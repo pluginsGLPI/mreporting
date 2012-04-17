@@ -343,14 +343,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          if ($data != 0) {
             $color_rbg = $this->colorHexToRGB($palette[$index]);
-            $color_rbg_darker = $this->colorHexToRGB($darkerpalette[$index]);
-            imageSmoothArc($image, $x, $y, $radius+8, $radius+8, $color_rbg_darker,
-                           deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
-
-            $x2 = $x + (sin(deg2rad(($start_angle+$angle)/2))*2.8);
-            $y2 = $y + (cos(deg2rad(($start_angle+$angle)/2))*2.8);
-
-            imageSmoothArc($image, $x2, $y2, $radius, $radius, $color_rbg,
+            imageSmoothArc($image, $x, $y, $radius+8, $radius+8, $color_rbg,
                            deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
 
             //text associated with pie arc (only for angle > 2°)
