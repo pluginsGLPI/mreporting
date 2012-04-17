@@ -48,9 +48,8 @@ class PluginMreportingMisc {
 
 
    static function getSQLDate($field = "glpi_tickets.date") {
-      if (!isset($_REQUEST['date1'])) $_REQUEST['date1'] = strftime("%Y-01-01");
-      if (!isset($_REQUEST['date2'])) $_REQUEST['date2'] = strftime("%Y-12-31");
-
+      if (!isset($_REQUEST['date1'])) $_REQUEST['date1'] = strftime("%Y-%m-%d", time() - (365 * 24 * 60 * 60));
+      if (!isset($_REQUEST['date2'])) $_REQUEST['date2'] = strftime("%Y-%m-%d");
 
       $date_array1=explode("-",$_REQUEST['date1']);
       $time1=mktime(0,0,0,$date_array1[1],$date_array1[2],$date_array1[0]);

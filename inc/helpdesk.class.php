@@ -261,7 +261,10 @@ class PluginMreportingHelpdesk {
       global $DB, $LANG;
       $datas = array();
 
-      $query = "SELECT DISTINCT DATE_FORMAT(date, '%m') as month, DATE_FORMAT(date, '%b') as month_l, COUNT(id) as nb
+      $query = "SELECT
+         DISTINCT DATE_FORMAT(date, '%m') as month,
+         DATE_FORMAT(date, '%b') as month_l,
+         COUNT(id) as nb
       FROM glpi_tickets
       WHERE ".$this->sql_date."
       GROUP BY month
@@ -274,7 +277,39 @@ class PluginMreportingHelpdesk {
       return array('datas' => $datas);
    }
 
+
    function reportLineNbTicket() {
       return $this->reportAreaNbTicket();
    }
+
+
+   function reportGlineNbTicket() {
+      global $DB, $LANG;
+      $datas = array();
+
+      $query = "SELECT DISTINCT
+         DATE_FORMAT(date, '%m') as month,
+         DATE_FORMAT(date, '%b') as month_l,
+         status,
+         COUNT(id) as nb
+      FROM glpi_tickets
+      WHERE ".$this->sql_date."
+      GROUP BY month, status
+      ORDER BY month_l, status";
+      $res = $DB->query($query);
+      while ($data = $DB->fetch_assoc($res)) {
+         $datas['labels2'][$data['month_l']] = $data['month_l'];
+         $datas['datas'][$data['status']][$data['month_l']] = $data['nb'];
+      }
+
+      $datas['spline'] = true;
+
+      return $datas;
+   }
+
+   function reportGareaNbTicket() {
+      return $this->reportGlineNbTicket();
+   }
+
+
 }
