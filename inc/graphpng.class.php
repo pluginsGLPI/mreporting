@@ -1,5 +1,8 @@
 <?php
 
+require_once "../lib/imagesmootharc/imageSmoothArc.php";
+
+
 class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function initGraph($title, $desc = '', $rand='', $export = false) {
@@ -59,6 +62,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $color = str_replace('#', '', $color);
       }
       return $colors;
+   }
+
+   function colorHexToRGB($color, $alpha = 0) {
+      $hex = str_replace("0x00", "", $color);
+
+      if(strlen($hex) == 3) {
+         $r = hexdec(substr($hex,0,1).substr($hex,0,1));
+         $g = hexdec(substr($hex,1,1).substr($hex,1,1));
+         $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+      } else {
+         $r = hexdec(substr($hex,0,2));
+         $g = hexdec(substr($hex,2,2));
+         $b = hexdec(substr($hex,4,2));
+      }
+      $rgb = array($r, $g, $b, $alpha);
+      return $rgb; // returns an array with the rgb values
    }
 
    function getPalette($image, $nb_index = 20) {
@@ -150,8 +169,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
      return $new_hex;
    }
 
-
-
    function showHbar($raw_datas, $title, $desc = "", $show_label = 'none', $export = false) {
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
@@ -171,9 +188,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $width = 596;
       $height = 30 * $nb_bar + 80;
 
-      //create image and activate antiliasing
+      //create image
       $image = imagecreatetruecolor ($width, $height);
-      if (function_exists('imageantialias')) imageantialias($image, true);
 
       //colors
       $black = imagecolorallocate($image, 0, 0, 0);
@@ -286,9 +302,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $width = 400;
       $height = 330;
 
-      //create image and activate antiliasing
+      //create image
       $image = imagecreatetruecolor ($width, $height);
-      if (function_exists('imageantialias')) imageantialias($image, true);
 
       //colors
       $black = imagecolorallocate($image, 0, 0, 0);
@@ -314,38 +329,34 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //add title on export
       if ($export) {
-         imagettftext(
-            $image,
-            $fontsize+2,
-            $fontangle,
-            10,
-            20,
-            $black,
-            $font,
-            $title
-         );
+         imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
       }
 
       //pie
       $index = 0;
       $x = $width / 2 - 50;
-      $y = $height / 2 + 30;
+      $y = $height / 2 + 20;
       $radius = $width / 2;
-      $start_angle = 270;
+      $start_angle = 0;
       foreach ($datas as $label => $data) {
          $angle = $start_angle + (360 * $data) / $max;
 
          if ($data != 0) {
-            //pie arc
-            imagefilledarc($image, $x, $y, $radius, $radius, $start_angle, $angle,
-                  $palette[$index], IMG_ARC_PIE);
-            imagefilledarc($image, $x, $y, $radius+1, $radius+1, $start_angle, $angle,
-                  $darkerpalette[$index], IMG_ARC_NOFILL + IMG_ARC_EDGED);
+            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            $color_rbg_darker = $this->colorHexToRGB($darkerpalette[$index]);
+            imageSmoothArc($image, $x, $y, $radius+8, $radius+8, $color_rbg_darker,
+                           deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
+
+            $x2 = $x + (sin(deg2rad(($start_angle+$angle)/2))*2.8);
+            $y2 = $y + (cos(deg2rad(($start_angle+$angle)/2))*2.8);
+
+            imageSmoothArc($image, $x2, $y2, $radius, $radius, $color_rbg,
+                           deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
 
             //text associated with pie arc (only for angle > 2°)
             if ($angle > 2) {
-               $xtext = $x - 3 + (cos(deg2rad(($start_angle+$angle)/2))*($radius/1.6));
-               $ytext = $y + 5  + (sin(deg2rad(($start_angle+$angle)/2))*($radius/1.6));
+               $xtext = $x - 3 + (sin(deg2rad(($start_angle+$angle)/2))*($radius/1.6));
+               $ytext = $y + 5  + (cos(deg2rad(($start_angle+$angle)/2))*($radius/1.6));
                imagettftext(
                   $image,
                   $fontsize = 8,
@@ -376,16 +387,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $image,
             $fontsize,
             $fontangle,
-            $width - $textwidth - 18,
-            10 + $index * (15) ,
+            $width - $textwidth - 15,
+            15 + $index * (15) ,
             $darkerpalette[$index],
             $font,
             $label
          );
 
          //legend circle
-         imagefilledellipse($image, $width - 10, 5 + $index * 15, 10, 10, $palette[$index]);
-         imageellipse($image, $width - 10, 5 + $index * 15, 11, 11, $darkerpalette[$index]);
+         $color_rbg = $this->colorHexToRGB($palette[$index]);
+         imageSmoothArc($image, $width - 10, 10 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
 
          $index++;
       }
@@ -421,9 +432,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $width = 596;
       $height = 28 * $nb_bar + 80;
 
-      //create image and activate antiliasing
+      //create image
       $image = imagecreatetruecolor ($width, $height);
-      if (function_exists('imageantialias')) imageantialias($image, true);
 
       //colors
       $black = imagecolorallocate($image, 0, 0, 0);
@@ -570,9 +580,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $height = 30 * $nb + 80;
       $width_line = ($width - 45) / $nb;
 
-      //create image and activate antiliasing
+      //create image
       $image = imagecreatetruecolor ($width, $height);
-      if (function_exists('imageantialias')) imageantialias($image, true);
 
       //colors
       $black = imagecolorallocate($image, 0, 0, 0);
@@ -701,9 +710,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $width_line = ($width - 45) / $nb;
       $index1 = 0;
 
-      //create image and activate antiliasing
+      //create image
       $image = imagecreatetruecolor ($width, $height);
-      if (function_exists('imageantialias')) imageantialias($image, true);
 
       //colors
       $black = imagecolorallocate($image, 0, 0, 0);
@@ -772,8 +780,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imageline($image, $x1, $y1, $x2, $y2, $palette[$index1]);
 
             //trace dots
-            imagefilledarc ($image, $x1, $y1, 8, 8, 0, 360, $white, IMG_ARC_PIE);
-            imagearc ($image, $x1, $y1, 8, 8, 0, 360, $darkerpalette[$index1]);
+            $color_rbg = $this->colorHexToRGB($palette[$index1]);
+            imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
+
 
             //display values label
             imagettftext($image, $fontsize, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
@@ -812,10 +821,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $textheight = abs($box[5] - $box[1]);
 
          //legend label
-         imagettftext($image, $fontsize, $fontangle, 25, 35 + $index * 14 , $black, $font, $label );
+         imagettftext($image, $fontsize, $fontangle, 20, 35 + $index * 14 , $black, $font, $label );
          //legend circle
-         imagefilledellipse($image, 10, 30 + $index * 14, 10, 10, $palette[$index]);
-         imageellipse($image, 10, 30 + $index * 14, 11, 11, $darkerpalette[$index]);
+         $color_rbg = $this->colorHexToRGB($palette[$index]);
+         imageSmoothArc($image, 10, 30 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
 
          $index++;
       }
