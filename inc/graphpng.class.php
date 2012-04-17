@@ -549,19 +549,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->endGraph($rand, $export);
    }
 
-      /**
-    * Show a Area charts
-    *
-    * @param $raw_datas : an array with :
-    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
-    *    - key 'unit', ex : '%', 'Kg' (optionnal)
-    * @param $title : title of the chart
-    * @param $desc : description of the chart (optionnal)
-    * @param $show_label : behavior of the graph labels,
-    *                      values : 'hover', 'never', 'always' (optionnal)
-    * @param $export : keep only svg to export (optionnal)
-    * @return nothing
-    */
+
    function showArea($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false, $area = true) {
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
@@ -646,8 +634,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
          //trace lines between points
-         imageline($image, $x1, $y1-1, $x2, $y2-1, $darkerpalette[0]);
-         imageline($image, $x1, $y1, $x2, $y2, $darkerpalette[0]);
+         imageline($image, $x1, $y1-1, $x2, $y2-1, $palette[0]);
+         imageline($image, $x1, $y1, $x2, $y2, $palette[0]);
 
          //trace dots
          imagefilledarc ($image, $x1, $y1, 8, 8, 0, 360, $white, IMG_ARC_PIE);
@@ -686,4 +674,156 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->showImage($contents);
       $this->endGraph($rand, $export);
    }
+
+   function showGArea($raw_datas, $title, $desc = "", $show_label = 'none', $export = false, $area = true) {
+      $datas = $raw_datas['datas'];
+      if (count($datas) <= 0) return false;
+      $labels2 = $raw_datas['labels2'];
+      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
+
+      $values = array_values($datas);
+      $labels = array_keys($datas);
+
+      $max = 1;
+      foreach ($values as $line) {
+         foreach ($line as $label2 => $value) {
+            if ($value > $max) $max = $value;
+         }
+      }
+      if ($max == 1 && $unit == '%') $max = 100;
+
+      $rand = mt_rand(0,15000);
+      $this->initGraph($title, $desc, $rand, $export);
+
+      $nb = count($labels2);
+      $width = 596;
+      $height = 450;
+      $width_line = ($width - 45) / $nb;
+      $index1 = 0;
+
+      //create image and activate antiliasing
+      $image = imagecreatetruecolor ($width, $height);
+      if (function_exists('imageantialias')) imageantialias($image, true);
+
+      //colors
+      $black = imagecolorallocate($image, 0, 0, 0);
+      $white = imagecolorallocate($image, 255, 255, 255);
+      $grey = imagecolorallocate($image, 242, 242, 242);
+      $palette = $this->getPalette($image, $nb);
+      $darkerpalette = $this->getDarkerPalette($image, $nb);
+
+      //background
+      $bg_color = $grey;
+      if ($export) $bg_color = $white;
+      imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
+
+      //create border on export
+      if ($export) {
+         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+      }
+
+      //config font
+      $font = "../fonts/FreeSans.ttf";
+      $fontsize = 8;
+      $fontangle = 0;
+
+      //add title on export
+      if ($export) {
+         imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
+      }
+
+      //parse datas
+      foreach ($datas as $label => $data) {
+
+         //parse line
+         $index2 = 0;
+         $old_data = 0;
+         $old_label = "";
+
+         foreach ($data as $subdata) {
+            //if first index, continue
+            if ($index2 == 0) {
+               $old_data = $subdata;
+               $old_label = $label;
+               $index2++;
+               continue;
+            }
+
+            // determine coords
+            $x1 = $index2 * $width_line - $width_line + 30;
+            $y1 = $height - 30 - $old_data * ($height - 150) / $max;
+            $x2 = $x1 + $width_line;
+            $y2 = $height - 30 - $subdata * ($height - 150) / $max;
+
+            //in case of area chart fill under point space
+            if ($area) {
+               $points = array(
+                  $x1, $y1,
+                  $x2, $y2,
+                  $x2, $height - 30,
+                  $x1, $height - 30
+               );
+               imagefilledpolygon($image, $points , 4 ,  $palette[$index1]);
+            }
+
+
+            //trace lines between points
+            imageline($image, $x1, $y1-1, $x2, $y2-1, $palette[$index1]);
+            imageline($image, $x1, $y1, $x2, $y2, $palette[$index1]);
+
+            //trace dots
+            imagefilledarc ($image, $x1, $y1, 8, 8, 0, 360, $white, IMG_ARC_PIE);
+            imagearc ($image, $x1, $y1, 8, 8, 0, 360, $darkerpalette[$index1]);
+
+            //display values label
+            imagettftext($image, $fontsize, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
+                         $darkerpalette[$index1], $font, $old_data);
+
+
+
+            imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[$index1]);
+            imageline($image, $x2, $y2, $x2, $height-27, $grey);
+
+
+            $old_data = $subdata;
+            $old_label = $label;
+            $index2++;
+         }
+         $index1++;
+      }
+
+            $fontsize = 9;
+
+      //display labels2
+      $index = 0;
+      foreach ($labels2 as $label) {
+         $x = $index * $width_line + 20;
+
+         imagettftext($image, $fontsize, $fontangle, $x , $height-10, $black,
+                         $font, $label);
+         $index++;
+      }
+
+      //legend (align left)
+      $index = 0;
+      foreach ($labels as $label) {
+         $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+         $textwidth = abs($box[4] - $box[0]);
+         $textheight = abs($box[5] - $box[1]);
+
+         //legend label
+         imagettftext($image, $fontsize, $fontangle, 25, 35 + $index * 14 , $black, $font, $label );
+         //legend circle
+         imagefilledellipse($image, 10, 30 + $index * 14, 10, 10, $palette[$index]);
+         imageellipse($image, 10, 30 + $index * 14, 11, 11, $darkerpalette[$index]);
+
+         $index++;
+      }
+
+      //generate image
+      $contents = $this->generateImage($image);
+      $this->showImage($contents);
+      $this->endGraph($rand, $export);
+   }
+
 }// End Class
