@@ -732,7 +732,7 @@ $JS = <<<JAVASCRIPT
          if (this.index == 0) return "black";
          return (i == this.index) ? "black" : "#eee";
       })
-      .height(height_area - 65)
+      .height(height_area - (n*14))
       .bottom(0)
      .anchor("bottom").add(pv.Label)
        .text(function(d) labels2[this.index]);

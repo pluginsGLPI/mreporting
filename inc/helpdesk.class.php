@@ -271,10 +271,13 @@ class PluginMreportingHelpdesk {
       ORDER BY month";
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
-         $datas[$data['month_l']] = $data['nb'];
+         $datas['datas'][$data['month_l']] = $data['nb'];
       }
 
-      return array('datas' => $datas);
+      //curve lines
+      $datas['spline'] = true;
+
+      return $datas;
    }
 
 
@@ -302,6 +305,7 @@ class PluginMreportingHelpdesk {
          $datas['datas'][$data['status']][$data['month_l']] = $data['nb'];
       }
 
+      //curve lines
       $datas['spline'] = true;
 
       return $datas;
