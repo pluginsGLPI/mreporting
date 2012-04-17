@@ -36,7 +36,7 @@ function plugin_init_mreporting() {
          }
       }
 
-      define('DEBUG_MREPORTING', true);
+      define('DEBUG_MREPORTING', false);
 
    }
 }
