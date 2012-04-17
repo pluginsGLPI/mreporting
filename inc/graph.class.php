@@ -664,6 +664,7 @@ JAVASCRIPT;
     * @param $raw_datas : an array with :
     *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
     *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    *    - key 'spline', curves line (boolean - optionnal)
     * @param $title : title of the chart
     * @param $desc : description of the chart (optionnal)
     * @param $show_label : behavior of the graph labels,
