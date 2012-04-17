@@ -547,8 +547,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          );
 
          //legend circle
-         imagefilledellipse($image, $width - 10, 5 + $index * 15, 10, 10, $palette[$index]);
-         imageellipse($image, $width - 10, 5 + $index * 15, 11, 11, $darkerpalette[$index]);
+         $color_rbg = $this->colorHexToRGB($palette[$index]);
+         imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
 
          $index++;
       }
@@ -647,8 +647,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imageline($image, $x1, $y1, $x2, $y2, $palette[0]);
 
          //trace dots
-         imagefilledarc ($image, $x1, $y1, 8, 8, 0, 360, $white, IMG_ARC_PIE);
-         imagearc ($image, $x1, $y1, 8, 8, 0, 360, $darkerpalette[0]);
+         $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
+         imageSmoothArc($image, $x1-1, $y1-1, 8, 8, $color_rbg, 0, 2 * M_PI);
+         imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
 
          //display values label
          imagettftext($image, $fontsize, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
@@ -669,8 +670,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //display last value, dot and axis label
       imagettftext($image, $fontsize, $fontangle, $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
-      imagefilledarc ($image, $x2, $y2, 8, 8, 0, 360, $white, IMG_ARC_PIE);
-      imagearc ($image, $x2, $y2, 8, 8, 0, 360, $darkerpalette[0]);
+      $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
+      imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
+      imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
       imagettftext($image, $fontsize, $fontangle, $x2 - 10 , $height-10, $black, $font, $label);
       imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
 
@@ -780,8 +782,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imageline($image, $x1, $y1, $x2, $y2, $palette[$index1]);
 
             //trace dots
-            $color_rbg = $this->colorHexToRGB($palette[$index1]);
+            $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
             imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
+            imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
 
 
             //display values label
