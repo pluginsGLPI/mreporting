@@ -441,6 +441,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       foreach ($datas as $label => $data) {
          $angle = $start_angle + (360 * $data) / $max;
 
+         //full circle need fix
+         if ($angle - $start_angle == 360) {
+            $angle = 359.999; 
+            $start_angle = 0; 
+         }
+
          if ($data != 0) {
             $color_rbg = $this->colorHexToRGB($palette[$index]);
             imageSmoothArc($image, $x, $y, $radius+8, $radius+8, $color_rbg,
