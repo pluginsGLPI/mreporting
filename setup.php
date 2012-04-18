@@ -36,8 +36,11 @@ function plugin_init_mreporting() {
          }
       }
 
-      define('DEBUG_MREPORTING', true);
-
+      if($_SESSION['glpi_use_mode'] == DEBUG_MODE) {
+         define('DEBUG_MREPORTING', true);
+      } else {
+         define('DEBUG_MREPORTING', false);
+      }
    }
 }
 
