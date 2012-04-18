@@ -325,8 +325,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       ORDER BY month, status";
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
+         $status =Ticket::getStatus($data['status']);
          $datas['labels2'][$data['month_l']] = $data['month_l'];
-         $datas['datas'][$data['status']][$data['month_l']] = $data['nb'];
+         $datas['datas'][$status][$data['month_l']] = $data['nb'];
       }
 
       //curve lines
