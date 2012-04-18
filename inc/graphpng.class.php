@@ -435,8 +435,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //pie
       $index = 0;
       $x = $width / 2 - 50;
-      $y = $height / 2 + 20;
-      $radius = $width / 2;
+      $y = $height / 2;
+      $radius = $height / 1.3;
       $start_angle = 0;
       foreach ($datas as $label => $data) {
          $angle = $start_angle + (360 * $data) / $max;
