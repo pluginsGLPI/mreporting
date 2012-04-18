@@ -69,7 +69,16 @@ class PluginMreportingCommon {
          "datas" => array(
             "Jan" => 15, "Fev" => 20, "Mar" => 21, "Avr" => 16,
             "Mai" => 8, "Jun" => 14, "Jui" => 3, "Aou" => 5,
-            "Sep" => 9, "Oct" => 11, "Nov" => 21, "Dec" => 30
+            "Sep" => 9, "Oct" => 11, "Nov" => 21, "Dec" => 30/*,
+            "Jan2" => 15, "Fev2" => 20, "Mar2" => 21, "Avr2" => 16,
+            "Mai2" => 8, "Jun2" => 14, "Jui2" => 3, "Aou2" => 5,
+            "Sep2" => 9, "Oct2" => 11, "Nov2" => 21, "Dec2" => 30,
+            "Jan3" => 15, "Fev3" => 20, "Mar3" => 21, "Avr3" => 16,
+            "Mai3" => 8, "Jun3" => 14, "Jui3" => 3, "Aou3" => 5,
+            "Sep3" => 9, "Oct3" => 11, "Nov3" => 21, "Dec3" => 30,
+            "Jan4" => 15, "Fev4" => 20, "Mar4" => 21, "Avr4" => 16,
+            "Mai4" => 8, "Jun4" => 14, "Jui4" => 3, "Aou4" => 5,
+            "Sep4" => 9, "Oct4" => 11, "Nov4" => 21, "Dec4" => 30*/
          ),
          'unit'   => 'ticket',
          'spline' => true

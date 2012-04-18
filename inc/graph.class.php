@@ -740,7 +740,7 @@ $JS = <<<JAVASCRIPT
       .height(height_area - (n*14))
       .bottom(-5)
      .anchor("bottom").add(pv.Label)
-       .text(function(d) labels2[this.index]);
+         .text(function(d) labels2[this.index]);
 
    /* A panel for each data series. */
    var panel{$rand} = vis{$rand}.add(pv.Panel)
