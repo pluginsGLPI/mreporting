@@ -108,14 +108,25 @@ class PluginMreportingCommon {
    function getAllReports($with_url = true) {
       global $LANG, $CFG_GLPI;
 
-      require GLPI_ROOT."/plugins/mreporting/classes.inc.php";
       $reports = array();
 
-      if (!isset($PluginMreportingClasses)) {
-         return false;
+      //parse inc dir to search report classes
+      $classes = array();
+      $matches = array();
+      $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
+      if ($handle = opendir($inc_dir)) {
+         while (false !== ($entry = readdir($handle))) {
+            if ($entry != "." && $entry != "..") {
+               $fcontent = file_get_contents($inc_dir."/".$entry);
+               if (preg_match("/class\s(.+)Extends PluginMreportingBaseclass/i", $fcontent, $matches)) {
+                  $classes[] = trim($matches[1]);
+               }
+            }
+         }
       }
 
-      foreach($PluginMreportingClasses as $classname) {
+      //construct array to list classes and functions
+      foreach($classes as $classname) {
          $i = 0;
          $short_classname = str_replace('PluginMreporting', '', $classname);
          $title = $LANG['plugin_mreporting'][$short_classname]['title'];
