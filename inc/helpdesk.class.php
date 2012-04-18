@@ -111,11 +111,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //replace cat_id by labels2
       foreach ($tmp_datas as $entity => &$subdata) {
          $tmp = array();
-         foreach ($subdata as $cat_id => $value) {
-            $cat_id = str_replace("cat_", "", $cat_id);
-            $cat_label = $labels2[$cat_id];
+         $i = 0;
+         foreach ($subdata as $value) {
+            $cat_label = $labels2[$i];
             $tmp[$cat_label] = $value;
-
+            $i++;
          }
          $subdata = $tmp;
       }
@@ -339,6 +339,6 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportGareaNbTicket() {
       return $this->reportGlineNbTicket();
    }
-
-
 }
+
+?>
