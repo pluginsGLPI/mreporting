@@ -520,7 +520,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $nb_bar = count($datas) * count($labels2);
       $width = 596;
-      $height = 28 * $nb_bar + 80;
+      $height = 28 * $nb_bar + count($labels2) * 24;
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
@@ -566,7 +566,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $index2 = 0;
 
       foreach ($datas as $label => $data) {
-         $ly = $index1 * count($labels2) * 28 + count($labels2) *24 / 2 + 40;
+         $ly = $index1 * count($labels2) * 28 + count($labels2) *24 / 2 + count($labels2) * 14;
          $step = $index1 * count($labels2) * 28;
 
          //create axis label (align right)
@@ -586,7 +586,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          foreach ($data as $subdata) {
             $bx1 = 150;
-            $by1 = ($index2+1) * 22 + $step + 30;
+            $by1 = ($index2+1) * 22 + $step + count($labels2) * 14;
             $bx2 = $bx1 + round(($subdata*($width - 300))/$max);
             $by2 = $by1 + 16;
 

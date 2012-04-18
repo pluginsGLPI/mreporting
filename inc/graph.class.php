@@ -388,7 +388,7 @@ JAVASCRIPT;
 
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
-      $height = 30 * $nb_bar * $nb_bar2 + 50;
+      $height = 28 * $nb_bar * $nb_bar2 + 50;
 
       $always = '';
       $hover = '';
