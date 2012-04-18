@@ -60,7 +60,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //get categories used in this period
       $query_cat = "SELECT
          DISTINCT(glpi_tickets.ticketcategories_id) as ticketcategories_id,
-         glpi_ticketcategories.name as category
+         glpi_ticketcategories.completename as category
       FROM glpi_tickets
       LEFT JOIN glpi_ticketcategories
          ON glpi_tickets.ticketcategories_id = glpi_ticketcategories.id
@@ -148,7 +148,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $query = "
          SELECT
             glpi_ticketcategories.id as category_id,
-            glpi_ticketcategories.name as category_name,
+            glpi_ticketcategories.completename as category_name,
             glpi_tickets.type,
             COUNT(glpi_tickets.id) as count
          FROM glpi_tickets
@@ -234,7 +234,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $query = "
          SELECT
             glpi_tickets.status,
-            glpi_ticketcategories.name as category_name,
+            glpi_ticketcategories.completename as category_name,
             COUNT(glpi_tickets.id) as count
          FROM glpi_tickets
          LEFT JOIN glpi_ticketcategories
