@@ -387,7 +387,8 @@ JAVASCRIPT;
       $this->initDatasMultiple($datas, $labels2, $unit);
 
       $nb_bar = count($datas);
-      $height = 150 * $nb_bar + 50;
+      $nb_bar2 = count($labels2);
+      $height = 30 * $nb_bar * $nb_bar2 + 50;
 
       $always = '';
       $hover = '';
@@ -397,7 +398,7 @@ $JS = <<<JAVASCRIPT
    var width_hgbar = 500;
    var height_hgbar = {$height};
    var x = pv.Scale.linear(0, max).range(0, width_hgbar - 100);
-   var y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, height_hgbar, 4/5);
+   var y = pv.Scale.ordinal(pv.range(n+1)).splitBanded(0, height_hgbar, 4/5);
 
    var offset = 0;
 
@@ -411,7 +412,7 @@ $JS = <<<JAVASCRIPT
 
    panel = vis{$rand}.add(pv.Panel)
       .data(datas)
-      .top(function() { return y(this.index); })
+      .top(function() { return y(this.index) + m*14; })
       .height(y.range().band)
    .anchor("left").add(pv.Label)
       .textMargin(5)
@@ -419,7 +420,7 @@ $JS = <<<JAVASCRIPT
       .text(function() { return labels[this.parent.index]; })
    .parent.add(pv.Panel)
       .data(function(d) { return d; })
-      .top(function() { return this.index * y.range().band / m; })
+      .top(function() { return (this.index * y.range().band / m); })
       .height(y.range().band /m);
 
    panel_bar = panel.add(pv.Panel)
