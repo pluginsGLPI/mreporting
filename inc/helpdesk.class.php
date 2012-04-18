@@ -1,5 +1,5 @@
 <?php
-class PluginMreportingHelpdesk {
+class PluginMreportingHelpdesk Extends PluginMreportingBaseclass{
    private $sql_date, $filters;
 
    function __construct()  {
