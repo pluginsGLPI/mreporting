@@ -7,13 +7,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function initGraph($title, $desc = '', $rand='', $export = false) {
       if (!$export) {
+
+         $width = $this->width + 100;
+
          if (!isset($_REQUEST['date1'])) $_REQUEST['date1'] = strftime("%Y-01-01");
          if (!isset($_REQUEST['date2'])) $_REQUEST['date2'] = strftime("%Y-12-31");
 
          $backtrace = debug_backtrace();
          $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
 
-         echo "<div class='center'><div id='fig'>";
+         echo "<div class='center'><div id='fig' style='width:{$width}px'>";
          echo "<div class='graph_title'>";
          echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
          echo $title;
@@ -282,7 +285,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($title, $desc, $rand, $export);
 
       $nb_bar = count($datas);
-      $width = 596;
+      $width = $this->width;
       $height = 30 * $nb_bar + 80;
 
       //create image
@@ -327,9 +330,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //bars
       $index = 0;
       foreach ($datas as $label => $data) {
-         $bx1 = 150;
+         $bx1 = 250;
          $by1 = ($index+1) * 28 + 30;
-         $bx2 = $bx1 + round(($data*($width -200)) / $max);
+         $bx2 = $bx1 + round(($data*($width -300)) / $max);
          $by2 = $by1 + 20;
 
          //createbar
@@ -357,7 +360,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $image,
             $fontsize,
             $fontangle,
-            145 - $textwidth,
+            245 - $textwidth,
             $by1 + 14,
             $black,
             $font,
@@ -368,8 +371,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       //y axis
-      imageline($image, 150, 40, 150, $height-20, $black);
-      imageline($image, 151, 40, 151, $height-20, $black);
+      imageline($image, 250, 40, 250, $height-20, $black);
+      imageline($image, 251, 40, 251, $height-20, $black);
 
       $contents = $this->generateImage($image);
       $this->showImage($contents);
@@ -396,7 +399,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($title, $desc, $rand, $export);
 
       $nb_bar = count($datas);
-      $width = 400;
+      $width = $this->width;
       $height = 330;
 
       //create image
@@ -519,7 +522,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($title, $desc, $rand, $export);
 
       $nb_bar = count($datas) * count($labels2);
-      $width = 596;
+      $width = $this->width;
       $height = 28 * $nb_bar + count($labels2) * 24;
 
       //create image
@@ -577,7 +580,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $image,
             $fontsize,
             $fontangle,
-            145 - $textwidth,
+            245 - $textwidth,
             $ly + 14,
             $black,
             $font,
@@ -585,7 +588,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          );
 
          foreach ($data as $subdata) {
-            $bx1 = 150;
+            $bx1 = 250;
             $by1 = ($index2+1) * 22 + $step + count($labels2) * 14;
             $bx2 = $bx1 + round(($subdata*($width - 300))/$max);
             $by2 = $by1 + 16;
@@ -613,8 +616,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       //y axis
-      imageline($image, 150, 40, 150, $height-40, $black);
-      imageline($image, 151, 40, 151, $height-40, $black);
+      imageline($image, 250, 40, 250, $height-6, $black);
+      imageline($image, 251, 40, 251, $height-6, $black);
 
       //legend (align right)
       $index = 0;
@@ -666,7 +669,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($title, $desc, $rand, $export);
 
       $nb = count($datas);
-      $width = 596;
+      $width = $this->width;
       $height = 30 * $nb + 80;
       $width_line = ($width - 45) / $nb;
 
@@ -797,7 +800,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($title, $desc, $rand, $export);
 
       $nb = count($labels2);
-      $width = 596;
+      $width = $this->width;
       $height = 450;
       $width_line = ($width - 45) / $nb;
       $index1 = 0;

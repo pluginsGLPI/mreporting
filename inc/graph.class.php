@@ -1,18 +1,22 @@
 <?php
 class PluginMreportingGraph {
    const DEBUG_GRAPH = false;
+   protected $width = 700;
 
    function initGraph($title, $desc = '', $rand='', $export = false) {
 
 
       if (!$export) {
+
+         $width = $this->width + 100;
+
          if (!isset($_REQUEST['date1'])) $_REQUEST['date1'] = strftime("%Y-01-01");
          if (!isset($_REQUEST['date2'])) $_REQUEST['date2'] = strftime("%Y-12-31");
 
          $backtrace = debug_backtrace();
          $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
 
-         echo "<div class='center'><div id='fig'>";
+         echo "<div class='center'><div id='fig' style='width:{$width}px'>";
          echo "<div class='graph_title'>";
          echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
          echo $title;
@@ -150,9 +154,9 @@ class PluginMreportingGraph {
       $this->checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
-   var width_hbar = 500;
+   var width_hbar = {$this->width};
    var height_hbar = {$height};
-   var x = pv.Scale.linear(0, max).range(0, width_hbar-80);
+   var x = pv.Scale.linear(0, max).range(0, width_hbar-120);
    var y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, height_hbar, 4/5);
 
    var offset = 0;
@@ -161,7 +165,7 @@ $JS = <<<JAVASCRIPT
       .width(width_hbar)
       .height(height_hbar)
       .bottom(20)
-      .left(180)
+      .left(240)
       .right(10)
       .top(5);
 
@@ -272,7 +276,7 @@ JAVASCRIPT;
       $this->checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
-   var width_pie = 400;
+   var width_pie = {$this->width};
    var height_pie = 300;
    var radius = 150;
    var angle = pv.Scale.linear(0, pv.sum(datas)).range(0, 2 * Math.PI);
@@ -395,9 +399,9 @@ JAVASCRIPT;
       $this->checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
-   var width_hgbar = 500;
+   var width_hgbar = {$this->width};
    var height_hgbar = {$height};
-   var x = pv.Scale.linear(0, max).range(0, width_hgbar - 100);
+   var x = pv.Scale.linear(0, max).range(0, width_hgbar - 150);
    var y = pv.Scale.ordinal(pv.range(n+1)).splitBanded(0, height_hgbar, 4/5);
 
    var offset = 0;
@@ -406,7 +410,7 @@ $JS = <<<JAVASCRIPT
       .width(width_hgbar)
       .height(height_hgbar)
       .bottom(20)
-      .left(180)
+      .left(240)
       .right(10)
       .top(5);
 
@@ -470,7 +474,7 @@ $JS = <<<JAVASCRIPT
    // legend
    vis{$rand}.add(pv.Dot)
       .data(labels2)
-      .right(100)
+      .right(160)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
          return colors(this.index);
@@ -535,7 +539,7 @@ JAVASCRIPT;
       $this->checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
-   var width_area = 500;
+   var width_area = {$this->width};
    var height_area = 350;
    var offset = 0;
 
@@ -699,7 +703,7 @@ JAVASCRIPT;
       $this->checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
-   var width_area = 500;
+   var width_area = {$this->width};
    var height_area = 350;
    var offset = 0;
 
