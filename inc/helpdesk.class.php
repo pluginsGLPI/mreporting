@@ -108,6 +108,17 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $data = array_merge(array_fill_keys($tmp_cat, 0), $data);
       }
 
+      //replace cat_id by labels2
+      foreach ($tmp_datas as $entity => &$subdata) {
+         $tmp = array();
+         foreach ($subdata as $cat_id => $value) {
+            $cat_id = str_replace("cat_", "", $cat_id);
+            $cat_label = $labels2[$cat_id];
+            $tmp[$cat_label] = $value;
+
+         }
+         $subdata = $tmp;
+      }
 
       $datas['datas'] = $tmp_datas;
       $datas['labels2'] = $labels2;
