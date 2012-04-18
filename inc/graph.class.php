@@ -839,14 +839,14 @@ JAVASCRIPT;
 
       $out = "var datas = [\n";
       foreach ($values as $value) {
-         $out.= "\t$value,\n";
+         $out.= "\t".addslashes($value).",\n";
       }
       $out = substr($out,0, -2)."\n";
       $out.= "];\n";
 
       $out.= "var labels = [\n";
       foreach ($labels as $label) {
-         $out.= "\t'$label',\n";
+         $out.= "\t'".addslashes($label)."',\n";
       }
       $out = substr($out,0, -2)."\n";
       $out.= "];\n";
@@ -870,7 +870,7 @@ JAVASCRIPT;
       foreach ($values as $line) {
          $out.= "\t[";
          foreach ($line as $label2 => $value) {
-            $out.= "$value,";
+            $out.= addslashes($value).",";
             if ($value > $max) $max = $value;
          }
          $out = substr($out,0, -1)."";
@@ -882,7 +882,7 @@ JAVASCRIPT;
 
       $out.= "var labels = [\n";
       foreach ($labels as $label) {
-         $out.= "\t'$label',\n";
+         $out.= "\t'".addslashes($label)."',\n";
       }
       $out = substr($out,0, -2)."\n";
       $out.= "];\n";
@@ -890,7 +890,7 @@ JAVASCRIPT;
 
       $out.= "var labels2 = [\n";
       foreach ($labels2 as $label) {
-         $out.= "\t'$label',\n";
+         $out.= "\t'".addslashes($label)."',\n";
       }
       $out = substr($out,0, -2)."\n";
       $out.= "];\n";
