@@ -571,7 +571,7 @@ $JS = <<<JAVASCRIPT
          return (i == this.index) ? "black" : "#eee";
       })
       .height(height_area - 30)
-      .bottom(0)
+      .bottom(-5)
       .anchor("bottom").add(pv.Label)
          .text(function() { return labels[this.index]; });
 
@@ -734,7 +734,7 @@ $JS = <<<JAVASCRIPT
          return (i == this.index) ? "black" : "#eee";
       })
       .height(height_area - (n*14))
-      .bottom(0)
+      .bottom(-5)
      .anchor("bottom").add(pv.Label)
        .text(function(d) labels2[this.index]);
 
