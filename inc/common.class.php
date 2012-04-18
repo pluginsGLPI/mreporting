@@ -90,7 +90,7 @@ class PluginMreportingCommon {
       $graph->showHbar  ($datas1, 'Exemple 1', 'Graphique en barres horizontales');
       $graph->showPie   ($datas1, 'Exemple 2', 'Graphique en camenbert');
       $graph->showHgbar ($datas2, 'Exemple 3', 'Graphique en barres groupées horizontales');
-      $graph->showLine  ($datas3, 'Exemple 4', 'Graphique en aires');
+      $graph->showArea  ($datas3, 'Exemple 4', 'Graphique en aires');
       $graph->showGArea  ($datas4, 'Exemple 5', 'Graphique en lignes (multiples)');
    }
 

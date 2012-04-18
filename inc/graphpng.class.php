@@ -112,6 +112,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
+   function getAlphaPalette($image, $nb_index = 20) {
+      $palette = array();
+      foreach($this->getColors($nb_index) as $color) {
+         $palette[] = "0x50".substr($color, 0, 6);
+      }
+
+      if ($nb_index > 20) {
+         $nb = ceil($nb_index / 20);
+         $tmp = $palette;
+         for ($i = 0; $i <= $nb; $i++) {
+            $palette = array_merge($palette, $tmp);
+         }
+      }
+      return $palette;
+   }
+
    function getLighterPalette($image, $nb_index = 20) {
       $palette = array();
       foreach($this->getColors($nb_index) as $color) {
@@ -713,6 +729,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $white = imagecolorallocate($image, 255, 255, 255);
       $grey = imagecolorallocate($image, 242, 242, 242);
       $palette = $this->getPalette($image, $nb);
+      $alphapalette = $this->getAlphaPalette($image, $nb);
       $darkerpalette = $this->getDarkerPalette($image, $nb);
 
       //background
@@ -766,7 +783,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   $x2, $height - 30,
                   $x1, $height - 30
                );
-               imagefilledpolygon($image, $points , 4 ,  $palette[$index1]);
+               imagefilledpolygon($image, $points , 4 ,  $alphapalette[$index1]);
             }
 
 

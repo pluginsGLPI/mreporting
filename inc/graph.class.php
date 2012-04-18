@@ -672,7 +672,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGArea($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false, $area = true) {
+   function showGarea($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false, $area = true) {
       global $LANG;
 
       if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
@@ -828,8 +828,8 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGLine($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false) {
-      $this->showGArea($raw_datas, $title, $desc, $show_label, $export, false);
+   function showGline($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false) {
+      $this->showGarea($raw_datas, $title, $desc, $show_label, $export, false);
    }
 
 
