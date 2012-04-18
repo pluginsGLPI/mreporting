@@ -273,8 +273,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
 
       $query = "SELECT
-         DISTINCT DATE_FORMAT(date, '%m') as month,
-         DATE_FORMAT(date, '%b') as month_l,
+         DISTINCT DATE_FORMAT(date, '%y%m') as month,
+         DATE_FORMAT(date, '%b%y') as month_l,
          COUNT(id) as nb
       FROM glpi_tickets
       WHERE ".$this->sql_date."
@@ -303,15 +303,15 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
 
       $query = "SELECT DISTINCT
-         DATE_FORMAT(date, '%m') as month,
-         DATE_FORMAT(date, '%b') as month_l,
+         DATE_FORMAT(date, '%y%m') as month,
+         DATE_FORMAT(date, '%b%y') as month_l,
          status,
          COUNT(id) as nb
       FROM glpi_tickets
       WHERE ".$this->sql_date."
       AND glpi_tickets.entities_id IN (".$this->where_entities.")
       GROUP BY month, status
-      ORDER BY month_l, status";
+      ORDER BY month, status";
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
          $datas['labels2'][$data['month_l']] = $data['month_l'];
