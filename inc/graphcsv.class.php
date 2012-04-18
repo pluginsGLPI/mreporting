@@ -85,4 +85,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
    function showArea($raw_datas, $title, $desc = "", $show_label = 'none', $export = false, $area = true) {
       $this->showHbar($raw_datas, $title, $desc, $show_label, $export);
    }
+   function showGarea($raw_datas, $title, $desc = "", $show_label = 'none', $export = false, $area = true) {
+      $this->showHGbar($raw_datas, $title, $desc, $show_label, $export);
+   }
 }
