@@ -588,13 +588,13 @@ $JS = <<<JAVASCRIPT
       })
       .left(function() x(this.index))
       .bottom(function(d) y(d))
-      .visible(function() {return this.index < (offset / 2);})
+      .visible(function() {return this.index  < ((offset / 2) * ( n / 12));})
       .lineWidth(4);
 
    if ('{$area}') {
       line{$rand}.add(pv.Area)
          .visible(function() {
-            return n < (offset / 2);
+            return n < ((offset / 2) * ( n / 12));
          })
          .bottom(1)
          .fillStyle("rgb(121,173,210)")
@@ -756,13 +756,13 @@ $JS = <<<JAVASCRIPT
       .strokeStyle(function() { return colors(this.parent.index); })
       .left(function() x(this.index))
       .bottom(function(d) y(d))
-      .visible(function() {return (this.index < (offset / 2)); })
+      .visible(function() {return (this.index < ((offset / 2) * ( m / 12))); })
       .lineWidth(2);
 
    if ('{$area}') {
       lines{$rand}.add(pv.Area)
          .visible(function() {
-            return n < (offset / 2);
+            return m < (offset / 2);
          })
          .lineWidth(0)
          .bottom(1)
