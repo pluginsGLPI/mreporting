@@ -1,6 +1,6 @@
 <?php
 class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
-   private $sql_date, $filters;
+   private $sql_date, $filters, $where_entities;
 
    function __construct()  {
       global $LANG;
@@ -23,6 +23,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             )
          )
       );
+      $this->where_entities = "'".implode("', '", $_SESSION['glpiactiveentities'])."'";
    }
 
    function reportHbarTicketNumberByEntity() {
@@ -36,6 +37,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       LEFT JOIN glpi_entities
          ON glpi_tickets.entities_id = glpi_entities.id
       WHERE ".$this->sql_date."
+      AND glpi_entities.id IN (".$this->where_entities.")
       GROUP BY glpi_entities.name
       ORDER BY glpi_entities.name ASC";
       $res = $DB->query($query);
@@ -65,6 +67,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       LEFT JOIN glpi_ticketcategories
          ON glpi_tickets.ticketcategories_id = glpi_ticketcategories.id
       WHERE ".$this->sql_date."
+      AND glpi_tickets.entities_id IN (".$this->where_entities.")
       ORDER BY glpi_ticketcategories.id ASC";
       $res_cat = $DB->query($query_cat);
       $categories = array();
@@ -90,6 +93,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       LEFT JOIN glpi_entities
          ON glpi_tickets.entities_id = glpi_entities.id
       WHERE glpi_tickets.ticketcategories_id IN ($cat_str)
+      AND glpi_tickets.entities_id IN (".$this->where_entities.")
       AND ".$this->sql_date."
       GROUP BY glpi_entities.name, glpi_tickets.ticketcategories_id
       ORDER BY glpi_entities.name ASC, glpi_tickets.ticketcategories_id ASC";
@@ -121,6 +125,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             SELECT COUNT(*)
             FROM glpi_tickets
             WHERE ".$this->sql_date."
+            AND glpi_tickets.entities_id IN (".$this->where_entities.")
             AND glpi_tickets.status IN('".implode("', '", array_keys($filter['status']))."')
          ";
          $result = $DB->query($query);
@@ -155,6 +160,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          LEFT JOIN glpi_ticketcategories
             ON glpi_ticketcategories.id = glpi_tickets.ticketcategories_id
          WHERE ".$this->sql_date."
+         AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.status IN('".implode("', '", array_keys($this->filters[$filter]['status']))."')
          GROUP BY glpi_ticketcategories.id, glpi_tickets.type
          ORDER BY glpi_ticketcategories.name
@@ -189,6 +195,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                FROM glpi_groups_tickets
                WHERE glpi_groups_tickets.type = 1
             )
+            AND glpi_tickets.entities_id IN (".$this->where_entities.")
             AND ".$this->sql_date."
             AND status IN('".implode("', '", array_keys($filter['status']))."')
          ";
@@ -202,6 +209,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                COUNT(glpi_tickets.id) as count
             FROM glpi_tickets, glpi_groups_tickets, glpi_groups
             WHERE glpi_tickets.id = glpi_groups_tickets.tickets_id
+            AND glpi_tickets.entities_id IN (".$this->where_entities.")
             AND glpi_groups_tickets.groups_id = glpi_groups.id
             AND glpi_groups_tickets.type = 1
             AND ".$this->sql_date."
@@ -231,6 +239,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       );
       $status_keys = array_keys($status);
 
+
+
       $query = "
          SELECT
             glpi_tickets.status,
@@ -240,6 +250,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          LEFT JOIN glpi_ticketcategories
             ON glpi_ticketcategories.id = glpi_tickets.ticketcategories_id
          WHERE ".$this->sql_date."
+         AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.status IN('".implode("', '",$status_keys)."')
          GROUP BY glpi_ticketcategories.id, glpi_tickets.status
          ORDER BY glpi_ticketcategories.name
@@ -267,6 +278,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          COUNT(id) as nb
       FROM glpi_tickets
       WHERE ".$this->sql_date."
+      AND glpi_tickets.entities_id IN (".$this->where_entities.")
       GROUP BY month
       ORDER BY month";
       $res = $DB->query($query);
@@ -297,6 +309,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          COUNT(id) as nb
       FROM glpi_tickets
       WHERE ".$this->sql_date."
+      AND glpi_tickets.entities_id IN (".$this->where_entities.")
       GROUP BY month, status
       ORDER BY month_l, status";
       $res = $DB->query($query);
