@@ -165,11 +165,7 @@ class PluginMreportingCommon {
       }
 
       echo "<table class='tab_cadre_fixe' id='mreporting_functions'>";
-
-
       foreach($reports as $classname => $report) {
-
-
          echo "<tr><th class='graph_title' colspan='4'>".$report['title']."</th></tr>";
 
          $odd = true;
@@ -196,7 +192,6 @@ class PluginMreportingCommon {
          }
 
          if (count($report['functions']) % 2 == 0) echo "<td></td></tr>";
-
          echo "<tr class='r_sep'><td colspan='4'>&nbsp;</td></tr>";
       }
       echo "</table>";
