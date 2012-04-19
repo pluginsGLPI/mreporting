@@ -41,8 +41,7 @@ function plugin_init_mreporting() {
                                                                         'changeProfile');
 
       /* Reports Link */                              
-      if (!Session::haveRight('config', 'w')
-         || !isset($_SESSION['glpi_plugin_mreporting_profile'])
+      if (!isset($_SESSION['glpi_plugin_mreporting_profile'])
          || $_SESSION['glpi_plugin_mreporting_profile']['reports'] != '1'
       ) $menu_entry  = false;
       /*else*/$menu_entry = "front/central.php";
