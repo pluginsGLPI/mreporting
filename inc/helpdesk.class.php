@@ -212,6 +212,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB, $LANG;
       $datas = array();
 
+      $datas['labels2']['type_0'] = $LANG['job'][32];
       $datas['labels2']['type_1'] = $LANG['job'][1];
       $datas['labels2']['type_2'] = $LANG['job'][2];
 
