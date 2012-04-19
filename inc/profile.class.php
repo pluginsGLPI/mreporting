@@ -99,16 +99,13 @@ class PluginMreportingProfile extends CommonDBTM {
 	}
   
    static function createFirstAccess($ID) {
-      
       $myProf = new self();
       if (!$myProf->getFromDBByProfile($ID)) {
-
          $myProf->add(array(
             'profiles_id' => $ID,
-            'reports'   => 1,
-            'config'    => 1
+            'reports'   => 'r',
+            'config'    => 'w'
          ));
-            
       }
    }
 
@@ -121,10 +118,9 @@ class PluginMreportingProfile extends CommonDBTM {
    static function changeProfile() {
       $prof = new self();
       if ($prof->getFromDBByProfile($_SESSION['glpiactiveprofile']['id'])) {
-         $_SESSION["glpi_plugin_mreporting_profile"]=$prof->fields;
+         $_SESSION["glpi_plugin_mreporting_profile"] = $prof->fields;
       }
-      else
-         unset($_SESSION["glpi_plugin_mreporting_profile"]);
+      else unset($_SESSION["glpi_plugin_mreporting_profile"]);
    }
 
    static function haveRight($module, $right) {
@@ -167,12 +163,12 @@ class PluginMreportingProfile extends CommonDBTM {
 		echo "<tr class='tab_bg_2'>";
 		
 		echo "<td>".$LANG['reports'][15].":</td><td>";
-      Dropdown::showYesNo("reports", $this->fields["reports"]);
+      Profile::dropdownNoneReadWrite("reports",$this->fields["reports"],1,1,0);
       echo "</td>";
 
       echo "<td>".$LANG['common'][12].":</td><td>";
-		Dropdown::showYesNo("config", $this->fields["config"]);
-		echo "</td>";
+		Profile::dropdownNoneReadWrite("config",$this->fields["config"],1,0,1);
+      echo "</td>";
 
 		echo "<td></td>";
 		echo "</tr>";

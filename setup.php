@@ -44,7 +44,7 @@ function plugin_init_mreporting() {
       if (!isset($_SESSION['glpi_plugin_mreporting_profile'])
          || $_SESSION['glpi_plugin_mreporting_profile']['reports'] != '1'
       ) $menu_entry  = false;
-      /*else*/$menu_entry = "front/central.php";
+      else $menu_entry = "front/central.php";
 
       $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
       
