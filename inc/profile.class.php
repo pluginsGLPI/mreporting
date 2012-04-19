@@ -105,7 +105,9 @@ class PluginMreportingProfile extends CommonDBTM {
 
          $myProf->add(array(
             'profiles_id' => $ID,
-            'reports' => 'w'));
+            'reports'   => 1,
+            'config'    => 1
+         ));
             
       }
    }
@@ -117,12 +119,31 @@ class PluginMreportingProfile extends CommonDBTM {
    }
    
    static function changeProfile() {
-      
+      echo "test";
       $prof = new self();
-      if ($prof->getFromDBByProfile($_SESSION['glpiactiveprofile']['id']))
+      if ($prof->getFromDBByProfile($_SESSION['glpiactiveprofile']['id'])) {
          $_SESSION["glpi_plugin_mreporting_profile"]=$prof->fields;
+      }
       else
          unset($_SESSION["glpi_plugin_mreporting_profile"]);
+   }
+
+   static function haveRight($module, $right) {
+      global $DB;
+      //If GLPI is using the slave DB -> read only mode
+      if ($DB->isSlave() && $right == "w") {
+         return false;
+      }
+      $matches = array(""  => array("", "r", "w"), // ne doit pas arriver normalement
+                       "r" => array("r", "w"),
+                       "w" => array("w"),
+                       "1" => array("1"),
+                       "0" => array("0", "1")); // ne doit pas arriver non plus
+      if (isset ($_SESSION["glpi_plugin_mreporting_profile"][$module])
+          && in_array($_SESSION["glpi_plugin_mreporting_profile"][$module], $matches[$right])) {
+         return true;
+      }
+      return false;
    }
    
    function showForm ($ID, $options=array()) {
@@ -146,8 +167,12 @@ class PluginMreportingProfile extends CommonDBTM {
       echo "</tr>";
 		echo "<tr class='tab_bg_2'>";
 		
-		echo "<td>".$LANG['plugin_mreporting']["name"].":</td><td>";
-		Profile::dropdownNoneReadWrite("reports",$this->fields["reports"],1,1,1);
+		echo "<td>".$LANG['reports'][15].":</td><td>";
+      Dropdown::showYesNo("reports", $this->fields["reports"]);
+      echo "</td>";
+
+      echo "<td>".$LANG['common'][12].":</td><td>";
+		Dropdown::showYesNo("config", $this->fields["config"]);
 		echo "</td>";
 
 		echo "<td></td>";
