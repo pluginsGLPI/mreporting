@@ -45,6 +45,7 @@ class PluginMreportingCommon {
 
       $params = $this->initParams($params);
       $graph = new PluginMreportingGraph();
+      $graphpng = new PluginMreportingGraphpng();
 
       $datas1 = array(
          'datas' => array(

@@ -676,8 +676,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $nb = count($datas);
       $width = $this->width;
-      $height = 30 * $nb + 80;
+      $height = 450;
       $width_line = ($width - 45) / $nb;
+      $step = round($nb / 20);
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
@@ -687,6 +688,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $white = imagecolorallocate($image, 255, 255, 255);
       $grey = imagecolorallocate($image, 242, 242, 242);
       $palette = $this->getPalette($image, $nb);
+      $alphapalette = $this->getAlphaPalette($image, $nb);
       $darkerpalette = $this->getDarkerPalette($image, $nb);
 
       //background
@@ -737,13 +739,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $x2, $height - 30,
                $x1, $height - 30
             );
-            imagefilledpolygon($image, $points , 4 ,  $palette[0]);
+            imagefilledpolygon($image, $points , 4 ,  $alphapalette[0]);
          }
 
 
          //trace lines between points
-         imageline($image, $x1, $y1-1, $x2, $y2-1, $palette[0]);
-         imageline($image, $x1, $y1, $x2, $y2, $palette[0]);
+         $this->imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $palette[0]);
 
          //trace dots
          $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
@@ -756,11 +757,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
          //display y axis and labels
-         imagettftext($image, $fontsize, $fontangle, $x1 - 10 , $height-10, $black,
-                      $font, $old_label);
-         imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[0]);
-         imageline($image, $x2, $y2, $x2, $height-27, $grey);
+         if (($index / $step) == round($index / $step)) {
+            imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[0]);
+            imageline($image, $x2, $y2, $x2, $height-27, $grey);
 
+            imagettftext($image, $fontsize, $fontangle, $x1 - 10 , $height-10, $black,
+                      $font, $old_label);
+         }
 
          $old_data = $data;
          $old_label = $label;
@@ -810,6 +813,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $height = 450;
       $width_line = ($width - 45) / $nb;
       $index1 = 0;
+      $index3 = 1;
+      $step = round($nb / 20);
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
@@ -834,7 +839,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //config font
       $font = "../fonts/FreeSans.ttf";
-      $fontsize = 8;
+      $fontsize = 6;
       $fontangle = 0;
 
       //add title on export
@@ -891,26 +896,32 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
 
-            imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[$index1]);
             imageline($image, $x2, $y2, $x2, $height-27, $grey);
-
+            if (($index3 / $step) == round($index3 / $step)) {
+               imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[$index1]);
+            }
+            
 
             $old_data = $subdata;
             $old_label = $label;
             $index2++;
+            $index3++;
          }
          $index1++;
       }
 
-            $fontsize = 9;
-
+      
       //display labels2
+      $fontsize = 8;
       $index = 0;
       foreach ($labels2 as $label) {
          $x = $index * $width_line + 20;
 
-         imagettftext($image, $fontsize, $fontangle, $x , $height-10, $black,
-                         $font, $label);
+         if (($index / $step) == round($index / $step)) {
+            imagettftext($image, $fontsize, $fontangle, $x , $height-10, $black,
+                            $font, $label);
+         }
+
          $index++;
       }
 
