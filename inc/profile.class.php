@@ -152,7 +152,6 @@ class PluginMreportingProfile extends CommonDBTM {
 		Profile::dropdownNoneReadWrite("config",$this->fields["config"],1,0,1);
       echo "</td>";
 
-		echo "<td></td>";
 		echo "</tr>";
 
 		echo "<input type='hidden' name='id' value=".$this->fields["id"].">";
