@@ -122,24 +122,6 @@ class PluginMreportingProfile extends CommonDBTM {
       }
       else unset($_SESSION["glpi_plugin_mreporting_profile"]);
    }
-
-   static function haveRight($module, $right) {
-      global $DB;
-      //If GLPI is using the slave DB -> read only mode
-      if ($DB->isSlave() && $right == "w") {
-         return false;
-      }
-      $matches = array(""  => array("", "r", "w"), // ne doit pas arriver normalement
-                       "r" => array("r", "w"),
-                       "w" => array("w"),
-                       "1" => array("1"),
-                       "0" => array("0", "1")); // ne doit pas arriver non plus
-      if (isset ($_SESSION["glpi_plugin_mreporting_profile"][$module])
-          && in_array($_SESSION["glpi_plugin_mreporting_profile"][$module], $matches[$right])) {
-         return true;
-      }
-      return false;
-   }
    
    function showForm ($ID, $options=array()) {
 		global $LANG;
