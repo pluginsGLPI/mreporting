@@ -156,7 +156,7 @@ class PluginMreportingGraph {
 $JS = <<<JAVASCRIPT
    var width_hbar = {$this->width};
    var height_hbar = {$height};
-   var x = pv.Scale.linear(0, max).range(0, width_hbar-120);
+   var x = pv.Scale.linear(0, max).range(0, width_hbar-145);
    var y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, height_hbar, 4/5);
 
    var offset = 0;
