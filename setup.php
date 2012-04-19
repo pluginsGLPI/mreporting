@@ -30,38 +30,28 @@
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
-
+   
+   /* Profile */
+      $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
+                                                                        'changeProfile');
+                                                                        
    if (Session::getLoginUserID()) {
          
       Plugin::registerClass('PluginMreportingProfile',
                       array('addtabon' => 'Profile'));
-      
-      /* Profile */
-      $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
-                                                                        'changeProfile');
 
       /* Reports Link */                              
-      if (!Session::haveRight('config', 'w')
-         || !isset($_SESSION['glpi_plugin_mreporting_profile'])
-         || $_SESSION['glpi_plugin_mreporting_profile']['reports'] != 'w'
-      ) $menu_entry  = false;
-      else $menu_entry = "front/central.php";
-
-      $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
-      $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
-         
+      if (plugin_mreporting_haveRight("reports","r")) {
+         $menu_entry = "front/central.php";
+         $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
+         $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
+      }   
       /* Configuration Link */
-      if (!Session::haveRight('config', 'w')
-         || !isset($_SESSION['glpi_plugin_mreporting_profile'])
-         || $_SESSION['glpi_plugin_mreporting_profile']['config'] != 'r') {
-         $config_entry = false;  
-      }
-      else {
+      if (plugin_mreporting_haveRight("config","w")) {
          $config_entry = 'front/config.form.php';
-         $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;  
+         $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
+         $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
       }
-      $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
-      
       
       /* Show Reports in standart stats page */
       /*$mreporting_common = new PluginMreportingCommon;
@@ -129,6 +119,20 @@ function plugin_mreporting_check_config($verbose=false) {
       echo $LANG['plugins'][2];
    }
    return false;
+}
+
+function plugin_mreporting_haveRight($module,$right) {
+	$matches=array(
+			""  => array("","r","w"), // ne doit pas arriver normalement
+			"r" => array("r","w"),
+			"w" => array("w"),
+			"1" => array("1"),
+			"0" => array("0","1"), // ne doit pas arriver non plus
+		      );
+	if (isset($_SESSION["glpi_plugin_mreporting_profile"][$module]) 
+         && in_array($_SESSION["glpi_plugin_mreporting_profile"][$module],$matches[$right]))
+		return true;
+	else return false;
 }
 
 ?>

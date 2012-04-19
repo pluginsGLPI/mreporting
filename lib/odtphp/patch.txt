@@ -1,0 +1,2 @@
+Patch TO 1.0.1 version of library :
+http://vikasmahajan.wordpress.com/2010/12/09/odtphp-bug-solved/
