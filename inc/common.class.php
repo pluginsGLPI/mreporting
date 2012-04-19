@@ -291,20 +291,6 @@ class PluginMreportingCommon {
       echo "</table>";
    }
 
-
-   /*function loadLibraries() {
-      $javascript_files = array(
-         //'../lib/protovis/protovis.min.js'
-         //'../lib/protovis/protovis-d3.2.js'
-         '../lib/protovis/protovis-r3.2.js'
-      );
-
-      foreach($javascript_files as $file) {
-         echo "<script type='text/javascript' src='$file'></script>";
-      }
-   }*/
-
-
    function export($opt)  {
       global $LANG;
       
@@ -352,7 +338,7 @@ class PluginMreportingCommon {
       
       //$odf = new odf("../templates/$template", $config);
       $odf = new odf("../templates/example.odt", $config);
-      
+
       $reports = $this->getAllReports();
 
       foreach($reports as $classname => $report) {
@@ -370,11 +356,20 @@ class PluginMreportingCommon {
       $csvdata = $odf->setSegment('csvdata');
 
       foreach ($datas as $label => $data) {
-         $csvdata->label(utf8_decode($label));
-         $csvdata->data($data);
+      
+         if (is_array($data)) {
+            foreach ($data as $label1 => $data1) {
+               $csvdata->label(utf8_decode($label1));
+               $csvdata->data($data1);
+               $csvdata->merge();
+            }
+         } else {
+            $csvdata->label(utf8_decode($label));
+            $csvdata->data($data);
+         }
          $csvdata->merge();
       }
-
+      
       $odf->mergeSegment($csvdata);
 
       // We export the file
