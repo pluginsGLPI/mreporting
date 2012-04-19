@@ -66,6 +66,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ON glpi_tickets.entities_id = glpi_entities.id
       WHERE ".$this->sql_date."
       AND glpi_entities.id IN (".$this->where_entities.")
+      AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name
       ORDER BY glpi_entities.name ASC";
       $res = $DB->query($query);
@@ -96,6 +97,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ON glpi_tickets.itilcategories_id = glpi_itilcategories.id
       WHERE ".$this->sql_date."
       AND glpi_tickets.entities_id IN (".$this->where_entities.")
+      AND glpi_tickets.is_deleted = '0'
       ORDER BY glpi_itilcategories.id ASC";
       $res_cat = $DB->query($query_cat);
       $categories = array();
@@ -123,6 +125,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       WHERE glpi_tickets.itilcategories_id IN ($cat_str)
       AND glpi_tickets.entities_id IN (".$this->where_entities.")
       AND ".$this->sql_date."
+      AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name, glpi_tickets.itilcategories_id
       ORDER BY glpi_entities.name ASC, glpi_tickets.itilcategories_id ASC";
       $res = $DB->query($query);
@@ -165,6 +168,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             FROM glpi_tickets
             WHERE ".$this->sql_date."
             AND glpi_tickets.entities_id IN (".$this->where_entities.")
+            AND glpi_tickets.is_deleted = '0'
             AND glpi_tickets.status IN('".implode("', '", array_keys($filter['status']))."')
          ";
          $result = $DB->query($query);
@@ -210,7 +214,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          LEFT JOIN glpi_tickets_users ON (glpi_tickets_users.tickets_id = glpi_tickets.id AND glpi_tickets_users.type =1)
          WHERE ".$this->sql_date."
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
+         AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_tickets_users.users_id
+         ORDER BY count DESC
          LIMIT 10
       ";
       $result = $DB->query($query);
@@ -256,6 +262,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          WHERE ".$this->sql_date."
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.status IN('".implode("', '", array_keys($this->filters[$filter]['status']))."')
+         AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_itilcategories.id, glpi_tickets.type
          ORDER BY glpi_itilcategories.name
       ";
@@ -306,6 +313,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             AND glpi_tickets.entities_id IN (".$this->where_entities.")
             AND glpi_groups_tickets.groups_id = glpi_groups.id
             AND glpi_groups_tickets.type = 1
+            AND glpi_tickets.is_deleted = '0'
             AND ".$this->sql_date."
             AND glpi_tickets.status IN('".implode("', '", array_keys($filter['status']))."')
             GROUP BY glpi_groups.id
@@ -346,6 +354,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          WHERE ".$this->sql_date."
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.status IN('".implode("', '",$status_keys)."')
+         AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_itilcategories.id, glpi_tickets.status
          ORDER BY glpi_itilcategories.name
       ";
@@ -373,6 +382,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       FROM glpi_tickets
       WHERE ".$this->sql_date."
       AND glpi_tickets.entities_id IN (".$this->where_entities.")
+      AND glpi_tickets.is_deleted = '0'
       GROUP BY month
       ORDER BY month";
       $res = $DB->query($query);
@@ -404,6 +414,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       FROM glpi_tickets
       WHERE ".$this->sql_date."
       AND glpi_tickets.entities_id IN (".$this->where_entities.")
+      AND glpi_tickets.is_deleted = '0'
       GROUP BY month, status
       ORDER BY month, status";
       $res = $DB->query($query);
