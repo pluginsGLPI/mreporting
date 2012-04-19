@@ -199,17 +199,16 @@ class PluginMreportingCommon {
    
    
    static function title() {
-      global $LANG, $PLUGIN_HOOKS, $CFG_GLPI;
+      global $LANG, $CFG_GLPI;
       
-      $opt_list["PluginMreportingCommon"] = $LANG['Menu'][5];
       $self = new self();
       $reports = $self->getAllReports();
-      $reports=array_unique($reports);
       
       foreach($reports as $classname => $report) {
+      $opt_list[$classname] = $report['title'];
          foreach($report['functions'] as $function) {
-            $stat_list["PluginMreportingCommon"][$function['function']]["name"]  = $function['title'];
-            $stat_list["PluginMreportingCommon"][$function['function']]["file"]  = $function['url_graph'];
+            $stat_list[$classname][$function['function']]["name"]  = $function['title'];
+            $stat_list[$classname][$function['function']]["file"]  = $function['url_graph'];
          }
       }
       
@@ -226,7 +225,7 @@ class PluginMreportingCommon {
       $count = count($stat_list);
       
       foreach ($opt_list as $opt => $group) {
-         
+         echo "<optgroup label=\"". $group ."\">";
          while ($data = each($stat_list[$opt])) {
             $name = $data[1]["name"];
             $file = $data[1]["file"];
@@ -237,6 +236,7 @@ class PluginMreportingCommon {
             echo "<option value='".$file."' title=\"".Html::cleanInputText($comment)."\">".$name."</option>";
             $i++;
          }
+         echo "</optgroup>";
       }
 
       echo "</select>";
@@ -350,7 +350,7 @@ class PluginMreportingCommon {
          $titre = $report['title'];
       }
       
-      $odf->setVars('titre', $title, true, 'UTF-8');
+      $odf->setVars('titre', $titre, true, 'UTF-8');
       
       $title_func = $title;
 
