@@ -160,16 +160,18 @@ class PluginMreportingGraph {
 
       if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
 
-      $datas = $raw_datas['datas'];
       $rand = mt_rand(0,15000);
 
       $this->initGraph($title, $desc, $rand, $export);
-      if (count($datas) <= 0) {
+      
+      if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $this->endGraph(false, false);
          return false;
       }
+      
+      $datas = $raw_datas['datas'];
 
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $this->initDatasSimple($datas, $unit);
@@ -283,19 +285,20 @@ JAVASCRIPT;
 
       if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
 
-      $datas = $raw_datas['datas'];
-
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
 
       $rand = mt_rand(0,15000);
       $this->initGraph($title, $desc, $rand, $export);
-      if (count($datas) <= 0) {
+      
+      if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $this->endGraph(false, false);
          return false;
       }
-
+      
+      $datas = $raw_datas['datas'];
+      
       $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
@@ -403,20 +406,23 @@ JAVASCRIPT;
       global $LANG;
 
       if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
-
-      $datas = $raw_datas['datas'];
-
-      $labels2 = $raw_datas['labels2'];
+      
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
 
       $rand = mt_rand(0,15000);
       $this->initGraph($title, $desc, $rand, $export);
-      if (count($datas) <= 0) {
+      
+      if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $this->endGraph(false, false);
          return false;
       }
+      
+      $datas = $raw_datas['datas'];
+
+      $labels2 = $raw_datas['labels2'];
+      
       $this->initDatasMultiple($datas, $labels2, $unit);
 
       $nb_bar = count($datas);
@@ -547,19 +553,20 @@ JAVASCRIPT;
 
       if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
 
-      $datas = $raw_datas['datas'];
-
       $unit    = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $spline  = (isset($raw_datas['spline']) && $raw_datas['spline']) ? "true" : "false";
 
       $rand = mt_rand(0,15000);
       $this->initGraph($title, $desc, $rand, $export);
-      if (count($datas) <= 0) {
+      
+      if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $this->endGraph(false, false);
          return false;
       }
+      
+      $datas = $raw_datas['datas'];
 
       $this->initDatasSimple($datas, $unit);
 
@@ -727,20 +734,23 @@ JAVASCRIPT;
 
       if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
 
-      $datas = $raw_datas['datas'];
-
-      $labels2 = $raw_datas['labels2'];
       $unit    = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $spline  = (isset($raw_datas['spline']) && $raw_datas['spline']) ? "true" : "false";
 
       $rand = mt_rand(0,15000);
       $this->initGraph($title, $desc, $rand, $export);
-      if (count($datas) <= 0) {
+      
+      if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $this->endGraph(false, false);
          return false;
       }
+      
+      $datas = $raw_datas['datas'];
+      
+      $labels2 = $raw_datas['labels2'];
+      
       $this->initDatasMultiple($datas, $labels2, $unit);
 
       $always = '';
