@@ -728,6 +728,7 @@ $JS = <<<JAVASCRIPT
    var y = pv.Scale.linear(0, max).range(0, height_area-(n*14));
    var i = -1;
 
+   console.log(x.ticks());
 
    /* The root panel. */
    var vis{$rand} = new pv.Panel()
@@ -748,7 +749,7 @@ $JS = <<<JAVASCRIPT
 
    /* X-ticks. */
    vis{$rand}.add(pv.Rule)
-      .data(x.ticks())
+      .data(x.ticks(m))
       .left(function(d) Math.round(x(d)) - .5)
       .strokeStyle(function() {
          if (this.index == 0) return "black";
@@ -765,7 +766,7 @@ $JS = <<<JAVASCRIPT
 
    /* add mini black lines in front of labels tick */
    vis{$rand}.add(pv.Rule)
-      .data(datas)
+      .data(x.ticks(m))
       .left(function() x(this.index)-1)
       .bottom(-5)
       .strokeStyle("black")
@@ -795,7 +796,7 @@ $JS = <<<JAVASCRIPT
    if ('{$area}') {
       lines{$rand}.add(pv.Area)
          .visible(function() {
-            return m < (offset / 2);
+            return m < ((offset / 2) * ( m / 12));
          })
          .lineWidth(0)
          .bottom(1)
