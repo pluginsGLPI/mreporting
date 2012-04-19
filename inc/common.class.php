@@ -331,16 +331,15 @@ class PluginMreportingCommon {
       $graph->{'show'.$opt['gtype']}($datas, $title_func, $opt['f_name'], '', $opt['export']);
    }
    
-   function generateOdt($title,$desc,$datas) {
+   function generateOdt($title,$desc,$raw_datas) {
       global $LANG;
-      
+
       $config = array('PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp');
       
       //$odf = new odf("../templates/$template", $config);
       $odf = new odf("../templates/example.odt", $config);
 
       $reports = $this->getAllReports();
-
       foreach($reports as $classname => $report) {
          $titre = $report['title'];
       }
@@ -350,28 +349,41 @@ class PluginMreportingCommon {
       $title_func = $title;
 
       $odf->setVars('message', $title_func, true, 'UTF-8');
+      
       $path = GLPI_PLUGIN_DOC_DIR."/mreporting/".$desc.".png";
+      
       $odf->setImage('image', $path);
-      
-      $csvdata = $odf->setSegment('csvdata');
 
-      foreach ($datas as $label => $data) {
+      $datas = $raw_datas['datas'];
+     
+      $csvdata = $odf->setSegment('csvdata');
       
+      foreach ($datas as $label => $data) {
+         
+         $csvdata->setVars('TitreCategorie', $label, true, 'UTF-8');
+         
          if (is_array($data)) {
+            
+            $labels2 = $raw_datas['labels2'];
+            
             foreach ($data as $label1 => $data1) {
-               $csvdata->label(utf8_decode($label1));
-               $csvdata->data($data1);
-               $csvdata->merge();
+
+               if (isset($labels2[$label1])) $label1 = str_replace(",", "-", $labels2[$label1]);
+               if(is_null($label1)) {
+                  $label1 = $LANG['plugin_mreporting']["error"][2];
+               }
+               $csvdata->data1->label_1(utf8_decode($label1));
+               $csvdata->data1->data_1($data1);
+               $csvdata->data1->merge();
             }
          } else {
-            $csvdata->label(utf8_decode($label));
-            $csvdata->data($data);
+            $csvdata->data1->label_1(utf8_decode($label));
+            $csvdata->data1->data_1($data);
          }
          $csvdata->merge();
       }
-      
       $odf->mergeSegment($csvdata);
-
+      
       // We export the file
       $odf->exportAsAttachedFile();
    }

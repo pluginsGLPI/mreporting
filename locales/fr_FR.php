@@ -31,21 +31,22 @@ $LANG['plugin_mreporting']["name"] = "Plus de rapports";
 
 $LANG['plugin_mreporting']["error"][0] = "Aucun rapport disponible !";
 $LANG['plugin_mreporting']["error"][1] = "Aucune données pour cette plage de date !";
-
+$LANG['plugin_mreporting']["error"][2] = "Non défini";
 
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
-$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Nombre de ticket par entités (Barres)";
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['title'] = "Nombre de ticket par entités (camembert)";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['title'] = "Nombre de ticket par catégories et entités";
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedAndClosed']['title'] = "Nombre de tickets ouverts et clôturés";
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['title'] = "Nombre de tickets ouverts par statuts";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['title'] = "Nombre de tickets ouverts par catégories et par types";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['title'] = "Nombre de tickets clôturés par catégories et par types";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByService']['title'] = "Nombre de tickets ouverts et clôturés par services";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['title'] = "Nombre de tickets ouverts par catégories et par statuts";
-$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Evolution du nombre de ticket sur la période (Aire)";
-$LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['title'] = "Evolution du nombre de ticket sur la période (Lignes)";
-$LANG['plugin_mreporting']['Helpdesk']['reportGlineNbTicket']['title'] = "Evolution du nombre de ticket sur la période (par Statut)";
-$LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['title'] = "Evolution du nombre de ticket sur la période (par Statut)";
+$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Barres - Nombre de ticket par entités";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['title'] = "Camembert - Nombre de ticket par entités";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['title'] = "Barres groupées - Nombre de ticket par catégories et entités";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedAndClosed']['title'] = "Camembert - Nombre de tickets ouverts et clôturés";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['title'] = "Camembert - Nombre de tickets ouverts par statuts";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTopTenAuthor']['title'] = "Camembert - Top 10 des demandeurs";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['title'] = "Barres groupées - Nombre de tickets ouverts par catégories et par types";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['title'] = "Barres groupées - Nombre de tickets clôturés par catégories et par types";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByService']['title'] = "Barres groupées - Nombre de tickets ouverts et clôturés par services";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['title'] = "Barres groupées - Nombre de tickets ouverts par catégories et par statuts";
+$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Aire - Evolution du nombre de ticket sur la période";
+$LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['title'] = "Lignes - Evolution du nombre de ticket sur la période";
+$LANG['plugin_mreporting']['Helpdesk']['reportGlineNbTicket']['title'] = "Lignes - Evolution du nombre de ticket sur la période (par Statut)";
+$LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['title'] = "Aire - Evolution du nombre de ticket sur la période (par Statut)";
 
 ?>

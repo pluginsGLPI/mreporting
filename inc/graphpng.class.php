@@ -32,6 +32,10 @@ require_once "../lib/imagesmootharc/imageSmoothArc.php";
 class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function initGraph($title, $desc = '', $rand='', $export = false) {
+      
+      if ($export=="odt") {
+         $this->width = $this->width - 100;
+      }
       if (!$export) {
 
          $width = $this->width + 100;
@@ -81,7 +85,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
    }
 
-   function generateImage($image,$type="png",$desc,$title,$datas='null') {
+   function generateImage($image,$type="png",$desc='',$title,$datas='null') {
 
       ob_start();
 
@@ -417,7 +421,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       imageline($image, 250, 40, 250, $height-20, $black);
       imageline($image, 251, 40, 251, $height-20, $black);
 
-      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }
@@ -543,7 +547,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $index++;
       }
       
-      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }
@@ -696,7 +700,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       //generate image
-      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }
@@ -826,7 +830,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       imageline($image, 20, $height-30, $width - 20, $height-30, $black);
 
       //generate image
-      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }
@@ -985,7 +989,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       //generate image
-      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }

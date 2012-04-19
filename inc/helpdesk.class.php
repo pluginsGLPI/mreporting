@@ -200,6 +200,34 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
    
+   function reportPieTopTenAuthor() {
+      global $DB, $LANG;
+      
+      $datas = array();
+      $query = "
+         SELECT COUNT(glpi_tickets.id) as count, glpi_tickets_users.users_id as users_id
+         FROM glpi_tickets
+         LEFT JOIN glpi_tickets_users ON (glpi_tickets_users.tickets_id = glpi_tickets.id AND glpi_tickets_users.type =1)
+         WHERE ".$this->sql_date."
+         AND glpi_tickets.entities_id IN (".$this->where_entities.")
+         GROUP BY glpi_tickets_users.users_id
+         LIMIT 10
+      ";
+      $result = $DB->query($query);
+         
+      while ($ticket = $DB->fetch_assoc($result)) {
+         if($ticket['users_id']==0) {
+            $label = $LANG['plugin_mreporting']["error"][2];
+         } else {
+            $label = getUserName($ticket['users_id']);
+         }
+         $datas['datas'][$label] = $ticket['count'];
+      }
+
+      return $datas;
+   }
+      
+
    function reportHgbarOpenTicketNumberByCategoryAndByType() {
       return $this->reportHgbarTicketNumberByCategoryAndByType('open');
    }
