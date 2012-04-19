@@ -369,7 +369,7 @@ class PluginMreportingCommon {
       $csvdata = $odf->setSegment('csvdata');
 
       foreach ($datas as $label => $data) {
-         $csvdata->label($label);
+         $csvdata->label(utf8_decode($label));
          $csvdata->data($data);
          $csvdata->merge();
       }
