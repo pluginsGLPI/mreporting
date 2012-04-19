@@ -94,8 +94,9 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
          //subtitle
          $i = 0;
-         foreach($cols as $label => $value) {
-            $label = str_replace(",", "-", $labels2[$i]);
+         foreach($cols as $value) {
+            $label = "";
+            if (isset($labels2[$i])) $label = str_replace(",", "-", $labels2[$i]);
             $out.= $label.";";
             $i++;
          }
