@@ -542,6 +542,7 @@ $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
    var height_area = 350;
    var offset = 0;
+   var step = Math.round(n / 20);
 
    var x = pv.Scale.linear(0, n-1).range(5, width_area);
    var y = pv.Scale.linear(0, max).range(0, height_area);
@@ -575,9 +576,24 @@ $JS = <<<JAVASCRIPT
          return (i == this.index) ? "black" : "#eee";
       })
       .height(height_area - 30)
-      .bottom(-5)
       .anchor("bottom").add(pv.Label)
+         .visible(function() {
+            if ((this.index / step) == Math.round(this.index / step)) return true;
+            else return false;
+         })
          .text(function() { return labels[this.index]; });
+
+   /* add mini black lines in front of labels tick */
+   vis{$rand}.add(pv.Rule)
+      .data(datas)
+      .left(function() x(this.index)-1)
+      .bottom(-5)
+      .strokeStyle("black")
+      .height(5)
+      .visible(function() {
+         if ((this.index / step) == Math.round(this.index / step)) return true;
+         else return false;
+      });
 
    /* The line with an area. */
    var line{$rand} = vis{$rand}.add(pv.Line)
@@ -706,6 +722,7 @@ $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
    var height_area = 350;
    var offset = 0;
+   var step = Math.round(m / 20);
 
    var x = pv.Scale.linear(0, m-1).range(5, width_area);
    var y = pv.Scale.linear(0, max).range(0, height_area-(n*14));
@@ -740,7 +757,23 @@ $JS = <<<JAVASCRIPT
       .height(height_area - (n*14))
       .bottom(-5)
      .anchor("bottom").add(pv.Label)
-         .text(function(d) labels2[this.index]);
+         .text(function(d) labels2[this.index])
+         .visible(function() {
+            if ((this.index / step) == Math.round(this.index / step)) return true;
+            else return false;
+         });
+
+   /* add mini black lines in front of labels tick */
+   vis{$rand}.add(pv.Rule)
+      .data(datas)
+      .left(function() x(this.index)-1)
+      .bottom(-5)
+      .strokeStyle("black")
+      .height(5)
+      .visible(function() {
+         if ((this.index / step) == Math.round(this.index / step)) return true;
+         else return false;
+      });
 
    /* A panel for each data series. */
    var panel{$rand} = vis{$rand}.add(pv.Panel)
