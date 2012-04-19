@@ -41,17 +41,19 @@ function plugin_init_mreporting() {
                                                                         'changeProfile');
 
       /* Reports Link */                              
-      if (!isset($_SESSION['glpi_plugin_mreporting_profile'])
-         || $_SESSION['glpi_plugin_mreporting_profile']['reports'] != '1'
+      if (!Session::haveRight('config', 'w')
+         || !isset($_SESSION['glpi_plugin_mreporting_profile'])
+         || $_SESSION['glpi_plugin_mreporting_profile']['reports'] != 'w'
       ) $menu_entry  = false;
       else $menu_entry = "front/central.php";
 
       $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
-      
+      $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
+         
       /* Configuration Link */
       if (!Session::haveRight('config', 'w')
          || !isset($_SESSION['glpi_plugin_mreporting_profile'])
-         || $_SESSION['glpi_plugin_mreporting_profile']['config'] != '1') {
+         || $_SESSION['glpi_plugin_mreporting_profile']['config'] != 'r') {
          $config_entry = false;  
       }
       else {
@@ -73,7 +75,7 @@ function plugin_init_mreporting() {
       }*/
       
       if($_SESSION['glpi_use_mode'] = Session::DEBUG_MODE) {
-         define('DEBUG_MREPORTING', false);
+         define('DEBUG_MREPORTING', true);
       } else {
          define('DEBUG_MREPORTING', false);
       }
