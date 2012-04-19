@@ -81,7 +81,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
    function showHgbar($raw_datas, $title, $desc = "", $show_label = 'none', $export = false) {
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
-      $labels2 = $raw_datas['labels2'];
+      $labels2 = array_values($raw_datas['labels2']);
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
 
       $rand = mt_rand(0,15000);
@@ -93,9 +93,11 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          $out.= $label2."\r\n";
 
          //subtitle
+         $i = 0;
          foreach($cols as $label => $value) {
-            $label = str_replace(",", "-", $label);
+            $label = str_replace(",", "-", $labels2[$i]);
             $out.= $label.";";
+            $i++;
          }
          $out = substr($out, 0, -1)."\r\n";
 

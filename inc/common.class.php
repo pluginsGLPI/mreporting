@@ -319,6 +319,7 @@ class PluginMreportingCommon {
             break;
          case 'csv':
             $graph = new PluginMreportingGraphcsv();
+            $opt['export'] = 'csv';
             break;
          case 'odt':
             $graph = new PluginMreportingGraphpng();
