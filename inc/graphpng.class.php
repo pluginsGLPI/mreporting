@@ -447,7 +447,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $nb_bar = count($datas);
       $width = $this->width;
-      $height = 330;
+      $height = 370;
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
@@ -481,9 +481,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //pie
       $index = 0;
-      $x = $width / 2 - 50;
+      $x = $width / 2 - 70;
       $y = $height / 2;
-      $radius = $height / 1.3;
+      $radius = $height / 1.5;
       $start_angle = 0;
       foreach ($datas as $label => $data) {
          $angle = $start_angle + (360 * $data) / $max;

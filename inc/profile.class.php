@@ -119,7 +119,6 @@ class PluginMreportingProfile extends CommonDBTM {
    }
    
    static function changeProfile() {
-      echo "test";
       $prof = new self();
       if ($prof->getFromDBByProfile($_SESSION['glpiactiveprofile']['id'])) {
          $_SESSION["glpi_plugin_mreporting_profile"]=$prof->fields;
