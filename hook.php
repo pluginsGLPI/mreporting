@@ -35,6 +35,7 @@ function plugin_mreporting_install() {
       `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
       `profiles_id` VARCHAR(45) NOT NULL,
       `reports` CHAR(1),
+      `config` CHAR(1),
    PRIMARY KEY (`id`)
    )
    ENGINE = InnoDB;";
