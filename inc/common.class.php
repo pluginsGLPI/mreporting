@@ -335,9 +335,15 @@ class PluginMreportingCommon {
       global $LANG;
 
       $config = array('PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp');
+      $template = "../templates/label.odt";
       
-      //$odf = new odf("../templates/$template", $config);
-      $odf = new odf("../templates/example.odt", $config);
+      $datas = $raw_datas['datas'];
+      foreach ($datas as $label => $data) {
+         if (is_array($data)) {
+            $template = "../templates/label2.odt";
+         }
+      }
+      $odf = new odf($template, $config);
 
       $reports = $this->getAllReports();
       foreach($reports as $classname => $report) {
@@ -354,15 +360,12 @@ class PluginMreportingCommon {
       
       $odf->setImage('image', $path);
 
-      $datas = $raw_datas['datas'];
-     
       $csvdata = $odf->setSegment('csvdata');
       
       foreach ($datas as $label => $data) {
          
-         $csvdata->setVars('TitreCategorie', $label, true, 'UTF-8');
-         
          if (is_array($data)) {
+            $csvdata->setVars('TitreCategorie', $label, true, 'UTF-8');
             
             $labels2 = $raw_datas['labels2'];
             
