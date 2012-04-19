@@ -1,7 +1,33 @@
 <?php
+/*
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
+ -------------------------------------------------------------------------
+ Mreporting plugin for GLPI
+ Copyright (C) 2003-2011 by the mreporting Development Team.
 
+ https://forge.indepnet.net/projects/mreporting
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of mreporting.
+
+ mreporting is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ mreporting is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with mreporting. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
+ 
 require_once "../lib/imagesmootharc/imageSmoothArc.php";
-
 
 class PluginMreportingGraphpng extends PluginMreportingGraph {
 
@@ -26,7 +52,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          PluginMreportingMisc::showSelector($_REQUEST['date1'], $_REQUEST['date2']);
          echo "</div>";
       }
-      echo "<div class='graph' id='graph_content'>";
+      if ($export!="odt") {
+         echo "<div class='graph' id='graph_content'>";
+      }
    }
 
    function endGraph($rand='', $export = false) {
@@ -37,7 +65,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (!$export) {
          echo "<div class='right'>";
          echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
-         echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a>";
+         echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
+         echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
          echo "</div>";
          echo "</div></div>";
       }
@@ -46,17 +75,31 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       unset($_SESSION['mreporting']['colors']);
    }
 
-   function showImage($contents)  {
-      echo "<img src='data:image/png;base64,".base64_encode($contents)."' />";
+   function showImage($contents,$type="png")  {
+      if ($type!="odt") {
+         echo "<img src='data:image/png;base64,".base64_encode($contents)."' />";
+      }
    }
 
-   function generateImage($image) {
-      ob_start();
-      imagepng($image);
-      $contents =  ob_get_contents();
-      ob_end_clean();
+   function generateImage($image,$type="png",$desc,$title,$datas='null') {
 
-      return $contents;
+      ob_start();
+
+      if ($type=="odt") {
+         $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$desc.".png";
+         imagepng($image,$path);
+         
+         $common = new PluginMreportingCommon;
+         $common->generateOdt($title,$desc,$datas);
+         return true;
+      } else {
+      
+         imagepng($image);
+         $contents =  ob_get_contents();
+         ob_end_clean();
+         return $contents;
+      }
+      
    }
 
    function getColors($index = 20) {
@@ -374,8 +417,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       imageline($image, 250, 40, 250, $height-20, $black);
       imageline($image, 251, 40, 251, $height-20, $black);
 
-      $contents = $this->generateImage($image);
-      $this->showImage($contents);
+      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }
 
@@ -499,9 +542,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          $index++;
       }
-
-      $contents = $this->generateImage($image);
-      $this->showImage($contents);
+      
+      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }
 
@@ -653,8 +696,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       //generate image
-      $contents = $this->generateImage($image);
-      $this->showImage($contents);
+      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }
 
@@ -783,8 +826,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       imageline($image, 20, $height-30, $width - 20, $height-30, $black);
 
       //generate image
-      $contents = $this->generateImage($image);
-      $this->showImage($contents);
+      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }
 
@@ -942,9 +985,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       //generate image
-      $contents = $this->generateImage($image);
-      $this->showImage($contents);
+      $contents = $this->generateImage($image,$export,$desc='',$title,$datas);
+      $this->showImage($contents,$export);
       $this->endGraph($rand, $export);
    }
 
 }// End Class
+?>

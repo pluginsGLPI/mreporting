@@ -1,4 +1,32 @@
 <?php
+/*
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
+ -------------------------------------------------------------------------
+ Mreporting plugin for GLPI
+ Copyright (C) 2003-2011 by the mreporting Development Team.
+
+ https://forge.indepnet.net/projects/mreporting
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of mreporting.
+
+ mreporting is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ mreporting is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with mreporting. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
+ 
 class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    private $sql_date, $filters, $where_entities;
 
@@ -61,19 +89,19 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       //get categories used in this period
       $query_cat = "SELECT
-         DISTINCT(glpi_tickets.ticketcategories_id) as ticketcategories_id,
-         glpi_ticketcategories.completename as category
+         DISTINCT(glpi_tickets.itilcategories_id) as itilcategories_id,
+         glpi_itilcategories.completename as category
       FROM glpi_tickets
-      LEFT JOIN glpi_ticketcategories
-         ON glpi_tickets.ticketcategories_id = glpi_ticketcategories.id
+      LEFT JOIN glpi_itilcategories
+         ON glpi_tickets.itilcategories_id = glpi_itilcategories.id
       WHERE ".$this->sql_date."
       AND glpi_tickets.entities_id IN (".$this->where_entities.")
-      ORDER BY glpi_ticketcategories.id ASC";
+      ORDER BY glpi_itilcategories.id ASC";
       $res_cat = $DB->query($query_cat);
       $categories = array();
       while ($data = $DB->fetch_assoc($res_cat)) {
          if (empty($data['category'])) $data['category'] = $LANG['job'][32];
-         $categories[$data['category']] = $data['ticketcategories_id'];
+         $categories[$data['category']] = $data['itilcategories_id'];
       }
 
 
@@ -88,15 +116,15 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $query = "SELECT
          COUNT(glpi_tickets.id) as nb,
          glpi_entities.name as entity,
-         glpi_tickets.ticketcategories_id as cat_id
+         glpi_tickets.itilcategories_id as cat_id
       FROM glpi_tickets
       LEFT JOIN glpi_entities
          ON glpi_tickets.entities_id = glpi_entities.id
-      WHERE glpi_tickets.ticketcategories_id IN ($cat_str)
+      WHERE glpi_tickets.itilcategories_id IN ($cat_str)
       AND glpi_tickets.entities_id IN (".$this->where_entities.")
       AND ".$this->sql_date."
-      GROUP BY glpi_entities.name, glpi_tickets.ticketcategories_id
-      ORDER BY glpi_entities.name ASC, glpi_tickets.ticketcategories_id ASC";
+      GROUP BY glpi_entities.name, glpi_tickets.itilcategories_id
+      ORDER BY glpi_entities.name ASC, glpi_tickets.itilcategories_id ASC";
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
          if (empty($data['entity'])) $data['entity'] = $LANG['entity'][2];
@@ -145,7 +173,33 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       return array('datas' => $datas);
    }
+   
+   function reportPieTicketOpenedbyStatus() {
+      global $DB;
+      
+      $datas = array();
+      foreach($this->filters['open']['status'] as $key => $val) {
 
+            $query = "
+               SELECT COUNT(glpi_tickets.id) as count
+               FROM glpi_tickets
+               WHERE ".$this->sql_date."
+               AND glpi_tickets.is_deleted = '0'
+               AND glpi_tickets.entities_id IN (".$this->where_entities.")
+               AND glpi_tickets.status ='".$key."'
+            ";
+            $result = $DB->query($query);
+            
+            while ($ticket = $DB->fetch_assoc($result)) {
+
+               $datas['datas'][$val] = $ticket['count'];
+            }
+      }
+      
+      
+      return $datas;
+   }
+   
    function reportHgbarOpenTicketNumberByCategoryAndByType() {
       return $this->reportHgbarTicketNumberByCategoryAndByType('open');
    }
@@ -163,18 +217,18 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $query = "
          SELECT
-            glpi_ticketcategories.id as category_id,
-            glpi_ticketcategories.completename as category_name,
+            glpi_itilcategories.id as category_id,
+            glpi_itilcategories.completename as category_name,
             glpi_tickets.type,
             COUNT(glpi_tickets.id) as count
          FROM glpi_tickets
-         LEFT JOIN glpi_ticketcategories
-            ON glpi_ticketcategories.id = glpi_tickets.ticketcategories_id
+         LEFT JOIN glpi_itilcategories
+            ON glpi_itilcategories.id = glpi_tickets.itilcategories_id
          WHERE ".$this->sql_date."
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.status IN('".implode("', '", array_keys($this->filters[$filter]['status']))."')
-         GROUP BY glpi_ticketcategories.id, glpi_tickets.type
-         ORDER BY glpi_ticketcategories.name
+         GROUP BY glpi_itilcategories.id, glpi_tickets.type
+         ORDER BY glpi_itilcategories.name
       ";
       $result = $DB->query($query);
 
@@ -255,16 +309,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $query = "
          SELECT
             glpi_tickets.status,
-            glpi_ticketcategories.completename as category_name,
+            glpi_itilcategories.completename as category_name,
             COUNT(glpi_tickets.id) as count
          FROM glpi_tickets
-         LEFT JOIN glpi_ticketcategories
-            ON glpi_ticketcategories.id = glpi_tickets.ticketcategories_id
+         LEFT JOIN glpi_itilcategories
+            ON glpi_itilcategories.id = glpi_tickets.itilcategories_id
          WHERE ".$this->sql_date."
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.status IN('".implode("', '",$status_keys)."')
-         GROUP BY glpi_ticketcategories.id, glpi_tickets.status
-         ORDER BY glpi_ticketcategories.name
+         GROUP BY glpi_itilcategories.id, glpi_tickets.status
+         ORDER BY glpi_itilcategories.name
       ";
       $result = $DB->query($query);
 
