@@ -764,8 +764,8 @@ $JS = <<<JAVASCRIPT
       .width(width_area)
       .height(height_area)
       .bottom(20)
-      .left(20)
-      .right(10)
+      .left(30)
+      .right(15)
       .top(5);
 
    /* Y-ticks. */
