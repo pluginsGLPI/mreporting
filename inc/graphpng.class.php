@@ -944,7 +944,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
             imageline($image, $x2, $y2, $x2, $height-27, $grey);
-            if (($index3 / $step) == round($index3 / $step)) {
+            if ($step!=0 && ($index3 / $step) == round($index3 / $step)) {
                imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[$index1]);
             }
             
@@ -964,7 +964,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       foreach ($labels2 as $label) {
          $x = $index * $width_line + 20;
 
-         if (($index / $step) == round($index / $step)) {
+         if ($step!=0 && ($index / $step) == round($index / $step)) {
             imagettftext($image, $fontsize, $fontangle, $x , $height-10, $black,
                             $font, $label);
          }
