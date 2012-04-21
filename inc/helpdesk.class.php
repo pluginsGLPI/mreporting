@@ -32,7 +32,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function __construct()  {
       global $LANG;
-      $this->sql_date = PluginMreportingMisc::getSQLDate();
+      
       $this->filters = array(
          'open' => array(
             'label' => $LANG['job'][14],
@@ -57,7 +57,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHbarTicketNumberByEntity() {
       global $DB, $LANG;
       $datas = array();
-
+      
+      $delay = 365;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      
       $query = "SELECT
          COUNT(glpi_tickets.id) as nb,
          glpi_entities.name as name
@@ -86,8 +89,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB, $LANG;
       $datas = array();
       $tmp_datas = array();
-
-
+      
+      $delay = 365;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      
       //get categories used in this period
       $query_cat = "SELECT
          DISTINCT(glpi_tickets.itilcategories_id) as itilcategories_id,
@@ -159,7 +164,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportPieTicketOpenedAndClosed() {
       global $DB;
-
+      
+      $delay = 30;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      
       $datas = array();
       foreach($this->filters as $filter) {
 
@@ -174,13 +182,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $result = $DB->query($query);
          $datas[$filter['label']] = $DB->result($result, 0, 0);
       }
-
+      
       return array('datas' => $datas);
    }
    
    function reportPieTicketOpenedbyStatus() {
       global $DB;
       
+      $delay = 365;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+
       $datas = array();
       foreach($this->filters['open']['status'] as $key => $val) {
 
@@ -200,6 +211,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             }
       }
       
+      $datas['delay'] = $delay;
       
       return $datas;
    }
@@ -207,12 +219,17 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportPieTopTenAuthor() {
       global $DB, $LANG;
       
+      $delay = 30;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      $this->sql_closedate = PluginMreportingMisc::getSQLDate("glpi_tickets.closedate",$delay);
+      
       $datas = array();
       $query = "
          SELECT COUNT(glpi_tickets.id) as count, glpi_tickets_users.users_id as users_id
          FROM glpi_tickets
          LEFT JOIN glpi_tickets_users ON (glpi_tickets_users.tickets_id = glpi_tickets.id AND glpi_tickets_users.type =1)
          WHERE ".$this->sql_date."
+         AND ".$this->sql_closedate."
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_tickets_users.users_id
@@ -229,6 +246,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          }
          $datas['datas'][$label] = $ticket['count'];
       }
+      
+      $datas['delay'] = $delay;
 
       return $datas;
    }
@@ -245,7 +264,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    private function reportHgbarTicketNumberByCategoryAndByType($filter) {
       global $DB, $LANG;
       $datas = array();
-
+      
+      $delay = 30;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      
       $datas['labels2']['type_0'] = $LANG['job'][32];
       $datas['labels2']['type_1'] = $LANG['job'][1];
       $datas['labels2']['type_2'] = $LANG['job'][2];
@@ -283,7 +305,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHgbarTicketNumberByService() {
       global $DB, $LANG;
       $datas = array();
-
+      
+      $delay = 30;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      
       foreach($this->filters as $class=>$filter) {
 
          $datas['labels2'][$class] = $filter['label'];
@@ -334,7 +359,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB, $LANG;
       $datas = array();
 
-
+      $delay = 30;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      
       $status = array_merge(
          $this->filters['open']['status'],
          $this->filters['close']['status']
@@ -374,7 +401,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportAreaNbTicket() {
       global $DB, $LANG;
       $datas = array();
-
+      
+      $delay = 365;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      
       $query = "SELECT
          DISTINCT DATE_FORMAT(date, '%y%m') as month,
          DATE_FORMAT(date, '%b%y') as month_l,
@@ -405,7 +435,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportGlineNbTicket() {
       global $DB, $LANG;
       $datas = array();
-
+      
+      $delay = 365;
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      
       $query = "SELECT DISTINCT
          DATE_FORMAT(date, '%y%m') as month,
          DATE_FORMAT(date, '%b%y') as month_l,

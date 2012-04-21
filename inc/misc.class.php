@@ -75,9 +75,12 @@ class PluginMreportingMisc {
    }
 
 
-   static function getSQLDate($field = "glpi_tickets.date") {
-      if (!isset($_REQUEST['date1'])) $_REQUEST['date1'] = strftime("%Y-%m-%d", time() - (365 * 24 * 60 * 60));
-      if (!isset($_REQUEST['date2'])) $_REQUEST['date2'] = strftime("%Y-%m-%d");
+   static function getSQLDate($field = "glpi_tickets.date", $delay=365) {
+
+      if (!isset($_REQUEST['date1'])) 
+         $_REQUEST['date1'] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+      if (!isset($_REQUEST['date2'])) 
+         $_REQUEST['date2'] = strftime("%Y-%m-%d");
 
       $date_array1=explode("-",$_REQUEST['date1']);
       $time1=mktime(0,0,0,$date_array1[1],$date_array1[2],$date_array1[0]);
@@ -94,7 +97,7 @@ class PluginMreportingMisc {
       $begin=date("Y-m-d H:i:s",$time1);
       $end=date("Y-m-d H:i:s",$time2);
 
-      return "$field >= '$begin' AND $field < '$end'";
+      return "($field >= '$begin' AND $field <= ADDDATE('$end' , INTERVAL 1 DAY) )";
    }
 
    static function exportSvgToPng($svgin) {
