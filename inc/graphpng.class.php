@@ -31,7 +31,7 @@ require_once "../lib/imagesmootharc/imageSmoothArc.php";
 
 class PluginMreportingGraphpng extends PluginMreportingGraph {
 
-   function initGraph($title, $desc = '', $rand='', $export = false) {
+   function initGraph($title, $desc = '', $rand='', $export = false, $delay = 365) {
       
       if ($export=="odt") {
          $this->width = $this->width - 100;
@@ -40,8 +40,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          $width = $this->width + 100;
 
-         if (!isset($_REQUEST['date1'])) $_REQUEST['date1'] = strftime("%Y-01-01");
-         if (!isset($_REQUEST['date2'])) $_REQUEST['date2'] = strftime("%Y-12-31");
+         if (!isset($_REQUEST['date1'])) 
+            $_REQUEST['date1'] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+         if (!isset($_REQUEST['date2'])) 
+            $_REQUEST['date2'] = strftime("%Y-%m-%d");
 
          $backtrace = debug_backtrace();
          $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
@@ -321,7 +323,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) return false;
 
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
       $max = max($values);
@@ -329,7 +332,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($max == 1 && $unit == '%') $max = 100;
 
       $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $this->initGraph($title, $desc, $rand, $export, $delay);
 
       $nb_bar = count($datas);
       $width = $this->width;
@@ -432,7 +435,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       $values = array_values($datas);
       $labels = array_keys($datas);
       $max = 0;
@@ -443,7 +446,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($max == 1 && $unit == '%') $max = 100;
 
       $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $this->initGraph($title, $desc, $rand, $export, $delay);
 
       $nb_bar = count($datas);
       $width = $this->width;
@@ -559,7 +562,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) return false;
       $labels2 = $raw_datas['labels2'];
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       $values = array_values($datas);
       $labels = array_keys($datas);
 
@@ -572,7 +575,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($max == 1 && $unit == '%') $max = 100;
 
       $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $this->initGraph($title, $desc, $rand, $export, $delay);
 
       $nb_bar = count($datas) * count($labels2);
       $width = $this->width;
@@ -711,7 +714,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) return false;
 
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
       $max = max($values);
@@ -719,7 +723,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($max == 1 && $unit == '%') $max = 100;
 
       $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $this->initGraph($title, $desc, $rand, $export, $delay);
 
       $nb = count($datas);
       $width = $this->width;
@@ -840,7 +844,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) return false;
       $labels2 = $raw_datas['labels2'];
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       $values = array_values($datas);
       $labels = array_keys($datas);
 
@@ -853,7 +857,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($max == 1 && $unit == '%') $max = 100;
 
       $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $this->initGraph($title, $desc, $rand, $export, $delay);
 
       $nb = count($labels2);
       $width = $this->width;

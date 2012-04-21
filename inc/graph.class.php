@@ -31,16 +31,18 @@ class PluginMreportingGraph {
    const DEBUG_GRAPH = false;
    protected $width = 700;
 
-   function initGraph($title, $desc = '', $rand='', $export = false) {
+   function initGraph($title, $desc = '', $rand='', $export = false, $delay = 365) {
 
 
       if (!$export) {
 
          $width = $this->width + 100;
 
-         if (!isset($_REQUEST['date1'])) $_REQUEST['date1'] = strftime("%Y-01-01");
-         if (!isset($_REQUEST['date2'])) $_REQUEST['date2'] = strftime("%Y-12-31");
-
+         if (!isset($_REQUEST['date1'])) 
+            $_REQUEST['date1'] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+         if (!isset($_REQUEST['date2'])) 
+            $_REQUEST['date2'] = strftime("%Y-%m-%d");
+      
          $backtrace = debug_backtrace();
          $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
 
@@ -161,8 +163,9 @@ class PluginMreportingGraph {
       if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
 
       $rand = mt_rand(0,15000);
-
-      $this->initGraph($title, $desc, $rand, $export);
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
+      $this->initGraph($title, $desc, $rand, $export, $delay);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
@@ -286,9 +289,10 @@ JAVASCRIPT;
       if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
 
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
       $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $this->initGraph($title, $desc, $rand, $export, $delay);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
@@ -408,9 +412,10 @@ JAVASCRIPT;
       if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
       
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
       $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $this->initGraph($title, $desc, $rand, $export, $delay);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
@@ -555,9 +560,10 @@ JAVASCRIPT;
 
       $unit    = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $spline  = (isset($raw_datas['spline']) && $raw_datas['spline']) ? "true" : "false";
-
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
       $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $this->initGraph($title, $desc, $rand, $export, $delay);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
@@ -736,9 +742,10 @@ JAVASCRIPT;
 
       $unit    = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $spline  = (isset($raw_datas['spline']) && $raw_datas['spline']) ? "true" : "false";
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
 
       $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $this->initGraph($title, $desc, $rand, $export, $delay);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
