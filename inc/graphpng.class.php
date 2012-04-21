@@ -804,7 +804,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
          //display y axis and labels
-         if (($index / $step) == round($index / $step)) {
+         if ($step!=0 && ($index / $step) == round($index / $step)) {
             imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[0]);
             imageline($image, $x2, $y2, $x2, $height-27, $grey);
 
