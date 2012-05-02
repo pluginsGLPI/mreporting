@@ -30,7 +30,7 @@
 class PluginMreportingGraphcsv extends PluginMreportingGraph {
    const DEBUG_CSV = false;
 
-   function initGraph($title, $desc = '', $rand='', $export = false) {
+   function initGraph($title, $desc = '', $rand='', $export = false, $delay = 365) {
       if (!self::DEBUG_CSV) {
          header ("Content-type: application/csv");
          header ("Content-Disposition: inline; filename=export.csv");
