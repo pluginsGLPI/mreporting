@@ -34,11 +34,7 @@ Html::header_nocache();
 
 $common = new PluginMreportingCommon();
 
-if (!isset($_POST['plugin_mreporting_tab'])) {
-   $_POST['plugin_mreporting_tab']=$_SESSION['glpi_plugin_mreporting_tab'];
-}
-
-switch ($_POST['plugin_mreporting_tab']) {
+switch ($_POST['classname']) {
 	default :
       $common->showCentral($_REQUEST);
 		break;

@@ -47,6 +47,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = false;
@@ -101,6 +102,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = false;

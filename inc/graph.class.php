@@ -88,9 +88,9 @@ class PluginMreportingGraph {
       if (!$export) {
          if ($_REQUEST['f_name'] != "test") {
             echo "<div class='graph_bottom'>";
-            /*echo "<span style='float:left'>";
+            echo "<span style='float:left'>";
             PluginMreportingMisc::showNavigation();
-            echo "</span>";*/
+            echo "</span>";
             echo "<span style='float:right'><b>".$LANG['buttons'][31]."</b> : ";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
@@ -173,6 +173,7 @@ class PluginMreportingGraph {
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = false;
@@ -320,6 +321,7 @@ JAVASCRIPT;
       $datas       = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = false;
@@ -463,6 +465,7 @@ JAVASCRIPT;
       $datas       = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = false;
@@ -628,6 +631,7 @@ JAVASCRIPT;
       $datas       = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = true;
@@ -831,6 +835,7 @@ JAVASCRIPT;
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = true;
