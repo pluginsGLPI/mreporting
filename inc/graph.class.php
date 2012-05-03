@@ -35,7 +35,7 @@ class PluginMreportingGraph {
    function initGraph($options) {
       
       $width = $this->width + 100;
-      
+      $rand = $options['rand'];
       echo "<div class='center'><div id='fig' style='width:{$width}px'>";
       echo "<div class='graph_title'>";
       $backtrace = debug_backtrace();
@@ -44,9 +44,12 @@ class PluginMreportingGraph {
       echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
       echo $options['title'];
       echo "</div>";
-      if (!empty($options['desc'])) echo "<div class='graph_desc'>".$options['desc']."</div>";
-      
-      $rand = $options['rand'];
+      if (!empty($options['desc'])) {
+         echo "<div class='graph_desc'>".$options['desc']."</div>";
+      } else if (isset($_REQUEST['date1'.$rand]) && isset($_REQUEST['date1'.$rand])) {
+         echo "<div class='graph_desc'>".Html::convdate($_REQUEST['date1'.$rand])." / ".
+            Html::convdate($_REQUEST['date2'.$rand])."</div>";
+      }
       
       if (!isset($_REQUEST['date1'.$rand])) 
             $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));

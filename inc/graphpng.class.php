@@ -45,7 +45,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          if (!isset($_REQUEST['date1'.$rand])) 
             $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
-         if (!isset($_REQUEST['date2'])) 
+         if (!isset($_REQUEST['date2'.$rand])) 
             $_REQUEST['date2'.$rand] = strftime("%Y-%m-%d");
 
          $backtrace = debug_backtrace();
@@ -56,7 +56,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
          echo $options['title'];
          echo "</div>";
-         if (!empty($options['desc'])) echo "<div class='graph_desc'>".$options['desc']."</div>";
+         if (!empty($options['desc'])) {
+            echo "<div class='graph_desc'>".$options['desc']."</div>";
+         } else if (isset($_REQUEST['date1'.$rand]) && isset($_REQUEST['date1'.$rand])) {
+            echo "<div class='graph_desc'>".Html::convdate($_REQUEST['date1'.$rand])." / ".
+               Html::convdate($_REQUEST['date2'.$rand])."</div>";
+         }
          echo "<div class='graph_navigation'>";
          PluginMreportingMisc::showSelector($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand],$rand);
          echo "</div>";
@@ -67,6 +72,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
    function endGraph($opt, $export = false) {
+      global $LANG;
       
       if (!$export) {
       
@@ -80,12 +86,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          echo "</div>";
          
          if ($_REQUEST['f_name'] != "test") {
-            echo "<div class='right'>";
+            echo "<div class='graph_bottom'>";
+            echo "<span style='float:left'>";
+            PluginMreportingMisc::showNavigation();
+            echo "</span>";
+            echo "<span style='float:right'><b>".$LANG['buttons'][31]."</b> : ";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
-            echo "</div>";
+            echo "</span>";
          }
+         echo "<div style='clear:both;'></div>";
+         echo "</div>";
          echo "</div></div>";
       }
 
@@ -376,16 +388,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       } else {
          $datas = array();
       }
-      if (count($datas) <= 0) return false;
-
+      
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
-      
-      $values = array_values($datas);
-      $labels = array_keys($datas);
-      $max = max($values);
-      if ($max <= 1) $max = 1;
-      if ($max == 1 && $unit == '%') $max = 100;
       
       $rand = $opt['rand'];
       $options = array("title" => $title,
@@ -395,7 +400,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "delay" => $delay);
                   
       $this->initGraph($options);
-
+      
+      if (count($datas) <= 0) {
+         echo "</div>";
+         return false;
+      }
+      $values = array_values($datas);
+      $labels = array_keys($datas);
+      $max = max($values);
+      if ($max <= 1) $max = 1;
+      if ($max == 1 && $unit == '%') $max = 100;
+      
       $nb_bar = count($datas);
       $width = $this->width;
       $height = 30 * $nb_bar + 80;
@@ -517,9 +532,23 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       } else {
          $datas = array();
       }
-      if (count($datas) <= 0) return false;
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
+      $rand = $opt['rand'];
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+      
+      $this->initGraph($options);
+      
+      if (count($datas) <= 0) {
+         echo "</div>";
+         return false;
+      }
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
       $max = 0;
@@ -528,15 +557,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       if ($max < 1) $max = 1;
       if ($max == 1 && $unit == '%') $max = 100;
-      
-      $rand = $opt['rand'];
-      $options = array("title" => $title,
-                        "desc" => $desc,
-                        "rand" => $rand,
-                        "export" => $export,
-                        "delay" => $delay);
-                  
-      $this->initGraph($options);
 
       $nb_bar = count($datas);
       $width = $this->width;
@@ -570,6 +590,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //add title on export
       if ($export) {
          imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
+      }
+      
+      if ($export && $desc) {
+         imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
       }
 
       //pie
@@ -671,10 +695,26 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       } else {
          $datas = array();
       }
-      if (count($datas) <= 0) return false;
-      $labels2 = $raw_datas['labels2'];
+      
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
+      $rand = $opt['rand'];
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
+      
+      if (count($datas) <= 0) {
+         echo "</div>";
+         return false;
+      }
+      
+      $labels2 = $raw_datas['labels2'];
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
 
@@ -685,15 +725,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
       }
       if ($max == 1 && $unit == '%') $max = 100;
-      
-      $rand = $opt['rand'];
-      $options = array("title" => $title,
-                        "desc" => $desc,
-                        "rand" => $rand,
-                        "export" => $export,
-                        "delay" => $delay);
-                  
-      $this->initGraph($options);
 
       $nb_bar = count($datas) * count($labels2);
       $width = $this->width;
@@ -737,7 +768,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $title
          );
       }
-
+      
+      if ($export && $desc) {
+         imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+      }
       //bars
       $index1 = 0;
       $index2 = 0;
@@ -853,16 +887,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $datas = array();
       }
 
-      if (count($datas) <= 0) return false;
-
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
-      
-      $values = array_values($datas);
-      $labels = array_keys($datas);
-      $max = max($values);
-      if ($max <= 1) $max = 1;
-      if ($max == 1 && $unit == '%') $max = 100;
       
       $rand = $opt['rand'];
       $options = array("title" => $title,
@@ -872,7 +898,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "delay" => $delay);
                   
       $this->initGraph($options);
-
+      
+      if (count($datas) <= 0) {
+         echo "</div>";
+         return false;
+      }
+      
+      $values = array_values($datas);
+      $labels = array_keys($datas);
+      $max = max($values);
+      if ($max <= 1) $max = 1;
+      if ($max == 1 && $unit == '%') $max = 100;
+      
       $nb = count($datas);
       $width = $this->width;
       $height = 450;
@@ -1013,10 +1050,26 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       } else {
          $datas = array();
       }
-      if (count($datas) <= 0) return false;
-      $labels2 = $raw_datas['labels2'];
+      
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
+      $rand = $opt['rand'];
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
+      
+      if (count($datas) <= 0) {
+         echo "</div>";
+         return false;
+      }
+      
+      $labels2 = $raw_datas['labels2'];
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
 
@@ -1027,15 +1080,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
       }
       if ($max == 1 && $unit == '%') $max = 100;
-      
-      $rand = $opt['rand'];
-      $options = array("title" => $title,
-                        "desc" => $desc,
-                        "rand" => $rand,
-                        "export" => $export,
-                        "delay" => $delay);
-                  
-      $this->initGraph($options);
 
       $nb = count($labels2);
       $width = $this->width;
