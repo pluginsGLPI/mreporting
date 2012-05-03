@@ -27,10 +27,10 @@
  --------------------------------------------------------------------------
  */
  
-class PluginMreportingCommon {
+class PluginMreportingCommon extends CommonDBTM {
    
    function showCentral($params) {
-      $this->parseAllClass();
+      $this->parseAllClass($params);
       if (DEBUG_MREPORTING) $this->debugGraph();
    }
 
@@ -39,12 +39,13 @@ class PluginMreportingCommon {
 
       //check the format display charts configured in glpi
       $opt = $this->initParams($opt, $export);
+      
       if ($CFG_GLPI['default_graphtype'] == 'png') $graph = new PluginMreportingGraphpng();
       else $graph = new PluginMreportingGraph();
 
       //dynamic instanciation of class passed by 'short_classname' GET parameter
       $classname = 'PluginMreporting'.$opt['short_classname'];
-      $obj = new $classname;
+      $obj = new $classname();
 
       //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
       $datas = $obj->$opt['f_name']();
@@ -57,7 +58,17 @@ class PluginMreportingCommon {
       $desc_func = "";
       if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc']))
         $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
-      $graph->{'show'.$opt['gtype']}($datas, $title_func, $desc_func, $show_label, $export);
+      
+      $params = array("raw_datas" => $datas,
+                       "title" => $title_func,
+                       "desc" => $desc_func,
+                       "f_name" => $opt['f_name'],
+                       "show_label" => '',
+                       "export" => $export,
+                       "opt" => $opt);
+                       
+      $graph->{'show'.$opt['gtype']}($params);
+
    }
 
 
@@ -124,12 +135,58 @@ class PluginMreportingCommon {
                             "Jui", "Aou","Sep", "Oct", "Nov", "Dec"),
          "spline"    => true
       );
+      
+      $rand = mt_rand();
 
-      $graph->showHbar  ($datas1, 'Exemple 1', 'Graphique en barres horizontales');
-      $graph->showPie   ($datas1, 'Exemple 2', 'Graphique en camembert');
-      $graph->showHgbar ($datas2, 'Exemple 3', 'Graphique en barres groupées horizontales');
-      $graph->showArea  ($datas3, 'Exemple 4', 'Graphique en aires');
-      $graph->showGArea  ($datas4, 'Exemple 5', 'Graphique en lignes (multiples)');
+      $opt = array("rand" => $rand);
+      $opt = array_merge($params, $opt);
+      
+      $params1['raw_datas'] = $datas1;
+      $params1['title'] = 'Exemple 1';
+      $params1['desc'] = 'Graphique en barres horizontales';
+      $params1['show_label'] = 'none';
+      $params1['export'] = false;
+      $params1['opt'] = $opt;
+      
+      $graph->showHbar($params1);
+      
+      $params2['raw_datas'] = $datas1;
+      $params2['title'] = 'Exemple 2';
+      $params2['desc'] = 'Graphique en camembert';
+      $params2['show_label'] = 'none';
+      $params2['export'] = false;
+      $params2['opt'] = $opt;
+      
+      $graph->showPie($params2);
+      
+      $params3['raw_datas'] = $datas2;
+      $params3['title'] = 'Exemple 3';
+      $params3['desc'] = 'Graphique en barres groupées horizontales';
+      $params3['show_label'] = 'none';
+      $params3['export'] = false;
+      $params3['opt'] = $opt;
+      
+      $graph->showHgbar($params3);
+      
+      $params4['raw_datas'] = $datas3;
+      $params4['title'] = 'Exemple 4';
+      $params4['desc'] = 'Graphique en aires';
+      $params4['show_label'] = 'none';
+      $params4['export'] = false;
+      $params4['area'] = true;
+      $params4['opt'] = $opt;
+      
+      $graph->showArea($params4);
+      
+      $params5['raw_datas'] = $datas4;
+      $params5['title'] = 'Exemple 5';
+      $params5['desc'] = 'Graphique en lignes (multiples)';
+      $params5['show_label'] = 'none';
+      $params5['export'] = false;
+      $params5['area'] = false;
+      $params5['opt'] = $opt;
+      
+      $graph->showGArea($params5);
    }
 
 
@@ -143,7 +200,7 @@ class PluginMreportingCommon {
       return $params;
    }
 
-   function getAllReports($with_url = true) {
+   function getAllReports($with_url = true, $params=array()) {
       global $LANG, $CFG_GLPI;
 
       $reports = array();
@@ -164,27 +221,36 @@ class PluginMreportingCommon {
             }
          }
       }
+      
 
       //construct array to list classes and functions
       foreach($classes as $classname) {
          $i = 0;
          $short_classname = str_replace('PluginMreporting', '', $classname);
          $title = $LANG['plugin_mreporting'][$short_classname]['title'];
-
+         
          $functions = get_class_methods($classname);
+
          foreach($functions as $f_name) {
             $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
             if ($ex_func[0] != 'report') continue;
 
             $gtype      = strtolower($ex_func[1]);
             $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
-            $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&f_name=$f_name&gtype=$gtype";
+            $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype";
             $min_url_graph  = "/front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype";
             
             $reports[$classname]['title'] = $title;
             $reports[$classname]['functions'][$i]['function'] = $f_name;
             $reports[$classname]['functions'][$i]['title'] = $title_func;
             $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
+            $reports[$classname]['functions'][$i]['gtype'] = $gtype;
+            $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
+            
+            $_SESSION['glpi_plugin_mreporting_rand'][$f_name]=$i;
+      
+            $reports[$classname]['functions'][$i]['rand'] = $_SESSION['glpi_plugin_mreporting_rand'][$f_name];
+             
             if ($with_url) {
                $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
                $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
@@ -246,11 +312,10 @@ class PluginMreportingCommon {
    }
 
 
-   function parseAllClass()  {
+   function parseAllClass($params)  {
       global $LANG;
 
-
-      $reports = $this->getAllReports();
+      $reports = $this->getAllReports(true, $params);
       if ($reports === false) {
          echo "<div class='center'>".$LANG['plugin_mreporting']["error"][0]."</div>";
          return false;
@@ -261,7 +326,7 @@ class PluginMreportingCommon {
       foreach($reports as $classname => $report) {
 
          echo "<tr><th class='graph_title' colspan='4'>".$report['title']."</th></tr>";
-         
+     
          $i = 0;
          $nb_per_line = 2;
          foreach($report['functions'] as $function) {
@@ -269,7 +334,7 @@ class PluginMreportingCommon {
                if ($i != 0) {
                   echo "</tr>";
                }
-               echo "<tr class='tab_bg_1'>";
+               echo "<tr class='tab_bg_1' valign='top'>";
             }
 
             echo "<td>";
@@ -280,7 +345,7 @@ class PluginMreportingCommon {
             $i++;
 
          }
- 
+
          while ($i%$nb_per_line != 0) {
             echo "<td>&nbsp;</td>";
             $i++;
@@ -293,7 +358,6 @@ class PluginMreportingCommon {
 
    function export($opt)  {
       global $LANG;
-      
       
       switch ($opt['switchto']) {
          default:
@@ -316,7 +380,7 @@ class PluginMreportingCommon {
 
       //dynamic instanciation of class passed by 'short_classname' GET parameter
       $classname = 'PluginMreporting'.$opt['short_classname'];
-      $obj = new $classname;
+      $obj = new $classname();
 
       //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
       $datas = $obj->$opt['f_name']();
@@ -328,7 +392,15 @@ class PluginMreportingCommon {
         $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
       
       
-      $graph->{'show'.$opt['gtype']}($datas, $title_func, $opt['f_name'], '', $opt['export']);
+      $params = array("raw_datas" => $datas,
+                       "title" => $title_func,
+                       "desc" => $desc_func,
+                       "f_name" => $opt['f_name'],
+                       "show_label" => '',
+                       "export" => $opt['export'],
+                       "opt" => $opt);
+                       
+      $graph->{'show'.$opt['gtype']}($params);
    }
    
    function generateOdt($title,$desc,$raw_datas) {

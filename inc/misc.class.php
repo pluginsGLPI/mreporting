@@ -40,7 +40,7 @@ class PluginMreportingMisc {
 
    static function getRequestString($var) {
       unset($var['submit']);
-
+      
       $request_string = "";
       foreach($var as $key => $value) {
          $request_string.= "$key=$value&";
@@ -50,20 +50,20 @@ class PluginMreportingMisc {
    }
 
 
-   static function showSelector($date1, $date2) {
+   static function showSelector($date1, $date2, $rand) {
       global $LANG, $DB;
 
       $request_string = self::getRequestString($_GET);
 
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'>\n";
-      echo "<table class='tab_cadre'><tr class='tab_bg_1'>";
+      echo "<table class='tab_cadre' width='20%'><tr class='tab_bg_1'>";
 
       echo "<td>";
-      Html::showDateFormItem("date1", $date1, false);
+      Html::showDateFormItem("date1".$rand, $date1, false);
       echo "</td>\n";
 
       echo "<td>";
-       Html::showDateFormItem("date2", $date2, false);
+      Html::showDateFormItem("date2".$rand, $date2, false);
       echo "</td>\n";
 
       echo "<td rowspan='2' class='center'>";
@@ -75,23 +75,23 @@ class PluginMreportingMisc {
    }
 
 
-   static function getSQLDate($field = "glpi_tickets.date", $delay=365) {
+   static function getSQLDate($field = "glpi_tickets.date", $delay=365, $rand) {
 
-      if (!isset($_REQUEST['date1'])) 
-         $_REQUEST['date1'] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
-      if (!isset($_REQUEST['date2'])) 
-         $_REQUEST['date2'] = strftime("%Y-%m-%d");
+      if (!isset($_REQUEST['date1'.$rand])) 
+         $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+      if (!isset($_REQUEST['date2'.$rand])) 
+         $_REQUEST['date2'.$rand] = strftime("%Y-%m-%d");
 
-      $date_array1=explode("-",$_REQUEST['date1']);
+      $date_array1=explode("-",$_REQUEST['date1'.$rand]);
       $time1=mktime(0,0,0,$date_array1[1],$date_array1[2],$date_array1[0]);
 
-      $date_array2=explode("-",$_REQUEST['date2']);
+      $date_array2=explode("-",$_REQUEST['date2'.$rand]);
       $time2=mktime(0,0,0,$date_array2[1],$date_array2[2],$date_array2[0]);
 
       //if data inverted, reverse it
       if ($time1 > $time2) {
          list($time1, $time2) = array($time2, $time1);
-         list($_REQUEST['date1'], $_REQUEST['date2']) = array($_REQUEST['date2'], $_REQUEST['date1']);
+         list($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand]) = array($_REQUEST['date2'.$rand], $_REQUEST['date1'.$rand]);
       }
 
       $begin=date("Y-m-d H:i:s",$time1);

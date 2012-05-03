@@ -28,48 +28,55 @@
  */
  
 class PluginMreportingGraph {
+
    const DEBUG_GRAPH = false;
    protected $width = 700;
 
-   function initGraph($title, $desc = '', $rand='', $export = false, $delay = 365) {
-
-
-      if (!$export) {
-
-         $width = $this->width + 100;
-
-         if (!isset($_REQUEST['date1'])) 
-            $_REQUEST['date1'] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
-         if (!isset($_REQUEST['date2'])) 
-            $_REQUEST['date2'] = strftime("%Y-%m-%d");
+   function initGraph($options) {
       
-         $backtrace = debug_backtrace();
-         $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
+      $width = $this->width + 100;
+      
+      echo "<div class='center'><div id='fig' style='width:{$width}px'>";
+      echo "<div class='graph_title'>";
+      $backtrace = debug_backtrace();
+      $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
+         
+      echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
+      echo $options['title'];
+      echo "</div>";
+      if (!empty($options['desc'])) echo "<div class='graph_desc'>".$options['desc']."</div>";
+      
+      $rand = $options['rand'];
+      
+      if (!isset($_REQUEST['date1'.$rand])) 
+            $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
+      if (!isset($_REQUEST['date2'.$rand])) 
+         $_REQUEST['date2'.$rand] = strftime("%Y-%m-%d");
 
-         echo "<div class='center'><div id='fig' style='width:{$width}px'>";
-         echo "<div class='graph_title'>";
-         echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
-         echo $title;
-         echo "</div>";
-         if (!empty($desc)) echo "<div class='graph_desc'>$desc</div>";
-         echo "<div class='graph_navigation'>";
-         PluginMreportingMisc::showSelector($_REQUEST['date1'], $_REQUEST['date2']);
-         echo "</div>";
-      }
-      echo "<div class='graph' id='graph_content'>";
+      echo "<div class='graph_navigation'>";
+      PluginMreportingMisc::showSelector($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand],$rand);
+      echo "</div>";
+         
+      echo "<div class='graph' id='graph_content$rand'>";
 
       $colors = "'".implode ("', '", $this->getColors())."'";
       echo "<script type='text/javascript+protovis'>
          function showGraph$rand() {
-            colors = pv.colors($colors);
-      ";
+            colors = pv.colors($colors);";
    }
 
-   function endGraph($rand = '', $export = false) {
+   function endGraph($opt, $export = false) {
       global $LANG;
-
+      
+      $_REQUEST['short_classname'] = $opt['short_classname'];
+      $_REQUEST['f_name'] = $opt['f_name'];
+      $_REQUEST['gtype'] = $opt['gtype'];
+      $_REQUEST['rand'] = $opt['rand'];
+      
+      $rand = $opt['rand'];
+      
       $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
-
+      
       if ($rand !== false) {
 
          echo "}
@@ -78,16 +85,18 @@ class PluginMreportingGraph {
       }
       echo "</div>";
 
-      if ($export === false) {
-         echo "<div class='graph_bottom'>";
-         echo "<span style='float:left'>";
-         PluginMreportingMisc::showNavigation();
-         echo "</span>";
-         echo "<span style='float:right'><b>".$LANG['buttons'][31]."</b> : ";
-         echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
-         echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
-         echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
-         echo "</span>";
+      if (!$export) {
+         if ($_REQUEST['f_name'] != "test") {
+            echo "<div class='graph_bottom'>";
+            /*echo "<span style='float:left'>";
+            PluginMreportingMisc::showNavigation();
+            echo "</span>";*/
+            echo "<span style='float:right'><b>".$LANG['buttons'][31]."</b> : ";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
+            echo "</span>";
+         }
          echo "<div style='clear:both;'></div>";
          echo "</div>";
          echo "</div></div>";
@@ -157,20 +166,40 @@ class PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHbar($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false) {
+   function showHbar($params) {
       global $LANG;
-
-      if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
-
-      $rand = mt_rand(0,15000);
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = false;
+      $opt         = array();
+
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
+      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
+
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      $rand = $opt['rand'];
+      
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $this->endGraph(false, false);
+         $opt["rand"] = false;
+         $this->endGraph($opt, false);
          return false;
       }
       
@@ -266,7 +295,8 @@ $JS = <<<JAVASCRIPT
 JAVASCRIPT;
 
       echo $JS;
-      $this->endGraph($rand, $export);
+      
+      $this->endGraph($opt, $export);
    }
 
 
@@ -283,21 +313,41 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showPie($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false) {
+   function showPie($params) {
       global $LANG;
+      
+      // Default values of parameters
+      $datas       = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = false;
+      $opt         = array();
 
-      if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
-
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
+      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
+      
+      $rand = $opt['rand'];
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $this->endGraph(false, false);
+         $opt["rand"] = false;
+         $this->endGraph($opt, false);
          return false;
       }
       
@@ -388,9 +438,9 @@ $JS = <<<JAVASCRIPT
 JAVASCRIPT;
 
       echo $JS;
-      $this->endGraph($rand, $export);
+      
+      $this->endGraph($opt, $export);
    }
-
 
    /**
     * Show a horizontal grouped bar chart
@@ -406,21 +456,40 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHgbar($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false) {
+   function showHgbar($params) {
       global $LANG;
-
-      if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
       
+      // Default values of parameters
+      $datas       = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = false;
+      $opt         = array();
+
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
+      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
+      $rand = $opt['rand'];
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $this->endGraph(false, false);
+         $opt["rand"] = false;
+         $this->endGraph($opt, false);
          return false;
       }
       
@@ -534,9 +603,8 @@ $JS = <<<JAVASCRIPT
    }, 20);
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
-
 
    /**
     * Show a Area chart
@@ -553,22 +621,41 @@ JAVASCRIPT;
     * @param $area : show plain chart instead only a line (optionnal)
     * @return nothing
     */
-   function showArea($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false, $area = true) {
+   function showArea($params) {
       global $LANG;
+      
+      // Default values of parameters
+      $datas       = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = true;
+      $opt         = array();
 
-      if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
-
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
+      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
+      $rand = $opt['rand'];
       $unit    = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $spline  = (isset($raw_datas['spline']) && $raw_datas['spline']) ? "true" : "false";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $this->endGraph(false, false);
+         $opt["rand"] = false;
+         $this->endGraph($opt, false);
          return false;
       }
       
@@ -700,7 +787,7 @@ $JS = <<<JAVASCRIPT
 JAVASCRIPT;
 
       echo $JS;
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
 
    /**
@@ -717,8 +804,10 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showLine($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false) {
-      $this->showArea($raw_datas, $title, $desc, $show_label, $export, false);
+   function showLine($params) {
+      
+      $params['area'] = false;
+      $this->showArea($params);
    }
 
     /**
@@ -735,22 +824,41 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGarea($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false, $area = true) {
+   function showGarea($params) {
       global $LANG;
+      
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = true;
+      $opt         = array();
 
-      if (self::DEBUG_GRAPH) printCleanArray($raw_datas);
-
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
+      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
+      $rand = $opt['rand'];
       $unit    = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $spline  = (isset($raw_datas['spline']) && $raw_datas['spline']) ? "true" : "false";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
 
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
          echo "</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $this->endGraph(false, false);
+         $opt["rand"] = false;
+         $this->endGraph($opt, false);
          return false;
       }
       
@@ -897,7 +1005,7 @@ $JS = <<<JAVASCRIPT
 
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
 
    /**
@@ -913,10 +1021,10 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGline($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false) {
-      $this->showGarea($raw_datas, $title, $desc, $show_label, $export, false);
+   function showGline($params) {
+      $params['area'] = false;
+      $this->showGarea($params);
    }
-
 
    function initDatasSimple($datas, $unit = '') {
       $labels = array_keys($datas);
@@ -988,7 +1096,6 @@ JAVASCRIPT;
       echo "var m = ".count($labels2).";";
       echo "var max = $max;";
    }
-
 
    function legend($datas) {
 

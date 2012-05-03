@@ -59,7 +59,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
       
       $delay = 365;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportHbarTicketNumberByEntity'];
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$rand);
       
       $query = "SELECT
          COUNT(glpi_tickets.id) as nb,
@@ -91,7 +92,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $tmp_datas = array();
       
       $delay = 365;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportHgbarTicketNumberByCatAndEntity'];
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $rand);
       
       //get categories used in this period
       $query_cat = "SELECT
@@ -165,8 +167,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportPieTicketOpenedAndClosed() {
       global $DB;
       
-      $delay = 30;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      $delay = 90;
+      $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportPieTicketOpenedAndClosed'];
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$rand);
       
       $datas = array();
       foreach($this->filters as $filter) {
@@ -190,7 +193,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB;
       
       $delay = 365;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportPieTicketOpenedbyStatus'];
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$rand);
 
       $datas = array();
       foreach($this->filters['open']['status'] as $key => $val) {
@@ -216,12 +220,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
    
-   function reportPieTopTenAuthor() {
+   /*function reportPieTopTenAuthor() {
       global $DB, $LANG;
       
-      $delay = 30;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
-      $this->sql_closedate = PluginMreportingMisc::getSQLDate("glpi_tickets.closedate",$delay);
+      $delay = 90;
+      $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportPieTopTenAuthor'];
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $rand);
+      $this->sql_closedate = PluginMreportingMisc::getSQLDate("glpi_tickets.closedate",$delay, $rand);
       
       $datas = array();
       $query = "
@@ -250,7 +255,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas['delay'] = $delay;
 
       return $datas;
-   }
+   }*/
       
 
    function reportHgbarOpenTicketNumberByCategoryAndByType() {
@@ -263,10 +268,19 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    private function reportHgbarTicketNumberByCategoryAndByType($filter) {
       global $DB, $LANG;
+      
       $datas = array();
       
-      $delay = 30;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      $delay = 90;
+      if (isset($_SESSION['glpi_plugin_mreporting_rand']['reportHgbarTicketNumberByCategoryAndByType'])) {
+         $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportHgbarTicketNumberByCategoryAndByType'];
+      } else if (isset($_SESSION['glpi_plugin_mreporting_rand']['reportHgbarOpenTicketNumberByCategoryAndByType'])) {
+         $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportHgbarOpenTicketNumberByCategoryAndByType'];
+      } else if (isset($_SESSION['glpi_plugin_mreporting_rand']['reportHgbarCloseTicketNumberByCategoryAndByType'])) {
+         $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportHgbarCloseTicketNumberByCategoryAndByType'];
+      }
+      
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$rand);
       
       $datas['labels2']['type_0'] = $LANG['job'][32];
       $datas['labels2']['type_1'] = $LANG['job'][1];
@@ -306,8 +320,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB, $LANG;
       $datas = array();
       
-      $delay = 30;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      $delay = 90;
+      $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportHgbarTicketNumberByService'];
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$rand);
       
       foreach($this->filters as $class=>$filter) {
 
@@ -359,8 +374,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB, $LANG;
       $datas = array();
 
-      $delay = 30;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      $delay = 90;
+      $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportHgbarOpenedTicketNumberByCategory'];
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $rand);
       
       $status = array_merge(
          $this->filters['open']['status'],
@@ -397,13 +413,24 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       return $datas;
    }
-
+   
+   function reportLineNbTicket() {
+      return $this->reportAreaNbTicket();
+   }
+   
    function reportAreaNbTicket() {
       global $DB, $LANG;
       $datas = array();
       
       $delay = 365;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+
+      if (isset($_SESSION['glpi_plugin_mreporting_rand']['reportAreaNbTicket'])) {
+         $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportAreaNbTicket'];
+      } else if (isset($_SESSION['glpi_plugin_mreporting_rand']['reportLineNbTicket'])) {
+         $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportLineNbTicket'];
+      }
+      
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$rand);
       
       $query = "SELECT
          DISTINCT DATE_FORMAT(date, '%y%m') as month,
@@ -425,19 +452,24 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       return $datas;
    }
-
-
-   function reportLineNbTicket() {
-      return $this->reportAreaNbTicket();
+   
+   function reportGareaNbTicket() {
+      return $this->reportGlineNbTicket();
    }
-
 
    function reportGlineNbTicket() {
       global $DB, $LANG;
       $datas = array();
       
       $delay = 365;
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay);
+      
+      if (isset($_SESSION['glpi_plugin_mreporting_rand']['reportGlineNbTicket'])) {
+         $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportGlineNbTicket'];
+      } else if (isset($_SESSION['glpi_plugin_mreporting_rand']['reportGareaNbTicket'])) {
+         $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportGareaNbTicket'];
+      }
+      
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $rand);
       
       $query = "SELECT DISTINCT
          DATE_FORMAT(date, '%y%m') as month,
@@ -462,10 +494,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       return $datas;
    }
-
-   function reportGareaNbTicket() {
-      return $this->reportGlineNbTicket();
-   }
+  
 }
 
 ?>

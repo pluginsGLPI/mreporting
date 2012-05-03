@@ -31,19 +31,22 @@ require_once "../lib/imagesmootharc/imageSmoothArc.php";
 
 class PluginMreportingGraphpng extends PluginMreportingGraph {
 
-   function initGraph($title, $desc = '', $rand='', $export = false, $delay = 365) {
+   function initGraph($options) {
       
-      if ($export=="odt") {
+      if ($options['export']=="odt") {
          $this->width = $this->width - 100;
       }
-      if (!$export) {
-
+      
+      $rand = $options['rand'];
+      
+      if (!$options['export']) {
+          
          $width = $this->width + 100;
 
-         if (!isset($_REQUEST['date1'])) 
-            $_REQUEST['date1'] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+         if (!isset($_REQUEST['date1'.$rand])) 
+            $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
          if (!isset($_REQUEST['date2'])) 
-            $_REQUEST['date2'] = strftime("%Y-%m-%d");
+            $_REQUEST['date2'.$rand] = strftime("%Y-%m-%d");
 
          $backtrace = debug_backtrace();
          $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
@@ -51,29 +54,37 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          echo "<div class='center'><div id='fig' style='width:{$width}px'>";
          echo "<div class='graph_title'>";
          echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
-         echo $title;
+         echo $options['title'];
          echo "</div>";
-         if (!empty($desc)) echo "<div class='graph_desc'>$desc</div>";
+         if (!empty($options['desc'])) echo "<div class='graph_desc'>".$options['desc']."</div>";
          echo "<div class='graph_navigation'>";
-         PluginMreportingMisc::showSelector($_REQUEST['date1'], $_REQUEST['date2']);
+         PluginMreportingMisc::showSelector($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand],$rand);
          echo "</div>";
       }
-      if ($export!="odt") {
-         echo "<div class='graph' id='graph_content'>";
+      if ($options['export']!="odt") {
+         echo "<div class='graph' id='graph_content$rand'>";
       }
    }
 
-   function endGraph($rand='', $export = false) {
+   function endGraph($opt, $export = false) {
+      
+      $_REQUEST['short_classname'] = $opt['short_classname'];
+      $_REQUEST['f_name'] = $opt['f_name'];
+      $_REQUEST['gtype'] = $opt['gtype'];
+      $_REQUEST['rand'] = $opt['rand'];
+      
       $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
 
       echo "</div>";
 
       if (!$export) {
-         echo "<div class='right'>";
-         echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
-         echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
-         echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
-         echo "</div>";
+         if ($_REQUEST['f_name'] != "test") {
+            echo "<div class='right'>";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
+            echo "</div>";
+         }
          echo "</div></div>";
       }
 
@@ -148,7 +159,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
-
    function getDarkerPalette($image, $nb_index = 20) {
       $palette = array();
       foreach($this->getColors($nb_index) as $color) {
@@ -194,7 +204,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       return $palette;
    }
-
 
    function darker($hex,$factor = 50) {
       $new_hex = '';
@@ -316,9 +325,21 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
    } // end of 'imageSmoothAlphaLine()' function
 
+   function showHbar($params) {
+   
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = false;
+      $opt         = array();
 
-
-   function showHbar($raw_datas, $title, $desc = "", $show_label = 'none', $export = false) {
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
 
@@ -330,9 +351,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $max = max($values);
       if ($max <= 1) $max = 1;
       if ($max == 1 && $unit == '%') $max = 100;
-
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      
+      $rand = $opt['rand'];
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
 
       $nb_bar = count($datas);
       $width = $this->width;
@@ -426,12 +453,24 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
 
+   function showPie($params) {
+      
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = false;
+      $opt         = array();
 
-
-   function showPie($raw_datas, $title, $desc = "", $show_label = 'none', $export = false) {
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
@@ -444,9 +483,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       if ($max < 1) $max = 1;
       if ($max == 1 && $unit == '%') $max = 100;
-
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      
+      $rand = $opt['rand'];
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
 
       $nb_bar = count($datas);
       $width = $this->width;
@@ -552,12 +597,24 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
 
+   function showHgbar($params) {
+      
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = false;
+      $opt         = array();
 
-
-   function showHgbar($raw_datas, $title, $desc = "", $show_label = 'none', $export = false) {
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
       $labels2 = $raw_datas['labels2'];
@@ -573,9 +630,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
       }
       if ($max == 1 && $unit == '%') $max = 100;
-
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      
+      $rand = $opt['rand'];
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
 
       $nb_bar = count($datas) * count($labels2);
       $width = $this->width;
@@ -705,11 +768,25 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //generate image
       $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
 
+   function showArea($params) {
+      
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = true;
+      $opt         = array();
 
-   function showArea($raw_datas, $title, $desc = "", $show_label = 'hover', $export = false, $area = true) {
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
+      
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
 
@@ -721,9 +798,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $max = max($values);
       if ($max <= 1) $max = 1;
       if ($max == 1 && $unit == '%') $max = 100;
-
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      
+      $rand = $opt['rand'];
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
 
       $nb = count($datas);
       $width = $this->width;
@@ -836,10 +919,24 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //generate image
       $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
 
-   function showGArea($raw_datas, $title, $desc = "", $show_label = 'none', $export = false, $area = true) {
+   function showGArea($params) {
+      
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = true;
+      $opt         = array();
+
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
       $labels2 = $raw_datas['labels2'];
@@ -855,9 +952,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
       }
       if ($max == 1 && $unit == '%') $max = 100;
-
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export, $delay);
+      
+      $rand = $opt['rand'];
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
 
       $nb = count($labels2);
       $width = $this->width;
@@ -995,8 +1098,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //generate image
       $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
       $this->showImage($contents,$export);
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
 
 }// End Class
+
 ?>
