@@ -402,7 +402,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo "</div>";
+         if (!$export)
+            echo "</div>";
          return false;
       }
       $values = array_values($datas);
@@ -545,7 +546,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo "</div>";
+         if (!$export)
+            echo "</div>";
          return false;
       }
       
@@ -709,7 +711,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo "</div>";
+         if (!$export)
+            echo "</div>";
          return false;
       }
       
@@ -900,7 +903,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo "</div>";
+         if (!$export)
+            echo "</div>";
          return false;
       }
       
@@ -1064,7 +1068,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo "</div>";
+         if (!$export)
+            echo "</div>";
          return false;
       }
       

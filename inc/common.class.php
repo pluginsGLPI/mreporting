@@ -397,14 +397,20 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "<th class='graph_title' colspan='2'>";
          
          echo "<div align='center'><form method='POST' action='export.php?switchto=odtall&classname=".$classname."' name='form'>\n";
-         echo "<table width='60%'>";
+         echo "<table width='80%'>";
          echo "<tr><th class='graph_title'>";
          echo $LANG['plugin_mreporting']["export"][0];
          echo "</th>";
          $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
          $date2 =  strftime("%Y-%m-%d");
          echo "<th class='graph_title'>";
+         echo $LANG['search'][8];
+         echo "</th>";
+         echo "<th class='graph_title'>";
          Html::showDateFormItem("date1",$date1,true);
+         echo "</th>";
+         echo "<th class='graph_title'>";
+         echo $LANG['search'][9];
          echo "</th>";
          echo "<th class='graph_title'>";
          Html::showDateFormItem("date2",$date2,true);
