@@ -47,11 +47,11 @@ function plugin_init_mreporting() {
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
       }
       /* Configuration Link */
-      /*if (plugin_mreporting_haveRight("config","w")) {
+      if (plugin_mreporting_haveRight("config","w")) {
          $config_entry = 'front/config.form.php';
          $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
-      }*/
+      }
 
       /* Show Reports in standart stats page */
       /*$mreporting_common = new PluginMreportingCommon;
@@ -65,7 +65,7 @@ function plugin_init_mreporting() {
       }*/
 
       if($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-         define('DEBUG_MREPORTING', true);
+         define('DEBUG_MREPORTING', false);
       } else {
          define('DEBUG_MREPORTING', false);
       }
@@ -77,9 +77,10 @@ function plugin_init_mreporting() {
    }
 
    // Add specific files to add to the header : javascript or css
-   $PLUGIN_HOOKS['add_javascript']['mreporting']= array ("lib/protovis/protovis-r3.2.js");
+   $PLUGIN_HOOKS['add_javascript']['mreporting']= array ("lib/protovis/protovis-r3.2.js",
+                                                         "lib/tabber/tabber.js");
    //css
-   $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
+   $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css","lib/tabber/example.css");
 }
 
 // Get the name and the version of the plugin - Needed
@@ -87,7 +88,7 @@ function plugin_version_mreporting() {
    global $LANG;
 
    return array('name'           => $LANG['plugin_mreporting']["name"],
-                'version'        => "1.1.1",
+                'version'        => "1.2.0",
                 'author'         => "<a href='http://www.teclib.com'>Teclib'</a> & <a href='http://www.infotel.com'>Infotel</a>",
                 'homepage'       => "https://forge.indepnet.net/projects/mreporting",
                 'license' => 'GPLv2+',

@@ -222,6 +222,11 @@ class PluginMreportingCommon extends CommonDBTM {
          }
       }
       
+      if (isset($params['plugin_mreporting_tab']) 
+            && !empty($params['plugin_mreporting_tab'])) {
+         $classes = array();
+         $classes[] = $params['plugin_mreporting_tab'];
+      }
 
       //construct array to list classes and functions
       foreach($classes as $classname) {
@@ -273,8 +278,21 @@ class PluginMreportingCommon extends CommonDBTM {
       foreach($reports as $classname => $report) {
       $opt_list[$classname] = $report['title'];
          foreach($report['functions'] as $function) {
+            
+            
+            $options = array("short_classname" => $function['short_classname'],
+                           "f_name" => $function['function'],
+                           "gtype" => $function['gtype'],
+                           "rand" => $function['rand']);  
+            
+            $request_string = "";
+            foreach($options as $key => $value) {
+               $request_string.= "$key=$value&";
+            }
+            
             $stat_list[$classname][$function['function']]["name"]  = $function['title'];
-            $stat_list[$classname][$function['function']]["file"]  = $function['url_graph'];
+            $stat_list[$classname][$function['function']]["file"]  = $function['url_graph']."?".$request_string;
+            
          }
       }
       
@@ -336,9 +354,19 @@ class PluginMreportingCommon extends CommonDBTM {
                }
                echo "<tr class='tab_bg_1' valign='top'>";
             }
-
+            
+            $options = array("short_classname" => $function['short_classname'],
+                           "f_name" => $function['function'],
+                           "gtype" => $function['gtype'],
+                           "rand" => $function['rand']);  
+            
+            $request_string = "";
+            foreach($options as $key => $value) {
+               $request_string.= "$key=$value&";
+            }
+                    
             echo "<td>";
-            echo "<a href='".$function['url_graph']."'>";
+            echo "<a href='".$function['url_graph']."?$request_string'>";
             echo "<img src='".$function['pic']."' />&nbsp;";
             echo $function['title'];
             echo "</a></td>";
