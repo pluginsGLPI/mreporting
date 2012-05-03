@@ -33,6 +33,8 @@ $LANG['plugin_mreporting']["error"][0] = "Aucun rapport disponible !";
 $LANG['plugin_mreporting']["error"][1] = "Aucune données pour cette plage de date !";
 $LANG['plugin_mreporting']["error"][2] = "Non défini";
 
+$LANG['plugin_mreporting']["export"][0] = "Rapport général - ODT";
+
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Barres - Nombre de ticket par entités";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['title'] = "Camembert - Nombre de ticket par entités";

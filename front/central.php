@@ -47,7 +47,7 @@ foreach ($reports as $classname => $report) {
      
    $tabs[$classname]=array('title'=>$report['title'],
                            'url'=>$CFG_GLPI['root_doc']."/plugins/mreporting/ajax/common.tabs.php",
-                           'params'=>"target=".$_SERVER['PHP_SELF']."&plugin_mreporting_tab=$classname");
+                           'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname");
 }
 
 echo "<div id='tabspanel' class='center-h'></div>";

@@ -33,7 +33,7 @@ include (GLPI_ROOT."/inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-if($_REQUEST['switchto'] == 'odt') {
+if($_REQUEST['switchto'] == 'odt' || $_REQUEST['switchto'] == 'odtall') {
    require_once('../lib/odtphp/odf.php');
 }
 

@@ -33,9 +33,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function initGraph($options) {
       
-      if ($options['export']=="odt") {
-         $this->width = $this->width - 100;
-      }
+      //if ($options['export']=="odt" || $options['export']=="odtall") {
+         //$this->width = $this->width - 100;
+      //}
       
       $rand = $options['rand'];
       
@@ -61,23 +61,24 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          PluginMreportingMisc::showSelector($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand],$rand);
          echo "</div>";
       }
-      if ($options['export']!="odt") {
+      if ($options['export']!="odt" && $options['export']!="odtall") {
          echo "<div class='graph' id='graph_content$rand'>";
       }
    }
 
    function endGraph($opt, $export = false) {
       
-      $_REQUEST['short_classname'] = $opt['short_classname'];
-      $_REQUEST['f_name'] = $opt['f_name'];
-      $_REQUEST['gtype'] = $opt['gtype'];
-      $_REQUEST['rand'] = $opt['rand'];
-      
-      $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
-
-      echo "</div>";
-
       if (!$export) {
+      
+         $_REQUEST['short_classname'] = $opt['short_classname'];
+         $_REQUEST['f_name'] = $opt['f_name'];
+         $_REQUEST['gtype'] = $opt['gtype'];
+         $_REQUEST['rand'] = $opt['rand'];
+         
+         $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
+
+         echo "</div>";
+         
          if ($_REQUEST['f_name'] != "test") {
             echo "<div class='right'>";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
@@ -92,23 +93,52 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       unset($_SESSION['mreporting']['colors']);
    }
 
-   function showImage($contents,$type="png")  {
-      if ($type!="odt") {
+   function showImage($contents, $export="png")  {
+      if ($export!="odt" && $export!="odtall") {
          echo "<img src='data:image/png;base64,".base64_encode($contents)."' />";
       }
    }
 
-   function generateImage($image,$type="png",$desc='',$title,$datas='null') {
+   function generateImage($params) {
+      
+      // Default values of parameters
+      $image       = "";
+      $export      = "png";
+      $f_name      = "";
+      $title       = "";
+      $raw_datas   = array();
 
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
       ob_start();
-
-      if ($type=="odt") {
-         $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$desc.".png";
+      
+      if ($export=="odt") {
+         $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
          imagepng($image,$path);
          
-         $common = new PluginMreportingCommon;
-         $common->generateOdt($title,$desc,$datas);
+         $common = new PluginMreportingCommon();
+         $options[] = array("title" => $title,
+                          "f_name" => $f_name,
+                          "raw_datas" => $raw_datas);
+         $common->generateOdt($options);
          return true;
+         
+      } else if ($export=="odtall") {
+      
+         $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
+         imagepng($image,$path);
+         
+         //print_r($raw_datas['datas']);
+         if (isset($raw_datas['datas'])) {
+            $_SESSION['glpi_plugin_mreporting_odtarray'][]=array("title" => $title,
+                                                              "f_name" => $f_name,
+                                                              "raw_datas" => $raw_datas);
+         }
+         
+         return true;
+         
       } else {
       
          imagepng($image);
@@ -331,6 +361,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = false;
@@ -340,7 +371,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $datas = $raw_datas['datas'];
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
       if (count($datas) <= 0) return false;
 
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
@@ -450,8 +485,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //y axis
       imageline($image, 250, 40, 250, $height-20, $black);
       imageline($image, 251, 40, 251, $height-20, $black);
-
-      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
+      
+      $params = array("image" => $image,
+                      "export" => $export,
+                      "f_name" => $f_name,
+                      "title" => $title,
+                      "raw_datas" => $raw_datas);
+      $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
       $this->endGraph($opt, $export);
    }
@@ -462,6 +502,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = false;
@@ -471,7 +512,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $datas = $raw_datas['datas'];
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
       if (count($datas) <= 0) return false;
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
@@ -595,7 +640,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $index++;
       }
       
-      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
+      $params = array("image" => $image,
+                      "export" => $export,
+                      "f_name" => $f_name,
+                      "title" => $title,
+                      "raw_datas" => $raw_datas);
+      $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
       $this->endGraph($opt, $export);
    }
@@ -606,6 +656,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = false;
@@ -615,7 +666,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $datas = $raw_datas['datas'];
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
       if (count($datas) <= 0) return false;
       $labels2 = $raw_datas['labels2'];
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
@@ -766,7 +821,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       //generate image
-      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
+      $params = array("image" => $image,
+                      "export" => $export,
+                      "f_name" => $f_name,
+                      "title" => $title,
+                      "raw_datas" => $raw_datas);
+      $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
       $this->endGraph($opt, $export);
    }
@@ -777,6 +837,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = true;
@@ -786,8 +847,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      
-      $datas = $raw_datas['datas'];
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
+
       if (count($datas) <= 0) return false;
 
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
@@ -917,7 +982,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       imageline($image, 20, $height-30, $width - 20, $height-30, $black);
 
       //generate image
-      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
+      $params = array("image" => $image,
+                      "export" => $export,
+                      "f_name" => $f_name,
+                      "title" => $title,
+                      "raw_datas" => $raw_datas);
+      $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
       $this->endGraph($opt, $export);
    }
@@ -928,6 +998,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $f_name      = "";
       $show_label  = false;
       $export      = false;
       $area        = true;
@@ -937,7 +1008,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $datas = $raw_datas['datas'];
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
       if (count($datas) <= 0) return false;
       $labels2 = $raw_datas['labels2'];
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
@@ -1096,7 +1171,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       //generate image
-      $contents = $this->generateImage($image,$export,$desc,$title,$raw_datas);
+      $params = array("image" => $image,
+                      "export" => $export,
+                      "f_name" => $f_name,
+                      "title" => $title,
+                      "raw_datas" => $raw_datas);
+      $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
       $this->endGraph($opt, $export);
    }
