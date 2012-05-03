@@ -37,7 +37,7 @@ if($_REQUEST['switchto'] == 'odt') {
    require_once('../lib/odtphp/odf.php');
 }
 
-$common = new PluginMreportingCommon;
+$common = new PluginMreportingCommon();
 $common->export($_REQUEST);
 
 ?>

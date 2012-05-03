@@ -30,28 +30,49 @@
 class PluginMreportingGraphcsv extends PluginMreportingGraph {
    const DEBUG_CSV = false;
 
-   function initGraph($title, $desc = '', $rand='', $export = false, $delay = 365) {
+   function initGraph($options) {
       if (!self::DEBUG_CSV) {
          header ("Content-type: application/csv");
          header ("Content-Disposition: inline; filename=export.csv");
       }
    }
 
-   function endGraph($rand='', $export = false) {
+   function endGraph($opt, $export = false) {
 
    }
 
+   function showHbar($params) {
+      
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = false;
+      $opt         = array();
 
-   function showHbar($raw_datas, $title, $desc = "", $show_label = 'none', $export = false) {
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+      
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
 
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $rand = $opt['rand'];
+      
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
 
       //titles
       $out = $title."\r\n";
@@ -67,25 +88,44 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $out = substr($out, 0, -1)."\r\n";
 
       echo $out;
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
 
-
-
-   function showPie($raw_datas, $title, $desc = "", $show_label = 'none', $export = false) {
-      $this->showHbar($raw_datas, $title, $desc, $show_label, $export);
+   function showPie($params) {
+      $this->showHbar($params);
    }
 
+   function showHgbar($params) {
+      
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      $show_label  = false;
+      $export      = false;
+      $area        = false;
+      $opt         = array();
 
-
-   function showHgbar($raw_datas, $title, $desc = "", $show_label = 'none', $export = false) {
+      foreach ($params as $key => $val) {
+         $$key=$val;
+      }
+   
+      $rand = $opt['rand'];
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
       $labels2 = array_values($raw_datas['labels2']);
       $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-
-      $rand = mt_rand(0,15000);
-      $this->initGraph($title, $desc, $rand, $export);
+      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      
+      $rand = $opt['rand'];
+      
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
 
       $out = "";
       foreach($datas as $label2 => $cols) {
@@ -109,14 +149,16 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $out = substr($out, 0, -1)."\r\n";
 
       echo $out;
-      $this->endGraph($rand, $export);
+      $this->endGraph($opt, $export);
    }
 
-   function showArea($raw_datas, $title, $desc = "", $show_label = 'none', $export = false, $area = true) {
-      $this->showHbar($raw_datas, $title, $desc, $show_label, $export);
+   function showArea($params) {
+      $this->showHbar($params);
    }
-   function showGarea($raw_datas, $title, $desc = "", $show_label = 'none', $export = false, $area = true) {
-      $this->showHGbar($raw_datas, $title, $desc, $show_label, $export);
+   
+   function showGarea($params) {
+      $this->showHGbar($params);
    }
 }
+
 ?>
