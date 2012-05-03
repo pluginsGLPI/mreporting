@@ -254,7 +254,7 @@ class PluginMreportingCommon extends CommonDBTM {
             $reports[$classname]['functions'][$i]['gtype'] = $gtype;
             $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
             
-            $_SESSION['glpi_plugin_mreporting_rand'][$f_name]=$i;
+            $_SESSION['glpi_plugin_mreporting_rand'][$f_name]=$classname.$i;
       
             $reports[$classname]['functions'][$i]['rand'] = $_SESSION['glpi_plugin_mreporting_rand'][$f_name];
              
@@ -394,10 +394,29 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</tr>";
          
          echo "<tr class='tab_bg_1'>";
-         echo "<th class='graph_title' colspan='4'>";
-         echo "<a target='_blank' href='export.php?switchto=odtall&classname=".$classname."'>";
+         echo "<th class='graph_title' colspan='2'>";
+         
+         echo "<div align='center'><form method='POST' action='export.php?switchto=odtall&classname=".$classname."' name='form'>\n";
+         echo "<table width='60%'>";
+         echo "<tr><th class='graph_title'>";
          echo $LANG['plugin_mreporting']["export"][0];
-         echo "</a></th>";
+         echo "</th>";
+         $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
+         $date2 =  strftime("%Y-%m-%d");
+         echo "<th class='graph_title'>";
+         Html::showDateFormItem("date1",$date1,true);
+         echo "</th>";
+         echo "<th class='graph_title'>";
+         Html::showDateFormItem("date2",$date2,true);
+         echo "</th>";
+         echo "<th class='graph_title'>";
+         echo "<input type='submit' class='button' name='submit' Value=\"". $LANG['buttons'][31] ."\">";
+         echo "</th>";
+         echo "</tr>";
+         echo "</table>";
+         echo "</form></div>";
+         
+         echo "</th>";
          echo "</tr>";
       
       }     
@@ -434,6 +453,7 @@ class PluginMreportingCommon extends CommonDBTM {
       
       //export all with odt
       if (isset($opt['classname'])) {
+         
          unset($_SESSION['glpi_plugin_mreporting_odtarray']);
  
          $reports = $this->getAllReports(false, $opt);
@@ -444,21 +464,33 @@ class PluginMreportingCommon extends CommonDBTM {
                //dynamic instanciation of class passed by 'short_classname' GET parameter
                $class = 'PluginMreporting'.$function['short_classname'];
                $obj = new $class();
-
+               
+               $delay = "";
+               if (isset($opt['date1']) && isset($opt['date2'])) {
+                  
+                  $s = strtotime($opt['date2'])-strtotime($opt['date1']); 
+                  $delay = intval($s/86400)+1;
+               }
+               
                //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-               $datas = $obj->$function['function']();
+               $datas = $obj->$function['function']($delay);
 
                //show graph (pgrah type determined by first entry of explode of camelcase of function name
                $title_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['title'];
+               /*if (isset($opt['date1']) && isset($opt['date2'])) {
+                  $title_func .= " - ".Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
+               }*/
                $desc_func = "";
-               if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc']))
+               if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'])) {
                  $desc_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'];
-
+               } else if (isset($opt['date1']) && isset($opt['date2'])) {
+                  $desc_func = Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
+               }
                $options = array("short_classname" => $function['short_classname'],
                            "f_name" => $function['function'],
                            "gtype" => $function['gtype'],
                            "rand" => $function['rand']); 
-                           
+          
                $params = array("raw_datas" => $datas,
                                 "title" => $title_func,
                                 "desc" => $desc_func,
@@ -471,9 +503,10 @@ class PluginMreportingCommon extends CommonDBTM {
                
             }
          }
-
-         $this->generateOdt($_SESSION['glpi_plugin_mreporting_odtarray']);
-         
+         if (isset($_SESSION['glpi_plugin_mreporting_odtarray']) &&
+               !empty($_SESSION['glpi_plugin_mreporting_odtarray'])) {
+            $this->generateOdt($_SESSION['glpi_plugin_mreporting_odtarray']);
+         }
          
       } else {
          //dynamic instanciation of class passed by 'short_classname' GET parameter
