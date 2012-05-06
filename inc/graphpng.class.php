@@ -30,7 +30,9 @@
 require_once "../lib/imagesmootharc/imageSmoothArc.php";
 
 class PluginMreportingGraphpng extends PluginMreportingGraph {
-
+   
+   const DEBUG_GRAPH = false;
+   
    function initGraph($options) {
       
       //if ($options['export']=="odt" || $options['export']=="odtall") {
@@ -369,19 +371,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function showHbar($params) {
    
-      // Default values of parameters
-      $raw_datas   = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = false;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
@@ -389,10 +385,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $datas = array();
       }
       
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
-      
       $rand = $opt['rand'];
+      
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
@@ -469,17 +463,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index]);
 
          //create data label
-         imagettftext(
-            $image,
-            $fontsize,
-            $fontangle,
-            $bx2 + 6,
-            $by1 + 14,
-            $darkerpalette[$index],
-            $font,
-            $data.$unit
-         );
-
+         if($show_label == "always") {
+            imagettftext(
+               $image,
+               $fontsize,
+               $fontangle,
+               $bx2 + 6,
+               $by1 + 14,
+               $darkerpalette[$index],
+               $font,
+               $data.$unit
+            );
+         }
          //create axis label (align right)
          $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index]);
          $textwidth = abs($box[4] - $box[0]);
@@ -504,7 +499,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $params = array("image" => $image,
                       "export" => $export,
-                      "f_name" => $f_name,
+                      "f_name" => $opt['f_name'],
                       "title" => $title,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
@@ -514,27 +509,19 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function showPie($params) {
       
-      // Default values of parameters
-      $raw_datas   = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = false;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
       } else {
          $datas = array();
       }
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
       $rand = $opt['rand'];
       $options = array("title" => $title,
@@ -619,7 +606,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                            deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
 
             //text associated with pie arc (only for angle > 2°)
-            if ($angle > 2) {
+            if ($angle > 2 && $show_label == "always") {
                $xtext = $x - 3 + (sin(deg2rad(($start_angle+$angle)/2))*($radius/1.6));
                $ytext = $y + 5  + (cos(deg2rad(($start_angle+$angle)/2))*($radius/1.6));
                imagettftext(
@@ -668,7 +655,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $params = array("image" => $image,
                       "export" => $export,
-                      "f_name" => $f_name,
+                      "f_name" => $opt['f_name'],
                       "title" => $title,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
@@ -678,30 +665,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function showHgbar($params) {
       
-      // Default values of parameters
-      $raw_datas   = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = false;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
       } else {
          $datas = array();
       }
-      
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
-      
+                         
       $rand = $opt['rand'];
+      
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
@@ -810,16 +789,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index2]);
 
             //create data label
-            imagettftext(
-               $image,
-               $fontsize,
-               $fontangle,
-               $bx2 + 6,
-               $by1 + 14,
-               $darkerpalette[$index2],
-               $font,
-               $subdata
-            );
+            if($show_label == "always") {
+               imagettftext(
+                  $image,
+                  $fontsize,
+                  $fontangle,
+                  $bx2 + 6,
+                  $by1 + 14,
+                  $darkerpalette[$index2],
+                  $font,
+                  $subdata
+               );
+            }
             $index2++;
          }
          $index1++;
@@ -860,7 +841,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //generate image
       $params = array("image" => $image,
                       "export" => $export,
-                      "f_name" => $f_name,
+                      "f_name" => $opt['f_name'],
                       "title" => $title,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
@@ -870,30 +851,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function showArea($params) {
       
-      // Default values of parameters
-      $raw_datas   = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = true;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
       } else {
          $datas = array();
       }
-
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
-      
+                         
       $rand = $opt['rand'];
+      
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
@@ -992,9 +965,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
 
          //display values label
-         imagettftext($image, $fontsize, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
+         if($show_label == "always") {
+            imagettftext($image, $fontsize, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
                       $darkerpalette[0], $font, $old_data);
-
+         }
 
          //display y axis and labels
          if ($step!=0 && ($index / $step) == round($index / $step)) {
@@ -1025,7 +999,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //generate image
       $params = array("image" => $image,
                       "export" => $export,
-                      "f_name" => $f_name,
+                      "f_name" => $opt['f_name'],
                       "title" => $title,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
@@ -1035,30 +1009,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function showGArea($params) {
       
-      // Default values of parameters
-      $raw_datas   = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = true;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
       } else {
          $datas = array();
       }
-      
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
-      
+                          
       $rand = $opt['rand'];
+      
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
@@ -1169,9 +1135,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
             //display values label
-            imagettftext($image, $fontsize, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
+            if($show_label == "always") {
+               imagettftext($image, $fontsize, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
                          $darkerpalette[$index1], $font, $old_data);
-
+            }
 
 
             imageline($image, $x2, $y2, $x2, $height-27, $grey);
@@ -1222,7 +1189,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //generate image
       $params = array("image" => $image,
                       "export" => $export,
-                      "f_name" => $f_name,
+                      "f_name" => $opt['f_name'],
                       "title" => $title,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);

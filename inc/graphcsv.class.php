@@ -43,24 +43,17 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
    function showHbar($params) {
       
-      // Default values of parameters
-      $raw_datas   = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = false;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
       
+      if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      
       $datas = $raw_datas['datas'];
+      
       if (count($datas) <= 0) return false;
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
       $values = array_values($datas);
       $labels = array_keys($datas);
@@ -98,26 +91,20 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
    function showHgbar($params) {
       
-      // Default values of parameters
-      $raw_datas   = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = false;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
+      
+      if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
    
       $rand = $opt['rand'];
+      
       $datas = $raw_datas['datas'];
       if (count($datas) <= 0) return false;
+      
       $labels2 = array_values($raw_datas['labels2']);
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
       $rand = $opt['rand'];
       

@@ -29,9 +29,256 @@
  
 class PluginMreportingCommon extends CommonDBTM {
    
+   static function title() {
+      global $LANG;
+      
+      $self = new self();
+      $reports = $self->getAllReports();
+      
+      foreach($reports as $classname => $report) {
+      $opt_list[$classname] = $report['title'];
+         foreach($report['functions'] as $function) {
+            
+            $stat_list[$classname][$function['function']]["name"]  = $function['title'];
+            $stat_list[$classname][$function['function']]["file"]  = $function['url_graph'];
+            
+         }
+      }
+      
+      
+      //Affichage du tableau de presentation des stats
+      echo "<table class='tab_cadre_fixe'>";
+      echo "<tr><th colspan='2'>".$LANG['stats'][0]."&nbsp;:</th></tr>";
+      echo "<tr class='tab_bg_1'><td class='center'>";
+      echo "<select name='graphmenu' onchange='window.location.href=this.options
+    [this.selectedIndex].value'>";
+      echo "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
+      
+      $i = 0;
+      $count = count($stat_list);
+      
+      foreach ($opt_list as $opt => $group) {
+         echo "<optgroup label=\"". $group ."\">";
+         while ($data = each($stat_list[$opt])) {
+            $name = $data[1]["name"];
+            $file = $data[1]["file"];
+            $comment ="";
+            if (isset($data[1]["comment"]))
+               $comment = $data[1]["comment"];
+            
+            echo "<option value='".$file."' title=\"".Html::cleanInputText($comment)."\">".$name."</option>";
+            $i++;
+         }
+         echo "</optgroup>";
+      }
+
+      echo "</select>";
+      echo "</td>";
+      echo "</tr>";
+      echo "</table>";
+   }
+   
    function showCentral($params) {
       $this->parseAllClass($params);
       if (DEBUG_MREPORTING) $this->debugGraph();
+   }
+   
+   function parseAllClass($params)  {
+      global $LANG;
+
+      $reports = $this->getAllReports(true, $params);
+      if ($reports === false) {
+         echo "<div class='center'>".$LANG['plugin_mreporting']["error"][0]."</div>";
+         return false;
+      }
+
+      echo "<table class='tab_cadre_fixe' id='mreporting_functions'>";
+
+      foreach($reports as $classname => $report) {
+
+         echo "<tr><th class='graph_title' colspan='4'>".$report['title']."</th></tr>";
+     
+         $i = 0;
+         $nb_per_line = 2;
+
+         foreach($report['functions'] as $function) {
+            if ($i%$nb_per_line == 0) {
+               if ($i != 0) {
+                  echo "</tr>";
+               }
+               echo "<tr class='tab_bg_1' valign='top'>";
+            }
+
+                    
+            echo "<td>";
+            echo "<a href='".$function['url_graph']."'>";
+            echo "<img src='".$function['pic']."' />&nbsp;";
+            echo $function['title'];
+            echo "</a></td>";
+            $i++;
+            
+         }
+
+         while ($i%$nb_per_line != 0) {
+            echo "<td>&nbsp;</td>";
+            $i++;
+         }
+         echo "</tr>";
+         
+         echo "<tr class='tab_bg_1'>";
+         echo "<th class='graph_title' colspan='2'>";
+         
+         echo "<div align='center'><form method='POST' action='export.php?switchto=odtall&classname=".$classname."' name='form'>\n";
+         echo "<table width='80%'>";
+         echo "<tr><th class='graph_title'>";
+         echo $LANG['plugin_mreporting']["export"][0];
+         echo "</th>";
+         $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
+         $date2 =  strftime("%Y-%m-%d");
+         echo "<th class='graph_title'>";
+         echo $LANG['search'][8];
+         echo "</th>";
+         echo "<th class='graph_title'>";
+         Html::showDateFormItem("date1",$date1,true);
+         echo "</th>";
+         echo "<th class='graph_title'>";
+         echo $LANG['search'][9];
+         echo "</th>";
+         echo "<th class='graph_title'>";
+         Html::showDateFormItem("date2",$date2,true);
+         echo "</th>";
+         echo "<th class='graph_title'>";
+         echo "<input type='submit' class='button' name='submit' Value=\"". $LANG['buttons'][31] ."\">";
+         echo "</th>";
+         echo "</tr>";
+         echo "</table>";
+         echo "</form></div>";
+         
+         echo "</th>";
+         echo "</tr>";
+      
+      }     
+      
+      echo "</table>";
+   }
+   
+   function getAllReports($with_url = true, $params=array()) {
+      global $LANG;
+
+      $reports = array();
+
+      //parse inc dir to search report classes
+      $classes = array();
+      $matches = array();
+      $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
+      $front_dir = GLPI_ROOT."/plugins/mreporting/front";
+      $pics_dir = GLPI_ROOT."/plugins/mreporting/pics";
+      if ($handle = opendir($inc_dir)) {
+         while (false !== ($entry = readdir($handle))) {
+            if ($entry != "." && $entry != "..") {
+               $fcontent = file_get_contents($inc_dir."/".$entry);
+               if (preg_match("/class\s(.+)Extends PluginMreportingBaseclass/i", $fcontent, $matches)) {
+                  $classes[] = trim($matches[1]);
+               }
+            }
+         }
+      }
+      
+      if (isset($params['classname']) 
+            && !empty($params['classname'])) {
+         $classes = array();
+         $classes[] = $params['classname'];
+         
+      }
+
+      //construct array to list classes and functions
+      foreach($classes as $classname) {
+         $i = 0;
+         $short_classname = str_replace('PluginMreporting', '', $classname);
+         $title = $LANG['plugin_mreporting'][$short_classname]['title'];
+         
+         $functions = get_class_methods($classname);
+
+         foreach($functions as $f_name) {
+            $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
+            if ($ex_func[0] != 'report') continue;
+
+            $gtype      = strtolower($ex_func[1]);
+            $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+            
+            $_SESSION['glpi_plugin_mreporting_rand'][$f_name]=$classname.$i;
+      
+            $rand = $_SESSION['glpi_plugin_mreporting_rand'][$f_name];
+            
+            $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
+            $min_url_graph  = "/front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
+            
+            $reports[$classname]['title'] = $title;
+            $reports[$classname]['functions'][$i]['function'] = $f_name;
+            $reports[$classname]['functions'][$i]['title'] = $title_func;
+            $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
+            $reports[$classname]['functions'][$i]['gtype'] = $gtype;
+            $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
+            $reports[$classname]['functions'][$i]['rand'] = $rand;
+            
+             
+            if ($with_url) {
+               $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
+               $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
+            }
+
+            $i++;
+         }
+      }
+
+      return $reports;
+   }
+   
+   function initParams($params, $export = false) {
+      if(!isset($params['classname'])) {
+         if (!isset($params['short_classname'])) exit;
+         if (!isset($params['f_name'])) exit;
+         if (!isset($params['gtype'])) exit;
+      }
+      
+      return $params;
+   }
+   
+   static function initGraphParams($params) {
+
+      $crit        = array();
+      
+      // Default values of parameters
+      $raw_datas   = array();
+      $title       = "";
+      $desc        = "";
+      
+      $export      = false;
+      
+      $delay       = false;
+      $show_label  = false;
+      $area        = false;
+      $unit        = '';
+      $spline      = false;
+      
+      $opt         = array();
+
+      foreach ($params as $key => $val) {
+         $crit[$key]=$val;
+      }
+      
+      $crit['delay']  = (isset($crit['raw_datas']['delay']) 
+                        && $crit['raw_datas']['delay']) ? $crit['raw_datas']['delay'] : "false";
+      $crit['show_label']  = (isset($crit['raw_datas']['show_label']) 
+               && $crit['raw_datas']['show_label']) ? $crit['raw_datas']['show_label'] : $show_label;
+      $crit['area']  = (isset($crit['raw_datas']['area']) 
+                        && $crit['raw_datas']['area']) ? "true" : $area;
+      $crit['unit'] = (isset($crit['raw_datas']['unit']) 
+                        && $crit['raw_datas']['unit']) ? $crit['raw_datas']['unit'] : $unit;
+      $crit['spline']  = (isset($crit['raw_datas']['spline']) 
+                           && $crit['raw_datas']['spline']) ? "true" : $spline;
+      
+      return $crit;
    }
 
    function showGraph($opt, $export = false) {
@@ -52,26 +299,213 @@ class PluginMreportingCommon extends CommonDBTM {
 
       if ($export) $show_label = 'always';
       else $show_label = 'hover';
-
+      
+      if ($CFG_GLPI['default_graphtype'] == 'png') $show_label = 'always';
+      
       //show graph (pgrah type determined by first entry of explode of camelcase of function name
       $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
       $desc_func = "";
       if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc']))
         $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
       
-      $params = array("raw_datas" => $datas,
-                       "title" => $title_func,
-                       "desc" => $desc_func,
-                       "f_name" => $opt['f_name'],
-                       "show_label" => '',
-                       "export" => $export,
-                       "opt" => $opt);
+      $params = array("raw_datas"   => $datas,
+                       "title"      => $title_func,
+                       "desc"       => $desc_func,
+                       "show_label" => $show_label,
+                       "unit"       => '',
+                       "export"     => $export,
+                       "opt"        => $opt);
                        
       $graph->{'show'.$opt['gtype']}($params);
 
    }
 
+   function export($opt)  {
+      global $LANG;
+      
+      switch ($opt['switchto']) {
+         default:
+         case 'png':
+            $graph = new PluginMreportingGraphpng();
+            //check the format display charts configured in glpi
+            $opt = $this->initParams($opt, true);
+            $opt['export'] = 'png';
+            break;
+         case 'csv':
+            $graph = new PluginMreportingGraphcsv();
+            $opt['export'] = 'csv';
+            break;
+         case 'odt':
+            $graph = new PluginMreportingGraphpng();
+            $opt = $this->initParams($opt, true);
+            $opt['export'] = 'odt';
+            break;
+         case 'odtall':
+            $graph = new PluginMreportingGraphpng();
+            $opt = $this->initParams($opt, true);
+            $opt['export'] = 'odtall';
+            break;
+      }
+      
+      //export all with odt
+      if (isset($opt['classname'])) {
+         
+         unset($_SESSION['glpi_plugin_mreporting_odtarray']);
+ 
+         $reports = $this->getAllReports(false, $opt);
 
+         foreach($reports as $classname => $report) {
+            foreach($report['functions'] as $function) {
+               
+               //dynamic instanciation of class passed by 'short_classname' GET parameter
+               $class = 'PluginMreporting'.$function['short_classname'];
+               $obj = new $class();
+               
+               $delay = "";
+               if (isset($opt['date1']) && isset($opt['date2'])) {
+                  
+                  $s = strtotime($opt['date2'])-strtotime($opt['date1']); 
+                  $delay = intval($s/86400)+1;
+               }
+               
+               //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
+               $datas = $obj->$function['function']($delay);
+               
+               //show graph (pgrah type determined by first entry of explode of camelcase of function name
+               $title_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['title'];
+
+               $desc_func = "";
+               if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'])) {
+                 $desc_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'];
+               } else if (isset($opt['date1']) && isset($opt['date2'])) {
+                  $desc_func = Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
+               }
+               $options = array("short_classname" => $function['short_classname'],
+                           "f_name" => $function['function'],
+                           "gtype" => $function['gtype'],
+                           "rand" => $function['rand']); 
+               
+               $show_label = 'always';
+      
+               $params = array("raw_datas"  => $datas,
+                                "title"      => $title_func,
+                                "desc"       => $desc_func,
+                                "show_label" => $show_label,
+                                "export"     => $opt['export'],
+                                "unit"       => '',
+                                "opt"        => $options);
+                                
+               $graph->{'show'.$function['gtype']}($params);
+               
+            }
+         }
+         if (isset($_SESSION['glpi_plugin_mreporting_odtarray']) &&
+               !empty($_SESSION['glpi_plugin_mreporting_odtarray'])) {
+            $this->generateOdt($_SESSION['glpi_plugin_mreporting_odtarray']);
+         }
+         
+      } else {
+         //dynamic instanciation of class passed by 'short_classname' GET parameter
+         $classname = 'PluginMreporting'.$opt['short_classname'];
+         $obj = new $classname();
+
+         //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
+         $datas = $obj->$opt['f_name']();
+
+         //show graph (pgrah type determined by first entry of explode of camelcase of function name
+         $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
+         $desc_func = "";
+         if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc']))
+           $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
+         
+         $show_label = 'always';
+               
+         $params = array("raw_datas"  => $datas,
+                          "title"      => $title_func,
+                          "desc"       => $desc_func,
+                          "show_label" => $show_label,
+                          "unit"       => '',
+                          "export"     => $opt['export'],
+                          "opt"        => $opt);
+                          
+         $graph->{'show'.$opt['gtype']}($params);
+      }
+   }
+   
+   function generateOdt($params) {
+      global $LANG;
+      
+      $config = array('PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp');
+      $template = "../templates/label2.odt";
+      
+      $odf = new odf($template, $config);
+      
+      $reports = $this->getAllReports();
+      foreach($reports as $classname => $report) {
+         $titre = $report['title'];
+      }
+      
+      $odf->setVars('titre', $titre, true, 'UTF-8');
+      
+      $newpage = $odf->setSegment('newpage');
+      
+      foreach ($params as $result => $page) {
+         
+         // Default values of parameters
+         $title       = "";
+         $f_name      = "";
+         $raw_datas   = array();
+
+         foreach ($page as $key => $val) {
+            $$key=$val;
+         }
+         
+         $datas = $raw_datas['datas'];
+         /*foreach ($datas as $label => $data) {
+            if (is_array($data)) {
+               $template = "../templates/label2.odt";
+            }
+         }*/
+
+         $newpage->setVars('message', $title, true, 'UTF-8');
+         
+         $path = GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
+         
+         $newpage->setImage('image', $path);
+
+         foreach ($datas as $label => $data) {
+            
+            if (is_array($data)) {
+               $newpage->csvdata->setVars('TitreCategorie', $label, true, 'UTF-8');
+               
+               $labels2 = $raw_datas['labels2'];
+               
+               foreach ($data as $label1 => $data1) {
+
+                  if (isset($labels2[$label1])) $label1 = str_replace(",", "-", $labels2[$label1]);
+                  if(is_null($label1)) {
+                     $label1 = $LANG['plugin_mreporting']["error"][2];
+                  }
+                  $newpage->csvdata->data1->label_1(utf8_decode($label1));
+                  $newpage->csvdata->data1->data_1($data1);
+                  $newpage->csvdata->data1->merge();
+               }
+            } else {
+               $newpage->csvdata->setVars('TitreCategorie', "", true, 'UTF-8');
+               $newpage->csvdata->data1->label_1(utf8_decode($label));
+               $newpage->csvdata->data1->data_1($data);
+            }
+            $newpage->csvdata->merge();
+         }
+         $newpage->merge();
+
+      }
+      $odf->mergeSegment($newpage);
+      // We export the file
+      $odf->exportAsAttachedFile();
+      unset($_SESSION['glpi_plugin_mreporting_odtarray']);
+   }
+   
    function debugGraph() {
 
       echo "<h1 style='color:red;'>DEBUG</h1>";
@@ -187,432 +621,6 @@ class PluginMreportingCommon extends CommonDBTM {
       $params5['opt'] = $opt;
       
       $graph->showGArea($params5);
-   }
-
-
-   function initParams($params, $export = false) {
-      if(!isset($params['classname'])) {
-         if (!isset($params['short_classname'])) exit;
-         if (!isset($params['f_name'])) exit;
-         if (!isset($params['gtype'])) exit;
-      }
-      //if (!$export) $this->loadLibraries();
-
-      return $params;
-   }
-
-   function getAllReports($with_url = true, $params=array()) {
-      global $LANG, $CFG_GLPI;
-
-      $reports = array();
-
-      //parse inc dir to search report classes
-      $classes = array();
-      $matches = array();
-      $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
-      $front_dir = GLPI_ROOT."/plugins/mreporting/front";
-      $pics_dir = GLPI_ROOT."/plugins/mreporting/pics";
-      if ($handle = opendir($inc_dir)) {
-         while (false !== ($entry = readdir($handle))) {
-            if ($entry != "." && $entry != "..") {
-               $fcontent = file_get_contents($inc_dir."/".$entry);
-               if (preg_match("/class\s(.+)Extends PluginMreportingBaseclass/i", $fcontent, $matches)) {
-                  $classes[] = trim($matches[1]);
-               }
-            }
-         }
-      }
-      
-      if (isset($params['classname']) 
-            && !empty($params['classname'])) {
-         $classes = array();
-         $classes[] = $params['classname'];
-         
-      }
-
-      //construct array to list classes and functions
-      foreach($classes as $classname) {
-         $i = 0;
-         $short_classname = str_replace('PluginMreporting', '', $classname);
-         $title = $LANG['plugin_mreporting'][$short_classname]['title'];
-         
-         $functions = get_class_methods($classname);
-
-         foreach($functions as $f_name) {
-            $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
-            if ($ex_func[0] != 'report') continue;
-
-            $gtype      = strtolower($ex_func[1]);
-            $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
-            $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype";
-            $min_url_graph  = "/front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype";
-            
-            $reports[$classname]['title'] = $title;
-            $reports[$classname]['functions'][$i]['function'] = $f_name;
-            $reports[$classname]['functions'][$i]['title'] = $title_func;
-            $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
-            $reports[$classname]['functions'][$i]['gtype'] = $gtype;
-            $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
-            
-            $_SESSION['glpi_plugin_mreporting_rand'][$f_name]=$classname.$i;
-      
-            $reports[$classname]['functions'][$i]['rand'] = $_SESSION['glpi_plugin_mreporting_rand'][$f_name];
-             
-            if ($with_url) {
-               $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
-               $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
-            }
-
-            $i++;
-         }
-      }
-
-      return $reports;
-   }
-   
-   
-   static function title() {
-      global $LANG, $CFG_GLPI;
-      
-      $self = new self();
-      $reports = $self->getAllReports();
-      
-      foreach($reports as $classname => $report) {
-      $opt_list[$classname] = $report['title'];
-         foreach($report['functions'] as $function) {
-            
-            
-            $options = array("short_classname" => $function['short_classname'],
-                           "f_name" => $function['function'],
-                           "gtype" => $function['gtype'],
-                           "rand" => $function['rand']);  
-            
-            $request_string = "";
-            foreach($options as $key => $value) {
-               $request_string.= "$key=$value&";
-            }
-            
-            $stat_list[$classname][$function['function']]["name"]  = $function['title'];
-            $stat_list[$classname][$function['function']]["file"]  = $function['url_graph']."?".$request_string;
-            
-         }
-      }
-      
-      
-      //Affichage du tableau de presentation des stats
-      echo "<table class='tab_cadre_fixe'>";
-      echo "<tr><th colspan='2'>".$LANG['stats'][0]."&nbsp;:</th></tr>";
-      echo "<tr class='tab_bg_1'><td class='center'>";
-      echo "<select name='graphmenu' onchange='window.location.href=this.options
-    [this.selectedIndex].value'>";
-      echo "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
-      
-      $i = 0;
-      $count = count($stat_list);
-      
-      foreach ($opt_list as $opt => $group) {
-         echo "<optgroup label=\"". $group ."\">";
-         while ($data = each($stat_list[$opt])) {
-            $name = $data[1]["name"];
-            $file = $data[1]["file"];
-            $comment ="";
-            if (isset($data[1]["comment"]))
-               $comment = $data[1]["comment"];
-            
-            echo "<option value='".$file."' title=\"".Html::cleanInputText($comment)."\">".$name."</option>";
-            $i++;
-         }
-         echo "</optgroup>";
-      }
-
-      echo "</select>";
-      echo "</td>";
-      echo "</tr>";
-      echo "</table>";
-   }
-
-
-   function parseAllClass($params)  {
-      global $LANG;
-
-      $reports = $this->getAllReports(true, $params);
-      if ($reports === false) {
-         echo "<div class='center'>".$LANG['plugin_mreporting']["error"][0]."</div>";
-         return false;
-      }
-
-      echo "<table class='tab_cadre_fixe' id='mreporting_functions'>";
-
-      foreach($reports as $classname => $report) {
-
-         echo "<tr><th class='graph_title' colspan='4'>".$report['title']."</th></tr>";
-     
-         $i = 0;
-         $nb_per_line = 2;
-
-         foreach($report['functions'] as $function) {
-            if ($i%$nb_per_line == 0) {
-               if ($i != 0) {
-                  echo "</tr>";
-               }
-               echo "<tr class='tab_bg_1' valign='top'>";
-            }
-            
-            $options = array("short_classname" => $function['short_classname'],
-                           "f_name" => $function['function'],
-                           "gtype" => $function['gtype'],
-                           "rand" => $function['rand']);  
-            
-            $request_string = "";
-            foreach($options as $key => $value) {
-               $request_string.= "$key=$value&";
-            }
-                    
-            echo "<td>";
-            echo "<a href='".$function['url_graph']."?$request_string'>";
-            echo "<img src='".$function['pic']."' />&nbsp;";
-            echo $function['title'];
-            echo "</a></td>";
-            $i++;
-            
-            $export[] = array("short_classname" => $function['short_classname'],
-                           "f_name" => $function['function'],
-                           "gtype" => $function['gtype'],
-                           "rand" => $function['rand']);  
-            
-            $export_string = "";
-            foreach($export as $k => $v) {
-               $export_string.= "$k=$v&";
-            }
-      
-         }
-
-         while ($i%$nb_per_line != 0) {
-            echo "<td>&nbsp;</td>";
-            $i++;
-         }
-         echo "</tr>";
-         
-         echo "<tr class='tab_bg_1'>";
-         echo "<th class='graph_title' colspan='2'>";
-         
-         echo "<div align='center'><form method='POST' action='export.php?switchto=odtall&classname=".$classname."' name='form'>\n";
-         echo "<table width='80%'>";
-         echo "<tr><th class='graph_title'>";
-         echo $LANG['plugin_mreporting']["export"][0];
-         echo "</th>";
-         $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
-         $date2 =  strftime("%Y-%m-%d");
-         echo "<th class='graph_title'>";
-         echo $LANG['search'][8];
-         echo "</th>";
-         echo "<th class='graph_title'>";
-         Html::showDateFormItem("date1",$date1,true);
-         echo "</th>";
-         echo "<th class='graph_title'>";
-         echo $LANG['search'][9];
-         echo "</th>";
-         echo "<th class='graph_title'>";
-         Html::showDateFormItem("date2",$date2,true);
-         echo "</th>";
-         echo "<th class='graph_title'>";
-         echo "<input type='submit' class='button' name='submit' Value=\"". $LANG['buttons'][31] ."\">";
-         echo "</th>";
-         echo "</tr>";
-         echo "</table>";
-         echo "</form></div>";
-         
-         echo "</th>";
-         echo "</tr>";
-      
-      }     
-      
-      echo "</table>";
-   }
-
-   function export($opt)  {
-      global $LANG;
-      
-      switch ($opt['switchto']) {
-         default:
-         case 'png':
-            $graph = new PluginMreportingGraphpng();
-            //check the format display charts configured in glpi
-            $opt = $this->initParams($opt, true);
-            $opt['export'] = 'png';
-            break;
-         case 'csv':
-            $graph = new PluginMreportingGraphcsv();
-            $opt['export'] = 'csv';
-            break;
-         case 'odt':
-            $graph = new PluginMreportingGraphpng();
-            $opt = $this->initParams($opt, true);
-            $opt['export'] = 'odt';
-            break;
-         case 'odtall':
-            $graph = new PluginMreportingGraphpng();
-            $opt = $this->initParams($opt, true);
-            $opt['export'] = 'odtall';
-            break;
-      }
-      
-      //export all with odt
-      if (isset($opt['classname'])) {
-         
-         unset($_SESSION['glpi_plugin_mreporting_odtarray']);
- 
-         $reports = $this->getAllReports(false, $opt);
-
-         foreach($reports as $classname => $report) {
-            foreach($report['functions'] as $function) {
-               
-               //dynamic instanciation of class passed by 'short_classname' GET parameter
-               $class = 'PluginMreporting'.$function['short_classname'];
-               $obj = new $class();
-               
-               $delay = "";
-               if (isset($opt['date1']) && isset($opt['date2'])) {
-                  
-                  $s = strtotime($opt['date2'])-strtotime($opt['date1']); 
-                  $delay = intval($s/86400)+1;
-               }
-               
-               //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-               $datas = $obj->$function['function']($delay);
-
-               //show graph (pgrah type determined by first entry of explode of camelcase of function name
-               $title_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['title'];
-               /*if (isset($opt['date1']) && isset($opt['date2'])) {
-                  $title_func .= " - ".Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
-               }*/
-               $desc_func = "";
-               if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'])) {
-                 $desc_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'];
-               } else if (isset($opt['date1']) && isset($opt['date2'])) {
-                  $desc_func = Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
-               }
-               $options = array("short_classname" => $function['short_classname'],
-                           "f_name" => $function['function'],
-                           "gtype" => $function['gtype'],
-                           "rand" => $function['rand']); 
-          
-               $params = array("raw_datas" => $datas,
-                                "title" => $title_func,
-                                "desc" => $desc_func,
-                                "f_name" => $function['function'],
-                                "show_label" => '',
-                                "export" => $opt['export'],
-                                "opt" => $options);
-                                
-               $graph->{'show'.$function['gtype']}($params);
-               
-            }
-         }
-         if (isset($_SESSION['glpi_plugin_mreporting_odtarray']) &&
-               !empty($_SESSION['glpi_plugin_mreporting_odtarray'])) {
-            $this->generateOdt($_SESSION['glpi_plugin_mreporting_odtarray']);
-         }
-         
-      } else {
-         //dynamic instanciation of class passed by 'short_classname' GET parameter
-         $classname = 'PluginMreporting'.$opt['short_classname'];
-         $obj = new $classname();
-
-         //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-         $datas = $obj->$opt['f_name']();
-
-         //show graph (pgrah type determined by first entry of explode of camelcase of function name
-         $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
-         $desc_func = "";
-         if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc']))
-           $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
-         
-         
-         $params = array("raw_datas" => $datas,
-                          "title" => $title_func,
-                          "desc" => $desc_func,
-                          "f_name" => $opt['f_name'],
-                          "show_label" => '',
-                          "export" => $opt['export'],
-                          "opt" => $opt);
-                          
-         $graph->{'show'.$opt['gtype']}($params);
-      }
-   }
-   
-   function generateOdt($params) {
-      global $LANG;
-      
-      $config = array('PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp');
-      $template = "../templates/label2.odt";
-      
-      $odf = new odf($template, $config);
-      
-      $reports = $this->getAllReports();
-      foreach($reports as $classname => $report) {
-         $titre = $report['title'];
-      }
-      
-      $odf->setVars('titre', $titre, true, 'UTF-8');
-      
-      $newpage = $odf->setSegment('newpage');
-      
-      foreach ($params as $result => $page) {
-         
-         // Default values of parameters
-         $title       = "";
-         $f_name      = "";
-         $raw_datas   = array();
-
-         foreach ($page as $key => $val) {
-            $$key=$val;
-         }
-         
-         $datas = $raw_datas['datas'];
-         /*foreach ($datas as $label => $data) {
-            if (is_array($data)) {
-               $template = "../templates/label2.odt";
-            }
-         }*/
-
-         $newpage->setVars('message', $title, true, 'UTF-8');
-         
-         $path = GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
-         
-         $newpage->setImage('image', $path);
-
-         foreach ($datas as $label => $data) {
-            
-            if (is_array($data)) {
-               $newpage->csvdata->setVars('TitreCategorie', $label, true, 'UTF-8');
-               
-               $labels2 = $raw_datas['labels2'];
-               
-               foreach ($data as $label1 => $data1) {
-
-                  if (isset($labels2[$label1])) $label1 = str_replace(",", "-", $labels2[$label1]);
-                  if(is_null($label1)) {
-                     $label1 = $LANG['plugin_mreporting']["error"][2];
-                  }
-                  $newpage->csvdata->data1->label_1(utf8_decode($label1));
-                  $newpage->csvdata->data1->data_1($data1);
-                  $newpage->csvdata->data1->merge();
-               }
-            } else {
-               $newpage->csvdata->setVars('TitreCategorie', "", true, 'UTF-8');
-               $newpage->csvdata->data1->label_1(utf8_decode($label));
-               $newpage->csvdata->data1->data_1($data);
-            }
-            $newpage->csvdata->merge();
-         }
-         $newpage->merge();
-
-      }
-      $odf->mergeSegment($newpage);
-      // We export the file
-      $odf->exportAsAttachedFile();
-      unset($_SESSION['glpi_plugin_mreporting_odtarray']);
    }
 }
 
