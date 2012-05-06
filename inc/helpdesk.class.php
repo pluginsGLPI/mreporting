@@ -410,10 +410,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    
    function reportLineNbTicket($delay = 365) {
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportLineNbTicket'];
-      return $this->reportAreaNbTicket($delay = 365, $rand);
+      $area = false;
+      return $this->reportAreaNbTicket($delay = 365, $rand, $area);
    }
    
-   function reportAreaNbTicket($delay = 365, $rand = "") {
+   function reportAreaNbTicket($delay = 365, $rand = "", $area = true) {
       global $DB, $LANG;
       $datas = array();
 
@@ -440,17 +441,20 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       //curve lines
       $datas['spline'] = true;
-
+      $datas['area'] = $area;
+      
       return $datas;
    }
    
    function reportGareaNbTicket($delay = 365) {
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportGareaNbTicket'];
-      return $this->reportGlineNbTicket($delay = 365, $rand);
+      $area = true;
+      return $this->reportGlineNbTicket($delay = 365, $rand, $area);
    }
 
-   function reportGlineNbTicket($delay = 365, $rand = "") {
+   function reportGlineNbTicket($delay = 365, $rand = "", $area = false) {
       global $DB, $LANG;
+      
       $datas = array();
       
       if ($rand != $_SESSION['glpi_plugin_mreporting_rand']['reportGareaNbTicket']) {
@@ -479,7 +483,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       //curve lines
       $datas['spline'] = true;
-
+      $datas['area'] = $area;
+      
       return $datas;
    }
   

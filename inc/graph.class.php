@@ -85,6 +85,7 @@ class PluginMreportingGraph {
          echo "}
             showGraph$rand();
          </script>";
+
       }
       echo "</div>";
 
@@ -172,23 +173,14 @@ class PluginMreportingGraph {
    function showHbar($params) {
       global $LANG;
       
-      // Default values of parameters
-      $raw_datas   = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = false;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
-
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      
       $rand = $opt['rand'];
       
       $options = array("title" => $title,
@@ -209,7 +201,6 @@ class PluginMreportingGraph {
       
       $datas = $raw_datas['datas'];
 
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
       $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
@@ -307,7 +298,8 @@ JAVASCRIPT;
    /**
     * Show a pie chart
     *
-    * @param $raw_datas : an array with :
+    * @params :
+    * $raw_datas : an array with :
     *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
     *    - key 'unit', ex : '%', 'Kg' (optionnal)
     * @param $title : title of the chart
@@ -320,25 +312,15 @@ JAVASCRIPT;
    function showPie($params) {
       global $LANG;
       
-      // Default values of parameters
-      $datas       = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = false;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       $rand = $opt['rand'];
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
       $options = array("title" => $title,
                         "desc" => $desc,
@@ -464,24 +446,15 @@ JAVASCRIPT;
    function showHgbar($params) {
       global $LANG;
       
-      // Default values of parameters
-      $datas       = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = false;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      
       $rand = $opt['rand'];
-      $unit = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
       $options = array("title" => $title,
                         "desc" => $desc,
@@ -630,25 +603,15 @@ JAVASCRIPT;
    function showArea($params) {
       global $LANG;
       
-      // Default values of parameters
-      $datas       = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = true;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+
       $rand = $opt['rand'];
-      $unit    = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $spline  = (isset($raw_datas['spline']) && $raw_datas['spline']) ? "true" : "false";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
       
       $options = array("title" => $title,
                         "desc" => $desc,
@@ -834,26 +797,16 @@ JAVASCRIPT;
    function showGarea($params) {
       global $LANG;
       
-      // Default values of parameters
-      $raw_datas   = array();
-      $title       = "";
-      $desc        = "";
-      $f_name      = "";
-      $show_label  = false;
-      $export      = false;
-      $area        = true;
-      $opt         = array();
-
-      foreach ($params as $key => $val) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      
       $rand = $opt['rand'];
-      $unit    = (isset($raw_datas['unit'])) ? $raw_datas['unit'] : "";
-      $spline  = (isset($raw_datas['spline']) && $raw_datas['spline']) ? "true" : "false";
-      $delay  = (isset($raw_datas['delay']) && $raw_datas['delay']) ? $raw_datas['delay'] : "false";
-
+      
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
