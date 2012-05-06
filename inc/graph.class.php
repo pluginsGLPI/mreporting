@@ -371,7 +371,7 @@ $JS = <<<JAVASCRIPT
             if (r < 0) r = 0;
             return angle(d - r);
          })
-         .left(function() { return (width_pie - 80) / 2
+         .left(function() { return (width_pie - 80) / 4
             + Math.cos(this.startAngle() + this.angle() / 2)
             * ((this.parent.o() == this.index) ? 20 : 0); })
          .bottom(function() { return height_pie / 2
