@@ -542,7 +542,7 @@ $JS = <<<JAVASCRIPT
    .anchor("right").add(pv.Label)
       .textAlign("left")
       .visible(function(d) {
-         return ((this.parent.active() || d <= max / 100)  && {$hover} || {$always}) ? true : false;
+         return ((this.parent.active() || (d <= max / 100 && d!=0))  && {$hover} || {$always}) ? true : false;
       })
       .textStyle(function() { return colors(this.parent.parent.index).darker(); });
 
@@ -1056,6 +1056,7 @@ JAVASCRIPT;
       echo "var n = ".count($labels).";";
       echo "var m = ".count($labels2).";";
       echo "var max = $max;";
+
    }
 
    function legend($datas) {

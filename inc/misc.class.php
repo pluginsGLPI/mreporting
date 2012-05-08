@@ -75,7 +75,7 @@ class PluginMreportingMisc {
    }
 
 
-   static function getSQLDate($field = "glpi_tickets.date", $delay=365, $rand) {
+   static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $rand) {
 
       if (!isset($_REQUEST['date1'.$rand])) 
          $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));

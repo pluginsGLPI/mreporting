@@ -206,9 +206,9 @@ class PluginMreportingCommon extends CommonDBTM {
             $gtype      = strtolower($ex_func[1]);
             $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
             
-            $_SESSION['glpi_plugin_mreporting_rand'][$f_name]=$classname.$i;
+            $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name]=$classname.$i;
       
-            $rand = $_SESSION['glpi_plugin_mreporting_rand'][$f_name];
+            $rand = $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name];
             
             $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
             $min_url_graph  = "/front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
@@ -366,7 +366,11 @@ class PluginMreportingCommon extends CommonDBTM {
                   
                   $s = strtotime($opt['date2'])-strtotime($opt['date1']); 
                   $delay = intval($s/86400)+1;
+                  
+                  $_REQUEST['date1'.$function['rand']] = $opt['date1'];
+                  $_REQUEST['date2'.$function['rand']] = $opt['date2'];
                }
+               
                
                //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
                $datas = $obj->$function['function']($delay);
@@ -415,8 +419,12 @@ class PluginMreportingCommon extends CommonDBTM {
          //show graph (pgrah type determined by first entry of explode of camelcase of function name
          $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
          $desc_func = "";
-         if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc']))
+         if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'])) {
            $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
+         } else if (isset($_REQUEST['date1'.$opt['rand']]) && isset($_REQUEST['date2'.$opt['rand']])) {
+            $desc_func = Html::convdate($_REQUEST['date1'.$opt['rand']]).
+                        " / ".Html::convdate($_REQUEST['date2'.$opt['rand']]);
+         }
          
          $show_label = 'always';
                
@@ -427,7 +435,7 @@ class PluginMreportingCommon extends CommonDBTM {
                           "unit"       => '',
                           "export"     => $opt['export'],
                           "opt"        => $opt);
-                          
+                
          $graph->{'show'.$opt['gtype']}($params);
       }
    }
