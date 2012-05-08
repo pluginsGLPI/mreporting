@@ -48,7 +48,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
+
       if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       $datas = $raw_datas['datas'];
@@ -65,11 +65,12 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
                         "rand" => $rand,
                         "export" => $export,
                         "delay" => $delay);
-                  
+      
+              
       $this->initGraph($options);
 
       //titles
-      $out = $title."\r\n";
+      $out = $title." - ".$desc."\r\n";
       foreach($labels as $label) {
          $out.= $label.";";
       }
@@ -117,6 +118,8 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $this->initGraph($options);
 
       $out = "";
+      $out = $title." - ".$desc."\r\n";
+      
       foreach($datas as $label2 => $cols) {
          //title
          $out.= $label2."\r\n";
