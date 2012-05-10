@@ -62,32 +62,40 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHbarTicketNumberByEntity($delay = 30, $rand = "") {
       global $DB, $LANG;
       
-      $datas = array();
-      
       if ($rand != $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportPieTicketNumberByEntity']) {
          $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHbarTicketNumberByEntity'];
       }
+      $this->sql_date = PluginMreportingMisc::getSQLDate("`glpi_tickets`.`date`", $delay, $rand);
 
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$rand);
-      
-      $query = "SELECT
-         COUNT(glpi_tickets.id) as nb,
+      $datas = array();
+      $query = "
+         SELECT
+         COUNT(glpi_tickets.id) as count,
          glpi_entities.name as name
       FROM glpi_tickets
       LEFT JOIN glpi_entities
-         ON glpi_tickets.entities_id = glpi_entities.id
+         ON (glpi_tickets.entities_id = glpi_entities.id 
+         AND glpi_entities.id IN (".$this->where_entities."))
       WHERE ".$this->sql_date."
-      AND glpi_entities.id IN (".$this->where_entities.")
       AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name
-      ORDER BY glpi_entities.name ASC";
-      $res = $DB->query($query);
-      while ($data = $DB->fetch_assoc($res)) {
-         if (empty($data['name'])) $data['name'] = $LANG['entity'][2];
-         $datas[$data['name']] = $data['nb'];
+      ORDER BY glpi_entities.name ASC
+      ";//
+      $result = $DB->query($query);
+         
+      while ($ticket = $DB->fetch_assoc($result)) {
+         if(empty($ticket['name'])) {
+            $label = $LANG['entity'][2];
+         } else {
+            $label = $ticket['name'];
+         }
+         $datas['datas'][$label] = $ticket['count'];
       }
+      
+      $datas['show_label'] = "always";
+      
+      return $datas;
 
-      return array('datas' => $datas);
    }
 
    function reportHgbarTicketNumberByCatAndEntity($delay = 30) {

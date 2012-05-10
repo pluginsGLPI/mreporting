@@ -192,7 +192,7 @@ class PluginMreportingGraph {
       $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
-         echo "</script>";
+         echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
          $this->endGraph($opt, false);
@@ -331,7 +331,7 @@ JAVASCRIPT;
       $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
-         echo "</script>";
+         echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
          $this->endGraph($opt, false);
@@ -465,7 +465,7 @@ JAVASCRIPT;
       $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
-         echo "</script>";
+         echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
          $this->endGraph($opt, false);
@@ -585,6 +585,7 @@ JAVASCRIPT;
       $this->endGraph($opt, $export);
    }
 
+
    /**
     * Show a Area chart
     *
@@ -622,7 +623,7 @@ JAVASCRIPT;
       $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
-         echo "</script>";
+         echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
          $this->endGraph($opt, false);
@@ -816,7 +817,7 @@ JAVASCRIPT;
       $this->initGraph($options);
       
       if (!isset($raw_datas['datas'])) {
-         echo "</script>";
+         echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
          $this->endGraph($opt, false);
@@ -843,7 +844,7 @@ $JS = <<<JAVASCRIPT
    var y = pv.Scale.linear(0, max).range(0, height_area-(n*14));
    var i = -1;
 
-   console.log(x.ticks());
+   //console.log(x.ticks());
 
    /* The root panel. */
    var vis{$rand} = new pv.Panel()
