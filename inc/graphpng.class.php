@@ -587,7 +587,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //pie
       $index = 0;
-      $x = $width / 4;
+      $x = $width / 4+50;
       $y = $height / 2;
       $radius = $height / 1.5;
       $start_angle = 0;
