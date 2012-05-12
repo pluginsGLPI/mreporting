@@ -84,7 +84,7 @@ class PluginMreportingCommon extends CommonDBTM {
    }
    
    function parseAllClass($params)  {
-      global $LANG;
+      global $LANG, $CFG_GLPI;
 
       $reports = $this->getAllReports(true, $params);
       if ($reports === false) {
@@ -96,7 +96,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
       foreach($reports as $classname => $report) {
 
-         echo "<tr><th class='graph_title' colspan='4'>".$report['title']."</th></tr>";
+         echo "<tr><th colspan='4'>".$report['title']."</th></tr>";
      
          $i = 0;
          $nb_per_line = 2;
@@ -109,7 +109,6 @@ class PluginMreportingCommon extends CommonDBTM {
                echo "<tr class='tab_bg_1' valign='top'>";
             }
 
-                    
             echo "<td>";
             echo "<a href='".$function['url_graph']."'>";
             echo "<img src='".$function['pic']."' />&nbsp;";
@@ -126,40 +125,110 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</tr>";
          
          echo "<tr class='tab_bg_1'>";
-         echo "<th class='graph_title' colspan='2'>";
-         
-         echo "<div align='center'><form method='POST' action='export.php?switchto=odtall&classname=".$classname."' name='form'>\n";
-         echo "<table width='80%'>";
-         echo "<tr><th class='graph_title'>";
-         echo $LANG['plugin_mreporting']["export"][0];
-         echo "</th>";
-         $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
-         $date2 =  strftime("%Y-%m-%d");
-         echo "<th class='graph_title'>";
-         echo $LANG['search'][8];
-         echo "</th>";
-         echo "<th class='graph_title'>";
-         Html::showDateFormItem("date1",$date1,true);
-         echo "</th>";
-         echo "<th class='graph_title'>";
-         echo $LANG['search'][9];
-         echo "</th>";
-         echo "<th class='graph_title'>";
-         Html::showDateFormItem("date2",$date2,true);
-         echo "</th>";
-         echo "<th class='graph_title'>";
-         echo "<input type='submit' class='button' name='submit' Value=\"". $LANG['buttons'][31] ."\">";
-         echo "</th>";
-         echo "</tr>";
-         echo "</table>";
-         echo "</form></div>";
-         
+         echo "<th colspan='2'>";
+         echo "<div class='right'>";
+         echo $LANG['buttons'][31]." : ";
+         echo "<a href='#' onClick=\"var w = window.open('".$CFG_GLPI["root_doc"].
+               "/plugins/mreporting/front/popup.php?classname=$classname' ,'glpipopup', ".
+               "'height=400, width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";
+         echo "ODT";
+         echo "</a></div>";
          echo "</th>";
          echo "</tr>";
       
       }     
       
       echo "</table>";
+   }
+   
+   function showExportFrom($opt) {
+      global $LANG;
+      
+      $classname = $opt["classname"];
+      if ($classname) {
+         echo "<div align='center'>";
+
+         echo "<form method='POST' action='export.php?switchto=odtall&classname=".$classname."' id='exportform' name='exportform'>\n";
+         
+         echo "<table class='tab_cadre_fixe'>";
+         
+         echo "<tr><th colspan='4'>";
+         echo $LANG['plugin_mreporting']["export"][0];
+         echo "</th></tr>";
+         
+         $reports = $this->getAllReports(false, $opt);
+         
+         foreach($reports as $class => $report) {
+
+            $i = 0;
+            $nb_per_line = 2;
+
+            foreach($report['functions'] as $function) {
+               if ($i%$nb_per_line == 0) {
+                  if ($i != 0) {
+                     echo "</tr>";
+                  }
+                  echo "<tr class='tab_bg_1'>";
+               }
+               
+               echo "<td>";
+               echo "<input type='checkbox' name='check[" . $function['rand'] . "]'";
+               if (isset($_POST['check']) && $_POST['check'] == 'all')
+                  echo " checked ";
+               echo ">";
+               echo "</td>";
+               echo "<td>";
+               echo "<img src='".$function['pic']."' />&nbsp;";
+               echo $function['title'];
+               echo "</td>";
+               $i++;
+               
+            }
+
+            while ($i%$nb_per_line != 0) {
+               echo "<td width='10'>&nbsp;</td>";
+               echo "<td>&nbsp;</td>";
+               $i++;
+            }
+            echo "</tr>";
+         }
+
+         echo "<tr class='tab_bg_2'>";
+         echo "<td colspan ='4' class='center'>";
+         echo "<div align='center'>";
+         echo "<table><tr class='tab_bg_2'>";
+         echo "<td>";
+         echo $LANG['search'][8];
+         echo "</td>";
+         echo "<td>";
+         $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
+         Html::showDateFormItem("date1",$date1,true);
+         echo "</td>";
+         echo "<td>";
+         echo $LANG['search'][9];
+         echo "</td>";
+         echo "<td>";
+         $date2 =  strftime("%Y-%m-%d");
+         Html::showDateFormItem("date2",$date2,true);
+         echo "</td>";
+         echo "</tr>";
+         echo "</table>";
+         echo "</div>";
+         
+         echo "</td>";
+         echo "</tr>";
+         
+        /* echo "<tr class='tab_bg_1'>";
+         echo "<th colspan='4'>";
+         echo "<input type='submit' class='button' name='submit' Value=\"". $LANG['buttons'][31] ."\">";
+         echo "</th>";
+         echo "</tr>";*/
+         
+         echo "</table>";
+         Html::openArrowMassives("exportform", true);
+         Html::closeArrowMassives(array('submit' => $LANG['buttons'][31]));
+         echo "</form></div>";
+      }
    }
    
    function getAllReports($with_url = true, $params=array()) {
@@ -350,62 +419,75 @@ class PluginMreportingCommon extends CommonDBTM {
       //export all with odt
       if (isset($opt['classname'])) {
          
-         unset($_SESSION['glpi_plugin_mreporting_odtarray']);
- 
-         $reports = $this->getAllReports(false, $opt);
+         if (isset($opt['check'])) {
+         
+            unset($_SESSION['glpi_plugin_mreporting_odtarray']);
+    
+            $reports = $this->getAllReports(false, $opt);
 
-         foreach($reports as $classname => $report) {
-            foreach($report['functions'] as $function) {
-               
-               //dynamic instanciation of class passed by 'short_classname' GET parameter
-               $class = 'PluginMreporting'.$function['short_classname'];
-               $obj = new $class();
-               
-               $delay = "";
-               if (isset($opt['date1']) && isset($opt['date2'])) {
+            foreach($reports as $classname => $report) {
+               foreach($report['functions'] as $function) {
                   
-                  $s = strtotime($opt['date2'])-strtotime($opt['date1']); 
-                  $delay = intval($s/86400)+1;
-                  
-                  $_REQUEST['date1'.$function['rand']] = $opt['date1'];
-                  $_REQUEST['date2'.$function['rand']] = $opt['date2'];
-               }
-               
-               
-               //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-               $datas = $obj->$function['function']($delay);
-               
-               //show graph (pgrah type determined by first entry of explode of camelcase of function name
-               $title_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['title'];
+                  foreach ($opt['check'] as $do=>$to) {
+                     
+                     if ($do == $function['rand']) {
+                        //dynamic instanciation of class passed by 'short_classname' GET parameter
+                        $class = 'PluginMreporting'.$function['short_classname'];
+                        $obj = new $class();
+                        
+                        $delay = "";
+                        if (isset($opt['date1']) && isset($opt['date2'])) {
+                           
+                           $s = strtotime($opt['date2'])-strtotime($opt['date1']); 
+                           $delay = intval($s/86400)+1;
+                           
+                           $_REQUEST['date1'.$function['rand']] = $opt['date1'];
+                           $_REQUEST['date2'.$function['rand']] = $opt['date2'];
+                        }
+                        
+                        
+                        //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
+                        $datas = $obj->$function['function']($delay);
+                        
+                        //show graph (pgrah type determined by first entry of explode of camelcase of function name
+                        $title_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['title'];
 
-               $desc_func = "";
-               if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'])) {
-                 $desc_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'];
-               } else if (isset($opt['date1']) && isset($opt['date2'])) {
-                  $desc_func = Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
+                        $desc_func = "";
+                        if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'])) {
+                          $desc_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'];
+                        } else if (isset($opt['date1']) && isset($opt['date2'])) {
+                           $desc_func = Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
+                        }
+                        $options = array("short_classname" => $function['short_classname'],
+                                    "f_name" => $function['function'],
+                                    "gtype" => $function['gtype'],
+                                    "rand" => $function['rand']); 
+                        
+                        $show_label = 'always';
+               
+                        $params = array("raw_datas"  => $datas,
+                                         "title"      => $title_func,
+                                         "desc"       => $desc_func,
+                                         "show_label" => $show_label,
+                                         "export"     => $opt['export'],
+                                         "unit"       => '',
+                                         "opt"        => $options);
+                                         
+                        $graph->{'show'.$function['gtype']}($params);
+                     }
+                  }
                }
-               $options = array("short_classname" => $function['short_classname'],
-                           "f_name" => $function['function'],
-                           "gtype" => $function['gtype'],
-                           "rand" => $function['rand']); 
-               
-               $show_label = 'always';
-      
-               $params = array("raw_datas"  => $datas,
-                                "title"      => $title_func,
-                                "desc"       => $desc_func,
-                                "show_label" => $show_label,
-                                "export"     => $opt['export'],
-                                "unit"       => '',
-                                "opt"        => $options);
-                                
-               $graph->{'show'.$function['gtype']}($params);
-               
             }
-         }
-         if (isset($_SESSION['glpi_plugin_mreporting_odtarray']) &&
-               !empty($_SESSION['glpi_plugin_mreporting_odtarray'])) {
-            $this->generateOdt($_SESSION['glpi_plugin_mreporting_odtarray']);
+            if (isset($_SESSION['glpi_plugin_mreporting_odtarray']) &&
+                  !empty($_SESSION['glpi_plugin_mreporting_odtarray'])) {
+               $this->generateOdt($_SESSION['glpi_plugin_mreporting_odtarray']);
+            }
+         } else {
+            Html::popHeader($LANG['plugin_mreporting']["export"][0], $_SERVER['PHP_SELF']);
+            echo "<div class='center'><br>".$LANG['plugin_mreporting']["error"][3]."<br><br>";
+            Html::displayBackLink();
+            echo "</div>";
+            Html::popFooter();
          }
          
       } else {
