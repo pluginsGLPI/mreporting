@@ -264,39 +264,41 @@ class PluginMreportingCommon extends CommonDBTM {
       foreach($classes as $classname) {
          $i = 0;
          $short_classname = str_replace('PluginMreporting', '', $classname);
-         $title = $LANG['plugin_mreporting'][$short_classname]['title'];
+         if (isset($LANG['plugin_mreporting'][$short_classname]['title'])) {
+            $title = $LANG['plugin_mreporting'][$short_classname]['title'];
+            
+            $functions = get_class_methods($classname);
+
+            foreach($functions as $f_name) {
+               $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
+               if ($ex_func[0] != 'report') continue;
+
+               $gtype      = strtolower($ex_func[1]);
+               $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+               
+               $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name]=$classname.$i;
          
-         $functions = get_class_methods($classname);
+               $rand = $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name];
+               
+               $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
+               $min_url_graph  = "/front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
+               
+               $reports[$classname]['title'] = $title;
+               $reports[$classname]['functions'][$i]['function'] = $f_name;
+               $reports[$classname]['functions'][$i]['title'] = $title_func;
+               $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
+               $reports[$classname]['functions'][$i]['gtype'] = $gtype;
+               $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
+               $reports[$classname]['functions'][$i]['rand'] = $rand;
+               
+                
+               if ($with_url) {
+                  $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
+                  $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
+               }
 
-         foreach($functions as $f_name) {
-            $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
-            if ($ex_func[0] != 'report') continue;
-
-            $gtype      = strtolower($ex_func[1]);
-            $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
-            
-            $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name]=$classname.$i;
-      
-            $rand = $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name];
-            
-            $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
-            $min_url_graph  = "/front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
-            
-            $reports[$classname]['title'] = $title;
-            $reports[$classname]['functions'][$i]['function'] = $f_name;
-            $reports[$classname]['functions'][$i]['title'] = $title_func;
-            $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
-            $reports[$classname]['functions'][$i]['gtype'] = $gtype;
-            $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
-            $reports[$classname]['functions'][$i]['rand'] = $rand;
-            
-             
-            if ($with_url) {
-               $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
-               $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
+               $i++;
             }
-
-            $i++;
          }
       }
 
