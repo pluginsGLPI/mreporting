@@ -5,3 +5,5 @@ png généré : pas bo
 http://protovis-js.googlecode.com/svn/trunk/examples/bar-stacked.html
 config
 echo "<script language='javascript'>encode_as_img_and_link();</script>";
+
+icons lib :farm fresh
