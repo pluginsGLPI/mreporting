@@ -595,6 +595,167 @@ JAVASCRIPT;
 
    
    /**
+    * Show a horizontal grouped bar chart
+    *
+    * @param $raw_datas : an array with :
+    *    - key 'datas', ex : array( 'test1' => array(15,20,50), 'test2' => array(36,15,22))
+    *    - key 'labels2', ex : array('label 1', 'label 2', 'label 3')
+    *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    * @param $title : title of the chart
+    * @param $desc : description of the chart (optionnal)
+    * @param $show_label : behavior of the graph labels,
+    *                      values : 'hover', 'never', 'always' (optionnal)
+    * @param $export : keep only svg to export (optionnal)
+    * @return nothing
+    */
+   function showHgstackbar($params) {
+      global $LANG;
+      
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
+         $$key=$val;
+      }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      
+      $rand = $opt['rand'];
+      
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay);
+                  
+      $this->initGraph($options);
+      
+      if (!isset($raw_datas['datas'])) {
+         echo "}</script>";
+         echo $LANG['plugin_mreporting']["error"][1];
+         $opt["rand"] = false;
+         $this->endGraph($opt, false);
+         return false;
+      }
+      
+      $datas = $raw_datas['datas'];
+      $flip_data = false;
+      if (isset($raw_datas['flip_data'])) {
+         $flip_data = $raw_datas['flip_data'];
+      }
+      
+      $labels2 = $raw_datas['labels2'];
+      
+      $this->initDatasMultiple($datas, $labels2, $unit);
+
+      $nb_bar = count($datas);
+      $nb_bar2 = count($labels2);
+      $height = 28 * $nb_bar * $nb_bar2 + 50;
+
+      $always = '';
+      $hover = '';
+      $this->checkVisibility($show_label, $always, $hover);
+
+$JS = <<<JAVASCRIPT
+   var w = {$this->width},
+    h = 400,
+    x = pv.Scale.ordinal(pv.range(10)).splitBanded(0, w, 2/5),
+    y = pv.Scale.linear(0, 3).range(0, h)
+    datas = pv.range(3).map(function() pv.range(10).map(Math.random))
+    ;
+    
+   var offset = 0;
+   
+var vis{$rand} = new pv.Panel()
+    .width({$this->width})
+    .height(h)
+    .bottom(20)
+    .left(20)
+    .right(5)
+    .top(5);
+/* 
+var bar = vis{$rand}.add(pv.Layout.Stack)
+    .layers(datas)
+    .x(function() x(this.index))
+    .y(y)
+  .layer.add(pv.Bar)
+    .width(x.range().band);
+*/
+
+var bar = vis{$rand}.add(pv.Panel)
+    .data(labels)
+  .add(pv.Layout.Stack)
+    .layers(datas)
+    //.values(datas)
+    .x(function() x(this.index))
+    .y(y)
+  .layer.add(pv.Bar)
+    .width(x.range().band);
+ /*   
+bar.anchor("top").add(pv.Label)
+    .visible(function(d) d > .2)
+    .textStyle("white")
+    .text(function(d) d.toFixed(1));
+
+bar.anchor("left").add(pv.Rule)
+    .visible(function(d) d <= .2)
+    .width(5)
+  .anchor("left").add(pv.Label)
+    .textAlign("right")
+    .text(function(d) d.toFixed(1));*/
+/*
+bar.anchor("bottom").add(pv.Label)
+    .visible(function() !this.parent.index)
+    .textMargin(5)
+    .textBaseline("top")
+    .text(function() { return labels[this.parent.index]; });*/
+/*
+bar.anchor("bottom").add(pv.Label)
+    .data(labels)
+    .bottom(0)
+    .left(function(d) x(d) + x.range().band / 2)
+    .textMargin(5)
+    .textBaseline("top")
+    .textAlign("center")
+    .text(pv.Format.date("%m/%y"));*/
+
+   vis{$rand}.add(pv.Rule)
+    .data(y.ticks())
+    .bottom(y)
+    .left(function(d) d ? 0 : null)
+    .width(function(d) d ? 5 : null)
+    .strokeStyle("#000")
+  .anchor("left").add(pv.Label)
+    .text(y.tickFormat);
+    
+   // legend
+   vis{$rand}.add(pv.Dot)
+      .data(labels2)
+      .right(10)
+      .top(function(d) { return 5 + this.index * 15; })
+      .fillStyle(function() {
+         return colors(this.index);
+      })
+      .strokeStyle(function() { return colors(this.index).darker(); })
+   .anchor("right").add(pv.Label)
+      .textAlign("right")
+      .textMargin(12)
+      .textBaseline("middle")
+      .textStyle(function() { return colors(this.index).darker(); });
+
+   //render in loop to animate
+
+
+var interval = setInterval(function() {
+      offset++;
+      vis{$rand}.render();
+      if (offset > 100) clearInterval(interval);
+   }, 20);
+
+JAVASCRIPT;
+      echo $JS;
+      $this->endGraph($opt, $export, $datas, $labels2, $flip_data);
+   }
+   /**
     * Show a Area chart
     *
     * @param $raw_datas : an array with :
