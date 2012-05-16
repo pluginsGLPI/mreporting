@@ -289,15 +289,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$rand);
       
-      $datas['labels2']['type_0'] = $LANG['job'][32];
-      $datas['labels2']['type_1'] = $LANG['job'][1];
-      $datas['labels2']['type_2'] = $LANG['job'][2];
-
       $query = "
          SELECT
             glpi_itilcategories.id as category_id,
             glpi_itilcategories.completename as category_name,
-            glpi_tickets.type,
+            glpi_tickets.type as type,
             COUNT(glpi_tickets.id) as count
          FROM glpi_tickets
          LEFT JOIN glpi_itilcategories
@@ -317,7 +313,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             $ticket['category_id'] = 0;
             $ticket['category_name'] = $LANG['job'][32];
          }
-         $datas['datas'][$ticket['category_name']]['type_'.$ticket['type']] = $ticket['count'];
+         if($ticket['type']==0) {
+            $type = $LANG['plugin_mreporting']["error"][2];
+         } else {
+            $type = Ticket::getTicketTypeName($ticket['type']);
+         }
+         $datas['labels2'][$type] = $type;
+         $datas['datas'][$ticket['category_name']][$type] = $ticket['count'];
       }
 
       return $datas;
@@ -332,8 +334,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       foreach($this->filters as $class=>$filter) {
 
-         $datas['labels2'][$class] = $filter['label'];
-
+         $datas['labels2'][$filter['label']] = $filter['label'];
          $query = "
             SELECT COUNT(*)
             FROM glpi_tickets
@@ -348,7 +349,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ";
          $result = $DB->query($query);
 
-         $datas['datas'][$LANG['common'][49]][$class] = $DB->result($result, 0, 0);
+         $datas['datas'][$LANG['common'][49]][$filter['label']] = $DB->result($result, 0, 0);
 
          $query = "
             SELECT
@@ -368,7 +369,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $result = $DB->query($query);
 
          while ($ticket = $DB->fetch_assoc($result)) {
-            $datas['datas'][$ticket['group_name']][$class] = $ticket['count'];
+            
+            $datas['datas'][$ticket['group_name']][$filter['label']] = $ticket['count'];
          }
 
       }
