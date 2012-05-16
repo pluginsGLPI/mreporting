@@ -110,8 +110,30 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
    function showImage($contents, $export="png")  {
+      global $CFG_GLPI;
       if ($export!="odt" && $export!="odtall") {
-         echo "<img src='data:image/png;base64,".base64_encode($contents)."' />";
+
+         $show_inline = true;
+        
+         //test browser (if ie < 9, show img from temp dir instead base64 inline)
+         $ua = trim(strtolower($_SERVER["HTTP_USER_AGENT"]));
+         $pattern = "/msie\s(\d+)\.0/";
+         if(preg_match($pattern,$ua,$arr)){
+            $ie_version = $arr[0];
+            if (version_compare($ie_version, '9.0') < 0) {
+               $show_inline = false;
+               $rand=mt_rand();
+               $filename_tmp = GLPI_ROOT."/files/_tmp/mreporting_img_$rand.png";
+               file_put_contents($filename_tmp, $contents);
+
+               echo "<img src='$filename_tmp' alt='graph' title='graph' />";
+            }
+         } 
+            
+         if ($show_inline) 
+            echo "<img src='data:image/png;base64,".base64_encode($contents)
+               ."' alt='graph' title='graph' />";
+         
       }
    }
 
