@@ -37,7 +37,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       }
    }
 
-   function endGraph($opt, $export = false) {
+   function endGraph($opt, $export = false, $datas=array(), $labels2=array(), $flip_data = false) {
 
    }
 

@@ -68,7 +68,7 @@ class PluginMreportingGraph {
             colors = pv.colors($colors);";
    }
 
-   function endGraph($opt, $export = false) {
+   function endGraph($opt, $export = false, $datas=array(), $labels2=array(), $flip_data = false) {
       global $LANG;
       
       $_REQUEST['short_classname'] = $opt['short_classname'];
@@ -88,8 +88,11 @@ class PluginMreportingGraph {
 
       }
       echo "</div>";
-
+      
       if (!$export) {
+         
+         PluginMreportingCommon::showGraphDatas($datas, $labels2, $flip_data);
+      
          if ($_REQUEST['f_name'] != "test") {
             echo "<div class='graph_bottom'>";
             echo "<span style='float:left'>";
@@ -108,6 +111,7 @@ class PluginMreportingGraph {
 
       //destroy specific palette
       unset($_SESSION['mreporting']['colors']);
+
    }
 
    function checkVisibility($show_label = 'hover', &$always, &$hover) {
@@ -291,7 +295,7 @@ JAVASCRIPT;
 
       echo $JS;
       
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas);
    }
 
 
@@ -426,7 +430,7 @@ JAVASCRIPT;
 
       echo $JS;
       
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas);
    }
 
    /**
@@ -473,7 +477,11 @@ JAVASCRIPT;
       }
       
       $datas = $raw_datas['datas'];
-
+      $flip_data = false;
+      if (isset($raw_datas['flip_data'])) {
+         $flip_data = $raw_datas['flip_data'];
+      }
+      
       $labels2 = $raw_datas['labels2'];
       
       $this->initDatasMultiple($datas, $labels2, $unit);
@@ -582,10 +590,10 @@ $JS = <<<JAVASCRIPT
    }, 20);
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas, $labels2, $flip_data);
    }
 
-
+   
    /**
     * Show a Area chart
     *
@@ -758,7 +766,7 @@ $JS = <<<JAVASCRIPT
 JAVASCRIPT;
 
       echo $JS;
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas);
    }
 
    /**
@@ -825,7 +833,10 @@ JAVASCRIPT;
       }
       
       $datas = $raw_datas['datas'];
-      
+      $flip_data = false;
+      if (isset($raw_datas['flip_data'])) {
+         $flip_data = $raw_datas['flip_data'];
+      }
       $labels2 = $raw_datas['labels2'];
       
       $this->initDatasMultiple($datas, $labels2, $unit);
@@ -967,7 +978,7 @@ $JS = <<<JAVASCRIPT
 
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas, $labels2, $flip_data);
    }
 
    /**

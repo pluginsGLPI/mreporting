@@ -388,6 +388,83 @@ class PluginMreportingCommon extends CommonDBTM {
       $graph->{'show'.$opt['gtype']}($params);
 
    }
+   
+   static function showGraphDatas ($datas=array(), $labels2=array(), $flip_data = false) {
+      global $LANG, $CFG_GLPI;
+      
+      $simpledatas = false;
+         
+         if (!$labels2) {
+            $labels2 = array();
+            $simpledatas = true;
+         }
+         
+         if ($flip_data == true) {
+            $labels2 = array_flip($labels2);
+         }
+            
+         $types = array();
+      
+         foreach($datas as $k => $v) {
+            
+            if (is_array($v)) {
+               foreach($v as $key => $val) {
+                  if (isset($labels2[$key]))
+                     $types[$key][$k] = $val;
+               }
+            }
+         }
+         
+         if ($flip_data != true) {
+            $tmp = $datas;
+            $datas = $types;
+            $types = $tmp;
+         }
+         
+         if ($simpledatas) {
+            $datas = array($LANG['plugin_mreporting']["export"][1] => 0);
+         }
+         
+         echo "<br><table class='tab_cadre' width='700px'>";
+         echo "<tr class='tab_bg_1'><th>";
+         echo "<a href=\"javascript:showHideDiv('view_datas','viewimg','".
+         $CFG_GLPI["root_doc"]."/pics/deplier_down.png','".
+         $CFG_GLPI["root_doc"]."/pics/deplier_up.png');\">";
+         echo "<img alt='' name='viewimg' src=\"".
+         $CFG_GLPI["root_doc"]."/pics/deplier_down.png\">&nbsp;";
+         echo $LANG['plugin_mreporting']["export"][2];
+         echo "</a>";
+         echo "</th>";
+         echo "</tr>";
+         echo "</table>";
+            
+         echo "<br><div align='center' style='display:none;' id='view_datas'>";
+         echo "<table class='tab_cadre' width='90%'>";
+         
+         echo "<tr class='tab_bg_1'>";
+         echo "<th></th>";
+
+         foreach($datas as $label => $cols) {
+            echo "<th>".$label."</th>";
+         }
+         echo "</tr>";
+         foreach($types as $label2 => $cols) {
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>".$label2."</td>";
+            //values
+            if ($simpledatas) {
+               echo "<td class='center'>".$cols."</td>";
+            } else {
+               foreach($cols as $date => $nb) {
+                  echo "<td class='center'>".$nb."</td>";
+               }
+            }
+            echo "</tr>";
+         }
+         
+         echo "</table>";
+         echo "</div><br>";
+   }
 
    function export($opt)  {
       global $LANG;

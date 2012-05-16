@@ -35,6 +35,8 @@ $LANG['plugin_mreporting']["error"][2] = "Non défini";
 $LANG['plugin_mreporting']["error"][3] = "aucun graphique sélectionné";
 
 $LANG['plugin_mreporting']["export"][0] = "Rapport général - ODT";
+$LANG['plugin_mreporting']["export"][1] = "Nombre";
+$LANG['plugin_mreporting']["export"][2] = "Données";
 
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Barres - Nombre de ticket par entités";
