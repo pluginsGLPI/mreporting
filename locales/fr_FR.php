@@ -53,5 +53,6 @@ $LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Aire - 
 $LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['title'] = "Lignes - Evolution du nombre de ticket sur la période";
 $LANG['plugin_mreporting']['Helpdesk']['reportGlineNbTicket']['title'] = "Lignes - Evolution du nombre de ticket sur la période (par Statut)";
 $LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['title'] = "Aire - Evolution du nombre de ticket sur la période (par Statut)";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgstackbarNbTicket']['title'] = "Barres empilées - Evolution du nombre de ticket sur la période (par Statut)";
 
 ?>
