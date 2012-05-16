@@ -33,17 +33,10 @@ include (GLPI_ROOT."/inc/includes.php");
 Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
 
 $common = new PluginMreportingCommon();
-//$common->showCentral($_REQUEST);
 
 $reports = $common->getAllReports();
 
 foreach ($reports as $classname => $report) {
-   
-    /*echo "<div class='tabbertab'>";
-	 echo "<h2>".$report['title']."</h2>";
-	 $_REQUEST["plugin_mreporting_tab"]=$classname;
-	 $common->showCentral($_REQUEST);
-    echo " </div>";*/
      
    $tabs[$classname]=array('title'=>$report['title'],
                            'url'=>$CFG_GLPI['root_doc']."/plugins/mreporting/ajax/common.tabs.php",
