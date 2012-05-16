@@ -170,7 +170,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $datas['datas'] = $tmp_datas;
       $datas['labels2'] = $labels2;
-
+      $datas['flip_data'] = true;
+      
       return $datas;
    }
 
@@ -426,8 +427,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB, $LANG;
       $datas = array();
 
-      if ($rand != $_SESSION['glpi_plugin_mreporting_rand']['reportLineNbTicket']) {
-         $rand = $_SESSION['glpi_plugin_mreporting_rand']['reportAreaNbTicket'];
+      if ($rand != $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportLineNbTicket']) {
+         $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportAreaNbTicket'];
       }
       
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$rand);

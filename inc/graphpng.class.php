@@ -73,19 +73,21 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
    }
 
-   function endGraph($opt, $export = false) {
+   function endGraph($opt, $export = false, $datas=array(), $labels2=array(), $flip_data = false) {
       global $LANG;
       
       if (!$export) {
       
+         echo "</div>";
+         
+         PluginMreportingCommon::showGraphDatas($datas, $labels2, $flip_data);
+         
          $_REQUEST['short_classname'] = $opt['short_classname'];
          $_REQUEST['f_name'] = $opt['f_name'];
          $_REQUEST['gtype'] = $opt['gtype'];
          $_REQUEST['rand'] = $opt['rand'];
          
          $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
-
-         echo "</div>";
          
          if ($_REQUEST['f_name'] != "test") {
             echo "<div class='graph_bottom'>";
@@ -504,7 +506,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas);
    }
 
    function showPie($params) {
@@ -660,7 +662,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas);
    }
 
    function showHgbar($params) {
@@ -696,7 +698,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       
       $labels2 = $raw_datas['labels2'];
-      
+      $flip_data = false;
+      if (isset($raw_datas['flip_data'])) {
+         $flip_data = $raw_datas['flip_data'];
+      }
       $values = array_values($datas);
       $labels = array_keys($datas);
 
@@ -846,7 +851,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas, $labels2, $flip_data);
    }
 
    function showArea($params) {
@@ -1004,7 +1009,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas);
    }
 
    function showGArea($params) {
@@ -1040,7 +1045,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       
       $labels2 = $raw_datas['labels2'];
-      
+      $flip_data = false;
+      if (isset($raw_datas['flip_data'])) {
+         $flip_data = $raw_datas['flip_data'];
+      }
       $values = array_values($datas);
       $labels = array_keys($datas);
 
@@ -1194,7 +1202,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export);
+      $this->endGraph($opt, $export, $datas, $labels2, $flip_data);
    }
 
 }// End Class
