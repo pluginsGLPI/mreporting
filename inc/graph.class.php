@@ -656,77 +656,51 @@ JAVASCRIPT;
       $this->checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
-   var w = {$this->width},
-    h = 400,
-    x = pv.Scale.ordinal(pv.range(10)).splitBanded(0, w, 2/5),
-    y = pv.Scale.linear(0, 3).range(0, h)
-    datas = pv.range(3).map(function() pv.range(10).map(Math.random))
-    ;
+   var w = {$this->width};
+   var h = 400;
+   var x = pv.Scale.ordinal(pv.range(m+2)).splitBanded(0, w, 4/5);
+   var y = pv.Scale.linear(0, max+80).range(0, h);
+   //datas = pv.range(3).map(function() pv.range(10).map(Math.random));
+
+   /*var x = pv.Scale.linear(0, max).range(0, width_hgbar - 150);
+   var y = pv.Scale.ordinal(pv.range(n+1)).splitBanded(0, height_hgbar, 4/5);*/
     
    var offset = 0;
    
-var vis{$rand} = new pv.Panel()
-    .width({$this->width})
-    .height(h)
-    .bottom(20)
-    .left(20)
-    .right(5)
-    .top(5);
-/* 
-var bar = vis{$rand}.add(pv.Layout.Stack)
-    .layers(datas)
-    .x(function() x(this.index))
-    .y(y)
-  .layer.add(pv.Bar)
-    .width(x.range().band);
-*/
+   var vis{$rand} = new pv.Panel()
+       .width(w)
+       .height(h)
+       .bottom(20)
+       .left(20)
+       .right(5)
+       .top(5);
 
-var bar = vis{$rand}.add(pv.Panel)
-    .data(labels)
-  .add(pv.Layout.Stack)
-    .layers(datas)
-    //.values(datas)
-    .x(function() x(this.index))
-    .y(y)
-  .layer.add(pv.Bar)
-    .width(x.range().band);
- /*   
-bar.anchor("top").add(pv.Label)
-    .visible(function(d) d > .2)
-    .textStyle("white")
-    .text(function(d) d.toFixed(1));
+   var bar = vis{$rand}.add(pv.Layout.Stack)
+      .layers(datas)
+      .x(function() x(this.index))
+      .y(function(d) y(d))
+   .layer.add(pv.Bar)
+      .width(x.range().band)
+      .fillStyle(function() {
+         return colors(this.parent.index);
+      })
+      .strokeStyle(function() { return colors(this.parent.index).darker(); });
 
-bar.anchor("left").add(pv.Rule)
-    .visible(function(d) d <= .2)
-    .width(5)
-  .anchor("left").add(pv.Label)
-    .textAlign("right")
-    .text(function(d) d.toFixed(1));*/
-
-bar.anchor("bottom").add(pv.Label)
-    .visible(function() !this.parent.index)
-    .textMargin(5)
-    .textBaseline("top")
-    .text(function() { return labels2[this.index]; });
-/*
-bar.anchor("bottom").add(pv.Label)
-    .data(labels)
-    .bottom(0)
-    .left(function(d) x(d) + x.range().band / 2)
-    .textMargin(5)
-    .textBaseline("top")
-    .textAlign("center")
-    .text(pv.Format.date("%m/%y"));*/
+   bar.anchor("bottom").add(pv.Label)
+       .visible(function() !this.parent.index)
+       .textMargin(5)
+       .textBaseline("top")
+       .text(function() { return labels2[this.index]; });
 
    vis{$rand}.add(pv.Rule)
-    .data(y.ticks())
-    .bottom(y)
-    .left(function(d) d ? 0 : null)
-    .width(function(d) d ? 5 : null)
-    .strokeStyle("#000")
-  .anchor("left").add(pv.Label)
-    .text(y.tickFormat);
-    
+       .data(y.ticks())
+       .bottom(y)
+       .left(function(d) d ? 0 : null)
+       .width(function(d) d ? 5 : null)
+       .strokeStyle("#000")
+     .anchor("left").add(pv.Label)
+       .text(y.tickFormat);
+       
    // legend
    vis{$rand}.add(pv.Dot)
       .data(labels)
@@ -743,13 +717,12 @@ bar.anchor("bottom").add(pv.Label)
       .textStyle(function() { return colors(this.index).darker(); });
 
    //render in loop to animate
-
-
-var interval = setInterval(function() {
-      offset++;
-      vis{$rand}.render();
-      if (offset > 100) clearInterval(interval);
-   }, 20);
+   vis{$rand}.render();
+   /*var interval = setInterval(function() {
+         offset++;
+         vis{$rand}.render();
+         if (offset > 100) clearInterval(interval);
+      }, 20);*/
 
 JAVASCRIPT;
       echo $JS;
