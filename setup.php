@@ -77,10 +77,9 @@ function plugin_init_mreporting() {
    }
 
    // Add specific files to add to the header : javascript or css
-   $PLUGIN_HOOKS['add_javascript']['mreporting']= array ("lib/protovis/protovis-r3.2.js",
-                                                         "lib/tabber/tabber.js");
+   $PLUGIN_HOOKS['add_javascript']['mreporting']= array ("lib/protovis/protovis-r3.2.js");
    //css
-   $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css","lib/tabber/example.css");
+   $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
 }
 
 // Get the name and the version of the plugin - Needed
