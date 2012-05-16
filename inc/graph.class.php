@@ -702,12 +702,12 @@ bar.anchor("left").add(pv.Rule)
   .anchor("left").add(pv.Label)
     .textAlign("right")
     .text(function(d) d.toFixed(1));*/
-/*
+
 bar.anchor("bottom").add(pv.Label)
     .visible(function() !this.parent.index)
     .textMargin(5)
     .textBaseline("top")
-    .text(function() { return labels[this.parent.index]; });*/
+    .text(function() { return labels2[this.index]; });
 /*
 bar.anchor("bottom").add(pv.Label)
     .data(labels)
@@ -729,7 +729,7 @@ bar.anchor("bottom").add(pv.Label)
     
    // legend
    vis{$rand}.add(pv.Dot)
-      .data(labels2)
+      .data(labels)
       .right(10)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
