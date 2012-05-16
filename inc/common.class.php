@@ -425,7 +425,7 @@ class PluginMreportingCommon extends CommonDBTM {
             $datas = array($LANG['plugin_mreporting']["export"][1] => 0);
          }
          
-         echo "<br><table class='tab_cadre' width='700px'>";
+         echo "<br><table class='tab_cadre' width='90%'>";
          echo "<tr class='tab_bg_1'><th>";
          echo "<a href=\"javascript:showHideDiv('view_datas','viewimg','".
          $CFG_GLPI["root_doc"]."/pics/deplier_down.png','".
@@ -438,7 +438,7 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</tr>";
          echo "</table>";
             
-         echo "<br><div align='center' style='display:none;' id='view_datas'>";
+         echo "<div align='center' style='display:inline;' id='view_datas'>";
          echo "<table class='tab_cadre' width='90%'>";
          
          echo "<tr class='tab_bg_1'>";
