@@ -438,7 +438,7 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</tr>";
          echo "</table>";
             
-         echo "<div align='center' style='display:inline;' id='view_datas'>";
+         echo "<div align='center' style='display:none;' id='view_datas'>";
          echo "<table class='tab_cadre' width='90%'>";
          
          echo "<tr class='tab_bg_1'>";
