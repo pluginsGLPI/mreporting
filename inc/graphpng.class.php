@@ -119,8 +119,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $ua = trim(strtolower($_SERVER["HTTP_USER_AGENT"]));
          $pattern = "/msie\s(\d+)\.0/";
          if(preg_match($pattern,$ua,$arr)){
-            $ie_version = $arr[0];
-            if (version_compare($ie_version, '9.0') < 0) {
+            $ie_version = $arr[1];
+            if (version_compare($ie_version, '9') < 0) {
                $show_inline = false;
                $rand=mt_rand();
                $filename_tmp = GLPI_ROOT."/files/_tmp/mreporting_img_$rand.png";
