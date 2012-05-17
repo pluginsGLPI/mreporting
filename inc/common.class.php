@@ -29,11 +29,13 @@
  
 class PluginMreportingCommon extends CommonDBTM {
    
-   static function title() {
+   static function title($opt) {
       global $LANG;
       
       $self = new self();
-      $reports = $self->getAllReports();
+      
+      $params['classname'] = 'PluginMreporting'.$opt['short_classname'];
+      $reports = $self->getAllReports(true,$params);
       
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='2'>".$LANG['stats'][0]."&nbsp;:</th></tr>";
@@ -373,7 +375,9 @@ class PluginMreportingCommon extends CommonDBTM {
 
    function showGraph($opt, $export = false) {
       global $LANG, $CFG_GLPI;
-
+      
+      PluginMreportingCommon::title($opt);
+      
       //check the format display charts configured in glpi
       $opt = $this->initParams($opt, $export);
       
