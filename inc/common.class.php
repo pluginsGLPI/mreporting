@@ -35,18 +35,6 @@ class PluginMreportingCommon extends CommonDBTM {
       $self = new self();
       $reports = $self->getAllReports();
       
-      foreach($reports as $classname => $report) {
-      $opt_list[$classname] = $report['title'];
-         foreach($report['functions'] as $function) {
-            
-            $stat_list[$classname][$function['function']]["name"]  = $function['title'];
-            $stat_list[$classname][$function['function']]["file"]  = $function['url_graph'];
-            
-         }
-      }
-      
-      
-      //Affichage du tableau de presentation des stats
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='2'>".$LANG['stats'][0]."&nbsp;:</th></tr>";
       echo "<tr class='tab_bg_1'><td class='center'>";
@@ -55,21 +43,34 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
       
       $i = 0;
-      $count = count($stat_list);
       
-      foreach ($opt_list as $opt => $group) {
-         echo "<optgroup label=\"". $group ."\">";
-         while ($data = each($stat_list[$opt])) {
-            $name = $data[1]["name"];
-            $file = $data[1]["file"];
-            $comment ="";
-            if (isset($data[1]["comment"]))
-               $comment = $data[1]["comment"];
+      foreach($reports as $classname => $report) {
+         
+         foreach($report['functions'] as $function) {
+            $graphs[$function['category_func']][] = $function;
+         }
+         
+         echo "<optgroup label=\"". $report['title'] ."\">";
+         
+         foreach($graphs as $cat => $graph) {
             
-            echo "<option value='".$file."' title=\"".Html::cleanInputText($comment)."\">".$name."</option>";
-            $i++;
+            echo "<optgroup label=\"". $cat ."\">";
+            
+            foreach($graph as $k => $v) {
+               
+               $comment = "";
+               if (isset($v["desc"]))
+                  $comment = $v["desc"];
+               
+               echo "<option value='".$v["url_graph"]."' title=\"".
+                                 Html::cleanInputText($comment)."\">".$v["title"]."</option>";
+               $i++;
+            }
+            echo "</optgroup>";
+
          }
          echo "</optgroup>";
+
       }
 
       echo "</select>";
@@ -96,48 +97,54 @@ class PluginMreportingCommon extends CommonDBTM {
 
       foreach($reports as $classname => $report) {
 
-         echo "<tr><th colspan='4'>".$report['title']."</th></tr>";
-     
          $i = 0;
          $nb_per_line = 2;
-
+         $graphs = array();
          foreach($report['functions'] as $function) {
-            if ($i%$nb_per_line == 0) {
-               if ($i != 0) {
-                  echo "</tr>";
-               }
-               echo "<tr class='tab_bg_1' valign='top'>";
-            }
-
-            echo "<td>";
-            echo "<a href='".$function['url_graph']."'>";
-            echo "<img src='".$function['pic']."' />&nbsp;";
-            echo $function['title'];
-            echo "</a></td>";
-            $i++;
-            
+            $graphs[$function['category_func']][] = $function;
          }
-
-         while ($i%$nb_per_line != 0) {
-            echo "<td>&nbsp;</td>";
-            $i++;
-         }
-         echo "</tr>";
          
-         echo "<tr class='tab_bg_1'>";
-         echo "<th colspan='2'>";
-         echo "<div class='right'>";
-         echo $LANG['buttons'][31]." : ";
-         echo "<a href='#' onClick=\"var w = window.open('".$CFG_GLPI["root_doc"].
-               "/plugins/mreporting/front/popup.php?classname=$classname' ,'glpipopup', ".
-               "'height=400, width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";
-         echo "ODT";
-         echo "</a></div>";
-         echo "</th>";
+         foreach($graphs as $cat => $graph) {
+            
+            echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
+            
+            foreach($graph as $k => $v) {
+
+               if ($i%$nb_per_line == 0) {
+                  if ($i != 0) {
+                     echo "</tr>";
+                  }
+                  echo "<tr class='tab_bg_1' valign='top'>";
+               }
+
+               echo "<td>";
+               echo "<a href='".$v['url_graph']."'>";
+               echo "<img src='".$v['pic']."' />&nbsp;";
+               echo $v['title'];
+               echo "</a></td>";
+               $i++;
+            }
+            
+            while ($i%$nb_per_line != 0) {
+               echo "<td>&nbsp;</td>";
+               $i++;
+            }
+         }
+ 
          echo "</tr>";
-      
-      }     
-      
+      }
+      echo "<tr class='tab_bg_1'>";
+      echo "<th colspan='2'>";
+      echo "<div class='right'>";
+      echo $LANG['buttons'][31]." : ";
+      echo "<a href='#' onClick=\"var w = window.open('".$CFG_GLPI["root_doc"].
+            "/plugins/mreporting/front/popup.php?classname=$classname' ,'glpipopup', ".
+            "'height=650, width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";
+      echo "ODT";
+      echo "</a></div>";
+      echo "</th>";
+      echo "</tr>";
+
       echo "</table>";
    }
    
@@ -162,33 +169,42 @@ class PluginMreportingCommon extends CommonDBTM {
 
             $i = 0;
             $nb_per_line = 2;
-
+            $graphs = array();
             foreach($report['functions'] as $function) {
-               if ($i%$nb_per_line == 0) {
-                  if ($i != 0) {
-                     echo "</tr>";
-                  }
-                  echo "<tr class='tab_bg_1'>";
-               }
-               
-               echo "<td>";
-               echo "<input type='checkbox' name='check[" . $function['rand'] . "]'";
-               if (isset($_POST['check']) && $_POST['check'] == 'all')
-                  echo " checked ";
-               echo ">";
-               echo "</td>";
-               echo "<td>";
-               echo "<img src='".$function['pic']."' />&nbsp;";
-               echo $function['title'];
-               echo "</td>";
-               $i++;
-               
+               $graphs[$function['category_func']][] = $function;
             }
-
-            while ($i%$nb_per_line != 0) {
-               echo "<td width='10'>&nbsp;</td>";
-               echo "<td>&nbsp;</td>";
-               $i++;
+            
+            foreach($graphs as $cat => $graph) {
+            
+               echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
+            
+               foreach($graph as $k => $v) {
+                  if ($i%$nb_per_line == 0) {
+                     if ($i != 0) {
+                        echo "</tr>";
+                     }
+                     echo "<tr class='tab_bg_1'>";
+                  }
+                  
+                  echo "<td>";
+                  echo "<input type='checkbox' name='check[" . $v['rand'] . "]'";
+                  if (isset($_POST['check']) && $_POST['check'] == 'all')
+                     echo " checked ";
+                  echo ">";
+                  echo "</td>";
+                  echo "<td>";
+                  echo "<img src='".$v['pic']."' />&nbsp;";
+                  echo $v['title'];
+                  echo "</td>";
+                  $i++;
+                  
+               }
+            
+               while ($i%$nb_per_line != 0) {
+                  echo "<td width='10'>&nbsp;</td>";
+                  echo "<td>&nbsp;</td>";
+                  $i++;
+               }
             }
             echo "</tr>";
          }
@@ -275,7 +291,9 @@ class PluginMreportingCommon extends CommonDBTM {
 
                $gtype      = strtolower($ex_func[1]);
                $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
-               
+               $category_func = '';
+               if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['category']))
+                  $category_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['category'];
                $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name]=$classname.$i;
          
                $rand = $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name];
@@ -286,6 +304,7 @@ class PluginMreportingCommon extends CommonDBTM {
                $reports[$classname]['title'] = $title;
                $reports[$classname]['functions'][$i]['function'] = $f_name;
                $reports[$classname]['functions'][$i]['title'] = $title_func;
+               $reports[$classname]['functions'][$i]['category_func'] = $category_func;
                $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
                $reports[$classname]['functions'][$i]['gtype'] = $gtype;
                $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
