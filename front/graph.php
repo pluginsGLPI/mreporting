@@ -32,8 +32,6 @@ include (GLPI_ROOT."/inc/includes.php");
 
 Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
 
-PluginMreportingCommon::title();
-
 $common = new PluginMreportingCommon;
 $common->showGraph($_REQUEST);
 
