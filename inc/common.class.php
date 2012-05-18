@@ -49,7 +49,9 @@ class PluginMreportingCommon extends CommonDBTM {
       foreach($reports as $classname => $report) {
          
          foreach($report['functions'] as $function) {
-            $graphs[$function['category_func']][] = $function;
+            if ($function['is_active']) {
+               $graphs[$function['category_func']][] = $function;
+            }
          }
          
          echo "<optgroup label=\"". $report['title'] ."\">";
@@ -60,13 +62,15 @@ class PluginMreportingCommon extends CommonDBTM {
             
             foreach($graph as $k => $v) {
                
-               $comment = "";
-               if (isset($v["desc"]))
-                  $comment = $v["desc"];
-               
-               echo "<option value='".$v["url_graph"]."' title=\"".
-                                 Html::cleanInputText($comment)."\">".$v["title"]."</option>";
-               $i++;
+               if ($v['is_active']) {
+                  $comment = "";
+                  if (isset($v["desc"]))
+                     $comment = $v["desc"];
+                  
+                  echo "<option value='".$v["url_graph"]."' title=\"".
+                                    Html::cleanInputText($comment)."\">".$v["title"]."</option>";
+                  $i++;
+               }
             }
             echo "</optgroup>";
 
@@ -103,49 +107,67 @@ class PluginMreportingCommon extends CommonDBTM {
          $nb_per_line = 2;
          $graphs = array();
          foreach($report['functions'] as $function) {
-            $graphs[$function['category_func']][] = $function;
+            
+            if ($function['is_active']) {
+               $graphs[$classname][$function['category_func']][] = $function;
+            }
          }
          
-         foreach($graphs as $cat => $graph) {
-            
-            echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
-            
-            foreach($graph as $k => $v) {
+         if (isset($graphs[$classname])) {
+            foreach($graphs[$classname] as $cat => $graph) {
+               
+               echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
+               
+               foreach($graph as $k => $v) {
+                  
+                  if ($v['is_active']) {
+                     if ($i%$nb_per_line == 0) {
+                        if ($i != 0) {
+                           echo "</tr>";
+                        }
+                        echo "<tr class='tab_bg_1' valign='top'>";
+                     }
 
-               if ($i%$nb_per_line == 0) {
-                  if ($i != 0) {
-                     echo "</tr>";
+                     echo "<td>";
+                     echo "<a href='".$v['url_graph']."'>";
+                     echo "<img src='".$v['pic']."' />&nbsp;";
+                     echo $v['title'];
+                     echo "</a></td>";
+                     $i++;
                   }
-                  echo "<tr class='tab_bg_1' valign='top'>";
                }
-
-               echo "<td>";
-               echo "<a href='".$v['url_graph']."'>";
-               echo "<img src='".$v['pic']."' />&nbsp;";
-               echo $v['title'];
-               echo "</a></td>";
-               $i++;
-            }
-            
-            while ($i%$nb_per_line != 0) {
-               echo "<td>&nbsp;</td>";
-               $i++;
+               
+               while ($i%$nb_per_line != 0) {
+                  echo "<td>&nbsp;</td>";
+                  $i++;
+               }
             }
          }
- 
          echo "</tr>";
+         
+         if (isset($graphs[$classname]) && count($graphs[$classname])>0) {
+            $height = 200;
+            $height += 50*count($graphs[$classname]);
+            echo "<tr class='tab_bg_1'>";
+            echo "<th colspan='2'>";
+            echo "<div class='right'>";
+            echo $LANG['buttons'][31]." : ";
+            echo "<a href='#' onClick=\"var w = window.open('".$CFG_GLPI["root_doc"].
+                  "/plugins/mreporting/front/popup.php?classname=$classname' ,'glpipopup', ".
+                  "'height=$height, width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";
+            echo "ODT";
+            echo "</a></div>";
+            echo "</th>";
+            echo "</tr>";
+         } else {
+            echo "<tr class='tab_bg_1'>";
+            echo "<th colspan='2'>";
+            echo $LANG['plugin_mreporting']["error"][0];
+            echo "</th>";
+            echo "</tr>";
+         }
       }
-      echo "<tr class='tab_bg_1'>";
-      echo "<th colspan='2'>";
-      echo "<div class='right'>";
-      echo $LANG['buttons'][31]." : ";
-      echo "<a href='#' onClick=\"var w = window.open('".$CFG_GLPI["root_doc"].
-            "/plugins/mreporting/front/popup.php?classname=$classname' ,'glpipopup', ".
-            "'height=650, width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";
-      echo "ODT";
-      echo "</a></div>";
-      echo "</th>";
-      echo "</tr>";
+      
 
       echo "</table>";
    }
@@ -173,33 +195,37 @@ class PluginMreportingCommon extends CommonDBTM {
             $nb_per_line = 2;
             $graphs = array();
             foreach($report['functions'] as $function) {
-               $graphs[$function['category_func']][] = $function;
+               if ($function['is_active']) {
+                  $graphs[$classname][$function['category_func']][] = $function;
+               }
             }
             
-            foreach($graphs as $cat => $graph) {
+            foreach($graphs[$classname] as $cat => $graph) {
             
                echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
-            
+               
                foreach($graph as $k => $v) {
-                  if ($i%$nb_per_line == 0) {
-                     if ($i != 0) {
-                        echo "</tr>";
+                  
+                  if ($v['is_active']) {
+                     if ($i%$nb_per_line == 0) {
+                        if ($i != 0) {
+                           echo "</tr>";
+                        }
+                        echo "<tr class='tab_bg_1'>";
                      }
-                     echo "<tr class='tab_bg_1'>";
+                     
+                     echo "<td>";
+                     echo "<input type='checkbox' name='check[" . $v['rand'] . "]'";
+                     if (isset($_POST['check']) && $_POST['check'] == 'all')
+                        echo " checked ";
+                     echo ">";
+                     echo "</td>";
+                     echo "<td>";
+                     echo "<img src='".$v['pic']."' />&nbsp;";
+                     echo $v['title'];
+                     echo "</td>";
+                     $i++;
                   }
-                  
-                  echo "<td>";
-                  echo "<input type='checkbox' name='check[" . $v['rand'] . "]'";
-                  if (isset($_POST['check']) && $_POST['check'] == 'all')
-                     echo " checked ";
-                  echo ">";
-                  echo "</td>";
-                  echo "<td>";
-                  echo "<img src='".$v['pic']."' />&nbsp;";
-                  echo $v['title'];
-                  echo "</td>";
-                  $i++;
-                  
                }
             
                while ($i%$nb_per_line != 0) {
@@ -311,8 +337,13 @@ class PluginMreportingCommon extends CommonDBTM {
                $reports[$classname]['functions'][$i]['gtype'] = $gtype;
                $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
                $reports[$classname]['functions'][$i]['rand'] = $rand;
-               
-                
+               $reports[$classname]['functions'][$i]['is_active'] = false;
+               $config = new PluginMreportingConfig();
+               if ($config->getFromDBByRand($rand)) {
+                  if ($config->fields['is_active'] == 1) {
+                     $reports[$classname]['functions'][$i]['is_active'] = true;
+                  }
+               }
                if ($with_url) {
                   $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
                   $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;

@@ -28,17 +28,26 @@
  */
  
 function plugin_mreporting_install() {
-
+   global $DB,$LANG;
+   
    $queries = array();
    $queries[] = "
-   CREATE TABLE `glpi_plugin_mreporting_profiles` (
+   CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
       `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
       `profiles_id` VARCHAR(45) NOT NULL,
       `reports` CHAR(1),
       `config` CHAR(1),
    PRIMARY KEY (`id`)
    )
-   ENGINE = InnoDB;";
+   ENGINE = InnoDB;
+   
+   CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
+	`id` int(11) NOT NULL auto_increment,
+	`name` varchar(255) collate utf8_unicode_ci default NULL,
+	`is_active` tinyint(1) NOT NULL default '0',
+   PRIMARY KEY  (`id`),
+	KEY `is_active` (`is_active`)
+   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
    foreach($queries as $query)
       mysql_query($query);
@@ -49,7 +58,7 @@ function plugin_mreporting_install() {
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
 	if (!is_dir($rep_files_mreporting))
       mkdir($rep_files_mreporting);
-      
+   
    return true;
 }
 
@@ -57,7 +66,8 @@ function plugin_mreporting_install() {
 function plugin_mreporting_uninstall() {
 
    $queries = array(
-      "DROP TABLE glpi_plugin_mreporting_profiles"
+      "DROP TABLE glpi_plugin_mreporting_profiles
+       DROP TABLE glpi_plugin_mreporting_configs"
    );
 
    foreach($queries as $query)
