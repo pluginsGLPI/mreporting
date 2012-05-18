@@ -645,7 +645,7 @@ JAVASCRIPT;
       
       $labels2 = $raw_datas['labels2'];
       
-      $this->initDatasMultiple($datas, $labels2, $unit);
+      $this->initDatasMultiple($datas, $labels2, $unit, true);
 
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
@@ -659,7 +659,7 @@ $JS = <<<JAVASCRIPT
    var w = {$this->width};
    var h = 400;
    var x = pv.Scale.ordinal(pv.range(m+2)).splitBanded(0, w, 4/5);
-   var y = pv.Scale.linear(0, max+80).range(0, h);
+   var y = pv.Scale.linear(0, max+10).range(0, h);
    //datas = pv.range(3).map(function() pv.range(10).map(Math.random));
 
    /*var x = pv.Scale.linear(0, max).range(0, width_hgbar - 150);
@@ -704,7 +704,7 @@ $JS = <<<JAVASCRIPT
    // legend
    vis{$rand}.add(pv.Dot)
       .data(labels)
-      .right(10)
+      .right(1)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
          return colors(this.index);
@@ -1132,7 +1132,15 @@ JAVASCRIPT;
       $params['area'] = false;
       $this->showGarea($params);
    }
-
+   
+   /**
+    * Compile simple datas
+    *
+    * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
+    * @param $unit, ex : '%', 'Kg' (optionnal)
+    * @return nothing
+    */
+    
    function initDatasSimple($datas, $unit = '') {
       $labels = array_keys($datas);
       $values = array_values($datas);
@@ -1159,19 +1167,45 @@ JAVASCRIPT;
       echo "var max = $max;";
       echo "var n = ".count($values).";";
    }
-
-   function initDatasMultiple($datas, $labels2, $unit = '') {
+   
+   /**
+    * Compile multiple datas
+    *
+    * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
+    * @param $labels2
+    * @param $unit, ex : '%', 'Kg' (optionnal)
+    * @param $stacked : if stacked graph, option to compile the max value
+    * @return nothing
+    */
+    
+   function initDatasMultiple($datas, $labels2, $unit = '',$stacked = false) {
 
       $labels = array_keys($datas);
       $values = array_values($datas);
       $max = 0;
-
+      
+      if ($stacked) {
+         
+         $tmp = array();
+         foreach($values as $k => $v) {
+                  
+            foreach($v as $key => $val) {
+                  $tmp[$key][$k] = $val;
+            }
+         }
+         if (count($tmp) > 0) {
+            foreach($tmp as $date => $nb) {
+               $count = array_sum(array_values($nb));
+               if ($count > $max) $max = $count;
+            }
+         }
+      }
       $out = "var datas = [\n";
       foreach ($values as $line) {
          $out.= "\t[";
          foreach ($line as $label2 => $value) {
             $out.= addslashes($value).",";
-            if ($value > $max) $max = $value;
+            if ($value > $max && !$stacked) $max = $value;
          }
          $out = substr($out,0, -1)."";
          $out.= "],\n";
@@ -1195,8 +1229,10 @@ JAVASCRIPT;
       $out = substr($out,0, -2)."\n";
       $out.= "];\n";
       echo $out;
-
-      $max = ($max*1.2);
+      
+      if (!$stacked) {
+         $max = ($max*1.2);
+      }
       if ($unit == '%') $max = 110;
 
       echo "var n = ".count($labels).";";
