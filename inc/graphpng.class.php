@@ -34,6 +34,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    const DEBUG_GRAPH = false;
    
    function initGraph($options) {
+      global $LANG;
       
       //if ($options['export']=="odt" || $options['export']=="odtall") {
          //$this->width = $this->width - 100;
@@ -54,6 +55,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
 
          echo "<div class='center'><div id='fig' style='width:{$width}px'>";
+         if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
+            echo "<div class='graph_title'>";
+            echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+            echo "</div>";
+         }
          echo "<div class='graph_title'>";
          echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
          echo $options['title'];
@@ -415,7 +421,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       
@@ -552,7 +559,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
       
       $this->initGraph($options);
       
@@ -709,7 +717,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       
@@ -898,7 +907,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       
@@ -1056,7 +1066,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       

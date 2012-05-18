@@ -33,10 +33,17 @@ class PluginMreportingGraph {
    protected $width = 700;
 
    function initGraph($options) {
+      global $LANG;
       
       $width = $this->width + 100;
       $rand = $options['rand'];
+
       echo "<div class='center'><div id='fig' style='width:{$width}px'>";
+      if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
+         echo "<div class='graph_title'>";
+         echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+         echo "</div>";
+      }
       echo "<div class='graph_title'>";
       $backtrace = debug_backtrace();
       $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
@@ -191,7 +198,8 @@ class PluginMreportingGraph {
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       
@@ -330,7 +338,8 @@ JAVASCRIPT;
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       
@@ -464,7 +473,8 @@ JAVASCRIPT;
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       
@@ -625,7 +635,8 @@ JAVASCRIPT;
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       
@@ -760,7 +771,8 @@ JAVASCRIPT;
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       
@@ -954,7 +966,8 @@ JAVASCRIPT;
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay);
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
       
