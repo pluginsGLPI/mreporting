@@ -48,9 +48,13 @@ function plugin_init_mreporting() {
       }
       /* Configuration Link */
       if (plugin_mreporting_haveRight("config","w")) {
-         $config_entry = 'front/config.form.php';
+         $config_entry = 'front/config.php';
          $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
+         $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['search']
+                  = '/plugins/mreporting/'.$config_entry;
+         $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['add']
+                  = '/plugins/mreporting/front/config.form.php';
       }
 
       /* Show Reports in standart stats page */

@@ -33,10 +33,13 @@ $LANG['plugin_mreporting']["error"][0] = "Aucun rapport disponible !";
 $LANG['plugin_mreporting']["error"][1] = "Aucune données pour cette plage de date !";
 $LANG['plugin_mreporting']["error"][2] = "Non défini";
 $LANG['plugin_mreporting']["error"][3] = "aucun graphique sélectionné";
+$LANG['plugin_mreporting']["error"][4] = "L'objet existe déjà";
 
 $LANG['plugin_mreporting']["export"][0] = "Rapport général - ODT";
 $LANG['plugin_mreporting']["export"][1] = "Nombre";
 $LANG['plugin_mreporting']["export"][2] = "Données";
+
+$LANG['plugin_mreporting']["config"][0] = "Configuration";
 
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Barres - Nombre de ticket par entités";
@@ -83,5 +86,43 @@ $LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['category'] = "Par
 
 $LANG['plugin_mreporting']['Helpdesk']['reportHgstackbarNbTicket']['title'] = "Barres empilées - Evolution du nombre de ticket sur la période (par Statut)";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgstackbarNbTicket']['category'] = "Par tickets";
+
+$LANG['plugin_mreporting']['Uneo']['title'] = "Indicateurs Globaux";
+$LANG['plugin_mreporting']['Uneo']['reportPieTopTenAuthor']['title'] = "Camembert - Top 10 des demandeurs";
+$LANG['plugin_mreporting']['Uneo']['reportPieTopTenAuthor']['category'] = "Demandeurs";
+$LANG['plugin_mreporting']['Uneo']['reportHgbarTopTenAuthor']['title'] = "Barres groupées - Top 10 des demandeurs";
+$LANG['plugin_mreporting']['Uneo']['reportHgbarTopTenAuthor']['category'] = "Demandeurs";
+
+$LANG['plugin_mreporting']['Uneo']['reportPieRequesttype']['title'] = "Camembert - Origine des tickets pour le mois";
+$LANG['plugin_mreporting']['Uneo']['reportPieRequesttype']['category'] = "Par source de la demande";
+$LANG['plugin_mreporting']['Uneo']['reportGareaRequesttype']['title'] = "Aire - Origine des tickets pour l'année";
+$LANG['plugin_mreporting']['Uneo']['reportGareaRequesttype']['category'] = "Par source de la demande";
+
+$LANG['plugin_mreporting']['Uneo']['reportPieOpenedTicketbytype']['title'] = "Camembert - Répartition des types de tickets ouverts dans le mois";
+$LANG['plugin_mreporting']['Uneo']['reportPieOpenedTicketbytype']['category'] = "Par catégorie";
+$LANG['plugin_mreporting']['Uneo']['reportHgbarOpenedTicketbytype']['title'] = "Barres groupées - Répartition des types de tickets ouverts dans l'année";
+$LANG['plugin_mreporting']['Uneo']['reportHgbarOpenedTicketbytype']['category'] = "Par catégorie";
+$LANG['plugin_mreporting']['Uneo']['reportHgbarOpenedAndCLosedTicket']['title'] = "Barres et Ligne - Evolution des tickets en cours  / tickets fermés";
+$LANG['plugin_mreporting']['Uneo']['reportHgbarOpenedAndCLosedTicket']['category'] = "Par catégorie";
+
+$LANG['plugin_mreporting']['UneoDemand']['title'] = "Indicateurs sur les demandes";
+$LANG['plugin_mreporting']['UneoDemand']['reportGareaOpenedTicketNumberByCategory']['title'] = "Aire - Nombre de tickets ouverts par catégories mères";
+$LANG['plugin_mreporting']['UneoDemand']['reportGareaOpenedTicketNumberByCategory']['category'] = "Par catégorie";
+$LANG['plugin_mreporting']['UneoDemand']['reportPieOpenedTicketNumberByCategory']['title'] = "Camembert - Nombre de tickets ouverts par catégories mères";
+$LANG['plugin_mreporting']['UneoDemand']['reportPieOpenedTicketNumberByCategory']['category'] = "Par catégorie";
+$LANG['plugin_mreporting']['UneoDemand']['reportHgstackbarOpenedTicketNumberByCategory']['title'] = "Barres empilées - Nombre de tickets ouverts par catégories mères";
+$LANG['plugin_mreporting']['UneoDemand']['reportHgstackbarOpenedTicketNumberByCategory']['category'] = "Par catégorie";
+$LANG['plugin_mreporting']['UneoDemand']['reportPieToptenTicket']['title'] = "Camembert - Top 10 des catégories de demandes";
+$LANG['plugin_mreporting']['UneoDemand']['reportPieToptenTicket']['category'] = "Par catégorie";
+
+$LANG['plugin_mreporting']['UneoIncident']['title'] = "Indicateurs sur les incidents";
+$LANG['plugin_mreporting']['UneoIncident']['reportPieOpenedTicketNumberByCategory']['title'] = "Camembert - Nombre de tickets ouverts par catégories mères";
+$LANG['plugin_mreporting']['UneoIncident']['reportPieOpenedTicketNumberByCategory']['category'] = "Par catégorie";
+$LANG['plugin_mreporting']['UneoIncident']['reportGareaOpenedTicketNumberByCategory']['title'] = "Aire - Nombre de tickets ouverts par catégories mères";
+$LANG['plugin_mreporting']['UneoIncident']['reportGareaOpenedTicketNumberByCategory']['category'] = "Par catégorie";
+$LANG['plugin_mreporting']['UneoIncident']['reportHgstackbarOpenedTicketNumberByCategory']['title'] = "Barres empilées - Nombre de tickets ouverts par catégories mères";
+$LANG['plugin_mreporting']['UneoIncident']['reportHgstackbarOpenedTicketNumberByCategory']['category'] = "Par catégorie";
+$LANG['plugin_mreporting']['UneoIncident']['reportPieToptenTicket']['title'] = "Camembert - Top 10 des catégories d'incidents";
+$LANG['plugin_mreporting']['UneoIncident']['reportPieToptenTicket']['category'] = "Par catégorie";
 
 ?>
