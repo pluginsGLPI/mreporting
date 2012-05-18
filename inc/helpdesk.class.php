@@ -92,7 +92,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $datas['datas'][$label] = $ticket['count'];
       }
       
-      $datas['show_label'] = "always";
+      //$datas['show_label'] = "always";
       
       return $datas;
 
@@ -170,7 +170,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $datas['datas'] = $tmp_datas;
       $datas['labels2'] = $labels2;
-      $datas['flip_data'] = true;
+      //$datas['flip_data'] = true;
       
       return $datas;
    }
@@ -451,8 +451,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       //curve lines
-      $datas['spline'] = true;
-      $datas['area'] = $area;
+      //$datas['spline'] = true;
+      //$datas['area'] = $area;
       
       return $datas;
    }
@@ -499,8 +499,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       //curve lines
-      $datas['spline'] = true;
-      $datas['area'] = $area;
+      //$datas['spline'] = true;
+      //$datas['area'] = $area;
       
       return $datas;
    }

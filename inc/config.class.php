@@ -38,6 +38,25 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[2]['name']     = $LANG['common'][60];
       $tab[2]['datatype'] = 'bool';
       
+      $tab[3]['table']    = $this->getTable();
+      $tab[3]['field']    = 'show_area';
+      $tab[3]['name']     = $LANG['plugin_mreporting']["config"][1];
+      $tab[3]['datatype'] = 'bool';
+      
+      $tab[4]['table']    = $this->getTable();
+      $tab[4]['field']    = 'spline';
+      $tab[4]['name']     = $LANG['plugin_mreporting']["config"][2];
+      $tab[4]['datatype'] = 'bool';
+      
+      $tab[5]['table']    = $this->getTable();
+      $tab[5]['field']    = 'show_label';
+      $tab[5]['name']     = $LANG['plugin_mreporting']["config"][3];
+      
+      $tab[6]['table']    = $this->getTable();
+      $tab[6]['field']    = 'flip_data';
+      $tab[6]['name']     = $LANG['plugin_mreporting']["config"][4];
+      $tab[6]['datatype'] = 'bool';
+      
 		return $tab;
    }
    
@@ -125,7 +144,65 @@ class PluginMreportingConfig extends CommonDBTM {
       echo $select;
       return $rand;
    }
+   
+   static function dropdownLabel($name, $options=array()) {
+      global $LANG;
 
+      $params['value']       = 0;
+      $params['toadd']       = array();
+      $params['on_change']   = '';
+
+      if (is_array($options) && count($options)) {
+         foreach ($options as $key => $val) {
+            $params[$key] = $val;
+         }
+      }
+
+      $items = array();
+      if (count($params['toadd'])>0) {
+         $items = $params['toadd'];
+      }
+
+      $items += self::getLabelTypes();
+
+      return Dropdown::showFromArray($name, $items, $params);
+   }
+   
+   /**
+    * Get label types
+    *
+    * @return array of types
+   **/
+   static function getLabelTypes() {
+      global $LANG;
+      
+      $options['never']    = $LANG['plugin_mreporting']["config"][7];
+      $options['hover']    = $LANG['plugin_mreporting']["config"][5];
+      $options['always']   = $LANG['plugin_mreporting']["config"][6];
+      
+      return $options;
+   }
+   
+   /**
+    * Get ticket type Name
+    *
+    * @param $value type ID
+   **/
+   static function getLabelTypeName($value) {
+      global $LANG;
+
+      switch ($value) {
+         case 'never' :
+            return $LANG['plugin_mreporting']["config"][7];
+
+         case 'hover' :
+            return $LANG['plugin_mreporting']["config"][5];
+         
+         case 'always' :
+            return $LANG['plugin_mreporting']["config"][6];
+      }
+   }
+   
    
    function prepareInputForAdd($input) {
       global $LANG;
@@ -189,14 +266,14 @@ class PluginMreportingConfig extends CommonDBTM {
       $this->showTabs($options);
       $this->showFormHeader($options);
 
-      echo "<tr>";
-      echo "<td class='tab_bg_2 center'>".$LANG['common'][16]."</td>";
-      echo "<td class='tab_bg_2 left'>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".$LANG['common'][16]."</td>";
+      echo "<td>";
       echo $this->fields["name"];
       echo "<input type='hidden' name='name' value=\"".$this->fields["name"]."\">\n";
       echo "</td>";
       
-      echo "<td class='tab_bg_2 left' colspan='2'>";
+      echo "<td colspan='2'>";
       $title_func = '';
       $short_classname = '';
       $f_name = '';
@@ -219,15 +296,48 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
       
-      echo "<tr>";
-      echo "<td class='tab_bg_2 center'>".$LANG['common'][60]."</td>";
-      echo "<td class='tab_bg_2 left'>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>".$LANG['common'][60]."</td>";
+      echo "<td>";
       Dropdown::showYesNo("is_active",$this->fields["is_active"]);
       echo "</td>";
       
-      echo "<td class='tab_bg_2 center'>";
+      echo "<td>";
+      echo $LANG['plugin_mreporting']["config"][1];
       echo "</td>";
-      echo "<td class='tab_bg_2 left'>";
+      echo "<td>";
+      Dropdown::showYesNo("show_area",$this->fields["show_area"]);
+      echo "</td>"; 
+      echo "</tr>";
+      
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
+      echo $LANG['plugin_mreporting']["config"][2];
+      echo "</td>";
+      echo "<td>";
+      Dropdown::showYesNo("spline",$this->fields["spline"]);
+      echo "</td>"; 
+      
+      echo "<td>";
+      echo $LANG['plugin_mreporting']["config"][3];
+      echo "</td>";
+      echo "<td>";
+      $opt = array('value' => $this->fields["show_label"]);
+      self::dropdownLabel('show_label', $opt);
+      echo "</td>"; 
+      echo "</tr>";
+      
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
+      echo $LANG['plugin_mreporting']["config"][4];
+      echo "</td>";
+      echo "<td>";
+      Dropdown::showYesNo("flip_data",$this->fields["flip_data"]);
+      echo "</td>"; 
+      
+      echo "<td>";
+      echo "</td>";
+      echo "<td>";
       echo "</td>"; 
       echo "</tr>";
       

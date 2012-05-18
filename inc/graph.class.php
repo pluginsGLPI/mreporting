@@ -121,20 +121,21 @@ class PluginMreportingGraph {
 
    }
 
-   function checkVisibility($show_label = 'hover', &$always, &$hover) {
+   function checkVisibility($show_label, &$always, &$hover) {
       switch ($show_label) {
          default:
          case 'hover':
             $always = "false";
             $hover = "true";
             break;
-         case 'never':
-            $always = "false";
-            $hover = "false";
-            break;
          case 'always':
             $always = "true";
             $hover = "true";
+            break;
+         default :
+            $always = "false";
+            $hover = "false";
+            break;
       }
    }
 
@@ -212,7 +213,13 @@ class PluginMreportingGraph {
       }
       
       $datas = $raw_datas['datas'];
-
+      
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $show_label = $config->fields['show_label'];
+      }
+      
       $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
@@ -353,6 +360,12 @@ JAVASCRIPT;
       
       $datas = $raw_datas['datas'];
       
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $show_label = $config->fields['show_label'];
+      }
+      
       $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
@@ -487,9 +500,13 @@ JAVASCRIPT;
       }
       
       $datas = $raw_datas['datas'];
+      
       $flip_data = false;
-      if (isset($raw_datas['flip_data'])) {
-         $flip_data = $raw_datas['flip_data'];
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $flip_data = $config->fields['flip_data'];
+         $show_label = $config->fields['show_label'];
       }
       
       $labels2 = $raw_datas['labels2'];
@@ -649,11 +666,15 @@ JAVASCRIPT;
       }
       
       $datas = $raw_datas['datas'];
-      $flip_data = false;
-      if (isset($raw_datas['flip_data'])) {
-         $flip_data = $raw_datas['flip_data'];
-      }
       
+      $flip_data = false;
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $flip_data = $config->fields['flip_data'];
+         $show_label = $config->fields['show_label'];
+      }
+
       $labels2 = $raw_datas['labels2'];
       
       $this->initDatasMultiple($datas, $labels2, $unit, true);
@@ -785,6 +806,16 @@ JAVASCRIPT;
       }
       
       $datas = $raw_datas['datas'];
+      
+      $area = false;
+      $spline = false;
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $area = $config->fields['show_area'];
+         $spline = $config->fields['spline'];
+         $show_label = $config->fields['show_label'];
+      }
 
       $this->initDatasSimple($datas, $unit);
 
@@ -853,7 +884,7 @@ $JS = <<<JAVASCRIPT
    var line{$rand} = vis{$rand}.add(pv.Line)
       .data(datas)
       .interpolate(function () { //curve line
-         if ({$spline}) return "cardinal";
+         if ({$spline}>0) return "cardinal";
          else return "linear";
       })
       .left(function() x(this.index))
@@ -861,7 +892,7 @@ $JS = <<<JAVASCRIPT
       .visible(function() {return this.index  < ((offset / 2) * ( n / 12));})
       .lineWidth(4);
 
-   if ('{$area}') {
+   if ('{$area}'>0) {
       line{$rand}.add(pv.Area)
          .visible(function() {
             return n < ((offset / 2) * ( n / 12));
@@ -931,7 +962,6 @@ JAVASCRIPT;
     */
    function showLine($params) {
       
-      $params['area'] = false;
       $this->showArea($params);
    }
 
@@ -980,10 +1010,19 @@ JAVASCRIPT;
       }
       
       $datas = $raw_datas['datas'];
+      
+      $area = false;
       $flip_data = false;
-      if (isset($raw_datas['flip_data'])) {
-         $flip_data = $raw_datas['flip_data'];
+      $spline = false;
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $flip_data = $config->fields['flip_data'];
+         $area = $config->fields['show_area'];
+         $spline = $config->fields['spline'];
+         $show_label = $config->fields['show_label'];
       }
+      
       $labels2 = $raw_datas['labels2'];
       
       $this->initDatasMultiple($datas, $labels2, $unit);
@@ -1058,7 +1097,7 @@ $JS = <<<JAVASCRIPT
    var lines{$rand} = panel{$rand}.add(pv.Line)
       .data(function(d) d)
       .interpolate(function () { //curve line
-         if ({$spline}) return "cardinal";
+         if ({$spline}>0) return "cardinal";
          else return "linear";
       })
       .strokeStyle(function() { return colors(this.parent.index); })
@@ -1067,7 +1106,7 @@ $JS = <<<JAVASCRIPT
       .visible(function() {return (this.index < ((offset / 2) * ( m / 12))); })
       .lineWidth(2);
 
-   if ('{$area}') {
+   if ('{$area}'>0) {
       lines{$rand}.add(pv.Area)
          .visible(function() {
             return m < ((offset / 2) * ( m / 12));
@@ -1142,7 +1181,6 @@ JAVASCRIPT;
     * @return nothing
     */
    function showGline($params) {
-      $params['area'] = false;
       $this->showGarea($params);
    }
    
