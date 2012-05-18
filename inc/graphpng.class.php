@@ -431,6 +431,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             echo "</div>";
          return false;
       }
+      
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $show_label = $config->fields['show_label'];
+      }
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
       $max = max($values);
@@ -568,6 +575,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          if (!$export)
             echo "</div>";
          return false;
+      }
+      
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $show_label = $config->fields['show_label'];
       }
       
       $values = array_values($datas);
@@ -729,10 +742,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       
       $labels2 = $raw_datas['labels2'];
+      
+      $show_label = 'never';
       $flip_data = false;
-      if (isset($raw_datas['flip_data'])) {
-         $flip_data = $raw_datas['flip_data'];
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $flip_data = $config->fields['flip_data'];
+         $show_label = $config->fields['show_label'];
       }
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
 
@@ -918,6 +936,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return false;
       }
       
+      $area = false;
+      $spline = false;
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $area = $config->fields['show_area'];
+         $spline = $config->fields['spline'];
+         $show_label = $config->fields['show_label'];
+      }
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
       $max = max($values);
@@ -982,7 +1010,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $y2 = $height - $data * ($height - 60) / $max;
 
          //in case of area chart fill under point space
-         if ($area) {
+         if ($area > 0) {
             $points = array(
                $x1, $y1,
                $x2, $y2,
@@ -1059,7 +1087,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       } else {
          $datas = array();
       }
-                          
+
       $rand = $opt['rand'];
       
       $options = array("title" => $title,
@@ -1078,10 +1106,19 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       
       $labels2 = $raw_datas['labels2'];
+      
+      $area = false;
       $flip_data = false;
-      if (isset($raw_datas['flip_data'])) {
-         $flip_data = $raw_datas['flip_data'];
+      $spline = false;
+      $show_label = 'never';
+      $config = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($rand)) {
+         $flip_data = $config->fields['flip_data'];
+         $area = $config->fields['show_area'];
+         $spline = $config->fields['spline'];
+         $show_label = $config->fields['show_label'];
       }
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
 
@@ -1156,7 +1193,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $y2 = $height - 30 - $subdata * ($height - 150) / $max;
 
             //in case of area chart fill under point space
-            if ($area) {
+            if ($area > 0) {
                $points = array(
                   $x1, $y1,
                   $x2, $y2,

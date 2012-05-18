@@ -45,6 +45,10 @@ function plugin_mreporting_install() {
 	`id` int(11) NOT NULL auto_increment,
 	`name` varchar(255) collate utf8_unicode_ci default NULL,
 	`is_active` tinyint(1) NOT NULL default '0',
+	`show_area` tinyint(1) NOT NULL default '0',
+	`spline` tinyint(1) NOT NULL default '0',
+	`show_label` VARCHAR(10) NOT NULL,
+	`flip_data` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`),
 	KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
