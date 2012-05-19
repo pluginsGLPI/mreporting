@@ -95,4 +95,84 @@ function plugin_mreporting_getDatabaseRelations() {
 		return array();
 }
 
+function plugin_mreporting_giveItem($type,$ID,$data,$num) {
+	global $CFG_GLPI, $DB, $LANG;
+
+	$searchopt=&Search::getOptions($type);
+	$table=$searchopt[$ID]["table"];
+	$field=$searchopt[$ID]["field"];
+   
+   $output_type=HTML_OUTPUT;
+   if (isset($_GET['display_type']))
+      $output_type=$_GET['display_type'];
+      
+   switch ($type) {
+      
+		case 'PluginMreportingConfig':
+         
+         switch ($table.'.'.$field) {
+            case "glpi_plugin_mreporting_configs.show_label":
+               $out = ' ';
+               if (!empty($data["ITEM_$num"])) {
+                  $out=PluginMreportingConfig::getLabelTypeName($data["ITEM_$num"]);
+               }
+               return $out;
+               break;
+            case "glpi_plugin_mreporting_configs.name":
+               $out = ' ';
+               if (!empty($data["ITEM_$num"])) {
+                  
+                  $title_func = '';
+                  $short_classname = '';
+                  $f_name = '';
+                  $session = $_SESSION['glpi_plugin_mreporting_rand'];
+                  
+                  foreach($session as $classname => $report) {
+                     foreach($report as $k => $v) {
+                        if ($data["ITEM_$num"] == $v) {
+                           $short_classname = $classname;
+                           $f_name = $k;
+                        }
+                     }
+                  }
+                  $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
+                  $gtype = strtolower($ex_func[1]);
+                  if (!empty($short_classname) && !empty($f_name)) {
+                     $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+                  }
+      
+                  $out="<a href='config.form.php?id=".$data["id"]."'>".
+                        $data["ITEM_$num"]."</a> (".$title_func.")";
+               }
+               return $out;
+               break;
+         }
+         return "";
+         break;
+      
+	}
+	return "";
+}
+
+function plugin_mreporting_MassiveActionsFieldsDisplay($options=array()) {
+	
+	$table = $options['options']['table'];
+   $field = $options['options']['field'];
+   $linkfield = $options['options']['linkfield'];
+   if ($table == getTableForItemType($options['itemtype'])) {
+
+      // Table fields
+      switch ($table.".".$field) {
+			
+			case "glpi_plugin_mreporting_configs.show_label":
+				PluginMreportingConfig::dropdownLabel('show_label');
+            return true;
+            break;
+		}
+
+	}
+	// Need to return false on non display item
+	return false;
+}
+
 ?>
