@@ -50,6 +50,8 @@ class PluginMreportingGraph {
          
       echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
       echo $options['title'];
+      echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
+      echo "<img src='../pics/cog_edit.png' class='title_pics'/></a>";
       echo "</div>";
       if (!empty($options['desc'])) {
          echo "<div class='graph_desc'>".$options['desc']."</div>";
@@ -214,10 +216,10 @@ class PluginMreportingGraph {
       
       $datas = $raw_datas['datas'];
       
-      $show_label = 'never';
-      $config = new PluginMreportingConfig();
-      if ($config->getFromDBByRand($rand)) {
-         $show_label = $config->fields['show_label'];
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
       }
       
       $this->initDatasSimple($datas, $unit);
@@ -360,10 +362,10 @@ JAVASCRIPT;
       
       $datas = $raw_datas['datas'];
       
-      $show_label = 'never';
-      $config = new PluginMreportingConfig();
-      if ($config->getFromDBByRand($rand)) {
-         $show_label = $config->fields['show_label'];
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
       }
       
       $this->initDatasSimple($datas, $unit);
@@ -501,12 +503,10 @@ JAVASCRIPT;
       
       $datas = $raw_datas['datas'];
       
-      $flip_data = false;
-      $show_label = 'never';
-      $config = new PluginMreportingConfig();
-      if ($config->getFromDBByRand($rand)) {
-         $flip_data = $config->fields['flip_data'];
-         $show_label = $config->fields['show_label'];
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
       }
       
       $labels2 = $raw_datas['labels2'];
@@ -667,12 +667,10 @@ JAVASCRIPT;
       
       $datas = $raw_datas['datas'];
       
-      $flip_data = false;
-      $show_label = 'never';
-      $config = new PluginMreportingConfig();
-      if ($config->getFromDBByRand($rand)) {
-         $flip_data = $config->fields['flip_data'];
-         $show_label = $config->fields['show_label'];
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
       }
 
       $labels2 = $raw_datas['labels2'];
@@ -807,14 +805,10 @@ JAVASCRIPT;
       
       $datas = $raw_datas['datas'];
       
-      $area = false;
-      $spline = false;
-      $show_label = 'never';
-      $config = new PluginMreportingConfig();
-      if ($config->getFromDBByRand($rand)) {
-         $area = $config->fields['show_area'];
-         $spline = $config->fields['spline'];
-         $show_label = $config->fields['show_label'];
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
       }
 
       $this->initDatasSimple($datas, $unit);
@@ -1011,16 +1005,10 @@ JAVASCRIPT;
       
       $datas = $raw_datas['datas'];
       
-      $area = false;
-      $flip_data = false;
-      $spline = false;
-      $show_label = 'never';
-      $config = new PluginMreportingConfig();
-      if ($config->getFromDBByRand($rand)) {
-         $flip_data = $config->fields['flip_data'];
-         $area = $config->fields['show_area'];
-         $spline = $config->fields['spline'];
-         $show_label = $config->fields['show_label'];
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
       }
       
       $labels2 = $raw_datas['labels2'];
