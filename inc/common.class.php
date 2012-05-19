@@ -379,10 +379,8 @@ class PluginMreportingCommon extends CommonDBTM {
       $export      = false;
       
       $delay       = false;
-      $show_label  = false;
-      $area        = false;
+
       $unit        = '';
-      $spline      = false;
       
       $opt         = array();
 
@@ -392,15 +390,9 @@ class PluginMreportingCommon extends CommonDBTM {
       
       $crit['delay']  = (isset($crit['raw_datas']['delay']) 
                         && $crit['raw_datas']['delay']) ? $crit['raw_datas']['delay'] : "false";
-      $crit['show_label']  = (isset($crit['raw_datas']['show_label']) 
-               && $crit['raw_datas']['show_label']) ? $crit['raw_datas']['show_label'] : $show_label;
-      $crit['area']  = (isset($crit['raw_datas']['area']) 
-                        && $crit['raw_datas']['area']) ? "true" : $area;
       $crit['unit'] = (isset($crit['raw_datas']['unit']) 
                         && $crit['raw_datas']['unit']) ? $crit['raw_datas']['unit'] : $unit;
-      $crit['spline']  = (isset($crit['raw_datas']['spline']) 
-                           && $crit['raw_datas']['spline']) ? "true" : $spline;
-      
+               
       return $crit;
    }
 

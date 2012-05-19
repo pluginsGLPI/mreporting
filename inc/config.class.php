@@ -117,23 +117,25 @@ class PluginMreportingConfig extends CommonDBTM {
          
          $select.= "<optgroup label=\"". $report['title'] ."\">";
          
-         foreach($graphs[$classname] as $cat => $graph) {
-            
-            $select.= "<optgroup label=\"". $cat ."\">";
-            
-            foreach($graph as $k => $v) {
+         if (isset($graphs[$classname])) {
+            foreach($graphs[$classname] as $cat => $graph) {
                
-               if (!$self->getFromDBByRand($v["rand"])) {
+               $select.= "<optgroup label=\"". $cat ."\">";
+               
+               foreach($graph as $k => $v) {
+                  
+                  if (!$self->getFromDBByRand($v["rand"])) {
 
-                  $select.= "<option value='".$v["rand"]."'".($options['value']==$v["rand"]?" selected ":"").">";
-                  $select.= $v["title"];
-                  $select.= "</option>";
-                    
-                  $i++;
+                     $select.= "<option value='".$v["rand"]."'".($options['value']==$v["rand"]?" selected ":"").">";
+                     $select.= $v["title"];
+                     $select.= "</option>";
+                       
+                     $i++;
+                  }
                }
-            }
-            $select.= "</optgroup>";
+               $select.= "</optgroup>";
 
+            }
          }
          $select.= "</optgroup>";
 
@@ -277,22 +279,25 @@ class PluginMreportingConfig extends CommonDBTM {
       $title_func = '';
       $short_classname = '';
       $f_name = '';
+      $gtype = '';
       $session = $_SESSION['glpi_plugin_mreporting_rand'];
       
       foreach($session as $classname => $report) {
          foreach($report as $k => $v) {
             if ($this->fields["name"] == $v) {
-            $short_classname = $classname;
-            $f_name = $k;
+               $short_classname = $classname;
+               $f_name = $k;
             }
          }
       }
-      
+      $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
+      $gtype = strtolower($ex_func[1]);
       if (!empty($short_classname) && !empty($f_name)) {
          $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
       }
-      
-      echo $title_func;
+      echo "&nbsp;<a href='graph.php?short_classname=".
+      $short_classname."&f_name=".$f_name."&gtype=".$gtype.
+      "&rand=".$this->fields["name"]."'>".$title_func."</a>";
       echo "</td>";
       echo "</tr>";
       
@@ -306,7 +311,13 @@ class PluginMreportingConfig extends CommonDBTM {
       echo $LANG['plugin_mreporting']["config"][1];
       echo "</td>";
       echo "<td>";
-      Dropdown::showYesNo("show_area",$this->fields["show_area"]);
+      if ($gtype == 'area' || $gtype == 'garea') {
+         Dropdown::showYesNo("show_area",$this->fields["show_area"]);
+      } else {
+         echo Dropdown::getYesNo($this->fields["show_area"]);
+         echo "<input type='hidden' name='show_area' value='0'>\n";
+      }
+      
       echo "</td>"; 
       echo "</tr>";
       
@@ -315,15 +326,26 @@ class PluginMreportingConfig extends CommonDBTM {
       echo $LANG['plugin_mreporting']["config"][2];
       echo "</td>";
       echo "<td>";
-      Dropdown::showYesNo("spline",$this->fields["spline"]);
+      if ($gtype == 'area' || $gtype == 'garea' || $gtype == 'line' || $gtype == 'gline') {
+         Dropdown::showYesNo("spline",$this->fields["spline"]);
+      } else {
+         echo Dropdown::getYesNo($this->fields["spline"]);
+         echo "<input type='hidden' name='spline' value='0'>\n";
+      }
+      
       echo "</td>"; 
       
       echo "<td>";
       echo $LANG['plugin_mreporting']["config"][3];
       echo "</td>";
       echo "<td>";
-      $opt = array('value' => $this->fields["show_label"]);
-      self::dropdownLabel('show_label', $opt);
+      if ($gtype != 'area' && $gtype != 'garea' && $gtype != 'line' && $gtype != 'gline') {
+         $opt = array('value' => $this->fields["show_label"]);
+         self::dropdownLabel('show_label', $opt);
+      } else {
+         echo self::getLabelTypeName($this->fields["show_label"]);
+         echo "<input type='hidden' name='show_label' value='never'>\n";
+      }
       echo "</td>"; 
       echo "</tr>";
       
@@ -332,7 +354,12 @@ class PluginMreportingConfig extends CommonDBTM {
       echo $LANG['plugin_mreporting']["config"][4];
       echo "</td>";
       echo "<td>";
-      Dropdown::showYesNo("flip_data",$this->fields["flip_data"]);
+      if ($gtype != 'hbar' && $gtype != 'pie' && $gtype != 'area' && $gtype != 'line') {
+         Dropdown::showYesNo("flip_data",$this->fields["flip_data"]);
+      } else {
+         echo Dropdown::getYesNo($this->fields["flip_data"]);
+         echo "<input type='hidden' name='flip_data' value='0'>\n";
+      }
       echo "</td>"; 
       
       echo "<td>";
@@ -348,6 +375,25 @@ class PluginMreportingConfig extends CommonDBTM {
       $this->addDivForTabs();
 
       return true;
+   }
+   
+   static function initConfigParams($rand) {
+      
+
+      $crit = array('area' => false,
+                     'spline' => false,
+                     'flip_data' => false,
+                     'show_label' => 'never');
+      
+      $self = new self();
+      if ($self->getFromDBByRand($rand)) {
+         $crit['area'] = $self->fields['show_area'];
+         $crit['spline'] = $self->fields['spline'];
+         $crit['show_label'] = $self->fields['show_label'];
+         $crit['flip_data'] = $self->fields['flip_data'];
+      }
+
+      return $crit;
    }
 }
 

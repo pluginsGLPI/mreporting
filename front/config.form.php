@@ -56,7 +56,13 @@ if (isset($_POST["add"])) {
 } else {
 
 	Html::header($LANG['common'][12],'',"plugins","mreporting","config");
-
+   
+   if (isset($_GET["rand"])) {
+       $self = new PluginMreportingConfig();
+      if ($config->getFromDBByRand($_GET["rand"])) {
+         $_GET["id"] = $config->fields['id'];
+      }
+   }
 	$config->showForm($_GET["id"]);
 	
 	Html::footer();
