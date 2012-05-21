@@ -192,31 +192,36 @@ class PluginMreportingConfig extends CommonDBTM {
                $graphs[$classname][$function['category_func']][] = $function;
             }
          }
-         
-         $select.= "<optgroup label=\"". $report['title'] ."\">";
-         
          if (isset($graphs[$classname])) {
-            foreach($graphs[$classname] as $cat => $graph) {
+            $count = count($graphs[$classname]);
+            if ($count > 0) {
                
-               $select.= "<optgroup label=\"". $cat ."\">";
+               $select.= "<optgroup label=\"". $report['title'] ."\">";
                
-               foreach($graph as $k => $v) {
-                  
-                  if (!$self->getFromDBByRand($v["rand"])) {
+               $count = count($graphs[$classname]);
+               if ($count > 0) {
+                  foreach($graphs[$classname] as $cat => $graph) {
+                     
+                     $select.= "<optgroup label=\"". $cat ."\">";
+                     
+                     foreach($graph as $k => $v) {
+                        
+                        if (!$self->getFromDBByRand($v["rand"])) {
 
-                     $select.= "<option value='".$v["rand"]."'".($options['value']==$v["rand"]?" selected ":"").">";
-                     $select.= $v["title"];
-                     $select.= "</option>";
-                       
-                     $i++;
+                           $select.= "<option value='".$v["rand"]."'".($options['value']==$v["rand"]?" selected ":"").">";
+                           $select.= $v["title"];
+                           $select.= "</option>";
+                             
+                           $i++;
+                        }
+                     }
+                     $select.= "</optgroup>";
+
                   }
                }
                $select.= "</optgroup>";
-
             }
          }
-         $select.= "</optgroup>";
-
       }
 
       $select.= "</select>";
@@ -402,6 +407,7 @@ class PluginMreportingConfig extends CommonDBTM {
       
       echo "<td colspan='2'>";
       $title_func = '';
+      $link=$LANG['plugin_mreporting']["error"][0];
       $short_classname = '';
       $f_name = '';
       $gtype = '';
@@ -418,11 +424,15 @@ class PluginMreportingConfig extends CommonDBTM {
       $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
       $gtype = strtolower($ex_func[1]);
       if (!empty($short_classname) && !empty($f_name)) {
-         $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+         if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
+            $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+            $link="&nbsp;<a href='graph.php?short_classname=".
+            $short_classname."&f_name=".$f_name."&gtype=".$gtype.
+            "&rand=".$this->fields["name"]."'>".$title_func."</a>";
+         }
       }
-      echo "&nbsp;<a href='graph.php?short_classname=".
-      $short_classname."&f_name=".$f_name."&gtype=".$gtype.
-      "&rand=".$this->fields["name"]."'>".$title_func."</a>";
+      
+      echo $link;
       echo "</td>";
       echo "</tr>";
       
