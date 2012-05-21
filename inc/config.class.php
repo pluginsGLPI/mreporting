@@ -157,9 +157,14 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["name"]=$graphname;
                $this->fields["is_active"]="1";
                $this->fields["spline"]="1";
+               $this->fields["show_area"]="0";
                $this->fields["default_delay"]="365";
                break;
-               
+            case 'hgstackbar':
+               $this->fields["name"]=$graphname;
+               $this->fields["is_active"]="1";
+               $this->fields["default_delay"]="365";
+               break;   
             default:
                $this->fields["name"]=$graphname;
                $this->fields["is_active"]="1";
@@ -446,7 +451,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo $LANG['plugin_mreporting']["config"][1];
       echo "</td>";
       echo "<td>";
-      if ($gtype == 'area' || $gtype == 'garea') {
+      if ($gtype == 'area' || $gtype == 'garea' || $gtype == 'line' || $gtype == 'gline') {
          Dropdown::showYesNo("show_area",$this->fields["show_area"]);
       } else {
          echo Dropdown::getYesNo($this->fields["show_area"]);
