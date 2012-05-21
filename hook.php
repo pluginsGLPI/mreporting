@@ -53,7 +53,14 @@ function plugin_mreporting_install() {
    PRIMARY KEY  (`id`),
 	KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-
+   
+   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','2','2','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','3','3','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','4','4','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','5','5','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','6','6','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','8','8','0');";
+   
    foreach($queries as $query)
       mysql_query($query);
 
@@ -69,7 +76,8 @@ function plugin_mreporting_install() {
 
 
 function plugin_mreporting_uninstall() {
-
+   global $DB;
+   
    $queries = array(
       "DROP TABLE glpi_plugin_mreporting_profiles",
       "DROP TABLE glpi_plugin_mreporting_configs"
@@ -82,6 +90,12 @@ function plugin_mreporting_uninstall() {
 
 	Toolbox::deleteDir($rep_files_mreporting);
 	
+	$tables_glpi = array("glpi_displaypreferences",
+					"glpi_bookmarks");
+
+	foreach($tables_glpi as $table_glpi)
+		$DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginMreportingConfig' ;");
+		
    return true;
 }
 
