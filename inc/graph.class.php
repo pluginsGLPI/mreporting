@@ -31,19 +31,27 @@ class PluginMreportingGraph {
 
    const DEBUG_GRAPH = false;
    protected $width = 700;
-
+   
+   /**
+    * init Graph : Show Titles / Date selector
+    *
+    * @params $options ($rand, short_classname, title, desc, delay)
+   */
+   
    function initGraph($options) {
       global $LANG;
       
       $width = $this->width + 100;
       $rand = $options['rand'];
-
+      
       echo "<div class='center'><div id='fig' style='width:{$width}px'>";
+      //Show global title
       if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
          echo "<div class='graph_title'>";
          echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
          echo "</div>";
       }
+      //Show grraph title
       echo "<div class='graph_title'>";
       $backtrace = debug_backtrace();
       $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
@@ -51,6 +59,9 @@ class PluginMreportingGraph {
       echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
       echo $options['title'];
       echo "</div>";
+      
+      //Show date selector
+      //using rand for display x graphs on same page
       if (!empty($options['desc'])) {
          echo "<div class='graph_desc'>".$options['desc']."</div>";
       } else if (isset($_REQUEST['date1'.$rand]) && isset($_REQUEST['date1'.$rand])) {
@@ -66,66 +77,17 @@ class PluginMreportingGraph {
       echo "<div class='graph_navigation'>";
       PluginMreportingMisc::showSelector($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand],$rand);
       echo "</div>";
-         
-      echo "<div class='graph' id='graph_content$rand'>";
-
-      $colors = "'".implode ("', '", PluginMreportingConfig::getColors())."'";
-      echo "<script type='text/javascript+protovis'>
-         function showGraph$rand() {
-            colors = pv.colors($colors);";
-   }
-
-   function endGraph($opt, $export = false, $datas=array(), $unit = '', $labels2=array(), $flip_data = false) {
-      global $LANG;
       
-      $_REQUEST['short_classname'] = $opt['short_classname'];
-      $_REQUEST['f_name'] = $opt['f_name'];
-      $_REQUEST['gtype'] = $opt['gtype'];
-      $_REQUEST['rand'] = $opt['rand'];
-      
-      $rand = $opt['rand'];
-      
-      $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
-      
+      //Script for graph display
       if ($rand !== false) {
+         echo "<div class='graph' id='graph_content$rand'>";
 
-         echo "}
-            showGraph$rand();
-         </script>";
-
+         $colors = "'".implode ("', '", PluginMreportingConfig::getColors())."'";
+         echo "<script type='text/javascript+protovis'>
+            function showGraph$rand() {
+               colors = pv.colors($colors);";
       }
-      echo "</div>";
-      
-      if (!$export) {
-         
-         PluginMreportingCommon::showGraphDatas($datas, $unit, $labels2, $flip_data);
-      
-         if ($_REQUEST['f_name'] != "test") {
-            echo "<div class='graph_bottom'>";
-            echo "<span style='float:left'>";
-            PluginMreportingMisc::showNavigation();
-            echo "</span>";
-            echo "<span style='float:right'>";
-            echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
-            echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
-            echo "<img src='../pics/config.png' class='title_pics'/></a>- ";
-            echo "<b>".$LANG['buttons'][31]."</b> : ";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
-            
-            echo "</span>";
-         }
-         echo "<div style='clear:both;'></div>";
-         echo "</div>";
-         echo "</div></div>";
-      }
-
-      //destroy specific palette
-      unset($_SESSION['mreporting']['colors']);
-
    }
- 
 
    /**
     * Show an horizontal bar chart
@@ -171,17 +133,12 @@ class PluginMreportingGraph {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
-         $this->endGraph($opt, false);
+         $opt["export"] = false;
+         PluginMreportingCommon::endGraph($opt);
          return false;
       }
       
       $datas = $raw_datas['datas'];
-      
-      $configs = PluginMreportingConfig::initConfigParams($rand);
-      
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
       
       $datas = $this->initDatasSimple($datas, $unit);
 
@@ -272,8 +229,11 @@ $JS = <<<JAVASCRIPT
 JAVASCRIPT;
 
       echo $JS;
-      
-      $this->endGraph($opt, $export, $datas, $unit);
+      $options = array("opt"     => $opt,
+                        "export" => $export,
+                        "datas"  => $datas,
+                        "unit"   => $unit);
+      PluginMreportingCommon::endGraph($options);
    }
 
 
@@ -322,17 +282,12 @@ JAVASCRIPT;
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
-         $this->endGraph($opt, false);
+         $opt["export"] = false;
+         PluginMreportingCommon::endGraph($opt);
          return false;
       }
       
       $datas = $raw_datas['datas'];
-      
-      $configs = PluginMreportingConfig::initConfigParams($rand);
-      
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
       
       $datas = $this->initDatasSimple($datas, $unit);
 
@@ -421,7 +376,11 @@ JAVASCRIPT;
 
       echo $JS;
       
-      $this->endGraph($opt, $export, $datas, $unit);
+      $options = array("opt"     => $opt,
+                        "export" => $export,
+                        "datas"  => $datas,
+                        "unit"   => $unit);
+      PluginMreportingCommon::endGraph($options);
    }
 
    /**
@@ -469,17 +428,12 @@ JAVASCRIPT;
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
-         $this->endGraph($opt, false);
+         $opt["export"] = false;
+         PluginMreportingCommon::endGraph($opt);
          return false;
       }
       
       $datas = $raw_datas['datas'];
-      
-      $configs = PluginMreportingConfig::initConfigParams($rand);
-      
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
       
       $labels2 = $raw_datas['labels2'];
       
@@ -590,7 +544,15 @@ $JS = <<<JAVASCRIPT
    }, 20);
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($opt, $export, $datas, $unit, $labels2, $flip_data);
+      
+      $options = array("opt"        => $opt,
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "labels2"   => $labels2,
+                        "flip_data" => $flip_data,
+                        "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
+
    }
 
    
@@ -639,7 +601,8 @@ JAVASCRIPT;
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
-         $this->endGraph($opt, false);
+         $opt["export"] = false;
+         PluginMreportingCommon::endGraph($opt);
          return false;
       }
       
@@ -728,7 +691,14 @@ $JS = <<<JAVASCRIPT
 
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($opt, $export, $datas, $unit, $labels2, $flip_data);
+      
+      $options = array("opt"        => $opt,
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "labels2"   => $labels2,
+                        "flip_data" => $flip_data,
+                        "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
    }
    /**
     * Show a Area chart
@@ -776,17 +746,12 @@ JAVASCRIPT;
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
-         $this->endGraph($opt, false);
+         $opt["export"] = false;
+         PluginMreportingCommon::endGraph($opt);
          return false;
       }
       
       $datas = $raw_datas['datas'];
-      
-      $configs = PluginMreportingConfig::initConfigParams($rand);
-      
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
 
       $datas = $this->initDatasSimple($datas, $unit);
 
@@ -914,7 +879,12 @@ $JS = <<<JAVASCRIPT
 JAVASCRIPT;
 
       echo $JS;
-      $this->endGraph($opt, $export, $datas, $unit);
+      
+      $options = array("opt"        => $opt,
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
    }
 
    /**
@@ -981,17 +951,12 @@ JAVASCRIPT;
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
          $opt["rand"] = false;
-         $this->endGraph($opt, false);
+         $opt["export"] = false;
+         PluginMreportingCommon::endGraph($opt);
          return false;
       }
       
       $datas = $raw_datas['datas'];
-      
-      $configs = PluginMreportingConfig::initConfigParams($rand);
-      
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
       
       $labels2 = $raw_datas['labels2'];
       
@@ -1134,7 +1099,14 @@ $JS = <<<JAVASCRIPT
 
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($opt, $export, $datas, $unit, $labels2, $flip_data);
+      
+      $options = array("opt"        => $opt,
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "labels2"   => $labels2,
+                        "flip_data" => $flip_data,
+                        "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
    }
 
    /**

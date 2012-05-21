@@ -37,10 +37,6 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       }
    }
 
-   function endGraph($opt, $export = false, $datas=array(), $unit = '', $labels2=array(), $flip_data = false) {
-
-   }
-
    function showHbar($params) {
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -96,7 +92,6 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $out = substr($out, 0, -1)."\r\n";
 
       echo $out;
-      $this->endGraph($opt, $export);
    }
 
    function showPie($params) {
@@ -167,7 +162,6 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $out = substr($out, 0, -1)."\r\n";
 
       echo $out;
-      $this->endGraph($opt, $export);
    }
    
    function showHgstackbar($params) {
