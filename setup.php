@@ -51,7 +51,7 @@ function plugin_init_mreporting() {
          $config_entry = 'front/config.php';
          $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['search']
+         $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['config']
                   = '/plugins/mreporting/'.$config_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['add']
                   = '/plugins/mreporting/front/config.form.php';
