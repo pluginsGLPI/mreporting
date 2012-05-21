@@ -99,7 +99,7 @@ class PluginMreportingConfig extends CommonDBTM {
          $buttons["config.php?new=1"] = $LANG['plugin_mreporting']["config"][10];
          $title = "";
       }
-      Html::displayTitle($CFG_GLPI["root_doc"] . "/plugins/mreporting/pics/cog_edit.png", 
+      Html::displayTitle($CFG_GLPI["root_doc"] . "/plugins/mreporting/pics/config2.png", 
                         $LANG['Menu'][14], $title,$buttons);
    
    }
