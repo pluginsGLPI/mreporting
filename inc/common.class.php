@@ -588,79 +588,79 @@ class PluginMreportingCommon extends CommonDBTM {
       global $LANG, $CFG_GLPI;
       
       $simpledatas = false;
-         
-         //simple array
-         if (!$labels2) {
-            $labels2 = array();
-            $simpledatas = true;
-         }
-         
-         if ($flip_data == true) {
-            $labels2 = array_flip($labels2);
-         }
-            
-         $types = array();
+        
+      //simple array
+      if (!$labels2) {
+         $labels2 = array();
+         $simpledatas = true;
+      }
       
-         foreach($datas as $k => $v) {
-            
-            if (is_array($v)) {
-               foreach($v as $key => $val) {
-                  if (isset($labels2[$key]))
-                     $types[$key][$k] = $val;
-               }
+      if ($flip_data == true) {
+         $labels2 = array_flip($labels2);
+      }
+         
+      $types = array();
+   
+      foreach($datas as $k => $v) {
+         
+         if (is_array($v)) {
+            foreach($v as $key => $val) {
+               if (isset($labels2[$key]))
+                  $types[$key][$k] = $val;
             }
          }
+      }
+      
+      if ($flip_data != true) {
+         $tmp = $datas;
+         $datas = $types;
+         $types = $tmp;
+      }
+      //simple array
+      if ($simpledatas) {
+         $datas = array($LANG['plugin_mreporting']["export"][1] => 0);
+      }
+      
+      echo "<br><table class='tab_cadre' width='90%'>";
+      echo "<tr class='tab_bg_1'><th>";
+      echo "<a href=\"javascript:showHideDiv('view_datas','viewimg','".
+      $CFG_GLPI["root_doc"]."/pics/deplier_down.png','".
+      $CFG_GLPI["root_doc"]."/pics/deplier_up.png');\">";
+      echo "<img alt='' name='viewimg' src=\"".
+      $CFG_GLPI["root_doc"]."/pics/deplier_down.png\">&nbsp;";
+      echo $LANG['plugin_mreporting']["export"][2];
+      echo "</a>";
+      echo "</th>";
+      echo "</tr>";
+      echo "</table>";
          
-         if ($flip_data != true) {
-            $tmp = $datas;
-            $datas = $types;
-            $types = $tmp;
-         }
+      echo "<div align='center' style='display:none;' id='view_datas'>";
+      echo "<table class='tab_cadre' width='90%'>";
+      
+      echo "<tr class='tab_bg_1'>";
+      echo "<th></th>";
+      
+      foreach($datas as $label => $cols) {
+         echo "<th>".$label."</th>";
+      }
+      echo "</tr>";
+      foreach($types as $label2 => $cols) {
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>".$label2."</td>";
          //simple array
          if ($simpledatas) {
-            $datas = array($LANG['plugin_mreporting']["export"][1] => 0);
-         }
-         
-         echo "<br><table class='tab_cadre' width='90%'>";
-         echo "<tr class='tab_bg_1'><th>";
-         echo "<a href=\"javascript:showHideDiv('view_datas','viewimg','".
-         $CFG_GLPI["root_doc"]."/pics/deplier_down.png','".
-         $CFG_GLPI["root_doc"]."/pics/deplier_up.png');\">";
-         echo "<img alt='' name='viewimg' src=\"".
-         $CFG_GLPI["root_doc"]."/pics/deplier_down.png\">&nbsp;";
-         echo $LANG['plugin_mreporting']["export"][2];
-         echo "</a>";
-         echo "</th>";
-         echo "</tr>";
-         echo "</table>";
-            
-         echo "<div align='center' style='display:none;' id='view_datas'>";
-         echo "<table class='tab_cadre' width='90%'>";
-         
-         echo "<tr class='tab_bg_1'>";
-         echo "<th></th>";
-
-         foreach($datas as $label => $cols) {
-            echo "<th>".$label."</th>";
-         }
-         echo "</tr>";
-         foreach($types as $label2 => $cols) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>".$label2."</td>";
-            //simple array
-            if ($simpledatas) {
-               echo "<td class='center'>".$cols." ".$unit."</td>";
-            //multiple array
-            } else {
-               foreach($cols as $date => $nb) {
-                  echo "<td class='center'>".$nb." ".$unit."</td>";
-               }
+            echo "<td class='center'>".$cols." ".$unit."</td>";
+         //multiple array
+         } else {
+            foreach($cols as $date => $nb) {
+               echo "<td class='center'>".$nb." ".$unit."</td>";
             }
-            echo "</tr>";
          }
-         
-         echo "</table>";
-         echo "</div><br>";
+         echo "</tr>";
+      }
+      
+      echo "</table>";
+      echo "</div><br>";
    }
    
    /**
@@ -819,61 +819,104 @@ class PluginMreportingCommon extends CommonDBTM {
          // Default values of parameters
          $title       = "";
          $f_name      = "";
-         $unit        = '';
          $raw_datas   = array();
 
          foreach ($page as $key => $val) {
             $$key=$val;
          }
-         
+
          $datas = $raw_datas['datas'];
+         
+         $labels2 = array();
+         if (isset($raw_datas['labels2'])) {
+            $labels2 = $raw_datas['labels2'];
+         }
+         
+         $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+         foreach ($configs as $k => $v) {
+            $$k=$v;
+         }
          
          if ($unit == '%') {
          
             $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
          }
-         
-         /*foreach ($datas as $label => $data) {
-            if (is_array($data)) {
-               $template = "../templates/label2.odt";
-            }
-         }*/
 
          $newpage->setVars('message', $title, true, 'UTF-8');
          
          $path = GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
          
          $newpage->setImage('image', $path);
-
-         foreach ($datas as $label => $data) {
+         
+         $simpledatas = false;
+         
+         //simple array
+         if (!$labels2) {
+            $labels2 = array();
+            $simpledatas = true;
+         }
+         
+         if ($flip_data == true) {
+            $labels2 = array_flip($labels2);
+         }
             
-            if (is_array($data)) {
-               $newpage->csvdata->setVars('TitreCategorie', $label, true, 'UTF-8');
-               
-               $labels2 = $raw_datas['labels2'];
-               
-               foreach ($data as $label1 => $data1) {
+         $types = array();
+      
+         foreach($datas as $k => $v) {
+            
+            if (is_array($v)) {
+               foreach($v as $key => $val) {
+                  if (isset($labels2[$key]))
+                     $types[$key][$k] = $val;
+               }
+            }
+         }
+         
+         if ($flip_data != true) {
+            $tmp = $datas;
+            $datas = $types;
+            $types = $tmp;
+         }
+         //simple array       
+         if ($simpledatas) {
+            
+            $label = $LANG['plugin_mreporting']["export"][1];
+            $newpage->csvdata->data0->label_0(utf8_decode($label));
+            $newpage->csvdata->data0->merge();
+            
+            foreach($types as $label2 => $cols) {
 
-                  if (isset($labels2[$label1])) $label1 = str_replace(",", "-", $labels2[$label1]);
-                  if(is_null($label1)) {
-                     $label1 = $LANG['plugin_mreporting']["error"][2];
-                  }
-                  $newpage->csvdata->data1->label_1(utf8_decode($label1));
+               $newpage->csvdata->label1->label_1(utf8_decode($label2));
+               $newpage->csvdata->label1->merge();
+               if (!empty($unit)) {
+                  $cols = $cols." ".$unit;
+               }
+               $newpage->csvdata->data1->data_1($cols);
+               $newpage->csvdata->merge();
+            }
+            
+         } else {
+            
+            foreach($datas as $label => $val) {
+               $newpage->csvdata->data0->label_0(utf8_decode($label));
+               $newpage->csvdata->data0->merge();
+            }
+               
+            foreach($types as $label2 => $cols) {
+
+               $newpage->csvdata->label1->label_1(utf8_decode($label2));
+               $newpage->csvdata->label1->merge();
+               foreach($cols as $date => $nb) {
                   if (!empty($unit)) {
-                     $data1 = $data1." ".$unit;
+                     $nb = $nb." ".$unit;
                   }
-                  $newpage->csvdata->data1->data_1($data1);
+                  $newpage->csvdata->data1->data_1($nb);
                   $newpage->csvdata->data1->merge();
                }
-            } else {
-               $newpage->csvdata->setVars('TitreCategorie', "", true, 'UTF-8');
-               $newpage->csvdata->data1->label_1(utf8_decode($label));
-               if (!empty($unit)) {
-                  $data = $data." ".$unit;
-               }
-               $newpage->csvdata->data1->data_1($data);
+               
+               $newpage->csvdata->merge();
             }
-            $newpage->csvdata->merge();
          }
          $newpage->merge();
 

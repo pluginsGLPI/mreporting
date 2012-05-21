@@ -130,7 +130,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $common = new PluginMreportingCommon();
          $options[] = array("title"  => $title,
                           "f_name"    => $f_name,
-                          "unit"      => $unit,
+                          "rand"      => $rand,
                           "raw_datas" => $raw_datas);
          $common->generateOdt($options);
          return true;
@@ -140,10 +140,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
          imagepng($image,$path);
          
-         //print_r($raw_datas['datas']);
          if (isset($raw_datas['datas'])) {
             $_SESSION['glpi_plugin_mreporting_odtarray'][]=array("title" => $title,
                                                               "f_name" => $f_name,
+                                                              "rand"      => $rand,
                                                               "raw_datas" => $raw_datas);
          }
          
@@ -510,7 +510,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "export" => $export,
                       "f_name" => $opt['f_name'],
                       "title" => $title,
-                      "unit" => $unit,
+                      "rand" => $rand,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
@@ -686,7 +686,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "export" => $export,
                       "f_name" => $opt['f_name'],
                       "title" => $title,
-                      "unit" => $unit,
+                      "rand" => $rand,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
@@ -885,7 +885,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "export" => $export,
                       "f_name" => $opt['f_name'],
                       "title" => $title,
-                      "unit" => $unit,
+                      "rand" => $rand,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
@@ -1063,7 +1063,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "export" => $export,
                       "f_name" => $opt['f_name'],
                       "title" => $title,
-                      "unit" => $unit,
+                      "rand" => $rand,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
@@ -1272,7 +1272,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "export" => $export,
                       "f_name" => $opt['f_name'],
                       "title" => $title,
-                      "unit" => $unit,
+                      "rand" => $rand,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
