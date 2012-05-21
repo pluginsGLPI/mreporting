@@ -71,13 +71,13 @@ class PluginMreportingGraph {
          
       echo "<div class='graph' id='graph_content$rand'>";
 
-      $colors = "'".implode ("', '", $this->getColors())."'";
+      $colors = "'".implode ("', '", PluginMreportingConfig::getColors())."'";
       echo "<script type='text/javascript+protovis'>
          function showGraph$rand() {
             colors = pv.colors($colors);";
    }
 
-   function endGraph($opt, $export = false, $datas=array(), $labels2=array(), $flip_data = false) {
+   function endGraph($opt, $export = false, $datas=array(), $unit = '', $labels2=array(), $flip_data = false) {
       global $LANG;
       
       $_REQUEST['short_classname'] = $opt['short_classname'];
@@ -100,7 +100,7 @@ class PluginMreportingGraph {
       
       if (!$export) {
          
-         PluginMreportingCommon::showGraphDatas($datas, $labels2, $flip_data);
+         PluginMreportingCommon::showGraphDatas($datas, $unit, $labels2, $flip_data);
       
          if ($_REQUEST['f_name'] != "test") {
             echo "<div class='graph_bottom'>";
@@ -122,54 +122,7 @@ class PluginMreportingGraph {
       unset($_SESSION['mreporting']['colors']);
 
    }
-
-   function checkVisibility($show_label, &$always, &$hover) {
-      switch ($show_label) {
-         default:
-         case 'hover':
-            $always = "false";
-            $hover = "true";
-            break;
-         case 'always':
-            $always = "true";
-            $hover = "true";
-            break;
-         default :
-            $always = "false";
-            $hover = "false";
-            break;
-      }
-   }
-
-   function getColors($index = 20)  {
-      if (isset($_SESSION['mreporting']['colors'])) {
-         $colors = $_SESSION['mreporting']['colors'];
-      } else {
-        /* if ($index <= 10) {
-            $colors = array(
-               "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
-               "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
-            );
-         } else {*/
-            $colors = array(
-               "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
-               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
-               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
-               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
-            );
-        // }
-      }
-
-      //fill colors on size index
-      $nb = count($colors);
-      $tmp = $colors;
-      while (count($colors) < $index) {
-         $colors = array_merge($tmp, $colors);
-      }
-
-      return $colors;
-   }
-
+ 
 
    /**
     * Show an horizontal bar chart
@@ -193,15 +146,20 @@ class PluginMreportingGraph {
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
       $rand = $opt['rand'];
       
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
@@ -222,7 +180,7 @@ class PluginMreportingGraph {
          $$k=$v;
       }
       
-      $this->initDatasSimple($datas, $unit);
+      $datas = $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
       $height = 25 * $nb_bar + 50;
@@ -230,7 +188,7 @@ class PluginMreportingGraph {
       $always = '';
       $hover = '';
 
-      $this->checkVisibility($show_label, $always, $hover);
+      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
    var width_hbar = {$this->width};
@@ -279,7 +237,7 @@ $JS = <<<JAVASCRIPT
          return ((this.parent.active() || d <= max / 100)  && {$hover} || {$always}) ? true : false;
       })
       .textAlign("left")
-      .text(function(d) { return  d+"{$unit}"; })
+      .text(function(d) { return  d+" {$unit}"; })
       .textMargin(5)
       .textBaseline("middle")
       .textStyle(function() { return colors(this.parent.parent.index).darker(); })
@@ -312,7 +270,7 @@ JAVASCRIPT;
 
       echo $JS;
       
-      $this->endGraph($opt, $export, $datas);
+      $this->endGraph($opt, $export, $datas, $unit);
    }
 
 
@@ -339,15 +297,20 @@ JAVASCRIPT;
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
       $rand = $opt['rand'];
+      
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
@@ -368,13 +331,13 @@ JAVASCRIPT;
          $$k=$v;
       }
       
-      $this->initDatasSimple($datas, $unit);
+      $datas = $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
 
       $always = '';
       $hover = '';
-      $this->checkVisibility($show_label, $always, $hover);
+      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
    var width_pie = {$this->width};
@@ -386,7 +349,8 @@ $JS = <<<JAVASCRIPT
 
    var vis{$rand} = new pv.Panel()
       .top(5)
-      .left(0)
+      .left(10)
+      .bottom(5)
       .width(width_pie)
       .height(height_pie)
       .def("o", -1)
@@ -415,7 +379,7 @@ $JS = <<<JAVASCRIPT
          .lineWidth(3)
       .add(pv.Wedge) // invisible wedge to offset label
          .visible(false)
-         .innerRadius(1.2 * (radius-40))
+         .innerRadius(1.2 * (radius-25))
          .outerRadius(radius-40)
          .fillStyle(null)
          .strokeStyle(null)
@@ -426,7 +390,7 @@ $JS = <<<JAVASCRIPT
          })
          .textAngle(0)
          .textStyle(function() { return colors(this.index).darker(); })
-         .text(function() { return datas[this.index]+"{$unit}"; });
+         .text(function() { return datas[this.index]+" {$unit}"; });
 
    // legend
    vis{$rand}.add(pv.Dot)
@@ -454,7 +418,7 @@ JAVASCRIPT;
 
       echo $JS;
       
-      $this->endGraph($opt, $export, $datas);
+      $this->endGraph($opt, $export, $datas, $unit);
    }
 
    /**
@@ -480,15 +444,20 @@ JAVASCRIPT;
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
       $rand = $opt['rand'];
+      
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
@@ -511,7 +480,7 @@ JAVASCRIPT;
       
       $labels2 = $raw_datas['labels2'];
       
-      $this->initDatasMultiple($datas, $labels2, $unit);
+      $datas = $this->initDatasMultiple($datas, $labels2, $unit);
 
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
@@ -519,7 +488,7 @@ JAVASCRIPT;
 
       $always = '';
       $hover = '';
-      $this->checkVisibility($show_label, $always, $hover);
+      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
    var width_hgbar = {$this->width};
@@ -579,7 +548,8 @@ $JS = <<<JAVASCRIPT
       .visible(function(d) {
          return ((this.parent.active() || (d <= max / 100 && d!=0))  && {$hover} || {$always}) ? true : false;
       })
-      .textStyle(function() { return colors(this.parent.parent.index).darker(); });
+      .textStyle(function() { return colors(this.parent.parent.index).darker(); })
+      .text(function(d) { return  d+" {$unit}"; });
 
    // axis and tick
    vis{$rand}.add(pv.Rule)
@@ -617,7 +587,7 @@ $JS = <<<JAVASCRIPT
    }, 20);
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($opt, $export, $datas, $labels2, $flip_data);
+      $this->endGraph($opt, $export, $datas, $unit, $labels2, $flip_data);
    }
 
    
@@ -644,15 +614,20 @@ JAVASCRIPT;
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
       $rand = $opt['rand'];
+      
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
@@ -666,16 +641,10 @@ JAVASCRIPT;
       }
       
       $datas = $raw_datas['datas'];
-      
-      $configs = PluginMreportingConfig::initConfigParams($rand);
-      
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
 
       $labels2 = $raw_datas['labels2'];
       
-      $this->initDatasMultiple($datas, $labels2, $unit, true);
+      $datas = $this->initDatasMultiple($datas, $labels2, $unit, true);
 
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
@@ -683,7 +652,7 @@ JAVASCRIPT;
 
       $always = '';
       $hover = '';
-      $this->checkVisibility($show_label, $always, $hover);
+      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
    var w = {$this->width};
@@ -756,7 +725,7 @@ $JS = <<<JAVASCRIPT
 
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($opt, $export, $datas, $labels2, $flip_data);
+      $this->endGraph($opt, $export, $datas, $unit, $labels2, $flip_data);
    }
    /**
     * Show a Area chart
@@ -782,15 +751,20 @@ JAVASCRIPT;
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-
       $rand = $opt['rand'];
       
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
@@ -811,11 +785,11 @@ JAVASCRIPT;
          $$k=$v;
       }
 
-      $this->initDatasSimple($datas, $unit);
+      $datas = $this->initDatasSimple($datas, $unit);
 
       $always = '';
       $hover = '';
-      $this->checkVisibility($show_label, $always, $hover);
+      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
@@ -913,7 +887,7 @@ $JS = <<<JAVASCRIPT
        .fillStyle("#ff7f0e")
        .lineWidth(1)
      .anchor("right").add(pv.Label)
-       .text(function() {return (i >= 0) ? datas[i]:'t';})
+       .text(function() {return (i >= 0) ? datas[i]+" {$unit}":'t';})
        .textStyle("#1f77b4");
 
    /* An invisible bar to capture events (without flickering). */
@@ -937,7 +911,7 @@ $JS = <<<JAVASCRIPT
 JAVASCRIPT;
 
       echo $JS;
-      $this->endGraph($opt, $export, $datas);
+      $this->endGraph($opt, $export, $datas, $unit);
    }
 
    /**
@@ -982,15 +956,20 @@ JAVASCRIPT;
          $$key=$val;
       }
       
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
       $rand = $opt['rand'];
+      
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
                         "export" => $export,
-                        "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
@@ -1013,11 +992,11 @@ JAVASCRIPT;
       
       $labels2 = $raw_datas['labels2'];
       
-      $this->initDatasMultiple($datas, $labels2, $unit);
+      $datas = $this->initDatasMultiple($datas, $labels2, $unit);
 
       $always = '';
       $hover = '';
-      $this->checkVisibility($show_label, $always, $hover);
+      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
@@ -1125,7 +1104,7 @@ $JS = <<<JAVASCRIPT
    var legend_labels{$rand} = legend_dots{$rand}.anchor("right").add(pv.Label)
          .text(function(d) {
             var text = labels[this.parent.index];
-            if (i > 0) text += " : "+d; // mouse over labels
+            if (i > 0) text += " : "+d+" {$unit}"; // mouse over labels
             return text;
          });
 
@@ -1152,7 +1131,7 @@ $JS = <<<JAVASCRIPT
 
 JAVASCRIPT;
       echo $JS;
-      $this->endGraph($opt, $export, $datas, $labels2, $flip_data);
+      $this->endGraph($opt, $export, $datas, $unit, $labels2, $flip_data);
    }
 
    /**
@@ -1181,9 +1160,16 @@ JAVASCRIPT;
     */
     
    function initDatasSimple($datas, $unit = '') {
+      
+      if ($unit == '%') {
+         
+         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      }
+      
       $labels = array_keys($datas);
       $values = array_values($datas);
-
+      
+      
       $out = "var datas = [\n";
       foreach ($values as $value) {
          $out.= "\t".addslashes($value).",\n";
@@ -1205,6 +1191,8 @@ JAVASCRIPT;
 
       echo "var max = $max;";
       echo "var n = ".count($values).";";
+      
+      return $datas;
    }
    
    /**
@@ -1218,7 +1206,12 @@ JAVASCRIPT;
     */
     
    function initDatasMultiple($datas, $labels2, $unit = '',$stacked = false) {
-
+      
+      if ($unit == '%') {
+         
+         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      }
+      
       $labels = array_keys($datas);
       $values = array_values($datas);
       $max = 0;
@@ -1277,7 +1270,9 @@ JAVASCRIPT;
       echo "var n = ".count($labels).";";
       echo "var m = ".count($labels2).";";
       echo "var max = $max;";
-
+      
+      return $datas;
+      
    }
 
    function legend($datas) {

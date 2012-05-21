@@ -36,10 +36,22 @@ Session::checkRight("config","w");
 
 $plugin = new Plugin();
 	if ($plugin->isActivated("mreporting")) {
-
-      Html::header($LANG['common'][12],'',"plugins","mreporting","config");
       
-      Search::show("PluginMreportingConfig");
+      if (isset($_GET["new"])) {
+
+         Session::checkRight("config","w");
+         $config= new PluginMreportingConfig();
+         $config->createFirstConfig();
+         Html::back();
+         
+      } else {
+         
+         Html::header($LANG['common'][12],'',"plugins","mreporting","config");
+         
+         PluginMreportingConfig::addFirstconfigLink();
+         
+         Search::show("PluginMreportingConfig");
+      }
 
 	} else {
 		Html::header($LANG['common'][12],'',"config","plugins");

@@ -37,7 +37,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       }
    }
 
-   function endGraph($opt, $export = false, $datas=array(), $labels2=array(), $flip_data = false) {
+   function endGraph($opt, $export = false, $datas=array(), $unit = '', $labels2=array(), $flip_data = false) {
 
    }
 
@@ -48,25 +48,38 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
+      
+      $rand = $opt['rand'];
 
       if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
-      $datas = $raw_datas['datas'];
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
       
       if (count($datas) <= 0) return false;
       
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if ($unit == '%') {
+         
+         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      }
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
-
-      $rand = $opt['rand'];
       
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
-                        "export" => $export,
-                        "delay" => $delay);
-      
-              
+                        "export" => $export);
+
       $this->initGraph($options);
 
       //titles
@@ -78,7 +91,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
       //values
       foreach($values as $value) {
-         $out.= $value.$unit.";";
+         $out.= $value." ".$unit.";";
       }
       $out = substr($out, 0, -1)."\r\n";
 
@@ -102,18 +115,31 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
    
       $rand = $opt['rand'];
       
-      $datas = $raw_datas['datas'];
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
+      
       if (count($datas) <= 0) return false;
       
-      $labels2 = array_values($raw_datas['labels2']);
+      $configs = PluginMreportingConfig::initConfigParams($rand);
       
-      $rand = $opt['rand'];
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if ($unit == '%') {
+         
+         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      }
+      
+      $labels2 = array_values($raw_datas['labels2']);
       
       $options = array("title" => $title,
                         "desc" => $desc,
                         "rand" => $rand,
-                        "export" => $export,
-                        "delay" => $delay);
+                        "export" => $export);
                   
       $this->initGraph($options);
 
@@ -135,7 +161,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          $out = substr($out, 0, -1)."\r\n";
 
          //values
-         foreach($cols as $value) $out.= $value.$unit.";";
+         foreach($cols as $value) $out.= $value." ".$unit.";";
          $out = substr($out, 0, -1)."\r\n\r\n";
       }
       $out = substr($out, 0, -1)."\r\n";
