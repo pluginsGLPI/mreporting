@@ -139,7 +139,9 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
                   $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
                   $gtype = strtolower($ex_func[1]);
                   if (!empty($short_classname) && !empty($f_name)) {
-                     $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+                     if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
+                        $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+                     }
                   }
       
                   $out="<a href='config.form.php?id=".$data["id"]."'>".
