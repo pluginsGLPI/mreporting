@@ -31,17 +31,16 @@ function plugin_mreporting_install() {
    global $DB,$LANG;
    
    $queries = array();
-   $queries[] = "
-   CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
+   $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
       `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
       `profiles_id` VARCHAR(45) NOT NULL,
       `reports` CHAR(1),
       `config` CHAR(1),
    PRIMARY KEY (`id`)
    )
-   ENGINE = InnoDB;
+   ENGINE = InnoDB;";
    
-   CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
+   $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
 	`id` int(11) NOT NULL auto_increment,
 	`name` varchar(255) collate utf8_unicode_ci default NULL,
 	`is_active` tinyint(1) NOT NULL default '0',
@@ -70,8 +69,8 @@ function plugin_mreporting_install() {
 function plugin_mreporting_uninstall() {
 
    $queries = array(
-      "DROP TABLE glpi_plugin_mreporting_profiles
-       DROP TABLE glpi_plugin_mreporting_configs"
+      "DROP TABLE glpi_plugin_mreporting_profiles",
+      "DROP TABLE glpi_plugin_mreporting_configs"
    );
 
    foreach($queries as $query)
