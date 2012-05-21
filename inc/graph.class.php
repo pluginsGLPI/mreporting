@@ -621,16 +621,12 @@ JAVASCRIPT;
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
 $JS = <<<JAVASCRIPT
-   var w = {$this->width};
-   var h = 400;
-   var x = pv.Scale.ordinal(pv.range(m+2)).splitBanded(0, w, 4/5);
-   var y = pv.Scale.linear(0, max+10).range(0, h);
-   //datas = pv.range(3).map(function() pv.range(10).map(Math.random));
-
-   /*var x = pv.Scale.linear(0, max).range(0, width_hgbar - 150);
-   var y = pv.Scale.ordinal(pv.range(n+1)).splitBanded(0, height_hgbar, 4/5);*/
-    
-   var offset = 0;
+   var w = {$this->width},
+       h = 400,
+       x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w-150, 4/5),
+       y = pv.Scale.linear(0, max+10).range(0, h),
+       offset = 0, // animation
+       i = -1; // mouseover index
    
    var vis{$rand} = new pv.Panel()
        .width(w)
@@ -640,23 +636,36 @@ $JS = <<<JAVASCRIPT
        .right(5)
        .top(5);
 
-   var bar = vis{$rand}.add(pv.Layout.Stack)
+   /*** stacks of bar ***/
+   var stack{$rand} = vis{$rand}.add(pv.Layout.Stack)
       .layers(datas)
       .x(function() x(this.index))
-      .y(function(d) y(d))
-   .layer.add(pv.Bar)
+      .y(function(d) y(d)); 
+
+   /*** bars ***/
+   var bar{$rand} = stack{$rand}.layer.add(pv.Bar)
       .width(x.range().band)
       .fillStyle(function() {
          return colors(this.parent.index);
       })
-      .strokeStyle(function() { return colors(this.parent.index).darker(); });
+      //.strokeStyle(function() { return colors(this.parent.index).darker(); })
+      .event("mouseover", function() {
+         i = this.index;
+         return vis{$rand};
+      })
+      .event("mouseout", function() {
+         i = -1;
+         return vis{$rand};
+      });
 
-   bar.anchor("bottom").add(pv.Label)
+   /*** x-axis labels ***/
+   bar{$rand}.anchor("bottom").add(pv.Label)
        .visible(function() !this.parent.index)
        .textMargin(5)
        .textBaseline("top")
        .text(function() { return labels2[this.index]; });
 
+   /*** y-axis ticks and labels ***/
    vis{$rand}.add(pv.Rule)
        .data(y.ticks())
        .bottom(y)
@@ -667,18 +676,27 @@ $JS = <<<JAVASCRIPT
        .text(y.tickFormat);
        
    // legend
-   vis{$rand}.add(pv.Dot)
+   dot{$rand} = vis{$rand}.add(pv.Dot) // legend dots
       .data(labels)
-      .right(1)
+      .right(40)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
          return colors(this.index);
       })
       .strokeStyle(function() { return colors(this.index).darker(); })
-   .anchor("right").add(pv.Label)
+   .anchor("right").add(pv.Label) // legend labels
       .textAlign("right")
       .textMargin(12)
       .textBaseline("middle")
+      .textStyle(function() { return colors(this.index).darker(); });
+   
+   dot{$rand}.anchor("left").add(pv.Label) // legend labels
+      .textAlign("left")
+      .textBaseline("middle")
+      .text(function() {
+         if (i>=0) return datas[this.index][i];
+         else return "";
+      })
       .textStyle(function() { return colors(this.index).darker(); });
 
    //render in loop to animate
