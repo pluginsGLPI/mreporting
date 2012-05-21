@@ -490,51 +490,57 @@ class PluginMreportingCommon extends CommonDBTM {
          $$k=$v;
       }
       
-      $_REQUEST['short_classname'] = $opt['short_classname'];
-      $_REQUEST['f_name'] = $opt['f_name'];
-      $_REQUEST['gtype'] = $opt['gtype'];
-      $_REQUEST['rand'] = $opt['rand'];
       
-      $rand = $opt['rand'];
-      
+      $rand = false;
+      if (isset($opt['rand'])) {
+			
+			$rand = $opt['rand'];
+			$_REQUEST['short_classname'] = $opt['short_classname'];
+			$_REQUEST['f_name'] = $opt['f_name'];
+			$_REQUEST['gtype'] = $opt['gtype'];
+			$_REQUEST['rand'] = $opt['rand'];
+			
+			//End Script for graph display
+			//if $rand exists
+			if (!$export && $CFG_GLPI['default_graphtype'] == 'svg') {
+
+				echo "}
+					showGraph$rand();
+				</script>";
+				echo "</div>";
+
+			}
+      }
       $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
       
-      //End Script for graph display
-      //if $rand exists
-      if ($rand !== false && !$export && $CFG_GLPI['default_graphtype'] == 'svg') {
-
-         echo "}
-            showGraph$rand();
-         </script>";
-         echo "</div>";
-
-      }
-      
-      if (!$export) {
-         
-         PluginMreportingCommon::showGraphDatas($datas, $unit, $labels2, $flip_data);
-      
-         if ($_REQUEST['f_name'] != "test") {
-            echo "<div class='graph_bottom'>";
-            echo "<span style='float:left'>";
-            PluginMreportingMisc::showNavigation();
-            echo "</span>";
-            echo "<span style='float:right'>";
-            echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
-            echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
-            echo "<img src='../pics/config.png' class='title_pics'/></a>- ";
-            echo "<b>".$LANG['buttons'][31]."</b> : ";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
-            
-            echo "</span>";
-         }
-         echo "<div style='clear:both;'></div>";
-         echo "</div>";
-         echo "</div></div>";
-      }
-
+		if ($rand !== false && !$export) {
+			
+			PluginMreportingCommon::showGraphDatas($datas, $unit, $labels2, $flip_data);
+			
+			if ($_REQUEST['f_name'] != "test") {
+				echo "<div class='graph_bottom'>";
+				echo "<span style='float:left'>";
+				PluginMreportingMisc::showNavigation();
+				echo "</span>";
+				echo "<span style='float:right'>";
+				echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
+				echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
+				echo "<img src='../pics/config.png' class='title_pics'/></a>- ";
+				echo "<b>".$LANG['buttons'][31]."</b> : ";
+				echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
+				echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
+				echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
+				
+				echo "</span>";
+			}
+			echo "<div style='clear:both;'></div>";
+			echo "</div>";
+			echo "</div></div>";
+		}
+		
+		if ($rand == false) {
+			echo "</div>";
+		}
       //destroy specific palette
       unset($_SESSION['mreporting']['colors']);
 
