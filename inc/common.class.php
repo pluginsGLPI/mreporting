@@ -888,13 +888,14 @@ class PluginMreportingCommon extends CommonDBTM {
          if ($simpledatas) {
             
             $label = $LANG['plugin_mreporting']["export"][1];
-            $newpage->csvdata->data0->label_0(utf8_decode($label));
-            $newpage->csvdata->data0->merge();
+            $newpage->data0->label_0(utf8_decode($label));
+            $newpage->data0->merge();
             
             foreach($types as $label2 => $cols) {
 
                $newpage->csvdata->label1->label_1(utf8_decode($label2));
                $newpage->csvdata->label1->merge();
+               
                if (!empty($unit)) {
                   $cols = $cols." ".$unit;
                }
@@ -905,14 +906,15 @@ class PluginMreportingCommon extends CommonDBTM {
          } else {
             
             foreach($datas as $label => $val) {
-               $newpage->csvdata->data0->label_0(utf8_decode($label));
-               $newpage->csvdata->data0->merge();
+               $newpage->data0->label_0(utf8_decode($label));
+               $newpage->data0->merge();
             }
                
             foreach($types as $label2 => $cols) {
 
                $newpage->csvdata->label1->label_1(utf8_decode($label2));
                $newpage->csvdata->label1->merge();
+               
                foreach($cols as $date => $nb) {
                   if (!empty($unit)) {
                      $nb = $nb." ".$unit;
