@@ -428,7 +428,14 @@ class PluginMreportingCommon extends CommonDBTM {
 
       return $crit;
    }
-
+   
+   /**
+    * show Graph : Show graph
+    *
+    * @params $options ($opt, export)
+    * @params $opt (classname, short_classname, f_name, gtype)
+   */
+   
    function showGraph($opt, $export = false) {
       global $LANG, $CFG_GLPI;
       
@@ -534,7 +541,7 @@ class PluginMreportingCommon extends CommonDBTM {
    }
    
    /**
-    * Compile datas
+    * Compile datas for unit display
     *
     * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
     * @param $unit, ex : '%', 'Kg' (optionnal)
@@ -544,16 +551,17 @@ class PluginMreportingCommon extends CommonDBTM {
    static function compileDatasForUnit($values, $unit = '') {
       
       if ($unit == '%') {
- 
+         //complie news datas with percent values
          $calcul = array();
          $datas = $values;
          foreach ($datas as $k=>$v) {
-
+            //multiple array
             if (is_array($v)) {
                foreach($v as $key => $val) {
                   $total = array_sum($v);
                   $calcul[$k][$key]= Html::formatNumber(($val*100)/$total);
                }
+            //simple array
             } else {
                $total = array_sum($values);
                $calcul[$k]= Html::formatNumber(($v*100)/$total);
@@ -581,6 +589,7 @@ class PluginMreportingCommon extends CommonDBTM {
       
       $simpledatas = false;
          
+         //simple array
          if (!$labels2) {
             $labels2 = array();
             $simpledatas = true;
@@ -607,7 +616,7 @@ class PluginMreportingCommon extends CommonDBTM {
             $datas = $types;
             $types = $tmp;
          }
-         
+         //simple array
          if ($simpledatas) {
             $datas = array($LANG['plugin_mreporting']["export"][1] => 0);
          }
@@ -638,9 +647,10 @@ class PluginMreportingCommon extends CommonDBTM {
          foreach($types as $label2 => $cols) {
             echo "<tr class='tab_bg_1'>";
             echo "<td>".$label2."</td>";
-            //values
+            //simple array
             if ($simpledatas) {
                echo "<td class='center'>".$cols." ".$unit."</td>";
+            //multiple array
             } else {
                foreach($cols as $date => $nb) {
                   echo "<td class='center'>".$nb." ".$unit."</td>";
@@ -748,6 +758,7 @@ class PluginMreportingCommon extends CommonDBTM {
                   !empty($_SESSION['glpi_plugin_mreporting_odtarray'])) {
                $this->generateOdt($_SESSION['glpi_plugin_mreporting_odtarray']);
             }
+         //no selected data
          } else {
             Html::popHeader($LANG['plugin_mreporting']["export"][0], $_SERVER['PHP_SELF']);
             echo "<div class='center'><br>".$LANG['plugin_mreporting']["error"][3]."<br><br>";

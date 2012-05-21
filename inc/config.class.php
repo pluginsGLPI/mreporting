@@ -89,6 +89,10 @@ class PluginMreportingConfig extends CommonDBTM {
       return false;
    }
    
+   /**
+	 * add First config Link
+	 *@return nothing
+	 **/
    static function addFirstconfigLink() {
       global $LANG, $CFG_GLPI;
 
@@ -104,7 +108,10 @@ class PluginMreportingConfig extends CommonDBTM {
    
    }
    
-   
+   /**
+	 * create First Config for all graphs
+	 *@return nothing
+	 **/
    function createFirstConfig() {
       
       $session = $_SESSION['glpi_plugin_mreporting_rand'];
@@ -179,6 +186,12 @@ class PluginMreportingConfig extends CommonDBTM {
 		return $this->fields;
 	}
 	
+	/**
+	 * show not used Graphs dropdown
+	 * @name name of dropdown
+	 * @options array example $value
+	 *@return nothing
+	 **/
 	static function dropdownGraph($name, $options=array()) {
       global $LANG;
       
@@ -235,6 +248,12 @@ class PluginMreportingConfig extends CommonDBTM {
       return $rand;
    }
    
+   /**
+	 * show Label dropdown
+	 * @name name of dropdown
+	 * @options array example $value
+	 *@return nothing
+	 **/
    static function dropdownLabel($name, $options=array()) {
       global $LANG;
 
@@ -293,6 +312,13 @@ class PluginMreportingConfig extends CommonDBTM {
       }
    }
    
+   /**
+    * checkVisibility
+    *
+    * @param $show_label show_label value (hover - always - never)
+    * @param $always
+    * @param $hover
+   **/
    static function checkVisibility($show_label, &$always, &$hover) {
       switch ($show_label) {
          default:
@@ -533,8 +559,13 @@ class PluginMreportingConfig extends CommonDBTM {
       return true;
    }
    
+   /**
+    * initialize config for graph display options
+    *
+    * @param $rand name of graph
+   **/
+   
    static function initConfigParams($rand) {
-      
 
       $crit = array('area' => false,
                      'spline' => false,
