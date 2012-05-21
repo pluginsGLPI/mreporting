@@ -6,6 +6,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginMreportingConfig extends CommonDBTM {
+
    static function getTypeName() {
       global $LANG;
 
@@ -57,6 +58,14 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[6]['name']     = $LANG['plugin_mreporting']["config"][4];
       $tab[6]['datatype'] = 'bool';
       
+      $tab[7]['table']    = $this->getTable();
+      $tab[7]['field']    = 'unit';
+      $tab[7]['name']     = $LANG['plugin_mreporting']["config"][8];
+      
+      $tab[8]['table']    = $this->getTable();
+      $tab[8]['field']    = 'default_delay';
+      $tab[8]['name']     = $LANG['plugin_mreporting']["config"][9];
+      
 		return $tab;
    }
    
@@ -80,6 +89,38 @@ class PluginMreportingConfig extends CommonDBTM {
       return false;
    }
    
+   static function addFirstconfigLink() {
+      global $LANG, $CFG_GLPI;
+
+      $buttons = array();
+      $title = $LANG['Menu'][14];
+
+      if (plugin_mreporting_haveRight('config', 'w')) {
+         $buttons["config.php?new=1"] = $LANG['plugin_mreporting']["config"][10];
+         $title = "";
+      }
+      Html::displayTitle($CFG_GLPI["root_doc"] . "/plugins/mreporting/pics/cog_edit.png", 
+                        $LANG['Menu'][14], $title,$buttons);
+   
+   }
+   
+   
+   function createFirstConfig() {
+      
+      $session = $_SESSION['glpi_plugin_mreporting_rand'];
+      
+      foreach($session as $classname => $report) {
+         foreach($report as $k => $v) {
+            $input = array();
+            
+            $input = $this->preconfig($v);
+            $input["firstconfig"] = 1;
+            unset($input["id"]);
+            $newid = $this->add($input);
+         }
+      }
+   }
+   
    /**
 	 * Preconfig datas for standard system
 	 * @graphname internal name of graph
@@ -87,13 +128,50 @@ class PluginMreportingConfig extends CommonDBTM {
 	 **/
 	function preconfig($graphname) {
       
-		switch($graphname) {
-			default:
-            $this->fields["name"]=$graphname;
-            $this->fields["is_active"]="1";
-            break;
+      if ($graphname != -1) {
+         $session = $_SESSION['glpi_plugin_mreporting_rand'];
+         
+         foreach($session as $classname => $report) {
+            foreach($report as $k => $v) {
+               if ($graphname == $v) {
+                  $short_classname = $classname;
+                  $f_name = $k;
+               }
+            }
+         }
+         $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
+         $gtype = strtolower($ex_func[1]);
+         
+         switch($gtype) {
+            
+            case 'area':
+            case 'garea':
+               $this->fields["name"]=$graphname;
+               $this->fields["is_active"]="1";
+               $this->fields["show_area"]="1";
+               $this->fields["spline"]="1";
+               $this->fields["default_delay"]="365";
+               break;
+            case 'line':
+            case 'gline':
+               $this->fields["name"]=$graphname;
+               $this->fields["is_active"]="1";
+               $this->fields["spline"]="1";
+               $this->fields["default_delay"]="365";
+               break;
+               
+            default:
+               $this->fields["name"]=$graphname;
+               $this->fields["is_active"]="1";
+               $this->fields["show_label"]="hover";
+               $this->fields["spline"]="0";
+               $this->fields["show_area"]="0";
+               $this->fields["default_delay"]="30";
+               break;
 
+         }
 		}
+		return $this->fields;
 	}
 	
 	static function dropdownGraph($name, $options=array()) {
@@ -186,7 +264,7 @@ class PluginMreportingConfig extends CommonDBTM {
    }
    
    /**
-    * Get ticket type Name
+    * Get label Name
     *
     * @param $value type ID
    **/
@@ -205,16 +283,63 @@ class PluginMreportingConfig extends CommonDBTM {
       }
    }
    
+   static function checkVisibility($show_label, &$always, &$hover) {
+      switch ($show_label) {
+         default:
+         case 'hover':
+            $always = "false";
+            $hover = "true";
+            break;
+         case 'always':
+            $always = "true";
+            $hover = "true";
+            break;
+         default :
+            $always = "false";
+            $hover = "false";
+            break;
+      }
+   }
+   
+   static function getColors($index = 20)  {
+      if (isset($_SESSION['mreporting']['colors'])) {
+         $colors = $_SESSION['mreporting']['colors'];
+      } else {
+        /* if ($index <= 10) {
+            $colors = array(
+               "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
+               "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
+            );
+         } else {*/
+            $colors = array(
+               "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+               "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
+               "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
+               "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
+            );
+        // }
+      }
+
+      //fill colors on size index
+      $nb = count($colors);
+      $tmp = $colors;
+      while (count($colors) < $index) {
+         $colors = array_merge($tmp, $colors);
+      }
+
+      return $colors;
+   }
+   
    
    function prepareInputForAdd($input) {
       global $LANG;
-		// dump status
 		
 		if (isset ($input["name"])) {
          
-         $config = new PluginMreportingConfig();
-         if ($config->getFromDBByRand($input["name"])) {
-            Session::addMessageAfterRedirect($LANG['plugin_mreporting']["error"][4], false, ERROR);
+         if ($this->getFromDBByRand($input["name"])) {
+            if (!isset ($input["firstconfig"])) {
+               Session::addMessageAfterRedirect($LANG['plugin_mreporting']["error"][4], false, ERROR);
+            }
             return array ();
          }
       }
@@ -363,8 +488,24 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</td>"; 
       
       echo "<td>";
+      echo $LANG['plugin_mreporting']["config"][8];
       echo "</td>";
       echo "<td>";
+      $opt = array('size' => 10);
+      Html::autocompletionTextField($this,'unit',$opt);
+      echo "</td>"; 
+      echo "</tr>";
+      
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
+      echo $LANG['plugin_mreporting']["config"][9];
+      echo "</td>";
+      echo "<td>";
+      $opt = array('size' => 10);
+      Html::autocompletionTextField($this,'default_delay',$opt);
+      echo "</td>"; 
+      
+      echo "<td colspan='2'>";
       echo "</td>"; 
       echo "</tr>";
       
@@ -383,14 +524,17 @@ class PluginMreportingConfig extends CommonDBTM {
       $crit = array('area' => false,
                      'spline' => false,
                      'flip_data' => false,
+                     'unit' => '',
                      'show_label' => 'never');
       
       $self = new self();
       if ($self->getFromDBByRand($rand)) {
-         $crit['area'] = $self->fields['show_area'];
-         $crit['spline'] = $self->fields['spline'];
-         $crit['show_label'] = $self->fields['show_label'];
-         $crit['flip_data'] = $self->fields['flip_data'];
+         $crit['area']        = $self->fields['show_area'];
+         $crit['spline']      = $self->fields['spline'];
+         $crit['show_label']  = $self->fields['show_label'];
+         $crit['flip_data']   = $self->fields['flip_data'];
+         $crit['unit']        = $self->fields['unit'];
+         $crit['delay']       = $self->fields['default_delay'];
       }
 
       return $crit;
