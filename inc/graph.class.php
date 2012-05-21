@@ -639,6 +639,7 @@ $JS = <<<JAVASCRIPT
    /*** stacks of bar ***/
    var stack{$rand} = vis{$rand}.add(pv.Layout.Stack)
       .layers(datas)
+      .order("reverse")
       .x(function() x(this.index))
       .y(function(d) y(d)); 
 
