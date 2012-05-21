@@ -648,7 +648,10 @@ $JS = <<<JAVASCRIPT
       .fillStyle(function() {
          return colors(this.parent.index);
       })
-      //.strokeStyle(function() { return colors(this.parent.index).darker(); })
+      .strokeStyle(function() { 
+         if (this.index == i)
+         return colors(this.parent.index).darker(); 
+      })
       .event("mouseover", function() {
          i = this.index;
          return vis{$rand};
