@@ -104,7 +104,7 @@ class PluginMreportingCommon extends CommonDBTM {
                $rand = $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name];
                
                $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
-               $min_url_graph  = "/front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
+               $min_url_graph  = "front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
                
                $reports[$classname]['title'] = $title;
                $reports[$classname]['functions'][$i]['function'] = $f_name;

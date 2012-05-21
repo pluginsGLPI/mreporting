@@ -58,7 +58,7 @@ function plugin_init_mreporting() {
       }
 
       /* Show Reports in standart stats page */
-      /*$mreporting_common = new PluginMreportingCommon;
+      $mreporting_common = new PluginMreportingCommon;
       $reports = $mreporting_common->getAllReports();
       if ($reports !== false) {
          foreach($reports as $report) {
@@ -66,7 +66,7 @@ function plugin_init_mreporting() {
                $PLUGIN_HOOKS['stats']['mreporting'][$function['min_url_graph']] = $function['title'];
             }
          }
-      }*/
+      }
 
       if($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
          define('DEBUG_MREPORTING', false);
