@@ -50,8 +50,6 @@ class PluginMreportingGraph {
          
       echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
       echo $options['title'];
-      echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
-      echo "<img src='../pics/cog_edit.png' class='title_pics'/></a>";
       echo "</div>";
       if (!empty($options['desc'])) {
          echo "<div class='graph_desc'>".$options['desc']."</div>";
@@ -110,7 +108,10 @@ class PluginMreportingGraph {
             echo "<span style='float:right'><b>".$LANG['buttons'][31]."</b> : ";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a> - ";
+            echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
+            echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
+            echo "<img src='../pics/cog_edit.png' class='title_pics'/></a>";
             echo "</span>";
          }
          echo "<div style='clear:both;'></div>";
