@@ -37,6 +37,7 @@ Session::checkRight("config","w");
 $plugin = new Plugin();
 	if ($plugin->isActivated("mreporting")) {
       
+      //Create first config for graphs
       if (isset($_GET["new"])) {
 
          Session::checkRight("config","w");
@@ -55,7 +56,10 @@ $plugin = new Plugin();
 
 	} else {
 		Html::header($LANG['common'][12],'',"config","plugins");
-		echo "<div align='center'><br><br><img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt=\"warning\"><br><br>";
+		echo "<div align='center'>";
+		echo "<br><br>";
+		echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt=\"warning\">";
+		echo "<br><br>";
 		echo "<b>Please activate the plugin</b></div>";
 	}
 

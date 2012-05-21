@@ -45,6 +45,8 @@ if (!defined('GLPI_ROOT')) {
 
 $config= new PluginMreportingConfig();
 if ($_POST['graphname'] != -1) {
-   echo "&nbsp;<a href='".$config->getFormURL()."?preconfig=".$_POST['graphname']."'>".$LANG['buttons'][7]."</a>";
+   echo "&nbsp;<a href='".$config->getFormURL().
+   "?preconfig=".$_POST['graphname']."'>".$LANG['buttons'][7]."</a>";
 }
+
 ?>
