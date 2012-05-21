@@ -169,7 +169,11 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       echo $out;
       $this->endGraph($opt, $export);
    }
-
+   
+   function showHgstackbar($params) {
+      $this->showHGbar($params);
+   }
+   
    function showArea($params) {
       $this->showHbar($params);
    }
