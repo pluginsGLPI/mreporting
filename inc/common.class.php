@@ -31,7 +31,7 @@ class PluginMreportingCommon extends CommonDBTM {
    
    /**
     * Parsing all classes
-    *
+    * Search all class into inc folder
     * @params
    */
    
@@ -460,6 +460,76 @@ class PluginMreportingCommon extends CommonDBTM {
                        "opt"        => $opt);
                        
       $graph->{'show'.$opt['gtype']}($params);
+
+   }
+   
+   /**
+    * end Graph : Show graph datas array, setup link, export
+    *
+    * @params $options ($opt, export, datas, unit, labels2, flip_data)
+   */
+
+   static function endGraph($options) {
+      global $LANG, $CFG_GLPI;
+      
+      $opt        = array();
+      $export     = false;
+      $datas      = array();
+      $unit       = '';
+      $labels2    =  array();
+      $flip_data  = false;
+      
+      foreach ($options as $k => $v) {
+         $$k=$v;
+      }
+      
+      $_REQUEST['short_classname'] = $opt['short_classname'];
+      $_REQUEST['f_name'] = $opt['f_name'];
+      $_REQUEST['gtype'] = $opt['gtype'];
+      $_REQUEST['rand'] = $opt['rand'];
+      
+      $rand = $opt['rand'];
+      
+      $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
+      
+      //End Script for graph display
+      //if $rand exists
+      if ($rand !== false && !$export && $CFG_GLPI['default_graphtype'] == 'svg') {
+
+         echo "}
+            showGraph$rand();
+         </script>";
+         echo "</div>";
+
+      }
+      
+      if (!$export) {
+         
+         PluginMreportingCommon::showGraphDatas($datas, $unit, $labels2, $flip_data);
+      
+         if ($_REQUEST['f_name'] != "test") {
+            echo "<div class='graph_bottom'>";
+            echo "<span style='float:left'>";
+            PluginMreportingMisc::showNavigation();
+            echo "</span>";
+            echo "<span style='float:right'>";
+            echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
+            echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
+            echo "<img src='../pics/config.png' class='title_pics'/></a>- ";
+            echo "<b>".$LANG['buttons'][31]."</b> : ";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
+            echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
+            
+            echo "</span>";
+         }
+         echo "<div style='clear:both;'></div>";
+         echo "</div>";
+         echo "</div></div>";
+      }
+
+      //destroy specific palette
+      unset($_SESSION['mreporting']['colors']);
 
    }
    

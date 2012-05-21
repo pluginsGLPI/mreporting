@@ -79,46 +79,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
    }
 
-   function endGraph($opt, $export = false, $datas=array(), $unit = '', $labels2=array(), $flip_data = false) {
-      global $LANG;
-      
-      if (!$export) {
-      
-         echo "</div>";
-         
-         PluginMreportingCommon::showGraphDatas($datas, $labels2, $flip_data);
-         
-         $_REQUEST['short_classname'] = $opt['short_classname'];
-         $_REQUEST['f_name'] = $opt['f_name'];
-         $_REQUEST['gtype'] = $opt['gtype'];
-         $_REQUEST['rand'] = $opt['rand'];
-         
-         $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
-         
-         if ($_REQUEST['f_name'] != "test") {
-            echo "<div class='graph_bottom'>";
-            echo "<span style='float:left'>";
-            PluginMreportingMisc::showNavigation();
-            echo "</span>";
-            echo "<span style='float:right'>";
-            echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
-            echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
-            echo "<img src='../pics/cog_edit.png' class='title_pics'/></a>- ";
-            echo "<b>".$LANG['buttons'][31]."</b> : ";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
-            echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
-            echo "</span>";
-         }
-         echo "<div style='clear:both;'></div>";
-         echo "</div>";
-         echo "</div></div>";
-      }
-
-      //destroy specific palette
-      unset($_SESSION['mreporting']['colors']);
-   }
-
    function showImage($contents, $export="png")  {
       global $CFG_GLPI;
       if ($export!="odt" && $export!="odtall") {
@@ -554,7 +514,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export, $datas, $unit);
+      
+      $options = array("opt"     => $opt,
+                        "export" => $export,
+                        "datas"  => $datas,
+                        "unit"   => $unit);
+      PluginMreportingCommon::endGraph($options);
    }
 
    function showPie($params) {
@@ -725,7 +690,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export, $datas, $unit);
+      
+      $options = array("opt"     => $opt,
+                        "export" => $export,
+                        "datas"  => $datas,
+                        "unit"   => $unit);
+      
+      PluginMreportingCommon::endGraph($options);
    }
 
    function showHgbar($params) {
@@ -918,7 +889,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export, $datas, $unit, $labels2, $flip_data);
+      
+      $options = array("opt"        => $opt,
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "labels2"   => $labels2,
+                        "flip_data" => $flip_data,
+                        "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
    }
 
    function showArea($params) {
@@ -1089,7 +1067,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export, $datas, $unit);
+      
+      $options = array("opt"        => $opt,
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
    }
 
    function showGArea($params) {
@@ -1293,7 +1276,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
-      $this->endGraph($opt, $export, $datas, $unit, $labels2, $flip_data);
+      
+      $options = array("opt"        => $opt,
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "labels2"   => $labels2,
+                        "flip_data" => $flip_data,
+                        "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
    }
 
 }// End Class
