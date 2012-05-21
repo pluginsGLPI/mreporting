@@ -108,7 +108,7 @@ class PluginMreportingGraph {
             echo "<span style='float:right'>";
             echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
             echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
-            echo "<img src='../pics/cog_edit.png' class='title_pics'/></a>- ";
+            echo "<img src='../pics/config.png' class='title_pics'/></a>- ";
             echo "<b>".$LANG['buttons'][31]."</b> : ";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
             echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
