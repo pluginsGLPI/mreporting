@@ -639,9 +639,8 @@ $JS = <<<JAVASCRIPT
    /*** stacks of bar ***/
    var stack{$rand} = vis{$rand}.add(pv.Layout.Stack)
       .layers(datas)
-      .order("reverse")
       .x(function() x(this.index))
-      .y(function(d) y(d)); 
+      .y(function(d) 1- 50/offset + y(d)); 
 
    /*** bars ***/
    var bar{$rand} = stack{$rand}.layer.add(pv.Bar)
@@ -704,12 +703,12 @@ $JS = <<<JAVASCRIPT
       .textStyle(function() { return colors(this.index).darker(); });
 
    //render in loop to animate
-   vis{$rand}.render();
-   /*var interval = setInterval(function() {
+   //vis{$rand}.render();
+   var interval = setInterval(function() {
          offset++;
          vis{$rand}.render();
          if (offset > 100) clearInterval(interval);
-      }, 20);*/
+      }, 20);
 
 JAVASCRIPT;
       echo $JS;
