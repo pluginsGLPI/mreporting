@@ -184,7 +184,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $rgb; // returns an array with the rgb values
    }
 
-   function getPalette($image, $nb_index = 20, $alpha = 00) {
+   function getPalette($image, $nb_index = 20, $alpha = "00") {
       $palette = array();
       foreach($this->getColors($nb_index) as $color) {
          $palette[] = "0x$alpha".substr($color, 0, 6);
@@ -200,7 +200,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
-   function getDarkerPalette($image, $nb_index = 20, $alpha = 00) {
+   function getDarkerPalette($image, $nb_index = 20, $alpha = "00") {
       $palette = array();
       foreach($this->getColors($nb_index) as $color) {
          $palette[] = "0x$alpha".substr($this->darker($color), 0, 6);
@@ -231,7 +231,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
-   function getLighterPalette($image, $nb_index = 20, $alpha = 00) {
+   function getLighterPalette($image, $nb_index = 20, $alpha = "00") {
       $palette = array();
       foreach($this->getColors($nb_index) as $color) {
          $palette[] = "0x$alpha".substr($this->lighter($color), 0, 6);
@@ -1001,7 +1001,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $white = imagecolorallocate($image, 255, 255, 255);
       $grey = imagecolorallocate($image, 230, 230, 230);
       $drakgrey = imagecolorallocate($image, 180, 180, 180);
-      $palette = $this->getPalette($image, $nb_bar, 90);
+      $palette = $this->getPalette($image, $nb_bar);
+      $alphapalette = $this->getPalette($image, $nb_bar, 90);
       $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
       //background
@@ -1076,7 +1077,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $by2 = $by1 - $subdata * ($height-175) / $max;
             $bx2 = $bx1 + $width_bar-10;
 
-            imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $palette[$index2]);
+            imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $alphapalette[$index2]);
             imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
 
             //create data label  // Affichage des données à côté des barres
