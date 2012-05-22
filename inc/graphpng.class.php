@@ -1055,10 +1055,21 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //process datas (reverse keys)
       $new_datas=array();
+      
       foreach ($datas as $key1 => $data) {
          foreach ($data as $key2 => $subdata) {
             $new_datas[$key2][$key1] = $subdata;
          }
+      }
+
+      //calculate max cum
+      $cum = 0;
+      foreach ($new_datas as $key1 => $data) {
+         $tmp_cum = 0;
+         foreach ($data as $key2 => $subdata) {
+            $tmp_cum += $subdata;
+         }
+         if ($tmp_cum > $cum) $cum = $tmp_cum;
       }
 
       $index1 = 0;
@@ -1074,7 +1085,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          foreach ($data as $subdata) {
             $by1 = $by2;
             $bx1 = 35 + $index1 * $width_bar;
-            $by2 = $by1 - $subdata * ($height-175) / $max;
+            $by2 = $by1 - $subdata * ($height-90) / $cum;
             $bx2 = $bx1 + $width_bar-10;
 
             imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $alphapalette[$index2]);
