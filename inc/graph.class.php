@@ -306,10 +306,6 @@ $JS = <<<JAVASCRIPT
 
    var offset = 0;
 
-   var update = function(){
-	  vis{$rand}.render();
-   }
-
    var vis{$rand} = new pv.Panel()
       .top(5)
       .left(10)
@@ -333,8 +329,16 @@ $JS = <<<JAVASCRIPT
             - Math.sin(this.startAngle() + this.angle() / 2)
             * ((Hilighted[this.index]) ? 20 : 0); })
          .fillStyle(function() {return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);})
-         .event("mouseover", function() {  this.parent.o(this.index) ; Hilighted[this.index] = true; update(); })
-         .event("mouseout", function() {  this.parent.o(-1) ; Hilighted[this.index] = false; update(); })
+         .event("mouseover", function() {
+            this.parent.o(this.index) ; 
+            Hilighted[this.index] = true; 
+            return vis{$rand};
+         })
+         .event("mouseout", function() {  
+            this.parent.o(-1) ; 
+            Hilighted[this.index] = false; 
+            return vis{$rand};
+         })
          .strokeStyle(function() { return colors(this.index).darker(); })
          .lineWidth(3)
       .add(pv.Wedge) // invisible wedge to offset label
@@ -361,20 +365,20 @@ $JS = <<<JAVASCRIPT
          return (this.parent.o() == this.index) ? colors(this.index).alpha(.6) : colors(this.index) &&
          Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
       })
-      .event("mouseover", function() {Hilighted[this.index] = true; update();})
-      .event("mouseout", function() { Hilighted[this.index] = false; update();})
+      .event("mouseover", function() {Hilighted[this.index] = true; return vis{$rand};})
+      .event("mouseout", function() { Hilighted[this.index] = false; return vis{$rand};})
       .strokeStyle(function() { return colors(this.index).darker(); })
    .anchor("right").add(pv.Label)
       .textAlign("right")
       .textMargin(12)
       .textBaseline("middle")
       .textStyle(function() { return colors(this.index).darker(); })
-      .textDecoration(function() { return (this.parent.o() == this.index) ? "underline" : "none"; })
+      .textDecoration(function() { return (this.parent.o() == this.index) ? "underline" : "none"; });
 
    //render in loop to animate
    var interval = setInterval(function() {
       offset++;
-       update();
+      vis{$rand}.render();
       if (offset > 100) clearInterval(interval);
    }, 20);
 JAVASCRIPT;
@@ -461,10 +465,6 @@ $JS = <<<JAVASCRIPT
 
    var offset = 0;
 
-   var update = function(){
-	  vis{$rand}.render();
-   }
-
    var vis{$rand} = new pv.Panel()
       .width(width_hgbar)
       .height(height_hgbar)
@@ -506,8 +506,16 @@ $JS = <<<JAVASCRIPT
          if(this.parent.active() || Hilighted[this.parent.parent.index]) return colors(this.parent.parent.index).alpha(.6);
          else return colors(this.parent.parent.index);
       })
-      .event("mouseover", function() { this.parent.active(true); Hilighted[this.parent.active] = true; update(); })
-      .event("mouseout", function() { this.parent.active(false); Hilighted[this.parent.active] = false; update(); })
+      .event("mouseover", function() { 
+         this.parent.active(true); 
+         Hilighted[this.parent.active] = true; 
+         return vis{$rand};
+      })
+      .event("mouseout", function() { 
+         this.parent.active(false); 
+         Hilighted[this.parent.active] = false; 
+         return vis{$rand};
+      })
       .strokeStyle(function() { return colors(this.parent.parent.index).darker(); })
       .lineWidth(2)
    .anchor("right").add(pv.Label)
@@ -537,8 +545,14 @@ $JS = <<<JAVASCRIPT
       .right(160)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);})
-      .event("mouseover", function() {Hilighted[this.index] = true; update();}) // override
-      .event("mouseout", function() { Hilighted[this.index] = false; update();})
+      .event("mouseover", function() {
+         Hilighted[this.index] = true; 
+         return vis{$rand};
+      }) // override
+      .event("mouseout", function() { 
+         Hilighted[this.index] = false; 
+         return vis{$rand};
+      })
       .strokeStyle(function() { return colors(this.index).darker(); })
    .anchor("right").add(pv.Label)
       .textAlign("right")
@@ -549,7 +563,7 @@ $JS = <<<JAVASCRIPT
    //render in loop to animate
    var interval = setInterval(function() {
       offset++;
-      update();
+      vis{$rand}.render();
       if (offset > 100) clearInterval(interval);
    }, 20);
 JAVASCRIPT;
@@ -1015,7 +1029,7 @@ JAVASCRIPT;
 
 $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
-   var height_area = 350;
+   var height_area = 450;
    var offset = 0;
    var step = Math.round(m / 20);
 
