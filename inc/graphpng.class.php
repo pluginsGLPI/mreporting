@@ -990,9 +990,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $nb = count($datas);
       $width = $this->width;
-      $height = 450;
+      $height = 350;
       $width_line = ($width - 45) / $nb;
-      $step = round($nb / 20);
+      $step = ceil($nb / 20);
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
@@ -1000,29 +1000,58 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //colors
       $black = imagecolorallocate($image, 0, 0, 0);
       $white = imagecolorallocate($image, 255, 255, 255);
-      $grey = imagecolorallocate($image, 242, 242, 242);
+      $grey = imagecolorallocate($image, 230, 230, 230);
+      $drakgrey = imagecolorallocate($image, 180, 180, 180);
       $palette = $this->getPalette($image, $nb);
       $alphapalette = $this->getAlphaPalette($image, $nb);
       $darkerpalette = $this->getDarkerPalette($image, $nb);
+
+      //config font
+      $font = "../fonts/FreeSans.ttf";
+      $fontsize = 7;
+      $fontangle = 0;
 
       //background
       $bg_color = $white;
       if ($export) $bg_color = $white;
       imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
+      //draw x-axis grey step line and values
+      $xstep = round(($height - 60) / 13);
+      for ($i = 0; $i< 13; $i++) {
+         $yaxis = $height- 30 - $xstep * $i ;
+
+         imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
+
+         //value label
+         $val = round($i * $max / 12);
+         $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
+         $textwidth = abs($box[4] - $box[0]);
+      
+         imagettftext($image, $fontsize, $fontangle, 28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+      }
+
+      //draw y-axis grey step line
+      for ($i = 0; $i< $nb; $i++) {
+         $xaxis = 30 + $width_line * $i;
+         imageLine($image, $xaxis, 50, $xaxis, $height-25, $grey);
+      }
+
+      //draw y-axis
+      imageLine($image, 30, 50, 30, $height-25, $black);
+
+
+      //draw x-axis
+      imageline($image, 30, $height-30, $width - 60, $height-30, $black);
+
       //create border on export
       if ($export) {
          imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
       }
 
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 8;
-      $fontangle = 0;
-
       //add title on export
       if ($export) {
-         imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
+         imagettftext($image, $fontsize+1, $fontangle, 10, 20, $black, $font, $title);
       }
 
       if ($area) $spline = false;
@@ -1078,16 +1107,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //display values label
             if($show_label == "always" || $show_label == "hover") {
-               imagettftext($image, $fontsize, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
+               imagettftext($image, $fontsize-1, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
                          $darkerpalette[0], $font, $old_data);
             }
          }
 
-         //display y axis and labels
+         //display y ticks and labels
          if ($step!=0 && ($index / $step) == round($index / $step)) {
             imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[0]);
-            imageline($image, $x2, $y2, $x2, $height-27, $grey);
-
+            
             imagettftext($image, $fontsize, $fontangle, $x1 - 10 , $height-10, $black,
                       $font, $old_label);
          }
@@ -1126,7 +1154,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //display values label
             if($show_label == "always" || $show_label == "hover") {
-               imagettftext($image, $fontsize, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
+               imagettftext($image, $fontsize-1, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
                          $darkerpalette[0], $font, $old_data);
             }
 
@@ -1137,16 +1165,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       //display last value, dot and axis label
-      imagettftext($image, $fontsize, $fontangle, $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
+      imagettftext($image, $fontsize-1, $fontangle, $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
       $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
       imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
       imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
       imagettftext($image, $fontsize, $fontangle, $x2 - 10 , $height-10, $black, $font, $label);
       imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
-
-      //axis
-      //imageline($image, 30, 40, 30, $height-20, $black);
-      imageline($image, 20, $height-30, $width - 20, $height-30, $black);
 
       //generate image
       $params = array("image" => $image,
