@@ -604,6 +604,7 @@ JAVASCRIPT;
       }
       
       $rand = $opt['rand'];
+
       
       $configs = PluginMreportingConfig::initConfigParams($rand);
       
@@ -650,13 +651,9 @@ $JS = <<<JAVASCRIPT
        x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w-150, 4/5),
        y = pv.Scale.linear(0, max+10).range(0, h),
        offset = 0, // animation
-       i = -1; // mouseover index
-       var Hilighted = [false, false,false, false,false, false];
+       i = -1 // mouseover index
+       Hilighted = [false, false,false, false,false, false];
 
-
-   var update = function(){
-	  vis{$rand}.render();
-   }
    
    var vis{$rand} = new pv.Panel()
        .width(w)
@@ -693,17 +690,19 @@ $JS = <<<JAVASCRIPT
       })
 
    bar{$rand}.anchor("top").add(pv.Label)
-       .visible(function(d){ return ( (Hilighted[this.parent.index]) && (d >= max / 100)) ? true : false ;  }      )
-       .textBaseline("top")
-       .text(function(d) { return d; })
-       .textStyle(function() { return colors(this.parent.index).darker(); });
+      .visible(function(d){ 
+         return ( (Hilighted[this.parent.index]) && (d >= max / 100)) ? true : false ;  
+      })
+      .textBaseline("top")
+      .text(function(d) { return d; })
+      .textStyle(function() { return colors(this.parent.index).darker(); });
 
    /*** x-axis labels ***/
    bar{$rand}.anchor("bottom").add(pv.Label)
-       .visible(function() !this.parent.index)
-       .textMargin(5)
-       .textBaseline("top")
-       .text(function() { return labels2[this.index]; });
+      .visible(function() !this.parent.index)
+      .textMargin(5)
+      .textBaseline("top")
+      .text(function() { return labels2[this.index]; });
 
 
    /*** y-axis ticks and labels ***/
@@ -724,8 +723,14 @@ $JS = <<<JAVASCRIPT
       .fillStyle(function() {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
       })
-      .event("mouseover", function() {Hilighted[this.index] = true; update();})
-      .event("mouseout", function() { Hilighted[this.index] = false; update();})
+      .event("mouseover", function() {
+         Hilighted[this.index] = true; 
+         return vis{$rand};
+      })
+      .event("mouseout", function() { 
+         Hilighted[this.index] = false; 
+         return vis{$rand};
+      })
       .strokeStyle(function() { return colors(this.index).darker(); })
    .anchor("right").add(pv.Label) // legend labels
       .textAlign("right")
@@ -746,7 +751,7 @@ $JS = <<<JAVASCRIPT
    //vis{$rand}.render();
    var interval = setInterval(function() {
          offset++;
-        update();
+         vis{$rand}.render();
          if (offset > 100) clearInterval(interval);
       }, 20);
 
