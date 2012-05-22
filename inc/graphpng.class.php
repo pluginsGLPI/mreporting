@@ -989,7 +989,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
         $nb_bar = count($datas) * count($labels2);
         $width = $this->width;
-        $height = 28 * $nb_bar + count($labels2) * 24;
+        $height = 350;
 
         //create image
         $image = imagecreatetruecolor (4000, $height);
@@ -1035,22 +1035,33 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
         } */
         //bars
 
+        //process datas
+        $new_datas=array();
+        foreach ($datas as $key1 => $data) {
+            foreach ($data as $key2 => $subdata) {
+               $new_datas[$key2][$key1] = $subdata;
+            }
+        }
+
         $index1 = 0;
         $index2 = 0;
        // $tab[$index2]=0;
 
         //pour chaque matériel
-        foreach ($datas as $label => $data) {
+        foreach ($new_datas as $label => $data) {
             //$step = $index1 * count($labels2) * 28;
+
+            $by2 = $height-50;
 
             //pour chaque donnée du mois
             foreach ($data as $subdata) {
-                $by2 = 500;
-                $bx1 = ($index2+1) * 22 + /*$step +*/ count($labels2) * 14;
-                if(isset($tab[$index2]))
-                    $by1 = $tab[$index2] - round(($subdata*($width - 500))/$max) ;
+                $by1 = $by2;
+                $bx1 = 30 + ($index1+1) * 30;
+                /*if(isset($tab[$index2]))
+                    $by1 = $width - $by2 - $tab[$index2] - round($subdata/$max) ;
                  else
-                    $by1 = $by2 - round(($subdata*($width - 500))/$max);
+                    $by1 = $width - $by2 - round($subdata/$max);*/
+                $by2 = $by1 - $subdata * ($height-150) / $max;
                 $bx2 = $bx1 + 18;
 
                 //createbar  Affichage des barres
@@ -1060,13 +1071,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                 //echo $index1;
                // imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index1]);
-                imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $palette[$index1]);
-                imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index1]);
+                imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $palette[$index2]);
+                imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
 
 
 
                 //create data label  // Affichage des données à côté des barres
-                if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
+                /*if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
                     imagettftext(
                         $image,
                         $fontsize,
@@ -1077,7 +1088,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         $font,
                         $subdata
                     );
-                }
+                }*/
                 $tab[$index2]= $by1;
                 $index2++;
                 //echo "index2: ".$index2;
