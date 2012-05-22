@@ -184,10 +184,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $rgb; // returns an array with the rgb values
    }
 
-   function getPalette($image, $nb_index = 20) {
+   function getPalette($image, $nb_index = 20, $alpha = 00) {
       $palette = array();
       foreach($this->getColors($nb_index) as $color) {
-         $palette[] = "0x00".substr($color, 0, 6);
+         $palette[] = "0x$alpha".substr($color, 0, 6);
       }
 
       if ($nb_index > 20) {
@@ -200,10 +200,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
-   function getDarkerPalette($image, $nb_index = 20) {
+   function getDarkerPalette($image, $nb_index = 20, $alpha = 00) {
       $palette = array();
       foreach($this->getColors($nb_index) as $color) {
-         $palette[] = "0x00".substr($this->darker($color), 0, 6);
+         $palette[] = "0x$alpha".substr($this->darker($color), 0, 6);
       }
       if ($nb_index > 20) {
          $nb = ceil($nb_index / 20);
@@ -231,10 +231,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
-   function getLighterPalette($image, $nb_index = 20) {
+   function getLighterPalette($image, $nb_index = 20, $alpha = 00) {
       $palette = array();
       foreach($this->getColors($nb_index) as $color) {
-         $palette[] = "0x00".substr($this->lighter($color), 0, 6);
+         $palette[] = "0x$alpha".substr($this->lighter($color), 0, 6);
       }
       if ($nb_index > 20) {
          $nb = ceil($nb_index / 20);
@@ -1001,7 +1001,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $white = imagecolorallocate($image, 255, 255, 255);
       $grey = imagecolorallocate($image, 230, 230, 230);
       $drakgrey = imagecolorallocate($image, 180, 180, 180);
-      $palette = $this->getPalette($image, $nb_bar);
+      $palette = $this->getPalette($image, $nb_bar, 90);
       $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
       //background
@@ -1033,140 +1033,139 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //draw x-axis
       imageline($image, 30, $height-30, $width - 100, $height-30, $black);
 
+      //add title on export
+      if ($export) {
+         imagettftext(
+            $image,
+            $fontsize+2,
+            $fontangle,
+            10,
+            20,
+            $black,
+            $font,
+            $title
+         );
+      }  
 
-        //add title on export
-        if ($export) {
-            imagettftext(
-                $image,
-                $fontsize+2,
-                $fontangle,
-                10,
-                20,
-                $black,
-                $font,
-                $title
-            );
-        }  
+      if ($export && $desc) {
+         imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+      } 
+      //bars
 
-        if ($export && $desc) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
-        } 
-        //bars
+      //process datas (reverse keys)
+      $new_datas=array();
+      foreach ($datas as $key1 => $data) {
+         foreach ($data as $key2 => $subdata) {
+            $new_datas[$key2][$key1] = $subdata;
+         }
+      }
 
-        //process datas (reverse keys)
-        $new_datas=array();
-        foreach ($datas as $key1 => $data) {
-            foreach ($data as $key2 => $subdata) {
-               $new_datas[$key2][$key1] = $subdata;
+      $index1 = 0;
+      $index2 = 0;
+
+      //pour chaque mois
+      foreach ($new_datas as $label => $data) {
+         //$step = $index1 * count($labels2) * 28;
+
+         $by2 = $height-30;
+
+         //pour chaque donnée
+         foreach ($data as $subdata) {
+            $by1 = $by2;
+            $bx1 = 35 + $index1 * $width_bar;
+            $by2 = $by1 - $subdata * ($height-175) / $max;
+            $bx2 = $bx1 + $width_bar-10;
+
+            imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $palette[$index2]);
+            imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
+
+            //create data label  // Affichage des données à côté des barres
+            if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
+               imagettftext(
+                  $image,
+                  $fontsize-1,
+                  $fontangle,
+                  $bx1 + 2,
+                  $by1 - ($by1 - $by2)/2 + 5,
+                  $darkerpalette[$index2],
+                  $font,
+                  $subdata
+               );
             }
-        }
+            $tab[$index2]= $by1;
+            $index2++;
+         }
 
-        $index1 = 0;
-        $index2 = 0;
+         $index1++;
+         $index2 = 0;
+      }
 
-        //pour chaque mois
-        foreach ($new_datas as $label => $data) {
-            //$step = $index1 * count($labels2) * 28;
+      //TEXTE GAUCHE Y
+      $index = 0;
+      //pour chaque mois
+      foreach ($labels2 as $label) {
+         $lx = 35 + $index * $width_bar;
+         $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+         $textwidth = abs($box[4] - $box[0]);
+         $textheight = abs($box[5] - $box[1]);
+         imagettftext(
+            $image,
+            $fontsize,
+            $fontangle,
+            $lx,
+            $height-10,
+            $black,
+            $font,
+            $label
+         );
 
-            $by2 = $height-30;
+         $index++;
+      }
 
-            //pour chaque donnée
-            foreach ($data as $subdata) {
-                $by1 = $by2;
-                $bx1 = 35 + $index1 * $width_bar;
-                $by2 = $by1 - $subdata * ($height-175) / $max;
-                $bx2 = $bx1 + $width_bar-10;
+      //legend (align right)
+      $index = 0;
+      $fontsize = 9;
+      foreach ($datas as $label => $data) {
+         $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index]);
+         $textwidth = abs($box[4] - $box[0]);
+         $textheight = abs($box[5] - $box[1]);
 
-                imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $palette[$index2]);
-                imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
+         //legend label
+         imagettftext(
+            $image,
+            $fontsize,
+            $fontangle,
+            $width - $textwidth - 18,
+            10 + $index * 15 ,
+            $black,
+            $font,
+            $labels[$index]
+         );
 
-                //create data label  // Affichage des données à côté des barres
-                if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
-                    imagettftext(
-                        $image,
-                        $fontsize-1,
-                        $fontangle,
-                        $bx1 + 2,
-                        $by1 - ($by1 - $by2)/2 + 5,
-                        $darkerpalette[$index2],
-                        $font,
-                        $subdata
-                    );
-                }
-                $tab[$index2]= $by1;
-                $index2++;
-            }
+         //legend circle
+         $color_rbg = $this->colorHexToRGB($palette[$index]);
+         imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
 
-            $index1++;
-            $index2 = 0;
-        }
+         $index++;
+      }
 
-        //TEXTE GAUCHE Y
-        $index = 0;
-        //pour chaque mois
-        foreach ($labels2 as $label) {
-            $lx = 35 + $index * $width_bar;
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
-            $textwidth = abs($box[4] - $box[0]);
-            $textheight = abs($box[5] - $box[1]);
-            imagettftext(
-                $image,
-                $fontsize,
-                $fontangle,
-                $lx,
-                $height-10,
-                $black,
-                $font,
-                $label
-            );
+      //generate image
+      $params = array("image" => $image,
+         "export" => $export,
+         "f_name" => $opt['f_name'],
+         "title" => $title,
+         "rand" => $rand,
+         "raw_datas" => $raw_datas);
+      $contents = $this->generateImage($params);
+      $this->showImage($contents,$export);
 
-            $index++;
-        }
-
-        //legend (align right)
-        $index = 0;
-        $fontsize = 9;
-        foreach ($datas as $label => $data) {
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index]);
-            $textwidth = abs($box[4] - $box[0]);
-            $textheight = abs($box[5] - $box[1]);
-
-            //legend label
-            imagettftext(
-                $image,
-                $fontsize,
-                $fontangle,
-                $width - $textwidth - 18,
-                10 + $index * 15 ,
-                $black,
-                $font,
-                $labels[$index]
-            );
-
-            //legend circle
-            $color_rbg = $this->colorHexToRGB($palette[$index]);
-            imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
-
-            $index++;
-        }
-
-        //generate image
-        $params = array("image" => $image,
-            "export" => $export,
-            "f_name" => $opt['f_name'],
-            "title" => $title,
-            "rand" => $rand,
-            "raw_datas" => $raw_datas);
-        $contents = $this->generateImage($params);
-        $this->showImage($contents,$export);
-
-        $options = array("opt"        => $opt,
-            "export"    => $export,
-            "datas"     => $datas,
-            "labels2"   => $labels2,
-            "flip_data" => $flip_data,
-            "unit"      => $unit);
-        PluginMreportingCommon::endGraph($options);
+      $options = array("opt"        => $opt,
+         "export"    => $export,
+         "datas"     => $datas,
+         "labels2"   => $labels2,
+         "flip_data" => $flip_data,
+         "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
     }
 
 
