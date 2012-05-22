@@ -385,17 +385,21 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
    function imageCubicSmoothLine($image, $color, $coords) {
+      Toolbox::logDebug($coords);
+
       $oCurve = new CubicSplines();
-      $oCurve->setInitCoords($coords, 8);
-      $r = $oCurve->processCoords();
+      if ($oCurve->setInitCoords($coords, 8) !== false) {
+         if ($r = $oCurve->processCoords()) {
 
-      list($iPrevX, $iPrevY) = each($r);
+            list($iPrevX, $iPrevY) = each($r);
 
-      while (list ($x, $y) = each($r)) {
-         $this->imageSmoothAlphaLineLarge($image, round($iPrevX), round($iPrevY), round($x), round($y), $color);
-         $iPrevX = $x;
-         $iPrevY = $y;
-      }      
+            while (list ($x, $y) = each($r)) {
+               $this->imageSmoothAlphaLineLarge($image, round($iPrevX), round($iPrevY), round($x), round($y), $color);
+               $iPrevX = $x;
+               $iPrevY = $y;
+            }  
+         }
+      }    
    }
 
 
