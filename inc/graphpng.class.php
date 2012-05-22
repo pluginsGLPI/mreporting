@@ -935,7 +935,234 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       PluginMreportingCommon::endGraph($options);
    }
 
+   
+   function showHgstackbar($params) {
 
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+
+        foreach ($criterias as $key => $val) {
+            $$key=$val;
+        }
+
+        $rand = $opt['rand'];
+
+        $configs = PluginMreportingConfig::initConfigParams($rand);
+
+        foreach ($configs as $k => $v) {
+            $$k=$v;
+        }
+
+        if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+
+        if (isset($raw_datas['datas'])) {
+            $datas = $raw_datas['datas'];
+        } else {
+            $datas = array();
+        }
+
+        $options = array("title" => $title,
+            "desc" => $desc,
+            "rand" => $rand,
+            "export" => $export,
+            "short_classname" => $opt["short_classname"]);
+
+        $this->initGraph($options);
+
+        if (count($datas) <= 0) {
+            if (!$export)
+                echo "</div>";
+            return false;
+        }
+
+        $labels2 = $raw_datas['labels2'];
+
+        $values = array_values($datas);
+        $labels = array_keys($datas);
+
+        $max = 1;
+        foreach ($values as $line) {
+            foreach ($line as $label2 => $value) {
+                if ($value > $max) $max = $value;
+            }
+        }
+        if ($max == 1 && $unit == '%') $max = 100;
+
+        $nb_bar = count($datas) * count($labels2);
+        $width = $this->width;
+        $height = 28 * $nb_bar + count($labels2) * 24;
+
+        //create image
+        $image = imagecreatetruecolor (4000, $height);
+
+        //colors
+        $black = imagecolorallocate($image, 0, 0, 0);
+        $white = imagecolorallocate($image, 255, 255, 255);
+        $grey = imagecolorallocate($image, 242, 242, 242);
+        $palette = $this->getPalette($image, $nb_bar);
+        $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+
+        //background
+        $bg_color = $grey;
+        //if ($export) $bg_color = $white;
+        imagefilledrectangle($image, 0, 0, 4000, $height - 1, $white);
+
+        //create border on export
+        /*if ($export) {
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+        }   */
+
+        //config font
+        $font = "../fonts/FreeSans.ttf";
+        $fontsize = 8;
+        $fontangle = 0;
+
+        //add title on export
+        /*if ($export) {
+            imagettftext(
+                $image,
+                $fontsize+2,
+                $fontangle,
+                10,
+                20,
+                $black,
+                $font,
+                $title
+            );
+        }  */
+
+        /*if ($export && $desc) {
+            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+        } */
+        //bars
+
+        $index1 = 0;
+        $index2 = 0;
+       // $tab[$index2]=0;
+
+        //pour chaque matériel
+        foreach ($datas as $label => $data) {
+            //$step = $index1 * count($labels2) * 28;
+
+            //pour chaque donnée du mois
+            foreach ($data as $subdata) {
+                $by2 = 500;
+                $bx1 = ($index2+1) * 22 + /*$step +*/ count($labels2) * 14;
+                if(isset($tab[$index2]))
+                    $by1 = $tab[$index2] - round(($subdata*($width - 500))/$max) ;
+                 else
+                    $by1 = $by2 - round(($subdata*($width - 500))/$max);
+                $bx2 = $bx1 + 18;
+
+                //createbar  Affichage des barres
+                //ImageFilledRectangle($image, $bx1, $by1, $bx2, $by2, $palette[$index2]);
+                //imagerectangle($image, $bx1, $by1-1, $bx2+1, $by2+1, $darkerpalette[$index2]);
+                //imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index2]);
+
+                //echo $index1;
+               // imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index1]);
+                imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $palette[$index1]);
+                imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index1]);
+
+
+
+                //create data label  // Affichage des données à côté des barres
+                if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
+                    imagettftext(
+                        $image,
+                        $fontsize,
+                        $fontangle,
+                        $bx2  - 12,
+                        $by1 + 14,
+                        $darkerpalette[$index1],
+                        $font,
+                        $subdata
+                    );
+                }
+                $tab[$index2]= $by1;
+                $index2++;
+                //echo "index2: ".$index2;
+
+            }
+
+            $index1++;
+            $index2 = 0;
+        }
+
+        //y axis  (ligne)  imageline ( resource $image , int $x1 , int $y1 , int $x2 , int $y2 , int $color )
+        imageline($image, 150, 40, 150, 500, $black);
+        imageline($image, 151, 40, 151, 500, $black);
+
+        //TEXTE GAUCHE Y
+        $index1 = 0;
+        //pour chaque mois
+        foreach ($labels2 as $label) {
+            $ly = $index1 * count($labels2) * 28 + count($labels2) *24 / 2 + count($labels2) * 14;
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+            $textwidth = abs($box[4] - $box[0]);
+            $textheight = abs($box[5] - $box[1]);
+            imagettftext(
+                $image,
+                $fontsize,
+                $fontangle,
+                245 - $textwidth,
+                $ly + 14,
+                $black,
+                $font,
+                $label
+            );
+
+            $index1++;
+        }
+
+        //x axis  (ligne)  imageline ( resource $image , int $x1 , int $y1 , int $x2 , int $y2 , int $color )
+        imageline($image, 150 , 500, $width, 500, $black);
+        imageline($image, 150 , 501, $width, 501, $black);
+
+        //legend (align right)
+        $index = 0;
+        $fontsize = 9;
+        foreach ($datas as $label => $data) {
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index]);
+            $textwidth = abs($box[4] - $box[0]);
+            $textheight = abs($box[5] - $box[1]);
+
+            //legend label
+            imagettftext(
+                $image,
+                $fontsize,
+                $fontangle,
+                $width - $textwidth - 18,
+                10 + $index * 15 ,
+                $black,
+                $font,
+                $labels[$index]
+            );
+
+            //legend circle
+            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
+
+            $index++;
+        }
+
+        //generate image
+        $params = array("image" => $image,
+            "export" => $export,
+            "f_name" => $opt['f_name'],
+            "title" => $title,
+            "rand" => $rand,
+            "raw_datas" => $raw_datas);
+        $contents = $this->generateImage($params);
+        $this->showImage($contents,$export);
+
+        $options = array("opt"        => $opt,
+            "export"    => $export,
+            "datas"     => $datas,
+            "labels2"   => $labels2,
+            "flip_data" => $flip_data,
+            "unit"      => $unit);
+        PluginMreportingCommon::endGraph($options);
+    }
 
 
    function showArea($params) {
