@@ -1006,6 +1006,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
       }
 
+      if ($spline) {
+         $aCoords = array();
+      }
+
       //parse datas
       $index = 0;
       $old_data = 0;
@@ -1038,8 +1042,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
 
-         //trace lines between points
-         $this->imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $palette[0]);
+         //trace lines between points (if linear)
+         if (!$spline) {
+            $this->imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $palette[0]);
+         } else { // else store coords for trace spline later (need processing points)
+            $aCoords[$x1] = $y1;
+         }
 
          //trace dots
          $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
@@ -1064,6 +1072,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $old_data = $data;
          $old_label = $label;
          $index++;
+      }
+
+
+      //if curved spline activated, draw cubic spline for the current line
+      if ($spline) {
+         $aCoords[$x2] = $y2;
+         $this->imageCubicSmoothLine($image, $palette[0], $aCoords);
       }
 
       //display last value, dot and axis label
