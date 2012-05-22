@@ -85,7 +85,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['categor
 $LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Aire - Evolution du nombre de ticket sur la période";
 $LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['category'] = "Par tickets";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['title'] = "Lignes - Evolution du nombre de ticket sur la période";
+$LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['title'] = "Ligne - Evolution du nombre de ticket sur la période";
 $LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['category'] = "Par tickets";
 
 $LANG['plugin_mreporting']['Helpdesk']['reportGlineNbTicket']['title'] = "Lignes - Evolution du nombre de ticket sur la période (par Statut)";

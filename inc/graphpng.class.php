@@ -374,6 +374,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
    } // end of 'imageSmoothAlphaLine()' function
 
+   function imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $color) {
+      imageline($image, $x1, $y1, $x2, $y2, $color);
+      $this->imageSmoothAlphaLine($image, $x1-1, $y1-1, $x2-1, $y2-1, $color);
+      $this->imageSmoothAlphaLine($image, $x1+1, $y1+1, $x2+1, $y2+1, $color);
+      $this->imageSmoothAlphaLine($image, $x1, $y1+1, $x2, $y2+1, $color);
+      $this->imageSmoothAlphaLine($image, $x1, $y1-1, $x2, $y2-1, $color);
+      $this->imageSmoothAlphaLine($image, $x1-1, $y1, $x2-1, $y2, $color);
+      $this->imageSmoothAlphaLine($image, $x1+1, $y1, $x2+1, $y2, $color);
+   }
+
    function imageCubicSmoothLine($image, $color, $coords) {
       $oCurve = new CubicSplines();
       $oCurve->setInitCoords($coords, 8);
@@ -382,8 +392,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       list($iPrevX, $iPrevY) = each($r);
 
       while (list ($x, $y) = each($r)) {
-         $this->imageSmoothAlphaLine($image, round($iPrevX), round($iPrevY), 
-            round($x), round($y), $color);
+         $this->imageSmoothAlphaLineLarge($image, round($iPrevX), round($iPrevY), round($x), round($y), $color);
          $iPrevX = $x;
          $iPrevY = $y;
       }      
