@@ -900,7 +900,7 @@ $JS = <<<JAVASCRIPT
             return n < ((offset / 2) * ( n / 12));
          })
          .bottom(1)
-         .fillStyle("rgb(121,173,210)")
+         .fillStyle(function() { return colors(0).alpha(.5); })
          .height(function(d) y(d));
    }
 
