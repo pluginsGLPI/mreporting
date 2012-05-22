@@ -1247,10 +1247,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
       //draw x-axis grey step line
-      $step = round(($height - 120) / 13);
+      $xstep = round(($height - 120) / 13);
       for ($i = 0; $i< 13; $i++) {
-         $y = $step * $i + 120;
-         imageLine($image, 30, $y, $width-70, $y, $grey);
+         $yaxis = $xstep * $i + 120;
+         imageLine($image, 30, $yaxis, $width-70, $yaxis, $grey);
+      }
+
+      //draw y-axis grey step line
+      for ($i = 0; $i< $nb; $i++) {
+         $xaxis = 30 + $width_line * $i;
+         imageLine($image, $xaxis, 120, $xaxis, $height-25, $grey);
       }
 
       //draw y-axis
@@ -1273,7 +1279,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($export) {
          imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
       }
-
 
       //parse datas
       foreach ($datas as $label => $data) {
@@ -1407,18 +1412,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          $index1++;
       }
-
-
       
       //display labels2
       $fontsize = 8;
       $index = 0;
+      //Html::printCleanArray($labels2);
       foreach ($labels2 as $label) {
          $x = $index * $width_line + 20;
 
          if ($step!=0 && ($index / $step) == round($index / $step)) {
-            imagettftext($image, $fontsize, $fontangle, $x , $height-10, $black,
-                            $font, $label);
+            imagettftext($image, $fontsize, $fontangle, $x , $height-10, $black, $font, $label);
          }
 
          $index++;
