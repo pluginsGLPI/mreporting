@@ -28,6 +28,8 @@
  */
  
 require_once "../lib/imagesmootharc/imageSmoothArc.php";
+require_once "../lib/cubic_splines/classes/CubicSplines.php";
+require_once "../lib/cubic_splines/classes/Plot.php";
 
 class PluginMreportingGraphpng extends PluginMreportingGraph {
    
@@ -364,6 +366,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
       }
    } // end of 'imageSmoothAlphaLine()' function
+
 
    function showHbar($params) {
    
@@ -899,6 +902,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       PluginMreportingCommon::endGraph($options);
    }
 
+
+
+
    function showArea($params) {
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1141,6 +1147,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $index3 = 1;
       $step = round($nb / 20);
 
+
       //create image
       $image = imagecreatetruecolor ($width, $height);
 
@@ -1172,8 +1179,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
       }
 
+
       //parse datas
       foreach ($datas as $label => $data) {
+
+         if ($spline) {
+            $oCurve = new CubicSplines();
+            $aCoords = array();
+         }
 
          //parse line
          $index2 = 0;
@@ -1206,8 +1219,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                imagefilledpolygon($image, $points , 4 ,  $alphapalette[$index1]);
             }
 
-            //trace lines between points
-            $this->imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $palette[$index1]);
+            //trace lines between points (if linear)
+            if (!$spline)
+               $this->imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $palette[$index1]);
+            else {
+               //else store coord of this points in an array for process in cubicspline class
+               $aCoords[$x1]=$height-$y1;
+            }
 
             //trace dots
             $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
@@ -1233,8 +1251,20 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $index2++;
             $index3++;
          }
+
+         //if curved spline activated, draw cubic spline for the current line
+         if ($spline) {
+            $oCurve->setInitCoords($aCoords, 1);
+            $r = $oCurve->processCoords();
+            $curveGraph = new Plot($r);
+            $curveGraph->drawLine($image, $palette[$index1], 0, $height);
+
+         }
+
          $index1++;
       }
+
+
 
       
       //display labels2
