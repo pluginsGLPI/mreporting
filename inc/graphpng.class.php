@@ -1040,7 +1040,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //draw y-axis
       imageLine($image, 30, 50, 30, $height-25, $black);
 
-
       //draw x-axis
       imageline($image, 30, $height-30, $width - 60, $height-30, $black);
 
@@ -1254,7 +1253,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //config font
       $font = "../fonts/FreeSans.ttf";
-      $fontsize = 6;
+      $fontsize = 7;
       $fontangle = 0;
 
       //background
@@ -1271,10 +1270,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //value label
          $val = round($i * $max / 12);
-         $box = @imageTTFBbox($fontsize+2,$fontangle,$font,$val);
+         $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
          $textwidth = abs($box[4] - $box[0]);
       
-         imagettftext($image, $fontsize+2, $fontangle, 28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+         imagettftext($image, $fontsize, $fontangle, 25-$textwidth, $yaxis+5, $drakgrey, $font, $val);
       }
 
       //draw y-axis grey step line
@@ -1286,6 +1285,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //draw y-axis
       imageLine($image, 30, 120, 30, $height-25, $black);
 
+      //draw y-axis
+      imageLine($image, 30, $height-30, $width - 50, $height-30, $black);
 
       //create border on export
       if ($export) {
@@ -1302,20 +1303,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //parse datas
       foreach ($datas as $label => $data) {
 
-         if ($spline) {
-            $aCoords = array();
-         }
-
-         //parse line
+         $aCoords = array();
          $index2 = 0;
          $old_data = 0;
-         $old_label = "";
-
+         //parse line
          foreach ($data as $subdata) {
             //if first index, continue
             if ($index2 == 0) {
                $old_data = $subdata;
-               $old_label = $label;
                $index2++;
                continue;
             }
@@ -1340,34 +1335,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             //trace lines between points (if linear)
             if (!$spline)
                $this->imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $palette[$index1]);
-            else {
-               //else store coord of this points in an array for process in cubicspline class
-               $aCoords[$x1]=$y1;
-            }
-
-            if (!$spline) {
-               //trace dots
-               $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
-               imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
-               imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
-
-
-               //display values label
-               if($show_label == "always" || $show_label == "hover") {
-                  imagettftext($image, $fontsize, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
-                            $darkerpalette[$index1], $font, $old_data);
-               }
-            }
-
-            //show x-axis ticks
-            //imageline($image, $x2, $y2, $x2, $height-27, $grey);
-            if ($step!=0 && ($index3 / $step) == round($index3 / $step)) {
-               imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[$index1]);
-            }
-            
+            $aCoords[$x1]=$y1;            
 
             $old_data = $subdata;
-            $old_label = $label;
             $index2++;
             $index3++;
          }
@@ -1380,60 +1350,66 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $index2 = 0;
             $old_data = 0;
             $old_label = "";
+         }
 
-            foreach ($data as $subdata) {
-               //if first index, continue
-               if ($index2 == 0) {
-                  $old_data = $subdata;
-                  $old_label = $label;
-                  $index2++;
-                  continue;
-               }
-
-               // determine coords
-               $x1 = $index2 * $width_line - $width_line + 30;
-               $y1 = $height - 30 - $old_data * ($height - 150) / $max;
-               $x2 = $x1 + $width_line;
-               $y2 = $height - 30 - $subdata * ($height - 150) / $max;
-
-               //trace dots
-               $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
-               imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
-               imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
-
-
-               //display values label
-               if($show_label == "always" || $show_label == "hover") {
-                  imagettftext($image, $fontsize, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
-                            $darkerpalette[$index1], $font, $old_data);
-               }
-
+         //draw labels and dots
+         foreach ($data as $subdata) {
+            //if first index, continue
+            if ($index2 == 0) {
                $old_data = $subdata;
                $old_label = $label;
                $index2++;
-               $index3++;
+               continue;
             }
 
-            /*** display last value ***/
+            // determine coords
+            $x1 = $index2 * $width_line - $width_line + 30;
+            $y1 = $height - 30 - $old_data * ($height - 150) / $max;
+            $x2 = $x1 + $width_line;
+            $y2 = $height - 30 - $subdata * ($height - 150) / $max;
+
             //trace dots
             $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
-            imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
-            imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
+            imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
+            imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
 
 
             //display values label
             if($show_label == "always" || $show_label == "hover") {
-               imagettftext($image, $fontsize, $fontangle, ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5,
+               imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
                          $darkerpalette[$index1], $font, $old_data);
             }
 
+            //show x-axis ticks
+            if ($step!=0 && ($index3 / $step) == round($index3 / $step)) {
+               imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[$index1]);
+            }
+
+            $old_data = $subdata;
+            $old_label = $label;
+            $index2++;
+            $index3++;
          }
+
+         /*** display last value ***/
+         //trace dots
+         $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
+         imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
+         imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
+
+
+         //display values label
+         if($show_label == "always" || $show_label == "hover") {
+            imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5,
+                      $darkerpalette[$index1], $font, $old_data);
+         }
+
+         
 
          $index1++;
       }
       
       //display labels2
-      $fontsize = 8;
       $index = 0;
       //Html::printCleanArray($labels2);
       foreach ($labels2 as $label) {
