@@ -1063,7 +1063,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //trace lines between points (if linear)
          if (!$spline) {
-            $this->imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $palette[0]);
+            $this->imageSmoothAlphaLineLarge ($image, $x1, $y1, $x2, $y2, $palette[0]);
          } else { // else store coords for trace spline later (need processing points)
             $aCoords[$x1] = $y1;
          }
@@ -1304,7 +1304,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //trace lines between points (if linear)
             if (!$spline)
-               $this->imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $palette[$index1]);
+               $this->imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $palette[$index1]);
             else {
                //else store coord of this points in an array for process in cubicspline class
                $aCoords[$x1]=$y1;
