@@ -537,6 +537,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB, $LANG;
       
       $datas = array();
+      $tmp_datas = array();
       /*Must be defined*/
       if ($rand != $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportGareaNbTicket']&& $rand != $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHgstackbarNbTicket']) {
          $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportGlineNbTicket'];
@@ -549,6 +550,27 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
       /*End Must be defined*/
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $rand);
+      
+      //get dates used in this period
+      $query_date = "SELECT
+         DISTINCT
+         DATE_FORMAT(`date`, '%y%m') AS month,
+         DATE_FORMAT(`date`, '%b%y') AS month_l
+      FROM `glpi_tickets`
+      WHERE ".$this->sql_date."
+      AND `glpi_tickets`.`entities_id` IN (".$this->where_entities.")
+      AND `glpi_tickets`.`is_deleted` = '0'
+      ORDER BY `date` ASC";
+      $res_date = $DB->query($query_date);
+      $dates = array();
+      while ($data = $DB->fetch_assoc($res_date)) {
+         $dates[$data['month']] = $data['month_l'];
+      }
+      
+      $tmp_date = array();
+      foreach(array_values($dates) as $id) {
+         $tmp_date[] = $id;
+      }
       
       $query = "SELECT DISTINCT
          DATE_FORMAT(date, '%y%m') as month,
@@ -564,10 +586,19 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
          $status =Ticket::getStatus($data['status']);
-         $datas['labels2'][$data['month_l']] = $data['month_l'];
-         $datas['datas'][$status][$data['month_l']] = $data['nb'];
+         $tmp_datas['labels2'][$data['month_l']] = $data['month_l'];
+         $tmp_datas['datas'][$status][$data['month_l']] = $data['nb'];
       }
- 
+      
+       //merge missing datas (not defined status for a month)
+      if (isset($tmp_datas['datas'])) {
+         foreach($tmp_datas['datas'] as &$data) {
+            $data = array_merge(array_fill_keys($tmp_date, 0), $data);
+         }
+      }
+      
+      $datas = $tmp_datas;
+      
       return $datas;
    }
   
