@@ -989,7 +989,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
         $nb_bar = count($datas) * count($labels2);
         $width = $this->width;
-        $height = 350;
+        $height = 400;
 
         //create image
         $image = imagecreatetruecolor (4000, $height);
@@ -1035,7 +1035,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
         } */
         //bars
 
-        //process datas
+        //process datas (reverse keys)
         $new_datas=array();
         foreach ($datas as $key1 => $data) {
             foreach ($data as $key2 => $subdata) {
@@ -1047,34 +1047,21 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
         $index2 = 0;
        // $tab[$index2]=0;
 
-        //pour chaque matériel
+        //pour chaque mois
         foreach ($new_datas as $label => $data) {
             //$step = $index1 * count($labels2) * 28;
 
-            $by2 = $height-50;
+            $by2 = $height-30;
 
-            //pour chaque donnée du mois
+            //pour chaque donnée
             foreach ($data as $subdata) {
                 $by1 = $by2;
-                $bx1 = 30 + ($index1+1) * 30;
-                /*if(isset($tab[$index2]))
-                    $by1 = $width - $by2 - $tab[$index2] - round($subdata/$max) ;
-                 else
-                    $by1 = $width - $by2 - round($subdata/$max);*/
-                $by2 = $by1 - $subdata * ($height-150) / $max;
-                $bx2 = $bx1 + 18;
+                $bx1 = 30 + ($index1+1) * 40;
+                $by2 = $by1 - $subdata * ($height-175) / $max;
+                $bx2 = $bx1 + 30;
 
-                //createbar  Affichage des barres
-                //ImageFilledRectangle($image, $bx1, $by1, $bx2, $by2, $palette[$index2]);
-                //imagerectangle($image, $bx1, $by1-1, $bx2+1, $by2+1, $darkerpalette[$index2]);
-                //imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index2]);
-
-                //echo $index1;
-               // imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index1]);
                 imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $palette[$index2]);
                 imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
-
-
 
                 //create data label  // Affichage des données à côté des barres
                 /*if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
@@ -1091,23 +1078,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                 }*/
                 $tab[$index2]= $by1;
                 $index2++;
-                //echo "index2: ".$index2;
-
             }
 
             $index1++;
             $index2 = 0;
         }
 
-        //y axis  (ligne)  imageline ( resource $image , int $x1 , int $y1 , int $x2 , int $y2 , int $color )
-        imageline($image, 150, 40, 150, 500, $black);
-        imageline($image, 151, 40, 151, 500, $black);
-
         //TEXTE GAUCHE Y
-        $index1 = 0;
+        $index = 0;
         //pour chaque mois
         foreach ($labels2 as $label) {
-            $ly = $index1 * count($labels2) * 28 + count($labels2) *24 / 2 + count($labels2) * 14;
+            $lx = 30 + ($index+1) * 40;
             $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
@@ -1115,14 +1096,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                 $image,
                 $fontsize,
                 $fontangle,
-                245 - $textwidth,
-                $ly + 14,
+                $lx,
+                $height-10,
                 $black,
                 $font,
                 $label
             );
 
-            $index1++;
+            $index++;
         }
 
         //x axis  (ligne)  imageline ( resource $image , int $x1 , int $y1 , int $x2 , int $y2 , int $color )
