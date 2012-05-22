@@ -385,7 +385,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
    function imageCubicSmoothLine($image, $color, $coords) {
-      Toolbox::logDebug($coords);
 
       $oCurve = new CubicSplines();
       if ($oCurve->setInitCoords($coords, 8) !== false) {
