@@ -1058,24 +1058,24 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                 $by1 = $by2;
                 $bx1 = 30 + ($index1+1) * 40;
                 $by2 = $by1 - $subdata * ($height-175) / $max;
-                $bx2 = $bx1 + 30;
+                $bx2 = $bx1 + 25;
 
                 imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $palette[$index2]);
                 imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
 
                 //create data label  // Affichage des données à côté des barres
-                /*if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
+                if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
                     imagettftext(
                         $image,
-                        $fontsize,
+                        $fontsize-1,
                         $fontangle,
-                        $bx2  - 12,
-                        $by1 + 14,
-                        $darkerpalette[$index1],
+                        $bx1 + 2,
+                        $by1 - ($by1 - $by2)/2 + 5,
+                        $darkerpalette[$index2],
                         $font,
                         $subdata
                     );
-                }*/
+                }
                 $tab[$index2]= $by1;
                 $index2++;
             }
@@ -1105,10 +1105,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             $index++;
         }
-
-        //x axis  (ligne)  imageline ( resource $image , int $x1 , int $y1 , int $x2 , int $y2 , int $color )
-        imageline($image, 150 , 500, $width, 500, $black);
-        imageline($image, 150 , 501, $width, 501, $black);
 
         //legend (align right)
         $index = 0;
