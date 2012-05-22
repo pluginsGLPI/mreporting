@@ -330,13 +330,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $tcr = ($trgb >> 16) & 0xFF;
             $tcg = ($trgb >> 8) & 0xFF;
             $tcb = $trgb & 0xFF;
-            imagesetpixel($image, $x, floor($y), imagecolorallocatealpha($image, ($tcr * $ya + $icr * $yb), ($tcg * $ya + $icg * $yb), ($tcb * $ya + $icb * $yb), $alpha));
+            imagesetpixel($image, $x, floor($y), 
+               imagecolorallocatealpha($image, ($tcr * $ya + $icr * $yb), 
+                  ($tcg * $ya + $icg * $yb), ($tcb * $ya + $icb * $yb), $alpha));
      
             $trgb = ImageColorAt($image, $x, ceil($y));
             $tcr = ($trgb >> 16) & 0xFF;
             $tcg = ($trgb >> 8) & 0xFF;
             $tcb = $trgb & 0xFF;
-            imagesetpixel($image, $x, ceil($y), imagecolorallocatealpha($image, ($tcr * $yb + $icr * $ya), ($tcg * $yb + $icg * $ya), ($tcb * $yb + $icb * $ya), $alpha));
+            imagesetpixel($image, $x, ceil($y), 
+               imagecolorallocatealpha($image, ($tcr * $yb + $icr * $ya), 
+                  ($tcg * $yb + $icg * $ya), ($tcb * $yb + $icb * $ya), $alpha));
      
             $x++;
          }
@@ -353,13 +357,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $tcr = ($trgb >> 16) & 0xFF;
             $tcg = ($trgb >> 8) & 0xFF;
             $tcb = $trgb & 0xFF;
-            imagesetpixel($image, floor($x), $y, imagecolorallocatealpha($image, ($tcr * $xa + $icr * $xb), ($tcg * $xa + $icg * $xb), ($tcb * $xa + $icb * $xb), $alpha));
+            imagesetpixel($image, floor($x), $y, 
+               imagecolorallocatealpha($image, ($tcr * $xa + $icr * $xb), 
+                  ($tcg * $xa + $icg * $xb), ($tcb * $xa + $icb * $xb), $alpha));
      
             $trgb = ImageColorAt($image, ceil($x), $y);
             $tcr = ($trgb >> 16) & 0xFF;
             $tcg = ($trgb >> 8) & 0xFF;
             $tcb = $trgb & 0xFF;
-            imagesetpixel ($image, ceil($x), $y, imagecolorallocatealpha($image, ($tcr * $xb + $icr * $xa), ($tcg * $xb + $icg * $xa), ($tcb * $xb + $icb * $xa), $alpha));
+            imagesetpixel ($image, ceil($x), $y, 
+               imagecolorallocatealpha($image, ($tcr * $xb + $icr * $xa), 
+                  ($tcg * $xb + $icg * $xa), ($tcb * $xb + $icb * $xa), $alpha));
      
             $y ++;
          }
@@ -368,7 +376,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function imageCubicSmoothLine($image, $color, $coords) {
       $oCurve = new CubicSplines();
-      $oCurve->setInitCoords($coords, 1);
+      $oCurve->setInitCoords($coords, 8);
       $r = $oCurve->processCoords();
 
       list($iPrevX, $iPrevY) = each($r);
