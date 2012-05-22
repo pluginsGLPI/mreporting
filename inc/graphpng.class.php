@@ -29,7 +29,6 @@
  
 require_once "../lib/imagesmootharc/imageSmoothArc.php";
 require_once "../lib/cubic_splines/classes/CubicSplines.php";
-require_once "../lib/cubic_splines/classes/Plot.php";
 
 class PluginMreportingGraphpng extends PluginMreportingGraph {
    
@@ -366,6 +365,21 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
       }
    } // end of 'imageSmoothAlphaLine()' function
+
+   function imageCubicSmoothLine($image, $color, $coords) {
+      $oCurve = new CubicSplines();
+      $oCurve->setInitCoords($coords, 1);
+      $r = $oCurve->processCoords();
+
+      list($iPrevX, $iPrevY) = each($r);
+
+      while (list ($x, $y) = each($r)) {
+         $this->imageSmoothAlphaLine($image, round($iPrevX), round($iPrevY), 
+            round($x), round($y), $color);
+         $iPrevX = $x;
+         $iPrevY = $y;
+      }      
+   }
 
 
    function showHbar($params) {
@@ -1184,7 +1198,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       foreach ($datas as $label => $data) {
 
          if ($spline) {
-            $oCurve = new CubicSplines();
             $aCoords = array();
          }
 
@@ -1224,7 +1237,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $this->imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $palette[$index1]);
             else {
                //else store coord of this points in an array for process in cubicspline class
-               $aCoords[$x1]=$height-$y1;
+               $aCoords[$x1]=$y1;
             }
 
             //trace dots
@@ -1254,11 +1267,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //if curved spline activated, draw cubic spline for the current line
          if ($spline) {
-            $oCurve->setInitCoords($aCoords, 1);
-            $r = $oCurve->processCoords();
-            $curveGraph = new Plot($r);
-            $curveGraph->drawLine($image, $palette[$index1], 0, $height);
-
+            $this->imageCubicSmoothLine($image, $palette[$index1], $aCoords);
          }
 
          $index1++;
