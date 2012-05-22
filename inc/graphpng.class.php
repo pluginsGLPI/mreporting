@@ -1056,29 +1056,27 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       if ($area) $spline = false;
 
-      if ($spline) {
-         $aCoords = array();
-      }
+      
 
       //parse datas
       $index = 0;
       $old_data = 0;
-      $old_label = "";
+      $aCoords = array();
       foreach ($datas as $label => $data) {
 
          //if first index, continue
          if ($index == 0) {
             $old_data = $data;
-            $old_label = $label;
             $index++;
             continue;
          }
 
          // determine coords
          $x1 = $index * $width_line - $width_line + 30;
-         $y1 = $height - $old_data * ($height - 60) / $max;
+         $y1 = $height - 30 - $old_data * ($height - 85) / $max;
          $x2 = $x1 + $width_line;
-         $y2 = $height - $data * ($height - 60) / $max;
+         $y2 = $height - 30 - $data * ($height - 85) / $max;
+         $aCoords[$x1] = $y1;
 
          //in case of area chart fill under point space
          if ($area > 0) {
@@ -1091,25 +1089,49 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imagefilledpolygon($image, $points , 4 ,  $alphapalette[0]);
          }
 
-
          //trace lines between points (if linear)
          if (!$spline) {
             $this->imageSmoothAlphaLineLarge ($image, $x1, $y1, $x2, $y2, $palette[0]);
-         } else { // else store coords for trace spline later (need processing points)
-            $aCoords[$x1] = $y1;
+         }       
+         
+         $old_data = $data;
+         $index++;
+      }
+
+
+      //if curved spline activated, draw cubic spline for the current line
+      if ($spline) {
+         $aCoords[$x2] = $y2;
+         $this->imageCubicSmoothLine($image, $palette[0], $aCoords);
+      }
+
+      //draw labels and dots
+      $index = 0;
+      $old_label = "";
+      foreach ($datas as $label => $data) {
+         //if first index, continue
+         if ($index == 0) {
+            $old_data = $data;
+            $old_label = $label;
+            $index++;
+            continue;
          }
 
-         if (!$spline) { //if spline, don't show dots and labels 
-            //trace dots
-            $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
-            imageSmoothArc($image, $x1-1, $y1-1, 8, 8, $color_rbg, 0, 2 * M_PI);
-            imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
+         // determine coords
+         $x1 = $index * $width_line - $width_line + 30;
+         $y1 = $height - 30 - $old_data * ($height - 85) / $max;
+         $x2 = $x1 + $width_line;
+         $y2 = $height - 30 - $data * ($height - 85) / $max;
 
-            //display values label
-            if($show_label == "always" || $show_label == "hover") {
-               imagettftext($image, $fontsize-1, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
-                         $darkerpalette[0], $font, $old_data);
-            }
+         //trace dots
+         $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
+         imageSmoothArc($image, $x1-1, $y1-1, 8, 8, $color_rbg, 0, 2 * M_PI);
+         imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
+
+         //display values label
+         if($show_label == "always" || $show_label == "hover") {
+            imagettftext($image, $fontsize-1, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
+                      $darkerpalette[0], $font, $old_data);
          }
 
          //display y ticks and labels
@@ -1124,45 +1146,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $old_label = $label;
          $index++;
       }
-
-
-      //if curved spline activated, draw cubic spline for the current line
-      if ($spline) {
-         $aCoords[$x2] = $y2;
-         $this->imageCubicSmoothLine($image, $palette[0], $aCoords);
-
-         $index = 0;
-         foreach ($datas as $label => $data) {
-            //if first index, continue
-            if ($index == 0) {
-               $old_data = $data;
-               $old_label = $label;
-               $index++;
-               continue;
-            }
-
-            // determine coords
-            $x1 = $index * $width_line - $width_line + 30;
-            $y1 = $height - $old_data * ($height - 60) / $max;
-            $x2 = $x1 + $width_line;
-            $y2 = $height - $data * ($height - 60) / $max;
-
-            //trace dots
-            $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
-            imageSmoothArc($image, $x1-1, $y1-1, 8, 8, $color_rbg, 0, 2 * M_PI);
-            imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
-
-            //display values label
-            if($show_label == "always" || $show_label == "hover") {
-               imagettftext($image, $fontsize-1, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
-                         $darkerpalette[0], $font, $old_data);
-            }
-
-            $old_data = $data;
-            $old_label = $label;
-            $index++;
-         }
-      }
+      
 
       //display last value, dot and axis label
       imagettftext($image, $fontsize-1, $fontangle, $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
