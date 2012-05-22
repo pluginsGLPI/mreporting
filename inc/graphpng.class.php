@@ -1229,7 +1229,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $width_line = ($width - 45) / $nb;
       $index1 = 0;
       $index3 = 1;
-      $step = round($nb / 20);
+      $step = ceil($nb / 20);
 
 
       //create image
@@ -1239,20 +1239,34 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $black = imagecolorallocate($image, 0, 0, 0);
       $white = imagecolorallocate($image, 255, 255, 255);
       $grey = imagecolorallocate($image, 230, 230, 230);
+      $drakgrey = imagecolorallocate($image, 180, 180, 180);
       $palette = $this->getPalette($image, $nb);
       $alphapalette = $this->getAlphaPalette($image, $nb);
       $darkerpalette = $this->getDarkerPalette($image, $nb);
+
+      //config font
+      $font = "../fonts/FreeSans.ttf";
+      $fontsize = 6;
+      $fontangle = 0;
 
       //background
       $bg_color = $white;
       if ($export) $bg_color = $white;
       imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
-      //draw x-axis grey step line
+      //draw x-axis grey step line and values
       $xstep = round(($height - 120) / 13);
       for ($i = 0; $i< 13; $i++) {
-         $yaxis = $xstep * $i + 120;
-         imageLine($image, 30, $yaxis, $width-70, $yaxis, $grey);
+         $yaxis = $height- 30 - $xstep * $i ;
+
+         imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
+
+         //value label
+         $val = round($i * $max / 12);
+         $box = @imageTTFBbox($fontsize+2,$fontangle,$font,$val);
+         $textwidth = abs($box[4] - $box[0]);
+      
+         imagettftext($image, $fontsize+2, $fontangle, 28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
       }
 
       //draw y-axis grey step line
@@ -1269,11 +1283,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($export) {
          imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
       }
-
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 6;
-      $fontangle = 0;
 
       if ($area) $spline = false;
 
