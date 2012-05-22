@@ -978,6 +978,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
         $values = array_values($datas);
         $labels = array_keys($datas);
+        
 
         $max = 1;
         foreach ($values as $line) {
@@ -990,9 +991,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
         $nb_bar = count($datas) * count($labels2);
         $width = $this->width;
         $height = 400;
+        $width_bar = ($width -150) / count($labels2);
 
         //create image
-        $image = imagecreatetruecolor (4000, $height);
+        $image = imagecreatetruecolor ($width, $height);
 
         //colors
         $black = imagecolorallocate($image, 0, 0, 0);
@@ -1004,20 +1006,42 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
         //background
         $bg_color = $grey;
         //if ($export) $bg_color = $white;
-        imagefilledrectangle($image, 0, 0, 4000, $height - 1, $white);
+        imagefilledrectangle($image, 0, 0, $width, $height - 1, $white);
 
         //create border on export
-        /*if ($export) {
+        if ($export) {
             imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
-        }   */
+        }   
 
         //config font
         $font = "../fonts/FreeSans.ttf";
         $fontsize = 8;
         $fontangle = 0;
 
+        //draw x-axis grey step line and values
+      /*$xstep = round(($height - 60) / 13);
+      for ($i = 0; $i< 13; $i++) {
+         $yaxis = $height- 30 - $xstep * $i ;
+
+         imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
+
+         //value label
+         $val = round($i * $max / 12);
+         $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
+         $textwidth = abs($box[4] - $box[0]);
+      
+         imagettftext($image, $fontsize, $fontangle, 28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+      }*/
+
+      //draw y-axis
+      imageLine($image, 30, 50, 30, $height-25, $black);
+
+      //draw x-axis
+      imageline($image, 30, $height-30, $width - 100, $height-30, $black);
+
+
         //add title on export
-        /*if ($export) {
+        if ($export) {
             imagettftext(
                 $image,
                 $fontsize+2,
@@ -1028,11 +1052,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                 $font,
                 $title
             );
-        }  */
+        }  
 
-        /*if ($export && $desc) {
+        if ($export && $desc) {
             imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
-        } */
+        } 
         //bars
 
         //process datas (reverse keys)
@@ -1045,7 +1069,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
         $index1 = 0;
         $index2 = 0;
-       // $tab[$index2]=0;
 
         //pour chaque mois
         foreach ($new_datas as $label => $data) {
@@ -1056,9 +1079,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             //pour chaque donnée
             foreach ($data as $subdata) {
                 $by1 = $by2;
-                $bx1 = 30 + ($index1+1) * 40;
+                $bx1 = 35 + $index1 * $width_bar;
                 $by2 = $by1 - $subdata * ($height-175) / $max;
-                $bx2 = $bx1 + 25;
+                $bx2 = $bx1 + $width_bar-10;
 
                 imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $palette[$index2]);
                 imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
@@ -1088,7 +1111,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
         $index = 0;
         //pour chaque mois
         foreach ($labels2 as $label) {
-            $lx = 30 + ($index+1) * 40;
+            $lx = 35 + $index * $width_bar;
             $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
