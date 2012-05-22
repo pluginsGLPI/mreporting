@@ -477,7 +477,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo $LANG['plugin_mreporting']["config"][1];
       echo "</td>";
       echo "<td>";
-      if ($gtype == 'area' || $gtype == 'garea' || $gtype == 'line' || $gtype == 'gline') {
+      if ($gtype == 'area' || $gtype == 'garea') {
          Dropdown::showYesNo("show_area",$this->fields["show_area"]);
       } else {
          echo Dropdown::getYesNo($this->fields["show_area"]);
