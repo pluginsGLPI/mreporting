@@ -1004,7 +1004,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $darkerpalette = $this->getDarkerPalette($image, $nb);
 
       //background
-      $bg_color = $grey;
+      $bg_color = $white;
       if ($export) $bg_color = $white;
       imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
@@ -1236,15 +1236,26 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //colors
       $black = imagecolorallocate($image, 0, 0, 0);
       $white = imagecolorallocate($image, 255, 255, 255);
-      $grey = imagecolorallocate($image, 242, 242, 242);
+      $grey = imagecolorallocate($image, 230, 230, 230);
       $palette = $this->getPalette($image, $nb);
       $alphapalette = $this->getAlphaPalette($image, $nb);
       $darkerpalette = $this->getDarkerPalette($image, $nb);
 
       //background
-      $bg_color = $grey;
+      $bg_color = $white;
       if ($export) $bg_color = $white;
       imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
+
+      //draw x-axis grey step line
+      $step = round(($height - 120) / 13);
+      for ($i = 0; $i< 13; $i++) {
+         $y = $step * $i + 120;
+         imageLine($image, 30, $y, $width-70, $y, $grey);
+      }
+
+      //draw y-axis
+      imageLine($image, 30, 120, 30, $height-25, $black);
+
 
       //create border on export
       if ($export) {
