@@ -940,98 +940,92 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
-        foreach ($criterias as $key => $val) {
-            $$key=$val;
-        }
+      foreach ($criterias as $key => $val) {
+         $$key=$val;
+      }
 
-        $rand = $opt['rand'];
+      $rand = $opt['rand'];
 
-        $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($rand);
 
-        foreach ($configs as $k => $v) {
-            $$k=$v;
-        }
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
 
-        if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = array();
-        }
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
 
-        $options = array("title" => $title,
-            "desc" => $desc,
-            "rand" => $rand,
-            "export" => $export,
-            "short_classname" => $opt["short_classname"]);
+      $options = array("title" => $title,
+         "desc" => $desc,
+         "rand" => $rand,
+         "export" => $export,
+         "short_classname" => $opt["short_classname"]);
 
-        $this->initGraph($options);
+      $this->initGraph($options);
 
-        if (count($datas) <= 0) {
-            if (!$export)
-                echo "</div>";
-            return false;
-        }
+      if (count($datas) <= 0) {
+         if (!$export)
+             echo "</div>";
+         return false;
+      }
 
-        $labels2 = $raw_datas['labels2'];
+      $labels2 = $raw_datas['labels2'];
 
-        $values = array_values($datas);
-        $labels = array_keys($datas);
-        
+      $values = array_values($datas);
+      $labels = array_keys($datas);
 
-        $max = 1;
-        foreach ($values as $line) {
-            foreach ($line as $label2 => $value) {
-                if ($value > $max) $max = $value;
-            }
-        }
-        if ($max == 1 && $unit == '%') $max = 100;
 
-        $nb_bar = count($datas) * count($labels2);
-        $width = $this->width;
-        $height = 400;
-        $width_bar = ($width -150) / count($labels2);
+      $max = 1;
+      foreach ($values as $line) {
+         foreach ($line as $label2 => $value) {
+             if ($value > $max) $max = $value;
+         }
+      }
+      if ($max == 1 && $unit == '%') $max = 100;
 
-        //create image
-        $image = imagecreatetruecolor ($width, $height);
+      $nb_bar = count($datas) * count($labels2);
+      $width = $this->width;
+      $height = 400;
+      $width_bar = ($width - 150) / count($labels2);
 
-        //colors
-        $black = imagecolorallocate($image, 0, 0, 0);
-        $white = imagecolorallocate($image, 255, 255, 255);
-        $grey = imagecolorallocate($image, 242, 242, 242);
-        $palette = $this->getPalette($image, $nb_bar);
-        $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+      //create image
+      $image = imagecreatetruecolor ($width, $height);
 
-        //background
-        $bg_color = $grey;
-        //if ($export) $bg_color = $white;
-        imagefilledrectangle($image, 0, 0, $width, $height - 1, $white);
+      //colors
+      $black = imagecolorallocate($image, 0, 0, 0);
+      $white = imagecolorallocate($image, 255, 255, 255);
+      $grey = imagecolorallocate($image, 230, 230, 230);
+      $drakgrey = imagecolorallocate($image, 180, 180, 180);
+      $palette = $this->getPalette($image, $nb_bar);
+      $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
-        //create border on export
-        if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
-        }   
+      //background
+      $bg_color = $grey;
+      //if ($export) $bg_color = $white;
+      imagefilledrectangle($image, 0, 0, $width, $height - 1, $white);
 
-        //config font
-        $font = "../fonts/FreeSans.ttf";
-        $fontsize = 8;
-        $fontangle = 0;
+      //create border on export
+      if ($export) {
+         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+      }   
 
-        //draw x-axis grey step line and values
-      /*$xstep = round(($height - 60) / 13);
+      //config font
+      $font = "../fonts/FreeSans.ttf";
+      $fontsize = 8;
+      $fontangle = 0;
+
+      //draw x-axis grey step line
+      $xstep = round(($height - 60) / 13);
       for ($i = 0; $i< 13; $i++) {
          $yaxis = $height- 30 - $xstep * $i ;
 
-         imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
-
-         //value label
-         $val = round($i * $max / 12);
-         $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
-         $textwidth = abs($box[4] - $box[0]);
-      
-         imagettftext($image, $fontsize, $fontangle, 28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
-      }*/
+         imageLine($image, 30, $yaxis, $width - 100, $yaxis, $grey);
+      }
 
       //draw y-axis
       imageLine($image, 30, 50, 30, $height-25, $black);
