@@ -389,17 +389,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $oCurve = new CubicSplines();
       if ($oCurve->setInitCoords($coords, 8) !== false) {
-         if ($r = $oCurve->processCoords()) {
+         if (!$r = $oCurve->processCoords()) $r = $coords;
+      } else $r = $coords;
 
-            list($iPrevX, $iPrevY) = each($r);
+      list($iPrevX, $iPrevY) = each($r);
 
-            while (list ($x, $y) = each($r)) {
-               $this->imageSmoothAlphaLineLarge($image, round($iPrevX), round($iPrevY), round($x), round($y), $color);
-               $iPrevX = $x;
-               $iPrevY = $y;
-            }  
-         }
-      }    
+      while (list ($x, $y) = each($r)) {
+         $this->imageSmoothAlphaLineLarge($image, round($iPrevX), round($iPrevY), round($x), round($y), $color);
+         $iPrevX = $x;
+         $iPrevY = $y;
+      }  
    }
 
 
