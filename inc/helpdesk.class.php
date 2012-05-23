@@ -521,7 +521,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
    
-   function reportHgstackbarNbTicket() {
+   function reportVstackbarNbTicket() {
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHgstackbarNbTicket'];
       $area = false;
       return $this->reportGlineNbTicket($rand, $area);

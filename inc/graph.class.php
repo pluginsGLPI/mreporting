@@ -37,7 +37,6 @@ class PluginMreportingGraph {
     *
     * @params $options ($rand, short_classname, title, desc, delay)
    */
-   
    function initGraph($options) {
       global $LANG;
       
@@ -581,7 +580,7 @@ JAVASCRIPT;
 
    
    /**
-    * Show a horizontal grouped bar chart
+    * Show a vertical stacked bar chart
     *
     * @param $raw_datas : an array with :
     *    - key 'datas', ex : array( 'test1' => array(15,20,50), 'test2' => array(36,15,22))
@@ -594,7 +593,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHgstackbar($params) {
+   function showVstackbar($params) {
       global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -766,6 +765,8 @@ JAVASCRIPT;
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options);
    }
+
+
    /**
     * Show a Area chart
     *
@@ -952,6 +953,7 @@ JAVASCRIPT;
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options);
    }
+
 
    /**
     * Show a Line chart

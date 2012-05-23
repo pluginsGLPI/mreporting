@@ -33,7 +33,12 @@ require_once "../lib/cubic_splines/classes/CubicSplines.php";
 class PluginMreportingGraphpng extends PluginMreportingGraph {
    
    const DEBUG_GRAPH = false;
-   
+
+   /**
+    * init Graph : Show Titles / Date selector
+    *
+    * @params $options ($rand, short_classname, title, desc, delay)
+   */
    function initGraph($options) {
       global $LANG;
       
@@ -80,6 +85,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
    }
 
+
    function showImage($contents, $export="png")  {
       global $CFG_GLPI;
       if ($export!="odt" && $export!="odtall") {
@@ -107,6 +113,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          
       }
    }
+
 
    function generateImage($params) {
       
@@ -160,6 +167,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
    }
 
+
    function getColors($index = 20) {
       $colors = PluginMreportingConfig::getColors($index);
       foreach($colors as &$color) {
@@ -168,8 +176,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $colors;
    }
 
-   function colorHexToRGB($color, $alpha = 0) {
-      $hex = str_replace("0x00", "", $color);
+
+
+   function colorHexToRGB($color) {
+      $hex = substr($color, 4);
+      $alpha = substr($color, 0, 4);
 
       if(strlen($hex) == 3) {
          $r = hexdec(substr($hex,0,1).substr($hex,0,1));
@@ -183,6 +194,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $rgb = array($r, $g, $b, $alpha);
       return $rgb; // returns an array with the rgb values
    }
+
+
 
    function getPalette($image, $nb_index = 20, $alpha = "00") {
       $palette = array();
@@ -200,6 +213,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
+
+
    function getDarkerPalette($image, $nb_index = 20, $alpha = "00") {
       $palette = array();
       foreach($this->getColors($nb_index) as $color) {
@@ -215,21 +230,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
-   function getAlphaPalette($image, $nb_index = 20) {
-      $palette = array();
-      foreach($this->getColors($nb_index) as $color) {
-         $palette[] = "0x50".substr($color, 0, 6);
-      }
-
-      if ($nb_index > 20) {
-         $nb = ceil($nb_index / 20);
-         $tmp = $palette;
-         for ($i = 0; $i <= $nb; $i++) {
-            $palette = array_merge($palette, $tmp);
-         }
-      }
-      return $palette;
-   }
 
    function getLighterPalette($image, $nb_index = 20, $alpha = "00") {
       $palette = array();
@@ -266,6 +266,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
      return $new_hex;
    }
 
+
    function lighter($hex,$factor = 50) {
       $new_hex = '';
 
@@ -287,11 +288,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
      return $new_hex;
    }
 
+
    /**
     * function imageSmoothAlphaLine() - version 1.0
     * Draws a smooth line with alpha-functionality
     *
-    * @param   ident    the image to draw on
+    * @param   image    the image to draw on
     * @param   integer  x1
     * @param   integer  y1
     * @param   integer  x2
@@ -374,6 +376,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
    } // end of 'imageSmoothAlphaLine()' function
 
+
    function imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $color) {
       imageline($image, $x1, $y1, $x2, $y2, $color);
       $this->imageSmoothAlphaLine($image, $x1-1, $y1-1, $x2-1, $y2-1, $color);
@@ -384,6 +387,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->imageSmoothAlphaLine($image, $x1+1, $y1, $x2+1, $y2, $color);
    }
 
+
+   /**
+    * function imageCubicSmoothLine() - 
+    * Draws a smooth line 
+    *
+    * @param   image    the image to draw on
+    * @param   color    color created by imagecolorallocatealpha
+    * @param   coords   array with points coordinates (x1 => y1, x2 => y2, etc)
+    *
+    */
    function imageCubicSmoothLine($image, $color, $coords) {
 
       $oCurve = new CubicSplines();
@@ -401,6 +414,19 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
 
+   /**
+    * Show an horizontal bar chart
+    *
+    * @param $raw_datas : an array with :
+    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
+    *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    * @param $title : title of the chart
+    * @param $desc : description of the chart (optionnal)
+    * @param $show_label : behavior of the graph labels,
+    *                      values : 'hover', 'never', 'always' (optionnal)
+    * @param $export : keep only svg to export (optionnal)
+    * @return nothing
+    */
    function showHbar($params) {
    
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -557,7 +583,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "unit"   => $unit);
       PluginMreportingCommon::endGraph($options);
    }
+   
 
+   /**
+    * Show a pie chart
+    *
+    * @params :
+    * $raw_datas : an array with :
+    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
+    *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    * @param $title : title of the chart
+    * @param $desc : description of the chart (optionnal)
+    * @param $show_label : behavior of the graph labels,
+    *                      values : 'hover', 'never', 'always' (optionnal)
+    * @param $export : keep only svg to export (optionnal)
+    * @return nothing
+    */
    function showPie($params) {
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -735,6 +776,20 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       PluginMreportingCommon::endGraph($options);
    }
 
+   /**
+    * Show a horizontal grouped bar chart
+    *
+    * @param $raw_datas : an array with :
+    *    - key 'datas', ex : array( 'test1' => array(15,20,50), 'test2' => array(36,15,22))
+    *    - key 'labels2', ex : array('label 1', 'label 2', 'label 3')
+    *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    * @param $title : title of the chart
+    * @param $desc : description of the chart (optionnal)
+    * @param $show_label : behavior of the graph labels,
+    *                      values : 'hover', 'never', 'always' (optionnal)
+    * @param $export : keep only svg to export (optionnal)
+    * @return nothing
+    */
    function showHgbar($params) {
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -941,8 +996,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       PluginMreportingCommon::endGraph($options);
    }
 
-   
-   function showHgstackbar($params) {
+
+   /**
+    * Show a vertical stacked bar chart
+    *
+    * @param $raw_datas : an array with :
+    *    - key 'datas', ex : array( 'test1' => array(15,20,50), 'test2' => array(36,15,22))
+    *    - key 'labels2', ex : array('label 1', 'label 2', 'label 3')
+    *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    * @param $title : title of the chart
+    * @param $desc : description of the chart (optionnal)
+    * @param $show_label : behavior of the graph labels,
+    *                      values : 'hover', 'never', 'always' (optionnal)
+    * @param $export : keep only svg to export (optionnal)
+    * @return nothing
+    */
+   function showVstackbar($params) {
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -1201,7 +1270,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       PluginMreportingCommon::endGraph($options);
     }
 
-
+   
+   /**
+    * Show a Area chart
+    *
+    * @param $raw_datas : an array with :
+    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
+    *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    *    - key 'spline', curves line (boolean - optionnal)
+    * @param $title : title of the chart
+    * @param $desc : description of the chart (optionnal)
+    * @param $show_label : behavior of the graph labels,
+    *                      values : 'hover', 'never', 'always' (optionnal)
+    * @param $export : keep only svg to export (optionnal)
+    * @param $area : show plain chart instead only a line (optionnal)
+    * @return nothing
+    */
    function showArea($params) {
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1285,13 +1369,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       for ($i = 0; $i< 13; $i++) {
          $yaxis = $height- 30 - $xstep * $i ;
 
+         //grey lines
          imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
 
-         //value label
+         //value labels
          $val = round($i * $max / 12);
          $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
          $textwidth = abs($box[4] - $box[0]);
-      
          imagettftext($image, $fontsize, $fontangle, 28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
       }
 
@@ -1317,9 +1401,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imagettftext($image, $fontsize+1, $fontangle, 10, 20, $black, $font, $title);
       }
 
+      //on png graph, no way to draw curved polygons, force area reports to be linear
       if ($area) $spline = false;
-
-      
 
       //parse datas
       $index = 0;
@@ -1434,8 +1517,23 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "datas"     => $datas,
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options);
-   }
+   } // end Area
 
+
+   /**
+    * Show a multi-area chart
+    *
+    * @param $raw_datas : an array with :
+    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
+    *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    *    - key 'spline', curves line (boolean - optionnal)
+    * @param $title : title of the chart
+    * @param $desc : description of the chart (optionnal)
+    * @param $show_label : behavior of the graph labels,
+    *                      values : 'hover', 'never', 'always' (optionnal)
+    * @param $export : keep only svg to export (optionnal)
+    * @return nothing
+    */
    function showGArea($params) {
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1502,7 +1600,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $index3 = 1;
       $step = ceil($nb / 20);
 
-
       //create image
       $image = imagecreatetruecolor ($width, $height);
 
@@ -1512,7 +1609,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $grey = imagecolorallocate($image, 230, 230, 230);
       $drakgrey = imagecolorallocate($image, 180, 180, 180);
       $palette = $this->getPalette($image, $nb);
-      $alphapalette = $this->getAlphaPalette($image, $nb);
+      $alphapalette = $this->getPalette($image, $nb, "50");
       $darkerpalette = $this->getDarkerPalette($image, $nb);
 
       //config font
@@ -1525,14 +1622,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($export) $bg_color = $white;
       imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
-      //draw x-axis grey step line and values
+      //draw x-axis grey step line and value ticks 
       $xstep = round(($height - 120) / 13);
       for ($i = 0; $i< 13; $i++) {
          $yaxis = $height- 30 - $xstep * $i ;
 
+         //grey lines
          imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
 
-         //value label
+         //value ticks
          $val = round($i * $max / 12);
          $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
          $textwidth = abs($box[4] - $box[0]);
@@ -1557,6 +1655,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
       }
 
+      //on png graph, no way to draw curved polygons, force area reports to be linear
       if ($area) $spline = false;
 
       //add title on export
@@ -1617,6 +1716,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
          //draw labels and dots
+         $index2 = 0;
+         $old_data = 0;
          foreach ($data as $subdata) {
             //if first index, continue
             if ($index2 == 0) {
@@ -1661,21 +1762,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
          imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
 
-
-         //display values label
+         //display value label
          if($show_label == "always" || $show_label == "hover") {
             imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5,
                       $darkerpalette[$index1], $font, $old_data);
          }
-
-         
+         /*** end display last value ***/
 
          $index1++;
       }
       
       //display labels2
       $index = 0;
-      //Html::printCleanArray($labels2);
       foreach ($labels2 as $label) {
          $x = $index * $width_line + 20;
 
@@ -1689,12 +1787,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //legend (align left)
       $index = 0;
       foreach ($labels as $label) {
+         //legend label
          $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
          $textwidth = abs($box[4] - $box[0]);
          $textheight = abs($box[5] - $box[1]);
+         imagettftext($image, $fontsize, $fontangle, 20, 35 + $index * 14 , $black, $font, $label);
 
-         //legend label
-         imagettftext($image, $fontsize, $fontangle, 20, 35 + $index * 14 , $black, $font, $label );
          //legend circle
          $color_rbg = $this->colorHexToRGB($palette[$index]);
          imageSmoothArc($image, 10, 30 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
@@ -1719,7 +1817,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options);
-   }
+   }// End Garea
 
 }// End Class
 
