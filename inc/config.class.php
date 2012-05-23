@@ -571,11 +571,12 @@ class PluginMreportingConfig extends CommonDBTM {
    
    static function initConfigParams($rand) {
 
-      $crit = array('area' => false,
-                     'spline' => false,
-                     'flip_data' => false,
-                     'unit' => '',
-                     'show_label' => 'never');
+      $crit = array('area'          => false,
+                     'spline'       => false,
+                     'flip_data'    => false,
+                     'unit'         => '',
+                     'show_label'   => 'never',
+                     'delay'        => '30');
       
       $self = new self();
       if ($self->getFromDBByRand($rand)) {

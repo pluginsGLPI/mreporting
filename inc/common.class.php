@@ -673,9 +673,10 @@ class PluginMreportingCommon extends CommonDBTM {
          $datas = array($LANG['plugin_mreporting']["export"][1] => 0);
       }
       
+      $rand = mt_rand();
       echo "<br><table class='tab_cadre' width='90%'>";
       echo "<tr class='tab_bg_1'><th>";
-      echo "<a href=\"javascript:showHideDiv('view_datas','viewimg','".
+      echo "<a href=\"javascript:showHideDiv('view_datas$rand','viewimg','".
       $CFG_GLPI["root_doc"]."/pics/deplier_down.png','".
       $CFG_GLPI["root_doc"]."/pics/deplier_up.png');\">";
       echo "<img alt='' name='viewimg' src=\"".
@@ -686,7 +687,7 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "</tr>";
       echo "</table>";
          
-      echo "<div align='center' style='display:none;' id='view_datas'>";
+      echo "<div align='center' style='display:none;' id='view_datas$rand'>";
       echo "<table class='tab_cadre' width='90%'>";
       
       echo "<tr class='tab_bg_1'>";
@@ -1133,7 +1134,8 @@ class PluginMreportingCommon extends CommonDBTM {
    }
    
    function debugGraph() {
-
+      global $CFG_GLPI;
+      
       echo "<h1 style='color:red;'>DEBUG</h1>";
 
       $params = array(
@@ -1143,8 +1145,8 @@ class PluginMreportingCommon extends CommonDBTM {
       );
 
       $params = $this->initParams($params);
-      $graph = new PluginMreportingGraph();
-      $graphpng = new PluginMreportingGraphpng();
+      if ($CFG_GLPI['default_graphtype'] == 'png') $graph = new PluginMreportingGraphpng();
+      else $graph = new PluginMreportingGraph();
 
       $datas1 = array(
          'datas' => array(
