@@ -62,9 +62,19 @@ class CubicSplines {
             $h_i = $x[$i] - $x[$i - 1];
             $h_i1 = $x[$i + 1] - $x[$i];
             $A = $h_i;
-            $C = 2.0 * ($h_i + $h_i1);
             $B = $h_i1;
-            $F = 6.0 * (($y[$i + 1] - $y[$i]) / $h_i1 - ($y[$i] - $y[$i - 1]) / $h_i);
+            
+            if ($h_i == $h_i1) {
+               $C = 7.0 * ($h_i + $h_i1);
+            } else {
+               $C = 2.3 * ($h_i + $h_i1);
+            }
+            $B = $h_i1;
+            if ($h_i == $h_i1) {
+               $F = 3.5 * (($y[$i + 1] - $y[$i]) / $h_i1 - ($y[$i] - $y[$i - 1]) / $h_i);
+            } else {
+               $F = 6.0 * (($y[$i + 1] - $y[$i]) / $h_i1 - ($y[$i] - $y[$i - 1]) / $h_i);
+            }
             $z = ($A * $alpha[$i - 1] + $C);
             $alpha[$i] = - $B / $z;
             $beta[$i] = ($F - $A * $beta[$i - 1]) / $z;

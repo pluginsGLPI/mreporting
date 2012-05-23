@@ -306,9 +306,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     */
    function imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $dcol) {
 
-      $height  = imagesy($image);
-      $width   = imagesx($image);
-
+      $height  = imagesy($image)-1;
+      $width   = imagesx($image)-1;
+      
       $rgba = $this->colorHexToRGB($dcol);
       $r       = $rgba[0];
       $g       = $rgba[1];
@@ -413,7 +413,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    function imageCubicSmoothLine($image, $color, $coords) {
 
       $oCurve = new CubicSplines();
-      if ($oCurve->setInitCoords($coords, 8) !== false) {
+      if ($oCurve->setInitCoords($coords, 6) !== false) {
          if (!$r = $oCurve->processCoords()) $r = $coords;
       } else $r = $coords;
 
