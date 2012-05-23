@@ -594,7 +594,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHgstackbar($params) {
+   function showVstackbar($params) {
       global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);

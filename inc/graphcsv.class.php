@@ -164,7 +164,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       echo $out;
    }
    
-   function showHgstackbar($params) {
+   function showVstackbar($params) {
       $this->showHGbar($params);
    }
    
