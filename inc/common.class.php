@@ -593,7 +593,7 @@ class PluginMreportingCommon extends CommonDBTM {
                foreach($v as $key => $val) {
                   $total = array_sum($v);
                   if ($total == 0) {
-                     $calcul[$k][$key] = 0;
+                     $calcul[$k][$key] = Html::formatNumber(0);
                   } else {
                      $calcul[$k][$key]= Html::formatNumber(($val*100)/$total);
                   }
@@ -849,7 +849,7 @@ class PluginMreportingCommon extends CommonDBTM {
       }
    }
    
-   function generateOdt($params) {
+   /*function generateOdt($params) {
       global $LANG;
       
       $config = array('PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp');
@@ -970,6 +970,157 @@ class PluginMreportingCommon extends CommonDBTM {
                }
                
                $newpage->csvdata->merge();
+            }
+         }
+         $newpage->merge();
+
+      }
+      $odf->mergeSegment($newpage);
+      // We export the file
+      $odf->exportAsAttachedFile();
+      unset($_SESSION['glpi_plugin_mreporting_odtarray']);
+   }*/
+   
+   function generateOdt($params) {
+      global $LANG;
+      
+      $config = array('PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp');
+      $template = "../templates/word.odt";
+      
+      $odf = new odf($template, $config);
+      
+      $reports = $this->getAllReports();
+      foreach($reports as $classname => $report) {
+         $titre = $report['title'];
+      }
+      
+      $odf->setVars('titre', $titre, true, 'UTF-8');
+      
+      $newpage = $odf->setSegment('newpage');
+      
+      foreach ($params as $result => $page) {
+         
+         // Default values of parameters
+         $title       = "";
+         $f_name      = "";
+         $raw_datas   = array();
+
+         foreach ($page as $key => $val) {
+            $$key=$val;
+         }
+
+         $datas = $raw_datas['datas'];
+         
+         $labels2 = array();
+         if (isset($raw_datas['labels2'])) {
+            $labels2 = $raw_datas['labels2'];
+         }
+         
+         $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+         foreach ($configs as $k => $v) {
+            $$k=$v;
+         }
+         
+         if ($unit == '%') {
+         
+            $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+         }
+
+         $newpage->setVars('message', $title, true, 'UTF-8');
+         
+         $path = GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
+         
+         $newpage->setImage('image', $path);
+         
+         $simpledatas = false;
+         
+         //simple array
+         if (!$labels2) {
+            $labels2 = array();
+            $simpledatas = true;
+         }
+         
+         if ($flip_data == true) {
+            $labels2 = array_flip($labels2);
+         }
+            
+         $types = array();
+      
+         foreach($datas as $k => $v) {
+            
+            if (is_array($v)) {
+               foreach($v as $key => $val) {
+                  if (isset($labels2[$key]))
+                     $types[$key][$k] = $val;
+               }
+            }
+         }
+         
+         if ($flip_data != true) {
+            $tmp = $datas;
+            $datas = $types;
+            $types = $tmp;
+         }
+         //simple array       
+         if ($simpledatas) {
+            
+            $label = $LANG['plugin_mreporting']["export"][1];
+            $newpage->data0->label_0(utf8_decode($label));
+            $newpage->data0->merge();
+            
+            foreach($types as $label2 => $cols) {
+
+               $newpage->csvdata->label1->label_1(utf8_decode($label2));
+               $newpage->csvdata->label1->merge();
+               
+               if (!empty($unit)) {
+                  $cols = $cols." ".$unit;
+               }
+               $newpage->csvdata->data1->data_1($cols);
+               $newpage->csvdata->merge();
+            }
+            
+         } else {
+            
+            if ($template == "../templates/word.odt") {
+               foreach($datas as $label => $val) {
+                  $newpage->data0->label_0(utf8_decode($label));
+                  $newpage->data0->merge();
+               }
+                  
+               foreach($types as $label2 => $cols) {
+
+                  $newpage->csvdata->label1->label_1(utf8_decode($label2));
+                  $newpage->csvdata->label1->merge();
+                  
+                  foreach($cols as $date => $nb) {
+                     if (!empty($unit)) {
+                        $nb = $nb." ".$unit;
+                     }
+                     $newpage->csvdata->data1->data_1($nb);
+                     $newpage->csvdata->data1->merge();
+                  }
+                  
+                  $newpage->csvdata->merge();
+               }
+            } else {
+            
+               foreach($types as $label2 => $cols) {
+                  
+                  $newpage->csvdata->setVars('TitreCategorie', $label2, true, 'UTF-8');
+
+                  foreach($cols as $date => $nb) {
+                     if (!empty($unit)) {
+                        $nb = $nb." ".$unit;
+                     }
+                     $newpage->csvdata->data1->label_1(utf8_decode($date));
+                     $newpage->csvdata->data1->data_1($nb);
+                     $newpage->csvdata->data1->merge();
+                  }
+                  
+                  $newpage->csvdata->merge();
+               }
             }
          }
          $newpage->merge();
