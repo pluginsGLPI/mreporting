@@ -306,6 +306,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     */
    function imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $dcol) {
 
+      $height  = imagesx($image);
+      $width   = imagesy($image);
+
       $rgba = $this->colorHexToRGB($dcol);
       $r       = $rgba[0];
       $g       = $rgba[1];
@@ -327,6 +330,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $y = $m * $x + $b;
             $ya = ($y == floor($y) ? 1: $y - floor($y));
             $yb = ceil($y) - $y;
+
+            if ($x > $height || $y > $height) continue;
       
             $trgb = ImageColorAt($image, $x, floor($y));
             $tcr = ($trgb >> 16) & 0xFF;
@@ -354,6 +359,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $x = ($y - $b) / $m;
             $xa = ($x == floor($x) ? 1: $x - floor($x));
             $xb = ceil($x) - $x;
+
+            if ($x > $height || $y > $height) continue;
      
             $trgb = ImageColorAt($image, floor($x), $y);
             $tcr = ($trgb >> 16) & 0xFF;
