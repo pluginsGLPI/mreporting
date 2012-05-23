@@ -742,7 +742,7 @@ $JS = <<<JAVASCRIPT
       .textAlign("left")
       .textBaseline("middle")
       .text(function() {
-         if (i>=0) return datas[this.index][i];
+         if (i>=0) return datas[this.index][i]+" {$unit}";
          else return "";
       })
       .textStyle(function() { return colors(this.index).darker(); });
