@@ -34,19 +34,22 @@ Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
 
 $common = new PluginMreportingCommon();
 
-$reports = $common->getAllReports();
+if (DEBUG_MREPORTING) {
+   $common->debugGraph();
+} else {
+   $reports = $common->getAllReports();
 
-foreach ($reports as $classname => $report) {
-     
-   $tabs[$classname]=array('title'=>$report['title'],
-                           'url'=>$CFG_GLPI['root_doc']."/plugins/mreporting/ajax/common.tabs.php",
-                           'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname");
+   foreach ($reports as $classname => $report) {
+        
+      $tabs[$classname]=array('title'=>$report['title'],
+                              'url'=>$CFG_GLPI['root_doc']."/plugins/mreporting/ajax/common.tabs.php",
+                              'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname");
+   }
+
+   echo "<div id='tabspanel' class='center-h'></div>";
+   Ajax::createTabs('tabspanel','tabcontent',$tabs,'PluginMreportingCommon');
+   $common->addDivForTabs();
 }
-
-echo "<div id='tabspanel' class='center-h'></div>";
-Ajax::createTabs('tabspanel','tabcontent',$tabs,'PluginMreportingCommon');
-$common->addDivForTabs();
-
 Html::footer();
 
 ?>

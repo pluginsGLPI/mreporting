@@ -283,8 +283,7 @@ class PluginMreportingCommon extends CommonDBTM {
       
 
       echo "</table>";
-      
-      if (DEBUG_MREPORTING) $this->debugGraph();
+
    }
    
    /**
@@ -493,7 +492,6 @@ class PluginMreportingCommon extends CommonDBTM {
          $$k=$v;
       }
       
-      
       $rand = false;
       if (isset($opt['rand'])) {
 			
@@ -538,7 +536,12 @@ class PluginMreportingCommon extends CommonDBTM {
 			}
 			echo "<div style='clear:both;'></div>";
 			echo "</div>";
-			echo "</div></div>";
+			
+			if ($_REQUEST['f_name'] != "test") {
+            echo "</div></div>";
+         } else {
+            echo "</div>";
+         }
 		}
 		
 		if ($rand == false) {
@@ -1198,57 +1201,85 @@ class PluginMreportingCommon extends CommonDBTM {
          "spline"    => true
       );
       
-      $rand = mt_rand();
-
-      $opt = array("rand" => $rand);
-      $opt = array_merge($params, $opt);
+      $opt1 = array("rand" => 1);
+      $opt1 = array_merge($params, $opt1);
       
       $params1['raw_datas'] = $datas1;
       $params1['title'] = 'Exemple 1';
       $params1['desc'] = 'Graphique en barres horizontales';
-      $params1['show_label'] = 'none';
+      $params1['show_label'] = 'hover';
+      $params1['delay'] = '30';
       $params1['export'] = false;
-      $params1['opt'] = $opt;
+      $params1['opt'] = $opt1;
       
       $graph->showHbar($params1);
+      
+      $opt2 = array("rand" => 2);
+      $opt2 = array_merge($params, $opt2);
       
       $params2['raw_datas'] = $datas1;
       $params2['title'] = 'Exemple 2';
       $params2['desc'] = 'Graphique en camembert';
-      $params2['show_label'] = 'none';
+      $params2['show_label'] = 'hover';
+      $params2['delay'] = '30';
       $params2['export'] = false;
-      $params2['opt'] = $opt;
+      $params2['opt'] = $opt2;
       
       $graph->showPie($params2);
+      
+      $opt3 = array("rand" => 3);
+      $opt3 = array_merge($params, $opt3);
       
       $params3['raw_datas'] = $datas2;
       $params3['title'] = 'Exemple 3';
       $params3['desc'] = 'Graphique en barres groupées horizontales';
-      $params3['show_label'] = 'none';
+      $params3['show_label'] = 'hover';
+      $params3['delay'] = '365';
       $params3['export'] = false;
-      $params3['opt'] = $opt;
+      $params3['opt'] = $opt3;
       
       $graph->showHgbar($params3);
       
-      $params4['raw_datas'] = $datas3;
+      $opt4 = array("rand" => 4);
+      $opt4 = array_merge($params, $opt4);
+      
+      $params4['raw_datas'] = $datas4;
       $params4['title'] = 'Exemple 4';
-      $params4['desc'] = 'Graphique en aires';
-      $params4['show_label'] = 'none';
+      $params4['desc'] = 'Graphique en barres cumulées verticales';
+      $params4['show_label'] = 'hover';
+      $params4['delay'] = '365';
       $params4['export'] = false;
-      $params4['area'] = true;
-      $params4['opt'] = $opt;
+      $params4['opt'] = $opt4;
       
-      $graph->showArea($params4);
+      $graph->showVstackbar($params4);
       
-      $params5['raw_datas'] = $datas4;
+      $opt5 = array("rand" => 5);
+      $opt5 = array_merge($params, $opt5);
+      
+      $params5['raw_datas'] = $datas3;
       $params5['title'] = 'Exemple 5';
-      $params5['desc'] = 'Graphique en lignes (multiples)';
-      $params5['show_label'] = 'none';
+      $params5['desc'] = 'Graphique en aires';
+      $params5['show_label'] = 'hover';
+      $params5['delay'] = '365';
+      $params5['area'] = true;
       $params5['export'] = false;
-      $params5['area'] = false;
-      $params5['opt'] = $opt;
+      $params5['opt'] = $opt5;
       
-      $graph->showGArea($params5);
+      $graph->showArea($params5);
+      
+      $opt6 = array("rand" => 6);
+      $opt6 = array_merge($params, $opt6);
+      
+      $params6['raw_datas'] = $datas4;
+      $params6['title'] = 'Exemple 6';
+      $params6['desc'] = 'Graphique en lignes (multiples)';
+      $params6['show_label'] = 'hover';
+      $params6['delay'] = '365';
+      $params6['export'] = false;
+      $params6['area'] = false;
+      $params6['opt'] = $opt6;
+      
+      $graph->showGArea($params6);
    }
 }
 
