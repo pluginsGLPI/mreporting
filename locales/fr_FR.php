@@ -97,4 +97,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['category'] = "Par
 $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['title'] = "Barres empilées - Evolution du nombre de ticket sur la période (par Statut)";
 $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['category'] = "Par tickets";
 
+$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['title'] = "Donut - Repartition des tickets par catégories et sous catégories";
+$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['category'] = "Par catégories";
+
 ?>
