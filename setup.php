@@ -70,7 +70,7 @@ function plugin_init_mreporting() {
 			}
 		}
       if($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-         define('DEBUG_MREPORTING', false);
+         define('DEBUG_MREPORTING', true);
       } else {
          define('DEBUG_MREPORTING', false);
       }
