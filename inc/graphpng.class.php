@@ -306,8 +306,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     */
    function imageSmoothAlphaLine ($image, $x1, $y1, $x2, $y2, $dcol) {
 
-      $height  = imagesx($image);
-      $width   = imagesy($image);
+      $height  = imagesy($image);
+      $width   = imagesx($image);
 
       $rgba = $this->colorHexToRGB($dcol);
       $r       = $rgba[0];
