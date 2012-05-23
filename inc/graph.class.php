@@ -37,6 +37,7 @@ class PluginMreportingGraph {
     *
     * @params $options ($rand, short_classname, title, desc, delay)
    */
+   
    function initGraph($options) {
       global $LANG;
       
@@ -580,7 +581,7 @@ JAVASCRIPT;
 
    
    /**
-    * Show a vertical stacked bar chart
+    * Show a horizontal grouped bar chart
     *
     * @param $raw_datas : an array with :
     *    - key 'datas', ex : array( 'test1' => array(15,20,50), 'test2' => array(36,15,22))
@@ -593,7 +594,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showVstackbar($params) {
+   function showHgstackbar($params) {
       global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -765,8 +766,6 @@ JAVASCRIPT;
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options);
    }
-
-
    /**
     * Show a Area chart
     *
@@ -885,6 +884,9 @@ $JS = <<<JAVASCRIPT
 
    /* The line with an area. */
    var line{$rand} = vis{$rand}.add(pv.Line)
+      .tension(function () {
+         return ('{$unit}' == '%') ? 0.9 : 0.7;
+      })
       .data(datas)
       .interpolate(function () { //curve line
          if ({$spline}>0) return "cardinal";
@@ -953,7 +955,6 @@ JAVASCRIPT;
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options);
    }
-
 
    /**
     * Show a Line chart
@@ -1098,6 +1099,9 @@ $JS = <<<JAVASCRIPT
 
    /* The line. */
    var lines{$rand} = panel{$rand}.add(pv.Line)
+      .tension(function () {
+         return ('{$unit}' == '%') ? 0.9 : 0.7;
+      })
       .data(function(d) d)
       .interpolate(function () { //curve line
          if ({$spline}>0) return "cardinal";
