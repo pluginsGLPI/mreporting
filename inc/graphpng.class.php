@@ -331,7 +331,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $ya = ($y == floor($y) ? 1: $y - floor($y));
             $yb = ceil($y) - $y;
 
-            if ($x > $height || $y > $height) continue;
+            if ($x > $height || $y > $width) continue;
       
             $trgb = ImageColorAt($image, $x, floor($y));
             $tcr = ($trgb >> 16) & 0xFF;
@@ -360,7 +360,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $xa = ($x == floor($x) ? 1: $x - floor($x));
             $xb = ceil($x) - $x;
 
-            if ($x > $height || $y > $height) continue;
+            if ($x > $height || $y > $width) continue;
      
             $trgb = ImageColorAt($image, floor($x), $y);
             $tcr = ($trgb >> 16) & 0xFF;
