@@ -393,6 +393,123 @@ JAVASCRIPT;
    }
 
    /**
+    * Show a sunburst chart (see : http://mbostock.github.com/protovis/ex/sunburst.html)
+    *
+    * @params :
+    * @param $raw_datas : an array with :
+    *    - key 'datas', ex : 
+    *          array( 
+    *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val), 
+    *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
+    *          )
+    *    - key 'root', root label in graph center
+    *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    * @param $title : title of the chart
+    * @param $desc : description of the chart (optionnal)
+    * @param $show_label : behavior of the graph labels,
+    *                      values : 'hover', 'never', 'always' (optionnal)
+    * @param $export : keep only svg to export (optionnal)
+    * @return nothing
+    */
+   function showSunburst($params) {
+      global $LANG;
+
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
+         $$key=$val;
+      }
+      
+      $rand = $opt['rand'];
+      
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "short_classname" => $opt["short_classname"]);
+                  
+      $this->initGraph($options);
+      
+      if (!isset($raw_datas['datas'])) {
+         echo "}</script>";
+         echo $LANG['plugin_mreporting']["error"][1];
+         $opt["rand"] = false;
+         $opt["export"] = false;
+         PluginMreportingCommon::endGraph($opt);
+         return false;
+      }
+      
+      $datas = $raw_datas['datas'];
+      
+      $datas = $this->initDatasTree($datas, $unit);
+
+      $always = '';
+      $hover = '';
+      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+
+
+$JS = <<<JAVASCRIPT
+   var width = {$this->width};
+   var height = 450;
+
+   console.log(datas);
+
+   var offset = 0;
+
+   var vis{$rand} = new pv.Panel()
+    .width(width)
+    .height(height)
+    .top(10);
+
+   var partition = vis{$rand}.add(pv.Layout.Partition.Fill)
+    .nodes(pv.dom(datas).root(null).nodes())
+    .size(function(d) d.nodeValue)
+    .order("ascending")
+    .orient("radial");
+
+   partition.node.add(pv.Wedge)
+      .fillStyle(function(d) {
+         //return pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName);
+         if (d.parentNode && d.parentNode.nodeName) {
+            var sub_angle = d.startAngle-d.parentNode.startAngle;
+            var sub_index = 1+sub_angle*d.parentNode.childNodes.length/d.parentNode.angle;
+            var alpha = 0.7*d.depth+0.4/sub_index
+            console.log(d, d.nodeName,sub_index, alpha);
+         
+            return colors(d.parentNode.index).alpha(alpha);
+         }
+         else return colors(d.index);
+      })
+      .strokeStyle("white")
+      .lineWidth(.5)
+
+   partition.label.add(pv.Label)
+    .visible(function(d) d.angle * d.outerRadius >= 6)
+    .textAngle(0);
+
+   vis{$rand}.render();
+JAVASCRIPT;
+
+
+      echo $JS;
+      
+      $options = array("opt"        => $opt,
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "flip_data" => $flip_data,
+                        "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
+   }
+
+   /**
     * Show a horizontal grouped bar chart
     *
     * @param $raw_datas : an array with :
@@ -1320,6 +1437,30 @@ JAVASCRIPT;
       
       return $datas;
       
+   }
+   
+
+   /**
+    * Compile Tree datas
+    *
+    * @param $datas, ex : 
+    *          array( 
+    *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val), 
+    *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
+    *          )
+    * @param $unit, ex : '%', 'Kg' (optionnal)
+    * @return nothing
+    */
+    
+   function initDatasTree($datas, $unit = '') {
+      
+      if ($unit == '%') {
+         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      }
+      
+      echo "var datas = ".json_encode($datas).";";
+      
+      return $datas;
    }
 
    function legend($datas) {

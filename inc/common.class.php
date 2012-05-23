@@ -94,39 +94,41 @@ class PluginMreportingCommon extends CommonDBTM {
                $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
                if ($ex_func[0] != 'report') continue;
 
-               $gtype      = strtolower($ex_func[1]);
-               $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
-               $category_func = '';
-               if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['category']))
-                  $category_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['category'];
-               $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name]=$classname.$i;
-         
-               $rand = $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name];
-               
-               $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
-               $min_url_graph  = "front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
-               
-               $reports[$classname]['title'] = $title;
-               $reports[$classname]['functions'][$i]['function'] = $f_name;
-               $reports[$classname]['functions'][$i]['title'] = $title_func;
-               $reports[$classname]['functions'][$i]['category_func'] = $category_func;
-               $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
-               $reports[$classname]['functions'][$i]['gtype'] = $gtype;
-               $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
-               $reports[$classname]['functions'][$i]['rand'] = $rand;
-               $reports[$classname]['functions'][$i]['is_active'] = false;
-               $config = new PluginMreportingConfig();
-               if ($config->getFromDBByRand($rand)) {
-                  if ($config->fields['is_active'] == 1) {
-                     $reports[$classname]['functions'][$i]['is_active'] = true;
+               if (isset($LANG['plugin_mreporting'][$short_classname][$f_name])) {
+                  $gtype      = strtolower($ex_func[1]);
+                  $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+                  $category_func = '';
+                  if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['category']))
+                     $category_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['category'];
+                  $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name]=$classname.$i;
+            
+                  $rand = $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name];
+                  
+                  $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
+                  $min_url_graph  = "front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
+                  
+                  $reports[$classname]['title'] = $title;
+                  $reports[$classname]['functions'][$i]['function'] = $f_name;
+                  $reports[$classname]['functions'][$i]['title'] = $title_func;
+                  $reports[$classname]['functions'][$i]['category_func'] = $category_func;
+                  $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
+                  $reports[$classname]['functions'][$i]['gtype'] = $gtype;
+                  $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
+                  $reports[$classname]['functions'][$i]['rand'] = $rand;
+                  $reports[$classname]['functions'][$i]['is_active'] = false;
+                  $config = new PluginMreportingConfig();
+                  if ($config->getFromDBByRand($rand)) {
+                     if ($config->fields['is_active'] == 1) {
+                        $reports[$classname]['functions'][$i]['is_active'] = true;
+                     }
                   }
-               }
-               if ($with_url) {
-                  $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
-                  $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
-               }
+                  if ($with_url) {
+                     $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
+                     $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
+                  }
 
-               $i++;
+                  $i++;
+               }
             }
          }
       }
@@ -418,6 +420,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $raw_datas   = array();
       $title       = "";
       $desc        = "";
+      $root        = "";
       
       $export      = false;
       $opt         = array();
