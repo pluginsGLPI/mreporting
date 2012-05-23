@@ -332,8 +332,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $yb = ceil($y) - $y;
 
             if ($x > $width || $y > $height) {
-               continue;
                $x++;
+               continue;
             }
       
             $trgb = ImageColorAt($image, $x, floor($y));
@@ -364,8 +364,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $xb = ceil($x) - $x;
 
             if ($x > $width || $y > $height) {
-               continue;
                $x++;
+               continue;
             }
      
             $trgb = ImageColorAt($image, floor($x), $y);
