@@ -775,6 +775,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $labels2 = $raw_datas['labels2'];
       
+      if ($unit == '%') {
+         
+         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+         $raw_datas['datas'] = $datas;
+      }
+      
       $values = array_values($datas);
       $labels = array_keys($datas);
 
@@ -876,7 +882,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   $by1 + 14,
                   $darkerpalette[$index2],
                   $font,
-                  $subdata
+                  $subdata.$unit
                );
             }
             $index2++;
@@ -975,8 +981,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       $labels2 = $raw_datas['labels2'];
-
+      
+      if ($unit == '%') {
+         
+         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+         $raw_datas['datas'] = $datas;
+      }
+      
       $values = array_values($datas);
+      
       $labels = array_keys($datas);
 
 
@@ -1109,7 +1122,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   $by1 - ($by1 - $by2)/2 + 5,
                   $darkerpalette[$index2],
                   $font,
-                  $subdata
+                  $subdata.$unit
                );
             }
             $tab[$index2]= $by1;

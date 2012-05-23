@@ -43,20 +43,24 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[3]['field']    = 'show_area';
       $tab[3]['name']     = $LANG['plugin_mreporting']["config"][1];
       $tab[3]['datatype'] = 'bool';
+      $tab[3]['massiveaction'] = false;
       
       $tab[4]['table']    = $this->getTable();
       $tab[4]['field']    = 'spline';
       $tab[4]['name']     = $LANG['plugin_mreporting']["config"][2];
       $tab[4]['datatype'] = 'bool';
+      $tab[4]['massiveaction'] = false;
       
       $tab[5]['table']    = $this->getTable();
       $tab[5]['field']    = 'show_label';
       $tab[5]['name']     = $LANG['plugin_mreporting']["config"][3];
+      $tab[5]['massiveaction'] = false;
       
       $tab[6]['table']    = $this->getTable();
       $tab[6]['field']    = 'flip_data';
       $tab[6]['name']     = $LANG['plugin_mreporting']["config"][4];
       $tab[6]['datatype'] = 'bool';
+      $tab[6]['massiveaction'] = false;
       
       $tab[7]['table']    = $this->getTable();
       $tab[7]['field']    = 'unit';
