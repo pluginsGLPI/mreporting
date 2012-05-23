@@ -331,7 +331,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $ya = ($y == floor($y) ? 1: $y - floor($y));
             $yb = ceil($y) - $y;
 
-            if ($x > $width || $y > $height) {
+            if ($x > $width) {
                $x++;
                continue;
             }
@@ -363,8 +363,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $xa = ($x == floor($x) ? 1: $x - floor($x));
             $xb = ceil($x) - $x;
 
-            if ($x > $width || $y > $height) {
-               $x++;
+            if ($y > $height) {
+               $y++;
                continue;
             }
      
