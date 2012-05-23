@@ -522,7 +522,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
    
    function reportVstackbarNbTicket() {
-      $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHgstackbarNbTicket'];
+      $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportVstackbarNbTicket'];
       $area = false;
       return $this->reportGlineNbTicket($rand, $area);
    }
@@ -539,7 +539,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
       $tmp_datas = array();
       /*Must be defined*/
-      if ($rand != $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportGareaNbTicket']&& $rand != $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHgstackbarNbTicket']) {
+      if ($rand != $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportGareaNbTicket'] 
+         && $rand != $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportVstackbarNbTicket']) {
          $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportGlineNbTicket'];
       }
       
