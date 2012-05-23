@@ -556,16 +556,45 @@ class PluginMreportingCommon extends CommonDBTM {
     
    static function compileDatasForUnit($values, $unit = '') {
       
+      toolbox::logdebug($values);
       if ($unit == '%') {
          //complie news datas with percent values
          $calcul = array();
+         
          $datas = $values;
+         
+         $simpledatas = true;
          foreach ($datas as $k=>$v) {
             //multiple array
             if (is_array($v)) {
+               $simpledatas = false;
+            }
+         }
+         if (!$simpledatas) {
+         
+            $types = array();
+      
+            foreach($datas as $k => $v) {
+               
+               if (is_array($v)) {
+                  foreach($v as $key => $val) {
+                     $types[$key][$k] = $val;
+                  }
+               }
+            }
+            $datas = $types;
+         }
+         toolbox::logdebug($datas);
+         foreach ($datas as $k=>$v) {
+            //multiple array
+            if (!$simpledatas) {
                foreach($v as $key => $val) {
                   $total = array_sum($v);
-                  $calcul[$k][$key]= Html::formatNumber(($val*100)/$total);
+                  if ($total == 0) {
+                     $calcul[$k][$key] = 0;
+                  } else {
+                     $calcul[$k][$key]= Html::formatNumber(($val*100)/$total);
+                  }
                }
             //simple array
             } else {
@@ -573,9 +602,24 @@ class PluginMreportingCommon extends CommonDBTM {
                $calcul[$k]= Html::formatNumber(($v*100)/$total);
                
             }
-            $datas = $calcul;
          }
          
+         if (!$simpledatas) {
+         
+            $datas = array();
+      
+            foreach($calcul as $k => $v) {
+               
+               if (is_array($v)) {
+                  foreach($v as $key => $val) {
+                     $datas[$key][$k] = $val;
+                  }
+               }
+            }
+         } else {
+            $datas = $calcul;
+         }
+
       }
 
       return $datas;
