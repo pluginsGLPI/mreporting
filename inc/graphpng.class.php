@@ -100,10 +100,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             if (version_compare($ie_version, '9') < 0) {
                $show_inline = false;
                $rand=mt_rand();
-               $filename_tmp = GLPI_ROOT."/files/_tmp/mreporting_img_$rand.png";
-               file_put_contents($filename_tmp, $contents);
+               $filename = "mreporting_img_$rand.png";
+               $filedir = GLPI_ROOT."/files/_plugins/mreporting/$filename";
+               file_put_contents($filedir, $contents);
 
-               echo "<img src='$filename_tmp' alt='graph' title='graph' />";
+               echo "<img src='".$CFG_GLPI['root_doc'].
+                  "/front/pluginimage.send.php?plugin=mreporting&name=".$filename.
+                  "' alt='graph' title='graph' />";
             }
          } 
             
