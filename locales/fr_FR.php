@@ -50,6 +50,7 @@ $LANG['plugin_mreporting']["config"][7] = "Jamais";
 $LANG['plugin_mreporting']["config"][8] = "Unité";
 $LANG['plugin_mreporting']["config"][9] = "Délai par défaut";
 $LANG['plugin_mreporting']["config"][10] = "Initialiser la configuration des graphiques";
+$LANG['plugin_mreporting']["config"][11] = "Condition supplémentaire Mysql";
 
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Barres - Nombre de ticket par entités";

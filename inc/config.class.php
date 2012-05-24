@@ -70,6 +70,10 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[8]['field']    = 'default_delay';
       $tab[8]['name']     = $LANG['plugin_mreporting']["config"][9];
       
+      $tab[9]['table']    = $this->getTable();
+      $tab[9]['field']    = 'condition';
+      $tab[9]['name']     = $LANG['plugin_mreporting']["config"][11];
+      
 		return $tab;
    }
    
@@ -550,7 +554,11 @@ class PluginMreportingConfig extends CommonDBTM {
       Html::autocompletionTextField($this,'default_delay',$opt);
       echo "</td>"; 
       
-      echo "<td colspan='2'>";
+      echo "<td>";
+      echo $LANG['plugin_mreporting']["config"][11];
+      echo "</td>";
+      echo "<td>";
+      Html::autocompletionTextField($this,'condition');
       echo "</td>"; 
       echo "</tr>";
       
@@ -576,7 +584,8 @@ class PluginMreportingConfig extends CommonDBTM {
                      'flip_data'    => false,
                      'unit'         => '',
                      'show_label'   => 'never',
-                     'delay'        => '30');
+                     'delay'        => '30',
+                     'condition'    => '');
       
       $self = new self();
       if ($self->getFromDBByRand($rand)) {
@@ -586,6 +595,7 @@ class PluginMreportingConfig extends CommonDBTM {
          $crit['flip_data']   = $self->fields['flip_data'];
          $crit['unit']        = $self->fields['unit'];
          $crit['delay']       = $self->fields['default_delay'];
+         $crit['condition']   = $self->fields['condition'];
       }
 
       return $crit;
