@@ -175,7 +175,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_area"]="0";
                $this->fields["default_delay"]="365";
                break;
-            case 'hgstackbar':
+            case 'vstackbar':
                $this->fields["name"]=$graphname;
                $this->fields["is_active"]="1";
                $this->fields["default_delay"]="365";
