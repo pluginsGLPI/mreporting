@@ -789,17 +789,17 @@ $JS = <<<JAVASCRIPT
    var stack{$rand} = vis{$rand}.add(pv.Layout.Stack)
       .layers(datas)
       .x(function() x(this.index))
-      .y(function(d) 1- 50/offset + y(d)); 
+      .y(function(d) 1- 50/offset + y(d))
 
    /*** bars ***/
    var bar{$rand} = stack{$rand}.layer.add(pv.Bar)
       .width(x.range().band)
-      .fillStyle(function() {
-         if(Hilighted[this.parent.index]) return colors(this.parent.index).alpha(.6);
-         else return colors(this.parent.index);
+      .fillStyle(function(d) {
+         if(Hilighted[this.parent.index] && d!=0) return colors(this.parent.index).alpha(.6);
+         else if(d!=0)return colors(this.parent.index);
       })
-      .strokeStyle(function() { 
-         if (this.index == i || Hilighted[this.parent.index])
+      .strokeStyle(function(d) {
+         if ((this.index == i || Hilighted[this.parent.index]) && d!=0)
          return colors(this.parent.index).darker(); 
       })
       .event("mouseover", function() {
@@ -809,15 +809,16 @@ $JS = <<<JAVASCRIPT
       .event("mouseout", function() {
          i = -1;
          return vis{$rand};
-      })
+      });
 
    bar{$rand}.anchor("top").add(pv.Label)
-      .visible(function(d){ 
-         return ( (Hilighted[this.parent.index]) && (d >= max / 100)) ? true : false ;  
+      .visible(function(d){
+         return ( (Hilighted[this.parent.index]) && (d >= max / 100) && (d!=0) ) ? true : false ;
       })
       .textBaseline("top")
       .text(function(d) { return d; })
       .textStyle(function() { return colors(this.parent.index).darker(); });
+
 
    /*** x-axis labels ***/
    bar{$rand}.anchor("bottom").add(pv.Label)
@@ -842,11 +843,11 @@ $JS = <<<JAVASCRIPT
       .data(labels)
       .right(40)
       .top(function(d) { return 5 + this.index * 15; })
-      .fillStyle(function() {
+      .fillStyle(function(d) {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
       })
-      .event("mouseover", function() {
-         Hilighted[this.index] = true; 
+      .event("mouseover", function(d) {
+         Hilighted[this.index] = true;
          return vis{$rand};
       })
       .event("mouseout", function() { 
