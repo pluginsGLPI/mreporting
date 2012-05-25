@@ -470,32 +470,33 @@ JAVASCRIPT;
 
 
 $JS = <<<JAVASCRIPT
-   var width = {$this->width};
-   var height = 450;
-
-   console.log(datas);
+   var   width = {$this->width},
+         height = 450
+         i = -1; //mouseover index
 
    var offset = 0;
 
    var vis{$rand} = new pv.Panel()
-    .width(width)
-    .height(height)
-    .top(10);
+      .width(width)
+      .height(height)
+      .top(10)
+      .event("mousemove", pv.Behavior.point(Infinity));
 
+   /*** Radial layout ***/
    var partition = vis{$rand}.add(pv.Layout.Partition.Fill)
-    .nodes(pv.dom(datas).root(null).nodes())
-    .size(function(d) d.nodeValue)
-    .order("ascending")
-    .orient("radial");
+      .nodes(pv.dom(datas).root(null).nodes())
+      .size(function(d) d.nodeValue)
+      .order("ascending")
+      .orient("radial");
 
-   partition.node.add(pv.Wedge)
+   /*** wedges ***/
+   var wedge = partition.node.add(pv.Wedge)
       .fillStyle(function(d) {
          //return pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName);
          if (d.parentNode && d.parentNode.nodeName) {
             var sub_angle = d.startAngle-d.parentNode.startAngle;
             var sub_index = 1+sub_angle*d.parentNode.childNodes.length/d.parentNode.angle;
             var alpha = 0.7*d.depth+0.4/sub_index
-            console.log(d, d.nodeName,sub_index, alpha);
          
             return colors(d.parentNode.index).alpha(alpha);
          }
@@ -504,9 +505,27 @@ $JS = <<<JAVASCRIPT
       .strokeStyle("white")
       .lineWidth(.5)
 
+   /*** wedge interaction ***/
+   wedge.anchor().add(pv.Mark)
+      .event("point", function() (i = this.index, label))
+      .event("unpoint", function() (i = -1, label));
+
+   /*** Label titles ***/
    partition.label.add(pv.Label)
-    .visible(function(d) d.angle * d.outerRadius >= 6)
-    .textAngle(0);
+      .visible(function(d) d.angle * d.outerRadius >= 6)
+      .textAngle(0);
+
+   /*** Label values ***/
+   var label = wedge.anchor("outer").add(pv.Label)
+      .visible(function() this.index == i)
+      .textMargin(5)
+      .textAngle(0)
+      .textStyle(function() {
+         return this.target.fillStyle().darker(4);
+      })
+      .text(function(d) {
+         return d.size
+      });
 
    vis{$rand}.render();
 JAVASCRIPT;
