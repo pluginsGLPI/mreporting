@@ -472,9 +472,8 @@ JAVASCRIPT;
 $JS = <<<JAVASCRIPT
    var   width = {$this->width},
          height = 450
-         i = -1; //mouseover index
-
-   var offset = 0;
+         i = -1, //mouseover index
+         offset = 0; // animation offset
 
    var vis{$rand} = new pv.Panel()
       .width(width)
@@ -502,6 +501,18 @@ $JS = <<<JAVASCRIPT
          }
          else return colors(d.index);
       })
+      .angle(function(d) {
+         var motion = (offset / 30) > 1 ? 1:(offset / 30);
+         return motion * d.size * 2 * Math.PI / sum;
+      })
+      .outerRadius(function(d) {
+         var motion = (offset / 15) > 1 ? 1:(offset / 15);
+         return d.outerRadius*motion;
+      })
+      .innerRadius(function(d) {
+         var motion = (offset / 15) > 1 ? 1:(offset / 15);
+         return d.innerRadius*motion;
+      })
       .strokeStyle("white")
       .lineWidth(.5)
 
@@ -527,7 +538,12 @@ $JS = <<<JAVASCRIPT
          return d.size
       });
 
-   vis{$rand}.render();
+   //render in loop to animate
+   var interval = setInterval(function() {
+      offset++;
+      vis{$rand}.render();
+      if (offset > 100) clearInterval(interval);
+   }, 20);
 JAVASCRIPT;
 
 
@@ -1496,9 +1512,12 @@ JAVASCRIPT;
       }
       
       echo "var datas = ".json_encode($datas).";";
+      echo "var sum = ".PluginMreportingMisc::cw_array_count($datas).";";
       
       return $datas;
    }
+
+   
 
    function legend($datas) {
 
