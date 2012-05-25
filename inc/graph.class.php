@@ -60,14 +60,24 @@ class PluginMreportingGraph {
       echo $options['title'];
       echo "</div>";
       
+      $desc = '';
+      if (!empty($options['desc'])) {
+         $desc =$options['desc'];
+      }
+      if (!empty($options['desc']) 
+            && isset($_REQUEST['date1'.$rand]) 
+               && isset($_REQUEST['date1'.$rand])) {
+         $desc.= " - ";
+      }
+      if (isset($_REQUEST['date1'.$rand]) 
+            && isset($_REQUEST['date1'.$rand])) {
+         $desc.= Html::convdate($_REQUEST['date1'.$rand])." / ".
+            Html::convdate($_REQUEST['date2'.$rand]);
+      }
+      echo "<div class='graph_desc'>".$desc."</div>";
+      
       //Show date selector
       //using rand for display x graphs on same page
-      if (!empty($options['desc'])) {
-         echo "<div class='graph_desc'>".$options['desc']."</div>";
-      } else if (isset($_REQUEST['date1'.$rand]) && isset($_REQUEST['date1'.$rand])) {
-         echo "<div class='graph_desc'>".Html::convdate($_REQUEST['date1'.$rand])." / ".
-            Html::convdate($_REQUEST['date2'.$rand])."</div>";
-      }
       
       if (!isset($_REQUEST['date1'.$rand])) 
             $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
