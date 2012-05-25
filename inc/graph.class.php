@@ -495,7 +495,7 @@ $JS = <<<JAVASCRIPT
          if (d.parentNode && d.parentNode.nodeName) {
             var sub_angle = d.startAngle-d.parentNode.startAngle;
             var sub_index = 1+sub_angle*d.parentNode.childNodes.length/d.parentNode.angle;
-            var alpha = 0.7*d.depth+0.4/sub_index
+            var alpha = 0.7*d.depth+0.4/sub_index;
          
             return colors(d.parentNode.index).alpha(alpha);
          }
@@ -506,20 +506,33 @@ $JS = <<<JAVASCRIPT
          return motion * d.size * 2 * Math.PI / sum;
       })
       .outerRadius(function(d) {
+         if (d.index == 0) return 0; //remove root
          var motion = (offset / 15) > 1 ? 1:(offset / 15);
          return d.outerRadius*motion;
       })
       .innerRadius(function(d) {
+         if (d.parentNode && d.parentNode.index == 0) return 0;
          var motion = (offset / 15) > 1 ? 1:(offset / 15);
          return d.innerRadius*motion;
       })
-      .strokeStyle("white")
-      .lineWidth(.5)
+      .strokeStyle(function() {
+         return this.fillStyle().darker();
+      })
+      .lineWidth(function() {
+         if (this.index == i) return 4;
+         else return 1;
+      });
 
    /*** wedge interaction ***/
    wedge.anchor().add(pv.Mark)
-      .event("point", function() (i = this.index, label))
-      .event("unpoint", function() (i = -1, label));
+      .event("point", function() {
+         (i = this.index, label);
+         return vis{$rand};
+      })
+      .event("unpoint", function() {
+         (i = -1, label);
+         return vis{$rand};
+      });
 
    /*** Label titles ***/
    partition.label.add(pv.Label)
@@ -527,15 +540,20 @@ $JS = <<<JAVASCRIPT
       .textAngle(0);
 
    /*** Label values ***/
-   var label = wedge.anchor("outer").add(pv.Label)
-      .visible(function() this.index == i)
-      .textMargin(5)
-      .textAngle(0)
-      .textStyle(function() {
-         return this.target.fillStyle().darker(4);
+   var label = wedge.anchor("inner").add(pv.Label)
+      .font("bold 11px sans-serif")
+      .visible(function() {
+         if (this.index > 0 && this.index == i) return true;
+         else return false;
       })
+      .textMargin(4)
+      //.textAngle(0)
+      .textStyle("white")
       .text(function(d) {
          return d.size
+      })
+      .strokeStyle(function() {
+         return this.target.fillStyle().darker();
       });
 
    //render in loop to animate

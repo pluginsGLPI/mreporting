@@ -614,6 +614,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $rand);
       
       return array('datas' => array( 
            'key1' => array('key1.1' => 12, 'key1.2' => 25, 'key1.3' => 43), 
