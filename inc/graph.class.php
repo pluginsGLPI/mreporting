@@ -473,7 +473,7 @@ $JS = <<<JAVASCRIPT
    var   width = {$this->width},
          height = 450
          i = -1, //mouseover index
-         offset = 0; // animation offset
+         offset = 99; // animation offset
 
    var vis{$rand} = new pv.Panel()
       .width(width)
@@ -537,7 +537,18 @@ $JS = <<<JAVASCRIPT
    /*** Label titles ***/
    partition.label.add(pv.Label)
       .visible(function(d) d.angle * d.outerRadius >= 6)
-      .textAngle(0);
+      .textAngle(0)
+      .left(function(d) {
+         var out = 1;
+         console.log(d);
+         //if (d.depth == 1) out = 1.13;
+         return out * ((height-20) / 2) * d.depth * Math.cos(d.midAngle) + width/2;
+      })
+      .bottom(function(d) {3
+         var out = 1;
+         //if (d.depth == 1) out = 1.13;
+         return - out * ((height-20) / 2) * d.depth * Math.sin(d.midAngle) + height/2;
+      });
 
    /*** Label values ***/
    var label = wedge.anchor("inner").add(pv.Label)
@@ -562,6 +573,7 @@ $JS = <<<JAVASCRIPT
       vis{$rand}.render();
       if (offset > 100) clearInterval(interval);
    }, 20);
+
 JAVASCRIPT;
 
 
