@@ -70,12 +70,23 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
          echo $options['title'];
          echo "</div>";
+
+         $desc = '';
          if (!empty($options['desc'])) {
-            echo "<div class='graph_desc'>".$options['desc']."</div>";
-         } else if (isset($_REQUEST['date1'.$rand]) && isset($_REQUEST['date1'.$rand])) {
-            echo "<div class='graph_desc'>".Html::convdate($_REQUEST['date1'.$rand])." / ".
-               Html::convdate($_REQUEST['date2'.$rand])."</div>";
+            $desc =$options['desc'];
          }
+         if (!empty($options['desc'])
+               &&isset($_REQUEST['date1'.$rand]) 
+                  && isset($_REQUEST['date1'.$rand])) {
+            $desc.= " - ";
+         }
+         if (isset($_REQUEST['date1'.$rand]) 
+               && isset($_REQUEST['date1'.$rand])) {
+            $desc.= Html::convdate($_REQUEST['date1'.$rand])." / ".
+               Html::convdate($_REQUEST['date2'.$rand]);
+         }
+         echo "<div class='graph_desc'>".$desc."</div>";
+      
          echo "<div class='graph_navigation'>";
          PluginMreportingMisc::showSelector($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand],$rand);
          echo "</div>";
