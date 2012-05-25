@@ -615,10 +615,24 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $$k=$v;
       }
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $rand);
+
+      $query = "SELECT 
+            glpi_itilcategories.completename as category_name,
+            glpi_itilcategories.itilcategories_is as parent,
+            COUNT(glpi_tickets.id) as count
+         FROM glpi_tickets
+         LEFT JOIN glpi_itilcategories
+            ON glpi_itilcategories.id = glpi_tickets.itilcategories_id
+         WHERE ".$this->sql_date."
+            AND glpi_tickets.entities_id IN (".$this->where_entities.")
+            AND glpi_tickets.is_deleted = '0'
+         GROUP BY glpi_itilcategories.id, glpi_tickets.status
+         ORDER BY glpi_itilcategories.name
+      ";
       
       return array('datas' => array( 
            'key1' => array('key1.1' => 12, 'key1.2' => 25, 'key1.3' => 43), 
-           'key2' => array('key2.1' => array("2.3.1"=>10,"2.3.2"=>8,"2.3.3" =>17), 'key2.2' => 18, 'key2.3' => 25),
+           'key2' => array('key2.1' => array("2.3.1"=>10,"2.3.2"=>8,"2.3.3" =>17)/*25*/, 'key2.2' => 18, 'key2.3' => 25),
            'key3' => array('key3.1' => 12, 'key3.2' => 25, 'key3.3' => 43)
          ), 
          'root' => "test"
