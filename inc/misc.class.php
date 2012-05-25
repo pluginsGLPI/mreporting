@@ -138,6 +138,7 @@ class PluginMreportingMisc {
 
    static function cw_array_count($a) { 
      if(!is_array($a)) return $a; 
+     $totale = 0;
      foreach($a as $key=>$value) 
         $totale += self::cw_array_count($value); 
      return $totale; 
