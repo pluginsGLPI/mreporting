@@ -100,6 +100,10 @@ class PluginMreportingCommon extends CommonDBTM {
                   $category_func = '';
                   if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['category']))
                      $category_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['category'];
+                  
+                  if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['desc']))
+                     $desc_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['desc'];
+                     
                   $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name]=$classname.$i;
             
                   $rand = $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name];
@@ -110,6 +114,7 @@ class PluginMreportingCommon extends CommonDBTM {
                   $reports[$classname]['title'] = $title;
                   $reports[$classname]['functions'][$i]['function'] = $f_name;
                   $reports[$classname]['functions'][$i]['title'] = $title_func;
+                  $reports[$classname]['functions'][$i]['desc'] = $desc_func;
                   $reports[$classname]['functions'][$i]['category_func'] = $category_func;
                   $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
                   $reports[$classname]['functions'][$i]['gtype'] = $gtype;
@@ -177,11 +182,12 @@ class PluginMreportingCommon extends CommonDBTM {
                
                if ($v['is_active']) {
                   $comment = "";
-                  if (isset($v["desc"]))
+                  if (isset($v["desc"])) {
                      $comment = $v["desc"];
-                  
+                     $desc = " (".$comment.")";
+                  }
                   echo "<option value='".$v["url_graph"]."' title=\"".
-                                    Html::cleanInputText($comment)."\">".$v["title"]."</option>";
+                                    Html::cleanInputText($comment)."\">".$v["title"].$desc."</option>";
                   $i++;
                }
             }
@@ -789,8 +795,16 @@ class PluginMreportingCommon extends CommonDBTM {
                         $desc_func = "";
                         if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'])) {
                           $desc_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'];
-                        } else if (isset($opt['date1']) && isset($opt['date2'])) {
-                           $desc_func = Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
+                        }
+                        if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'])
+                              &&isset($opt['date1']) 
+                                 && isset($opt['date2'])) {
+                           $desc_func.= " - ";
+                        }
+                        
+                        if (isset($opt['date1']) 
+                              && isset($opt['date2'])) {
+                           $desc_func.= Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
                         }
                         $options = array("short_classname" => $function['short_classname'],
                                     "f_name" => $function['function'],
@@ -836,8 +850,15 @@ class PluginMreportingCommon extends CommonDBTM {
          $desc_func = "";
          if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'])) {
            $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
-         } else if (isset($_REQUEST['date1'.$opt['rand']]) && isset($_REQUEST['date2'.$opt['rand']])) {
-            $desc_func = Html::convdate($_REQUEST['date1'.$opt['rand']]).
+         }
+         if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'])
+               && isset($_REQUEST['date1'.$opt['rand']]) 
+               && isset($_REQUEST['date2'.$opt['rand']])) {
+            $desc_func.= " - ";
+         }
+         if (isset($_REQUEST['date1'.$opt['rand']]) 
+               && isset($_REQUEST['date2'.$opt['rand']])) {
+            $desc_func.= Html::convdate($_REQUEST['date1'.$opt['rand']]).
                         " / ".Html::convdate($_REQUEST['date2'.$opt['rand']]);
          }
          
