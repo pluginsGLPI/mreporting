@@ -74,6 +74,12 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[9]['field']    = 'condition';
       $tab[9]['name']     = $LANG['plugin_mreporting']["config"][11];
       
+      $tab[10]['table']    = $this->getTable();
+      $tab[10]['field']    = 'show_graph';
+      $tab[10]['name']     = $LANG['plugin_mreporting']["config"][12];
+      $tab[10]['datatype'] = 'bool';
+      $tab[10]['massiveaction'] = false;
+      
 		return $tab;
    }
    
@@ -164,6 +170,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["name"]=$graphname;
                $this->fields["is_active"]="1";
                $this->fields["show_area"]="1";
+               $this->fields["show_graph"]="1";
                $this->fields["spline"]="1";
                $this->fields["default_delay"]="365";
                break;
@@ -173,11 +180,13 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["is_active"]="1";
                $this->fields["spline"]="1";
                $this->fields["show_area"]="0";
+               $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
                break;
             case 'vstackbar':
                $this->fields["name"]=$graphname;
                $this->fields["is_active"]="1";
+               $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
                break;   
             default:
@@ -186,6 +195,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_label"]="hover";
                $this->fields["spline"]="0";
                $this->fields["show_area"]="0";
+               $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="30";
                break;
 
@@ -478,6 +488,16 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</tr>";
       
       echo "<tr class='tab_bg_1'>";
+      echo "<td>".$LANG['plugin_mreporting']["config"][12]."</td>";
+      echo "<td>";
+      Dropdown::showYesNo("show_graph",$this->fields["show_graph"]);
+      echo "</td>";
+      
+      echo "<td colspan='2'>";
+      echo "</td>"; 
+      echo "</tr>";
+      
+      echo "<tr class='tab_bg_1'>";
       echo "<td>".$LANG['common'][60]."</td>";
       echo "<td>";
       Dropdown::showYesNo("is_active",$this->fields["is_active"]);
@@ -587,7 +607,8 @@ class PluginMreportingConfig extends CommonDBTM {
                      'unit'         => '',
                      'show_label'   => 'never',
                      'delay'        => '30',
-                     'condition'    => '');
+                     'condition'    => '',
+                     'show_graph'    => false);
       
       $self = new self();
       if ($self->getFromDBByRand($rand)) {
@@ -598,6 +619,25 @@ class PluginMreportingConfig extends CommonDBTM {
          $crit['unit']        = $self->fields['unit'];
          $crit['delay']       = $self->fields['default_delay'];
          $crit['condition']   = $self->fields['condition'];
+         $crit['show_graph']  = $self->fields['show_graph'];
+      }
+
+      return $crit;
+   }
+   
+   /**
+    * test for value of show_graph field
+    *
+    * @param $rand name of graph
+   **/
+   
+   static function showGraphConfigValue($rand) {
+
+      $crit = false;
+      
+      $self = new self();
+      if ($self->getFromDBByRand($rand)) {
+         $crit  = $self->fields['show_graph'];
       }
 
       return $crit;

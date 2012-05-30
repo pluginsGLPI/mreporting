@@ -167,6 +167,18 @@ class Segment implements IteratorAggregate, Countable
         list ($width, $height) = $size;
         $width *= Odf::PIXEL_TO_CM;
         $height *= Odf::PIXEL_TO_CM;
+         if($width>20 && $height<=26)  {
+            $width=$width*('0.8%');
+            $height=$height*('0.8%');
+         }
+         if($width>20 && $height>=26)  {
+            $width=$width*('0.6%');
+            $height=$height*('0.6%');
+         }
+         if($width<20 && $height>=26)  {
+            $width=$width*('0.6%');
+            $height=$height*('0.6%');
+         }
         $xml = <<<IMG
 <draw:frame draw:style-name="fr1" draw:name="$filename" text:anchor-type="aschar" svg:width="{$width}cm" svg:height="{$height}cm" draw:z-index="3"><draw:image xlink:href="Pictures/$file" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>
 IMG;

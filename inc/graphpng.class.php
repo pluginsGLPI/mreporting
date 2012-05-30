@@ -602,9 +602,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "title" => $title,
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);
+                     
       $contents = $this->generateImage($params);
-      $this->showImage($contents,$export);
-      
+      if ($show_graph) {
+         $this->showImage($contents,$export);
+      }
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
@@ -794,9 +796,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "title" => $title,
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);
+                      
       $contents = $this->generateImage($params);
-      $this->showImage($contents,$export);
-      
+      if ($show_graph) {
+         $this->showImage($contents,$export);
+      }
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
@@ -1014,9 +1018,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "title" => $title,
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);
-      $contents = $this->generateImage($params);
-      $this->showImage($contents,$export);
       
+      $contents = $this->generateImage($params);
+      if ($show_graph) {
+         $this->showImage($contents,$export);
+      }
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
@@ -1124,7 +1130,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $nb_bar = count($datas) * count($labels2);
       $width = $this->width;
       $height = 400;
-      $width_bar = ($width - 170) / count($labels2);
+      $width_bar = ($width - 350) / count($labels2);
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
@@ -1289,9 +1295,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          "title" => $title,
          "rand" => $rand,
          "raw_datas" => $raw_datas);
+      
       $contents = $this->generateImage($params);
-      $this->showImage($contents,$export);
-
+      if ($show_graph) {
+         $this->showImage($contents,$export);
+      }
       $options = array("opt"        => $opt,
          "export"    => $export,
          "datas"     => $datas,
@@ -1542,8 +1550,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
-      $this->showImage($contents,$export);
-      
+      if ($show_graph) {
+         $this->showImage($contents,$export);
+      }
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
@@ -1841,8 +1850,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
-      $this->showImage($contents,$export);
-      
+      if ($show_graph) {
+         $this->showImage($contents,$export);
+      }
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,

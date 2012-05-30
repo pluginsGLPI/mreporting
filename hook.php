@@ -44,6 +44,7 @@ function plugin_mreporting_install() {
 	`id` int(11) NOT NULL auto_increment,
 	`name` varchar(255) collate utf8_unicode_ci default NULL,
 	`is_active` tinyint(1) NOT NULL default '0',
+	`show_graph` tinyint(1) NOT NULL default '0',
 	`show_area` tinyint(1) NOT NULL default '0',
 	`spline` tinyint(1) NOT NULL default '0',
 	`show_label` VARCHAR(10) NOT NULL,

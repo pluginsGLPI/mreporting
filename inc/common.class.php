@@ -507,9 +507,11 @@ class PluginMreportingCommon extends CommonDBTM {
 			$_REQUEST['gtype'] = $opt['gtype'];
 			$_REQUEST['rand'] = $opt['rand'];
 			
+			
 			//End Script for graph display
 			//if $rand exists
-			if (!$export && $CFG_GLPI['default_graphtype'] == 'svg') {
+			if (!$export 
+               && $CFG_GLPI['default_graphtype'] == 'svg') {
 
 				echo "}
 					showGraph$rand();
@@ -522,7 +524,8 @@ class PluginMreportingCommon extends CommonDBTM {
       
 		if ($rand !== false && !$export) {
 			
-			PluginMreportingCommon::showGraphDatas($datas, $unit, $labels2, $flip_data);
+			$show_graph = PluginMreportingConfig::showGraphConfigValue($rand);
+			self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
 			
 			if ($_REQUEST['f_name'] != "test") {
 				echo "<div class='graph_bottom'>";
@@ -535,7 +538,9 @@ class PluginMreportingCommon extends CommonDBTM {
 				echo "<img src='../pics/config.png' class='title_pics'/></a>- ";
 				echo "<b>".$LANG['buttons'][31]."</b> : ";
 				echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
-				echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
+				if ($show_graph) {
+               echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
+            }
 				echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
 				
 				echo "</span>";
@@ -645,7 +650,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * @param $flip_data, flip array if necessary
    */
     
-   static function showGraphDatas ($datas=array(), $unit = '', $labels2=array(), $flip_data = false) {
+   static function showGraphDatas ($datas=array(), $unit = '', $labels2=array(), $flip_data = false, $show_graph = false) {
       global $LANG, $CFG_GLPI;
       
       $simpledatas = false;
@@ -685,18 +690,31 @@ class PluginMreportingCommon extends CommonDBTM {
       $rand = mt_rand();
       echo "<br><table class='tab_cadre' width='90%'>";
       echo "<tr class='tab_bg_1'><th>";
+      
       echo "<a href=\"javascript:showHideDiv('view_datas$rand','viewimg','".
-      $CFG_GLPI["root_doc"]."/pics/deplier_down.png','".
-      $CFG_GLPI["root_doc"]."/pics/deplier_up.png');\">";
+         $CFG_GLPI["root_doc"]."/pics/deplier_down.png','".
+         $CFG_GLPI["root_doc"]."/pics/deplier_up.png');\">";
+         
+      if ($show_graph) {
+         $img = "deplier_down.png";  
+      } else {
+         $img = "deplier_up.png";
+      }
       echo "<img alt='' name='viewimg' src=\"".
-      $CFG_GLPI["root_doc"]."/pics/deplier_down.png\">&nbsp;";
+         $CFG_GLPI["root_doc"]."/pics/$img\">&nbsp;";
+         
       echo $LANG['plugin_mreporting']["export"][2];
       echo "</a>";
       echo "</th>";
       echo "</tr>";
       echo "</table>";
-         
-      echo "<div align='center' style='display:none;' id='view_datas$rand'>";
+      
+      if ($show_graph) {
+         $visibility = "display:none;";
+      } else {
+         $visibility = "display:inline;";
+      }
+      echo "<div align='center' style='".$visibility."' id='view_datas$rand'>";
       echo "<table class='tab_cadre' width='90%'>";
       
       echo "<tr class='tab_bg_1'>";
@@ -990,7 +1008,7 @@ class PluginMreportingCommon extends CommonDBTM {
                   if (!empty($unit)) {
                      $nb = $nb." ".$unit;
                   }
-                  $newpage->csvdata->data1->data_1($nb);
+                  $newpage->csvdata->data1->data_1(utf8_decode($nb));
                   $newpage->csvdata->data1->merge();
                }
                
@@ -1056,8 +1074,11 @@ class PluginMreportingCommon extends CommonDBTM {
          
          $path = GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
          
-         $newpage->setImage('image', $path);
-         
+         if ($show_graph) {
+            $newpage->setImage('image', $path);
+         } else {
+            $newpage->setVars('image', "", true, 'UTF-8');
+         }
          $simpledatas = false;
          
          //simple array
@@ -1123,7 +1144,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      if (!empty($unit)) {
                         $nb = $nb." ".$unit;
                      }
-                     $newpage->csvdata->data1->data_1($nb);
+                     $newpage->csvdata->data1->data_1(utf8_decode($nb));
                      $newpage->csvdata->data1->merge();
                   }
                   
@@ -1140,7 +1161,7 @@ class PluginMreportingCommon extends CommonDBTM {
                         $nb = $nb." ".$unit;
                      }
                      $newpage->csvdata->data1->label_1(utf8_decode($date));
-                     $newpage->csvdata->data1->data_1($nb);
+                     $newpage->csvdata->data1->data_1(utf8_decode($nb));
                      $newpage->csvdata->data1->merge();
                   }
                   

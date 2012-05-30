@@ -30,7 +30,7 @@
 class PluginMreportingGraph {
 
    const DEBUG_GRAPH = false;
-   protected $width = 700;
+   protected $width = 850;
    
    /**
     * init Graph : Show Titles / Date selector
@@ -238,8 +238,11 @@ $JS = <<<JAVASCRIPT
    }, 20);
 
 JAVASCRIPT;
-
-      echo $JS;
+      
+      if ($show_graph) {
+         echo $JS;
+      }
+      
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
@@ -395,7 +398,9 @@ $JS = <<<JAVASCRIPT
    }, 20);
 JAVASCRIPT;
 
-      echo $JS;
+      if ($show_graph) {
+         echo $JS;
+      }
       
       $options = array("opt"     => $opt,
                         "export" => $export,
@@ -576,8 +581,9 @@ $JS = <<<JAVASCRIPT
 
 JAVASCRIPT;
 
-
-      echo $JS;
+      if ($show_graph) {
+         echo $JS;
+      }
       
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -763,7 +769,10 @@ $JS = <<<JAVASCRIPT
       if (offset > 100) clearInterval(interval);
    }, 20);
 JAVASCRIPT;
-      echo $JS;
+
+      if ($show_graph) {
+         echo $JS;
+      }
       
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -845,7 +854,7 @@ JAVASCRIPT;
 $JS = <<<JAVASCRIPT
    var w = {$this->width},
        h = 400,
-       x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w-150, 4/5),
+       x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w-300, 4/5),
        y = pv.Scale.linear(0, max+10).range(0, h),
        offset = 0, // animation
        i = -1 // mouseover index
@@ -916,7 +925,7 @@ $JS = <<<JAVASCRIPT
    // legend
    dot{$rand} = vis{$rand}.add(pv.Dot) // legend dots
       .data(labels)
-      .right(40)
+      .right(20)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function(d) {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
@@ -954,7 +963,10 @@ $JS = <<<JAVASCRIPT
       }, 20);
 
 JAVASCRIPT;
-      echo $JS;
+
+      if ($show_graph) {
+         echo $JS;
+      }
       
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -1146,7 +1158,9 @@ $JS = <<<JAVASCRIPT
    }, 20);
 JAVASCRIPT;
 
-      echo $JS;
+      if ($show_graph) {
+         echo $JS;
+      }
       
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -1370,7 +1384,10 @@ $JS = <<<JAVASCRIPT
    }, 20);
 
 JAVASCRIPT;
-      echo $JS;
+      
+      if ($show_graph) {
+         echo $JS;
+      }
       
       $options = array("opt"        => $opt,
                         "export"    => $export,
