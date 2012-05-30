@@ -621,6 +621,10 @@ class PluginMreportingConfig extends CommonDBTM {
          $crit['condition']   = $self->fields['condition'];
          $crit['show_graph']  = $self->fields['show_graph'];
       }
+      if (DEBUG_MREPORTING == true) {
+         $crit['show_graph']  = true;
+         $crit['spline']      = true;
+      }
 
       return $crit;
    }
@@ -639,7 +643,11 @@ class PluginMreportingConfig extends CommonDBTM {
       if ($self->getFromDBByRand($rand)) {
          $crit  = $self->fields['show_graph'];
       }
-
+      
+      if (DEBUG_MREPORTING == true) {
+         $crit  = true;
+      }
+      
       return $crit;
    }
 }

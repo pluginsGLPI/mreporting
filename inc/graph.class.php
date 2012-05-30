@@ -1007,6 +1007,9 @@ JAVASCRIPT;
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
+      if (DEBUG_MREPORTING == true) {
+         $area = true;
+      }
       
       if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
 
