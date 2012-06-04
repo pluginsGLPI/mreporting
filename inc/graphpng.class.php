@@ -493,11 +493,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return false;
       }
       
-      if ($unit == '%') {
-         
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-         $raw_datas['datas'] = $datas;
-      }
+      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      $raw_datas['datas'] = $datas;
       
       $values = array_values($datas);
       $labels = array_keys($datas);
@@ -571,7 +568,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $by1 + 14,
                $darkerpalette[$index],
                $font,
-               $data.$unit
+               Html::clean($data.$unit)
             );
          }
          //create axis label (align right)
@@ -586,7 +583,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $by1 + 14,
             $black,
             $font,
-            $labels[$index]
+            Html::clean($labels[$index])
          );
 
          $index++;
@@ -668,11 +665,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return false;
       }
       
-      if ($unit == '%') {
-         
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-         $raw_datas['datas'] = $datas;
-      }
+      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      $raw_datas['datas'] = $datas;
       
       $values = array_values($datas);
       
@@ -754,7 +748,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   $ytext,
                   $darkerpalette[$index],
                   $font,
-                  $data.$unit
+                  Html::clean($data.$unit)
                );
             }
 
@@ -780,7 +774,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             15 + $index * (15) ,
             $darkerpalette[$index],
             $font,
-            $label
+            Html::clean($label)
          );
 
          //legend circle
@@ -864,11 +858,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $labels2 = $raw_datas['labels2'];
       
-      if ($unit == '%') {
-         
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-         $raw_datas['datas'] = $datas;
-      }
+      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      $raw_datas['datas'] = $datas;
       
       $values = array_values($datas);
       $labels = array_keys($datas);
@@ -947,7 +938,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $ly + 14,
             $black,
             $font,
-            $labels[$index1]
+            Html::clean($labels[$index1])
          );
 
          foreach ($data as $subdata) {
@@ -1001,7 +992,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             10 + $index * 15 ,
             $black,
             $font,
-            $label
+            Html::clean($label)
          );
 
          //legend circle
@@ -1088,11 +1079,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $labels2 = $raw_datas['labels2'];
       
-      if ($unit == '%') {
-         
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-         $raw_datas['datas'] = $datas;
-      }
+      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      $raw_datas['datas'] = $datas;
       
       $values = array_values($datas);
       
@@ -1255,7 +1243,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $height-15,
             $black,
             $font,
-            $label
+            Html::clean($label)
          );
 
          $index++;
@@ -1278,7 +1266,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             10 + $index * 15 ,
             $black,
             $font,
-            $labels[$index]
+            Html::clean($labels[$index])
          );
 
          //legend circle
@@ -1368,11 +1356,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return false;
       }
       
-      if ($unit == '%') {
-         
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-         $raw_datas['datas'] = $datas;
-      }
+      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      $raw_datas['datas'] = $datas;
       
       $values = array_values($datas);
       $labels = array_keys($datas);
@@ -1620,12 +1605,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $labels2 = $raw_datas['labels2'];
 
-      
-      if ($unit == '%') {
-         
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-         $raw_datas['datas'] = $datas;
-      }
+      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      $raw_datas['datas'] = $datas;
       
       $values = array_values($datas);
       $labels = array_keys($datas);
