@@ -37,7 +37,6 @@ class PluginMreportingGraph {
     *
     * @params $options ($rand, short_classname, title, desc, delay)
    */
-   
    function initGraph($options) {
       global $LANG;
       
@@ -898,7 +897,7 @@ $JS = <<<JAVASCRIPT
 
    bar{$rand}.anchor("top").add(pv.Label)
       .visible(function(d){
-         return ( (Hilighted[this.parent.index]) && (d >= max / 100) && (d!=0) ) ? true : false ;
+         return ( (this.index == i || Hilighted[this.parent.index]) && (d >= max / 100) && (d!=0) ) ? true : false ;
       })
       .textBaseline("top")
       .text(function(d) { return d; })

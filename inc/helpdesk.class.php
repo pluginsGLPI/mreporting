@@ -64,7 +64,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       /*Must be defined*/
       if ($rand != $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportPieTicketNumberByEntity']) {
-         $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHbarTicketNumberByEntity'];
+         $rand = mt_rand();
       }
       
       //Init delay value
@@ -279,25 +279,27 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       $datas = array();
       $query = "
-         SELECT COUNT(glpi_tickets.id) as count, glpi_tickets_users.users_id as users_id
-         FROM glpi_tickets
-         LEFT JOIN glpi_tickets_users ON (glpi_tickets_users.tickets_id = glpi_tickets.id AND glpi_tickets_users.type =1)
+         
+         SELECT COUNT(glpi_tickets.id) as count, glpi_groups_tickets.groups_id as groups_id, glpi_name
+         FROM  glpi_groups, glpi_tickets 
+         
+         LEFT JOIN glpi_groups_tickets ON (glpi_groups_tickets.tickets_id = glpi_tickets.id)
          WHERE ".$this->sql_date."
          AND ".$this->sql_closedate."
-         AND glpi_tickets.entities_id IN (".$this->where_entities.")
+         AND glpi_groups_tickets.groups_id = groups.id    
+        
          AND glpi_tickets.is_deleted = '0'
-         GROUP BY glpi_tickets_users.users_id
+         GROUP BY glpi_groups_tickets.groups_id
          ORDER BY count DESC
          LIMIT 10
       ";
       $result = $DB->query($query);
-         
       while ($ticket = $DB->fetch_assoc($result)) {
-         if($ticket['users_id']==0) {
+         if($ticket['groups_id']==0) {
             $label = $LANG['plugin_mreporting']["error"][2];
          } else {
-            $label = getUserName($ticket['users_id']);
-         }
+            $label = getName($ticket['groups_id']);
+                     }
          $datas['datas'][$label] = $ticket['count'];
       }
 

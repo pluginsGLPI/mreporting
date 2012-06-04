@@ -808,6 +808,154 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       PluginMreportingCommon::endGraph($options);
    }
 
+
+   /**
+    * Show a sunburst chart (see : http://mbostock.github.com/protovis/ex/sunburst.html)
+    *
+    * @params :
+    * @param $raw_datas : an array with :
+    *    - key 'datas', ex : 
+    *          array( 
+    *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val), 
+    *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
+    *          )
+    *    - key 'root', root label in graph center
+    *    - key 'unit', ex : '%', 'Kg' (optionnal)
+    * @param $title : title of the chart
+    * @param $desc : description of the chart (optionnal)
+    * @param $show_label : behavior of the graph labels,
+    *                      values : 'hover', 'never', 'always' (optionnal)
+    * @param $export : keep only svg to export (optionnal)
+    * @return nothing
+    */
+   function showSunburst($params) {
+      global $LANG;
+
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
+         $$key=$val;
+      }
+      
+      $rand = $opt['rand'];
+      
+      $configs = PluginMreportingConfig::initConfigParams($rand);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
+
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "rand" => $rand,
+                        "export" => $export,
+                        "delay" => $delay,
+                        "short_classname" => $opt["short_classname"]);
+                  
+      $this->initGraph($options);
+      
+      if (count($datas) <= 0) {
+         if (!$export)
+            echo "</div>";
+         return false;
+      }
+      
+      $labels2 = $raw_datas['labels2'];
+      
+      if ($unit == '%') {
+         
+         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+         $raw_datas['datas'] = $datas;
+      }
+      
+      $values = array_values($datas);
+      $labels = array_keys($datas);
+
+      $max = 1;
+      foreach ($values as $line) {
+         foreach ($line as $label2 => $value) {
+            if ($value > $max) $max = $value;
+         }
+      }
+      if ($max == 1 && $unit == '%') $max = 100;
+
+      $nb_bar = count($datas) * count($labels2);
+      $width = $this->width;
+      $height = 28 * $nb_bar + count($labels2) * 24;
+
+      //create image
+      $image = imagecreatetruecolor ($width, $height);
+
+      //colors
+      $black = imagecolorallocate($image, 0, 0, 0);
+      $white = imagecolorallocate($image, 255, 255, 255);
+      $grey = imagecolorallocate($image, 242, 242, 242);
+      $palette = $this->getPalette($image, $nb_bar);
+      $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+
+      //background
+      $bg_color = $grey;
+      if ($export) $bg_color = $white;
+      imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
+
+      //create border on export
+      if ($export) {
+         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+      }
+
+      //config font
+      $font = "../fonts/FreeSans.ttf";
+      $fontsize = 8;
+      $fontangle = 0;
+
+      //add title on export
+      if ($export) {
+         imagettftext(
+            $image,
+            $fontsize+2,
+            $fontangle,
+            10,
+            20,
+            $black,
+            $font,
+            $title
+         );
+      }
+      
+      if ($export && $desc) {
+         imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+      }
+
+      //generate image
+      $params = array("image" => $image,
+                      "export" => $export,
+                      "f_name" => $opt['f_name'],
+                      "title" => $title,
+                      "rand" => $rand,
+                      "raw_datas" => $raw_datas);
+      $contents = $this->generateImage($params);
+      $this->showImage($contents,$export);
+      
+      $options = array("opt"        => $opt,
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "labels2"   => $labels2,
+                        "flip_data" => $flip_data,
+                        "unit"      => $unit);
+      PluginMreportingCommon::endGraph($options);
+      
+   }
+
+
+
    /**
     * Show a horizontal grouped bar chart
     *
