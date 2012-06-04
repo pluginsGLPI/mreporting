@@ -839,7 +839,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
