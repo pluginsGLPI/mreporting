@@ -58,8 +58,8 @@ if (isset($_POST["add"])) {
 	Html::header($LANG['common'][12],'',"plugins","mreporting","config");
    
    //Link from graph
-   if (isset($_GET["rand"])) {
-      if ($config->getFromDBByRand($_GET["rand"])) {
+   if (isset($_GET["name"]) && isset($_GET["classname"])) {
+      if ($config->getFromDBByFunctionAndClassname($_GET["name"],$_GET["classname"])) {
          $_GET["id"] = $config->fields['id'];
       }
    }

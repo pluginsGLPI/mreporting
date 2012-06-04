@@ -57,7 +57,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       
       if (count($datas) <= 0) return false;
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -118,7 +118,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       
       if (count($datas) <= 0) return false;
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
