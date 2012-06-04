@@ -864,7 +864,7 @@ $JS = <<<JAVASCRIPT
    var vis{$rand} = new pv.Panel()
        .width(w)
        .height(h)
-       .bottom(20)
+       .bottom(100)
        .left(20)
        .right(5)
        .top(5);
@@ -904,12 +904,21 @@ $JS = <<<JAVASCRIPT
       .textStyle(function() { return colors(this.parent.index).darker(); });
 
 
-   /*** x-axis labels ***/
-   bar{$rand}.anchor("bottom").add(pv.Label)
+   /*** x-axis labels and ticks ***/
+   var hiddenanchor{$rand} = stack{$rand}.layer.add(pv.Bar)
+      .fillStyle(null)
+      .width(x.range().band)
+      .bottom(-80)
+      .height(80)
+   .anchor("top").add(pv.Label)
       .visible(function() !this.parent.index)
+      .textAlign("left")
       .textMargin(5)
       .textBaseline("top")
-      .text(function() { return labels2[this.index]; });
+      .textAngle(Math.PI / 4)
+      .text(function() { return labels2[this.index]; })
+   .anchor("bottom").add(pv.Rule)
+      .height(3);
 
 
    /*** y-axis ticks and labels ***/
