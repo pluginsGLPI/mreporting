@@ -68,7 +68,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
       
       //Init delay value
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -115,7 +115,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*Must be defined*/
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -198,7 +198,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*Must be defined*/
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportPieTicketOpenedAndClosed'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -231,7 +231,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*Must be defined*/
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportPieTicketOpenedbyStatus'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -268,7 +268,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*Must be defined*/
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportPieTopTenAuthor'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -326,7 +326,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHgbarTicketNumberByCategoryAndByType'];
       }
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -377,7 +377,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*Must be defined*/
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHgbarTicketNumberByService'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -438,7 +438,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*Must be defined*/
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -495,7 +495,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportAreaNbTicket'];
       }
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -544,7 +544,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportGlineNbTicket'];
       }
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -609,7 +609,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*Must be defined*/
       $rand = $_SESSION['glpi_plugin_mreporting_rand']['Helpdesk']['reportSunburstTicketByCategories'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, get_class($this));
       
       foreach ($configs as $k => $v) {
          $$k=$v;
