@@ -122,7 +122,7 @@ class PluginMreportingCommon extends CommonDBTM {
                   $reports[$classname]['functions'][$i]['rand'] = $rand;
                   $reports[$classname]['functions'][$i]['is_active'] = false;
                   $config = new PluginMreportingConfig();
-                  if ($config->getFromDBByRand($rand)) {
+                  if ($config->getFromDBByFunctionAndClassname($f_name,$classname)) {
                      if ($config->fields['is_active'] == 1) {
                         $reports[$classname]['functions'][$i]['is_active'] = true;
                      }
@@ -232,6 +232,7 @@ class PluginMreportingCommon extends CommonDBTM {
             }
          }
          
+         $count = 0;
          if (isset($graphs[$classname])) {
             foreach($graphs[$classname] as $cat => $graph) {
                
@@ -254,6 +255,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      echo "</a></td>";
                      $i++;
                   }
+                  $count++;
                }
                
                while ($i%$nb_per_line != 0) {
@@ -264,9 +266,10 @@ class PluginMreportingCommon extends CommonDBTM {
          }
          echo "</tr>";
          
-         if (isset($graphs[$classname]) && count($graphs[$classname])>0) {
+         if (isset($graphs[$classname]) && $count>0) {
+
             $height = 200;
-            $height += 50*count($graphs[$classname]);
+            $height += 27*$count;
             echo "<tr class='tab_bg_1'>";
             echo "<th colspan='2'>";
             echo "<div class='right'>";
@@ -468,6 +471,7 @@ class PluginMreportingCommon extends CommonDBTM {
       if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc']))
         $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
       
+      $opt['class'] = $classname;
       $params = array("raw_datas"   => $datas,
                        "title"      => $title_func,
                        "desc"       => $desc_func,
@@ -524,7 +528,7 @@ class PluginMreportingCommon extends CommonDBTM {
       
 		if ($rand !== false && !$export) {
 			
-			$show_graph = PluginMreportingConfig::showGraphConfigValue($rand);
+			$show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'],$opt['class']);
 			self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
 			
 			if ($_REQUEST['f_name'] != "test") {
@@ -534,7 +538,7 @@ class PluginMreportingCommon extends CommonDBTM {
 				echo "</span>";
 				echo "<span style='float:right'>";
 				echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
-				echo "&nbsp;<a href='config.form.php?rand=".$rand."' target='_blank'>";
+				echo "&nbsp;<a href='config.form.php?name=".$opt['f_name']."&classname=".$opt['class']."' target='_blank'>";
 				echo "<img src='../pics/config.png' class='title_pics'/></a>- ";
 				echo "<b>".$LANG['buttons'][31]."</b> : ";
 				echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
@@ -826,11 +830,12 @@ class PluginMreportingCommon extends CommonDBTM {
                         }
                         $options = array("short_classname" => $function['short_classname'],
                                     "f_name" => $function['function'],
+                                    "class" => $opt['classname'],
                                     "gtype" => $function['gtype'],
                                     "rand" => $function['rand']); 
                         
                         $show_label = 'always';
-               
+                        
                         $params = array("raw_datas"  => $datas,
                                          "title"      => $title_func,
                                          "desc"       => $desc_func,
@@ -881,7 +886,8 @@ class PluginMreportingCommon extends CommonDBTM {
          }
          
          $show_label = 'always';
-               
+         
+         $opt['class'] = $classname;
          $params = array("raw_datas"  => $datas,
                           "title"      => $title_func,
                           "desc"       => $desc_func,
@@ -927,7 +933,7 @@ class PluginMreportingCommon extends CommonDBTM {
             $labels2 = $raw_datas['labels2'];
          }
          
-         $configs = PluginMreportingConfig::initConfigParams($rand);
+         $configs = PluginMreportingConfig::initConfigParams($f_name, $class);
       
          foreach ($configs as $k => $v) {
             $$k=$v;
@@ -1059,7 +1065,7 @@ class PluginMreportingCommon extends CommonDBTM {
             $labels2 = $raw_datas['labels2'];
          }
          
-         $configs = PluginMreportingConfig::initConfigParams($rand);
+         $configs = PluginMreportingConfig::initConfigParams($f_name, $class);
       
          foreach ($configs as $k => $v) {
             $$k=$v;

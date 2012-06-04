@@ -43,6 +43,7 @@ function plugin_mreporting_install() {
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
 	`id` int(11) NOT NULL auto_increment,
 	`name` varchar(255) collate utf8_unicode_ci default NULL,
+	`classname` varchar(255) collate utf8_unicode_ci default NULL,
 	`is_active` tinyint(1) NOT NULL default '0',
 	`show_graph` tinyint(1) NOT NULL default '0',
 	`show_area` tinyint(1) NOT NULL default '0',
@@ -142,24 +143,31 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
                   $title_func = '';
                   $short_classname = '';
                   $f_name = '';
-                  $session = $_SESSION['glpi_plugin_mreporting_rand'];
                   
-                  foreach($session as $classname => $report) {
-                     foreach($report as $k => $v) {
-                        if ($data["ITEM_$num"] == $v) {
-                           $short_classname = $classname;
-                           $f_name = $k;
+                  $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
+                  //parse inc dir to search report classes
+                  $classes = PluginMreportingCommon::parseAllClasses($inc_dir);
+                  
+                  foreach($classes as $classname) {
+                     
+                     $functions = get_class_methods($classname);
+                     
+                     foreach($functions as $funct_name) {
+                        $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);
+                        if ($ex_func[0] != 'report') continue;
+            
+                        $gtype = strtolower($ex_func[1]);
+                        
+                        if ($data["ITEM_$num"] == $funct_name) {
+                           if (!empty($classname) && !empty($funct_name)) {
+                              $short_classname = str_replace('PluginMreporting', '', $classname);
+                              if (isset($LANG['plugin_mreporting'][$short_classname][$funct_name]['title'])) {
+                                 $title_func = $LANG['plugin_mreporting'][$short_classname][$funct_name]['title'];
+                              }
+                           }
                         }
-                     }
+                     }  
                   }
-                  $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
-                  $gtype = strtolower($ex_func[1]);
-                  if (!empty($short_classname) && !empty($f_name)) {
-                     if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-                        $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
-                     }
-                  }
-      
                   $out="<a href='config.form.php?id=".$data["id"]."'>".
                         $data["ITEM_$num"]."</a> (".$title_func.")";
                }

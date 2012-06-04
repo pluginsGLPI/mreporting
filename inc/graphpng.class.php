@@ -135,6 +135,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $image       = "";
       $export      = "png";
       $f_name      = "";
+      $class      = "";
       $title       = "";
       $unit        = '';
       $raw_datas   = array();
@@ -150,10 +151,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imagepng($image,$path);
          
          $common = new PluginMreportingCommon();
-         $options[] = array("title"  => $title,
-                          "f_name"    => $f_name,
-                          "rand"      => $rand,
-                          "raw_datas" => $raw_datas);
+         $options[] = array("title"   => $title,
+                          "f_name"     => $f_name,
+                          "class"      => $class,
+                          "rand"       => $rand,
+                          "raw_datas"  => $raw_datas);
          $common->generateOdt($options);
          return true;
          
@@ -163,10 +165,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imagepng($image,$path);
          
          if (isset($raw_datas['datas'])) {
-            $_SESSION['glpi_plugin_mreporting_odtarray'][]=array("title" => $title,
-                                                              "f_name" => $f_name,
-                                                              "rand"      => $rand,
-                                                              "raw_datas" => $raw_datas);
+            $_SESSION['glpi_plugin_mreporting_odtarray'][]=array("title"   => $title,
+                                                              "f_name"     => $f_name,
+                                                              "class"      => $class,
+                                                              "rand"       => $rand,
+                                                              "raw_datas"  => $raw_datas);
          }
          
          return true;
@@ -464,7 +467,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -596,6 +599,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
+                      "class" => $opt['class'],
                       "title" => $title,
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);
@@ -636,7 +640,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -787,6 +791,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
+                      "class" => $opt['class'],
                       "title" => $title,
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);
@@ -827,7 +832,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -1006,6 +1011,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
+                      "class" => $opt['class'],
                       "title" => $title,
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);
@@ -1048,7 +1054,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $rand = $opt['rand'];
 
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -1278,11 +1284,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //generate image
       $params = array("image" => $image,
-         "export" => $export,
-         "f_name" => $opt['f_name'],
-         "title" => $title,
-         "rand" => $rand,
-         "raw_datas" => $raw_datas);
+                     "export" => $export,
+                     "f_name" => $opt['f_name'],
+                     "class" => $opt['class'],
+                     "title" => $title,
+                     "rand" => $rand,
+                     "raw_datas" => $raw_datas);
       
       $contents = $this->generateImage($params);
       if ($show_graph) {
@@ -1323,7 +1330,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -1535,6 +1542,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
+                      "class" => $opt['class'],
                       "title" => $title,
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);
@@ -1574,7 +1582,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -1831,6 +1839,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
+                      "class" => $opt['class'],
                       "title" => $title,
                       "rand" => $rand,
                       "raw_datas" => $raw_datas);

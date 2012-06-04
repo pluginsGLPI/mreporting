@@ -123,7 +123,7 @@ class PluginMreportingGraph {
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -275,8 +275,8 @@ JAVASCRIPT;
       }
       
       $rand = $opt['rand'];
-      
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -439,7 +439,7 @@ JAVASCRIPT;
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -584,11 +584,12 @@ JAVASCRIPT;
       if ($show_graph) {
          echo $JS;
       }
-      
+      $labels2 = $raw_datas['labels2'];
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
                         "flip_data" => $flip_data,
+                        "labels2"   => $labels2,
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options);
    }
@@ -618,7 +619,7 @@ JAVASCRIPT;
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -811,7 +812,7 @@ JAVASCRIPT;
       $rand = $opt['rand'];
 
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -925,7 +926,7 @@ $JS = <<<JAVASCRIPT
    // legend
    dot{$rand} = vis{$rand}.add(pv.Dot) // legend dots
       .data(labels)
-      .right(20)
+      .right(40)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function(d) {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
@@ -1002,7 +1003,7 @@ JAVASCRIPT;
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -1216,7 +1217,7 @@ JAVASCRIPT;
       
       $rand = $opt['rand'];
       
-      $configs = PluginMreportingConfig::initConfigParams($rand);
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -1428,10 +1429,7 @@ JAVASCRIPT;
     
    function initDatasSimple($datas, $unit = '') {
       
-      if ($unit == '%') {
-         
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-      }
+      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       
       $labels = array_keys($datas);
       $values = array_values($datas);
@@ -1474,10 +1472,7 @@ JAVASCRIPT;
     
    function initDatasMultiple($datas, $labels2, $unit = '',$stacked = false) {
       
-      if ($unit == '%') {
-         
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-      }
+      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       
       $labels = array_keys($datas);
       $values = array_values($datas);
@@ -1557,9 +1552,7 @@ JAVASCRIPT;
     
    function initDatasTree($datas, $unit = '') {
       
-      if ($unit == '%') {
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-      }
+      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       
       echo "var datas = ".json_encode($datas).";";
       echo "var sum = ".PluginMreportingMisc::cw_array_count($datas).";";

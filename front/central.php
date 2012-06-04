@@ -38,17 +38,20 @@ if (DEBUG_MREPORTING) {
    $common->debugGraph();
 } else {
    $reports = $common->getAllReports();
-
+   $tabs = array();
    foreach ($reports as $classname => $report) {
         
       $tabs[$classname]=array('title'=>$report['title'],
                               'url'=>$CFG_GLPI['root_doc']."/plugins/mreporting/ajax/common.tabs.php",
                               'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname");
    }
-
-   echo "<div id='tabspanel' class='center-h'></div>";
-   Ajax::createTabs('tabspanel','tabcontent',$tabs,'PluginMreportingCommon');
-   $common->addDivForTabs();
+   if (count($tabs) > 0){
+      echo "<div id='tabspanel' class='center-h'></div>";
+      Ajax::createTabs('tabspanel','tabcontent',$tabs,'PluginMreportingCommon');
+      $common->addDivForTabs();
+   } else {
+      echo "<div class='center'><br>".$LANG['plugin_mreporting']["error"][0]."</div>";
+   }
 }
 Html::footer();
 

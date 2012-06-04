@@ -80,16 +80,22 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[10]['datatype'] = 'bool';
       $tab[10]['massiveaction'] = false;
       
+      $tab[11]['table']    = $this->getTable();
+      $tab[11]['field']    = 'classname';
+      $tab[11]['name']     = $LANG['plugin_mreporting']["config"][13];
+      $tab[11]['massiveaction'] = false;
+      
 		return $tab;
    }
    
    
-   function getFromDBByRand($rand) {
+   function getFromDBByFunctionAndClassname($function,$classname) {
       global $DB;
 
       $query = "SELECT *
                 FROM `".$this->getTable()."`
-                WHERE `name` = '$rand'";
+                WHERE `name` = '".addslashes($function)."'
+                AND `classname` = '".addslashes($classname)."'";
 
       if ($result = $DB->query($query)) {
          if ($DB->numrows($result) != 1) {
@@ -128,13 +134,25 @@ class PluginMreportingConfig extends CommonDBTM {
 	 **/
    function createFirstConfig() {
       
-      $session = $_SESSION['glpi_plugin_mreporting_rand'];
       
-      foreach($session as $classname => $report) {
-         foreach($report as $k => $v) {
+      $reports = array();
+      
+      $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
+      //parse inc dir to search report classes
+      $classes = PluginMreportingCommon::parseAllClasses($inc_dir);
+      
+      foreach($classes as $classname) {
+      
+         $functions = get_class_methods($classname);
+
+         foreach($functions as $funct_name) {
+            
+            $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);
+            if ($ex_func[0] != 'report') continue;
+               
             $input = array();
             
-            $input = $this->preconfig($v);
+            $input = $this->preconfig($funct_name, $classname);
             $input["firstconfig"] = 1;
             unset($input["id"]);
             $newid = $this->add($input);
@@ -147,27 +165,20 @@ class PluginMreportingConfig extends CommonDBTM {
 	 * @graphname internal name of graph
 	 *@return nothing
 	 **/
-	function preconfig($graphname) {
+	function preconfig($funct_name, $classname) {
       
-      if ($graphname != -1) {
-         $session = $_SESSION['glpi_plugin_mreporting_rand'];
+      if ($funct_name != -1 && $classname) {
          
-         foreach($session as $classname => $report) {
-            foreach($report as $k => $v) {
-               if ($graphname == $v) {
-                  $short_classname = $classname;
-                  $f_name = $k;
-               }
-            }
-         }
-         $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
+         $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);
+         if ($ex_func[0] != 'report') return false;
          $gtype = strtolower($ex_func[1]);
          
          switch($gtype) {
             
             case 'area':
             case 'garea':
-               $this->fields["name"]=$graphname;
+               $this->fields["name"]=$funct_name;
+               $this->fields["classname"]=$classname;
                $this->fields["is_active"]="1";
                $this->fields["show_area"]="1";
                $this->fields["show_graph"]="1";
@@ -176,7 +187,8 @@ class PluginMreportingConfig extends CommonDBTM {
                break;
             case 'line':
             case 'gline':
-               $this->fields["name"]=$graphname;
+               $this->fields["name"]=$funct_name;
+               $this->fields["classname"]=$classname;
                $this->fields["is_active"]="1";
                $this->fields["spline"]="1";
                $this->fields["show_area"]="0";
@@ -184,13 +196,15 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["default_delay"]="365";
                break;
             case 'vstackbar':
-               $this->fields["name"]=$graphname;
+               $this->fields["name"]=$funct_name;
+               $this->fields["classname"]=$classname;
                $this->fields["is_active"]="1";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
                break;   
             default:
-               $this->fields["name"]=$graphname;
+               $this->fields["name"]=$funct_name;
+               $this->fields["classname"]=$classname;
                $this->fields["is_active"]="1";
                $this->fields["show_label"]="hover";
                $this->fields["spline"]="0";
@@ -214,20 +228,21 @@ class PluginMreportingConfig extends CommonDBTM {
       global $LANG;
       
       $self = new self();
-      $config = new PluginMreportingCommon();
+      $common = new PluginMreportingCommon();
       $rand = mt_rand();
       $select = "<select name='$name' id='dropdown_".$name.$rand."'>";
       $select.= "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
       
       $i = 0;
-      $reports = $config->getAllReports();
+      $reports = $common->getAllReports();
       foreach($reports as $classname => $report) {
-         
+
          foreach($report['functions'] as $function) {
-            if (!$self->getFromDBByRand($function["rand"])) {
+            if (!$self->getFromDBByFunctionAndClassname($function["function"],$classname)) {
                $graphs[$classname][$function['category_func']][] = $function;
             }
          }
+
          if (isset($graphs[$classname])) {
             $count = count($graphs[$classname]);
             if ($count > 0) {
@@ -242,22 +257,20 @@ class PluginMreportingConfig extends CommonDBTM {
                      
                      foreach($graph as $k => $v) {
                         
-                        if (!$self->getFromDBByRand($v["rand"])) {
-                           
-                           $comment = "";
-                           if (isset($v["desc"])) {
-                              $comment = $v["desc"];
-                              $desc = " (".$comment.")";
-                           }
-                  
-                           $select.= "<option  title=\"".
-                                    Html::cleanInputText($comment)."\" 
-                                    value='".$v["rand"]."'".($options['value']==$v["rand"]?" selected ":"").">";
-                           $select.= $v["title"].$desc;
-                           $select.= "</option>";
-                             
-                           $i++;
+                        $comment = "";
+                        if (isset($v["desc"])) {
+                           $comment = $v["desc"];
+                           $desc = " (".$comment.")";
                         }
+               
+                        $select.= "<option  title=\"".
+                                 Html::cleanInputText($comment)."\" 
+                                 value='".$classname.";".$v["function"].
+                                 "'".($options['value']==$classname.";".$v["function"]?" selected ":"").">";
+                        $select.= $v["title"].$desc;
+                        $select.= "</option>";
+                          
+                        $i++;
                      }
                      $select.= "</optgroup>";
 
@@ -398,7 +411,7 @@ class PluginMreportingConfig extends CommonDBTM {
 		
 		if (isset ($input["name"])) {
          
-         if ($this->getFromDBByRand($input["name"])) {
+         if ($this->getFromDBByFunctionAndClassname($input["name"],$input["classname"])) {
             if (!isset ($input["firstconfig"])) {
                Session::addMessageAfterRedirect($LANG['plugin_mreporting']["error"][4], false, ERROR);
             }
@@ -419,10 +432,13 @@ class PluginMreportingConfig extends CommonDBTM {
       } else {
          $this->check(-1,'w');
          $this->getEmpty();
-         if (isset($_GET['preconfig'])) {
-            $this->preconfig($_GET['preconfig']);
+         if (isset($_GET['name']) && isset($_GET['classname'])) {
+            $this->preconfig($_GET['name'], $_GET['classname']);
+            $_GET['preconfig']=1;
          } else {
-            $_GET['preconfig'] = -1;
+            $_GET['name'] = -1;
+            $_GET['classname'] = -1;
+            $_GET['preconfig']==-1;
          }
       }
       
@@ -464,24 +480,19 @@ class PluginMreportingConfig extends CommonDBTM {
       
       echo "<td colspan='2'>";
       $title_func = '';
-      $link=$LANG['plugin_mreporting']["error"][0];
-      $short_classname = '';
-      $f_name = '';
       $gtype = '';
-      $session = $_SESSION['glpi_plugin_mreporting_rand'];
+      $link=$LANG['plugin_mreporting']["error"][0];
+
+      $f_name = $this->fields["name"];
       
-      foreach($session as $classname => $report) {
-         foreach($report as $k => $v) {
-            if ($this->fields["name"] == $v) {
-               $short_classname = $classname;
-               $f_name = $k;
-            }
-         }
-      }
       $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
       if (isset($ex_func[1])) {
          $gtype = strtolower($ex_func[1]);
       }
+      
+      $short_classname = str_replace('PluginMreporting', '', $this->fields["classname"]);
+      
+
       if (!empty($short_classname) && !empty($f_name)) {
          if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
             $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
@@ -492,6 +503,7 @@ class PluginMreportingConfig extends CommonDBTM {
       }
       
       echo $link;
+      echo "<input type='hidden' name='classname' value=\"".$this->fields["classname"]."\">\n";
       echo "</td>";
       echo "</tr>";
       
@@ -607,7 +619,7 @@ class PluginMreportingConfig extends CommonDBTM {
     * @param $rand name of graph
    **/
    
-   static function initConfigParams($rand) {
+   static function initConfigParams($name, $classname) {
 
       $crit = array('area'          => false,
                      'spline'       => false,
@@ -619,7 +631,7 @@ class PluginMreportingConfig extends CommonDBTM {
                      'show_graph'    => false);
       
       $self = new self();
-      if ($self->getFromDBByRand($rand)) {
+      if ($self->getFromDBByFunctionAndClassname($name,$classname)) {
          $crit['area']        = $self->fields['show_area'];
          $crit['spline']      = $self->fields['spline'];
          $crit['show_label']  = $self->fields['show_label'];
@@ -643,12 +655,12 @@ class PluginMreportingConfig extends CommonDBTM {
     * @param $rand name of graph
    **/
    
-   static function showGraphConfigValue($rand) {
+   static function showGraphConfigValue($name, $classname) {
 
       $crit = false;
       
       $self = new self();
-      if ($self->getFromDBByRand($rand)) {
+      if ($self->getFromDBByFunctionAndClassname($name,$classname)) {
          $crit  = $self->fields['show_graph'];
       }
       

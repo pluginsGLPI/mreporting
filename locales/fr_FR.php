@@ -26,7 +26,7 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 $LANG['plugin_mreporting']["name"] = "Plus de rapports";
 
 $LANG['plugin_mreporting']["error"][0] = "Aucun rapport disponible !";
@@ -52,6 +52,7 @@ $LANG['plugin_mreporting']["config"][9] = "Délai par défaut";
 $LANG['plugin_mreporting']["config"][10] = "Initialiser la configuration des graphiques";
 $LANG['plugin_mreporting']["config"][11] = "Condition supplémentaire Mysql";
 $LANG['plugin_mreporting']["config"][12] = "Voir le graphique";
+$LANG['plugin_mreporting']["config"][13] = "Classe";
 
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Nombre de ticket par entités";
