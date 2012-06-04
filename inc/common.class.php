@@ -573,12 +573,12 @@ class PluginMreportingCommon extends CommonDBTM {
     
    static function compileDatasForUnit($values, $unit = '') {
       
+      $datas = $values;
+      
       if ($unit == '%') {
          //complie news datas with percent values
          $calcul = array();
-         
-         $datas = $values;
-         
+
          $simpledatas = true;
          foreach ($datas as $k=>$v) {
             //multiple array
@@ -637,7 +637,7 @@ class PluginMreportingCommon extends CommonDBTM {
          }
 
       }
-
+      
       return $datas;
    }
    
