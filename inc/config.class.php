@@ -243,9 +243,17 @@ class PluginMreportingConfig extends CommonDBTM {
                      foreach($graph as $k => $v) {
                         
                         if (!$self->getFromDBByRand($v["rand"])) {
-
-                           $select.= "<option value='".$v["rand"]."'".($options['value']==$v["rand"]?" selected ":"").">";
-                           $select.= $v["title"];
+                           
+                           $comment = "";
+                           if (isset($v["desc"])) {
+                              $comment = $v["desc"];
+                              $desc = " (".$comment.")";
+                           }
+                  
+                           $select.= "<option  title=\"".
+                                    Html::cleanInputText($comment)."\" 
+                                    value='".$v["rand"]."'".($options['value']==$v["rand"]?" selected ":"").">";
+                           $select.= $v["title"].$desc;
                            $select.= "</option>";
                              
                            $i++;
