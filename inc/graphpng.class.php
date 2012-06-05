@@ -46,16 +46,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //$this->width = $this->width - 100;
       //}
       
-      $rand = $options['rand'];
+      $randname = $options['randname'];
       
       if (!$options['export']) {
           
          $width = $this->width + 100;
 
-         if (!isset($_REQUEST['date1'.$rand])) 
-            $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
-         if (!isset($_REQUEST['date2'.$rand])) 
-            $_REQUEST['date2'.$rand] = strftime("%Y-%m-%d");
+         if (!isset($_REQUEST['date1'.$randname])) 
+            $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
+         if (!isset($_REQUEST['date2'.$randname])) 
+            $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
 
          $backtrace = debug_backtrace();
          $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
@@ -76,23 +76,23 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $desc =$options['desc'];
          }
          if (!empty($options['desc'])
-               &&isset($_REQUEST['date1'.$rand]) 
-                  && isset($_REQUEST['date1'.$rand])) {
+               &&isset($_REQUEST['date1'.$randname]) 
+                  && isset($_REQUEST['date1'.$randname])) {
             $desc.= " - ";
          }
-         if (isset($_REQUEST['date1'.$rand]) 
-               && isset($_REQUEST['date1'.$rand])) {
-            $desc.= Html::convdate($_REQUEST['date1'.$rand])." / ".
-               Html::convdate($_REQUEST['date2'.$rand]);
+         if (isset($_REQUEST['date1'.$randname]) 
+               && isset($_REQUEST['date1'.$randname])) {
+            $desc.= Html::convdate($_REQUEST['date1'.$randname])." / ".
+               Html::convdate($_REQUEST['date2'.$randname]);
          }
          echo "<div class='graph_desc'>".$desc."</div>";
       
          echo "<div class='graph_navigation'>";
-         PluginMreportingMisc::showSelector($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand],$rand);
+         PluginMreportingMisc::showSelector($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
          echo "</div>";
       }
       if ($options['export']!="odt" && $options['export']!="odtall") {
-         echo "<div class='graph' id='graph_content$rand'>";
+         echo "<div class='graph' id='graph_content$randname'>";
       }
    }
 
@@ -154,7 +154,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $options[] = array("title"   => $title,
                           "f_name"     => $f_name,
                           "class"      => $class,
-                          "rand"       => $rand,
+                          "randname"   => $randname,
                           "raw_datas"  => $raw_datas);
          $common->generateOdt($options);
          return true;
@@ -168,7 +168,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $_SESSION['glpi_plugin_mreporting_odtarray'][]=array("title"   => $title,
                                                               "f_name"     => $f_name,
                                                               "class"      => $class,
-                                                              "rand"       => $rand,
+                                                              "randname"   => $randname,
                                                               "raw_datas"  => $raw_datas);
          }
          
@@ -465,7 +465,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $rand = $opt['rand'];
+      //$rand = $opt['rand'];
       
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
@@ -483,7 +483,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -601,13 +601,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "f_name" => $opt['f_name'],
                       "class" => $opt['class'],
                       "title" => $title,
-                      "rand" => $rand,
+                      "randname" => $randname,
                       "raw_datas" => $raw_datas);
                      
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
       }
+      $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
@@ -638,7 +639,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $rand = $opt['rand'];
+      //$rand = $opt['rand'];
       
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
@@ -656,7 +657,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -793,13 +794,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "f_name" => $opt['f_name'],
                       "class" => $opt['class'],
                       "title" => $title,
-                      "rand" => $rand,
+                      "randname" => $randname,
                       "raw_datas" => $raw_datas);
                       
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
       }
+      $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
@@ -837,7 +839,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $rand = $opt['rand'];
+      //$rand = $opt['rand'];
       
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
@@ -855,7 +857,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -939,11 +941,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "export" => $export,
                       "f_name" => $opt['f_name'],
                       "title" => $title,
-                      "rand" => $rand,
+                      "randname" => $randname,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
       
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
@@ -978,7 +981,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $rand = $opt['rand'];
+      //$rand = $opt['rand'];
       
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
@@ -996,7 +999,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -1161,13 +1164,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "f_name" => $opt['f_name'],
                       "class" => $opt['class'],
                       "title" => $title,
-                      "rand" => $rand,
+                      "randname" => $randname,
                       "raw_datas" => $raw_datas);
       
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
       }
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
@@ -1200,7 +1204,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
 
-      $rand = $opt['rand'];
+      //$rand = $opt['rand'];
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
@@ -1218,7 +1222,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -1436,13 +1440,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                      "f_name" => $opt['f_name'],
                      "class" => $opt['class'],
                      "title" => $title,
-                     "rand" => $rand,
+                     "randname" => $randname,
                      "raw_datas" => $raw_datas);
       
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
       }
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
          "export"    => $export,
          "datas"     => $datas,
@@ -1476,7 +1481,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $rand = $opt['rand'];
+      //$rand = $opt['rand'];
       
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
@@ -1498,7 +1503,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -1692,12 +1697,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "f_name" => $opt['f_name'],
                       "class" => $opt['class'],
                       "title" => $title,
-                      "rand" => $rand,
+                      "randname" => $randname,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
       }
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
@@ -1728,7 +1734,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $rand = $opt['rand'];
+      //$rand = $opt['rand'];
       
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
@@ -1746,7 +1752,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -1989,12 +1995,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "f_name" => $opt['f_name'],
                       "class" => $opt['class'],
                       "title" => $title,
-                      "rand" => $rand,
+                      "randname" => $randname,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
       }
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,

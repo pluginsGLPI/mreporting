@@ -497,8 +497,7 @@ class PluginMreportingConfig extends CommonDBTM {
          if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
             $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
             $link="&nbsp;<a href='graph.php?short_classname=".
-            $short_classname."&f_name=".$f_name."&gtype=".$gtype.
-            "&rand=".$this->fields["name"]."'>".$title_func."</a>";
+            $short_classname."&f_name=".$f_name."&gtype=".$gtype."'>".$title_func."</a>";
          }
       }
       
@@ -616,7 +615,8 @@ class PluginMreportingConfig extends CommonDBTM {
    /**
     * initialize config for graph display options
     *
-    * @param $rand name of graph
+    * @param $name of graph
+    * @param $classname of graph
    **/
    
    static function initConfigParams($name, $classname) {
@@ -628,7 +628,8 @@ class PluginMreportingConfig extends CommonDBTM {
                      'show_label'   => 'never',
                      'delay'        => '30',
                      'condition'    => '',
-                     'show_graph'    => false);
+                     'show_graph'   => false,
+                     'randname'     => '');
       
       $self = new self();
       if ($self->getFromDBByFunctionAndClassname($name,$classname)) {
@@ -640,6 +641,8 @@ class PluginMreportingConfig extends CommonDBTM {
          $crit['delay']       = $self->fields['default_delay'];
          $crit['condition']   = $self->fields['condition'];
          $crit['show_graph']  = $self->fields['show_graph'];
+         
+         $crit['randname']    = $classname.$name;
       }
       if (DEBUG_MREPORTING == true) {
          $crit['show_graph']  = true;
@@ -652,7 +655,8 @@ class PluginMreportingConfig extends CommonDBTM {
    /**
     * test for value of show_graph field
     *
-    * @param $rand name of graph
+    * @param $name of graph
+    * @param $classname of graph
    **/
    
    static function showGraphConfigValue($name, $classname) {
