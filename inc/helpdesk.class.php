@@ -63,7 +63,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB, $LANG;
       
       /*Must be defined*/
-      if (count($configs) < 0) {
+      if (count($configs) == 0) {
          $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       }
       foreach ($configs as $k => $v) {
@@ -315,7 +315,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
       
       /*Must be defined*/
-      if (count($configs) < 0) {
+      if (count($configs) == 0) {
          $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       }
       
@@ -485,7 +485,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       $datas = array();
       /*Must be defined*/ 
-      if (count($configs) < 0) {
+      if (count($configs) == 0) {
          $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       }
       
@@ -533,7 +533,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
       $tmp_datas = array();
       /*Must be defined*/
-      if (count($configs) < 0) {
+      if (count($configs) == 0) {
          $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       }
       
