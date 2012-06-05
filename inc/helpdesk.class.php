@@ -55,15 +55,17 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
    
    function reportPieTicketNumberByEntity() {
-      return $this->reportHbarTicketNumberByEntity();
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      return $this->reportHbarTicketNumberByEntity($configs);
    }
    
-   function reportHbarTicketNumberByEntity() {
+   function reportHbarTicketNumberByEntity($configs = array()) {
       global $DB, $LANG;
       
       /*Must be defined*/
-      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      
+      if (count($configs) < 0) {
+         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      }
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
@@ -298,20 +300,24 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
 
    function reportHgbarOpenTicketNumberByCategoryAndByType() {
-      return $this->reportHgbarTicketNumberByCategoryAndByType('open');
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      return $this->reportHgbarTicketNumberByCategoryAndByType('open',$configs);
    }
 
    function reportHgbarCloseTicketNumberByCategoryAndByType() {
-      return $this->reportHgbarTicketNumberByCategoryAndByType('close');
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      return $this->reportHgbarTicketNumberByCategoryAndByType('close',$configs);
    }
 
-   private function reportHgbarTicketNumberByCategoryAndByType($filter) {
+   private function reportHgbarTicketNumberByCategoryAndByType($filter, $configs=array()) {
       global $DB, $LANG;
       
       $datas = array();
       
       /*Must be defined*/
-      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      if (count($configs) < 0) {
+         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      }
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -470,15 +476,18 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportLineNbTicket() {
 
       $area = false;
-      return $this->reportAreaNbTicket($area);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      return $this->reportAreaNbTicket($area, $configs);
    }
    
-   function reportAreaNbTicket($area = true) {
+   function reportAreaNbTicket($area = true, $configs=array()) {
       global $DB, $LANG;
       
       $datas = array();
       /*Must be defined*/ 
-      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      if (count($configs) < 0) {
+         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      }
       
       foreach ($configs as $k => $v) {
          $$k=$v;
@@ -508,21 +517,25 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    
    function reportVstackbarNbTicket() {
       $area = false;
-      return $this->reportGlineNbTicket($area);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      return $this->reportGlineNbTicket($area, $configs);
    }
    
    function reportGareaNbTicket() {
       $area = true;
-      return $this->reportGlineNbTicket($area);
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      return $this->reportGlineNbTicket($area, $configs);
    }
 
-   function reportGlineNbTicket($area = false) {
+   function reportGlineNbTicket($area = false, $configs = array()) {
       global $DB, $LANG;
       
       $datas = array();
       $tmp_datas = array();
       /*Must be defined*/
-      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      if (count($configs) < 0) {
+         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      }
       
       foreach ($configs as $k => $v) {
          $$k=$v;
