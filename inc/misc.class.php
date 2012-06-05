@@ -50,7 +50,7 @@ class PluginMreportingMisc {
    }
 
 
-   static function showSelector($date1, $date2, $rand) {
+   static function showSelector($date1, $date2, $randname) {
       global $LANG, $DB;
 
       $request_string = self::getRequestString($_GET);
@@ -59,11 +59,11 @@ class PluginMreportingMisc {
       echo "<table class='tab_cadre' width='20%'><tr class='tab_bg_1'>";
 
       echo "<td>";
-      Html::showDateFormItem("date1".$rand, $date1, false);
+      Html::showDateFormItem("date1".$randname, $date1, false);
       echo "</td>\n";
 
       echo "<td>";
-      Html::showDateFormItem("date2".$rand, $date2, false);
+      Html::showDateFormItem("date2".$randname, $date2, false);
       echo "</td>\n";
 
       echo "<td rowspan='2' class='center'>";
@@ -75,23 +75,23 @@ class PluginMreportingMisc {
    }
 
 
-   static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $rand) {
+   static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname) {
 
-      if (!isset($_REQUEST['date1'.$rand])) 
-         $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
-      if (!isset($_REQUEST['date2'.$rand])) 
-         $_REQUEST['date2'.$rand] = strftime("%Y-%m-%d");
+      if (!isset($_REQUEST['date1'.$randname])) 
+         $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+      if (!isset($_REQUEST['date2'.$randname])) 
+         $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
 
-      $date_array1=explode("-",$_REQUEST['date1'.$rand]);
+      $date_array1=explode("-",$_REQUEST['date1'.$randname]);
       $time1=mktime(0,0,0,$date_array1[1],$date_array1[2],$date_array1[0]);
 
-      $date_array2=explode("-",$_REQUEST['date2'.$rand]);
+      $date_array2=explode("-",$_REQUEST['date2'.$randname]);
       $time2=mktime(0,0,0,$date_array2[1],$date_array2[2],$date_array2[0]);
 
       //if data inverted, reverse it
       if ($time1 > $time2) {
          list($time1, $time2) = array($time2, $time1);
-         list($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand]) = array($_REQUEST['date2'.$rand], $_REQUEST['date1'.$rand]);
+         list($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname]) = array($_REQUEST['date2'.$randname], $_REQUEST['date1'.$randname]);
       }
 
       $begin=date("Y-m-d H:i:s",$time1);
@@ -101,15 +101,17 @@ class PluginMreportingMisc {
    }
 
    static function exportSvgToPng($svgin) {
+
       $im = new Imagick();
+      $im->setBackgroundColor(new ImagickPixel('transparent'));
+      $svg = file_get_contents($svgin);
+      $im->readImageBlob($svg);
 
-      $im->readImageBlob($svgin);
+      $im->setImageFormat("png32");
 
-      $im->setImageFormat("png24");
-      $im->resizeImage(720, 445, imagick::FILTER_LANCZOS, 1);
 
       echo '<img src="data:image/jpg;base64,' . base64_encode($im) . '"  />';
-
+      
       $im->clear();
       $im->destroy();
    }

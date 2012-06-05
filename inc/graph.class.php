@@ -41,7 +41,7 @@ class PluginMreportingGraph {
       global $LANG;
       
       $width = $this->width + 100;
-      $rand = $options['rand'];
+      $randname = $options['randname'];
       
       echo "<div class='center'><div id='fig' style='width:{$width}px'>";
       //Show global title
@@ -50,7 +50,7 @@ class PluginMreportingGraph {
          echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
          echo "</div>";
       }
-      //Show grraph title
+      //Show graph title
       echo "<div class='graph_title'>";
       $backtrace = debug_backtrace();
       $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
@@ -64,36 +64,36 @@ class PluginMreportingGraph {
          $desc =$options['desc'];
       }
       if (!empty($options['desc']) 
-            && isset($_REQUEST['date1'.$rand]) 
-               && isset($_REQUEST['date1'.$rand])) {
+            && isset($_REQUEST['date1'.$randname]) 
+               && isset($_REQUEST['date1'.$randname])) {
          $desc.= " - ";
       }
-      if (isset($_REQUEST['date1'.$rand]) 
-            && isset($_REQUEST['date1'.$rand])) {
-         $desc.= Html::convdate($_REQUEST['date1'.$rand])." / ".
-            Html::convdate($_REQUEST['date2'.$rand]);
+      if (isset($_REQUEST['date1'.$randname]) 
+            && isset($_REQUEST['date1'.$randname])) {
+         $desc.= Html::convdate($_REQUEST['date1'.$randname])." / ".
+            Html::convdate($_REQUEST['date2'.$randname]);
       }
       echo "<div class='graph_desc'>".$desc."</div>";
       
       //Show date selector
       //using rand for display x graphs on same page
       
-      if (!isset($_REQUEST['date1'.$rand])) 
-            $_REQUEST['date1'.$rand] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
-      if (!isset($_REQUEST['date2'.$rand])) 
-         $_REQUEST['date2'.$rand] = strftime("%Y-%m-%d");
+      if (!isset($_REQUEST['date1'.$randname])) 
+            $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
+      if (!isset($_REQUEST['date2'.$randname])) 
+         $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
 
       echo "<div class='graph_navigation'>";
-      PluginMreportingMisc::showSelector($_REQUEST['date1'.$rand], $_REQUEST['date2'.$rand],$rand);
+      PluginMreportingMisc::showSelector($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
       echo "</div>";
-      
+
       //Script for graph display
-      if ($rand !== false) {
-         echo "<div class='graph' id='graph_content$rand'>";
+      if ($randname !== false) {
+         echo "<div class='graph' id='graph_content$randname'>";
 
          $colors = "'".implode ("', '", PluginMreportingConfig::getColors())."'";
          echo "<script type='text/javascript+protovis'>
-            function showGraph$rand() {
+            function showGraph$randname() {
                colors = pv.colors($colors);";
       }
    }
@@ -119,9 +119,7 @@ class PluginMreportingGraph {
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
-      $rand = $opt['rand'];
-      
+
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
@@ -132,7 +130,7 @@ class PluginMreportingGraph {
 
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "delay" => $delay,
                         "export" => $export,
                         "short_classname" => $opt["short_classname"]);
@@ -142,7 +140,7 @@ class PluginMreportingGraph {
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["rand"] = false;
+         $opt["randname"] = false;
          $opt["export"] = false;
          PluginMreportingCommon::endGraph($opt);
          return false;
@@ -168,7 +166,7 @@ $JS = <<<JAVASCRIPT
 
    var offset = 0;
 
-   var vis{$rand} = new pv.Panel()
+   var vis{$randname} = new pv.Panel()
       .width(width_hbar)
       .height(height_hbar)
       .bottom(20)
@@ -176,7 +174,7 @@ $JS = <<<JAVASCRIPT
       .right(10)
       .top(5);
 
-   vis{$rand}.add(pv.Panel)
+   vis{$randname}.add(pv.Panel)
       .data(datas)
       .top(function() y(this.index))
       .height(y.range().band)
@@ -232,7 +230,7 @@ $JS = <<<JAVASCRIPT
    //render in loop to animate
    var interval = setInterval(function() {
       offset++;
-      vis{$rand}.render();
+      vis{$randname}.render();
       if (offset > 100) clearInterval(interval);
    }, 20);
 
@@ -242,6 +240,7 @@ JAVASCRIPT;
          echo $JS;
       }
       
+      $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
@@ -272,8 +271,6 @@ JAVASCRIPT;
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
-      $rand = $opt['rand'];
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
@@ -285,7 +282,7 @@ JAVASCRIPT;
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -295,7 +292,7 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["rand"] = false;
+         $opt["randname"] = false;
          $opt["export"] = false;
          PluginMreportingCommon::endGraph($opt);
          return false;
@@ -320,7 +317,7 @@ $JS = <<<JAVASCRIPT
 
    var offset = 0;
 
-   var vis{$rand} = new pv.Panel()
+   var vis{$randname} = new pv.Panel()
       .top(5)
       .left(10)
       .bottom(5)
@@ -328,7 +325,7 @@ $JS = <<<JAVASCRIPT
       .height(height_pie)
       .def("o", -1)
       .lineWidth(0)
-   vis{$rand}.add(pv.Wedge)
+   vis{$randname}.add(pv.Wedge)
          .data(datas)
          .outerRadius(radius-40)
          .angle(function(d) {
@@ -346,12 +343,12 @@ $JS = <<<JAVASCRIPT
          .event("mouseover", function() {
             this.parent.o(this.index) ; 
             Hilighted[this.index] = true; 
-            return vis{$rand};
+            return vis{$randname};
          })
          .event("mouseout", function() {  
             this.parent.o(-1) ; 
             Hilighted[this.index] = false; 
-            return vis{$rand};
+            return vis{$randname};
          })
          .strokeStyle(function() { return colors(this.index).darker(); })
          .lineWidth(3)
@@ -371,7 +368,7 @@ $JS = <<<JAVASCRIPT
          .text(function() { return datas[this.index]+" {$unit}"; });
 
    // legend
-   vis{$rand}.add(pv.Dot)
+   vis{$randname}.add(pv.Dot)
       .data(labels)
       .right(5)
       .top(function(d) { return 5 + this.index * 15; })
@@ -379,8 +376,8 @@ $JS = <<<JAVASCRIPT
          return (this.parent.o() == this.index) ? colors(this.index).alpha(.6) : colors(this.index) &&
          Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
       })
-      .event("mouseover", function() {Hilighted[this.index] = true; return vis{$rand};})
-      .event("mouseout", function() { Hilighted[this.index] = false; return vis{$rand};})
+      .event("mouseover", function() {Hilighted[this.index] = true; return vis{$randname};})
+      .event("mouseout", function() { Hilighted[this.index] = false; return vis{$randname};})
       .strokeStyle(function() { return colors(this.index).darker(); })
    .anchor("right").add(pv.Label)
       .textAlign("right")
@@ -392,7 +389,7 @@ $JS = <<<JAVASCRIPT
    //render in loop to animate
    var interval = setInterval(function() {
       offset++;
-      vis{$rand}.render();
+      vis{$randname}.render();
       if (offset > 100) clearInterval(interval);
    }, 20);
 JAVASCRIPT;
@@ -401,6 +398,7 @@ JAVASCRIPT;
          echo $JS;
       }
       
+      $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
@@ -436,8 +434,6 @@ JAVASCRIPT;
          $$key=$val;
       }
       
-      $rand = $opt['rand'];
-      
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
@@ -448,7 +444,7 @@ JAVASCRIPT;
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -458,7 +454,7 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["rand"] = false;
+         $opt["randname"] = false;
          $opt["export"] = false;
          PluginMreportingCommon::endGraph($opt);
          return false;
@@ -479,14 +475,14 @@ $JS = <<<JAVASCRIPT
          i = -1, //mouseover index
          offset = 99; // animation offset
 
-   var vis{$rand} = new pv.Panel()
+   var vis{$randname} = new pv.Panel()
       .width(width)
       .height(height)
       .top(10)
       .event("mousemove", pv.Behavior.point(Infinity));
 
    /*** Radial layout ***/
-   var partition = vis{$rand}.add(pv.Layout.Partition.Fill)
+   var partition = vis{$randname}.add(pv.Layout.Partition.Fill)
       .nodes(pv.dom(datas).root(null).nodes())
       .size(function(d) d.nodeValue)
       .order("ascending")
@@ -531,11 +527,11 @@ $JS = <<<JAVASCRIPT
    wedge.anchor().add(pv.Mark)
       .event("point", function() {
          (i = this.index, label);
-         return vis{$rand};
+         return vis{$randname};
       })
       .event("unpoint", function() {
          (i = -1, label);
-         return vis{$rand};
+         return vis{$randname};
       });
 
    /*** Label titles ***/
@@ -574,7 +570,7 @@ $JS = <<<JAVASCRIPT
    //render in loop to animate
    var interval = setInterval(function() {
       offset++;
-      vis{$rand}.render();
+      vis{$randname}.render();
       if (offset > 100) clearInterval(interval);
    }, 20);
 
@@ -584,6 +580,7 @@ JAVASCRIPT;
          echo $JS;
       }
       $labels2 = $raw_datas['labels2'];
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
@@ -615,9 +612,7 @@ JAVASCRIPT;
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
-      $rand = $opt['rand'];
-      
+
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
@@ -628,7 +623,7 @@ JAVASCRIPT;
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -638,7 +633,7 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["rand"] = false;
+         $opt["randname"] = false;
          $opt["export"] = false;
          PluginMreportingCommon::endGraph($opt);
          return false;
@@ -667,7 +662,7 @@ $JS = <<<JAVASCRIPT
 
    var offset = 0;
 
-   var vis{$rand} = new pv.Panel()
+   var vis{$randname} = new pv.Panel()
       .width(width_hgbar)
       .height(height_hgbar)
       .bottom(20)
@@ -675,7 +670,7 @@ $JS = <<<JAVASCRIPT
       .right(10)
       .top(5);
 
-   panel = vis{$rand}.add(pv.Panel)
+   panel = vis{$randname}.add(pv.Panel)
       .data(datas)
       .top(function() { return y(this.index) + m*14; })
       .height(y.range().band)
@@ -711,12 +706,12 @@ $JS = <<<JAVASCRIPT
       .event("mouseover", function() { 
          this.parent.active(true); 
          Hilighted[this.parent.active] = true; 
-         return vis{$rand};
+         return vis{$randname};
       })
       .event("mouseout", function() { 
          this.parent.active(false); 
          Hilighted[this.parent.active] = false; 
-         return vis{$rand};
+         return vis{$randname};
       })
       .strokeStyle(function() { return colors(this.parent.parent.index).darker(); })
       .lineWidth(2)
@@ -729,7 +724,7 @@ $JS = <<<JAVASCRIPT
       .text(function(d) { return  d+" {$unit}"; });
 
    // axis and tick
-   vis{$rand}.add(pv.Rule)
+   vis{$randname}.add(pv.Rule)
          .data(x.ticks(6))
          .left(x)
          .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "#000"; })
@@ -742,18 +737,18 @@ $JS = <<<JAVASCRIPT
          .text(x.tickFormat);
 
    // legend
-   vis{$rand}.add(pv.Dot)
+   vis{$randname}.add(pv.Dot)
       .data(labels2)
       .right(160)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);})
       .event("mouseover", function() {
          Hilighted[this.index] = true; 
-         return vis{$rand};
+         return vis{$randname};
       }) // override
       .event("mouseout", function() { 
          Hilighted[this.index] = false; 
-         return vis{$rand};
+         return vis{$randname};
       })
       .strokeStyle(function() { return colors(this.index).darker(); })
    .anchor("right").add(pv.Label)
@@ -765,7 +760,7 @@ $JS = <<<JAVASCRIPT
    //render in loop to animate
    var interval = setInterval(function() {
       offset++;
-      vis{$rand}.render();
+      vis{$randname}.render();
       if (offset > 100) clearInterval(interval);
    }, 20);
 JAVASCRIPT;
@@ -774,6 +769,7 @@ JAVASCRIPT;
          echo $JS;
       }
       
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
@@ -808,9 +804,6 @@ JAVASCRIPT;
          $$key=$val;
       }
       
-      $rand = $opt['rand'];
-
-      
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
@@ -821,7 +814,7 @@ JAVASCRIPT;
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -831,7 +824,7 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["rand"] = false;
+         $opt["randname"] = false;
          $opt["export"] = false;
          PluginMreportingCommon::endGraph($opt);
          return false;
@@ -861,7 +854,7 @@ $JS = <<<JAVASCRIPT
        Hilighted = [false, false,false, false,false, false];
 
    
-   var vis{$rand} = new pv.Panel()
+   var vis{$randname} = new pv.Panel()
        .width(w)
        .height(h)
        .bottom(100)
@@ -870,13 +863,13 @@ $JS = <<<JAVASCRIPT
        .top(5);
 
    /*** stacks of bar ***/
-   var stack{$rand} = vis{$rand}.add(pv.Layout.Stack)
+   var stack{$randname} = vis{$randname}.add(pv.Layout.Stack)
       .layers(datas)
       .x(function() x(this.index))
       .y(function(d) 1- 50/offset + y(d))
 
    /*** bars ***/
-   var bar{$rand} = stack{$rand}.layer.add(pv.Bar)
+   var bar{$randname} = stack{$randname}.layer.add(pv.Bar)
       .width(x.range().band)
       .fillStyle(function(d) {
          if(Hilighted[this.parent.index] && d!=0) return colors(this.parent.index).alpha(.6);
@@ -888,14 +881,14 @@ $JS = <<<JAVASCRIPT
       })
       .event("mouseover", function() {
          i = this.index;
-         return vis{$rand};
+         return vis{$randname};
       })
       .event("mouseout", function() {
          i = -1;
-         return vis{$rand};
+         return vis{$randname};
       });
 
-   bar{$rand}.anchor("top").add(pv.Label)
+   bar{$randname}.anchor("top").add(pv.Label)
       .visible(function(d){
          return ( (this.index == i || Hilighted[this.parent.index]) && (d >= max / 100) && (d!=0) ) ? true : false ;
       })
@@ -905,7 +898,7 @@ $JS = <<<JAVASCRIPT
 
 
    /*** x-axis labels and ticks ***/
-   var hiddenanchor{$rand} = stack{$rand}.layer.add(pv.Bar)
+   var hiddenanchor{$randname} = stack{$randname}.layer.add(pv.Bar)
       .fillStyle(null)
       .width(x.range().band)
       .bottom(-80)
@@ -922,7 +915,7 @@ $JS = <<<JAVASCRIPT
 
 
    /*** y-axis ticks and labels ***/
-   vis{$rand}.add(pv.Rule)
+   vis{$randname}.add(pv.Rule)
        .data(y.ticks())
        .bottom(y)
        .left(function(d) d ? 0 : null)
@@ -932,7 +925,7 @@ $JS = <<<JAVASCRIPT
        .text(y.tickFormat);
        
    // legend
-   dot{$rand} = vis{$rand}.add(pv.Dot) // legend dots
+   dot{$randname} = vis{$randname}.add(pv.Dot) // legend dots
       .data(labels)
       .right(40)
       .top(function(d) { return 5 + this.index * 15; })
@@ -941,11 +934,11 @@ $JS = <<<JAVASCRIPT
       })
       .event("mouseover", function(d) {
          Hilighted[this.index] = true;
-         return vis{$rand};
+         return vis{$randname};
       })
       .event("mouseout", function() { 
          Hilighted[this.index] = false; 
-         return vis{$rand};
+         return vis{$randname};
       })
       .strokeStyle(function() { return colors(this.index).darker(); })
    .anchor("right").add(pv.Label) // legend labels
@@ -954,7 +947,7 @@ $JS = <<<JAVASCRIPT
       .textBaseline("middle")
       .textStyle(function() { return colors(this.index).darker(); });
    
-   dot{$rand}.anchor("left").add(pv.Label) // legend labels
+   dot{$randname}.anchor("left").add(pv.Label) // legend labels
       .textAlign("left")
       .textBaseline("middle")
       .text(function() {
@@ -964,10 +957,10 @@ $JS = <<<JAVASCRIPT
       .textStyle(function() { return colors(this.index).darker(); });
 
    //render in loop to animate
-   //vis{$rand}.render();
+   //vis{$randname}.render();
    var interval = setInterval(function() {
          offset++;
-         vis{$rand}.render();
+         vis{$randname}.render();
          if (offset > 100) clearInterval(interval);
       }, 20);
 
@@ -977,6 +970,7 @@ JAVASCRIPT;
          echo $JS;
       }
       
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
@@ -1008,9 +1002,7 @@ JAVASCRIPT;
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
-      $rand = $opt['rand'];
-      
+
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
@@ -1024,7 +1016,7 @@ JAVASCRIPT;
 
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -1034,7 +1026,7 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["rand"] = false;
+         $opt["randname"] = false;
          $opt["export"] = false;
          PluginMreportingCommon::endGraph($opt);
          return false;
@@ -1059,7 +1051,7 @@ $JS = <<<JAVASCRIPT
 
 
    /* The root panel. */
-   var vis{$rand} = new pv.Panel()
+   var vis{$randname} = new pv.Panel()
       .width(width_area)
       .height(height_area)
       .bottom(20)
@@ -1068,7 +1060,7 @@ $JS = <<<JAVASCRIPT
       .top(5);
 
    /* Y-axis and ticks. */
-   vis{$rand}.add(pv.Rule)
+   vis{$randname}.add(pv.Rule)
       .data(y.ticks(5))
       .bottom(y)
       .lineWidth(1)
@@ -1077,7 +1069,7 @@ $JS = <<<JAVASCRIPT
          .text(y.tickFormat);
 
    /* X-axis and ticks. */
-   vis{$rand}.add(pv.Rule)
+   vis{$randname}.add(pv.Rule)
       .data(datas)
       .left(function() x(this.index)-1)
       .bottom(-5)
@@ -1094,7 +1086,7 @@ $JS = <<<JAVASCRIPT
          .text(function() { return labels[this.index]; });
 
    /* add mini black lines in front of labels tick */
-   vis{$rand}.add(pv.Rule)
+   vis{$randname}.add(pv.Rule)
       .data(datas)
       .left(function() x(this.index)-1)
       .bottom(-5)
@@ -1106,7 +1098,7 @@ $JS = <<<JAVASCRIPT
       });
 
    /* The line with an area. */
-   var line{$rand} = vis{$rand}.add(pv.Line)
+   var line{$randname} = vis{$randname}.add(pv.Line)
       .tension(function () {
          return ('{$unit}' == '%') ? 0.9 : 0.7;
       })
@@ -1121,7 +1113,7 @@ $JS = <<<JAVASCRIPT
       .lineWidth(4);
 
    if ('{$area}'>0) {
-      line{$rand}.add(pv.Area)
+      line{$randname}.add(pv.Area)
          .visible(function() {
             return n < ((offset / 2) * ( n / 12));
          })
@@ -1131,7 +1123,7 @@ $JS = <<<JAVASCRIPT
    }
 
    /* Dots */
-   var dot = line{$rand}.add(pv.Dot)
+   var dot = line{$randname}.add(pv.Dot)
       .left(function() x(this.index))
       .bottom(function(d) y(d))
       .fillStyle(function () { return (i == this.index) ? "#ff7f0e" : "white";})
@@ -1140,7 +1132,7 @@ $JS = <<<JAVASCRIPT
 
    /* The mouseover dots and label. */
    var i = -1;
-   vis{$rand}.add(pv.Dot)
+   vis{$randname}.add(pv.Dot)
        .visible(function() i >= 0)
        .left(5)
        .top(5)
@@ -1151,21 +1143,21 @@ $JS = <<<JAVASCRIPT
        .textStyle("#1f77b4");
 
    /* An invisible bar to capture events (without flickering). */
-   vis{$rand}.add(pv.Bar)
+   vis{$randname}.add(pv.Bar)
       .fillStyle("rgba(0,0,0,.001)")
       .event("mouseout", function() {
          i = -1;
-         return vis{$rand};
+         return vis{$randname};
       })
       .event("mousemove", function() {
-         i = Math.round(x.invert(vis{$rand}.mouse().x));
-         return vis{$rand};
+         i = Math.round(x.invert(vis{$randname}.mouse().x));
+         return vis{$randname};
       });
 
    //render in loop to animate
    var interval = setInterval(function() {
       offset++;
-      vis{$rand}.render();
+      vis{$randname}.render();
       if (offset > 100) clearInterval(interval);
    }, 20);
 JAVASCRIPT;
@@ -1174,6 +1166,7 @@ JAVASCRIPT;
          echo $JS;
       }
       
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
@@ -1222,9 +1215,7 @@ JAVASCRIPT;
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
-      $rand = $opt['rand'];
-      
+
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
@@ -1235,7 +1226,7 @@ JAVASCRIPT;
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
@@ -1245,7 +1236,7 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["rand"] = false;
+         $opt["randname"] = false;
          $opt["export"] = false;
          PluginMreportingCommon::endGraph($opt);
          return false;
@@ -1274,7 +1265,7 @@ $JS = <<<JAVASCRIPT
    //console.log(x.ticks());
 
    /* The root panel. */
-   var vis{$rand} = new pv.Panel()
+   var vis{$randname} = new pv.Panel()
       .width(width_area)
       .height(height_area)
       .bottom(20)
@@ -1283,7 +1274,7 @@ $JS = <<<JAVASCRIPT
       .top(5);
 
    /* Y-ticks. */
-   vis{$rand}.add(pv.Rule)
+   vis{$randname}.add(pv.Rule)
       .data(y.ticks())
       .bottom(function(d) Math.round(y(d)) - .5)
       .strokeStyle(function(d) d ? "#eee" : "black")
@@ -1291,7 +1282,7 @@ $JS = <<<JAVASCRIPT
        .text(function(d) d.toFixed(1));
 
    /* X-ticks. */
-   vis{$rand}.add(pv.Rule)
+   vis{$randname}.add(pv.Rule)
       .data(x.ticks(m))
       .left(function(d) Math.round(x(d)) - .5)
       .strokeStyle(function() {
@@ -1308,7 +1299,7 @@ $JS = <<<JAVASCRIPT
          });
 
    /* add mini black lines in front of labels tick */
-   vis{$rand}.add(pv.Rule)
+   vis{$randname}.add(pv.Rule)
       .data(x.ticks(m))
       .left(function() x(this.index)-1)
       .bottom(-5)
@@ -1320,11 +1311,11 @@ $JS = <<<JAVASCRIPT
       });
 
    /* A panel for each data series. */
-   var panel{$rand} = vis{$rand}.add(pv.Panel)
+   var panel{$randname} = vis{$randname}.add(pv.Panel)
       .data(datas);
 
    /* The line. */
-   var lines{$rand} = panel{$rand}.add(pv.Line)
+   var lines{$randname} = panel{$randname}.add(pv.Line)
       .tension(function () {
          return ('{$unit}' == '%') ? 0.9 : 0.7;
       })
@@ -1340,7 +1331,7 @@ $JS = <<<JAVASCRIPT
       .lineWidth(2);
 
    if ('{$area}'>0) {
-      lines{$rand}.add(pv.Area)
+      lines{$randname}.add(pv.Area)
          .visible(function() {
             return m < ((offset / 2) * ( m / 12));
          })
@@ -1351,7 +1342,7 @@ $JS = <<<JAVASCRIPT
    }
 
    /* The dots*/
-   var dots{$rand} = lines{$rand}.add(pv.Dot)
+   var dots{$randname} = lines{$randname}.add(pv.Dot)
       .left(function() x(this.index))
       .bottom(function(d) y(d))
       .fillStyle(function () {
@@ -1362,12 +1353,12 @@ $JS = <<<JAVASCRIPT
 
 
    /* The legend */
-   var legend_dots{$rand} = lines{$rand}.add(pv.Dot)
+   var legend_dots{$randname} = lines{$randname}.add(pv.Dot)
          .data(function(d) [d[i]])
          .left(5)
          .top(function() this.parent.index * 13 + 10);
 
-   var legend_labels{$rand} = legend_dots{$rand}.anchor("right").add(pv.Label)
+   var legend_labels{$randname} = legend_dots{$randname}.anchor("right").add(pv.Label)
          .text(function(d) {
             var text = labels[this.parent.index];
             if (i > 0) text += " : "+d+" {$unit}"; // mouse over labels
@@ -1376,22 +1367,22 @@ $JS = <<<JAVASCRIPT
 
 
    /* An invisible bar to capture events (without flickering). */
-   vis{$rand}.add(pv.Bar)
+   vis{$randname}.add(pv.Bar)
       .fillStyle("rgba(0,0,0,.001)")
       .event("mouseout", function() {
          i = -1;
-         return vis{$rand};
+         return vis{$randname};
       })
       .event("mousemove", function() {
-         i = Math.round(x.invert(vis{$rand}.mouse().x));
-         return vis{$rand}  ;
+         i = Math.round(x.invert(vis{$randname}.mouse().x));
+         return vis{$randname}  ;
       });
 
 
    //render in loop to animate
    var interval = setInterval(function() {
       offset++;
-      vis{$rand}.render();
+      vis{$randname}.render();
       if (offset > 100) clearInterval(interval);
    }, 20);
 
@@ -1401,6 +1392,7 @@ JAVASCRIPT;
          echo $JS;
       }
       
+      $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,

@@ -45,8 +45,6 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          $$key=$val;
       }
       
-      $rand = $opt['rand'];
-
       if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       if (isset($raw_datas['datas'])) {
@@ -73,7 +71,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export);
 
       $this->initGraph($options);
@@ -108,8 +106,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       
       if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
    
-      $rand = $opt['rand'];
-      
+
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
       } else {
@@ -133,7 +130,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       
       $options = array("title" => $title,
                         "desc" => $desc,
-                        "rand" => $rand,
+                        "randname" => $randname,
                         "export" => $export);
                   
       $this->initGraph($options);

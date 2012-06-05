@@ -104,12 +104,8 @@ class PluginMreportingCommon extends CommonDBTM {
                   if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['desc']))
                      $desc_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['desc'];
                      
-                  $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name]=$classname.$i;
-            
-                  $rand = $_SESSION['glpi_plugin_mreporting_rand'][$short_classname][$f_name];
-                  
-                  $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
-                  $min_url_graph  = "front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype&amp;rand=$rand";
+                  $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype";
+                  $min_url_graph  = "front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype";
                   
                   $reports[$classname]['title'] = $title;
                   $reports[$classname]['functions'][$i]['function'] = $f_name;
@@ -119,7 +115,6 @@ class PluginMreportingCommon extends CommonDBTM {
                   $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
                   $reports[$classname]['functions'][$i]['gtype'] = $gtype;
                   $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
-                  $reports[$classname]['functions'][$i]['rand'] = $rand;
                   $reports[$classname]['functions'][$i]['is_active'] = false;
                   $config = new PluginMreportingConfig();
                   if ($config->getFromDBByFunctionAndClassname($f_name,$classname)) {
@@ -344,7 +339,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      }
                      
                      echo "<td>";
-                     echo "<input type='checkbox' name='check[" . $v['rand'] . "]'";
+                     echo "<input type='checkbox' name='check[" . $v['function'].$classname . "]'";
                      if (isset($_POST['check']) && $_POST['check'] == 'all')
                         echo " checked ";
                      echo ">";
@@ -491,6 +486,7 @@ class PluginMreportingCommon extends CommonDBTM {
    static function endGraph($options) {
       global $LANG, $CFG_GLPI;
       
+      
       $opt        = array();
       $export     = false;
       $datas      = array();
@@ -502,23 +498,23 @@ class PluginMreportingCommon extends CommonDBTM {
          $$k=$v;
       }
       
-      $rand = false;
-      if (isset($opt['rand'])) {
+      $randname = false;
+      if (isset($opt['randname'])) {
 			
-			$rand = $opt['rand'];
+			$randname = $opt['randname'];
 			$_REQUEST['short_classname'] = $opt['short_classname'];
 			$_REQUEST['f_name'] = $opt['f_name'];
 			$_REQUEST['gtype'] = $opt['gtype'];
-			$_REQUEST['rand'] = $opt['rand'];
+			$_REQUEST['randname'] = $opt['randname'];
 			
 			
 			//End Script for graph display
-			//if $rand exists
+			//if $randname exists
 			if (!$export 
                && $CFG_GLPI['default_graphtype'] == 'svg') {
 
 				echo "}
-					showGraph$rand();
+					showGraph$randname();
 				</script>";
 				echo "</div>";
 
@@ -526,7 +522,7 @@ class PluginMreportingCommon extends CommonDBTM {
       }
       $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
       
-		if ($rand !== false && !$export) {
+		if ($randname !== false && !$export) {
 			
 			$show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'],$opt['class']);
 			self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
@@ -554,12 +550,10 @@ class PluginMreportingCommon extends CommonDBTM {
 			
 			if ($_REQUEST['f_name'] != "test") {
             echo "</div></div>";
-         } else {
-            echo "</div>";
          }
 		}
 		
-		if ($rand == false) {
+		if ($randname == false) {
 			echo "</div>";
 		}
       //destroy specific palette
@@ -794,17 +788,17 @@ class PluginMreportingCommon extends CommonDBTM {
                   
                   foreach ($opt['check'] as $do=>$to) {
                      
-                     if ($do == $function['rand']) {
+                     if ($do == $function['function'].$classname) {
                         //dynamic instanciation of class passed by 'short_classname' GET parameter
                         $class = 'PluginMreporting'.$function['short_classname'];
                         $obj = new $class();
-                        
+                        $randname = $classname.$function['function'];
                         if (isset($opt['date1']) && isset($opt['date2'])) {
                            
                            $s = strtotime($opt['date2'])-strtotime($opt['date1']); 
                            
-                           $_REQUEST['date1'.$function['rand']] = $opt['date1'];
-                           $_REQUEST['date2'.$function['rand']] = $opt['date2'];
+                           $_REQUEST['date1'.$randname] = $opt['date1'];
+                           $_REQUEST['date2'.$randname] = $opt['date2'];
                         }
                         
                         
@@ -832,7 +826,7 @@ class PluginMreportingCommon extends CommonDBTM {
                                     "f_name" => $function['function'],
                                     "class" => $opt['classname'],
                                     "gtype" => $function['gtype'],
-                                    "rand" => $function['rand']); 
+                                    "randname" => $randname); 
                         
                         $show_label = 'always';
                         
@@ -875,14 +869,14 @@ class PluginMreportingCommon extends CommonDBTM {
            $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
          }
          if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'])
-               && isset($_REQUEST['date1'.$opt['rand']]) 
-               && isset($_REQUEST['date2'.$opt['rand']])) {
+               && isset($_REQUEST['date1'.$opt['randname']]) 
+               && isset($_REQUEST['date2'.$opt['randname']])) {
             $desc_func.= " - ";
          }
-         if (isset($_REQUEST['date1'.$opt['rand']]) 
-               && isset($_REQUEST['date2'.$opt['rand']])) {
-            $desc_func.= Html::convdate($_REQUEST['date1'.$opt['rand']]).
-                        " / ".Html::convdate($_REQUEST['date2'.$opt['rand']]);
+         if (isset($_REQUEST['date1'.$opt['randname']]) 
+               && isset($_REQUEST['date2'.$opt['randname']])) {
+            $desc_func.= Html::convdate($_REQUEST['date1'.$opt['randname']]).
+                        " / ".Html::convdate($_REQUEST['date2'.$opt['randname']]);
          }
          
          $show_label = 'always';
@@ -1192,6 +1186,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $params = array(
          'short_classname' => "test",
          'f_name' => "test",
+         'class' => "test",
          'gtype' => "test"
       );
 
