@@ -140,9 +140,11 @@ class PluginMreportingGraph {
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["randname"] = false;
-         $opt["export"] = false;
-         PluginMreportingCommon::endGraph($opt);
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -292,9 +294,11 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["randname"] = false;
-         $opt["export"] = false;
-         PluginMreportingCommon::endGraph($opt);
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -454,9 +458,11 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["randname"] = false;
-         $opt["export"] = false;
-         PluginMreportingCommon::endGraph($opt);
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -633,9 +639,11 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["randname"] = false;
-         $opt["export"] = false;
-         PluginMreportingCommon::endGraph($opt);
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -824,9 +832,11 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["randname"] = false;
-         $opt["export"] = false;
-         PluginMreportingCommon::endGraph($opt);
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -1026,9 +1036,11 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["randname"] = false;
-         $opt["export"] = false;
-         PluginMreportingCommon::endGraph($opt);
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -1236,9 +1248,11 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $opt["randname"] = false;
-         $opt["export"] = false;
-         PluginMreportingCommon::endGraph($opt);
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       

@@ -458,7 +458,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showHbar($params) {
-   
+      global $LANG;
+      
       $criterias = PluginMreportingCommon::initGraphParams($params);
       
       foreach ($criterias as $key => $val) {
@@ -491,8 +492,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         if (!$export)
-            echo "</div>";
+         echo $LANG['plugin_mreporting']["error"][1];
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -632,6 +637,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showPie($params) {
+      global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
       
@@ -665,8 +671,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         if (!$export)
-            echo "</div>";
+         echo $LANG['plugin_mreporting']["error"][1];
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -840,7 +850,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       
       //$rand = $opt['rand'];
-      
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
@@ -865,8 +874,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         if (!$export)
-            echo "</div>";
+         echo $LANG['plugin_mreporting']["error"][1];
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -890,8 +903,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($max == 1 && $unit == '%') $max = 100;
 
       $nb_bar = count($datas) * count($labels2);
-      $width = $this->width;
-      $height = 28 * $nb_bar + count($labels2) * 24;
+      $width = $this->width-200;
+      $height = 350;
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
@@ -906,17 +919,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //background
       $bg_color = $grey;
       if ($export) $bg_color = $white;
-      imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
+      imagefilledrectangle($image, 1, 1, $width - 2, $height-2, $bg_color);
 
       //create border on export
       if ($export) {
-         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+         imagerectangle($image, 0, 0, $width - 1, $height , $black);
       }
 
       //config font
       $font = "../fonts/FreeSans.ttf";
       $fontsize = 8;
       $fontangle = 0;
+
 
       //add title on export
       if ($export) {
@@ -931,15 +945,157 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $title
          );
       }
-      
+
       if ($export && $desc) {
          imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
       }
+
+       //second pie (bigger)
+       $index = 0;
+       $index2 = 0;
+       $x = $width / 4 +50;
+       $y = $height / 4 +100;
+       $radius = 250;
+       $start_angle = 0;
+       $start_angle2 = 0;
+
+       $mymax=0;
+       $nb = array();
+       foreach ($datas as $label => $data) {
+           $nb[$label]=array_sum($data);
+               $mymax+=$nb[$label];
+       }
+
+       foreach ($datas as $label => $data) {
+           $angle = $start_angle + (360 * $nb[$label]) / $mymax;
+           
+           $color_rbg = $this->colorHexToRGB($palette[$index]);
+
+           //EXTERNAL PIE
+           foreach($data as $label2 => $data2) {
+               if(!is_array($data2) && ($data2!=0)){
+                   $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
+
+                   //full circle need fix
+                   if ($angle2 - $start_angle2 == 360) {
+                       $angle2 = 359.999;
+                       $start_angle2 = 0;
+                   }
+
+                   $color[0]=$color_rbg[0]-(($index2)*6);
+                   $color[1]=$color_rbg[1]-(($index2)*6);
+                   $color[2]=$color_rbg[2]-(($index2)*0.5);
+                   $color[3]=$color_rbg[3];
+
+                   imageSmoothArc($image, $x, $y, $radius, $radius, $color, deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI);
+
+                   //imagearc($image,$x,$y,$radius,$radius,deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI,$black);
+
+                   /*imageSmoothArcDrawSegment ($image, $x, $y, $a, $b, $aaAngleX, $aaAngleY, $black, $start, $stop, $seg) */
+
+                   $start_angle2 = $angle2;
+                   $index2++;
+               }
+           }
+
+
+           // Interior PIE
+           //full circle need fix
+           if ($angle - $start_angle == 360) {
+               $angle = 359.999;
+               $start_angle = 0;
+           }
+
+           imageSmoothArc($image, $x, $y, $radius-180, $radius-180, $color_rbg,
+               deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
+
+           //text associated with pie arc (only for angle > 2°)
+           if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
+               $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/6));
+               $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/6));
+               imagettftext(
+                   $image,
+                   $fontsize = 8,
+                   $fontangle = 0,
+                   $xtext,
+                   $ytext,
+                   $darkerpalette[$index],
+                   $font,
+                   Html::clean($nb[$label])
+               );
+           }
+
+           $start_angle = $angle;
+           $index++;
+       }
+
+       //EXTERNAL PIE LEGEND
+       $start_angle2=0;
+       foreach ($datas as $label => $data) {
+           $angle = $start_angle + (360 * $nb[$label]) / $mymax;
+           foreach($data as $label2 => $data2) {
+               if(!is_array($data2) && ($data2!=0)){
+                   $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
+                   //full circle need fix
+                   if ($angle2 - $start_angle2 == 360) {
+                       $angle2 = 359.999;
+                       $start_angle2 = 0;
+                   }
+
+                   //text associated with pie arc (only for angle > 2°)
+                   if ($angle2 > 10 && ($show_label == "always" || $show_label == "hover")) {
+                           $fontangle2 =  $start_angle2 - 80;
+                           $xtext = $x + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/3.3));
+                           $ytext = $y + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/3.3));
+
+                       imagettftext(
+                           $image,
+                           $fontsize = 7,
+                           $fontangle2,
+                           $xtext,
+                           $ytext,
+                           $black,
+                           $font,
+                           Html::clean($label2)
+                       );
+                   }
+
+                   $start_angle2 = $angle2;
+                   $index2++;
+               }
+           }
+           $start_angle = $angle;
+       }
+
+       //legend interior pie (align right)
+       $index = 0;
+       $fontsize = 9;
+       foreach ($labels as $label) {
+           $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+           $textwidth = abs($box[4] - $box[0]);
+           //legend label
+           imagettftext(
+               $image,
+               $fontsize,
+               $fontangle,
+               $width - $textwidth - 15,
+               25 + $index * (15) ,
+               $darkerpalette[$index],
+               $font,
+               Html::clean($label)
+           );
+           //legend circle
+           $color_rbg = $this->colorHexToRGB($palette[$index]);
+           imageSmoothArc($image, $width - 10, 20 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
+
+           $index++;
+       }
 
       //generate image
       $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
+                      "class" => $opt['class'],
                       "title" => $title,
                       "randname" => $randname,
                       "raw_datas" => $raw_datas);
@@ -954,7 +1110,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options);
-      
    }
 
 
@@ -974,6 +1129,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showHgbar($params) {
+      global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
       
@@ -1007,8 +1163,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         if (!$export)
-            echo "</div>";
+         echo $LANG['plugin_mreporting']["error"][1];
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -1197,7 +1357,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showVstackbar($params) {
-
+      global $LANG;
+      
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -1230,8 +1391,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
 
       if (count($datas) <= 0) {
-         if (!$export)
-             echo "</div>";
+         echo $LANG['plugin_mreporting']["error"][1];
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
 
@@ -1449,11 +1614,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
-         "export"    => $export,
-         "datas"     => $datas,
-         "labels2"   => $labels2,
-         "flip_data" => $flip_data,
-         "unit"      => $unit);
+                        "export"    => $export,
+                        "datas"     => $datas,
+                        "labels2"   => $labels2,
+                        "flip_data" => $flip_data,
+                        "unit"      => $unit);
       PluginMreportingCommon::endGraph($options);
     }
 
@@ -1474,6 +1639,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showArea($params) {
+      global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
       
@@ -1511,8 +1677,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         if (!$export)
-            echo "</div>";
+         echo $LANG['plugin_mreporting']["error"][1];
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       
@@ -1727,6 +1897,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showGArea($params) {
+      global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
       
@@ -1760,8 +1931,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         if (!$export)
-            echo "</div>";
+         echo $LANG['plugin_mreporting']["error"][1];
+         $end['opt']["export"] = false;
+         $end['opt']["randname"] = false;
+         $end['opt']["f_name"] = $opt['f_name'];
+         $end['opt']["class"] = $opt['class'];
+         PluginMreportingCommon::endGraph($end);
          return false;
       }
       

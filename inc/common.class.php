@@ -499,7 +499,7 @@ class PluginMreportingCommon extends CommonDBTM {
       }
       
       $randname = false;
-      if (isset($opt['randname'])) {
+      if (isset($opt['randname']) && $opt['randname'] !== false) {
 			
 			$randname = $opt['randname'];
 			$_REQUEST['short_classname'] = $opt['short_classname'];
@@ -526,7 +526,10 @@ class PluginMreportingCommon extends CommonDBTM {
 			
 			$show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'],$opt['class']);
 			self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
-			
+		
+		}
+		if (!$export) {
+		
 			if ($_REQUEST['f_name'] != "test") {
 				echo "<div class='graph_bottom'>";
 				echo "<span style='float:left'>";
@@ -535,14 +538,15 @@ class PluginMreportingCommon extends CommonDBTM {
 				echo "<span style='float:right'>";
 				echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
 				echo "&nbsp;<a href='config.form.php?name=".$opt['f_name']."&classname=".$opt['class']."' target='_blank'>";
-				echo "<img src='../pics/config.png' class='title_pics'/></a>- ";
-				echo "<b>".$LANG['buttons'][31]."</b> : ";
-				echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
-				if ($show_graph) {
-               echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
-            }
-				echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
-				
+				echo "<img src='../pics/config.png' class='title_pics'/></a>";
+				if ($randname !== false) {
+               echo " - <b>".$LANG['buttons'][31]."</b> : ";
+               echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
+               if ($show_graph) {
+                  echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
+               }
+               echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
+				}
 				echo "</span>";
 			}
 			echo "<div style='clear:both;'></div>";

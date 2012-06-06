@@ -48,11 +48,11 @@ function plugin_mreporting_install() {
 	`show_graph` tinyint(1) NOT NULL default '0',
 	`show_area` tinyint(1) NOT NULL default '0',
 	`spline` tinyint(1) NOT NULL default '0',
-	`show_label` VARCHAR(10) NOT NULL,
+	`show_label` VARCHAR(10) default NULL,
 	`flip_data` tinyint(1) NOT NULL default '0',
-	`unit` VARCHAR(10) NOT NULL,
-	`default_delay` VARCHAR(10) NOT NULL,
-	`condition` VARCHAR(255) NOT NULL,
+	`unit` VARCHAR(10) default NULL,
+	`default_delay` VARCHAR(10) default NULL,
+	`condition` VARCHAR(255) default NULL,
    PRIMARY KEY  (`id`),
 	KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
