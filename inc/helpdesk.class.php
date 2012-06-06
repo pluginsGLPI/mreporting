@@ -609,7 +609,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
-
+      
+      $datas = array();
+      
       $query = "SELECT 
             glpi_itilcategories.completename as category_name,
             glpi_itilcategories.itilcategories_is as parent,
@@ -624,13 +626,17 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ORDER BY glpi_itilcategories.name
       ";
       
-      return array('datas' => array( 
+      $datas['labels2'] = array( 
+           'key1', 
+           'key2',
+           'key3');
+      
+      $datas['datas'] = array( 
            'key1' => array('key1.1' => 12, 'key1.2' => 25, 'key1.3' => 43), 
            'key2' => array('key2.1' => array("2.3.1"=>10,"2.3.2"=>8,"2.3.3" =>17)/*25*/, 'key2.2' => 18, 'key2.3' => 25),
            'key3' => array('key3.1' => 12, 'key3.2' => 25, 'key3.3' => 43)
-         ), 
-         'root' => "test"
-      );
+         );
+      return $datas;
    }
 }
 
