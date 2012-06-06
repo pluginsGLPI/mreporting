@@ -1036,9 +1036,10 @@ class PluginMreportingCommon extends CommonDBTM {
       
       $odf = new odf($template, $config);
       
-      $reports = $this->getAllReports();
-      foreach($reports as $classname => $report) {
-         $titre = $report['title'];
+      $titre = '';
+      $short_classname = str_replace('PluginMreporting', '', $params[0]['class']);
+      if (isset($LANG['plugin_mreporting'][$short_classname]['title'])) {
+         $titre = $LANG['plugin_mreporting'][$short_classname]['title'];
       }
       
       $odf->setVars('titre', $titre, true, 'UTF-8');
