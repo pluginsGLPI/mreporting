@@ -201,7 +201,17 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["is_active"]="1";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
-               break;   
+               break;
+            case 'hgbar':
+               $this->fields["name"]=$funct_name;
+               $this->fields["classname"]=$classname;
+               $this->fields["is_active"]="1";
+               $this->fields["show_graph"]="1";
+               $this->fields["show_label"]="hover";
+               $this->fields["spline"]="0";
+               $this->fields["show_area"]="0";
+               $this->fields["default_delay"]="365";
+               break; 
             default:
                $this->fields["name"]=$funct_name;
                $this->fields["classname"]=$classname;
