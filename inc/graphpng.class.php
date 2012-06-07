@@ -1358,7 +1358,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     */
    function showVstackbar($params) {
       global $LANG;
-      
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -1401,12 +1401,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       $labels2 = $raw_datas['labels2'];
-      
+
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       $raw_datas['datas'] = $datas;
-      
+
       $values = array_values($datas);
-      
+
       $labels = array_keys($datas);
 
 
@@ -1420,7 +1420,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //process datas (reverse keys)
       $new_datas=array();
-      
+
       foreach ($datas as $key1 => $data) {
          foreach ($data as $key2 => $subdata) {
             $new_datas[$key2][$key1] = $subdata;
@@ -1443,8 +1443,23 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $height = 400;
       $width_bar = ($width - 350) / count($labels2);
 
+       //config font
+       $font = "../fonts/FreeSans.ttf";
+       $fontsize = 8;
+       $fontangle = 0;
+
+       //longueur du texte en dessous des barres
+       $index = 0;
+       foreach ($labels2 as $label) {
+           $lx = 55 + $index * $width_bar;
+           $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$label);
+           $textwidth[$label] = abs($box[4] - $box[0]);
+           $index++;
+       }
+       $maxtextwidth = max($textwidth) ;
+
       //create image
-      $image = imagecreatetruecolor ($width, $height);
+      $image = imagecreatetruecolor ($width, $height+$maxtextwidth);
 
       //colors
       $black = imagecolorallocate($image, 0, 0, 0);
@@ -1458,17 +1473,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       //background
       $bg_color = $grey;
       //if ($export) $bg_color = $white;
-      imagefilledrectangle($image, 0, 0, $width, $height - 1, $white);
+      imagefilledrectangle($image, 0, 0, $width, $height + $maxtextwidth, $white);
 
       //create border on export
       if ($export) {
-         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
-      }   
-
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 8;
-      $fontangle = 0;
+         imagerectangle($image, 0, 0, $width - 1, $height - 1 + $maxtextwidth, $black);
+      }
 
       //draw x-axis grey step line and values ticks
       $xstep = round(($height - 60) / 13);
@@ -1481,7 +1491,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $val = round($i * $cum / 12);
          $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
          $textwidth = abs($box[4] - $box[0]);
-      
+
          imagettftext($image, $fontsize, $fontangle, 38-$textwidth, $yaxis+5, $drakgrey, $font, $val);
       }
 
@@ -1503,11 +1513,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $font,
             $title
          );
-      }  
+      }
 
       if ($export && $desc) {
          imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
-      } 
+      }
 
 
       $index1 = 0;
@@ -1561,7 +1571,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imagettftext(
             $image,
             $fontsize-1,
-            $fontangle,
+            -45,
             $lx,
             $height-15,
             $black,
@@ -1607,7 +1617,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                      "title" => $title,
                      "randname" => $randname,
                      "raw_datas" => $raw_datas);
-      
+
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
