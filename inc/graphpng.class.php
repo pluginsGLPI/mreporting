@@ -904,7 +904,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $nb_bar = count($datas) * count($labels2);
       $width = $this->width-200;
-      $height = 350;
+      $height = 500;
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
@@ -953,8 +953,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
        //second pie (bigger)
        $index = 0;
        $index2 = 0;
-       $x = $width / 4 +50;
-       $y = $height / 4 +100;
+       $x = $width / 4 +100;
+       $y = $height / 4 +150;
        $radius = 250;
        $start_angle = 0;
        $start_angle2 = 0;
@@ -1053,7 +1053,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                    if ($angle2 > 10 && ($show_label == "always" || $show_label == "hover")) {
                            //$fontangle2 =  $start_angle2 - 80;
                            $xtext = $x - 25 + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
-                           $ytext = $y + 5 + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
+                           $ytext = $y + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
 
                        imagettftext(
                            $image,
