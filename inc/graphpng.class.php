@@ -989,6 +989,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                    imageSmoothArc($image, $x, $y, $radius, $radius, $color, deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI);
 
+                   $xtext = $x  + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
+                   $ytext = $y  + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
+
+
+                   imageline($image, $xtext, $ytext , $x + (sin(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)) , $y + (cos(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)), $black);
+
+
                    //imagearc($image,$x,$y,$radius,$radius,deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI,$black);
 
                    /*imageSmoothArcDrawSegment ($image, $x, $y, $a, $b, $aaAngleX, $aaAngleY, $black, $start, $stop, $seg) */
@@ -1011,8 +1018,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
            //text associated with pie arc (only for angle > 2°)
            if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
-               $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/6));
-               $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/6));
+               $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/8));
+               $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/8));
                imagettftext(
                    $image,
                    $fontsize = 8,
@@ -1044,19 +1051,19 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                    //text associated with pie arc (only for angle > 2°)
                    if ($angle2 > 10 && ($show_label == "always" || $show_label == "hover")) {
-                           $fontangle2 =  $start_angle2 - 80;
-                           $xtext = $x + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/3.3));
-                           $ytext = $y + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/3.3));
+                           //$fontangle2 =  $start_angle2 - 80;
+                           $xtext = $x - 25 + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
+                           $ytext = $y + 5 + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
 
                        imagettftext(
                            $image,
                            $fontsize = 7,
-                           $fontangle2,
+                           $fontangle,
                            $xtext,
                            $ytext,
                            $black,
                            $font,
-                           Html::clean($label2)
+                           Html::clean($label2." : ".$data2)
                        );
                    }
 
@@ -1084,6 +1091,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $font,
                Html::clean($label)
            );
+
            //legend circle
            $color_rbg = $this->colorHexToRGB($palette[$index]);
            imageSmoothArc($image, $width - 10, 20 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
