@@ -753,8 +753,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //text associated with pie arc (only for angle > 2°)
             if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
-               $xtext = $x - 3 + (sin(deg2rad(($start_angle+$angle)/2))*($radius/1.6));
-               $ytext = $y + 5  + (cos(deg2rad(($start_angle+$angle)/2))*($radius/1.6));
+               $xtext = $x - 3 + (sin(deg2rad(($start_angle+$angle)/2))*($radius/1.8));
+               $ytext = $y + 5  + (cos(deg2rad(($start_angle+$angle)/2))*($radius/1.8));
                imagettftext(
                   $image,
                   $fontsize = 8,
@@ -1564,7 +1564,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $index = 0;
       //pour chaque mois
       foreach ($labels2 as $label) {
-         $lx = 47 + $index * $width_bar;
+         $lx = 54 + $index * $width_bar;
          $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$label);
          $textwidth = abs($box[4] - $box[0]);
          $textheight = abs($box[5] - $box[1]);
@@ -1573,7 +1573,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $fontsize-1,
             -45,
             $lx,
-            $height-15,
+            $height-20,
             $black,
             $font,
             Html::clean($label)
