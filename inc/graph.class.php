@@ -1375,7 +1375,7 @@ $JS = <<<JAVASCRIPT
    var legend_labels{$randname} = legend_dots{$randname}.anchor("right").add(pv.Label)
          .text(function(d) {
             var text = labels[this.parent.index];
-            if (i > 0) text += " : "+d+" {$unit}"; // mouse over labels
+            if (i > -1) text += " : "+d+" {$unit}"; // mouse over labels
             return text;
          });
 
