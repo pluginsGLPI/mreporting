@@ -147,9 +147,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       ob_start();
       
       if ($export=="odt") {
-         $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
-         imagepng($image,$path);
-         
+         $show_graph = PluginMreportingConfig::showGraphConfigValue($f_name,$class);
+         if ($show_graph) {
+            $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
+            imagepng($image,$path);
+         }
          $common = new PluginMreportingCommon();
          $options[] = array("title"   => $title,
                           "f_name"     => $f_name,
@@ -160,10 +162,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return true;
          
       } else if ($export=="odtall") {
-      
-         $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
-         imagepng($image,$path);
          
+         $show_graph = PluginMreportingConfig::showGraphConfigValue($f_name,$class);
+         if ($show_graph) {
+            $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
+            imagepng($image,$path);
+         }
          if (isset($raw_datas['datas'])) {
             $_SESSION['glpi_plugin_mreporting_odtarray'][]=array("title"   => $title,
                                                               "f_name"     => $f_name,
@@ -516,91 +520,92 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
+      
+      if ($show_graph) {
+         //colors
+         $black = imagecolorallocate($image, 0, 0, 0);
+         $white = imagecolorallocate($image, 255, 255, 255);
+         $grey = imagecolorallocate($image, 242, 242, 242);
+         $palette = $this->getPalette($image, $nb_bar);
+         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
-      //colors
-      $black = imagecolorallocate($image, 0, 0, 0);
-      $white = imagecolorallocate($image, 255, 255, 255);
-      $grey = imagecolorallocate($image, 242, 242, 242);
-      $palette = $this->getPalette($image, $nb_bar);
-      $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+         //background
+         $bg_color = $grey;
+         if ($export) $bg_color = $white;
+         imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
-      //background
-      $bg_color = $grey;
-      if ($export) $bg_color = $white;
-      imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
+         //create border on export
+         if ($export) {
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+         }
 
-      //create border on export
-      if ($export) {
-         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
-      }
+         //config font
+         $font = "../fonts/FreeSans.ttf";
+         $fontsize = 8;
+         $fontangle = 0;
 
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 8;
-      $fontangle = 0;
+         //add title on export
+         if ($export) {
+            imagettftext(
+               $image,
+               $fontsize+2,
+               $fontangle,
+               10,
+               20,
+               $black,
+               $font,
+               $title
+            );
+         }
 
-      //add title on export
-      if ($export) {
-         imagettftext(
-            $image,
-            $fontsize+2,
-            $fontangle,
-            10,
-            20,
-            $black,
-            $font,
-            $title
-         );
-      }
+         //bars
+         $index = 0;
+         foreach ($datas as $label => $data) {
+            $bx1 = 250;
+            $by1 = ($index+1) * 28 + 30;
+            $bx2 = $bx1 + round(($data*($width -300)) / $max);
+            $by2 = $by1 + 20;
 
-      //bars
-      $index = 0;
-      foreach ($datas as $label => $data) {
-         $bx1 = 250;
-         $by1 = ($index+1) * 28 + 30;
-         $bx2 = $bx1 + round(($data*($width -300)) / $max);
-         $by2 = $by1 + 20;
+            //createbar
+            ImageFilledRectangle($image, $bx1, $by1, $bx2, $by2, $palette[$index]);
+            imagerectangle($image, $bx1, $by1-1, $bx2+1, $by2+1, $darkerpalette[$index]);
+            imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index]);
 
-         //createbar
-         ImageFilledRectangle($image, $bx1, $by1, $bx2, $by2, $palette[$index]);
-         imagerectangle($image, $bx1, $by1-1, $bx2+1, $by2+1, $darkerpalette[$index]);
-         imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index]);
-
-         //create data label
-         if($show_label == "always" || $show_label == "hover") {
+            //create data label
+            if($show_label == "always" || $show_label == "hover") {
+               imagettftext(
+                  $image,
+                  $fontsize,
+                  $fontangle,
+                  $bx2 + 6,
+                  $by1 + 14,
+                  $darkerpalette[$index],
+                  $font,
+                  Html::clean($data.$unit)
+               );
+            }
+            //create axis label (align right)
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index]);
+            $textwidth = abs($box[4] - $box[0]);
+            $textheight = abs($box[5] - $box[1]);
             imagettftext(
                $image,
                $fontsize,
                $fontangle,
-               $bx2 + 6,
+               245 - $textwidth,
                $by1 + 14,
-               $darkerpalette[$index],
+               $black,
                $font,
-               Html::clean($data.$unit)
+               Html::clean($labels[$index])
             );
+
+            $index++;
          }
-         //create axis label (align right)
-         $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index]);
-         $textwidth = abs($box[4] - $box[0]);
-         $textheight = abs($box[5] - $box[1]);
-         imagettftext(
-            $image,
-            $fontsize,
-            $fontangle,
-            245 - $textwidth,
-            $by1 + 14,
-            $black,
-            $font,
-            Html::clean($labels[$index])
-         );
 
-         $index++;
+         //y axis
+         imageline($image, 250, 40, 250, $height-20, $black);
+         imageline($image, 251, 40, 251, $height-20, $black);
       }
-
-      //y axis
-      imageline($image, 250, 40, 250, $height-20, $black);
-      imageline($image, 251, 40, 251, $height-20, $black);
-      
       $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
@@ -699,106 +704,107 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
-
-      //colors
-      $black = imagecolorallocate($image, 0, 0, 0);
-      $white = imagecolorallocate($image, 255, 255, 255);
-      $grey = imagecolorallocate($image, 242, 242, 242);
-      $palette = $this->getPalette($image, $nb_bar);
-      $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
-
-      //background
-      $bg_color = $grey;
-      if ($export) $bg_color = $white;
-      imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
-
-      //create border on export
-      if ($export) {
-         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
-      }
-
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 8;
-      $fontangle = 0;
-
-      //add title on export
-      if ($export) {
-         imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
-      }
       
-      if ($export && $desc) {
-         imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
-      }
+      if ($show_graph) {
+         //colors
+         $black = imagecolorallocate($image, 0, 0, 0);
+         $white = imagecolorallocate($image, 255, 255, 255);
+         $grey = imagecolorallocate($image, 242, 242, 242);
+         $palette = $this->getPalette($image, $nb_bar);
+         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
-      //pie
-      $index = 0;
-      $x = $width / 4+50;
-      $y = $height / 2;
-      $radius = $height / 1.5;
-      $start_angle = 0;
-      foreach ($datas as $label => $data) {
-         $angle = $start_angle + (360 * $data) / $max;
+         //background
+         $bg_color = $grey;
+         if ($export) $bg_color = $white;
+         imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
-         //full circle need fix
-         if ($angle - $start_angle == 360) {
-            $angle = 359.999; 
-            $start_angle = 0; 
+         //create border on export
+         if ($export) {
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
          }
 
-         if ($data != 0) {
-            $color_rbg = $this->colorHexToRGB($palette[$index]);
-            imageSmoothArc($image, $x, $y, $radius+8, $radius+8, $color_rbg,
-                           deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
+         //config font
+         $font = "../fonts/FreeSans.ttf";
+         $fontsize = 8;
+         $fontangle = 0;
 
-            //text associated with pie arc (only for angle > 2°)
-            if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
-               $xtext = $x - 3 + (sin(deg2rad(($start_angle+$angle)/2))*($radius/1.8));
-               $ytext = $y + 5  + (cos(deg2rad(($start_angle+$angle)/2))*($radius/1.8));
-               imagettftext(
-                  $image,
-                  $fontsize = 8,
-                  $fontangle = 0,
-                  $xtext,
-                  $ytext,
-                  $darkerpalette[$index],
-                  $font,
-                  Html::clean($data.$unit)
-               );
+         //add title on export
+         if ($export) {
+            imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
+         }
+         
+         if ($export && $desc) {
+            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+         }
+
+         //pie
+         $index = 0;
+         $x = $width / 4+50;
+         $y = $height / 2;
+         $radius = $height / 1.5;
+         $start_angle = 0;
+         foreach ($datas as $label => $data) {
+            $angle = $start_angle + (360 * $data) / $max;
+
+            //full circle need fix
+            if ($angle - $start_angle == 360) {
+               $angle = 359.999; 
+               $start_angle = 0; 
             }
 
-            $start_angle = $angle;
+            if ($data != 0) {
+               $color_rbg = $this->colorHexToRGB($palette[$index]);
+               imageSmoothArc($image, $x, $y, $radius+8, $radius+8, $color_rbg,
+                              deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
+
+               //text associated with pie arc (only for angle > 2°)
+               if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
+                  $xtext = $x - 3 + (sin(deg2rad(($start_angle+$angle)/2))*($radius/1.8));
+                  $ytext = $y + 5  + (cos(deg2rad(($start_angle+$angle)/2))*($radius/1.8));
+                  imagettftext(
+                     $image,
+                     $fontsize = 8,
+                     $fontangle = 0,
+                     $xtext,
+                     $ytext,
+                     $darkerpalette[$index],
+                     $font,
+                     Html::clean($data.$unit)
+                  );
+               }
+
+               $start_angle = $angle;
+            }
+            $index++;
          }
-         $index++;
+
+         //legend (align right)
+         $index = 0;
+         $fontsize = 9;
+         foreach ($labels as $label) {
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+            $textwidth = abs($box[4] - $box[0]);
+            $textheight = abs($box[5] - $box[1]);
+
+            //legend label
+            imagettftext(
+               $image,
+               $fontsize,
+               $fontangle,
+               $width - $textwidth - 15,
+               15 + $index * (15) ,
+               $darkerpalette[$index],
+               $font,
+               Html::clean($label)
+            );
+
+            //legend circle
+            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            imageSmoothArc($image, $width - 10, 10 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
+
+            $index++;
+         }
       }
-
-      //legend (align right)
-      $index = 0;
-      $fontsize = 9;
-      foreach ($labels as $label) {
-         $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
-         $textwidth = abs($box[4] - $box[0]);
-         $textheight = abs($box[5] - $box[1]);
-
-         //legend label
-         imagettftext(
-            $image,
-            $fontsize,
-            $fontangle,
-            $width - $textwidth - 15,
-            15 + $index * (15) ,
-            $darkerpalette[$index],
-            $font,
-            Html::clean($label)
-         );
-
-         //legend circle
-         $color_rbg = $this->colorHexToRGB($palette[$index]);
-         imageSmoothArc($image, $width - 10, 10 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
-
-         $index++;
-      }
-      
       $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
@@ -908,180 +914,181 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
+      
+      if ($show_graph) {
+         //colors
+         $black = imagecolorallocate($image, 0, 0, 0);
+         $white = imagecolorallocate($image, 255, 255, 255);
+         $grey = imagecolorallocate($image, 242, 242, 242);
+         $palette = $this->getPalette($image, $nb_bar);
+         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
-      //colors
-      $black = imagecolorallocate($image, 0, 0, 0);
-      $white = imagecolorallocate($image, 255, 255, 255);
-      $grey = imagecolorallocate($image, 242, 242, 242);
-      $palette = $this->getPalette($image, $nb_bar);
-      $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+         //background
+         $bg_color = $grey;
+         if ($export) $bg_color = $white;
+         imagefilledrectangle($image, 1, 1, $width - 2, $height-2, $bg_color);
 
-      //background
-      $bg_color = $grey;
-      if ($export) $bg_color = $white;
-      imagefilledrectangle($image, 1, 1, $width - 2, $height-2, $bg_color);
+         //create border on export
+         if ($export) {
+            imagerectangle($image, 0, 0, $width - 1, $height , $black);
+         }
 
-      //create border on export
-      if ($export) {
-         imagerectangle($image, 0, 0, $width - 1, $height , $black);
-      }
-
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 8;
-      $fontangle = 0;
-
-
-      //add title on export
-      if ($export) {
-         imagettftext(
-            $image,
-            $fontsize+2,
-            $fontangle,
-            10,
-            20,
-            $black,
-            $font,
-            $title
-         );
-      }
-
-      if ($export && $desc) {
-         imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
-      }
-
-       //second pie (bigger)
-       $index = 0;
-       $index2 = 0;
-       $x = $width / 4 +100;
-       $y = $height / 4 +150;
-       $radius = 250;
-       $start_angle = 0;
-       $start_angle2 = 0;
-
-       $mymax=0;
-       $nb = array();
-       foreach ($datas as $label => $data) {
-           $nb[$label]=array_sum($data);
-               $mymax+=$nb[$label];
-       }
-
-       foreach ($datas as $label => $data) {
-           $angle = $start_angle + (360 * $nb[$label]) / $mymax;
-           
-           $color_rbg = $this->colorHexToRGB($palette[$index]);
-
-           //EXTERNAL PIE
-           foreach($data as $label2 => $data2) {
-               if(!is_array($data2) && ($data2!=0)){
-                   $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
-
-                   //full circle need fix
-                   if ($angle2 - $start_angle2 == 360) {
-                       $angle2 = 359.999;
-                       $start_angle2 = 0;
-                   }
-
-                   $color[0]=$color_rbg[0]-(($index2)*6);
-                   $color[1]=$color_rbg[1]-(($index2)*6);
-                   $color[2]=$color_rbg[2]-(($index2)*0.5);
-                   $color[3]=$color_rbg[3];
-
-                   imageSmoothArc($image, $x, $y, $radius, $radius, $color, deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI);
-
-                   $xtext = $x  + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
-                   $ytext = $y  + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
+         //config font
+         $font = "../fonts/FreeSans.ttf";
+         $fontsize = 8;
+         $fontangle = 0;
 
 
-                   imageline($image, $xtext, $ytext , $x + (sin(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)) , $y + (cos(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)), $black);
+         //add title on export
+         if ($export) {
+            imagettftext(
+               $image,
+               $fontsize+2,
+               $fontangle,
+               10,
+               20,
+               $black,
+               $font,
+               $title
+            );
+         }
+
+         if ($export && $desc) {
+            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+         }
+
+          //second pie (bigger)
+          $index = 0;
+          $index2 = 0;
+          $x = $width / 4 +100;
+          $y = $height / 4 +150;
+          $radius = 250;
+          $start_angle = 0;
+          $start_angle2 = 0;
+
+          $mymax=0;
+          $nb = array();
+          foreach ($datas as $label => $data) {
+              $nb[$label]=array_sum($data);
+                  $mymax+=$nb[$label];
+          }
+
+          foreach ($datas as $label => $data) {
+              $angle = $start_angle + (360 * $nb[$label]) / $mymax;
+              
+              $color_rbg = $this->colorHexToRGB($palette[$index]);
+
+              //EXTERNAL PIE
+              foreach($data as $label2 => $data2) {
+                  if(!is_array($data2) && ($data2!=0)){
+                      $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
+
+                      //full circle need fix
+                      if ($angle2 - $start_angle2 == 360) {
+                          $angle2 = 359.999;
+                          $start_angle2 = 0;
+                      }
+
+                      $color[0]=$color_rbg[0]-(($index2)*6);
+                      $color[1]=$color_rbg[1]-(($index2)*6);
+                      $color[2]=$color_rbg[2]-(($index2)*0.5);
+                      $color[3]=$color_rbg[3];
+
+                      imageSmoothArc($image, $x, $y, $radius, $radius, $color, deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI);
+
+                      $xtext = $x  + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
+                      $ytext = $y  + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
 
 
-                   //imagearc($image,$x,$y,$radius,$radius,deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI,$black);
-
-                   /*imageSmoothArcDrawSegment ($image, $x, $y, $a, $b, $aaAngleX, $aaAngleY, $black, $start, $stop, $seg) */
-
-                   $start_angle2 = $angle2;
-                   $index2++;
-               }
-           }
+                      imageline($image, $xtext, $ytext , $x + (sin(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)) , $y + (cos(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)), $black);
 
 
-           // Interior PIE
-           //full circle need fix
-           if ($angle - $start_angle == 360) {
-               $angle = 359.999;
-               $start_angle = 0;
-           }
+                      //imagearc($image,$x,$y,$radius,$radius,deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI,$black);
 
-           imageSmoothArc($image, $x, $y, $radius-180, $radius-180, $color_rbg,
-               deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
+                      /*imageSmoothArcDrawSegment ($image, $x, $y, $a, $b, $aaAngleX, $aaAngleY, $black, $start, $stop, $seg) */
 
-           //text associated with pie arc (only for angle > 2°)
-           if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
-               $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/8));
-               $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/8));
-               imagettftext(
-                   $image,
-                   $fontsize = 8,
-                   $fontangle = 0,
-                   $xtext,
-                   $ytext,
-                   $darkerpalette[$index],
-                   $font,
-                   Html::clean($nb[$label])
-               );
-           }
+                      $start_angle2 = $angle2;
+                      $index2++;
+                  }
+              }
 
-           $start_angle = $angle;
-           $index++;
-       }
 
-       //EXTERNAL PIE LEGEND
-       $start_angle2=0;
-       foreach ($datas as $label => $data) {
-           $angle = $start_angle + (360 * $nb[$label]) / $mymax;
-           foreach($data as $label2 => $data2) {
-               if(!is_array($data2) && ($data2!=0)){
-                   $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
-                   //full circle need fix
-                   if ($angle2 - $start_angle2 == 360) {
-                       $angle2 = 359.999;
-                       $start_angle2 = 0;
-                   }
+              // Interior PIE
+              //full circle need fix
+              if ($angle - $start_angle == 360) {
+                  $angle = 359.999;
+                  $start_angle = 0;
+              }
 
-                   //text associated with pie arc (only for angle > 2°)
-                   if ($angle2 > 10 && ($show_label == "always" || $show_label == "hover")) {
-                           //$fontangle2 =  $start_angle2 - 80;
-                           $xtext = $x - 25 + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
-                           $ytext = $y + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
+              imageSmoothArc($image, $x, $y, $radius-180, $radius-180, $color_rbg,
+                  deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
 
-                       imagettftext(
-                           $image,
-                           $fontsize = 7,
-                           $fontangle,
-                           $xtext,
-                           $ytext,
-                           $black,
-                           $font,
-                           Html::clean($label2." : ".$data2)
-                       );
-                   }
+              //text associated with pie arc (only for angle > 2°)
+              if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
+                  $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/8));
+                  $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/8));
+                  imagettftext(
+                      $image,
+                      $fontsize = 8,
+                      $fontangle = 0,
+                      $xtext,
+                      $ytext,
+                      $darkerpalette[$index],
+                      $font,
+                      Html::clean($nb[$label])
+                  );
+              }
 
-                   $start_angle2 = $angle2;
-                   $index2++;
-               }
-           }
-           $start_angle = $angle;
-       }
+              $start_angle = $angle;
+              $index++;
+          }
 
-       //legend interior pie (align right)
-       $index = 0;
-       $fontsize = 9;
-       foreach ($labels as $label) {
-           $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
-           $textwidth = abs($box[4] - $box[0]);
-           //legend label
-           imagettftext(
+          //EXTERNAL PIE LEGEND
+          $start_angle2=0;
+          foreach ($datas as $label => $data) {
+              $angle = $start_angle + (360 * $nb[$label]) / $mymax;
+              foreach($data as $label2 => $data2) {
+                  if(!is_array($data2) && ($data2!=0)){
+                      $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
+                      //full circle need fix
+                      if ($angle2 - $start_angle2 == 360) {
+                          $angle2 = 359.999;
+                          $start_angle2 = 0;
+                      }
+
+                      //text associated with pie arc (only for angle > 2°)
+                      if ($angle2 > 10 && ($show_label == "always" || $show_label == "hover")) {
+                              //$fontangle2 =  $start_angle2 - 80;
+                              $xtext = $x - 25 + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
+                              $ytext = $y + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
+
+                          imagettftext(
+                              $image,
+                              $fontsize = 7,
+                              $fontangle,
+                              $xtext,
+                              $ytext,
+                              $black,
+                              $font,
+                              Html::clean($label2." : ".$data2)
+                          );
+                      }
+
+                      $start_angle2 = $angle2;
+                      $index2++;
+                  }
+              }
+              $start_angle = $angle;
+          }
+
+          //legend interior pie (align right)
+          $index = 0;
+          $fontsize = 9;
+         foreach ($labels as $label) {
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+            $textwidth = abs($box[4] - $box[0]);
+            //legend label
+            imagettftext(
                $image,
                $fontsize,
                $fontangle,
@@ -1090,15 +1097,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $darkerpalette[$index],
                $font,
                Html::clean($label)
-           );
+            );
 
-           //legend circle
-           $color_rbg = $this->colorHexToRGB($palette[$index]);
-           imageSmoothArc($image, $width - 10, 20 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
+            //legend circle
+            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            imageSmoothArc($image, $width - 10, 20 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
 
-           $index++;
-       }
-
+            $index++;
+         }
+      }
       //generate image
       $params = array("image" => $image,
                       "export" => $export,
@@ -1202,130 +1209,131 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
-
-      //colors
-      $black = imagecolorallocate($image, 0, 0, 0);
-      $white = imagecolorallocate($image, 255, 255, 255);
-      $grey = imagecolorallocate($image, 242, 242, 242);
-      $palette = $this->getPalette($image, $nb_bar);
-      $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
-
-      //background
-      $bg_color = $grey;
-      if ($export) $bg_color = $white;
-      imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
-
-      //create border on export
-      if ($export) {
-         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
-      }
-
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 8;
-      $fontangle = 0;
-
-      //add title on export
-      if ($export) {
-         imagettftext(
-            $image,
-            $fontsize+2,
-            $fontangle,
-            10,
-            20,
-            $black,
-            $font,
-            $title
-         );
-      }
       
-      if ($export && $desc) {
-         imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
-      }
-      //bars
-      $index1 = 0;
-      $index2 = 0;
+      if ($show_graph) {
+         //colors
+         $black = imagecolorallocate($image, 0, 0, 0);
+         $white = imagecolorallocate($image, 255, 255, 255);
+         $grey = imagecolorallocate($image, 242, 242, 242);
+         $palette = $this->getPalette($image, $nb_bar);
+         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
-      foreach ($datas as $label => $data) {
-         $ly = $index1 * count($labels2) * 28 + count($labels2) *24 / 2 + count($labels2) * 14;
-         $step = $index1 * count($labels2) * 28;
+         //background
+         $bg_color = $grey;
+         if ($export) $bg_color = $white;
+         imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
-         //create axis label (align right)
-         $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index1]);
-         $textwidth = abs($box[4] - $box[0]);
-         $textheight = abs($box[5] - $box[1]);
-         imagettftext(
-            $image,
-            $fontsize,
-            $fontangle,
-            245 - $textwidth,
-            $ly + 14,
-            $black,
-            $font,
-            Html::clean($labels[$index1])
-         );
-
-         foreach ($data as $subdata) {
-            $bx1 = 250;
-            $by1 = ($index2+1) * 22 + $step + count($labels2) * 14;
-            $bx2 = $bx1 + round(($subdata*($width - 300))/$max);
-            $by2 = $by1 + 16;
-
-            //createbar
-            ImageFilledRectangle($image, $bx1, $by1, $bx2, $by2, $palette[$index2]);
-            imagerectangle($image, $bx1, $by1-1, $bx2+1, $by2+1, $darkerpalette[$index2]);
-            imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index2]);
-
-            //create data label
-            if($show_label == "always" || $show_label == "hover") {
-               imagettftext(
-                  $image,
-                  $fontsize,
-                  $fontangle,
-                  $bx2 + 6,
-                  $by1 + 14,
-                  $darkerpalette[$index2],
-                  $font,
-                  $subdata.$unit
-               );
-            }
-            $index2++;
+         //create border on export
+         if ($export) {
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
          }
-         $index1++;
+
+         //config font
+         $font = "../fonts/FreeSans.ttf";
+         $fontsize = 8;
+         $fontangle = 0;
+
+         //add title on export
+         if ($export) {
+            imagettftext(
+               $image,
+               $fontsize+2,
+               $fontangle,
+               10,
+               20,
+               $black,
+               $font,
+               $title
+            );
+         }
+         
+         if ($export && $desc) {
+            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+         }
+         //bars
+         $index1 = 0;
          $index2 = 0;
+
+         foreach ($datas as $label => $data) {
+            $ly = $index1 * count($labels2) * 28 + count($labels2) *24 / 2 + count($labels2) * 14;
+            $step = $index1 * count($labels2) * 28;
+
+            //create axis label (align right)
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index1]);
+            $textwidth = abs($box[4] - $box[0]);
+            $textheight = abs($box[5] - $box[1]);
+            imagettftext(
+               $image,
+               $fontsize,
+               $fontangle,
+               245 - $textwidth,
+               $ly + 14,
+               $black,
+               $font,
+               Html::clean($labels[$index1])
+            );
+
+            foreach ($data as $subdata) {
+               $bx1 = 250;
+               $by1 = ($index2+1) * 22 + $step + count($labels2) * 14;
+               $bx2 = $bx1 + round(($subdata*($width - 300))/$max);
+               $by2 = $by1 + 16;
+
+               //createbar
+               ImageFilledRectangle($image, $bx1, $by1, $bx2, $by2, $palette[$index2]);
+               imagerectangle($image, $bx1, $by1-1, $bx2+1, $by2+1, $darkerpalette[$index2]);
+               imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index2]);
+
+               //create data label
+               if($show_label == "always" || $show_label == "hover") {
+                  imagettftext(
+                     $image,
+                     $fontsize,
+                     $fontangle,
+                     $bx2 + 6,
+                     $by1 + 14,
+                     $darkerpalette[$index2],
+                     $font,
+                     $subdata.$unit
+                  );
+               }
+               $index2++;
+            }
+            $index1++;
+            $index2 = 0;
+         }
+
+         //y axis
+         imageline($image, 250, 40, 250, $height-6, $black);
+         imageline($image, 251, 40, 251, $height-6, $black);
+
+         //legend (align right)
+         $index = 0;
+         $fontsize = 9;
+         foreach ($labels2 as $label) {
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+            $textwidth = abs($box[4] - $box[0]);
+            $textheight = abs($box[5] - $box[1]);
+
+            //legend label
+            imagettftext(
+               $image,
+               $fontsize,
+               $fontangle,
+               $width - $textwidth - 18,
+               10 + $index * 15 ,
+               $black,
+               $font,
+               Html::clean($label)
+            );
+
+            //legend circle
+            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
+
+            $index++;
+         }
       }
-
-      //y axis
-      imageline($image, 250, 40, 250, $height-6, $black);
-      imageline($image, 251, 40, 251, $height-6, $black);
-
-      //legend (align right)
-      $index = 0;
-      $fontsize = 9;
-      foreach ($labels2 as $label) {
-         $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
-         $textwidth = abs($box[4] - $box[0]);
-         $textheight = abs($box[5] - $box[1]);
-
-         //legend label
-         imagettftext(
-            $image,
-            $fontsize,
-            $fontangle,
-            $width - $textwidth - 18,
-            10 + $index * 15 ,
-            $black,
-            $font,
-            Html::clean($label)
-         );
-
-         //legend circle
-         $color_rbg = $this->colorHexToRGB($palette[$index]);
-         imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
-
-         $index++;
-      }
-
       //generate image
       $params = array("image" => $image,
                       "export" => $export,
@@ -1468,155 +1476,156 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //create image
       $image = imagecreatetruecolor ($width, $height+$maxtextwidth);
+      
+      if ($show_graph) {
+         //colors
+         $black = imagecolorallocate($image, 0, 0, 0);
+         $white = imagecolorallocate($image, 255, 255, 255);
+         $grey = imagecolorallocate($image, 230, 230, 230);
+         $drakgrey = imagecolorallocate($image, 180, 180, 180);
+         $palette = $this->getPalette($image, $nb_bar);
+         $alphapalette = $this->getPalette($image, $nb_bar, 90);
+         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
-      //colors
-      $black = imagecolorallocate($image, 0, 0, 0);
-      $white = imagecolorallocate($image, 255, 255, 255);
-      $grey = imagecolorallocate($image, 230, 230, 230);
-      $drakgrey = imagecolorallocate($image, 180, 180, 180);
-      $palette = $this->getPalette($image, $nb_bar);
-      $alphapalette = $this->getPalette($image, $nb_bar, 90);
-      $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+         //background
+         $bg_color = $grey;
+         //if ($export) $bg_color = $white;
+         imagefilledrectangle($image, 0, 0, $width, $height + $maxtextwidth, $white);
 
-      //background
-      $bg_color = $grey;
-      //if ($export) $bg_color = $white;
-      imagefilledrectangle($image, 0, 0, $width, $height + $maxtextwidth, $white);
-
-      //create border on export
-      if ($export) {
-         imagerectangle($image, 0, 0, $width - 1, $height - 1 + $maxtextwidth, $black);
-      }
-
-      //draw x-axis grey step line and values ticks
-      $xstep = round(($height - 60) / 13);
-      for ($i = 0; $i< 13; $i++) {
-         $yaxis = $height- 30 - $xstep * $i ;
-
-         imageLine($image, 30, $yaxis, $width - 125, $yaxis, $grey);
-
-         //value label
-         $val = round($i * $cum / 12);
-         $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
-         $textwidth = abs($box[4] - $box[0]);
-
-         imagettftext($image, $fontsize, $fontangle, 38-$textwidth, $yaxis+5, $drakgrey, $font, $val);
-      }
-
-      //draw y-axis
-      imageLine($image, 40, 50, 40, $height-28, $black);
-
-      //draw x-axis
-      imageline($image, 38, $height-30, $width - 100, $height-30, $black);
-
-      //add title on export
-      if ($export) {
-         imagettftext(
-            $image,
-            $fontsize+2,
-            $fontangle,
-            10,
-            20,
-            $black,
-            $font,
-            $title
-         );
-      }
-
-      if ($export && $desc) {
-         imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
-      }
-
-
-      $index1 = 0;
-      $index2 = 0;
-
-      //pour chaque mois
-      foreach ($new_datas as $label => $data) {
-         //$step = $index1 * count($labels2) * 28;
-
-         $by2 = $height-30;
-
-         //pour chaque donnée
-         foreach ($data as $subdata) {
-            $by1 = $by2;
-            $bx1 = 45 + $index1 * $width_bar;
-            $by2 = $by1 - $subdata * ($height-90) / $cum;
-            $bx2 = $bx1 + $width_bar-10;
-
-            imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $alphapalette[$index2]);
-            imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
-
-            //create data label  // Affichage des données à côté des barres
-            if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
-               imagettftext(
-                  $image,
-                  $fontsize-1,
-                  $fontangle,
-                  $bx1 + 2,
-                  $by1 - ($by1 - $by2)/2 + 5,
-                  $darkerpalette[$index2],
-                  $font,
-                  $subdata.$unit
-               );
-            }
-            $tab[$index2]= $by1;
-            $index2++;
+         //create border on export
+         if ($export) {
+            imagerectangle($image, 0, 0, $width - 1, $height - 1 + $maxtextwidth, $black);
          }
 
-         $index1++;
+         //draw x-axis grey step line and values ticks
+         $xstep = round(($height - 60) / 13);
+         for ($i = 0; $i< 13; $i++) {
+            $yaxis = $height- 30 - $xstep * $i ;
+
+            imageLine($image, 30, $yaxis, $width - 125, $yaxis, $grey);
+
+            //value label
+            $val = round($i * $cum / 12);
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
+            $textwidth = abs($box[4] - $box[0]);
+
+            imagettftext($image, $fontsize, $fontangle, 38-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+         }
+
+         //draw y-axis
+         imageLine($image, 40, 50, 40, $height-28, $black);
+
+         //draw x-axis
+         imageline($image, 38, $height-30, $width - 100, $height-30, $black);
+
+         //add title on export
+         if ($export) {
+            imagettftext(
+               $image,
+               $fontsize+2,
+               $fontangle,
+               10,
+               20,
+               $black,
+               $font,
+               $title
+            );
+         }
+
+         if ($export && $desc) {
+            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+         }
+
+
+         $index1 = 0;
          $index2 = 0;
+
+         //pour chaque mois
+         foreach ($new_datas as $label => $data) {
+            //$step = $index1 * count($labels2) * 28;
+
+            $by2 = $height-30;
+
+            //pour chaque donnée
+            foreach ($data as $subdata) {
+               $by1 = $by2;
+               $bx1 = 45 + $index1 * $width_bar;
+               $by2 = $by1 - $subdata * ($height-90) / $cum;
+               $bx2 = $bx1 + $width_bar-10;
+
+               imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $alphapalette[$index2]);
+               imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
+
+               //create data label  // Affichage des données à côté des barres
+               if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
+                  imagettftext(
+                     $image,
+                     $fontsize-1,
+                     $fontangle,
+                     $bx1 + 2,
+                     $by1 - ($by1 - $by2)/2 + 5,
+                     $darkerpalette[$index2],
+                     $font,
+                     $subdata.$unit
+                  );
+               }
+               $tab[$index2]= $by1;
+               $index2++;
+            }
+
+            $index1++;
+            $index2 = 0;
+         }
+
+         //TEXTE GAUCHE Y
+         $index = 0;
+         //pour chaque mois
+         foreach ($labels2 as $label) {
+            $lx = 54 + $index * $width_bar;
+            $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$label);
+            $textwidth = abs($box[4] - $box[0]);
+            $textheight = abs($box[5] - $box[1]);
+            imagettftext(
+               $image,
+               $fontsize-1,
+               -45,
+               $lx,
+               $height-20,
+               $black,
+               $font,
+               Html::clean($label)
+            );
+
+            $index++;
+         }
+
+         //legend (align right)
+         $index = 0;
+         $fontsize = 9;
+         foreach ($datas as $label => $data) {
+            $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$labels[$index]);
+            $textwidth = abs($box[4] - $box[0]);
+            $textheight = abs($box[5] - $box[1]);
+
+            //legend label
+            imagettftext(
+               $image,
+               $fontsize-1,
+               $fontangle,
+               $width - $textwidth - 18,
+               10 + $index * 15 ,
+               $black,
+               $font,
+               Html::clean($labels[$index])
+            );
+
+            //legend circle
+            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
+
+            $index++;
+         }
       }
-
-      //TEXTE GAUCHE Y
-      $index = 0;
-      //pour chaque mois
-      foreach ($labels2 as $label) {
-         $lx = 54 + $index * $width_bar;
-         $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$label);
-         $textwidth = abs($box[4] - $box[0]);
-         $textheight = abs($box[5] - $box[1]);
-         imagettftext(
-            $image,
-            $fontsize-1,
-            -45,
-            $lx,
-            $height-20,
-            $black,
-            $font,
-            Html::clean($label)
-         );
-
-         $index++;
-      }
-
-      //legend (align right)
-      $index = 0;
-      $fontsize = 9;
-      foreach ($datas as $label => $data) {
-         $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$labels[$index]);
-         $textwidth = abs($box[4] - $box[0]);
-         $textheight = abs($box[5] - $box[1]);
-
-         //legend label
-         imagettftext(
-            $image,
-            $fontsize-1,
-            $fontangle,
-            $width - $textwidth - 18,
-            10 + $index * 15 ,
-            $black,
-            $font,
-            Html::clean($labels[$index])
-         );
-
-         //legend circle
-         $color_rbg = $this->colorHexToRGB($palette[$index]);
-         imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
-
-         $index++;
-      }
-
       //generate image
       $params = array("image" => $image,
                      "export" => $export,
@@ -1721,164 +1730,165 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
+      
+      if ($show_graph) {
+         //colors
+         $black = imagecolorallocate($image, 0, 0, 0);
+         $white = imagecolorallocate($image, 255, 255, 255);
+         $grey = imagecolorallocate($image, 230, 230, 230);
+         $drakgrey = imagecolorallocate($image, 180, 180, 180);
+         $palette = $this->getPalette($image, $nb);
+         $alphapalette = $this->getPalette($image, $nb, "50");
+         $darkerpalette = $this->getDarkerPalette($image, $nb);
 
-      //colors
-      $black = imagecolorallocate($image, 0, 0, 0);
-      $white = imagecolorallocate($image, 255, 255, 255);
-      $grey = imagecolorallocate($image, 230, 230, 230);
-      $drakgrey = imagecolorallocate($image, 180, 180, 180);
-      $palette = $this->getPalette($image, $nb);
-      $alphapalette = $this->getPalette($image, $nb, "50");
-      $darkerpalette = $this->getDarkerPalette($image, $nb);
+         //config font
+         $font = "../fonts/FreeSans.ttf";
+         $fontsize = 7;
+         $fontangle = 0;
 
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 7;
-      $fontangle = 0;
+         //background
+         $bg_color = $white;
+         if ($export) $bg_color = $white;
+         imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
-      //background
-      $bg_color = $white;
-      if ($export) $bg_color = $white;
-      imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
+         //draw x-axis grey step line and values
+         $xstep = round(($height - 60) / 13);
+         for ($i = 0; $i< 13; $i++) {
+            $yaxis = $height- 30 - $xstep * $i ;
 
-      //draw x-axis grey step line and values
-      $xstep = round(($height - 60) / 13);
-      for ($i = 0; $i< 13; $i++) {
-         $yaxis = $height- 30 - $xstep * $i ;
+            //grey lines
+            imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
 
-         //grey lines
-         imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
+            //value labels
+            $val = round($i * $max / 12);
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
+            $textwidth = abs($box[4] - $box[0]);
+            imagettftext($image, $fontsize, $fontangle, 28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+         }
 
-         //value labels
-         $val = round($i * $max / 12);
-         $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
-         $textwidth = abs($box[4] - $box[0]);
-         imagettftext($image, $fontsize, $fontangle, 28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
-      }
+         //draw y-axis grey step line
+         for ($i = 0; $i< $nb; $i++) {
+            $xaxis = 30 + $width_line * $i;
+            imageLine($image, $xaxis, 50, $xaxis, $height-25, $grey);
+         }
 
-      //draw y-axis grey step line
-      for ($i = 0; $i< $nb; $i++) {
-         $xaxis = 30 + $width_line * $i;
-         imageLine($image, $xaxis, 50, $xaxis, $height-25, $grey);
-      }
+         //draw y-axis
+         imageLine($image, 30, 50, 30, $height-25, $black);
 
-      //draw y-axis
-      imageLine($image, 30, 50, 30, $height-25, $black);
+         //draw x-axis
+         imageline($image, 30, $height-30, $width - 60, $height-30, $black);
 
-      //draw x-axis
-      imageline($image, 30, $height-30, $width - 60, $height-30, $black);
+         //create border on export
+         if ($export) {
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+         }
 
-      //create border on export
-      if ($export) {
-         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
-      }
+         //add title on export
+         if ($export) {
+            imagettftext($image, $fontsize+1, $fontangle, 10, 20, $black, $font, $title);
+         }
 
-      //add title on export
-      if ($export) {
-         imagettftext($image, $fontsize+1, $fontangle, 10, 20, $black, $font, $title);
-      }
+         //on png graph, no way to draw curved polygons, force area reports to be linear
+         if ($area) $spline = false;
 
-      //on png graph, no way to draw curved polygons, force area reports to be linear
-      if ($area) $spline = false;
+         //parse datas
+         $index = 0;
+         $old_data = 0;
+         $aCoords = array();
+         foreach ($datas as $label => $data) {
 
-      //parse datas
-      $index = 0;
-      $old_data = 0;
-      $aCoords = array();
-      foreach ($datas as $label => $data) {
+            //if first index, continue
+            if ($index == 0) {
+               $old_data = $data;
+               $index++;
+               continue;
+            }
 
-         //if first index, continue
-         if ($index == 0) {
+            // determine coords
+            $x1 = $index * $width_line - $width_line + 30;
+            $y1 = $height - 30 - $old_data * ($height - 85) / $max;
+            $x2 = $x1 + $width_line;
+            $y2 = $height - 30 - $data * ($height - 85) / $max;
+            $aCoords[$x1] = $y1;
+
+            //in case of area chart fill under point space
+            if ($area > 0) {
+               $points = array(
+                  $x1, $y1,
+                  $x2, $y2,
+                  $x2, $height - 30,
+                  $x1, $height - 30
+               );
+               imagefilledpolygon($image, $points , 4 ,  $alphapalette[0]);
+            }
+
+            //trace lines between points (if linear)
+            if (!$spline) {
+               $this->imageSmoothAlphaLineLarge ($image, $x1, $y1, $x2, $y2, $palette[0]);
+            }       
+            
             $old_data = $data;
             $index++;
-            continue;
          }
 
-         // determine coords
-         $x1 = $index * $width_line - $width_line + 30;
-         $y1 = $height - 30 - $old_data * ($height - 85) / $max;
-         $x2 = $x1 + $width_line;
-         $y2 = $height - 30 - $data * ($height - 85) / $max;
-         $aCoords[$x1] = $y1;
 
-         //in case of area chart fill under point space
-         if ($area > 0) {
-            $points = array(
-               $x1, $y1,
-               $x2, $y2,
-               $x2, $height - 30,
-               $x1, $height - 30
-            );
-            imagefilledpolygon($image, $points , 4 ,  $alphapalette[0]);
+         //if curved spline activated, draw cubic spline for the current line
+         if ($spline) {
+            $aCoords[$x2] = $y2;
+            $this->imageCubicSmoothLine($image, $palette[0], $aCoords);
          }
 
-         //trace lines between points (if linear)
-         if (!$spline) {
-            $this->imageSmoothAlphaLineLarge ($image, $x1, $y1, $x2, $y2, $palette[0]);
-         }       
-         
-         $old_data = $data;
-         $index++;
-      }
+         //draw labels and dots
+         $index = 0;
+         $old_label = "";
+         foreach ($datas as $label => $data) {
+            //if first index, continue
+            if ($index == 0) {
+               $old_data = $data;
+               $old_label = $label;
+               $index++;
+               continue;
+            }
 
+            // determine coords
+            $x1 = $index * $width_line - $width_line + 30;
+            $y1 = $height - 30 - $old_data * ($height - 85) / $max;
+            $x2 = $x1 + $width_line;
+            $y2 = $height - 30 - $data * ($height - 85) / $max;
 
-      //if curved spline activated, draw cubic spline for the current line
-      if ($spline) {
-         $aCoords[$x2] = $y2;
-         $this->imageCubicSmoothLine($image, $palette[0], $aCoords);
-      }
+            //trace dots
+            $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
+            imageSmoothArc($image, $x1-1, $y1-1, 8, 8, $color_rbg, 0, 2 * M_PI);
+            imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
 
-      //draw labels and dots
-      $index = 0;
-      $old_label = "";
-      foreach ($datas as $label => $data) {
-         //if first index, continue
-         if ($index == 0) {
+            //display values label
+            if($show_label == "always" || $show_label == "hover") {
+               imagettftext($image, $fontsize-1, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
+                         $darkerpalette[0], $font, $old_data);
+            }
+
+            //display y ticks and labels
+            if ($step!=0 && ($index / $step) == round($index / $step)) {
+               imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[0]);
+               
+               imagettftext($image, $fontsize, $fontangle, $x1 - 10 , $height-10, $black,
+                         $font, $old_label);
+            }
+
             $old_data = $data;
             $old_label = $label;
             $index++;
-            continue;
          }
+         
 
-         // determine coords
-         $x1 = $index * $width_line - $width_line + 30;
-         $y1 = $height - 30 - $old_data * ($height - 85) / $max;
-         $x2 = $x1 + $width_line;
-         $y2 = $height - 30 - $data * ($height - 85) / $max;
-
-         //trace dots
+         //display last value, dot and axis label
+         imagettftext($image, $fontsize-1, $fontangle, $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
          $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
-         imageSmoothArc($image, $x1-1, $y1-1, 8, 8, $color_rbg, 0, 2 * M_PI);
-         imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
-
-         //display values label
-         if($show_label == "always" || $show_label == "hover") {
-            imagettftext($image, $fontsize-1, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
-                      $darkerpalette[0], $font, $old_data);
-         }
-
-         //display y ticks and labels
-         if ($step!=0 && ($index / $step) == round($index / $step)) {
-            imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[0]);
-            
-            imagettftext($image, $fontsize, $fontangle, $x1 - 10 , $height-10, $black,
-                      $font, $old_label);
-         }
-
-         $old_data = $data;
-         $old_label = $label;
-         $index++;
+         imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
+         imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
+         imagettftext($image, $fontsize, $fontangle, $x2 - 10 , $height-10, $black, $font, $label);
+         imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
       }
-      
-
-      //display last value, dot and axis label
-      imagettftext($image, $fontsize-1, $fontangle, $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
-      $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
-      imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
-      imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
-      imagettftext($image, $fontsize, $fontangle, $x2 - 10 , $height-10, $black, $font, $label);
-      imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
-
       //generate image
       $params = array("image" => $image,
                       "export" => $export,
@@ -1965,7 +1975,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $values = array_values($datas);
       $labels = array_keys($datas);
-
+      
       $max = 1;
       foreach ($values as $line) {
          foreach ($line as $label2 => $value) {
@@ -1981,207 +1991,208 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $index1 = 0;
       $index3 = 1;
       $step = ceil($nb / 20);
-
+   
       //create image
       $image = imagecreatetruecolor ($width, $height);
-
-      //colors
-      $black = imagecolorallocate($image, 0, 0, 0);
-      $white = imagecolorallocate($image, 255, 255, 255);
-      $grey = imagecolorallocate($image, 230, 230, 230);
-      $drakgrey = imagecolorallocate($image, 180, 180, 180);
-      $palette = $this->getPalette($image, $nb);
-      $alphapalette = $this->getPalette($image, $nb, "50");
-      $darkerpalette = $this->getDarkerPalette($image, $nb);
-
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 7;
-      $fontangle = 0;
-
-      //background
-      $bg_color = $white;
-      if ($export) $bg_color = $white;
-      imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
-
-      //draw x-axis grey step line and value ticks 
-      $xstep = round(($height - 120) / 13);
-      for ($i = 0; $i< 13; $i++) {
-         $yaxis = $height- 30 - $xstep * $i ;
-
-         //grey lines
-         imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
-
-         //value ticks
-         $val = round($i * $max / 12);
-         $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
-         $textwidth = abs($box[4] - $box[0]);
       
-         imagettftext($image, $fontsize, $fontangle, 25-$textwidth, $yaxis+5, $drakgrey, $font, $val);
-      }
+      if ($show_graph) {
+         //colors
+         $black = imagecolorallocate($image, 0, 0, 0);
+         $white = imagecolorallocate($image, 255, 255, 255);
+         $grey = imagecolorallocate($image, 230, 230, 230);
+         $drakgrey = imagecolorallocate($image, 180, 180, 180);
+         $palette = $this->getPalette($image, $nb);
+         $alphapalette = $this->getPalette($image, $nb, "50");
+         $darkerpalette = $this->getDarkerPalette($image, $nb);
 
-      //draw y-axis grey step line
-      for ($i = 0; $i< $nb; $i++) {
-         $xaxis = 30 + $width_line * $i;
-         imageLine($image, $xaxis, 120, $xaxis, $height-25, $grey);
-      }
+         //config font
+         $font = "../fonts/FreeSans.ttf";
+         $fontsize = 7;
+         $fontangle = 0;
 
-      //draw y-axis
-      imageLine($image, 30, 120, 30, $height-25, $black);
+         //background
+         $bg_color = $white;
+         if ($export) $bg_color = $white;
+         imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
-      //draw y-axis
-      imageLine($image, 30, $height-30, $width - 50, $height-30, $black);
+         //draw x-axis grey step line and value ticks 
+         $xstep = round(($height - 120) / 13);
+         for ($i = 0; $i< 13; $i++) {
+            $yaxis = $height- 30 - $xstep * $i ;
 
-      //create border on export
-      if ($export) {
-         imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
-      }
+            //grey lines
+            imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
 
-      //on png graph, no way to draw curved polygons, force area reports to be linear
-      if ($area) $spline = false;
-
-      //add title on export
-      if ($export) {
-         imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
-      }
-
-      //parse datas
-      foreach ($datas as $label => $data) {
-
-         $aCoords = array();
-         $index2 = 0;
-         $old_data = 0;
-         //parse line
-         foreach ($data as $subdata) {
-            //if first index, continue
-            if ($index2 == 0) {
-               $old_data = $subdata;
-               $index2++;
-               continue;
-            }
-
-            // determine coords
-            $x1 = $index2 * $width_line - $width_line + 30;
-            $y1 = $height - 30 - $old_data * ($height - 150) / $max;
-            $x2 = $x1 + $width_line;
-            $y2 = $height - 30 - $subdata * ($height - 150) / $max;
-
-            //in case of area chart fill under point space
-            if ($area > 0) {
-               $points = array(
-                  $x1, $y1,
-                  $x2, $y2,
-                  $x2, $height - 30,
-                  $x1, $height - 30
-               );
-               imagefilledpolygon($image, $points , 4,  $alphapalette[$index1]);
-            }
-
-            //trace lines between points (if linear)
-            if (!$spline)
-               $this->imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $palette[$index1]);
-            $aCoords[$x1]=$y1;            
-
-            $old_data = $subdata;
-            $index2++;
-            $index3++;
+            //value ticks
+            $val = round($i * $max / 12);
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
+            $textwidth = abs($box[4] - $box[0]);
+         
+            imagettftext($image, $fontsize, $fontangle, 25-$textwidth, $yaxis+5, $drakgrey, $font, $val);
          }
 
-         //if curved spline activated, draw cubic spline for the current line
-         if ($spline) {
-            $aCoords[$x2] = $y2;
-            $this->imageCubicSmoothLine($image, $palette[$index1], $aCoords);
+         //draw y-axis grey step line
+         for ($i = 0; $i< $nb; $i++) {
+            $xaxis = 30 + $width_line * $i;
+            imageLine($image, $xaxis, 120, $xaxis, $height-25, $grey);
+         }
 
+         //draw y-axis
+         imageLine($image, 30, 120, 30, $height-25, $black);
+
+         //draw y-axis
+         imageLine($image, 30, $height-30, $width - 50, $height-30, $black);
+
+         //create border on export
+         if ($export) {
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+         }
+
+         //on png graph, no way to draw curved polygons, force area reports to be linear
+         if ($area) $spline = false;
+
+         //add title on export
+         if ($export) {
+            imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
+         }
+
+         //parse datas
+         foreach ($datas as $label => $data) {
+
+            $aCoords = array();
             $index2 = 0;
             $old_data = 0;
-            $old_label = "";
-         }
+            //parse line
+            foreach ($data as $subdata) {
+               //if first index, continue
+               if ($index2 == 0) {
+                  $old_data = $subdata;
+                  $index2++;
+                  continue;
+               }
 
-         //draw labels and dots
-         $index2 = 0;
-         $old_data = 0;
-         foreach ($data as $subdata) {
-            //if first index, continue
-            if ($index2 == 0) {
+               // determine coords
+               $x1 = $index2 * $width_line - $width_line + 30;
+               $y1 = $height - 30 - $old_data * ($height - 150) / $max;
+               $x2 = $x1 + $width_line;
+               $y2 = $height - 30 - $subdata * ($height - 150) / $max;
+
+               //in case of area chart fill under point space
+               if ($area > 0) {
+                  $points = array(
+                     $x1, $y1,
+                     $x2, $y2,
+                     $x2, $height - 30,
+                     $x1, $height - 30
+                  );
+                  imagefilledpolygon($image, $points , 4,  $alphapalette[$index1]);
+               }
+
+               //trace lines between points (if linear)
+               if (!$spline)
+                  $this->imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $palette[$index1]);
+               $aCoords[$x1]=$y1;            
+
+               $old_data = $subdata;
+               $index2++;
+               $index3++;
+            }
+
+            //if curved spline activated, draw cubic spline for the current line
+            if ($spline) {
+               $aCoords[$x2] = $y2;
+               $this->imageCubicSmoothLine($image, $palette[$index1], $aCoords);
+
+               $index2 = 0;
+               $old_data = 0;
+               $old_label = "";
+            }
+
+            //draw labels and dots
+            $index2 = 0;
+            $old_data = 0;
+            foreach ($data as $subdata) {
+               //if first index, continue
+               if ($index2 == 0) {
+                  $old_data = $subdata;
+                  $old_label = $label;
+                  $index2++;
+                  continue;
+               }
+
+               // determine coords
+               $x1 = $index2 * $width_line - $width_line + 30;
+               $y1 = $height - 30 - $old_data * ($height - 150) / $max;
+               $x2 = $x1 + $width_line;
+               $y2 = $height - 30 - $subdata * ($height - 150) / $max;
+
+               //trace dots
+               $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
+               imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
+               imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
+
+
+               //display values label
+               if($show_label == "always" || $show_label == "hover") {
+                  imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
+                            $darkerpalette[$index1], $font, $old_data);
+               }
+
+               //show x-axis ticks
+               if ($step!=0 && ($index3 / $step) == round($index3 / $step)) {
+                  imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[$index1]);
+               }
+
                $old_data = $subdata;
                $old_label = $label;
                $index2++;
-               continue;
+               $index3++;
             }
 
-            // determine coords
-            $x1 = $index2 * $width_line - $width_line + 30;
-            $y1 = $height - 30 - $old_data * ($height - 150) / $max;
-            $x2 = $x1 + $width_line;
-            $y2 = $height - 30 - $subdata * ($height - 150) / $max;
-
+            /*** display last value ***/
             //trace dots
             $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
-            imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
-            imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
+            imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
+            imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
 
-
-            //display values label
+            //display value label
             if($show_label == "always" || $show_label == "hover") {
-               imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
+               imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5,
                          $darkerpalette[$index1], $font, $old_data);
             }
+            /*** end display last value ***/
 
-            //show x-axis ticks
-            if ($step!=0 && ($index3 / $step) == round($index3 / $step)) {
-               imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[$index1]);
+            $index1++;
+         }
+         
+         //display labels2
+         $index = 0;
+         foreach ($labels2 as $label) {
+            $x = $index * $width_line + 20;
+
+            if ($step!=0 && ($index / $step) == round($index / $step)) {
+               imagettftext($image, $fontsize, $fontangle, $x , $height-10, $black, $font, $label);
             }
 
-            $old_data = $subdata;
-            $old_label = $label;
-            $index2++;
-            $index3++;
+            $index++;
          }
 
-         /*** display last value ***/
-         //trace dots
-         $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
-         imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
-         imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
+         //legend (align left)
+         $index = 0;
+         foreach ($labels as $label) {
+            //legend label
+            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+            $textwidth = abs($box[4] - $box[0]);
+            $textheight = abs($box[5] - $box[1]);
+            imagettftext($image, $fontsize, $fontangle, 20, 35 + $index * 14 , $black, $font, $label);
 
-         //display value label
-         if($show_label == "always" || $show_label == "hover") {
-            imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5,
-                      $darkerpalette[$index1], $font, $old_data);
+            //legend circle
+            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            imageSmoothArc($image, 10, 30 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
+
+            $index++;
          }
-         /*** end display last value ***/
-
-         $index1++;
       }
-      
-      //display labels2
-      $index = 0;
-      foreach ($labels2 as $label) {
-         $x = $index * $width_line + 20;
-
-         if ($step!=0 && ($index / $step) == round($index / $step)) {
-            imagettftext($image, $fontsize, $fontangle, $x , $height-10, $black, $font, $label);
-         }
-
-         $index++;
-      }
-
-      //legend (align left)
-      $index = 0;
-      foreach ($labels as $label) {
-         //legend label
-         $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
-         $textwidth = abs($box[4] - $box[0]);
-         $textheight = abs($box[5] - $box[1]);
-         imagettftext($image, $fontsize, $fontangle, 20, 35 + $index * 14 , $black, $font, $label);
-
-         //legend circle
-         $color_rbg = $this->colorHexToRGB($palette[$index]);
-         imageSmoothArc($image, 10, 30 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
-
-         $index++;
-      }
-
       //generate image
       $params = array("image" => $image,
                       "export" => $export,
@@ -2191,6 +2202,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "randname" => $randname,
                       "raw_datas" => $raw_datas);
       $contents = $this->generateImage($params);
+      
       if ($show_graph) {
          $this->showImage($contents,$export);
       }
