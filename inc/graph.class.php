@@ -496,6 +496,7 @@ $JS = <<<JAVASCRIPT
 
    /*** wedges ***/
    var wedge = partition.node.add(pv.Wedge)
+      .title(function(d) { return d.nodeName; })
       .fillStyle(function(d) {
          //return pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName);
          if (d.parentNode && d.parentNode.nodeName) {
@@ -527,7 +528,8 @@ $JS = <<<JAVASCRIPT
       .lineWidth(function() {
          if (this.index == i) return 4;
          else return 1;
-      });
+      })
+      .event("mouseover", pv.Behavior.extjsTooltips());;
 
    /*** wedge interaction ***/
    wedge.anchor().add(pv.Mark)
@@ -546,7 +548,7 @@ $JS = <<<JAVASCRIPT
       .textAngle(0)
       .left(function(d) {
          var out = 1;
-         console.log(d);
+         //console.log(d);
          //if (d.depth == 1) out = 1.13;
          return out * ((height-20) / 2) * d.depth * Math.cos(d.midAngle) + width/2;
       })
@@ -554,7 +556,8 @@ $JS = <<<JAVASCRIPT
          var out = 1;
          //if (d.depth == 1) out = 1.13;
          return - out * ((height-20) / 2) * d.depth * Math.sin(d.midAngle) + height/2;
-      });
+      })
+      .text(function(d) { return d.nodeName });
 
    /*** Label values ***/
    var label = wedge.anchor("inner").add(pv.Label)
@@ -577,8 +580,13 @@ $JS = <<<JAVASCRIPT
    var interval = setInterval(function() {
       offset++;
       vis{$randname}.render();
+
+      //limit loop
       if (offset > 100) clearInterval(interval);
    }, 20);
+
+   
+
 
 JAVASCRIPT;
 

@@ -59,16 +59,16 @@ function plugin_init_mreporting() {
 
       /* Show Reports in standart stats page */
       if (class_exists('PluginMreportingCommon')) {
-			$mreporting_common = new PluginMreportingCommon();
-			$reports = $mreporting_common->getAllReports();
-			if ($reports !== false) {
-				foreach($reports as $report) {
-					foreach($report['functions'] as $function) {
-						$PLUGIN_HOOKS['stats']['mreporting'][$function['min_url_graph']] = $function['title'];
-					}
-				}
-			}
-		}
+         $mreporting_common = new PluginMreportingCommon();
+         $reports = $mreporting_common->getAllReports();
+         if ($reports !== false) {
+            foreach($reports as $report) {
+               foreach($report['functions'] as $function) {
+                  $PLUGIN_HOOKS['stats']['mreporting'][$function['min_url_graph']] = $function['title'];
+               }
+            }
+         }
+      }
       if($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
          define('DEBUG_MREPORTING', true);
       } else {
@@ -82,8 +82,12 @@ function plugin_init_mreporting() {
    }
 
    // Add specific files to add to the header : javascript or css
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
+   $PLUGIN_HOOKS['add_javascript']['mreporting'] =  array(
+      "lib/protovis/protovis.min.js",
+      "lib/protovis-msie/protovis-msie.min.js",
+      "lib/protovis-extjs-tooltips.js"
+   );
+
    //css
    $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
 }
@@ -128,17 +132,17 @@ function plugin_mreporting_check_config($verbose=false) {
 }
 
 function plugin_mreporting_haveRight($module,$right) {
-	$matches=array(
-			""  => array("","r","w"), // ne doit pas arriver normalement
-			"r" => array("r","w"),
-			"w" => array("w"),
-			"1" => array("1"),
-			"0" => array("0","1"), // ne doit pas arriver non plus
-		      );
-	if (isset($_SESSION["glpi_plugin_mreporting_profile"][$module])
+   $matches=array(
+   ""  => array("","r","w"), // ne doit pas arriver normalement
+   "r" => array("r","w"),
+   "w" => array("w"),
+   "1" => array("1"),
+   "0" => array("0","1"), // ne doit pas arriver non plus
+   );
+   if (isset($_SESSION["glpi_plugin_mreporting_profile"][$module])
          && in_array($_SESSION["glpi_plugin_mreporting_profile"][$module],$matches[$right]))
-		return true;
-	else return false;
+      return true;
+   else return false;
 }
 
 ?>
