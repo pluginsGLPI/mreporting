@@ -1185,8 +1185,6 @@ class PluginMreportingCommon extends CommonDBTM {
    
    function debugGraph() {
       global $CFG_GLPI;
-      
-      echo "<h1 style='color:red;'>DEBUG</h1>";
 
       $params = array(
          'short_classname' => "test",
