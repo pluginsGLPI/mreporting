@@ -886,13 +886,23 @@ $JS = <<<JAVASCRIPT
        .left(20)
        .right(5)
        .top(5);
-
+   
+   /*** y-axis ticks and labels ***/
+   vis{$randname}.add(pv.Rule)
+       .data(y.ticks())
+       .bottom(y)
+       .left(function(d) d ? 0 : null)
+       .width(function(d) d ? w-200 : null)
+       .strokeStyle(function(d) d ? "#eee" : "black")
+       .anchor("left").add(pv.Label)
+       .text(y.tickFormat);
+       
    /*** stacks of bar ***/
    var stack{$randname} = vis{$randname}.add(pv.Layout.Stack)
       .layers(datas)
       .x(function() x(this.index))
       .y(function(d) 1- 50/offset + y(d))
-
+   
    /*** bars ***/
    var bar{$randname} = stack{$randname}.layer.add(pv.Bar)
       .width(x.range().band)
@@ -904,7 +914,7 @@ $JS = <<<JAVASCRIPT
          if ((this.index == i || Hilighted[this.parent.index]) && d!=0)
          return colors(this.parent.index).darker(); 
       })
-      .event("mouseover", function() {
+      .event("mouseover", function(d) {
          i = this.index;
          return vis{$randname};
       })
@@ -915,7 +925,7 @@ $JS = <<<JAVASCRIPT
 
    bar{$randname}.anchor("top").add(pv.Label)
       .visible(function(d){
-         return ( (this.index == i || Hilighted[this.parent.index]) && (d >= max / 100) && (d!=0) ) ? true : false ;
+         return ( (this.index == i || Hilighted[this.parent.index]) && ({$hover} && (d!=0)) || ({$always}  && (d!=0)) ) ? true : false ;
       })
       .textBaseline("top")
       .text(function(d) { return d; })
@@ -937,18 +947,7 @@ $JS = <<<JAVASCRIPT
       .text(function() { return labels2[this.index]; })
    .anchor("bottom").add(pv.Rule)
       .height(3);
-
-
-   /*** y-axis ticks and labels ***/
-   vis{$randname}.add(pv.Rule)
-       .data(y.ticks())
-       .bottom(y)
-       .left(function(d) d ? 0 : null)
-       .width(function(d) d ? 5 : null)
-       .strokeStyle("#000")
-     .anchor("left").add(pv.Label)
-       .text(y.tickFormat);
-       
+  
    // legend
    dot{$randname} = vis{$randname}.add(pv.Dot) // legend dots
       .data(labels)
