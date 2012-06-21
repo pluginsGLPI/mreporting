@@ -862,7 +862,6 @@ JAVASCRIPT;
 
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
-      $height = 28 * $nb_bar * $nb_bar2 + 50;
 
       $always = '';
       $hover = '';
@@ -951,7 +950,7 @@ $JS = <<<JAVASCRIPT
    dot{$randname} = vis{$randname}.add(pv.Dot) // legend dots
       .data(labels)
       .right(40)
-      .top(function(d) { return 5 + this.index * 15; })
+      .top(function(d) { return (15 * $nb_bar) + (this.index * -15); })
       .fillStyle(function(d) {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
       })
