@@ -908,7 +908,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       if ($max == 1 && $unit == '%') $max = 100;
 
-      $nb_bar = count($datas) * count($labels2);
+      $nb_intern = count($labels);
       $width = $this->width-200;
       $height = 500;
 
@@ -920,8 +920,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $black = imagecolorallocate($image, 0, 0, 0);
          $white = imagecolorallocate($image, 255, 255, 255);
          $grey = imagecolorallocate($image, 242, 242, 242);
-         $palette = $this->getPalette($image, $nb_bar);
-         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+         $palette = $this->getPalette($image, $nb_intern);
+         $darkerpalette = $this->getDarkerPalette($image, $nb_intern);
 
          //background
          $bg_color = $grey;
@@ -958,7 +958,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
           //second pie (bigger)
-          $index = 0;
+          $index = 1;
           $index2 = 0;
           $x = $width / 4 +100;
           $y = $height / 4 +150;
@@ -975,7 +975,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
           foreach ($datas as $label => $data) {
               $angle = $start_angle + (360 * $nb[$label]) / $mymax;
-              
               $color_rbg = $this->colorHexToRGB($palette[$index]);
 
               //EXTERNAL PIE
@@ -989,8 +988,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                           $start_angle2 = 0;
                       }
 
-                      $color[0]=$color_rbg[0]-(($index2)*6);
-                      $color[1]=$color_rbg[1]-(($index2)*6);
+                      $color[0]=$color_rbg[0]-(($index2)*5);
+                      $color[1]=$color_rbg[1]-(($index2)*9);
                       $color[2]=$color_rbg[2]-(($index2)*0.5);
                       $color[3]=$color_rbg[3];
 
@@ -1012,34 +1011,34 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   }
               }
 
+                  // Interior PIE
+                  //full circle need fix
+                  if ($angle - $start_angle == 360) {
+                      $angle = 359.999;
+                      $start_angle = 0;
+                  }
 
-              // Interior PIE
-              //full circle need fix
-              if ($angle - $start_angle == 360) {
-                  $angle = 359.999;
-                  $start_angle = 0;
-              }
+                  imageSmoothArc($image, $x, $y, $radius-180, $radius-180, $color_rbg,
+                      deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
 
-              imageSmoothArc($image, $x, $y, $radius-180, $radius-180, $color_rbg,
-                  deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
+                  //text associated with pie arc (only for angle > 2°)
+                  if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
+                      $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/8));
+                      $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/8));
+                      imagettftext(
+                          $image,
+                          $fontsize = 8,
+                          $fontangle = 0,
+                          $xtext,
+                          $ytext,
+                          $darkerpalette[$index],
+                          $font,
+                          Html::clean($nb[$label])
+                      );
+                  }
 
-              //text associated with pie arc (only for angle > 2°)
-              if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
-                  $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/8));
-                  $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/8));
-                  imagettftext(
-                      $image,
-                      $fontsize = 8,
-                      $fontangle = 0,
-                      $xtext,
-                      $ytext,
-                      $darkerpalette[$index],
-                      $font,
-                      Html::clean($nb[$label])
-                  );
-              }
+                  $start_angle = $angle;
 
-              $start_angle = $angle;
               $index++;
           }
 
@@ -1057,7 +1056,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       }
 
                       //text associated with pie arc (only for angle > 2°)
-                      if ($angle2 > 10 && ($show_label == "always" || $show_label == "hover")) {
+                      if ($angle2 > 1 && ($show_label == "always" || $show_label == "hover")) {
                               //$fontangle2 =  $start_angle2 - 80;
                               $xtext = $x - 25 + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
                               $ytext = $y + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
@@ -1082,7 +1081,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
           }
 
           //legend interior pie (align right)
-          $index = 0;
+          $index = 1;
           $fontsize = 9;
          foreach ($labels as $label) {
             $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
