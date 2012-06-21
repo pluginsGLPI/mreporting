@@ -223,8 +223,8 @@ $JS = <<<JAVASCRIPT
       .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
    .add(pv.Rule)
       .bottom(0)
-      .height(5)
-      .strokeStyle("black")
+      .height(height_hbar)
+      .strokeStyle(function(d) d ? "#eee" : "black")
    .anchor("bottom").add(pv.Label)
       .strokeStyle("black")
       .text(x.tickFormat);
@@ -692,7 +692,20 @@ $JS = <<<JAVASCRIPT
       .left(240)
       .right(10)
       .top(5);
-
+   
+   // axis and tick
+   vis{$randname}.add(pv.Rule)
+         .data(x.ticks(6))
+         .left(x)
+         .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "#000"; })
+         .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
+      .add(pv.Rule)
+         .bottom(0)
+         .height(height_hgbar)
+         .strokeStyle(function(d) d ? "#eee" : "black")
+      .anchor("bottom").add(pv.Label)
+         .text(x.tickFormat);
+         
    panel = vis{$randname}.add(pv.Panel)
       .data(datas)
       .top(function() { return y(this.index) + m*14; })
@@ -708,8 +721,7 @@ $JS = <<<JAVASCRIPT
 
    panel_bar = panel.add(pv.Panel)
       .def("active", false);
-
-
+     
    bar = panel_bar.add(pv.Bar)
       .left(0)
       .width(function(d) {
@@ -745,19 +757,6 @@ $JS = <<<JAVASCRIPT
       })
       .textStyle(function() { return colors(this.parent.parent.index).darker(); })
       .text(function(d) { return  d+" {$unit}"; });
-
-   // axis and tick
-   vis{$randname}.add(pv.Rule)
-         .data(x.ticks(6))
-         .left(x)
-         .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "#000"; })
-         .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
-      .add(pv.Rule)
-         .bottom(0)
-         .height(5)
-         .strokeStyle("#000")
-      .anchor("bottom").add(pv.Label)
-         .text(x.tickFormat);
 
    // legend
    vis{$randname}.add(pv.Dot)
