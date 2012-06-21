@@ -1,37 +1,31 @@
 <?php
 /*
- * @version $Id: dropdownTicketCategories.php 16119 2011-11-21 16:07:23Z yllen $
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
- GLPI - Gestionnaire Libre de Parc Informatique
- Copyright (C) 2003-2010 by the INDEPNET Development Team.
+ Mreporting plugin for GLPI
+ Copyright (C) 2003-2011 by the mreporting Development Team.
 
- http://indepnet.net/   http://glpi-project.org
+ https://forge.indepnet.net/projects/mreporting
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of GLPI.
+ This file is part of mreporting.
 
- GLPI is free software; you can redistribute it and/or modify
+ mreporting is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
- GLPI is distributed in the hope that it will be useful,
+ mreporting is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with GLPI; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-
-// ----------------------------------------------------------------------
-// Original Author of file: Julien Dombre
-// Purpose of file:
-// ----------------------------------------------------------------------
 
 if (strpos($_SERVER['PHP_SELF'],"dropdownGraphs.php")) {
    define('GLPI_ROOT','../../..');
