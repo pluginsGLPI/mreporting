@@ -496,7 +496,6 @@ $JS = <<<JAVASCRIPT
 
    /*** wedges ***/
    var wedge = partition.node.add(pv.Wedge)
-      .title(function(d) { return d.nodeName; })
       .fillStyle(function(d) {
          //return pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName);
          if (d.parentNode && d.parentNode.nodeName) {
@@ -519,8 +518,13 @@ $JS = <<<JAVASCRIPT
       })
       .innerRadius(function(d) {
          if (d.parentNode && d.parentNode.index == 0) return 0;
+         var lastchild = 1;
+         if (d.childNodes.length == 0 && this.index > 0 && this.index == i) {
+            lastchid = 1.5;
+            console.log(d.innerRadius);
+         }
          var motion = (offset / 15) > 1 ? 1:(offset / 15);
-         return d.innerRadius*motion;
+         return d.innerRadius*motion*lastchild;
       })
       .strokeStyle(function() {
          return this.fillStyle().darker();
@@ -529,7 +533,7 @@ $JS = <<<JAVASCRIPT
          if (this.index == i) return 4;
          else return 1;
       })
-      .event("mouseover", pv.Behavior.extjsTooltips());;
+      .event("mouseover", pv.Behavior.extjsTooltips(this.nodeName));
 
    /*** wedge interaction ***/
    wedge.anchor().add(pv.Mark)
@@ -557,7 +561,10 @@ $JS = <<<JAVASCRIPT
          //if (d.depth == 1) out = 1.13;
          return - out * ((height-20) / 2) * d.depth * Math.sin(d.midAngle) + height/2;
       })
-      .text(function(d) { return d.nodeName });
+      .text(function(d) { 
+         var label = d.nodeName;
+         return label;
+      });
 
    /*** Label values ***/
    var label = wedge.anchor("inner").add(pv.Label)
