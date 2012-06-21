@@ -1164,7 +1164,7 @@ $JS = <<<JAVASCRIPT
        .fillStyle("#ff7f0e")
        .lineWidth(1)
      .anchor("right").add(pv.Label)
-       .text(function() {return (i >= 0) ? datas[i]+" {$unit}":'t';})
+       .text(function() { return (i >= 0 && {$hover}) ? datas[i]+" {$unit}":'';})
        .textStyle("#1f77b4");
 
    /* An invisible bar to capture events (without flickering). */
@@ -1388,7 +1388,7 @@ $JS = <<<JAVASCRIPT
    var legend_labels{$randname} = legend_dots{$randname}.anchor("right").add(pv.Label)
          .text(function(d) {
             var text = labels[this.parent.index];
-            if (i > -1) text += " : "+d+" {$unit}"; // mouse over labels
+            if (i > -1 && {$hover}) text += " : "+d+" {$unit}"; // mouse over labels
             return text;
          });
 

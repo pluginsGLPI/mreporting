@@ -329,13 +329,13 @@ class PluginMreportingConfig extends CommonDBTM {
 	 * @options array example $value
 	 *@return nothing
 	 **/
-   static function dropdownLabel($name, $options=array()) {
+   static function dropdownLabel($name, $options=array(),$notall = false) {
       global $LANG;
 
       $params['value']       = 0;
       $params['toadd']       = array();
       $params['on_change']   = '';
-
+      
       if (is_array($options) && count($options)) {
          foreach ($options as $key => $val) {
             $params[$key] = $val;
@@ -347,7 +347,7 @@ class PluginMreportingConfig extends CommonDBTM {
          $items = $params['toadd'];
       }
 
-      $items += self::getLabelTypes();
+      $items += self::getLabelTypes($notall);
 
       return Dropdown::showFromArray($name, $items, $params);
    }
@@ -357,13 +357,14 @@ class PluginMreportingConfig extends CommonDBTM {
     *
     * @return array of types
    **/
-   static function getLabelTypes() {
+   static function getLabelTypes($notall = false) {
       global $LANG;
       
       $options['never']    = $LANG['plugin_mreporting']["config"][7];
       $options['hover']    = $LANG['plugin_mreporting']["config"][5];
-      $options['always']   = $LANG['plugin_mreporting']["config"][6];
-      
+      if (!$notall) {
+         $options['always']   = $LANG['plugin_mreporting']["config"][6];
+      }
       return $options;
    }
    
@@ -590,12 +591,11 @@ class PluginMreportingConfig extends CommonDBTM {
       echo $LANG['plugin_mreporting']["config"][3];
       echo "</td>";
       echo "<td>";
+      $opt = array('value' => $this->fields["show_label"]);
       if ($gtype != 'area' && $gtype != 'garea' && $gtype != 'line' && $gtype != 'gline') {
-         $opt = array('value' => $this->fields["show_label"]);
          self::dropdownLabel('show_label', $opt);
       } else {
-         echo self::getLabelTypeName($this->fields["show_label"]);
-         echo "<input type='hidden' name='show_label' value='never'>\n";
+         self::dropdownLabel('show_label', $opt, true);
       }
       echo "</td>"; 
       echo "</tr>";
