@@ -681,8 +681,8 @@ class PluginMreportingConfig extends CommonDBTM {
          $crit['randname']    = $classname.$name;
       }
       if (DEBUG_MREPORTING == true) {
-         $crit['show_graph']  = true;
-         $crit['spline']      = true;
+         $crit['show_graph']  = 1;
+         $crit['spline']      = 0;
       }
 
       return $crit;
