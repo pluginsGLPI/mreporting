@@ -1453,7 +1453,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
 
-      $nb_bar = count($datas) * count($labels2);
+      $nb_bar = count($datas);
       $width = $this->width;
       $height = 400;
       $width_bar = ($width - 350) / count($labels2);
@@ -1612,7 +1612,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $fontsize-1,
                $fontangle,
                $width - $textwidth - 18,
-               10 + $index * 15 ,
+               5+(15 * $nb_bar) + ($index * -15) ,
                $black,
                $font,
                Html::clean($labels[$index])
@@ -1620,7 +1620,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //legend circle
             $color_rbg = $this->colorHexToRGB($palette[$index]);
-            imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
+            imageSmoothArc($image, $width - 10, (15 * $nb_bar) + ($index * -15), 8, 8, $color_rbg, 0, 2 * M_PI);
 
             $index++;
          }
