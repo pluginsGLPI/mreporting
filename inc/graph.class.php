@@ -921,11 +921,11 @@ $JS = <<<JAVASCRIPT
          return vis{$randname};
       });
 
-   bar{$randname}.anchor("top").add(pv.Label)
+   bar{$randname}.anchor("center").add(pv.Label)
       .visible(function(d){
          return ( (this.index == i || Hilighted[this.parent.index]) && ({$hover} && (d!=0)) || ({$always}  && (d!=0)) ) ? true : false ;
       })
-      .textBaseline("top")
+      .textBaseline("center")
       .text(function(d) { return d; })
       .textStyle(function() { return colors(this.parent.index).darker(); });
 
