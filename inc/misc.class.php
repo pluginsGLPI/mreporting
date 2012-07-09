@@ -71,7 +71,9 @@ class PluginMreportingMisc {
       echo "</td>\n";
 
       echo "</tr>";
-      echo "</table></form></div>\n";
+      echo "</table>";
+      Html::closeForm();
+      echo "</div>\n";
    }
 
 
