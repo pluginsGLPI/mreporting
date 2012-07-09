@@ -389,7 +389,8 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</table>";
          Html::openArrowMassives("exportform", true);
          Html::closeArrowMassives(array('submit' => $LANG['buttons'][31]));
-         echo "</form></div>";
+         Html::closeForm();
+         echo "</div>";
       }
    }
    

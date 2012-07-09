@@ -30,9 +30,10 @@
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
-
+      
+   $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
    /* Profile */
-      $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
+   $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
                                                                         'changeProfile');
 
    if (Session::getLoginUserID()) {
@@ -101,15 +102,15 @@ function plugin_version_mreporting() {
                 'author'         => "<a href='http://www.teclib.com'>Teclib'</a> & <a href='http://www.infotel.com'>Infotel</a>",
                 'homepage'       => "https://forge.indepnet.net/projects/mreporting",
                 'license' => 'GPLv2+',
-                'minGlpiVersion' => "0.83");
+                'minGlpiVersion' => "0.83.3");
 }
 
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_mreporting_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION,'0.83','lt') || version_compare(GLPI_VERSION,'0.84','ge')) {
-      echo "This plugin requires GLPI >= 0.83 and GLPI < 0.84";
+   if (version_compare(GLPI_VERSION,'0.83.3','lt') || version_compare(GLPI_VERSION,'0.84','ge')) {
+      echo "This plugin requires GLPI >= 0.83.3 and GLPI < 0.84";
    } else {
       return true;
    }
