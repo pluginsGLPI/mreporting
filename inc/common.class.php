@@ -1163,7 +1163,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      if (!empty($unit)) {
                         $nb = $nb." ".$unit;
                      }
-                     $newpage->csvdata->data1->data_1(utf8_decode($nb));
+                     if (!is_array($nb)) $newpage->csvdata->data1->data_1(utf8_decode($nb));
                      $newpage->csvdata->data1->merge();
                   }
                   
