@@ -168,7 +168,7 @@ $JS = <<<JAVASCRIPT
 
    var offset = 0;
 
-   var vis{$randname} = new pv.Panel()
+   vis{$randname} = new pv.Panel()
       .width(width_hbar)
       .height(height_hbar)
       .bottom(20)
@@ -321,7 +321,7 @@ $JS = <<<JAVASCRIPT
 
    var offset = 0;
 
-   var vis{$randname} = new pv.Panel()
+   vis{$randname} = new pv.Panel()
       .top(5)
       .left(10)
       .bottom(5)
@@ -389,6 +389,7 @@ $JS = <<<JAVASCRIPT
       .textBaseline("middle")
       .textStyle(function() { return colors(this.index).darker(); })
       .textDecoration(function() { return (this.parent.o() == this.index) ? "underline" : "none"; });
+
 
    //render in loop to animate
    var interval = setInterval(function() {
@@ -481,7 +482,7 @@ $JS = <<<JAVASCRIPT
          i = -1, //mouseover index
          offset = 99; // animation offset
 
-   var vis{$randname} = new pv.Panel()
+   vis{$randname} = new pv.Panel()
       .width(width)
       .height(height)
       .top(10)
@@ -685,7 +686,7 @@ $JS = <<<JAVASCRIPT
 
    var offset = 0;
 
-   var vis{$randname} = new pv.Panel()
+   vis{$randname} = new pv.Panel()
       .width(width_hgbar)
       .height(height_hgbar)
       .bottom(20)
@@ -877,7 +878,7 @@ $JS = <<<JAVASCRIPT
        Hilighted = [false, false,false, false,false, false];
 
    
-   var vis{$randname} = new pv.Panel()
+   vis{$randname} = new pv.Panel()
        .width(w)
        .height(h)
        .bottom(100)
@@ -1075,7 +1076,7 @@ $JS = <<<JAVASCRIPT
 
 
    /* The root panel. */
-   var vis{$randname} = new pv.Panel()
+   vis{$randname} = new pv.Panel()
       .width(width_area)
       .height(height_area)
       .bottom(20)
@@ -1291,7 +1292,7 @@ $JS = <<<JAVASCRIPT
    //console.log(x.ticks());
 
    /* The root panel. */
-   var vis{$randname} = new pv.Panel()
+   vis{$randname} = new pv.Panel()
       .width(width_area)
       .height(height_area)
       .bottom(20)
