@@ -44,6 +44,3 @@ $common->showExportForm($_POST);
 echo "<div class='center'><br><a href='javascript:window.close()'>".$LANG['buttons'][60]."</a>";
 echo "</div>";
 Html::popFooter();
-
-
-?>

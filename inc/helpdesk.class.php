@@ -30,7 +30,7 @@
 class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    private $sql_date, $filters, $where_entities;
 
-   function __construct()  {
+   function __construct() {
       global $LANG;
       
       $this->filters = array(
@@ -72,7 +72,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
       
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("`glpi_tickets`.`date`", $delay, $randname);
+      $this->sql_date = PluginMreportingMisc::getSQLDate("`glpi_tickets`.`date`", 
+         $delay, $randname);
 
       $datas = array();
       $query = "
@@ -237,20 +238,19 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
       foreach($this->filters['open']['status'] as $key => $val) {
 
-            $query = "
-               SELECT COUNT(glpi_tickets.id) as count
-               FROM glpi_tickets
-               WHERE ".$this->sql_date."
-               AND glpi_tickets.is_deleted = '0'
-               AND glpi_tickets.entities_id IN (".$this->where_entities.")
-               AND glpi_tickets.status ='".$key."'
-            ";
-            $result = $DB->query($query);
-            
-            while ($ticket = $DB->fetch_assoc($result)) {
-
-               $datas['datas'][$val] = $ticket['count'];
-            }
+         $query = "
+            SELECT COUNT(glpi_tickets.id) as count
+            FROM glpi_tickets
+            WHERE ".$this->sql_date."
+            AND glpi_tickets.is_deleted = '0'
+            AND glpi_tickets.entities_id IN (".$this->where_entities.")
+            AND glpi_tickets.status ='".$key."'
+         ";
+         $result = $DB->query($query);
+         
+         while ($ticket = $DB->fetch_assoc($result)) {
+            $datas['datas'][$val] = $ticket['count'];
+         }
       }
 
       return $datas;
@@ -269,14 +269,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
-      $this->sql_closedate = PluginMreportingMisc::getSQLDate("glpi_tickets.closedate",$delay, $randname);
+      $this->sql_closedate = PluginMreportingMisc::getSQLDate("glpi_tickets.closedate",
+         $delay, $randname);
       
       $datas = array();
       $query = "
          SELECT COUNT(glpi_tickets.id) as count, glpi_tickets_users.users_id as users_id
          FROM glpi_tickets
          
-         LEFT JOIN glpi_tickets_users ON (glpi_tickets_users.tickets_id = glpi_tickets.id AND glpi_tickets_users.type =1)
+         LEFT JOIN glpi_tickets_users 
+            ON (glpi_tickets_users.tickets_id = glpi_tickets.id AND glpi_tickets_users.type =1)
          WHERE ".$this->sql_date."
          AND ".$this->sql_closedate."  
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
@@ -338,7 +340,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             ON glpi_itilcategories.id = glpi_tickets.itilcategories_id
          WHERE ".$this->sql_date."
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
-         AND glpi_tickets.status IN('".implode("', '", array_keys($this->filters[$filter]['status']))."')
+         AND glpi_tickets.status IN('".implode(
+            "', '", array_keys($this->filters[$filter]['status']))."')
          AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_itilcategories.id, glpi_tickets.type
          ORDER BY glpi_itilcategories.name
@@ -633,7 +636,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       $datas['datas'] = array( 
            'key1' => array('key1.1' => 12, 'key1.2' => 25, 'key1.3' => 43), 
-           'key2' => array('key2.1' => array("2.3.1"=>10,"2.3.2"=>8,"2.3.3" =>17)/*25*/, 'key2.2' => 18, 'key2.3' => 25),
+           'key2' => array('key2.1' => array(
+               "2.3.1"=>10,"2.3.2"=>8,"2.3.3" =>17)/*25*/, 'key2.2' => 18, 'key2.3' => 25),
            'key3' => array('key3.1' => 12, 'key3.2' => 25, 'key3.3' => 43)
          );
       return $datas;
