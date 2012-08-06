@@ -350,7 +350,7 @@ JAVASCRIPT;
             this.parent.o(this.index) ; 
             Hilighted[this.index] = true; 
             return vis{$randname};
-         })
+         })don
          .event("mouseout", function() {  
             this.parent.o(-1) ; 
             Hilighted[this.index] = false; 
@@ -524,7 +524,7 @@ JAVASCRIPT;
          var lastchild = 1;
          if (d.childNodes.length == 0 && this.index > 0 && this.index == i) {
             lastchid = 1.5;
-            console.log(d.innerRadius);
+            //console.log(d.innerRadius);
          }
          var motion = (offset / 15) > 1 ? 1:(offset / 15);
          return d.innerRadius*motion*lastchild;
@@ -566,6 +566,9 @@ JAVASCRIPT;
       })
       .text(function(d) { 
          var label = d.nodeName;
+         if (label && label.length > 8) {
+            label = label.substring(0, 8)+"..";
+         }
          return label;
       });
 
