@@ -53,7 +53,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $width = $this->width + 100;
 
          if (!isset($_REQUEST['date1'.$randname])) 
-            $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
+            $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time() 
+               - ($options['delay'] * 24 * 60 * 60));
          if (!isset($_REQUEST['date2'.$randname])) 
             $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
 
@@ -88,7 +89,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          echo "<div class='graph_desc'>".$desc."</div>";
       
          echo "<div class='graph_navigation'>";
-         PluginMreportingMisc::showSelector($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
+         PluginMreportingMisc::showSelector(
+            $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
          echo "</div>";
       }
       if ($options['export']!="odt" && $options['export']!="odtall") {
@@ -97,7 +99,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
 
-   function showImage($contents, $export="png")  {
+   function showImage($contents, $export="png") {
       global $CFG_GLPI;
       if ($export!="odt" && $export!="odtall") {
 
@@ -284,7 +286,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $new_hex .= $new_hex_component;
       }
 
-     return $new_hex;
+      return $new_hex;
    }
 
 
@@ -306,7 +308,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $new_hex .= $new_hex_component;
       }
 
-     return $new_hex;
+      return $new_hex;
    }
 
 
@@ -441,7 +443,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       list($iPrevX, $iPrevY) = each($r);
 
       while (list ($x, $y) = each($r)) {
-         $this->imageSmoothAlphaLineLarge($image, round($iPrevX), round($iPrevY), round($x), round($y), $color);
+         $this->imageSmoothAlphaLineLarge(
+            $image, round($iPrevX), round($iPrevY), round($x), round($y), $color);
          $iPrevX = $x;
          $iPrevY = $y;
       }  
@@ -958,131 +961,133 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
           //second pie (bigger)
-          $index = 1;
-          $index2 = 0;
-          $x = $width / 4 +100;
-          $y = $height / 4 +150;
-          $radius = 250;
-          $start_angle = 0;
-          $start_angle2 = 0;
+         $index = 1;
+         $index2 = 0;
+         $x = $width / 4 +100;
+         $y = $height / 4 +150;
+         $radius = 250;
+         $start_angle = 0;
+         $start_angle2 = 0;
 
-          $mymax=0;
-          $nb = array();
-          foreach ($datas as $label => $data) {
-              $nb[$label]=array_sum($data);
-                  $mymax+=$nb[$label];
-          }
+         $mymax=0;
+         $nb = array();
+         foreach ($datas as $label => $data) {
+            $nb[$label]=array_sum($data);
+            $mymax+=$nb[$label];
+         }
 
-          foreach ($datas as $label => $data) {
-              $angle = $start_angle + (360 * $nb[$label]) / $mymax;
-              $color_rbg = $this->colorHexToRGB($palette[$index]);
+         foreach ($datas as $label => $data) {
+            $angle = $start_angle + (360 * $nb[$label]) / $mymax;
+            $color_rbg = $this->colorHexToRGB($palette[$index]);
 
-              //EXTERNAL PIE
-              foreach($data as $label2 => $data2) {
-                  if(!is_array($data2) && ($data2!=0)){
-                      $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
+            //EXTERNAL PIE
+            foreach($data as $label2 => $data2) {
+               if(!is_array($data2) && ($data2!=0)){
+                  $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
 
-                      //full circle need fix
-                      if ($angle2 - $start_angle2 == 360) {
-                          $angle2 = 359.999;
-                          $start_angle2 = 0;
-                      }
-
-                      $color[0]=$color_rbg[0]-(($index2)*5);
-                      $color[1]=$color_rbg[1]-(($index2)*9);
-                      $color[2]=$color_rbg[2]-(($index2)*0.5);
-                      $color[3]=$color_rbg[3];
-
-                      imageSmoothArc($image, $x, $y, $radius, $radius, $color, deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI);
-
-                      $xtext = $x  + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
-                      $ytext = $y  + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
-
-
-                      imageline($image, $xtext, $ytext , $x + (sin(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)) , $y + (cos(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)), $black);
-
-
-                      //imagearc($image,$x,$y,$radius,$radius,deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI,$black);
-
-                      /*imageSmoothArcDrawSegment ($image, $x, $y, $a, $b, $aaAngleX, $aaAngleY, $black, $start, $stop, $seg) */
-
-                      $start_angle2 = $angle2;
-                      $index2++;
+                  //full circle need fix
+                  if ($angle2 - $start_angle2 == 360) {
+                     $angle2 = 359.999;
+                     $start_angle2 = 0;
                   }
-              }
+
+                  $color[0]=$color_rbg[0]-(($index2)*5);
+                  $color[1]=$color_rbg[1]-(($index2)*9);
+                  $color[2]=$color_rbg[2]-(($index2)*0.5);
+                  $color[3]=$color_rbg[3];
+
+                  imageSmoothArc(
+                     $image, $x, $y, $radius, $radius, $color, 
+                     deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI);
+
+                  $xtext = $x  + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
+                  $ytext = $y  + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
+
+                  imageline($image, $xtext, $ytext , 
+                     $x + (sin(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)) , 
+                     $y + (cos(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)), $black);
+
+                  /*imagearc($image,$x,$y,$radius,$radius,
+                     deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI,$black);
+                  imageSmoothArcDrawSegment ($image, 
+                     $x, $y, $a, $b, $aaAngleX, $aaAngleY, $black, $start, $stop, $seg) */
+
+                  $start_angle2 = $angle2;
+                  $index2++;
+               }
+            }
 
                   // Interior PIE
                   //full circle need fix
-                  if ($angle - $start_angle == 360) {
-                      $angle = 359.999;
-                      $start_angle = 0;
-                  }
+            if ($angle - $start_angle == 360) {
+                $angle = 359.999;
+                $start_angle = 0;
+            }
 
-                  imageSmoothArc($image, $x, $y, $radius-180, $radius-180, $color_rbg,
-                      deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
+            imageSmoothArc($image, $x, $y, $radius-180, $radius-180, $color_rbg,
+                deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
 
-                  //text associated with pie arc (only for angle > 2°)
-                  if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
-                      $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/8));
-                      $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/8));
-                      imagettftext(
-                          $image,
-                          $fontsize = 8,
-                          $fontangle = 0,
-                          $xtext,
-                          $ytext,
-                          $darkerpalette[$index],
-                          $font,
-                          Html::clean($nb[$label])
-                      );
-                  }
+            //text associated with pie arc (only for angle > 2°)
+            if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
+                $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/8));
+                $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/8));
+                imagettftext(
+                  $image,
+                  $fontsize = 8,
+                  $fontangle = 0,
+                  $xtext,
+                  $ytext,
+                  $darkerpalette[$index],
+                  $font,
+                  Html::clean($nb[$label])
+                );
+            }
 
-                  $start_angle = $angle;
-
-              $index++;
-          }
+            $start_angle = $angle;
+            $index++;
+         }
 
           //EXTERNAL PIE LEGEND
-          $start_angle2=0;
-          foreach ($datas as $label => $data) {
-              $angle = $start_angle + (360 * $nb[$label]) / $mymax;
-              foreach($data as $label2 => $data2) {
-                  if(!is_array($data2) && ($data2!=0)){
-                      $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
-                      //full circle need fix
-                      if ($angle2 - $start_angle2 == 360) {
-                          $angle2 = 359.999;
-                          $start_angle2 = 0;
-                      }
-
-                      //text associated with pie arc (only for angle > 2°)
-                      if ($angle2 > 1 && ($show_label == "always" || $show_label == "hover")) {
-                              //$fontangle2 =  $start_angle2 - 80;
-                              $xtext = $x - 25 + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
-                              $ytext = $y + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
-
-                          imagettftext(
-                              $image,
-                              $fontsize = 7,
-                              $fontangle,
-                              $xtext,
-                              $ytext,
-                              $black,
-                              $font,
-                              Html::clean($label2." : ".$data2)
-                          );
-                      }
-
-                      $start_angle2 = $angle2;
-                      $index2++;
+         $start_angle2=0;
+         foreach ($datas as $label => $data) {
+            $angle = $start_angle + (360 * $nb[$label]) / $mymax;
+            foreach($data as $label2 => $data2) {
+               if(!is_array($data2) && ($data2!=0)){
+                  $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
+                  //full circle need fix
+                  if ($angle2 - $start_angle2 == 360) {
+                     $angle2 = 359.999;
+                     $start_angle2 = 0;
                   }
-              }
-              $start_angle = $angle;
-          }
+
+                  //text associated with pie arc (only for angle > 2°)
+                  if ($angle2 > 1 && ($show_label == "always" || $show_label == "hover")) {
+                     //$fontangle2 =  $start_angle2 - 80;
+                     $xtext = $x - 25 + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
+                     $ytext = $y + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
+
+                     imagettftext(
+                        $image,
+                        $fontsize = 7,
+                        $fontangle,
+                        $xtext,
+                        $ytext,
+                        $black,
+                        $font,
+                        Html::clean($label2." : ".$data2)
+                     );
+                  }
+
+                  $start_angle2 = $angle2;
+                  $index2++;
+               }
+            }
+            $start_angle = $angle;
+         }
 
           //legend interior pie (align right)
-          $index = 1;
-          $fontsize = 9;
+         $index = 1;
+         $fontsize = 9;
          foreach ($labels as $label) {
             $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
             $textwidth = abs($box[4] - $box[0]);
@@ -1458,20 +1463,20 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $height = 400;
       $width_bar = ($width - 350) / count($labels2);
 
-       //config font
-       $font = "../fonts/FreeSans.ttf";
-       $fontsize = 8;
-       $fontangle = 0;
+      //config font
+      $font = "../fonts/FreeSans.ttf";
+      $fontsize = 8;
+      $fontangle = 0;
 
-       //longueur du texte en dessous des barres
-       $index = 0;
-       foreach ($labels2 as $label) {
-           $lx = 55 + $index * $width_bar;
-           $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$label);
-           $textwidth[$label] = abs($box[4] - $box[0]);
-           $index++;
-       }
-       $maxtextwidth = max($textwidth) ;
+      //longueur du texte en dessous des barres
+      $index = 0;
+      foreach ($labels2 as $label) {
+         $lx = 55 + $index * $width_bar;
+         $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$label);
+         $textwidth[$label] = abs($box[4] - $box[0]);
+         $index++;
+      }
+      $maxtextwidth = max($textwidth) ;
 
       //create image
       $image = imagecreatetruecolor ($width, $height+$maxtextwidth);
@@ -1508,7 +1513,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
             $textwidth = abs($box[4] - $box[0]);
 
-            imagettftext($image, $fontsize, $fontangle, 38-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+            imagettftext($image, $fontsize, $fontangle, 
+               38-$textwidth, $yaxis+5, $drakgrey, $font, $val);
          }
 
          //draw y-axis
@@ -1620,7 +1626,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //legend circle
             $color_rbg = $this->colorHexToRGB($palette[$index]);
-            imageSmoothArc($image, $width - 10, (15 * $nb_bar) + ($index * -15), 8, 8, $color_rbg, 0, 2 * M_PI);
+            imageSmoothArc($image, 
+               $width - 10, (15 * $nb_bar) + ($index * -15), 8, 8, $color_rbg, 0, 2 * M_PI);
 
             $index++;
          }
@@ -1762,7 +1769,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $val = round($i * $max / 12);
             $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
             $textwidth = abs($box[4] - $box[0]);
-            imagettftext($image, $fontsize, $fontangle, 28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+            imagettftext($image, $fontsize, $fontangle, 
+               28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
          }
 
          //draw y-axis grey step line
@@ -1862,8 +1870,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //display values label
             if($show_label == "always" || $show_label == "hover") {
-               imagettftext($image, $fontsize-1, $fontangle, ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
-                         $darkerpalette[0], $font, $old_data);
+               imagettftext($image, $fontsize-1, $fontangle, 
+                  ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5, $darkerpalette[0], $font, $old_data);
             }
 
             //display y ticks and labels
@@ -1882,11 +1890,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //display last value, dot and axis label
          if (isset($x2)) {
-            imagettftext($image, $fontsize-1, $fontangle, $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
+            imagettftext($image, $fontsize-1, $fontangle, 
+               $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
             $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
             imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
             imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
-            imagettftext($image, $fontsize, $fontangle, $x2 - 10 , $height-10, $black, $font, $label);
+            imagettftext($image, $fontsize, $fontangle, 
+               $x2 - 10 , $height-10, $black, $font, $label);
             imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
          }
       }
@@ -2029,7 +2039,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
             $textwidth = abs($box[4] - $box[0]);
          
-            imagettftext($image, $fontsize, $fontangle, 25-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+            imagettftext($image, $fontsize, $fontangle,
+               25-$textwidth, $yaxis+5, $drakgrey, $font, $val);
          }
 
          //draw y-axis grey step line
@@ -2135,8 +2146,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                //display values label
                if($show_label == "always" || $show_label == "hover") {
-                  imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
-                            $darkerpalette[$index1], $font, $old_data);
+                  imagettftext($image, $fontsize-1, $fontangle, 
+                     ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5, 
+                     $darkerpalette[$index1], $font, $old_data);
                }
 
                //show x-axis ticks
@@ -2159,8 +2171,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                //display value label
                if($show_label == "always" || $show_label == "hover") {
-                  imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5,
-                            $darkerpalette[$index1], $font, $old_data);
+                  imagettftext($image, $fontsize-1, $fontangle, 
+                     ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5, 
+                     $darkerpalette[$index1], $font, $old_data);
                }
             }
             /*** end display last value ***/
@@ -2187,7 +2200,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
-            imagettftext($image, $fontsize, $fontangle, 20, 35 + $index * 14 , $black, $font, $label);
+            imagettftext($image, $fontsize, $fontangle, 
+               20, 35 + $index * 14 , $black, $font, $label);
 
             //legend circle
             $color_rbg = $this->colorHexToRGB($palette[$index]);

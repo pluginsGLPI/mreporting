@@ -79,12 +79,14 @@ class PluginMreportingGraph {
       //using rand for display x graphs on same page
       
       if (!isset($_REQUEST['date1'.$randname])) 
-            $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
+            $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", 
+               time() - ($options['delay'] * 24 * 60 * 60));
       if (!isset($_REQUEST['date2'.$randname])) 
          $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
 
       echo "<div class='graph_navigation'>";
-      PluginMreportingMisc::showSelector($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
+      PluginMreportingMisc::showSelector(
+         $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
       echo "</div>";
 
       //Script for graph display
@@ -160,7 +162,7 @@ class PluginMreportingGraph {
 
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-$JS = <<<JAVASCRIPT
+      $JS = <<<JAVASCRIPT
    var width_hbar = {$this->width};
    var height_hbar = {$height};
    var x = pv.Scale.linear(0, max).range(0, width_hbar-145);
@@ -312,7 +314,7 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-$JS = <<<JAVASCRIPT
+      $JS = <<<JAVASCRIPT
    var width_pie = {$this->width};
    var height_pie = 300;
    var radius = 150;
@@ -377,8 +379,8 @@ $JS = <<<JAVASCRIPT
       .right(5)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
-         return (this.parent.o() == this.index) ? colors(this.index).alpha(.6) : colors(this.index) &&
-         Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
+         return (this.parent.o() == this.index) ? colors(this.index).alpha(.6) : colors(this.index) 
+         && Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
       })
       .event("mouseover", function() {Hilighted[this.index] = true; return vis{$randname};})
       .event("mouseout", function() { Hilighted[this.index] = false; return vis{$randname};})
@@ -388,7 +390,7 @@ $JS = <<<JAVASCRIPT
       .textMargin(12)
       .textBaseline("middle")
       .textStyle(function() { return colors(this.index).darker(); })
-      .textDecoration(function() { return (this.parent.o() == this.index) ? "underline" : "none"; });
+      .textDecoration(function() { return (this.parent.o() == this.index) ? "underline" : "none";});
 
 
    //render in loop to animate
@@ -476,7 +478,7 @@ JAVASCRIPT;
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
 
-$JS = <<<JAVASCRIPT
+      $JS = <<<JAVASCRIPT
    var   width = {$this->width},
          height = 450
          i = -1, //mouseover index
@@ -677,7 +679,7 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-$JS = <<<JAVASCRIPT
+      $JS = <<<JAVASCRIPT
    var width_hgbar = {$this->width};
    var height_hgbar = {$height};
    var x = pv.Scale.linear(0, max).range(0, width_hgbar - 150);
@@ -736,7 +738,9 @@ $JS = <<<JAVASCRIPT
       .top(2)
       .bottom(2)
       .fillStyle(function() {
-         if(this.parent.active() || Hilighted[this.parent.parent.index]) return colors(this.parent.parent.index).alpha(.6);
+         if(this.parent.active() || Hilighted[this.parent.parent.index]) {
+            return colors(this.parent.parent.index).alpha(.6);
+         }
          else return colors(this.parent.parent.index);
       })
       .event("mouseover", function() { 
@@ -754,7 +758,8 @@ $JS = <<<JAVASCRIPT
    .anchor("right").add(pv.Label)
       .textAlign("left")
       .visible(function(d) {
-         return ((this.parent.active() || (d <= max / 100 && d!=0) || Hilighted[this.parent.parent.index])  && {$hover} || {$always}) ? true : false;
+         return ((this.parent.active() || (d <= max / 100 && d!=0) 
+            || Hilighted[this.parent.parent.index])  && {$hover} || {$always}) ? true : false;
       })
       .textStyle(function() { return colors(this.parent.parent.index).darker(); })
       .text(function(d) { return  d+" {$unit}"; });
@@ -868,7 +873,7 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-$JS = <<<JAVASCRIPT
+      $JS = <<<JAVASCRIPT
    var w = {$this->width},
        h = 400,
        x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w-300, 4/5),
@@ -924,7 +929,8 @@ $JS = <<<JAVASCRIPT
 
    bar{$randname}.anchor("center").add(pv.Label)
       .visible(function(d){
-         return ( (this.index == i || Hilighted[this.parent.index]) && ({$hover} && (d!=0)) || ({$always}  && (d!=0)) ) ? true : false ;
+         return ( (this.index == i || Hilighted[this.parent.index]) 
+            && ({$hover} && (d!=0)) || ({$always}  && (d!=0)) ) ? true : false ;
       })
       .textBaseline("center")
       .text(function(d) { return d; })
@@ -1065,7 +1071,7 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-$JS = <<<JAVASCRIPT
+      $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
    var height_area = 350;
    var offset = 0;
@@ -1279,7 +1285,7 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-$JS = <<<JAVASCRIPT
+      $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
    var height_area = 450;
    var offset = 0;

@@ -813,9 +813,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
             foreach($reports as $classname => $report) {
                foreach($report['functions'] as $func) {
-                  
                   foreach ($opt['check'] as $do=>$to) {
-                     
                      if ($do == $func['function'].$classname) {
                         //dynamic instanciation of class passed by 'short_classname' GET parameter
                         $class = 'PluginMreporting'.$func['short_classname'];
