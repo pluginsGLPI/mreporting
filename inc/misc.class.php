@@ -70,6 +70,10 @@ class PluginMreportingMisc {
       echo "<input type='submit' class='button' name='submit' Value=\"". $LANG['buttons'][7] ."\">";
       echo "</td>\n";
 
+      echo "<td rowspan='2' class='center'>";
+      Bookmark::showSaveButton(Bookmark::URI);
+      echo "</td>\n";
+
       echo "</tr>";
       echo "</table>";
       Html::closeForm();
@@ -93,7 +97,10 @@ class PluginMreportingMisc {
       //if data inverted, reverse it
       if ($time1 > $time2) {
          list($time1, $time2) = array($time2, $time1);
-         list($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname]) = array($_REQUEST['date2'.$randname], $_REQUEST['date1'.$randname]);
+         list($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname]) = array(
+            $_REQUEST['date2'.$randname], 
+            $_REQUEST['date1'.$randname]
+         );
       }
 
       $begin=date("Y-m-d H:i:s",$time1);
@@ -141,11 +148,11 @@ class PluginMreportingMisc {
    }
 
    static function cw_array_count($a) { 
-     if(!is_array($a)) return $a; 
-     $totale = 0;
-     foreach($a as $key=>$value) 
-        $totale += self::cw_array_count($value); 
-     return $totale; 
+      if(!is_array($a)) return $a; 
+      $totale = 0;
+      foreach($a as $key=>$value) 
+         $totale += self::cw_array_count($value); 
+      return $totale; 
    } 
 }
 ?>
