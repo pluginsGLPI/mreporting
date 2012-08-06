@@ -534,7 +534,7 @@ class PluginMreportingCommon extends CommonDBTM {
       }
       if (!$export) {
       
-         if ($_REQUEST['f_name'] != "test") {
+         if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
             echo "<div class='graph_bottom'>";
             echo "<span style='float:left'>";
             PluginMreportingMisc::showNavigation();
@@ -560,7 +560,7 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "<div style='clear:both;'></div>";
          echo "</div>";
          
-         if ($_REQUEST['f_name'] != "test") {
+         if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
             echo "</div></div>";
          }
       }
