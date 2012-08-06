@@ -547,13 +547,31 @@ class PluginMreportingCommon extends CommonDBTM {
             if ($randname !== false) {
                echo " - <b>".$LANG['buttons'][31]."</b> : ";
                echo "&nbsp;<a target='_blank' href='".
+                  "export.php?switchto=odt&$request_string'>ODT</a> /";
+               echo "&nbsp;<a target='_blank' href='".
                   "export.php?switchto=csv&$request_string'>CSV</a> /";
                if ($show_graph) {
                   echo "&nbsp;<a target='_blank' href='".
                      "export.php?switchto=png&$request_string'>PNG</a> /";
+
+                  /*** export svg ***/
+                  echo "&nbsp;<a id='export_svg_link' target='_blank' href='#' ".
+                     "onClick='return false;'>SVG</a>";
+                  echo "<form method='post' action='export_svg.php' id='export_svg_form' ".
+                     "style='margin: 0; padding: 0'><p>";
+                  echo "<input type='hidden' name='svg_content' value='none' />";
+                  echo "</p></form>";
+
+                  echo "<script type='text/javascript'>
+                     Ext.get('export_svg_link').on('click', function () {
+                        var svg_content = vis{$randname}.scene[0].canvas.innerHTML;
+                        var form = document.getElementById('export_svg_form');
+                        form.svg_content.value = svg_content;
+                        form.submit();
+                     });
+                  </script>";
                }
-               echo "&nbsp;<a target='_blank' href='".
-                  "export.php?switchto=odt&$request_string'>ODT</a>";
+               
             }
             echo "</span>";
          }
@@ -767,12 +785,6 @@ class PluginMreportingCommon extends CommonDBTM {
             //check the format display charts configured in glpi
             $opt = $this->initParams($opt, true);
             $opt['export'] = 'png';
-            break;
-         case 'svg':
-            $graph = new PluginMreportingGraph();
-            //check the format display charts configured in glpi
-            $opt = $this->initParams($opt, true);
-            $opt['export'] = 'svg';
             break;
          case 'csv':
             $graph = new PluginMreportingGraphcsv();
