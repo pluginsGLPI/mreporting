@@ -1881,12 +1881,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          
 
          //display last value, dot and axis label
-         imagettftext($image, $fontsize-1, $fontangle, $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
-         $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
-         imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
-         imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
-         imagettftext($image, $fontsize, $fontangle, $x2 - 10 , $height-10, $black, $font, $label);
-         imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
+         if (isset($x2)) {
+            imagettftext($image, $fontsize-1, $fontangle, $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
+            $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
+            imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
+            imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
+            imagettftext($image, $fontsize, $fontangle, $x2 - 10 , $height-10, $black, $font, $label);
+            imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
+         }
       }
       //generate image
       $params = array("image" => $image,
@@ -2149,15 +2151,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             }
 
             /*** display last value ***/
-            //trace dots
-            $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
-            imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
-            imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
+            if (isset($x2)) {
+               //trace dots
+               $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
+               imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
+               imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
 
-            //display value label
-            if($show_label == "always" || $show_label == "hover") {
-               imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5,
-                         $darkerpalette[$index1], $font, $old_data);
+               //display value label
+               if($show_label == "always" || $show_label == "hover") {
+                  imagettftext($image, $fontsize-1, $fontangle, ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5,
+                            $darkerpalette[$index1], $font, $old_data);
+               }
             }
             /*** end display last value ***/
 
