@@ -38,14 +38,14 @@ class PluginMreportingCommon extends CommonDBTM {
    static function parseAllClasses($inc_dir) {
       
       $classes = array();
-      
       $matches = array();
 
       if ($handle = opendir($inc_dir)) {
          while (false !== ($entry = readdir($handle))) {
             if ($entry != "." && $entry != "..") {
                $fcontent = file_get_contents($inc_dir."/".$entry);
-               if (preg_match("/class\s(.+)Extends PluginMreportingBaseclass/i", $fcontent, $matches)) {
+               if (preg_match("/class\s(.+)Extends PluginMreportingBaseclass/i", 
+                     $fcontent, $matches)) {
                   $classes[] = trim($matches[1]);
                }
             }
@@ -84,9 +84,11 @@ class PluginMreportingCommon extends CommonDBTM {
       //construct array to list classes and functions
       foreach($classes as $classname) {
          $i = 0;
-         $short_classname = str_replace('PluginMreporting', '', $classname);
-         if (isset($LANG['plugin_mreporting'][$short_classname]['title'])) {
-            $title = $LANG['plugin_mreporting'][$short_classname]['title'];
+
+         //scn = short class name
+         $scn = str_replace('PluginMreporting', '', $classname);
+         if (isset($LANG['plugin_mreporting'][$scn]['title'])) {
+            $title = $LANG['plugin_mreporting'][$scn]['title'];
             
             $functions = get_class_methods($classname);
 
@@ -94,27 +96,29 @@ class PluginMreportingCommon extends CommonDBTM {
                $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
                if ($ex_func[0] != 'report') continue;
 
-               if (isset($LANG['plugin_mreporting'][$short_classname][$f_name])) {
+               if (isset($LANG['plugin_mreporting'][$scn][$f_name])) {
                   $gtype      = strtolower($ex_func[1]);
-                  $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+                  $title_func = $LANG['plugin_mreporting'][$scn][$f_name]['title'];
                   $category_func = '';
-                  if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['category']))
-                     $category_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['category'];
+                  if (isset($LANG['plugin_mreporting'][$scn][$f_name]['category']))
+                     $category_func = $LANG['plugin_mreporting'][$scn][$f_name]['category'];
                   
-                  if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['desc']))
-                     $desc_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['desc'];
+                  if (isset($LANG['plugin_mreporting'][$scn][$f_name]['desc']))
+                     $des_func = $LANG['plugin_mreporting'][$scn][$f_name]['desc'];
                      
-                  $url_graph  = $front_dir."/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype";
-                  $min_url_graph  = "front/graph.php?short_classname=$short_classname&amp;f_name=$f_name&amp;gtype=$gtype";
+                  $url_graph  = $front_dir."/graph.php?short_classname=$scn".
+                     "&amp;f_name=$f_name&amp;gtype=$gtype";
+                  $min_url_graph  = "front/graph.php?short_classname=$scn".
+                     "&amp;f_name=$f_name&amp;gtype=$gtype";
                   
                   $reports[$classname]['title'] = $title;
                   $reports[$classname]['functions'][$i]['function'] = $f_name;
                   $reports[$classname]['functions'][$i]['title'] = $title_func;
-                  $reports[$classname]['functions'][$i]['desc'] = $desc_func;
+                  $reports[$classname]['functions'][$i]['desc'] = $des_func;
                   $reports[$classname]['functions'][$i]['category_func'] = $category_func;
                   $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
                   $reports[$classname]['functions'][$i]['gtype'] = $gtype;
-                  $reports[$classname]['functions'][$i]['short_classname'] = $short_classname;
+                  $reports[$classname]['functions'][$i]['short_classname'] = $scn;
                   $reports[$classname]['functions'][$i]['is_active'] = false;
                   $config = new PluginMreportingConfig();
                   if ($config->getFromDBByFunctionAndClassname($f_name,$classname)) {
@@ -182,7 +186,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      $desc = " (".$comment.")";
                   }
                   echo "<option value='".$v["url_graph"]."' title=\"".
-                                    Html::cleanInputText($comment)."\">".$v["title"].$desc."</option>";
+                                 Html::cleanInputText($comment)."\">".$v["title"].$desc."</option>";
                   $i++;
                }
             }
@@ -204,7 +208,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * and display list
    */
    
-   function showCentral($params)  {
+   function showCentral($params) {
       global $LANG, $CFG_GLPI;
 
       $reports = $this->getAllReports(true, $params);
@@ -463,14 +467,14 @@ class PluginMreportingCommon extends CommonDBTM {
       
       //show graph (pgrah type determined by first entry of explode of camelcase of function name
       $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
-      $desc_func = "";
+      $des_func = "";
       if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc']))
-        $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
+        $des_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
       
       $opt['class'] = $classname;
       $params = array("raw_datas"   => $datas,
                        "title"      => $title_func,
-                       "desc"       => $desc_func,
+                       "desc"       => $des_func,
                        "export"     => $export,
                        "opt"        => $opt);
                        
@@ -501,66 +505,69 @@ class PluginMreportingCommon extends CommonDBTM {
       
       $randname = false;
       if (isset($opt['randname']) && $opt['randname'] !== false) {
-			
-			$randname = $opt['randname'];
-			$_REQUEST['short_classname'] = $opt['short_classname'];
-			$_REQUEST['f_name'] = $opt['f_name'];
-			$_REQUEST['gtype'] = $opt['gtype'];
-			$_REQUEST['randname'] = $opt['randname'];
-			
-			
-			//End Script for graph display
-			//if $randname exists
-			if (!$export 
+         $randname = $opt['randname'];
+         $_REQUEST['short_classname'] = $opt['short_classname'];
+         $_REQUEST['f_name'] = $opt['f_name'];
+         $_REQUEST['gtype'] = $opt['gtype'];
+         $_REQUEST['randname'] = $opt['randname'];
+         
+         
+         //End Script for graph display
+         //if $randname exists
+         if (!$export 
                && $CFG_GLPI['default_graphtype'] == 'svg') {
 
-				echo "}
-					showGraph$randname();
-				</script>";
-				echo "</div>";
+            echo "}
+               showGraph$randname();
+            </script>";
+            echo "</div>";
 
-			}
+         }
       }
       $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
       
-		if ($randname !== false && !$export) {
-			
-			$show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'],$opt['class']);
-			self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
-		
-		}
-		if (!$export) {
-		
-			if ($_REQUEST['f_name'] != "test") {
-				echo "<div class='graph_bottom'>";
-				echo "<span style='float:left'>";
-				PluginMreportingMisc::showNavigation();
-				echo "</span>";
-				echo "<span style='float:right'>";
-				echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
-				echo "&nbsp;<a href='config.form.php?name=".$opt['f_name']."&classname=".$opt['class']."' target='_blank'>";
-				echo "<img src='../pics/config.png' class='title_pics'/></a>";
-				if ($randname !== false) {
+      if ($randname !== false && !$export) {
+         
+         $show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'],$opt['class']);
+         self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
+      
+      }
+      if (!$export) {
+      
+         if ($_REQUEST['f_name'] != "test") {
+            echo "<div class='graph_bottom'>";
+            echo "<span style='float:left'>";
+            PluginMreportingMisc::showNavigation();
+            echo "</span>";
+            echo "<span style='float:right'>";
+            echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
+            echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
+               "&classname=".$opt['class']."' target='_blank'>";
+            echo "<img src='../pics/config.png' class='title_pics'/></a>";
+            if ($randname !== false) {
                echo " - <b>".$LANG['buttons'][31]."</b> : ";
-               echo "&nbsp;<a target='_blank' href='export.php?switchto=csv&$request_string'>CSV</a> /";
+               echo "&nbsp;<a target='_blank' href='".
+                  "export.php?switchto=csv&$request_string'>CSV</a> /";
                if ($show_graph) {
-                  echo "&nbsp;<a target='_blank' href='export.php?switchto=png&$request_string'>PNG</a> /";
+                  echo "&nbsp;<a target='_blank' href='".
+                     "export.php?switchto=png&$request_string'>PNG</a> /";
                }
-               echo "&nbsp;<a target='_blank' href='export.php?switchto=odt&$request_string'>ODT</a>";
-				}
-				echo "</span>";
-			}
-			echo "<div style='clear:both;'></div>";
-			echo "</div>";
-			
-			if ($_REQUEST['f_name'] != "test") {
+               echo "&nbsp;<a target='_blank' href='".
+                  "export.php?switchto=odt&$request_string'>ODT</a>";
+            }
+            echo "</span>";
+         }
+         echo "<div style='clear:both;'></div>";
+         echo "</div>";
+         
+         if ($_REQUEST['f_name'] != "test") {
             echo "</div></div>";
          }
-		}
-		
-		if ($randname == false) {
-			echo "</div>";
-		}
+      }
+      
+      if ($randname == false) {
+         echo "</div>";
+      }
       //destroy specific palette
       unset($_SESSION['mreporting']['colors']);
 
@@ -615,8 +622,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      $calcul[$k][$key]= Html::formatNumber(($val*100)/$total);
                   }
                }
-            //simple array
-            } else {
+            } else {//simple array
                $total = array_sum($values);
                $calcul[$k]= Html::formatNumber(($v*100)/$total);
                
@@ -653,7 +659,8 @@ class PluginMreportingCommon extends CommonDBTM {
     * @param $flip_data, flip array if necessary
    */
     
-   static function showGraphDatas ($datas=array(), $unit = '', $labels2=array(), $flip_data = false, $show_graph = false) {
+   static function showGraphDatas (
+         $datas=array(), $unit = '', $labels2=array(), $flip_data = false, $show_graph = false) {
       global $LANG, $CFG_GLPI;
       
       $simpledatas = false;
@@ -730,11 +737,9 @@ class PluginMreportingCommon extends CommonDBTM {
       foreach($types as $label2 => $cols) {
          echo "<tr class='tab_bg_1'>";
          echo "<td>".$label2."</td>";
-         //simple array
-         if ($simpledatas) {
+         if ($simpledatas) { //simple array
             echo "<td class='center'>".$cols." ".$unit."</td>";
-         //multiple array
-         } else {
+         } else { //multiple array
             foreach($cols as $date => $nb) {
                echo "<td class='center'>".$nb." ".$unit."</td>";
             }
@@ -752,7 +757,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * @param $opt
    */
    
-   function export($opt)  {
+   function export($opt) {
       global $LANG;
       
       switch ($opt['switchto']) {
@@ -762,6 +767,12 @@ class PluginMreportingCommon extends CommonDBTM {
             //check the format display charts configured in glpi
             $opt = $this->initParams($opt, true);
             $opt['export'] = 'png';
+            break;
+         case 'svg':
+            $graph = new PluginMreportingGraph();
+            //check the format display charts configured in glpi
+            $opt = $this->initParams($opt, true);
+            $opt['export'] = 'svg';
             break;
          case 'csv':
             $graph = new PluginMreportingGraphcsv();
@@ -789,15 +800,15 @@ class PluginMreportingCommon extends CommonDBTM {
             $reports = $this->getAllReports(false, $opt);
 
             foreach($reports as $classname => $report) {
-               foreach($report['functions'] as $function) {
+               foreach($report['functions'] as $func) {
                   
                   foreach ($opt['check'] as $do=>$to) {
                      
-                     if ($do == $function['function'].$classname) {
+                     if ($do == $func['function'].$classname) {
                         //dynamic instanciation of class passed by 'short_classname' GET parameter
-                        $class = 'PluginMreporting'.$function['short_classname'];
+                        $class = 'PluginMreporting'.$func['short_classname'];
                         $obj = new $class();
-                        $randname = $classname.$function['function'];
+                        $randname = $classname.$func['function'];
                         if (isset($opt['date1']) && isset($opt['date2'])) {
                            
                            $s = strtotime($opt['date2'])-strtotime($opt['date1']); 
@@ -807,41 +818,44 @@ class PluginMreportingCommon extends CommonDBTM {
                         }
                         
                         
-                        //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-                        $datas = $obj->$function['function']();
+                        //dynamic call of method passed by 'f_name' 
+                        //GET parameter with previously instancied class
+                        $datas = $obj->$func['function']();
                         
-                        //show graph (pgrah type determined by first entry of explode of camelcase of function name
-                        $title_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['title'];
+                        //show graph (pgrah type determined by 
+                        //first entry of explode of camelcase of function name
+                        $title_func = $LANG['plugin_mreporting'][$func['short_classname']][$func['function']]['title'];
 
-                        $desc_func = "";
-                        if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'])) {
-                          $desc_func = $LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'];
+                        $des_func = "";
+                        if (isset($LANG['plugin_mreporting'][$func['short_classname']][$func['function']]['desc'])) {
+                          $des_func = $LANG['plugin_mreporting'][$func['short_classname']][$func['function']]['desc'];
                         }
-                        if (isset($LANG['plugin_mreporting'][$function['short_classname']][$function['function']]['desc'])
+                        if (isset($LANG['plugin_mreporting'][$func['short_classname']][$func['function']]['desc'])
                               &&isset($opt['date1']) 
                                  && isset($opt['date2'])) {
-                           $desc_func.= " - ";
+                           $des_func.= " - ";
                         }
                         
                         if (isset($opt['date1']) 
                               && isset($opt['date2'])) {
-                           $desc_func.= Html::convdate($opt['date1'])." / ".Html::convdate($opt['date2']);
+                           $des_func.= Html::convdate($opt['date1'])." / ".
+                              Html::convdate($opt['date2']);
                         }
-                        $options = array("short_classname" => $function['short_classname'],
-                                    "f_name" => $function['function'],
+                        $options = array("short_classname" => $func['short_classname'],
+                                    "f_name" => $func['function'],
                                     "class" => $opt['classname'],
-                                    "gtype" => $function['gtype'],
+                                    "gtype" => $func['gtype'],
                                     "randname" => $randname); 
                         
                         $show_label = 'always';
                         
                         $params = array("raw_datas"  => $datas,
                                          "title"      => $title_func,
-                                         "desc"       => $desc_func,
+                                         "desc"       => $des_func,
                                          "export"     => $opt['export'],
                                          "opt"        => $options);
                                          
-                        $graph->{'show'.$function['gtype']}($params);
+                        $graph->{'show'.$func['gtype']}($params);
                      }
                   }
                }
@@ -850,8 +864,7 @@ class PluginMreportingCommon extends CommonDBTM {
                   !empty($_SESSION['glpi_plugin_mreporting_odtarray'])) {
                $this->generateOdt($_SESSION['glpi_plugin_mreporting_odtarray']);
             }
-         //no selected data
-         } else {
+         } else { //no selected data
             Html::popHeader($LANG['plugin_mreporting']["export"][0], $_SERVER['PHP_SELF']);
             echo "<div class='center'><br>".$LANG['plugin_mreporting']["error"][3]."<br><br>";
             Html::displayBackLink();
@@ -869,18 +882,18 @@ class PluginMreportingCommon extends CommonDBTM {
 
          //show graph (pgrah type determined by first entry of explode of camelcase of function name
          $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
-         $desc_func = "";
+         $des_func = "";
          if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'])) {
-           $desc_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
+            $des_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
          }
          if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'])
                && isset($_REQUEST['date1'.$opt['randname']]) 
                && isset($_REQUEST['date2'.$opt['randname']])) {
-            $desc_func.= " - ";
+            $des_func.= " - ";
          }
          if (isset($_REQUEST['date1'.$opt['randname']]) 
                && isset($_REQUEST['date2'.$opt['randname']])) {
-            $desc_func.= Html::convdate($_REQUEST['date1'.$opt['randname']]).
+            $des_func.= Html::convdate($_REQUEST['date1'.$opt['randname']]).
                         " / ".Html::convdate($_REQUEST['date2'.$opt['randname']]);
          }
          
@@ -889,7 +902,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $opt['class'] = $classname;
          $params = array("raw_datas"  => $datas,
                           "title"      => $title_func,
-                          "desc"       => $desc_func,
+                          "desc"       => $des_func,
                           "export"     => $opt['export'],
                           "opt"        => $opt);
                 
@@ -1221,7 +1234,8 @@ class PluginMreportingCommon extends CommonDBTM {
          "datas" => array(
             "Jan" => 15, "Fev" => 20, "Mar" => 21, "Avr" => 16,
             "Mai" => 8, "Jun" => 14, "Jui" => 3, "Aou" => 5,
-            "Sep" => 9, "Oct" => 11, "Nov" => 21, "Dec" => 30/*,
+            "Sep" => 9, "Oct" => 11, "Nov" => 21, "Dec" => 30
+            /*,
             "Jan2" => 15, "Fev2" => 20, "Mar2" => 21, "Avr2" => 16,
             "Mai2" => 8, "Jun2" => 14, "Jui2" => 3, "Aou2" => 5,
             "Sep2" => 9, "Oct2" => 11, "Nov2" => 21, "Dec2" => 30,
