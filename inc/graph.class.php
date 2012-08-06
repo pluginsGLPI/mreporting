@@ -345,7 +345,9 @@ JAVASCRIPT;
          .bottom(function() { return height_pie / 2
             - Math.sin(this.startAngle() + this.angle() / 2)
             * ((Hilighted[this.index]) ? 20 : 0); })
-         .fillStyle(function() {return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);})
+         .fillStyle(function() {
+            return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
+         })
          .event("mouseover", function() {
             this.parent.o(this.index) ; 
             Hilighted[this.index] = true; 
@@ -689,7 +691,7 @@ JAVASCRIPT;
    var y = pv.Scale.ordinal(pv.range(n+1)).splitBanded(0, height_hgbar, 4/5);
    var Hilighted = [false, false,false, false,false, false];
 
-   var offset = 0;
+   var offset = 0, index_active = -1;
 
    vis{$randname} = new pv.Panel()
       .width(width_hgbar)
@@ -748,12 +750,15 @@ JAVASCRIPT;
       })
       .event("mouseover", function() { 
          this.parent.active(true); 
-         Hilighted[this.parent.active] = true; 
+         Hilighted[this.parent.active] = true;
+         index_active = this.parent.parent.index;
          return vis{$randname};
       })
+//      .event("mouseover", pv.Behavior.extjsTooltips("test"))
       .event("mouseout", function() { 
          this.parent.active(false); 
          Hilighted[this.parent.active] = false; 
+         index_active = -1;
          return vis{$randname};
       })
       .strokeStyle(function() { return colors(this.parent.parent.index).darker(); })
@@ -772,7 +777,9 @@ JAVASCRIPT;
       .data(labels2)
       .right(160)
       .top(function(d) { return 5 + this.index * 15; })
-      .fillStyle(function() {return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);})
+      .fillStyle(function() {
+         return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
+      })
       .event("mouseover", function() {
          Hilighted[this.index] = true; 
          return vis{$randname};
@@ -786,7 +793,8 @@ JAVASCRIPT;
       .textAlign("right")
       .textMargin(12)
       .textBaseline("middle")
-      .textStyle(function() { return colors(this.index).darker(); });
+      .textStyle(function() { return colors(this.index).darker(); })
+      .textDecoration(function() { return (index_active == this.index) ? "underline" : "none";});
 
    //render in loop to animate
    var interval = setInterval(function() {
