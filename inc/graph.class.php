@@ -350,7 +350,7 @@ JAVASCRIPT;
             this.parent.o(this.index) ; 
             Hilighted[this.index] = true; 
             return vis{$randname};
-         })don
+         })
          .event("mouseout", function() {  
             this.parent.o(-1) ; 
             Hilighted[this.index] = false; 
