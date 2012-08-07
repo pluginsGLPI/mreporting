@@ -451,12 +451,19 @@ class PluginMreportingCommon extends CommonDBTM {
       global $LANG, $CFG_GLPI;
       
       PluginMreportingCommon::title($opt);
-      
+
+
       //check the format display charts configured in glpi
       $opt = $this->initParams($opt, $export);
+      $config = PluginMreportingConfig::initConfigParams($opt['f_name'], "PluginMreporting".$opt['short_classname']);
       
-      if ($CFG_GLPI['default_graphtype'] == 'png') $graph = new PluginMreportingGraphpng();
-      else $graph = new PluginMreportingGraph();
+      if ($config['graphtype'] == 'PNG' || 
+            $config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'png') {
+         $graph = new PluginMreportingGraphpng();
+      } elseif ($config['graphtype'] == 'SVG' || 
+            $config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'svg') { 
+         $graph = new PluginMreportingGraph();
+      }
 
       //dynamic instanciation of class passed by 'short_classname' GET parameter
       $classname = 'PluginMreporting'.$opt['short_classname'];
@@ -514,9 +521,13 @@ class PluginMreportingCommon extends CommonDBTM {
          
          //End Script for graph display
          //if $randname exists
+         
+         $config = PluginMreportingConfig::initConfigParams($opt['f_name'], 
+            "PluginMreporting".$opt['short_classname']);
+      
          if (!$export 
-               && $CFG_GLPI['default_graphtype'] == 'svg') {
-
+               && ($config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'svg' 
+                  || $config['graphtype'] == 'SVG')) {
             echo "}
                showGraph$randname();
             </script>";

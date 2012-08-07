@@ -53,6 +53,7 @@ function plugin_mreporting_install() {
 	`unit` VARCHAR(10) default NULL,
 	`default_delay` VARCHAR(10) default NULL,
 	`condition` VARCHAR(255) default NULL,
+   `graphtype` VARCHAR(255) default 'GLPI',
    PRIMARY KEY  (`id`),
 	KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
