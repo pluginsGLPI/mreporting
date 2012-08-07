@@ -549,7 +549,11 @@ class PluginMreportingConfig extends CommonDBTM {
       Dropdown::showYesNo("show_graph",$this->fields["show_graph"]);
       echo "</td>";
       
-      echo "<td colspan='2'>";
+      echo "<td>".$LANG['setup'][47]."</td>";
+      echo "<td>";
+      Dropdown::showFromArray("graphtype", 
+         array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'), 
+         array('value' => $this->fields["graphtype"]));
       echo "</td>"; 
       echo "</tr>";
       
@@ -665,7 +669,8 @@ class PluginMreportingConfig extends CommonDBTM {
                      'delay'        => '30',
                      'condition'    => '',
                      'show_graph'   => false,
-                     'randname'     => '');
+                     'randname'     => '',
+                     'graphtype'    => 'GLPI');
       
       $self = new self();
       if ($self->getFromDBByFunctionAndClassname($name,$classname)) {
@@ -677,6 +682,7 @@ class PluginMreportingConfig extends CommonDBTM {
          $crit['delay']       = $self->fields['default_delay'];
          $crit['condition']   = $self->fields['condition'];
          $crit['show_graph']  = $self->fields['show_graph'];
+         $crit['graphtype']   = $self->fields['graphtype'];
          
          $crit['randname']    = $classname.$name;
       }
