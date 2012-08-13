@@ -571,8 +571,8 @@ class PluginMreportingCommon extends CommonDBTM {
                   echo "<form method='post' action='export_svg.php' id='export_svg_form' ".
                      "style='margin: 0; padding: 0'><p>";
                   echo "<input type='hidden' name='svg_content' value='none' />";
-                  echo "</p></form>";
-
+                  echo "</p>";
+                  Html::Closeform();
                   echo "<script type='text/javascript'>
                      Ext.get('export_svg_link').on('click', function () {
                         var svg_content = vis{$randname}.scene[0].canvas.innerHTML;
