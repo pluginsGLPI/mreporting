@@ -54,64 +54,70 @@ class PluginMreportingConfig extends CommonDBTM {
 
       $tab['common'] = $LANG['plugin_mreporting']["config"][0];
 
-      $tab[1]['table']=$this->getTable();
-      $tab[1]['field']='name';
-      $tab[1]['name']=$LANG['common'][16];
-      $tab[1]['datatype']='itemlink';
-      $tab[1]['itemlink_type'] = $this->getType();
+      $tab[1]['table']          = $this->getTable();
+      $tab[1]['field']          ='name';
+      $tab[1]['name']           = $LANG['common'][16];
+      $tab[1]['datatype']       ='itemlink';
+      $tab[1]['itemlink_type']  = $this->getType();
       
-      $tab[2]['table']    = $this->getTable();
-      $tab[2]['field']    = 'is_active';
-      $tab[2]['name']     = $LANG['common'][60];
-      $tab[2]['datatype'] = 'bool';
+      $tab[2]['table']          = $this->getTable();
+      $tab[2]['field']          = 'is_active';
+      $tab[2]['name']           = $LANG['common'][60];
+      $tab[2]['datatype']       = 'bool';
       
-      $tab[3]['table']    = $this->getTable();
-      $tab[3]['field']    = 'show_area';
-      $tab[3]['name']     = $LANG['plugin_mreporting']["config"][1];
-      $tab[3]['datatype'] = 'bool';
-      $tab[3]['massiveaction'] = false;
+      $tab[3]['table']          = $this->getTable();
+      $tab[3]['field']          = 'show_area';
+      $tab[3]['name']           = $LANG['plugin_mreporting']["config"][1];
+      $tab[3]['datatype']       = 'bool';
+      $tab[3]['massiveaction']  = false;
       
-      $tab[4]['table']    = $this->getTable();
-      $tab[4]['field']    = 'spline';
-      $tab[4]['name']     = $LANG['plugin_mreporting']["config"][2];
-      $tab[4]['datatype'] = 'bool';
-      $tab[4]['massiveaction'] = false;
+      $tab[4]['table']          = $this->getTable();
+      $tab[4]['field']          = 'spline';
+      $tab[4]['name']           = $LANG['plugin_mreporting']["config"][2];
+      $tab[4]['datatype']       = 'bool';
+      $tab[4]['massiveaction']  = false;
       
-      $tab[5]['table']    = $this->getTable();
-      $tab[5]['field']    = 'show_label';
-      $tab[5]['name']     = $LANG['plugin_mreporting']["config"][3];
-      $tab[5]['massiveaction'] = false;
+      $tab[5]['table']          = $this->getTable();
+      $tab[5]['field']          = 'show_label';
+      $tab[5]['name']           = $LANG['plugin_mreporting']["config"][3];
+      $tab[5]['massiveaction']  = false;
       
-      $tab[6]['table']    = $this->getTable();
-      $tab[6]['field']    = 'flip_data';
-      $tab[6]['name']     = $LANG['plugin_mreporting']["config"][4];
-      $tab[6]['datatype'] = 'bool';
-      $tab[6]['massiveaction'] = false;
+      $tab[6]['table']          = $this->getTable();
+      $tab[6]['field']          = 'flip_data';
+      $tab[6]['name']           = $LANG['plugin_mreporting']["config"][4];
+      $tab[6]['datatype']       = 'bool';
+      $tab[6]['massiveaction']  = false;
       
-      $tab[7]['table']    = $this->getTable();
-      $tab[7]['field']    = 'unit';
-      $tab[7]['name']     = $LANG['plugin_mreporting']["config"][8];
+      $tab[7]['table']          = $this->getTable();
+      $tab[7]['field']          = 'unit';
+      $tab[7]['name']           = $LANG['plugin_mreporting']["config"][8];
       
-      $tab[8]['table']    = $this->getTable();
-      $tab[8]['field']    = 'default_delay';
-      $tab[8]['name']     = $LANG['plugin_mreporting']["config"][9];
+      $tab[8]['table']          = $this->getTable();
+      $tab[8]['field']          = 'default_delay';
+      $tab[8]['name']           = $LANG['plugin_mreporting']["config"][9];
       
-      $tab[9]['table']    = $this->getTable();
-      $tab[9]['field']    = 'condition';
-      $tab[9]['name']     = $LANG['plugin_mreporting']["config"][11];
+      $tab[9]['table']          = $this->getTable();
+      $tab[9]['field']          = 'condition';
+      $tab[9]['name']           = $LANG['plugin_mreporting']["config"][11];
       
-      $tab[10]['table']    = $this->getTable();
-      $tab[10]['field']    = 'show_graph';
-      $tab[10]['name']     = $LANG['plugin_mreporting']["config"][12];
-      $tab[10]['datatype'] = 'bool';
+      $tab[10]['table']         = $this->getTable();
+      $tab[10]['field']         = 'show_graph';
+      $tab[10]['name']          = $LANG['plugin_mreporting']["config"][12];
+      $tab[10]['datatype']      = 'bool';
       $tab[10]['massiveaction'] = false;
       
-      $tab[11]['table']    = $this->getTable();
-      $tab[11]['field']    = 'classname';
-      $tab[11]['name']     = $LANG['plugin_mreporting']["config"][13];
-      $tab[11]['massiveaction'] = false;
+      $tab[11]['table']         = $this->getTable();
+      $tab[11]['field']         = 'classname';
+      $tab[11]['name']          = $LANG['plugin_mreporting']["config"][13];
+      $tab[11]['massiveaction'] = false;      
       
-		return $tab;
+      $tab[12]['table']         = $this->getTable();
+      $tab[12]['field']         = 'graphtype';
+      $tab[12]['searchtype']    = 'equals';
+      $tab[12]['name']          = $LANG['setup'][47];
+      $tab[12]['massiveaction'] = true;
+      
+      return $tab;
    }
    
    
@@ -136,9 +142,9 @@ class PluginMreportingConfig extends CommonDBTM {
    }
    
    /**
-	 * add First config Link
-	 *@return nothing
-	 **/
+    * add First config Link
+    *@return nothing
+    **/
    static function addFirstconfigLink() {
       global $LANG, $CFG_GLPI;
 
@@ -155,9 +161,9 @@ class PluginMreportingConfig extends CommonDBTM {
    }
    
    /**
-	 * create First Config for all graphs
-	 *@return nothing
-	 **/
+    * create First Config for all graphs
+    *@return nothing
+    **/
    function createFirstConfig() {
       
       
@@ -187,11 +193,11 @@ class PluginMreportingConfig extends CommonDBTM {
    }
    
    /**
-	 * Preconfig datas for standard system
-	 * @graphname internal name of graph
-	 *@return nothing
-	 **/
-	function preconfig($funct_name, $classname) {
+    * Preconfig datas for standard system
+    * @graphname internal name of graph
+    *@return nothing
+    **/
+   function preconfig($funct_name, $classname) {
       
       if ($funct_name != -1 && $classname) {
          
@@ -250,17 +256,17 @@ class PluginMreportingConfig extends CommonDBTM {
                break;
 
          }
-		}
-		return $this->fields;
-	}
-	
-	/**
-	 * show not used Graphs dropdown
-	 * @name name of dropdown
-	 * @options array example $value
-	 *@return nothing
-	 **/
-	static function dropdownGraph($name, $options=array()) {
+      }
+      return $this->fields;
+   }
+   
+   /**
+    * show not used Graphs dropdown
+    * @name name of dropdown
+    * @options array example $value
+    *@return nothing
+    **/
+   static function dropdownGraph($name, $options=array()) {
       global $LANG;
       
       $self = new self();
@@ -302,7 +308,8 @@ class PluginMreportingConfig extends CommonDBTM {
                         $select.= "<option  title=\"".
                                  Html::cleanInputText($comment)."\" 
                                  value='".$classname.";".$v["function"].
-                                 "'".($options['value']==$classname.";".$v["function"]?" selected ":"").">";
+                                 "'".($options['value']==$classname.";".
+                                 $v["function"]?" selected ":"").">";
                         $select.= $v["title"].$desc;
                         $select.= "</option>";
                           
@@ -324,11 +331,11 @@ class PluginMreportingConfig extends CommonDBTM {
    }
    
    /**
-	 * show Label dropdown
-	 * @name name of dropdown
-	 * @options array example $value
-	 *@return nothing
-	 **/
+    * show Label dropdown
+    * @name name of dropdown
+    * @options array example $value
+    *@return nothing
+    **/
    static function dropdownLabel($name, $options=array(),$notall = false) {
       global $LANG;
 
@@ -413,11 +420,11 @@ class PluginMreportingConfig extends CommonDBTM {
       }
    }
    
-   static function getColors($index = 20)  {
+   static function getColors($index = 20) {
       if (isset($_SESSION['mreporting']['colors'])) {
          $colors = $_SESSION['mreporting']['colors'];
       } else {
-        /* if ($index <= 10) {
+         /* if ($index <= 10) {
             $colors = array(
                "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
                "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
@@ -429,7 +436,7 @@ class PluginMreportingConfig extends CommonDBTM {
                "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
                "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
             );
-        // }
+         // }
       }
 
       //fill colors on size index
@@ -445,21 +452,22 @@ class PluginMreportingConfig extends CommonDBTM {
    
    function prepareInputForAdd($input) {
       global $LANG;
-		
-		if (isset ($input["name"])) {
+      
+      if (isset ($input["name"])) {
          
          if ($this->getFromDBByFunctionAndClassname($input["name"],$input["classname"])) {
             if (!isset ($input["firstconfig"])) {
-               Session::addMessageAfterRedirect($LANG['plugin_mreporting']["error"][4], false, ERROR);
+               Session::addMessageAfterRedirect($LANG['plugin_mreporting']["error"][4], 
+                  false, ERROR);
             }
             return array ();
          }
       }
       
-		return $input;
-	}
-	
-	function showForm ($ID, $options=array()) {
+      return $input;
+   }
+   
+   function showForm ($ID, $options=array()) {
       global $CFG_GLPI, $LANG;
       
       if (!$this->canView()) return false;

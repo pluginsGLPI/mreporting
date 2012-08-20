@@ -452,10 +452,10 @@ class PluginMreportingCommon extends CommonDBTM {
       
       PluginMreportingCommon::title($opt);
 
-
       //check the format display charts configured in glpi
       $opt = $this->initParams($opt, $export);
-      $config = PluginMreportingConfig::initConfigParams($opt['f_name'], "PluginMreporting".$opt['short_classname']);
+      $config = PluginMreportingConfig::initConfigParams($opt['f_name'], 
+         "PluginMreporting".$opt['short_classname']);
       
       if ($config['graphtype'] == 'PNG' || 
             $config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'png') {
@@ -569,7 +569,7 @@ class PluginMreportingCommon extends CommonDBTM {
                   echo "&nbsp;<a id='export_svg_link' target='_blank' href='#' ".
                      "onClick='return false;'>SVG</a>";
                   echo "<form method='post' action='export_svg.php' id='export_svg_form' ".
-                     "style='margin: 0; padding: 0'><p>";
+                     "style='margin: 0; padding: 0' target='_blank'><p>";
                   echo "<input type='hidden' name='svg_content' value='none' />";
                   echo "</p>";
                   Html::Closeform();
@@ -579,6 +579,21 @@ class PluginMreportingCommon extends CommonDBTM {
                         var form = document.getElementById('export_svg_form');
                         form.svg_content.value = svg_content;
                         form.submit();
+
+                        Ext.Ajax.request({
+                           url: '../ajax/get_new_crsf_token.php',
+                           success: function(response, opts) {
+                              var token = response.responseText;
+                              Ext.select('#export_svg_form input[name=_glpi_csrf_token]')
+                                 .set({'value': token});
+                              
+                           },
+                           failure: function(response, opts) {
+                              console.log('server-side failure with status code ' + response.status);
+                           }
+                        });
+
+                        
                      });
                   </script>";
                }
@@ -849,7 +864,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
                         $des_func = "";
                         if (isset($LANG['plugin_mreporting'][$func['short_classname']][$func['function']]['desc'])) {
-                          $des_func = $LANG['plugin_mreporting'][$func['short_classname']][$func['function']]['desc'];
+                           $des_func = $LANG['plugin_mreporting'][$func['short_classname']][$func['function']]['desc'];
                         }
                         if (isset($LANG['plugin_mreporting'][$func['short_classname']][$func['function']]['desc'])
                               &&isset($opt['date1']) 
