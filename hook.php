@@ -58,12 +58,18 @@ function plugin_mreporting_install() {
    KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
    
-   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','2','2','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','3','3','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','4','4','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','5','5','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','6','6','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` VALUES (NULL,'PluginMreportingConfig','8','8','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      VALUES (NULL,'PluginMreportingConfig','2','2','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      VALUES (NULL,'PluginMreportingConfig','3','3','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      VALUES (NULL,'PluginMreportingConfig','4','4','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      VALUES (NULL,'PluginMreportingConfig','5','5','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      VALUES (NULL,'PluginMreportingConfig','6','6','0');";
+   $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      VALUES (NULL,'PluginMreportingConfig','8','8','0');";
    
    foreach($queries as $query)
       mysql_query($query);
@@ -182,7 +188,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
    return "";
 }
 
-function plugin_example_addWhere($link, $nott, $type, $ID, $val, $searchtype) {
+function plugin_mreporting_addWhere($link, $nott, $type, $ID, $val, $searchtype) {
 
    $searchopt = &Search::getOptions($type);
    $table     = $searchopt[$ID]["table"];
