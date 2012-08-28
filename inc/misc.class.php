@@ -154,5 +154,58 @@ class PluginMreportingMisc {
          $totale += self::cw_array_count($value); 
       return $totale; 
    } 
+
+   static function getArrayMaxValue($array) {
+      $max = 0;
+
+      if (!is_array($array)) return $array;
+
+      foreach ($array as $value) {
+         if (is_array($value)) {
+            $sub_max = self::getArrayMaxValue($value);
+            if ($sub_max > $max) $max = $sub_max;
+         } else{
+            if ($value > $max) $max = $value;
+         }
+      }  
+
+      return $max;
+   }
+
+   static function getArraySum($array ) {
+      $sum = 0;
+
+      if (!is_array($array)) return $array;
+
+
+      foreach ($array as $value) {
+         if (is_array($value)) {
+            $sum+= self::getArraySum($value);
+         } else{
+            $sum+= $value;
+         }
+      }  
+
+      return $sum;
+   }
+
+
+   static function getArrayDepth($array) {
+      $max_depth = 1;
+
+      foreach ($array as $value) {
+         if (is_array($value)) {
+            $depth = self::getArrayDepth($value) + 1;
+
+            if ($depth > $max_depth) {
+               $max_depth = $depth;
+            }
+         }
+      }
+
+      return $max_depth;
+   }
+
+
 }
 ?>
