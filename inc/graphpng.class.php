@@ -269,12 +269,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
-   function darker($hex,$factor = 50) {
+   function darker($color,$factor = 50) {
+      if (strlen($color) == 10) $color = substr($color, 4);
+
       $new_hex = '';
 
-      $base['R'] = hexdec($hex{0}.$hex{1});
-      $base['G'] = hexdec($hex{2}.$hex{3});
-      $base['B'] = hexdec($hex{4}.$hex{5});
+      $base['R'] = hexdec($color{0}.$color{1});
+      $base['G'] = hexdec($color{2}.$color{3});
+      $base['B'] = hexdec($color{4}.$color{5});
 
       foreach ($base as $k => $v) {
          $amount = $v / 100;
@@ -290,12 +292,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
 
-   function lighter($hex,$factor = 50) {
+   function lighter($color,$factor = 50) {
+      if (strlen($color) == 10) $color = substr($color, 4);
+
       $new_hex = '';
 
-      $base['R'] = hexdec($hex{0}.$hex{1});
-      $base['G'] = hexdec($hex{2}.$hex{3});
-      $base['B'] = hexdec($hex{4}.$hex{5});
+      $base['R'] = hexdec($color{0}.$color{1});
+      $base['G'] = hexdec($color{2}.$color{3});
+      $base['B'] = hexdec($color{4}.$color{5});
 
       foreach ($base as $k => $v) {
          $amount = 255 - $v;
@@ -853,14 +857,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       global $LANG;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
-      //$rand = $opt['rand'];
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
@@ -895,45 +895,32 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $labels2 = $raw_datas['labels2'];
       
       if ($unit == '%') {
-         
-         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-         $raw_datas['datas'] = $datas;
+         $raw_datas['datas'] = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       }
       
       $values = array_values($datas);
       $labels = array_keys($datas);
 
-      $max = 1;
-      foreach ($values as $line) {
-         foreach ($line as $label2 => $value) {
-            if ($value > $max) $max = $value;
-         }
-      }
-      if ($max == 1 && $unit == '%') $max = 100;
-
-      $nb_intern = count($labels);
       $width = $this->width-200;
       $height = 500;
 
       //create image
-      $image = imagecreatetruecolor ($width, $height);
+      $img = imagecreatetruecolor ($width, $height);
       
       if ($show_graph) {
          //colors
-         $black = imagecolorallocate($image, 0, 0, 0);
-         $white = imagecolorallocate($image, 255, 255, 255);
-         $grey = imagecolorallocate($image, 242, 242, 242);
-         $palette = $this->getPalette($image, $nb_intern);
-         $darkerpalette = $this->getDarkerPalette($image, $nb_intern);
-
+         $black = imagecolorallocate($img, 0, 0, 0);
+         $white = imagecolorallocate($img, 255, 255, 255);
+         $grey = imagecolorallocate($img, 242, 242, 242);
+         
          //background
          $bg_color = $grey;
          if ($export) $bg_color = $white;
-         imagefilledrectangle($image, 1, 1, $width - 2, $height-2, $bg_color);
+         imagefilledrectangle($img, 1, 1, $width - 2, $height-2, $bg_color);
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height , $black);
+            imagerectangle($img, 0, 0, $width - 1, $height , $black);
          }
 
          //config font
@@ -945,7 +932,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //add title on export
          if ($export) {
             imagettftext(
-               $image,
+               $img,
                $fontsize+2,
                $fontangle,
                10,
@@ -957,161 +944,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
          if ($export && $desc) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
-         }
-
-          //second pie (bigger)
-         $index = 1;
-         $index2 = 0;
-         $x = $width / 4 +100;
-         $y = $height / 4 +150;
-         $radius = 250;
-         $start_angle = 0;
-         $start_angle2 = 0;
-
-         $mymax=0;
-         $nb = array();
-         foreach ($datas as $label => $data) {
-            $nb[$label]=array_sum($data);
-            $mymax+=$nb[$label];
-         }
-
-         foreach ($datas as $label => $data) {
-            $angle = $start_angle + (360 * $nb[$label]) / $mymax;
-            $color_rbg = $this->colorHexToRGB($palette[$index]);
-
-            //EXTERNAL PIE
-            foreach($data as $label2 => $data2) {
-               if(!is_array($data2) && ($data2!=0)){
-                  $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
-
-                  //full circle need fix
-                  if ($angle2 - $start_angle2 == 360) {
-                     $angle2 = 359.999;
-                     $start_angle2 = 0;
-                  }
-
-                  $color[0]=$color_rbg[0]-(($index2)*5);
-                  $color[1]=$color_rbg[1]-(($index2)*9);
-                  $color[2]=$color_rbg[2]-(($index2)*0.5);
-                  $color[3]=$color_rbg[3];
-
-                  imageSmoothArc(
-                     $image, $x, $y, $radius, $radius, $color, 
-                     deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI);
-
-                  $xtext = $x  + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
-                  $ytext = $y  + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/2.5));
-
-                  imageline($image, $xtext, $ytext , 
-                     $x + (sin(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)) , 
-                     $y + (cos(deg2rad(($start_angle2+$angle2)/2))*(($radius+350)/3.8)), $black);
-
-                  /*imagearc($image,$x,$y,$radius,$radius,
-                     deg2rad($start_angle2)- 0.5 * M_PI, deg2rad($angle2)- 0.5 * M_PI,$black);
-                  imageSmoothArcDrawSegment ($image, 
-                     $x, $y, $a, $b, $aaAngleX, $aaAngleY, $black, $start, $stop, $seg) */
-
-                  $start_angle2 = $angle2;
-                  $index2++;
-               }
-            }
-
-                  // Interior PIE
-                  //full circle need fix
-            if ($angle - $start_angle == 360) {
-                $angle = 359.999;
-                $start_angle = 0;
-            }
-
-            imageSmoothArc($image, $x, $y, $radius-180, $radius-180, $color_rbg,
-                deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
-
-            //text associated with pie arc (only for angle > 2°)
-            if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
-                $xtext = $x + (sin(deg2rad(($start_angle+$angle)/2))*($radius/8));
-                $ytext = $y + (cos(deg2rad(($start_angle+$angle)/2))*($radius/8));
-                imagettftext(
-                  $image,
-                  $fontsize = 8,
-                  $fontangle = 0,
-                  $xtext,
-                  $ytext,
-                  $darkerpalette[$index],
-                  $font,
-                  Html::clean($nb[$label])
-                );
-            }
-
-            $start_angle = $angle;
-            $index++;
-         }
-
-          //EXTERNAL PIE LEGEND
-         $start_angle2=0;
-         foreach ($datas as $label => $data) {
-            $angle = $start_angle + (360 * $nb[$label]) / $mymax;
-            foreach($data as $label2 => $data2) {
-               if(!is_array($data2) && ($data2!=0)){
-                  $angle2 = $start_angle2 + (($angle-$start_angle)/$nb[$label]*$data2);
-                  //full circle need fix
-                  if ($angle2 - $start_angle2 == 360) {
-                     $angle2 = 359.999;
-                     $start_angle2 = 0;
-                  }
-
-                  //text associated with pie arc (only for angle > 2°)
-                  if ($angle2 > 1 && ($show_label == "always" || $show_label == "hover")) {
-                     //$fontangle2 =  $start_angle2 - 80;
-                     $xtext = $x - 25 + (sin(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
-                     $ytext = $y + (cos(deg2rad(($start_angle2+$angle2)/2))*($radius/1.5));
-
-                     imagettftext(
-                        $image,
-                        $fontsize = 7,
-                        $fontangle,
-                        $xtext,
-                        $ytext,
-                        $black,
-                        $font,
-                        Html::clean($label2." : ".$data2)
-                     );
-                  }
-
-                  $start_angle2 = $angle2;
-                  $index2++;
-               }
-            }
-            $start_angle = $angle;
-         }
-
-          //legend interior pie (align right)
-         $index = 1;
-         $fontsize = 9;
-         foreach ($labels as $label) {
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
-            $textwidth = abs($box[4] - $box[0]);
-            //legend label
-            imagettftext(
-               $image,
-               $fontsize,
-               $fontangle,
-               $width - $textwidth - 15,
-               25 + $index * (15) ,
-               $darkerpalette[$index],
-               $font,
-               Html::clean($label)
-            );
-
-            //legend circle
-            $color_rbg = $this->colorHexToRGB($palette[$index]);
-            imageSmoothArc($image, $width - 10, 20 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
-
-            $index++;
+            imagettftext($img, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
          }
       }
+
+      //recursive level draw
+      $img = $this->drawSunburstLevel($img, $datas, array(
+         'width'  => $width,
+         'height' => $height
+      ));
+
       //generate image
-      $params = array("image" => $image,
+      $params = array("image" => $img,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
                       "class" => $opt['class'],
@@ -1131,8 +975,78 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       PluginMreportingCommon::endGraph($options);
    }
 
+   function drawSunburstLevel($img, $datas, $params=array()) {
+      global $LANG;
+
+      $width  = $params['width'] - 70;
+      $height = $params['height'] - 70;
+
+      $gsum = PluginMreportingMisc::getArraySum($datas);
+
+      $index = 0;
+
+      $x = $width / 2;
+      $y = $height / 2 + 50;
+      $params['depth'] = isset($params['depth']) ? $params['depth'] : PluginMreportingMisc::getArrayDepth($datas);
+      $params['start_angle'] = isset($params['start_angle']) ? $params['start_angle'] : 0;
+      $params['max_angle'] = isset($params['max_angle']) ? $params['max_angle'] : 360;
+      $params['level'] = isset($params['level']) ? $params['level'] : 0;
+      $params['current_index'] = isset($params['current_index']) ? $params['current_index'] : false;
+      $step = $height/ $params['depth'];
+      $radius = $step * ($params['level']+1);
+      
+      
+      $darkerpalette = $this->getDarkerPalette($img);
+
+      foreach($datas as $data) {
+
+         if (is_array($data)) {
+            $params2 = array();
+            $params2 = $params;
+
+            $sum = PluginMreportingMisc::getArraySum($data);
+            $angle = ($params['max_angle'] * $sum) / $gsum;
+
+            $params2['max_angle'] = $angle;
+            $params2['start_angle'] = $params['start_angle'];
+            $params2['level'] = $params['level']+1;
+            $params2['current_index'] = $index;
+            
+            $this->drawSunburstLevel($img, $data, $params2);
+
+         } else {
+            $angle = ($params['max_angle'] * $data) / $gsum;            
+         }
+
+         $alpha = 100 - $params['level'] * 5 - $index * 5;
+         $palette = $this->getPalette($img/*, 20, $alpha*/);
+         if ($params['current_index'] === false) $color = $palette[$index];
+         else {
+            $color = $palette[$params['current_index']];
+            //get lighter color
+            $color = "0x$alpha".substr(self::lighter($color, 5 * $params['current_index']), 0, 6);
+         }
+
+         $color_rbg = $this->colorHexToRGB($color);
 
 
+         imageSmoothArc(
+            $img, $x, $y, $radius, $radius, $color_rbg, 
+            deg2rad($params['start_angle'])- 0.5 * M_PI, 
+            deg2rad($params['start_angle'] + $angle)- 0.5 * M_PI);
+         /*imagefilledarc($img, $x, $y, $radius, $radius, 
+            $params['start_angle'], 
+            $params['start_angle'] + $angle, 
+            $color, IMG_ARC_PIE);*/
+         
+         $params['start_angle']+= $angle;
+         $index++;
+      }
+
+      return $img;
+   }
+
+ 
    /**
     * Show a horizontal grouped bar chart
     *
