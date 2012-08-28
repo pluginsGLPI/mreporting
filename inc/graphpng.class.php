@@ -984,21 +984,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $gsum = PluginMreportingMisc::getArraySum($datas);
 
       $index = 0;
-
       $x = $width / 2;
       $y = $height / 2 + 50;
-      $params['depth'] = isset($params['depth']) ? $params['depth'] : PluginMreportingMisc::getArrayDepth($datas);
+      $params['depth'] = isset($params['depth']) 
+         ? $params['depth'] 
+         : PluginMreportingMisc::getArrayDepth($datas);
       $params['start_angle'] = isset($params['start_angle']) ? $params['start_angle'] : 0;
       $params['max_angle'] = isset($params['max_angle']) ? $params['max_angle'] : 360;
       $params['level'] = isset($params['level']) ? $params['level'] : 0;
       $params['current_index'] = isset($params['current_index']) ? $params['current_index'] : false;
-      $step = $height/ $params['depth'];
+      $step = $height / $params['depth'];
       $radius = $step * ($params['level']+1);
       
       
       $darkerpalette = $this->getDarkerPalette($img);
 
-      foreach($datas as $data) {
+      foreach($datas as $key =>  $data) {
 
          if (is_array($data)) {
             $params2 = array();
@@ -1010,21 +1011,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $params2['max_angle'] = $angle;
             $params2['start_angle'] = $params['start_angle'];
             $params2['level'] = $params['level']+1;
-            $params2['current_index'] = $index;
+            $params2['current_index'] = ($params['current_index'] === false) 
+               ? $index 
+               : $params['current_index'];
             
             $this->drawSunburstLevel($img, $data, $params2);
 
          } else {
             $angle = ($params['max_angle'] * $data) / $gsum;            
          }
-
-         $alpha = 100 - $params['level'] * 5 - $index * 5;
-         $palette = $this->getPalette($img/*, 20, $alpha*/);
+            
+         $palette = $this->getPalette($img);
          if ($params['current_index'] === false) $color = $palette[$index];
          else {
             $color = $palette[$params['current_index']];
             //get lighter color
-            $color = "0x$alpha".substr(self::lighter($color, 5 * $params['current_index']), 0, 6);
+            $color = "0x00".substr(self::lighter($color, 15 * $params['level'] * $index), 0, 6);
          }
 
          $color_rbg = $this->colorHexToRGB($color);
@@ -1034,10 +1036,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $img, $x, $y, $radius, $radius, $color_rbg, 
             deg2rad($params['start_angle'])- 0.5 * M_PI, 
             deg2rad($params['start_angle'] + $angle)- 0.5 * M_PI);
-         /*imagefilledarc($img, $x, $y, $radius, $radius, 
-            $params['start_angle'], 
-            $params['start_angle'] + $angle, 
-            $color, IMG_ARC_PIE);*/
          
          $params['start_angle']+= $angle;
          $index++;
