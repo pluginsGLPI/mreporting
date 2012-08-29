@@ -762,12 +762,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             if ($data != 0) {
                $color_rbg = $this->colorHexToRGB($palette[$index]);
                imageSmoothArc($image, $x, $y, $radius+8, $radius+8, $color_rbg,
-                              deg2rad($start_angle) - 0.5 * M_PI, deg2rad($angle) - 0.5 *M_PI);
+                              deg2rad($start_angle), deg2rad($angle));
 
                //text associated with pie arc (only for angle > 2°)
                if ($angle > 2 && ($show_label == "always" || $show_label == "hover")) {
-                  $xtext = $x - 3 + (sin(deg2rad(($start_angle+$angle)/2))*($radius/1.8));
-                  $ytext = $y + 5  + (cos(deg2rad(($start_angle+$angle)/2))*($radius/1.8));
+                  $xtext = $x - 1 + cos(deg2rad(($start_angle + $angle)/2)) * ($radius / 1.7);
+                  $ytext = $y + 5 - sin(deg2rad(($start_angle + $angle)/2)) * ($radius / 1.7);
                   imagettftext(
                      $image,
                      $fontsize = 8,
@@ -985,7 +985,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $index = 0;
       $x = $width / 2;
-      $y = $height / 2 + 50;
+      $y = $height / 2 + 60;
       $params['depth'] = isset($params['depth']) 
          ? $params['depth'] 
          : PluginMreportingMisc::getArrayDepth($datas);
@@ -1000,8 +1000,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $darkerpalette = $this->getDarkerPalette($img);
 
       foreach($datas as $key =>  $data) {
-
          if (is_array($data)) {
+            arsort($data);
+
             $params2 = array();
             $params2 = $params;
 
@@ -1021,6 +1022,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $angle = ($params['max_angle'] * $data) / $gsum;            
          }
             
+         //get colors
          $palette = $this->getPalette($img);
          if ($params['current_index'] === false) $color = $palette[$index];
          else {
@@ -1028,14 +1030,42 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             //get lighter color
             $color = "0x00".substr(self::lighter($color, 15 * $params['level'] * $index), 0, 6);
          }
-
+         $darkercolor = "0x00".substr(self::darker($color), 0, 6);
          $color_rbg = $this->colorHexToRGB($color);
+         $darkercolor_rbg = $this->colorHexToRGB($darkercolor);
 
-
+         //show data arc 
+         //(Never use deg2rad() in loops, use $rad = ($deg * M_PI / 180) instead which is faster!)
          imageSmoothArc(
-            $img, $x, $y, $radius, $radius, $color_rbg, 
-            deg2rad($params['start_angle'])- 0.5 * M_PI, 
-            deg2rad($params['start_angle'] + $angle)- 0.5 * M_PI);
+            $img, $x, $y, $radius+1, $radius+1, $darkercolor_rbg, 
+            $params['start_angle'] * M_PI / 180, 
+            ($params['start_angle'] + $angle) * M_PI / 180
+         );
+         imageSmoothArc(
+            $img, $x, $y, $radius-1, $radius-1, $color_rbg, 
+            ($params['start_angle'] + 0.8 / ($params['level']+1)) * M_PI / 180, 
+            ($params['start_angle'] + $angle - 0.8 / ($params['level']+1)) * M_PI / 180
+         );
+         
+
+         //text associated with pie arc (only for angle > 2°)
+         if ($angle > 2) {
+            $angle_med = $params['start_angle'] + $angle / 2;
+            $angle_med_rad = $angle_med * M_PI / 180;
+            $xtext = $x + cos($angle_med_rad) * $radius / 2.5;
+            $ytext = $y - sin($angle_med_rad) * $radius / 2.5;
+
+            imagettftext(
+               $img,
+               8,
+               0,
+               $xtext,
+               $ytext,
+               $darkercolor,
+               "../fonts/FreeSans.ttf",
+               $key
+            );
+         }
          
          $params['start_angle']+= $angle;
          $index++;
