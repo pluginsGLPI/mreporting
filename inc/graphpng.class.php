@@ -34,6 +34,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    
    const DEBUG_GRAPH = false;
 
+   //define common colors
+   private $black = "0x00000000";
+   private $white = "0x00FFFFFF";
+   private $grey  = "0x00F2F2F2";
+
    /**
     * init Graph : Show Titles / Date selector
     *
@@ -1049,11 +1054,27 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          
 
          //text associated with pie arc (only for angle > 2°)
-         if ($angle > 2) {
-            $angle_med = $params['start_angle'] + $angle / 2;
-            $angle_med_rad = $angle_med * M_PI / 180;
-            $xtext = $x + cos($angle_med_rad) * $radius / 2.5;
-            $ytext = $y - sin($angle_med_rad) * $radius / 2.5;
+         $am = $params['start_angle'] + $angle / 2; //mediant angle
+         $amr = $am * M_PI / 180; //mediant angle in radiant
+
+         $xtext = $x + cos($amr) * (0.5 * $radius - $step/4);
+         $ytext = $y - sin($amr) * (0.5 * $radius - $step/4);
+
+         imagettftext(
+            $img,
+            8,
+            0,
+            $xtext,
+            $ytext,
+            $darkercolor,
+            "../fonts/FreeSans.ttf",
+            $key
+         );
+
+         //values labels 
+         if ($angle > 5) {
+            $xtext = $x - 2+ cos($amr) * (0.5 * $radius - $step/12);
+            $ytext = $y + 5 - sin($amr) * (0.5 * $radius - $step/12);
 
             imagettftext(
                $img,
@@ -1061,11 +1082,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                0,
                $xtext,
                $ytext,
-               $darkercolor,
+               $this->black,
                "../fonts/FreeSans.ttf",
-               $key
+               (is_array($data)) ? $gsum : $data
             );
          }
+         
          
          $params['start_angle']+= $angle;
          $index++;
