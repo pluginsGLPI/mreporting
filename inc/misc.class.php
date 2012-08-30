@@ -207,6 +207,41 @@ class PluginMreportingMisc {
       return $max_depth;
    }
 
+   static function buildTree($flat_array) {   
+      $raw_tree = self::mapTree($flat_array);
+      $tree = self::cleanTree($raw_tree);
+      return $tree;
+   }
 
+   static function mapTree(array &$elements, $parentId = 0) {
+      $branch = array();
+
+      foreach ($elements as $element) {
+         if (isset($element['parent']) && $element['parent'] == $parentId) {
+            $children = self::mapTree($elements, $element['id']);
+            if ($children) {
+                $element['children'] = $children;
+            }
+            $branch[$element['id']] = $element;
+         }
+      }
+      return $branch;
+   }
+
+   static function cleanTree($raw_tree) {
+      $tree = array();
+      
+      foreach ($raw_tree as $id => $node) {
+         if (isset($node['children'])) {
+            $current = array($node['name'] => $node['count']);
+            $sub = self::cleanTree($node['children']);
+            $tree[$node['name']] = array_merge($current, $sub);
+         } else {
+            $tree[$node['name']] = $node['count'];
+         }
+      }
+
+      return $tree;
+   }
 }
 ?>

@@ -889,7 +889,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return false;
       }
       
-      $labels2 = $raw_datas['labels2'];
+      $labels2 = array();
       
       if ($unit == '%') {
          $raw_datas['datas'] = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
