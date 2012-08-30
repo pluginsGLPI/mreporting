@@ -1022,7 +1022,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $color_rbg = self::colorHexToRGB($color);
          $darkercolor_rbg = self::colorHexToRGB($darkercolor);
 
-         //show data arc 
+         //show data arc (tow arcs : 1st border color, 2nd content color)
          //(Never use deg2rad() in loops, use $rad = ($deg * M_PI / 180) instead which is faster!)
          imageSmoothArc(
             $image, $x, $y, $radius+1, $radius+1, $darkercolor_rbg, 
@@ -1037,12 +1037,32 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          
 
          //text associated with pie arc (only for angle > 2°)
-         $am = $params['start_angle'] + $angle / 2; //mediant angle
-         $amr = $am * M_PI / 180; //mediant angle in radiant
+         $am   = $params['start_angle'] + $angle / 2; //mediant angle
+         $amr  = $am * M_PI / 180; //mediant angle in radiant
 
-         $xtext = $x + cos($amr) * (0.5 * $radius - $step/4);
-         $ytext = $y - sin($amr) * (0.5 * $radius - $step/4);
+         //adjust label position
+         $dx = $dy = 0;
+         if( $amr>=7*M_PI/4 || $amr <= M_PI/4 ) $dx=0;
+         if( $amr>=M_PI/4 && $amr <= 3*M_PI/4 ) $dx=($amr-M_PI/4)*2/M_PI;
+         if( $amr>=3*M_PI/4 && $amr <= 5*M_PI/4 ) $dx=1;
+         if( $amr>=5*M_PI/4 && $amr <= 7*M_PI/4 ) $dx=(1-($amr-M_PI*5/4)*2/M_PI);
 
+         if( $amr>=7*M_PI/4 ) $dy=(($amr-M_PI)-3*M_PI/4)*2/M_PI;
+         if( $amr<=M_PI/4 ) $dy=(1-$amr*2/M_PI);
+         if( $amr>=M_PI/4 && $amr <= 3*M_PI/4 ) $dy=1;
+         if( $amr>=3*M_PI/4 && $amr <= 5*M_PI/4 ) $dy=(1-($amr-3*M_PI/4)*2/M_PI);
+         if( $amr>=5*M_PI/4 && $amr <= 7*M_PI/4 ) $dy=0;
+
+         //get label size
+         $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$key);
+         $tw = abs($box[4] - $box[0]);
+         $th = abs($box[5] - $box[1]);
+
+         //define label position
+         $xtext = $x - $dx * $tw + cos($amr) * (0.5 * $radius - $step/3);
+         $ytext = $y + $dy * $th - sin($amr) * (0.5 * $radius - $step/4);
+
+         //draw label
          imagettftext(
             $image,
             $this->fontsize,
@@ -1056,9 +1076,20 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //values labels 
          if ($angle > 5) {
-            $xtext = $x - 2+ cos($amr) * (0.5 * $radius - $step/12);
-            $ytext = $y + 5 - sin($amr) * (0.5 * $radius - $step/12);
+            //mediant start angle in radiant (adjusted for left align label to this arc)
+            $samr = ($params['start_angle'] + 10/($params['level']+1)) * M_PI / 180; 
 
+            //get label size
+            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,
+               (is_array($data)) ? $gsum : $data);
+            $tw = abs($box[4] - $box[0]);
+            $th = abs($box[5] - $box[1]);
+
+            //define label position
+            $xtext = $x - $dx * $tw + cos($samr) * (0.5 * $radius - $step/8);
+            $ytext = $y + $dy * $th - sin($samr) * (0.5 * $radius - $step/16);
+
+            //draw label
             imagettftext(
                $image,
                $this->fontsize,
