@@ -459,6 +459,9 @@ JAVASCRIPT;
                         "short_classname" => $opt["short_classname"]);
                   
       $this->initGraph($options);
+
+      if (isset($_REQUEST['export'])) $export_txt = "true";
+      else $export_txt =  "false";
       
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
@@ -539,7 +542,7 @@ JAVASCRIPT;
          else return 1;
       });
       
-   if ('{$export}') wedge.event("mouseover", pv.Behavior.extjsTooltips(this.nodeName));
+   if ({$export_txt} == false) wedge.event("mouseover", pv.Behavior.extjsTooltips(this.nodeName));
 
    /*** wedge interaction ***/
    wedge.anchor().add(pv.Mark)
