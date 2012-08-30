@@ -537,8 +537,9 @@ JAVASCRIPT;
       .lineWidth(function() {
          if (this.index == i) return 4;
          else return 1;
-      })
-      .event("mouseover", pv.Behavior.extjsTooltips(this.nodeName));
+      });
+      
+   if ('{$export}') wedge.event("mouseover", pv.Behavior.extjsTooltips(this.nodeName));
 
    /*** wedge interaction ***/
    wedge.anchor().add(pv.Mark)
