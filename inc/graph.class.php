@@ -608,7 +608,7 @@ JAVASCRIPT;
       if ($show_graph) {
          echo $JS;
       }
-      $labels2 = $raw_datas['labels2'];
+      $labels2 = array();
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,

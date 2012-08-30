@@ -638,12 +638,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $tree_datas['datas'] = PluginMreportingMisc::buildTree($flat_datas);
 
       $datas['datas'] = array( 
-           'key1' => array('key1.1' => 12, 'key1.2' => 25, 'key1.3' => 43), 
-           'key2' => array('key2.1' => array(
-               "2.3.1"=>10,"2.3.2"=>8,"2.3.3" =>17)/*25*/, 'key2.2' => 18, 'key2.3' => 25),
-           'key3' => array('key3.1' => 12, 'key3.2' => 25, 'key3.3' => 43), 
-           'very looooooooooooooooooooooooooooooooooooooooooooog key' => 54
-         );
+        'key1' => array('key1.1' => 12, 'key1.2' => 25, 'key1.3' => 43), 
+        'key2' => array('key2.1' => array(
+            "2.3.1"=>10,"2.3.2"=>8,"2.3.3" =>17)/*25*/, 'key2.2' => 18, 'key2.3' => 25),
+        'key3' => array('key3.1' => 12, 'key3.2' => 25, 'key3.3' => 43), 
+        'very looooooooooooooooooooooooooooooooooooooooooooog key' => 54
+      );
 
       return $tree_datas;
    }
