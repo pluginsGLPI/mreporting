@@ -580,6 +580,7 @@ class PluginMreportingCommon extends CommonDBTM {
                         form.svg_content.value = svg_content;
                         form.submit();
 
+                        //set new crsf token for svg export
                         Ext.Ajax.request({
                            url: '../ajax/get_new_crsf_token.php',
                            success: function(response, opts) {
@@ -589,10 +590,23 @@ class PluginMreportingCommon extends CommonDBTM {
                               
                            },
                            failure: function(response, opts) {
-                              console.log('server-side failure with status code ' + response.status);
+                              console.log('server-side failure with status code '+response.status);
                            }
                         });
-
+                        
+                        //set new crsf token for main form
+                        Ext.Ajax.request({
+                           url: '../ajax/get_new_crsf_token.php',
+                           success: function(response, opts) {
+                              var token = response.responseText;
+                              Ext.select('#mreporting_date_selector input[name=_glpi_csrf_token]')
+                                 .set({'value': token});
+                              
+                           },
+                           failure: function(response, opts) {
+                              console.log('server-side failure with status code '+response.status);
+                           }
+                        });
                         
                      });
                   </script>";

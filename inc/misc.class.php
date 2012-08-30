@@ -55,7 +55,8 @@ class PluginMreportingMisc {
 
       $request_string = self::getRequestString($_GET);
 
-      echo "<div class='center'><form method='POST' action='?$request_string' name='form'>\n";
+      echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
+         ." id='mreporting_date_selector'>\n";
       echo "<table class='tab_cadre' width='20%'><tr class='tab_bg_1'>";
 
       echo "<td>";
