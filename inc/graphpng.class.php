@@ -1040,7 +1040,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $am   = $params['start_angle'] + $angle / 2; //mediant angle
          $amr  = $am * M_PI / 180; //mediant angle in radiant
 
-         //adjust label position
+         //adjust label position (in fonction of angle position)
          $dx = $dy = 0;
          if( $amr>=7*M_PI/4 || $amr <= M_PI/4 ) $dx=0;
          if( $amr>=M_PI/4 && $amr <= 3*M_PI/4 ) $dx=($amr-M_PI/4)*2/M_PI;
@@ -1059,16 +1059,21 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $th = abs($box[5] - $box[1]);
 
          //define label position
-         $xtext = $x - $dx * $tw + cos($amr) * (0.5 * $radius - $step/3);
-         $ytext = $y + $dy * $th - sin($amr) * (0.5 * $radius - $step/4);
+         if (is_array($data)) {
+            //show label inside its arc
+            $xtext = $x - $dx * $tw + cos($amr) * (0.5 * $radius - $step/3);
+            $ytext = $y + $dy * $th - sin($amr) * (0.5 * $radius - $step/4);
+         } else {
+            //show label outside of its arc
+            $xtext = $x + 3 - $dx * $tw + cos($amr) * (0.5 * $radius + $step/16);
+            $ytext = $y + $dy * $th - sin($amr) * (0.5 * $radius + $step/8);
+         }
 
          //draw label
          imagettftext(
             $image,
-            $this->fontsize,
-            $this->fontangle,
-            $xtext,
-            $ytext,
+            $this->fontsize, $this->fontangle,
+            $xtext, $ytext,
             $darkercolor,
             $this->font,
             $key
@@ -1076,7 +1081,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //values labels 
          if ($angle > 5) {
-            //mediant start angle in radiant (adjusted for left align label to this arc)
+            //mediant start angle in radiant (adjusted for left align label to its arc)
             $samr = ($params['start_angle'] + 10/($params['level']+1)) * M_PI / 180; 
 
             //get label size
@@ -1092,10 +1097,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             //draw label
             imagettftext(
                $image,
-               $this->fontsize,
-               $this->fontangle,
-               $xtext,
-               $ytext,
+               $this->fontsize, $this->fontangle,
+               $xtext, $ytext,
                $this->black,
                $this->font,
                (is_array($data)) ? $gsum : $data
