@@ -613,11 +613,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
       
+      $flat_datas = array();
       $datas = array();
       
       $query = "SELECT 
-            glpi_itilcategories.completename as category_name,
-            glpi_itilcategories.itilcategories_is as parent,
+            glpi_tickets.itilcategories_id as id,
+            glpi_itilcategories.name as name,
+            glpi_itilcategories.itilcategories_id as parent,
             COUNT(glpi_tickets.id) as count
          FROM glpi_tickets
          LEFT JOIN glpi_itilcategories
@@ -628,12 +630,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          GROUP BY glpi_itilcategories.id, glpi_tickets.status
          ORDER BY glpi_itilcategories.name
       ";
+      $res = $DB->query($query);
+      while ($data = $DB->fetch_assoc($res)) {
+         $flat_datas[$data['id']] = $data;
+      }
       
-      $datas['labels2'] = array( 
-           'key1', 
-           'key2',
-           'key3');
-      
+      $tree_datas['datas'] = PluginMreportingMisc::buildTree($flat_datas);
+
       $datas['datas'] = array( 
            'key1' => array('key1.1' => 12, 'key1.2' => 25, 'key1.3' => 43), 
            'key2' => array('key2.1' => array(
@@ -641,8 +644,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
            'key3' => array('key3.1' => 12, 'key3.2' => 25, 'key3.3' => 43), 
            'very looooooooooooooooooooooooooooooooooooooooooooog key' => 54
          );
-      return $datas;
+
+      return $tree_datas;
    }
+
+
 }
 
 ?>
