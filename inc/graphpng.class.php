@@ -38,6 +38,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    private $black = "0x00000000";
    private $white = "0x00FFFFFF";
    private $grey  = "0x00F2F2F2";
+   private $darkgrey  = "0x00B4B4B4";
 
    /**
     * init Graph : Show Titles / Date selector
@@ -535,20 +536,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $black = imagecolorallocate($image, 0, 0, 0);
-         $white = imagecolorallocate($image, 255, 255, 255);
-         $grey = imagecolorallocate($image, 242, 242, 242);
          $palette = $this->getPalette($image, $nb_bar);
          $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
          //background
-         $bg_color = $grey;
-         if ($export) $bg_color = $white;
+         $bg_color = $this->grey;
+         if ($export) $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
 
          //config font
@@ -564,7 +562,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $fontangle,
                10,
                20,
-               $black,
+               $this->black,
                $font,
                $title
             );
@@ -606,7 +604,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $fontangle,
                245 - $textwidth,
                $by1 + 14,
-               $black,
+               $this->black,
                $font,
                Html::clean($labels[$index])
             );
@@ -615,8 +613,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
          //y axis
-         imageline($image, 250, 40, 250, $height-20, $black);
-         imageline($image, 251, 40, 251, $height-20, $black);
+         imageline($image, 250, 40, 250, $height-20, $this->black);
+         imageline($image, 251, 40, 251, $height-20, $this->black);
       }
       $params = array("image" => $image,
                       "export" => $export,
@@ -719,20 +717,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $black = imagecolorallocate($image, 0, 0, 0);
-         $white = imagecolorallocate($image, 255, 255, 255);
-         $grey = imagecolorallocate($image, 242, 242, 242);
          $palette = $this->getPalette($image, $nb_bar);
          $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
          //background
-         $bg_color = $grey;
-         if ($export) $bg_color = $white;
+         $bg_color = $this->grey;
+         if ($export) $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
 
          //config font
@@ -742,11 +737,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //add title on export
          if ($export) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
+            imagettftext($image, $fontsize+2, $fontangle, 10, 20, $this->black, $font, $title);
          }
          
          if ($export && $desc) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $this->black, $font, $desc);
          }
 
          //pie
@@ -913,19 +908,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $img = imagecreatetruecolor ($width, $height);
       
       if ($show_graph) {
-         //colors
-         $black = imagecolorallocate($img, 0, 0, 0);
-         $white = imagecolorallocate($img, 255, 255, 255);
-         $grey = imagecolorallocate($img, 242, 242, 242);
          
          //background
-         $bg_color = $grey;
-         if ($export) $bg_color = $white;
+         $bg_color = $this->grey;
+         if ($export) $bg_color = $this->white;
          imagefilledrectangle($img, 1, 1, $width - 2, $height-2, $bg_color);
 
          //create border on export
          if ($export) {
-            imagerectangle($img, 0, 0, $width - 1, $height , $black);
+            imagerectangle($img, 0, 0, $width - 1, $height , $this->black);
          }
 
          //config font
@@ -942,14 +933,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $fontangle,
                10,
                20,
-               $black,
+               $this->black,
                $font,
                $title
             );
          }
 
          if ($export && $desc) {
-            imagettftext($img, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+            imagettftext($img, $fontsize+2, $fontangle, 10, 35, $this->black, $font, $desc);
          }
       }
 
@@ -1180,20 +1171,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $black = imagecolorallocate($image, 0, 0, 0);
-         $white = imagecolorallocate($image, 255, 255, 255);
-         $grey = imagecolorallocate($image, 242, 242, 242);
          $palette = $this->getPalette($image, $nb_bar);
          $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
          //background
-         $bg_color = $grey;
-         if ($export) $bg_color = $white;
+         $bg_color = $this->grey;
+         if ($export) $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
 
          //config font
@@ -1209,14 +1197,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $fontangle,
                10,
                20,
-               $black,
+               $this->black,
                $font,
                $title
             );
          }
          
          if ($export && $desc) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $this->black, $font, $desc);
          }
          //bars
          $index1 = 0;
@@ -1236,7 +1224,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $fontangle,
                245 - $textwidth,
                $ly + 14,
-               $black,
+               $this->black,
                $font,
                Html::clean($labels[$index1])
             );
@@ -1272,8 +1260,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
          //y axis
-         imageline($image, 250, 40, 250, $height-6, $black);
-         imageline($image, 251, 40, 251, $height-6, $black);
+         imageline($image, 250, 40, 250, $height-6, $this->black);
+         imageline($image, 251, 40, 251, $height-6, $this->black);
 
          //legend (align right)
          $index = 0;
@@ -1290,7 +1278,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $fontangle,
                $width - $textwidth - 18,
                10 + $index * 15 ,
-               $black,
+               $this->black,
                $font,
                Html::clean($label)
             );
@@ -1447,22 +1435,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $black = imagecolorallocate($image, 0, 0, 0);
-         $white = imagecolorallocate($image, 255, 255, 255);
-         $grey = imagecolorallocate($image, 230, 230, 230);
-         $drakgrey = imagecolorallocate($image, 180, 180, 180);
          $palette = $this->getPalette($image, $nb_bar);
          $alphapalette = $this->getPalette($image, $nb_bar, 90);
          $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
 
          //background
-         $bg_color = $grey;
-         //if ($export) $bg_color = $white;
-         imagefilledrectangle($image, 0, 0, $width, $height + $maxtextwidth, $white);
+         $bg_color = $this->grey;
+         //if ($export) $bg_color = $this->white;
+         imagefilledrectangle($image, 0, 0, $width, $height + $maxtextwidth, $this->white);
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height - 1 + $maxtextwidth, $black);
+            imagerectangle($image, 0, 0, $width - 1, $height - 1 + $maxtextwidth, $this->black);
          }
 
          //draw x-axis grey step line and values ticks
@@ -1470,7 +1454,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          for ($i = 0; $i< 13; $i++) {
             $yaxis = $height- 30 - $xstep * $i ;
 
-            imageLine($image, 30, $yaxis, $width - 125, $yaxis, $grey);
+            imageLine($image, 30, $yaxis, $width - 125, $yaxis, $this->grey);
 
             //value label
             $val = round($i * $cum / 12);
@@ -1478,14 +1462,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs($box[4] - $box[0]);
 
             imagettftext($image, $fontsize, $fontangle, 
-               38-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+               38-$textwidth, $yaxis+5, $this->darkgrey, $font, $val);
          }
 
          //draw y-axis
-         imageLine($image, 40, 50, 40, $height-28, $black);
+         imageLine($image, 40, 50, 40, $height-28, $this->black);
 
          //draw x-axis
-         imageline($image, 38, $height-30, $width - 100, $height-30, $black);
+         imageline($image, 38, $height-30, $width - 100, $height-30, $this->black);
 
          //add title on export
          if ($export) {
@@ -1495,14 +1479,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $fontangle,
                10,
                20,
-               $black,
+               $this->black,
                $font,
                $title
             );
          }
 
          if ($export && $desc) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $black, $font, $desc);
+            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $this->black, $font, $desc);
          }
 
 
@@ -1560,7 +1544,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                -45,
                $lx,
                $height-20,
-               $black,
+               $this->black,
                $font,
                Html::clean($label)
             );
@@ -1583,7 +1567,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $fontangle,
                $width - $textwidth - 18,
                5+(15 * $nb_bar) + ($index * -15) ,
-               $black,
+               $this->black,
                $font,
                Html::clean($labels[$index])
             );
@@ -1703,10 +1687,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $black = imagecolorallocate($image, 0, 0, 0);
-         $white = imagecolorallocate($image, 255, 255, 255);
-         $grey = imagecolorallocate($image, 230, 230, 230);
-         $drakgrey = imagecolorallocate($image, 180, 180, 180);
          $palette = $this->getPalette($image, $nb);
          $alphapalette = $this->getPalette($image, $nb, "50");
          $darkerpalette = $this->getDarkerPalette($image, $nb);
@@ -1717,8 +1697,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $fontangle = 0;
 
          //background
-         $bg_color = $white;
-         if ($export) $bg_color = $white;
+         $bg_color = $this->white;
+         if ($export) $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
          //draw x-axis grey step line and values
@@ -1727,36 +1707,36 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $yaxis = $height- 30 - $xstep * $i ;
 
             //grey lines
-            imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
+            imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $this->grey);
 
             //value labels
             $val = round($i * $max / 12);
             $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
             $textwidth = abs($box[4] - $box[0]);
             imagettftext($image, $fontsize, $fontangle, 
-               28-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+               28-$textwidth, $yaxis+5, $this->darkgrey, $font, $val);
          }
 
          //draw y-axis grey step line
          for ($i = 0; $i< $nb; $i++) {
             $xaxis = 30 + $width_line * $i;
-            imageLine($image, $xaxis, 50, $xaxis, $height-25, $grey);
+            imageLine($image, $xaxis, 50, $xaxis, $height-25, $this->grey);
          }
 
          //draw y-axis
-         imageLine($image, 30, 50, 30, $height-25, $black);
+         imageLine($image, 30, 50, 30, $height-25, $this->black);
 
          //draw x-axis
-         imageline($image, 30, $height-30, $width - 60, $height-30, $black);
+         imageline($image, 30, $height-30, $width - 60, $height-30, $this->black);
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
 
          //add title on export
          if ($export) {
-            imagettftext($image, $fontsize+1, $fontangle, 10, 20, $black, $font, $title);
+            imagettftext($image, $fontsize+1, $fontangle, 10, 20, $this->black, $font, $title);
          }
 
          //on png graph, no way to draw curved polygons, force area reports to be linear
@@ -1842,7 +1822,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             if ($step!=0 && ($index / $step) == round($index / $step)) {
                imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[0]);
                
-               imagettftext($image, $fontsize, $fontangle, $x1 - 10 , $height-10, $black,
+               imagettftext($image, $fontsize, $fontangle, $x1 - 10 , $height-10, $this->black,
                          $font, $old_label);
             }
 
@@ -1860,7 +1840,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
             imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
             imagettftext($image, $fontsize, $fontangle, 
-               $x2 - 10 , $height-10, $black, $font, $label);
+               $x2 - 10 , $height-10, $this->black, $font, $label);
             imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
          }
       }
@@ -1972,10 +1952,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $black = imagecolorallocate($image, 0, 0, 0);
-         $white = imagecolorallocate($image, 255, 255, 255);
-         $grey = imagecolorallocate($image, 230, 230, 230);
-         $drakgrey = imagecolorallocate($image, 180, 180, 180);
          $palette = $this->getPalette($image, $nb);
          $alphapalette = $this->getPalette($image, $nb, "50");
          $darkerpalette = $this->getDarkerPalette($image, $nb);
@@ -1986,8 +1962,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $fontangle = 0;
 
          //background
-         $bg_color = $white;
-         if ($export) $bg_color = $white;
+         $bg_color = $this->white;
+         if ($export) $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
          //draw x-axis grey step line and value ticks 
@@ -1996,7 +1972,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $yaxis = $height- 30 - $xstep * $i ;
 
             //grey lines
-            imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $grey);
+            imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $this->grey);
 
             //value ticks
             $val = round($i * $max / 12);
@@ -2004,24 +1980,24 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs($box[4] - $box[0]);
          
             imagettftext($image, $fontsize, $fontangle,
-               25-$textwidth, $yaxis+5, $drakgrey, $font, $val);
+               25-$textwidth, $yaxis+5, $this->darkgrey, $font, $val);
          }
 
          //draw y-axis grey step line
          for ($i = 0; $i< $nb; $i++) {
             $xaxis = 30 + $width_line * $i;
-            imageLine($image, $xaxis, 120, $xaxis, $height-25, $grey);
+            imageLine($image, $xaxis, 120, $xaxis, $height-25, $this->grey);
          }
 
          //draw y-axis
-         imageLine($image, 30, 120, 30, $height-25, $black);
+         imageLine($image, 30, 120, 30, $height-25, $this->black);
 
          //draw y-axis
-         imageLine($image, 30, $height-30, $width - 50, $height-30, $black);
+         imageLine($image, 30, $height-30, $width - 50, $height-30, $this->black);
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height - 1, $black);
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
 
          //on png graph, no way to draw curved polygons, force area reports to be linear
@@ -2029,7 +2005,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //add title on export
          if ($export) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 20, $black, $font, $title);
+            imagettftext($image, $fontsize+2, $fontangle, 10, 20, $this->black, $font, $title);
          }
 
          //parse datas
@@ -2151,7 +2127,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $x = $index * $width_line + 20;
 
             if ($step!=0 && ($index / $step) == round($index / $step)) {
-               imagettftext($image, $fontsize, $fontangle, $x , $height-10, $black, $font, $label);
+               imagettftext($image, $fontsize, $fontangle, $x , $height-10, 
+                  $this->black, $font, $label);
             }
 
             $index++;
@@ -2165,7 +2142,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext($image, $fontsize, $fontangle, 
-               20, 35 + $index * 14 , $black, $font, $label);
+               20, 35 + $index * 14 , $this->black, $font, $label);
 
             //legend circle
             $color_rbg = $this->colorHexToRGB($palette[$index]);
