@@ -35,10 +35,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    const DEBUG_GRAPH = false;
 
    //define common colors
-   private $black = "0x00000000";
-   private $white = "0x00FFFFFF";
-   private $grey  = "0x00F2F2F2";
-   private $darkgrey  = "0x00B4B4B4";
+   private $black    = "0x00000000";
+   private $white    = "0x00FFFFFF";
+   private $grey     = "0x00F2F2F2";
+   private $darkgrey = "0x00B4B4B4";
+
+   //define font
+   private $font      =  "../fonts/FreeSans.ttf";
+   private $fontsize  = 8;
+   private $fontangle = 0;
 
    /**
     * init Graph : Show Titles / Date selector
@@ -197,7 +202,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
 
-   function getColors($index = 20) {
+   static function getColors($index = 20) {
       $colors = PluginMreportingConfig::getColors($index);
       foreach($colors as &$color) {
          $color = str_replace('#', '', $color);
@@ -207,7 +212,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
 
-   function colorHexToRGB($color) {
+   static function colorHexToRGB($color) {
       $hex = substr($color, 4);
       $alpha = substr($color, 0, 4);
 
@@ -226,9 +231,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
 
-   function getPalette($image, $nb_index = 20, $alpha = "00") {
+   static function getPalette($nb_index = 20, $alpha = "00") {
       $palette = array();
-      foreach($this->getColors($nb_index) as $color) {
+      foreach(self::getColors($nb_index) as $color) {
          $palette[] = "0x$alpha".substr($color, 0, 6);
       }
 
@@ -244,10 +249,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
 
-   function getDarkerPalette($image, $nb_index = 20, $alpha = "00") {
+   static function getDarkerPalette($nb_index = 20, $alpha = "00") {
       $palette = array();
-      foreach($this->getColors($nb_index) as $color) {
-         $palette[] = "0x$alpha".substr($this->darker($color), 0, 6);
+      foreach(self::getColors($nb_index) as $color) {
+         $palette[] = "0x$alpha".substr(self::darker($color), 0, 6);
       }
       if ($nb_index > 20) {
          $nb = ceil($nb_index / 20);
@@ -260,10 +265,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
 
-   function getLighterPalette($image, $nb_index = 20, $alpha = "00") {
+   static function getLighterPalette($nb_index = 20, $alpha = "00") {
       $palette = array();
-      foreach($this->getColors($nb_index) as $color) {
-         $palette[] = "0x$alpha".substr($this->lighter($color), 0, 6);
+      foreach(self::getColors($nb_index) as $color) {
+         $palette[] = "0x$alpha".substr(self::lighter($color), 0, 6);
       }
       if ($nb_index > 20) {
          $nb = ceil($nb_index / 20);
@@ -275,7 +280,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       return $palette;
    }
 
-   function darker($color,$factor = 50) {
+   static function darker($color,$factor = 50) {
       if (strlen($color) == 10) $color = substr($color, 4);
 
       $new_hex = '';
@@ -298,7 +303,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
 
-   function lighter($color,$factor = 50) {
+   static function lighter($color,$factor = 50) {
       if (strlen($color) == 10) $color = substr($color, 4);
 
       $new_hex = '';
@@ -342,7 +347,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $height  = imagesy($image)-1;
       $width   = imagesx($image)-1;
       
-      $rgba = $this->colorHexToRGB($dcol);
+      $rgba = self::colorHexToRGB($dcol);
       $r       = $rgba[0];
       $g       = $rgba[1];
       $b       = $rgba[2];
@@ -536,8 +541,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $palette = $this->getPalette($image, $nb_bar);
-         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+         $palette = self::getPalette($nb_bar);
+         $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
          $bg_color = $this->grey;
@@ -549,21 +554,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
 
-         //config font
-         $font = "../fonts/FreeSans.ttf";
-         $fontsize = 8;
-         $fontangle = 0;
 
          //add title on export
          if ($export) {
             imagettftext(
                $image,
-               $fontsize+2,
-               $fontangle,
+               $this->fontsize+2,
+               $this->fontangle,
                10,
                20,
                $this->black,
-               $font,
+               $this->font,
                $title
             );
          }
@@ -585,27 +586,27 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             if($show_label == "always" || $show_label == "hover") {
                imagettftext(
                   $image,
-                  $fontsize,
-                  $fontangle,
+                  $this->fontsize,
+                  $this->fontangle,
                   $bx2 + 6,
                   $by1 + 14,
                   $darkerpalette[$index],
-                  $font,
+                  $this->font,
                   Html::clean($data.$unit)
                );
             }
             //create axis label (align right)
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index]);
+            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$labels[$index]);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext(
                $image,
-               $fontsize,
-               $fontangle,
+               $this->fontsize,
+               $this->fontangle,
                245 - $textwidth,
                $by1 + 14,
                $this->black,
-               $font,
+               $this->font,
                Html::clean($labels[$index])
             );
 
@@ -717,8 +718,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $palette = $this->getPalette($image, $nb_bar);
-         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+         $palette = self::getPalette($nb_bar);
+         $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
          $bg_color = $this->grey;
@@ -730,18 +731,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
 
-         //config font
-         $font = "../fonts/FreeSans.ttf";
-         $fontsize = 8;
-         $fontangle = 0;
-
          //add title on export
          if ($export) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 20, $this->black, $font, $title);
+            imagettftext($image, $this->fontsize+2, $this->fontangle, 10, 20, 
+               $this->black, $this->font, $title);
          }
          
          if ($export && $desc) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $this->black, $font, $desc);
+            imagettftext($image, $this->fontsize+2, $this->fontangle, 10, 35, 
+               $this->black, $this->font, $desc);
          }
 
          //pie
@@ -760,7 +758,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             }
 
             if ($data != 0) {
-               $color_rbg = $this->colorHexToRGB($palette[$index]);
+               $color_rbg = self::colorHexToRGB($palette[$index]);
                imageSmoothArc($image, $x, $y, $radius+8, $radius+8, $color_rbg,
                               deg2rad($start_angle), deg2rad($angle));
 
@@ -770,12 +768,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   $ytext = $y + 5 - sin(deg2rad(($start_angle + $angle)/2)) * ($radius / 1.7);
                   imagettftext(
                      $image,
-                     $fontsize = 8,
-                     $fontangle = 0,
+                     $this->fontsize,
+                     $this->fontangle,
                      $xtext,
                      $ytext,
                      $darkerpalette[$index],
-                     $font,
+                     $this->font,
                      Html::clean($data.$unit)
                   );
                }
@@ -787,26 +785,25 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //legend (align right)
          $index = 0;
-         $fontsize = 9;
          foreach ($labels as $label) {
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+            $box = @imageTTFBbox($this->fontsize+1,$this->fontangle,$this->font,$label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
 
             //legend label
             imagettftext(
                $image,
-               $fontsize,
-               $fontangle,
+               $this->fontsize,
+               $this->fontangle,
                $width - $textwidth - 15,
                15 + $index * (15) ,
                $darkerpalette[$index],
-               $font,
+               $this->font,
                Html::clean($label)
             );
 
             //legend circle
-            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            $color_rbg = self::colorHexToRGB($palette[$index]);
             imageSmoothArc($image, $width - 10, 10 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
 
             $index++;
@@ -905,53 +902,48 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $height = 500;
 
       //create image
-      $img = imagecreatetruecolor ($width, $height);
+      $image = imagecreatetruecolor ($width, $height);
       
       if ($show_graph) {
          
          //background
          $bg_color = $this->grey;
          if ($export) $bg_color = $this->white;
-         imagefilledrectangle($img, 1, 1, $width - 2, $height-2, $bg_color);
+         imagefilledrectangle($image, 1, 1, $width - 2, $height-2, $bg_color);
 
          //create border on export
          if ($export) {
-            imagerectangle($img, 0, 0, $width - 1, $height , $this->black);
+            imagerectangle($image, 0, 0, $width - 1, $height , $this->black);
          }
-
-         //config font
-         $font = "../fonts/FreeSans.ttf";
-         $fontsize = 8;
-         $fontangle = 0;
-
 
          //add title on export
          if ($export) {
             imagettftext(
-               $img,
-               $fontsize+2,
-               $fontangle,
+               $image,
+               $this->fontsize+2,
+               $this->fontangle,
                10,
                20,
                $this->black,
-               $font,
+               $this->font,
                $title
             );
          }
 
          if ($export && $desc) {
-            imagettftext($img, $fontsize+2, $fontangle, 10, 35, $this->black, $font, $desc);
+            imagettftext($image, $this->fontsize+2, $this->fontangle, 10, 35, 
+               $this->black, $this->font, $desc);
          }
       }
 
       //recursive level draw
-      $img = $this->drawSunburstLevel($img, $datas, array(
+      $image = $this->drawSunburstLevel($image, $datas, array(
          'width'  => $width,
          'height' => $height
       ));
 
       //generate image
-      $params = array("image" => $img,
+      $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
                       "class" => $opt['class'],
@@ -971,7 +963,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       PluginMreportingCommon::endGraph($options);
    }
 
-   function drawSunburstLevel($img, $datas, $params=array()) {
+   function drawSunburstLevel($image, $datas, $params=array()) {
       global $LANG;
 
       $width  = $params['width'] - 70;
@@ -993,7 +985,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $radius = $step * ($params['level']+1);
       
       
-      $darkerpalette = $this->getDarkerPalette($img);
+      $darkerpalette = self::getDarkerPalette();
 
       foreach($datas as $key =>  $data) {
          if (is_array($data)) {
@@ -1012,14 +1004,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                ? $index 
                : $params['current_index'];
             
-            $this->drawSunburstLevel($img, $data, $params2);
+            $this->drawSunburstLevel($image, $data, $params2);
 
          } else {
             $angle = ($params['max_angle'] * $data) / $gsum;            
          }
             
          //get colors
-         $palette = $this->getPalette($img);
+         $palette = $this->getPalette();
          if ($params['current_index'] === false) $color = $palette[$index];
          else {
             $color = $palette[$params['current_index']];
@@ -1027,18 +1019,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $color = "0x00".substr(self::lighter($color, 15 * $params['level'] * $index), 0, 6);
          }
          $darkercolor = "0x00".substr(self::darker($color), 0, 6);
-         $color_rbg = $this->colorHexToRGB($color);
-         $darkercolor_rbg = $this->colorHexToRGB($darkercolor);
+         $color_rbg = self::colorHexToRGB($color);
+         $darkercolor_rbg = self::colorHexToRGB($darkercolor);
 
          //show data arc 
          //(Never use deg2rad() in loops, use $rad = ($deg * M_PI / 180) instead which is faster!)
          imageSmoothArc(
-            $img, $x, $y, $radius+1, $radius+1, $darkercolor_rbg, 
+            $image, $x, $y, $radius+1, $radius+1, $darkercolor_rbg, 
             $params['start_angle'] * M_PI / 180, 
             ($params['start_angle'] + $angle) * M_PI / 180
          );
          imageSmoothArc(
-            $img, $x, $y, $radius-1, $radius-1, $color_rbg, 
+            $image, $x, $y, $radius-1, $radius-1, $color_rbg, 
             ($params['start_angle'] + 0.8 / ($params['level']+1)) * M_PI / 180, 
             ($params['start_angle'] + $angle - 0.8 / ($params['level']+1)) * M_PI / 180
          );
@@ -1052,13 +1044,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $ytext = $y - sin($amr) * (0.5 * $radius - $step/4);
 
          imagettftext(
-            $img,
-            8,
-            0,
+            $image,
+            $this->fontsize,
+            $this->fontangle,
             $xtext,
             $ytext,
             $darkercolor,
-            "../fonts/FreeSans.ttf",
+            $this->font,
             $key
          );
 
@@ -1068,13 +1060,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $ytext = $y + 5 - sin($amr) * (0.5 * $radius - $step/12);
 
             imagettftext(
-               $img,
-               8,
-               0,
+               $image,
+               $this->fontsize,
+               $this->fontangle,
                $xtext,
                $ytext,
                $this->black,
-               "../fonts/FreeSans.ttf",
+               $this->font,
                (is_array($data)) ? $gsum : $data
             );
          }
@@ -1084,7 +1076,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $index++;
       }
 
-      return $img;
+      return $image;
    }
 
  
@@ -1171,8 +1163,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $palette = $this->getPalette($image, $nb_bar);
-         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+         $palette = self::getPalette($nb_bar);
+         $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
          $bg_color = $this->grey;
@@ -1184,27 +1176,23 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
 
-         //config font
-         $font = "../fonts/FreeSans.ttf";
-         $fontsize = 8;
-         $fontangle = 0;
-
          //add title on export
          if ($export) {
             imagettftext(
                $image,
-               $fontsize+2,
-               $fontangle,
+               $this->fontsize+2,
+               $this->fontangle,
                10,
                20,
                $this->black,
-               $font,
+               $this->font,
                $title
             );
          }
          
          if ($export && $desc) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $this->black, $font, $desc);
+            imagettftext($image, $this->fontsize+2, $this->fontangle, 10, 35, 
+               $this->black, $this->font, $desc);
          }
          //bars
          $index1 = 0;
@@ -1215,17 +1203,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $step = $index1 * count($labels2) * 28;
 
             //create axis label (align right)
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$labels[$index1]);
+            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$labels[$index1]);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext(
                $image,
-               $fontsize,
-               $fontangle,
+               $this->fontsize,
+               $this->fontangle,
                245 - $textwidth,
                $ly + 14,
                $this->black,
-               $font,
+               $this->font,
                Html::clean($labels[$index1])
             );
 
@@ -1244,12 +1232,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                if($show_label == "always" || $show_label == "hover") {
                   imagettftext(
                      $image,
-                     $fontsize,
-                     $fontangle,
+                     $this->fontsize,
+                     $this->fontangle,
                      $bx2 + 6,
                      $by1 + 14,
                      $darkerpalette[$index2],
-                     $font,
+                     $this->font,
                      $subdata.$unit
                   );
                }
@@ -1265,26 +1253,25 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //legend (align right)
          $index = 0;
-         $fontsize = 9;
          foreach ($labels2 as $label) {
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+            $box = @imageTTFBbox($this->fontsize+1,$this->fontangle,$this->font,$label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
 
             //legend label
             imagettftext(
                $image,
-               $fontsize,
-               $fontangle,
+               $this->fontsize,
+               $this->fontangle,
                $width - $textwidth - 18,
                10 + $index * 15 ,
                $this->black,
-               $font,
+               $this->font,
                Html::clean($label)
             );
 
             //legend circle
-            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            $color_rbg = self::colorHexToRGB($palette[$index]);
             imageSmoothArc($image, $width - 10, 5 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
 
             $index++;
@@ -1415,16 +1402,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $height = 400;
       $width_bar = ($width - 350) / count($labels2);
 
-      //config font
-      $font = "../fonts/FreeSans.ttf";
-      $fontsize = 8;
-      $fontangle = 0;
-
       //longueur du texte en dessous des barres
       $index = 0;
       foreach ($labels2 as $label) {
          $lx = 55 + $index * $width_bar;
-         $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$label);
+         $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$label);
          $textwidth[$label] = abs($box[4] - $box[0]);
          $index++;
       }
@@ -1435,9 +1417,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $palette = $this->getPalette($image, $nb_bar);
-         $alphapalette = $this->getPalette($image, $nb_bar, 90);
-         $darkerpalette = $this->getDarkerPalette($image, $nb_bar);
+         $palette = self::getPalette($nb_bar);
+         $alphapalette = self::getPalette($nb_bar, 90);
+         $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
          $bg_color = $this->grey;
@@ -1458,11 +1440,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //value label
             $val = round($i * $cum / 12);
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
+            $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $val);
             $textwidth = abs($box[4] - $box[0]);
 
-            imagettftext($image, $fontsize, $fontangle, 
-               38-$textwidth, $yaxis+5, $this->darkgrey, $font, $val);
+            imagettftext($image, $this->fontsize, $this->fontangle, 
+               38-$textwidth, $yaxis+5, $this->darkgrey, $this->font, $val);
          }
 
          //draw y-axis
@@ -1475,18 +1457,19 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          if ($export) {
             imagettftext(
                $image,
-               $fontsize+2,
-               $fontangle,
+               $this->fontsize+2,
+               $this->fontangle,
                10,
                20,
                $this->black,
-               $font,
+               $this->font,
                $title
             );
          }
 
          if ($export && $desc) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 35, $this->black, $font, $desc);
+            imagettftext($image, $this->fontsize+2, $this->fontangle, 10, 35, 
+               $this->black, $this->font, $desc);
          }
 
 
@@ -1513,12 +1496,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
                   imagettftext(
                      $image,
-                     $fontsize-1,
-                     $fontangle,
+                     $this->fontsize-1,
+                     $this->fontangle,
                      $bx1 + 2,
                      $by1 - ($by1 - $by2)/2 + 5,
                      $darkerpalette[$index2],
-                     $font,
+                     $this->font,
                      $subdata.$unit
                   );
                }
@@ -1535,17 +1518,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //pour chaque mois
          foreach ($labels2 as $label) {
             $lx = 54 + $index * $width_bar;
-            $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$label);
+            $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext(
                $image,
-               $fontsize-1,
+               $this->fontsize-1,
                -45,
                $lx,
                $height-20,
                $this->black,
-               $font,
+               $this->font,
                Html::clean($label)
             );
 
@@ -1554,26 +1537,25 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //legend (align right)
          $index = 0;
-         $fontsize = 9;
          foreach ($datas as $label => $data) {
-            $box = @imageTTFBbox($fontsize-1,$fontangle,$font,$labels[$index]);
+            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$labels[$index]);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
 
             //legend label
             imagettftext(
                $image,
-               $fontsize-1,
-               $fontangle,
+               $this->fontsize-1,
+               $this->fontangle,
                $width - $textwidth - 18,
                5+(15 * $nb_bar) + ($index * -15) ,
                $this->black,
-               $font,
+               $this->font,
                Html::clean($labels[$index])
             );
 
             //legend circle
-            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            $color_rbg = self::colorHexToRGB($palette[$index]);
             imageSmoothArc($image, 
                $width - 10, (15 * $nb_bar) + ($index * -15), 8, 8, $color_rbg, 0, 2 * M_PI);
 
@@ -1687,14 +1669,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $palette = $this->getPalette($image, $nb);
-         $alphapalette = $this->getPalette($image, $nb, "50");
-         $darkerpalette = $this->getDarkerPalette($image, $nb);
-
-         //config font
-         $font = "../fonts/FreeSans.ttf";
-         $fontsize = 7;
-         $fontangle = 0;
+         $palette = self::getPalette($nb);
+         $alphapalette = self::getPalette($nb, "50");
+         $darkerpalette = self::getDarkerPalette($nb);
 
          //background
          $bg_color = $this->white;
@@ -1711,10 +1688,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //value labels
             $val = round($i * $max / 12);
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
+            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$val);
             $textwidth = abs($box[4] - $box[0]);
-            imagettftext($image, $fontsize, $fontangle, 
-               28-$textwidth, $yaxis+5, $this->darkgrey, $font, $val);
+            imagettftext($image, $this->fontsize, $this->fontangle, 
+               28-$textwidth, $yaxis+5, $this->darkgrey, $this->font, $val);
          }
 
          //draw y-axis grey step line
@@ -1736,7 +1713,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //add title on export
          if ($export) {
-            imagettftext($image, $fontsize+1, $fontangle, 10, 20, $this->black, $font, $title);
+            imagettftext($image, $this->fontsize+1, $this->fontangle, 10, 20, 
+               $this->black, $this->font, $title);
          }
 
          //on png graph, no way to draw curved polygons, force area reports to be linear
@@ -1808,22 +1786,23 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $y2 = $height - 30 - $data * ($height - 85) / $max;
 
             //trace dots
-            $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
+            $color_rbg = self::colorHexToRGB($darkerpalette[0]);
             imageSmoothArc($image, $x1-1, $y1-1, 8, 8, $color_rbg, 0, 2 * M_PI);
             imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
 
             //display values label
             if($show_label == "always" || $show_label == "hover") {
-               imagettftext($image, $fontsize-1, $fontangle, 
-                  ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5, $darkerpalette[0], $font, $old_data);
+               imagettftext($image, $this->fontsize-1, $this->fontangle, 
+                  ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5, 
+                  $darkerpalette[0], $this->font, $old_data);
             }
 
             //display y ticks and labels
             if ($step!=0 && ($index / $step) == round($index / $step)) {
                imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[0]);
                
-               imagettftext($image, $fontsize, $fontangle, $x1 - 10 , $height-10, $this->black,
-                         $font, $old_label);
+               imagettftext($image, $this->fontsize, $this->fontangle, $x1 - 10 , $height-10, 
+                  $this->black, $this->font, $old_label);
             }
 
             $old_data = $data;
@@ -1834,13 +1813,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //display last value, dot and axis label
          if (isset($x2)) {
-            imagettftext($image, $fontsize-1, $fontangle, 
-               $x2 - 6, $y2 - 5, $darkerpalette[0], $font, $data);
-            $color_rbg = $this->colorHexToRGB($darkerpalette[0]);
+            imagettftext($image, $this->fontsize-1, $this->fontangle, 
+               $x2 - 6, $y2 - 5, $darkerpalette[0], $this->font, $data);
+            $color_rbg = self::colorHexToRGB($darkerpalette[0]);
             imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
             imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
-            imagettftext($image, $fontsize, $fontangle, 
-               $x2 - 10 , $height-10, $this->black, $font, $label);
+            imagettftext($image, $this->fontsize, $this->fontangle, 
+               $x2 - 10 , $height-10, $this->black, $this->font, $label);
             imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
          }
       }
@@ -1952,14 +1931,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $palette = $this->getPalette($image, $nb);
-         $alphapalette = $this->getPalette($image, $nb, "50");
-         $darkerpalette = $this->getDarkerPalette($image, $nb);
-
-         //config font
-         $font = "../fonts/FreeSans.ttf";
-         $fontsize = 7;
-         $fontangle = 0;
+         $palette = self::getPalette($nb);
+         $alphapalette = self::getPalette($nb, "50");
+         $darkerpalette = self::getDarkerPalette($nb);
 
          //background
          $bg_color = $this->white;
@@ -1976,11 +1950,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //value ticks
             $val = round($i * $max / 12);
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$val);
+            $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$val);
             $textwidth = abs($box[4] - $box[0]);
          
-            imagettftext($image, $fontsize, $fontangle,
-               25-$textwidth, $yaxis+5, $this->darkgrey, $font, $val);
+            imagettftext($image, $this->fontsize-1, $this->fontangle,
+               25-$textwidth, $yaxis+5, $this->darkgrey, $this->font, $val);
          }
 
          //draw y-axis grey step line
@@ -2005,7 +1979,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //add title on export
          if ($export) {
-            imagettftext($image, $fontsize+2, $fontangle, 10, 20, $this->black, $font, $title);
+            imagettftext($image, $this->fontsize+1, $this->fontangle, 10, 20, 
+               $this->black, $this->font, $title);
          }
 
          //parse datas
@@ -2079,16 +2054,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $y2 = $height - 30 - $subdata * ($height - 150) / $max;
 
                //trace dots
-               $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
+               $color_rbg = self::colorHexToRGB($darkerpalette[$index1]);
                imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
                imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
 
 
                //display values label
                if($show_label == "always" || $show_label == "hover") {
-                  imagettftext($image, $fontsize-1, $fontangle, 
+                  imagettftext($image, $this->fontsize-2, $this->fontangle, 
                      ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5, 
-                     $darkerpalette[$index1], $font, $old_data);
+                     $darkerpalette[$index1], $this->font, $old_data);
                }
 
                //show x-axis ticks
@@ -2105,15 +2080,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             /*** display last value ***/
             if (isset($x2)) {
                //trace dots
-               $color_rbg = $this->colorHexToRGB($darkerpalette[$index1]);
+               $color_rbg = self::colorHexToRGB($darkerpalette[$index1]);
                imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
                imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
 
                //display value label
                if($show_label == "always" || $show_label == "hover") {
-                  imagettftext($image, $fontsize-1, $fontangle, 
+                  imagettftext($image, $this->fontsize-2, $this->fontangle, 
                      ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5, 
-                     $darkerpalette[$index1], $font, $old_data);
+                     $darkerpalette[$index1], $this->font, $old_data);
                }
             }
             /*** end display last value ***/
@@ -2127,8 +2102,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $x = $index * $width_line + 20;
 
             if ($step!=0 && ($index / $step) == round($index / $step)) {
-               imagettftext($image, $fontsize, $fontangle, $x , $height-10, 
-                  $this->black, $font, $label);
+               imagettftext($image, $this->fontsize-1, $this->fontangle, $x , $height-10, 
+                  $this->black, $this->font, $label);
             }
 
             $index++;
@@ -2138,14 +2113,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $index = 0;
          foreach ($labels as $label) {
             //legend label
-            $box = @imageTTFBbox($fontsize,$fontangle,$font,$label);
+            $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
-            imagettftext($image, $fontsize, $fontangle, 
-               20, 35 + $index * 14 , $this->black, $font, $label);
+            imagettftext($image, $this->fontsize-1, $this->fontangle, 
+               20, 35 + $index * 14 , $this->black, $this->font, $label);
 
             //legend circle
-            $color_rbg = $this->colorHexToRGB($palette[$index]);
+            $color_rbg = self::colorHexToRGB($palette[$index]);
             imageSmoothArc($image, 10, 30 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
 
             $index++;
