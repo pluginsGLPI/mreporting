@@ -38,6 +38,11 @@ class PluginMreportingMisc {
    }
 
 
+   /**
+    * Transform a request var into a get string
+    * @param  array $var the request string ($_REQUEST, $_POST, $_GET)
+    * @return string the imploded array. Format : $key=$value&$key2=$value2...
+    */
    static function getRequestString($var) {
       unset($var['submit']);
       
@@ -50,6 +55,13 @@ class PluginMreportingMisc {
    }
 
 
+   /**
+    * Show a date selector
+    * @param  datetime $date1    date of start
+    * @param  datetime $date2    date of ending
+    * @param  string $randname random string (to prevent conflict in js selection)
+    * @return nothing
+    */
    static function showSelector($date1, $date2, $randname) {
       global $LANG, $DB;
 
@@ -81,7 +93,14 @@ class PluginMreportingMisc {
       echo "</div>\n";
    }
 
-
+   /**
+    * Generate a SQL date test with $_REQUEST date fields
+    * @param  string  $field     the sql table field to compare
+    * @param  integer $delay     if $_REQUET date fields not provided, 
+    *                            generate them from $delay (in days) 
+    * @param  string $randname   random string (to prevent conflict in js selection)
+    * @return string             The sql test to insert in your query
+    */
    static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname) {
 
       if (!isset($_REQUEST['date1'.$randname])) 
@@ -110,6 +129,12 @@ class PluginMreportingMisc {
       return "($field >= '$begin' AND $field <= ADDDATE('$end' , INTERVAL 1 DAY) )";
    }
 
+   
+   /**
+    * Get the max value of a multidimensionnal array 
+    * @param  array() $array the array to compute
+    * @return number the sum
+    */
    static function getArrayMaxValue($array) {
       $max = 0;
 
@@ -127,6 +152,12 @@ class PluginMreportingMisc {
       return $max;
    }
 
+
+   /**
+    * Computes the sum of a multidimensionnal array 
+    * @param  array() $array the array where to seek
+    * @return number the sum
+    */
    static function getArraySum($array ) {
       $sum = 0;
 
@@ -143,6 +174,11 @@ class PluginMreportingMisc {
    }
 
 
+   /**
+    * Get the depth of a multidimensionnal array 
+    * @param  array() $array the array where to seek
+    * @return number the sum
+    */
    static function getArrayDepth($array) {
       $max_depth = 1;
 
@@ -159,12 +195,24 @@ class PluginMreportingMisc {
       return $max_depth;
    }
 
+
+   /**
+    * Transform a flat array to a tree array
+    * @param  array $flat_array the flat array. Format : array('id', 'parent', 'name', 'count')
+    * @return array the tree array. Format : array(name => array(name2 => array(count), ...)
+    */
    static function buildTree($flat_array) {   
       $raw_tree = self::mapTree($flat_array);
       $tree = self::cleanTree($raw_tree);
       return $tree;
    }
 
+
+   /**
+    * Transform a flat array to a tree array (without keys changes)
+    * @param  array $flat_array the flat array. Format : array('id', 'parent', 'name', 'count')
+    * @return array the tree array. Format : array(orginal_keys, children => array(...)
+    */
    static function mapTree(array &$elements, $parentId = 0) {
       $branch = array();
 
@@ -180,6 +228,14 @@ class PluginMreportingMisc {
       return $branch;
    }
 
+
+   /**
+    * Transform a tree array to a tree array (with clean keyss)
+    * @param  array $flat_array the tree array. 
+    *               Format : array('id', 'parent', 'name', 'count', children => array(...)
+    * @return array the tree array. 
+    *               Format : array(name => array(name2 => array(count), ...)
+    */
    static function cleanTree($raw_tree) {
       $tree = array();
       
