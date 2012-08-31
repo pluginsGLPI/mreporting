@@ -510,6 +510,8 @@ JAVASCRIPT;
             var sub_angle = d.startAngle-d.parentNode.startAngle;
             var sub_index = 1+sub_angle*d.parentNode.childNodes.length/d.parentNode.angle;
             var alpha = 0.7*d.depth+0.4/sub_index;
+
+            console.log(d);
          
             return colors(d.parentNode.index).alpha(alpha);
          }
@@ -1603,7 +1605,7 @@ JAVASCRIPT;
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       
       echo "var datas = ".json_encode($datas).";";
-      echo "var sum = ".PluginMreportingMisc::cw_array_count($datas).";";
+      echo "var sum = ".PluginMreportingMisc::getArraySum($datas).";";
       
       return $datas;
    }
