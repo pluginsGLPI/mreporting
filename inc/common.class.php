@@ -722,11 +722,15 @@ class PluginMreportingCommon extends CommonDBTM {
       global $LANG, $CFG_GLPI;
       
       $simpledatas = false;
+      $treedatas = false;
         
-      //simple array
+      //simple and tree array
       if (!$labels2) {
          $labels2 = array();
-         $simpledatas = true;
+         $depth = PluginMreportingMisc::getArrayDepth($datas);
+         if ($depth > 1) 
+            $treedatas = true;
+         else $simpledatas = true;
       }
       
       if ($flip_data == true) {
@@ -786,17 +790,22 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "<table class='tab_cadre' width='90%'>";
       
       echo "<tr class='tab_bg_1'>";
-      echo "<th></th>";
       
       foreach($datas as $label => $cols) {
          echo "<th>".$label."</th>";
       }
       echo "</tr>";
-      foreach($types as $label2 => $cols) {
+      if (($treedatas)) {
+         echo "<tr class='tab_bg_1'>";
+         self::showGraphTreeDatas($types);
+         echo "</tr>";
+      } else foreach($types as $label2 => $cols) {
          echo "<tr class='tab_bg_1'>";
          echo "<td>".$label2."</td>";
          if ($simpledatas) { //simple array
             echo "<td class='center'>".$cols." ".$unit."</td>";
+         } elseif ($treedatas) { //multiple array
+            self::showGraphTreeDatas($cols);
          } else { //multiple array
             foreach($cols as $date => $nb) {
                echo "<td class='center'>".$nb." ".$unit."</td>";
@@ -807,6 +816,21 @@ class PluginMreportingCommon extends CommonDBTM {
       
       echo "</table>";
       echo "</div><br>";
+   }
+
+   static function showGraphTreeDatas($cols) {
+      foreach ($cols as $label => $value) {
+         echo "<tr class='tab_bg_1'>";
+         echo "<th class='center'>$label</th>";
+         echo "<td class='center'>";
+         if (is_array($value)) {
+
+            echo "<table class='tab_cadre' width='90%'>";
+            self::showGraphTreeDatas($value);
+            echo "</table>";
+         } else echo $value;
+         echo "</td></tr>";
+      }
    }
    
    /**
