@@ -62,7 +62,6 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       }
       
       if ($unit == '%') {
-         
          $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       }
       
@@ -122,7 +121,6 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       }
       
       if ($unit == '%') {
-         
          $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       }
       
@@ -135,7 +133,6 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
                   
       $this->initGraph($options);
 
-      $out = "";
       $out = $title." - ".$desc."\r\n";
       
       foreach($datas as $label2 => $cols) {
@@ -171,6 +168,69 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
    
    function showGarea($params) {
       $this->showHGbar($params);
+   }
+
+   function showSunburst($params) {
+      $criterias = PluginMreportingCommon::initGraphParams($params);
+      
+      foreach ($criterias as $key => $val) {
+         $$key=$val;
+      }
+      
+      if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+   
+
+      if (isset($raw_datas['datas'])) {
+         $datas = $raw_datas['datas'];
+      } else {
+         $datas = array();
+      }
+      
+      if (count($datas) <= 0) return false;
+      
+      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      
+      if ($unit == '%') {
+         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+      }
+            
+      $options = array("title" => $title,
+                        "desc" => $desc,
+                        "randname" => $randname,
+                        "export" => $export);
+                  
+      $this->initGraph($options);
+
+      $out = $title." - ".$desc."\r\n";
+      $out.= $this->sunburstLevel($datas);
+
+      echo $out;
+   }
+
+   function sunburstLevel($datas, $level = 0) {
+      $out = "";
+
+      $i = 0;
+      foreach($datas as $label => $value) {
+         for ($j=0; $j < $level; $j++) { 
+           if ($i > 0) $out.= ";";
+         }
+
+         if (is_array($value)) {
+            arsort($value);
+            $out.= $label.";";
+            $out.= $this->sunburstLevel($value, $level+1)."\r\n";
+         } else {
+            $out.= $label.";".$value."\r\n";
+         }
+         $i++;
+      }
+
+      return $out;
    }
 }
 
