@@ -1011,7 +1011,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
             
          //get colors
-         $palette = $this->getPalette();
+         $palette = $this->getPalette(5);
          if ($params['current_index'] === false) $color = $palette[$index];
          else {
             $color = $palette[$params['current_index']];

@@ -110,52 +110,6 @@ class PluginMreportingMisc {
       return "($field >= '$begin' AND $field <= ADDDATE('$end' , INTERVAL 1 DAY) )";
    }
 
-   static function exportSvgToPng($svgin) {
-
-      $im = new Imagick();
-      $im->setBackgroundColor(new ImagickPixel('transparent'));
-      $svg = file_get_contents($svgin);
-      $im->readImageBlob($svg);
-
-      $im->setImageFormat("png32");
-
-
-      echo '<img src="data:image/jpg;base64,' . base64_encode($im) . '"  />';
-      
-      $im->clear();
-      $im->destroy();
-   }
-
-   static function DOM_getElementByClassName($referenceNode, $className, $index=false) {
-      $className = strtolower($className);
-      $response  = array();
-
-      foreach ( $referenceNode->getElementsByTagName("*") as $node ) {
-         $nodeClass = strtolower($node->getAttribute("class"));
-
-         if (
-            $nodeClass == $className ||
-            preg_match("/\b" . $className . "\b/", $nodeClass)
-         ) {
-            $response[] = $node;
-         }
-      }
-
-      if ( $index !== false ) {
-         return isset($response[$index]) ? $response[$index] : false;
-      }
-
-      return $response;
-   }
-
-   static function cw_array_count($a) { 
-      if(!is_array($a)) return $a; 
-      $totale = 0;
-      foreach($a as $key=>$value) 
-         $totale += self::cw_array_count($value); 
-      return $totale; 
-   } 
-
    static function getArrayMaxValue($array) {
       $max = 0;
 
@@ -177,8 +131,6 @@ class PluginMreportingMisc {
       $sum = 0;
 
       if (!is_array($array)) return $array;
-
-
       foreach ($array as $value) {
          if (is_array($value)) {
             $sum+= self::getArraySum($value);

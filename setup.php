@@ -33,7 +33,9 @@
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
       
+   /* CRSF */
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
+
    /* Profile */
    $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
                                                                         'changeProfile');
@@ -66,8 +68,8 @@ function plugin_init_mreporting() {
          $reports = $mreporting_common->getAllReports();
          if ($reports !== false) {
             foreach($reports as $report) {
-               foreach($report['functions'] as $function) {
-                  $PLUGIN_HOOKS['stats']['mreporting'][$function['min_url_graph']] = $function['title'];
+               foreach($report['functions'] as $func) {
+                  $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
                }
             }
          }
@@ -84,14 +86,12 @@ function plugin_init_mreporting() {
                      = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'));
    }
 
-   // Add specific files to add to the header : javascript or css
-   $PLUGIN_HOOKS['add_javascript']['mreporting'] =  array(
-      "lib/protovis/protovis.min.js",
-      "lib/protovis-msie/protovis-msie.min.js",
-      "lib/protovis-extjs-tooltips.js"
-   );
-
-   //css
+   // Add specific files to add to the header : javascript
+   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
+   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
+   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
+      
+   //Add specific files to add to the header : css
    $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
 }
 
@@ -101,7 +101,8 @@ function plugin_version_mreporting() {
 
    return array('name'           => $LANG['plugin_mreporting']["name"],
                 'version'        => "1.2.0",
-                'author'         => "<a href='http://www.teclib.com'>Teclib'</a> & <a href='http://www.infotel.com'>Infotel</a>",
+                'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
+                  & <a href='http://www.infotel.com'>Infotel</a>",
                 'homepage'       => "https://forge.indepnet.net/projects/mreporting",
                 'license' => 'GPLv2+',
                 'minGlpiVersion' => "0.83.3");
