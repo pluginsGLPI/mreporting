@@ -484,6 +484,23 @@ JAVASCRIPT;
 
 
       $JS = <<<JAVASCRIPT
+
+   function getLevelIndex(node) {
+      var levelIndex = -1;
+      var children = node.parentNode.childNodes;
+      for(var i= 0; i < children.length; i++) {
+         if (children[i] == node) {
+            levelIndex = i;
+            break;
+         }
+      }
+      return levelIndex;
+   }
+
+   function getLevelNbNode(node) {
+      return node.parentNode.childNodes.length;
+   }
+
    var   width = {$this->width},
          height = 450
          i = -1, //mouseover index
@@ -507,15 +524,31 @@ JAVASCRIPT;
       .fillStyle(function(d) {
          //return pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName);
          if (d.parentNode && d.parentNode.nodeName) {
-            var sub_angle = d.startAngle-d.parentNode.startAngle;
-            var sub_index = 1+sub_angle*d.parentNode.childNodes.length/d.parentNode.angle;
-            var alpha = 0.7*d.depth+0.4/sub_index;
+            var root = d;
+            while (root.minDepth != 0) root = root.parentNode
+            var rootNodeIndex = getLevelIndex(root);
 
-            console.log(d);
-         
-            return colors(d.parentNode.index).alpha(alpha);
+            //compute alpha value
+            var levelIndex = getLevelIndex(d);
+            var levelIndexParent = getLevelIndex(d.parentNode);
+            var nbLevelNode = getLevelNbNode(d);
+            var nbLevelParentNode = getLevelNbNode(d.parentNode);
+            var alpha_index = 1 - levelIndex / (nbLevelNode+1);
+            var alpha_index_parent  = 1 - levelIndexParent / (nbLevelParentNode+1);
+            
+            //specific case alpha index when 1st lvl
+            if (d.parentNode == root) alpha_index_parent = 1;
+
+            var alpha = alpha_index * alpha_index_parent;
+
+            return colors(rootNodeIndex).alpha(alpha);
          }
-         else return colors(d.index);
+         else {
+            if (d.parentNode) {
+               levelIndex = getLevelIndex(d);
+               return colors(levelIndex);
+            } else return colors(0);
+         }
       })
       .angle(function(d) {
          var motion = (offset / 30) > 1 ? 1:(offset / 30);
