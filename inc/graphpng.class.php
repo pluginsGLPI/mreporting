@@ -1101,7 +1101,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $xtext, $ytext,
                $this->black,
                $this->font,
-               (is_array($data)) ? $gsum : $data
+               (is_array($data)) ? $sum : $data
             );
          }
          
