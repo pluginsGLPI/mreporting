@@ -1577,6 +1577,13 @@ JAVASCRIPT;
             }
          }
       }
+
+      //merge missing keys
+      $empty_values = array_fill_keys(array_keys($labels2), 0);
+      foreach($values as $k => $v) {
+         $values[$k] = array_replace($empty_values, $v);
+      }
+
       $out = "var datas = [\n";
       foreach ($values as $line) {
          $out.= "\t[";

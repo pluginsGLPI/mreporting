@@ -624,8 +624,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          FROM glpi_tickets
          LEFT JOIN glpi_itilcategories
             ON glpi_itilcategories.id = glpi_tickets.itilcategories_id
-         WHERE ".$this->sql_date."
-            AND glpi_tickets.entities_id IN (".$this->where_entities.")
+         WHERE {$this->sql_date}
+            AND glpi_tickets.entities_id IN ({$this->where_entities})
             AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_itilcategories.id, glpi_tickets.status
          ORDER BY glpi_itilcategories.name
