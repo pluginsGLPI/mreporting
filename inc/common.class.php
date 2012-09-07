@@ -790,7 +790,9 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "<table class='tab_cadre' width='90%'>";
       
       echo "<tr class='tab_bg_1'>";
-      
+      if (!($treedatas)) {
+         echo "<th></th>";
+      }
       foreach($datas as $label => $cols) {
          echo "<th>".$label."</th>";
       }
