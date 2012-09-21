@@ -551,10 +551,12 @@ class PluginMreportingCommon extends CommonDBTM {
             PluginMreportingMisc::showNavigation();
             echo "</span>";
             echo "<span style='float:right'>";
-            echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
-            echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
-               "&classname=".$opt['class']."' target='_blank'>";
-            echo "<img src='../pics/config.png' class='title_pics'/></a>";
+            if (plugin_mreporting_haveRight('config', 'w')) {
+               echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
+               echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
+                  "&classname=".$opt['class']."' target='_blank'>";
+               echo "<img src='../pics/config.png' class='title_pics'/></a>";
+            }
             if ($randname !== false) {
                echo " - <b>".$LANG['buttons'][31]."</b> : ";
                echo "&nbsp;<a target='_blank' href='".
