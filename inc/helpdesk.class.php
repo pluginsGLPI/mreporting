@@ -82,9 +82,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          glpi_entities.name as name
       FROM glpi_tickets
       LEFT JOIN glpi_entities
-         ON (glpi_tickets.entities_id = glpi_entities.id 
-         AND glpi_entities.id IN (".$this->where_entities."))
+         ON (glpi_tickets.entities_id = glpi_entities.id)
       WHERE ".$this->sql_date."
+      AND glpi_entities.id IN (".$this->where_entities.")
       AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name
       ORDER BY glpi_entities.name ASC
