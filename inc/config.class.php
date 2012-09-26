@@ -677,7 +677,7 @@ class PluginMreportingConfig extends CommonDBTM {
                      'delay'        => '30',
                      'condition'    => '',
                      'show_graph'   => false,
-                     'randname'     => '',
+                     'randname'     => mt_rand(),
                      'graphtype'    => 'GLPI');
       
       $self = new self();
