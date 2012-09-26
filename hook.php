@@ -30,6 +30,7 @@
 function plugin_mreporting_install() {
    global $DB,$LANG;
    
+   //create profiles table
    $queries = array();
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
       `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -40,6 +41,7 @@ function plugin_mreporting_install() {
    )
    ENGINE = InnoDB;";
    
+   //create configuration table
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
    `id` int(11) NOT NULL auto_increment,
    `name` varchar(255) collate utf8_unicode_ci default NULL,
@@ -57,19 +59,27 @@ function plugin_mreporting_install() {
    PRIMARY KEY  (`id`),
    KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-   
-   $queries[] = "INSERT INTO `glpi_displaypreferences` 
-      VALUES (NULL,'PluginMreportingConfig','2','2','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` 
-      VALUES (NULL,'PluginMreportingConfig','3','3','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` 
-      VALUES (NULL,'PluginMreportingConfig','4','4','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` 
-      VALUES (NULL,'PluginMreportingConfig','5','5','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` 
-      VALUES (NULL,'PluginMreportingConfig','6','6','0');";
-   $queries[] = "INSERT INTO `glpi_displaypreferences` 
-      VALUES (NULL,'PluginMreportingConfig','8','8','0');";
+
+
+   // add display preferences 
+   $query_display_pref = "SELECT id 
+      FROM glpi_displaypreferences
+      WHERE itemtype = 'PluginMreportingConfig'";
+   $res_display_pref = $DB->query($query_display_pref);
+   if ($DB->numrows($res_display_pref) == 0) {
+      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+         VALUES (NULL,'PluginMreportingConfig','2','2','0');";
+      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+         VALUES (NULL,'PluginMreportingConfig','3','3','0');";
+      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+         VALUES (NULL,'PluginMreportingConfig','4','4','0');";
+      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+         VALUES (NULL,'PluginMreportingConfig','5','5','0');";
+      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+         VALUES (NULL,'PluginMreportingConfig','6','6','0');";
+      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+         VALUES (NULL,'PluginMreportingConfig','8','8','0');";
+   }
    
    foreach($queries as $query)
       mysql_query($query);
