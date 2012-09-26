@@ -34,9 +34,11 @@ header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 Html::includeHeader("");
 
+echo "<div class='debug_content'>";
+
 $common = new PluginMreportingCommon();
 $common->debugGraph();
 
-echo "</div></div>";
+echo "</div></div></div>";
 echo "</body></html>";
 ?>

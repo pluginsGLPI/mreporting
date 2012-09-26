@@ -60,3 +60,6 @@
 #mreporting_functions td { width:50%;}
 #mreporting_functions td img {vertical-align:middle;}
 
+.debug_content {
+   background: white;
+}
