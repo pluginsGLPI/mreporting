@@ -84,6 +84,8 @@ class PluginMreportingMisc {
       echo "</td>\n";
 
       echo "<td rowspan='2' class='center'>";
+      $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
+      $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
       Bookmark::showSaveButton(Bookmark::URI);
       echo "</td>\n";
 
