@@ -1339,6 +1339,17 @@ class PluginMreportingCommon extends CommonDBTM {
                             "Jui", "Aou","Sep", "Oct", "Nov", "Dec"),
          "spline"    => true
       );
+
+      $tree_datas['datas'] = array( 
+        'key1' => array('key1.1' => 12, 'key1.2' => 25, 'key1.3' => 43), 
+        'key2' => array(
+            'key2.1' => array('2.3.1'=>10,'2.3.2'=>8,'2.3.3' =>17), 
+            'key2.2' => array('2.2.1'=>45,'2.2.2'=>17,'2.2.3' =>23), 
+            'key2.3' => 25
+         ),
+        'key3' => array('key3.1' => 12, 'key3.2' => 25, 'key3.3' => 43), 
+        'very looooooooooooooooooooooooooooooooooooooooooooog key' => 54
+      );
       
       $opt1 = array("rand" => 1);
       $opt1 = array_merge($params, $opt1);
@@ -1391,6 +1402,20 @@ class PluginMreportingCommon extends CommonDBTM {
       $params4['opt'] = $opt4;
       
       $graph->showVstackbar($params4);
+
+      $opt7 = array("rand" => 7);
+      $opt7 = array_merge($params, $opt7);
+
+      $params7['raw_datas'] = $tree_datas;
+      $params7['title'] = 'Exemple 7';
+      $params7['desc'] = 'Sunburst';
+      $params7['show_label'] = 'hover';
+      $params7['delay'] = '365';
+      $params7['export'] = false;
+      $params7['area'] = false;
+      $params7['opt'] = $opt7;
+      
+      $graph->showSunburst($params7);
       
       $opt5 = array("rand" => 5);
       $opt5 = array_merge($params, $opt5);
@@ -1419,6 +1444,8 @@ class PluginMreportingCommon extends CommonDBTM {
       $params6['opt'] = $opt6;
       
       $graph->showGArea($params6);
+
+      
    }
 }
 
