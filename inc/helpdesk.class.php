@@ -74,7 +74,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("`glpi_tickets`.`date`", 
          $delay, $randname);
-
+      
       $datas = array();
       $query = "
          SELECT
@@ -83,9 +83,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       FROM glpi_tickets
       LEFT JOIN glpi_entities
          ON (glpi_tickets.entities_id = glpi_entities.id)
-      WHERE ".$this->sql_date."
-      AND glpi_entities.id IN (".$this->where_entities.")
-      AND glpi_tickets.is_deleted = '0'
+      WHERE ".$this->sql_date." ";
+      
+      if (Session::isMultiEntitiesMode()) {
+         $query.= "AND glpi_entities.id IN (".$this->where_entities.") ";
+      }
+      $query.= "AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name
       ORDER BY glpi_entities.name ASC
       ";//
@@ -128,9 +131,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       FROM glpi_tickets
       LEFT JOIN glpi_itilcategories
          ON glpi_tickets.itilcategories_id = glpi_itilcategories.id
-      WHERE ".$this->sql_date."
-      AND glpi_tickets.entities_id IN (".$this->where_entities.")
-      AND glpi_tickets.is_deleted = '0'
+      WHERE ".$this->sql_date." ";
+      
+      if (Session::isMultiEntitiesMode()) {
+         $query_cat.= "AND glpi_tickets.entities_id IN (".$this->where_entities.") ";
+      }
+      
+      $query_cat.= "AND glpi_tickets.is_deleted = '0'
       ORDER BY glpi_itilcategories.id ASC";
       $res_cat = $DB->query($query_cat);
       $categories = array();
@@ -154,9 +161,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       FROM glpi_tickets
       LEFT JOIN glpi_entities
          ON glpi_tickets.entities_id = glpi_entities.id
-      WHERE glpi_tickets.itilcategories_id IN ($cat_str)
-      AND glpi_tickets.entities_id IN (".$this->where_entities.")
-      AND ".$this->sql_date."
+      WHERE glpi_tickets.itilcategories_id IN ($cat_str) ";
+      
+      if (Session::isMultiEntitiesMode()) {
+         $query.= "AND glpi_tickets.entities_id IN (".$this->where_entities.")";
+      }
+      
+      $query.= "AND ".$this->sql_date."
       AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name, glpi_tickets.itilcategories_id
       ORDER BY glpi_entities.name ASC, glpi_tickets.itilcategories_id ASC";
@@ -209,9 +220,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $query = "
             SELECT COUNT(*)
             FROM glpi_tickets
-            WHERE ".$this->sql_date."
-            AND glpi_tickets.entities_id IN (".$this->where_entities.")
-            AND glpi_tickets.is_deleted = '0'
+            WHERE ".$this->sql_date." ";
+            
+         if (Session::isMultiEntitiesMode()) {
+            $query.= "AND glpi_tickets.entities_id IN (".$this->where_entities.")";
+         }
+ 
+         $query.= "AND glpi_tickets.is_deleted = '0'
             AND glpi_tickets.status IN('".implode("', '", array_keys($filter['status']))."')
          ";
          $result = $DB->query($query);
