@@ -73,7 +73,7 @@ class PluginMreportingCommon extends CommonDBTM {
       //parse inc dir to search report classes
       $classes = self::parseAllClasses($inc_dir);
       
-      
+      sort($classes);
       if (isset($params['classname']) 
             && !empty($params['classname'])) {
          $classes = array();
@@ -255,6 +255,9 @@ class PluginMreportingCommon extends CommonDBTM {
                      $i++;
                   }
                   $count++;
+                  if ($i%$nb_per_line > 0) {
+                     $count++;
+                  }
                }
                
                while ($i%$nb_per_line != 0) {
@@ -268,7 +271,7 @@ class PluginMreportingCommon extends CommonDBTM {
          if (isset($graphs[$classname]) && $count>0) {
 
             $height = 200;
-            $height += 27*$count;
+            $height += 30*$count;
             echo "<tr class='tab_bg_1'>";
             echo "<th colspan='2'>";
             echo "<div class='right'>";
