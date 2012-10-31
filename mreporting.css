@@ -1,12 +1,10 @@
 #fig {
-   /*width:600px;*/
    border:1px solid #E0E0E0;
    border-radius:8px;
    position:relative;
    margin:10px auto;
 }
 .graph {
-   /*background-color:#F2F2F2;*/
    margin:2px
 }
 .graph_title {
