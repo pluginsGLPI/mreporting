@@ -27,28 +27,25 @@
  --------------------------------------------------------------------------
  */
  
-define('GLPI_ROOT', '../../..');
+define('GLPI_ROOT', '../../..'); 
 include (GLPI_ROOT."/inc/includes.php");
 
-header("Content-Type: text/html; charset=UTF-8");
-Html::header_nocache();
-
-if($_REQUEST['switchto'] == 'odt' || $_REQUEST['switchto'] == 'odtall') {
-   require_once('../lib/odtphp/odf.php');
+if (!isset ($_GET["id"])) {
+   $_GET["id"] = "";
 }
+   
+$pref= new PluginMreportingPreference();
 
-if (PluginMreportingPreference::atLeastOneTemplateExists()) {
-      $template = PluginMreportingPreference::checkPreferenceTemplateValue(Session::getLoginUserID());
-   if ($template) {
-      $common = new PluginMreportingCommon();
-      $common->export($_REQUEST);
-   } else {
-      Session::addMessageAfterRedirect($LANG['plugin_mreporting']["parser"][2], false, ERROR);
-      Html::redirect(GLPI_ROOT."/front/preference.php");
-   }
+if (isset($_POST["update"])) {
+   
+   $pref->update($_POST);
+   Html::redirect($_SERVER['HTTP_REFERER']);
+
 } else {
-   Session::addMessageAfterRedirect($LANG['plugin_mreporting']["parser"][3], false, ERROR);
-   Html::back();
+   Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
+   $pref->showForm("./preference.form.php",$_GET["id"]);
+   Html::footer();
+
 }
 
 ?>

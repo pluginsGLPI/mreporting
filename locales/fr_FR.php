@@ -54,6 +54,10 @@ $LANG['plugin_mreporting']["config"][11] = "Condition supplémentaire Mysql";
 $LANG['plugin_mreporting']["config"][12] = "Voir le graphique";
 $LANG['plugin_mreporting']["config"][13] = "Classe";
 
+$LANG['plugin_mreporting']['parser'][1] = "Utiliser ce modèle";
+$LANG['plugin_mreporting']['parser'][2] = "Merci de sélectionner un modèle dans vos préférences";
+$LANG['plugin_mreporting']['parser'][3] = "Aucun modèle n'existe";
+
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Nombre de ticket par entités";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['desc'] = "Barres";

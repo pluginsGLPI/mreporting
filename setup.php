@@ -29,6 +29,14 @@
  --------------------------------------------------------------------------
  */
 
+if (!defined('PLUGIN_MREPORTING_TEMPLATE_DIR')) {
+   define ("PLUGIN_MREPORTING_TEMPLATE_DIR",  GLPI_ROOT."/plugins/mreporting/templates/");
+}
+
+if (!defined('PLUGIN_MREPORTING_TEMPLATE_EXTENSION')) {
+   define ("PLUGIN_MREPORTING_TEMPLATE_EXTENSION", "odt");
+}
+
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
@@ -44,7 +52,10 @@ function plugin_init_mreporting() {
 
       Plugin::registerClass('PluginMreportingProfile',
                       array('addtabon' => 'Profile'));
-
+                      
+      Plugin::registerClass('PluginMreportingPreference', 
+                     array('addtabon' => array('Preference')));
+      
       /* Reports Link */
       if (plugin_mreporting_haveRight("reports","r")) {
          $menu_entry = "front/central.php";

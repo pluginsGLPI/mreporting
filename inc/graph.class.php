@@ -309,14 +309,17 @@ JAVASCRIPT;
       $datas = $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
-
+      $height = 15 * $nb_bar + 50;
+      if ($height < 300) {
+         $height = 300;
+      }
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
       $JS = <<<JAVASCRIPT
    var width_pie = {$this->width};
-   var height_pie = 300;
+   var height_pie = {$height};
    var radius = 150;
    var angle = pv.Scale.linear(0, pv.sum(datas)).range(0, 2 * Math.PI);
    var Hilighted = [false, false,false, false,false, false];
@@ -476,6 +479,10 @@ JAVASCRIPT;
       
       $datas = $raw_datas['datas'];
       
+      $labels2 = array();
+      if (isset($raw_datas['labels2'])) {
+         $labels2 = $raw_datas['labels2'];
+      }
       $datas = $this->initDatasTree($datas, $unit);
 
       $always = '';
@@ -647,7 +654,7 @@ JAVASCRIPT;
       if ($show_graph) {
          echo $JS;
       }
-      $labels2 = array();
+
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -918,14 +925,19 @@ JAVASCRIPT;
 
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
-
+      
+      $height = 20 * $nb_bar + 50;
+      if ($height < 400) {
+         $height = 400;
+      }
+      
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
       $JS = <<<JAVASCRIPT
    var w = {$this->width},
-       h = 400,
+       h = {$height},
        x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w-300, 4/5),
        y = pv.Scale.linear(0, max+10).range(0, h),
        offset = 0, // animation
@@ -937,7 +949,7 @@ JAVASCRIPT;
        .width(w)
        .height(h)
        .bottom(100)
-       .left(20)
+       .left(30)
        .right(5)
        .top(5);
    
@@ -1334,10 +1346,16 @@ JAVASCRIPT;
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-
+      
+      $nb_bar = count($datas);
+      $height = 20 * $nb_bar + 50;
+      if ($height < 450) {
+         $height = 450;
+      }
+      
       $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
-   var height_area = 450;
+   var height_area = {$height};
    var offset = 0;
    var step = Math.round(m / 20);
 
