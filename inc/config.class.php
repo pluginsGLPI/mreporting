@@ -216,6 +216,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_graph"]="1";
                $this->fields["spline"]="1";
                $this->fields["default_delay"]="365";
+               $this->fields["graphtype"]="GLPI";
                break;
             case 'line':
             case 'gline':
@@ -226,6 +227,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_area"]="0";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
+               $this->fields["graphtype"]="GLPI";
                break;
             case 'vstackbar':
                $this->fields["name"]=$funct_name;
@@ -233,6 +235,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["is_active"]="1";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
+               $this->fields["graphtype"]="GLPI";
                break;
             case 'hgbar':
                $this->fields["name"]=$funct_name;
@@ -243,6 +246,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["spline"]="0";
                $this->fields["show_area"]="0";
                $this->fields["default_delay"]="365";
+               $this->fields["graphtype"]="GLPI";
                break; 
             default:
                $this->fields["name"]=$funct_name;
@@ -253,6 +257,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_area"]="0";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="30";
+               $this->fields["graphtype"]="GLPI";
                break;
 
          }

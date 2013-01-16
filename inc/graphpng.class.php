@@ -514,12 +514,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo $LANG['plugin_mreporting']["error"][1];
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         
+         if ($export!="odtall") {
+            echo $LANG['plugin_mreporting']["error"][1];
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end);
+         }
          return false;
       }
       
@@ -687,12 +690,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo $LANG['plugin_mreporting']["error"][1];
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         
+         if ($export!="odtall") {
+            echo $LANG['plugin_mreporting']["error"][1];
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end);
+         }
          return false;
       }
       
@@ -711,8 +717,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $nb_bar = count($datas);
       $width = $this->width;
-      $height = 370;
 
+      $height = 15 * $nb_bar + 50;
+      if ($height < 300) {
+         $height = 370;
+      }
       //create image
       $image = imagecreatetruecolor ($width, $height);
       
@@ -880,12 +889,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo $LANG['plugin_mreporting']["error"][1];
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         
+         if ($export!="odtall") {
+            echo $LANG['plugin_mreporting']["error"][1];
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end);
+         }
          return false;
       }
       
@@ -967,7 +979,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       global $LANG;
 
       $width  = $params['width'] - 70;
-      $height = $params['height'] - 70;
+      $height = $params['height'] - 120;
 
       $gsum = PluginMreportingMisc::getArraySum($datas);
 
@@ -1163,12 +1175,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo $LANG['plugin_mreporting']["error"][1];
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         
+         if ($export!="odtall") {
+            echo $LANG['plugin_mreporting']["error"][1];
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end);
+         }
          return false;
       }
       
@@ -1384,12 +1399,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
 
       if (count($datas) <= 0) {
-         echo $LANG['plugin_mreporting']["error"][1];
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         
+         if ($export!="odtall") {
+            echo $LANG['plugin_mreporting']["error"][1];
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end);
+         }
          return false;
       }
 
@@ -1433,9 +1451,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $nb_bar = count($datas);
       $width = $this->width;
-      $height = 400;
       $width_bar = ($width - 350) / count($labels2);
-
+      
+      $height = 20 * $nb_bar + 50;
+      if ($height < 400) {
+         $height = 400;
+      }
+      
       //longueur du texte en dessous des barres
       $index = 0;
       foreach ($labels2 as $label) {
@@ -1674,12 +1696,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo $LANG['plugin_mreporting']["error"][1];
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         
+         if ($export!="odtall") {
+            echo $LANG['plugin_mreporting']["error"][1];
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end);
+         }
          return false;
       }
       
@@ -1927,12 +1952,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $this->initGraph($options);
       
       if (count($datas) <= 0) {
-         echo $LANG['plugin_mreporting']["error"][1];
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         
+         if ($export!="odtall") {
+            echo $LANG['plugin_mreporting']["error"][1];
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end);
+         }
          return false;
       }
       
@@ -1954,7 +1982,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $nb = count($labels2);
       $width = $this->width;
-      $height = 450;
+      
+      $nb_bar = count($datas);
+      $height = 20 * $nb_bar + 50;
+      if ($height < 450) {
+         $height = 450;
+      }
+      
       $width_line = ($width - 45) / $nb;
       $index1 = 0;
       $index3 = 1;
