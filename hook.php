@@ -107,7 +107,8 @@ function plugin_mreporting_uninstall() {
    
    $queries = array(
       "DROP TABLE glpi_plugin_mreporting_profiles",
-      "DROP TABLE glpi_plugin_mreporting_configs"
+      "DROP TABLE glpi_plugin_mreporting_configs",
+      "DROP TABLE glpi_plugin_mreporting_preferences"
    );
 
    foreach($queries as $query)
