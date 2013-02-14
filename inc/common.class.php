@@ -738,7 +738,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $simpledatas = true;
       }
       
-      if ($depth > 1) {
+      if ($depth > 2) {
          $treedatas = true;
       }
       
