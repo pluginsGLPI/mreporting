@@ -602,7 +602,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $tmp_datas['datas'][$status][$data['month_l']] = $data['nb'];
       }
       
-       //merge missing datas (not defined status for a month)
+      //merge missing datas (not defined status for a month)
       if (isset($tmp_datas['datas'])) {
          foreach($tmp_datas['datas'] as &$data) {
             $data = array_merge(array_fill_keys($tmp_date, 0), $data);
@@ -653,6 +653,87 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $tree_datas['datas'] = PluginMreportingMisc::buildTree($flat_datas);
 
       return $tree_datas;
+   }
+
+
+   function reportVstackbarTicketStatusByTechnician() {
+      global $DB, $LANG;
+      
+      $datas = array();
+      /*Must be defined*/
+      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      /*End Must be defined*/
+      
+      //Init delay value
+      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
+      
+      $status = array_merge(
+         $this->filters['open']['status'],
+         $this->filters['close']['status']
+      );
+      $status_keys = array_keys($status);
+
+      //get technician list
+      $technicians = array();
+      $query = "
+         SELECT
+            glpi_users.name as username
+         FROM glpi_tickets
+         INNER JOIN glpi_tickets_users
+            ON glpi_tickets_users.tickets_id = glpi_tickets.id
+            AND glpi_tickets_users.type = 2
+         INNER JOIN glpi_users
+            ON glpi_users.id = glpi_tickets_users.users_id
+         WHERE ".$this->sql_date."
+         AND glpi_tickets.entities_id IN (".$this->where_entities.")
+         AND glpi_tickets.is_deleted = '0'
+      ";
+      $result = $DB->query($query);
+
+      while ($technician = $DB->fetch_assoc($result)) {
+         $technicians[] = $technician['username'];
+      }
+
+      //prepare empty values with technician list
+      foreach ($status as $key_status => $current_status) {
+         foreach ($technicians as $technician) {
+            $datas['datas'][$current_status][$technician] = 0;
+         }
+      }
+
+      $query = "
+         SELECT
+            glpi_tickets.status,
+            CONCAT(glpi_users.firstname, glpi_users.realname) as technician,
+            glpi_users.name as username,
+            COUNT(glpi_tickets.id) as count
+         FROM glpi_tickets
+         INNER JOIN glpi_tickets_users
+            ON glpi_tickets_users.tickets_id = glpi_tickets.id
+            AND glpi_tickets_users.type = 2
+         INNER JOIN glpi_users
+            ON glpi_users.id = glpi_tickets_users.users_id
+         WHERE ".$this->sql_date."
+         AND glpi_tickets.entities_id IN (".$this->where_entities.")
+         AND glpi_tickets.is_deleted = '0'
+         GROUP BY status, technician
+         ORDER BY technician
+      ";
+      $result = $DB->query($query);
+
+      while ($ticket = $DB->fetch_assoc($result)) {
+         if(is_null($ticket['technician'])) {
+            $ticket['technician'] = $LANG['job'][32];
+         }
+         $datas['labels2'][$ticket['username']] = $ticket['technician'];
+         $datas['datas'][$status[$ticket['status']]][$ticket['username']] = $ticket['count'];
+      }
+
+      return $datas;
    }
 
 
