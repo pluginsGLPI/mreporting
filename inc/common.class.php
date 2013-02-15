@@ -727,6 +727,7 @@ class PluginMreportingCommon extends CommonDBTM {
    static function showGraphDatas (
          $datas=array(), $unit = '', $labels2=array(), $flip_data = false, $show_graph = false) {
       global $LANG, $CFG_GLPI;
+
       
       $simpledatas = false;
       $treedatas = false;
@@ -738,7 +739,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $simpledatas = true;
       }
       
-      if ($depth > 2) {
+      if ($_REQUEST['gtype'] == "sunburst") {
          $treedatas = true;
       }
       
@@ -749,7 +750,6 @@ class PluginMreportingCommon extends CommonDBTM {
       $types = array();
    
       foreach($datas as $k => $v) {
-         
          if (is_array($v)) {
             foreach($v as $key => $val) {
                if (isset($labels2[$key]))
