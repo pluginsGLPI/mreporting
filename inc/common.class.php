@@ -321,11 +321,11 @@ class PluginMreportingCommon extends CommonDBTM {
          $reports = $this->getAllReports(false, $opt);
          
          foreach($reports as $class => $report) {
-
             $i = 0;
             $nb_per_line = 2;
             $graphs = array();
             foreach($report['functions'] as $function) {
+               if ($function['gtype'] === "sunburst") continue;
                if ($function['is_active']) {
                   $graphs[$classname][$function['category_func']][] = $function;
                }
@@ -563,8 +563,11 @@ class PluginMreportingCommon extends CommonDBTM {
                }
                if ($randname !== false) {
                   echo " - <b>".$LANG['buttons'][31]."</b> : ";
-                  echo "&nbsp;<a target='_blank' href='".
-                     "export.php?switchto=odt&$request_string'>ODT</a> /";
+
+                  if ($_REQUEST['gtype'] !== "sunburst") {
+                     echo "&nbsp;<a target='_blank' href='".
+                        "export.php?switchto=odt&$request_string'>ODT</a> /";
+                  }
                   echo "&nbsp;<a target='_blank' href='".
                      "export.php?switchto=csv&$request_string'>CSV</a> /";
                   if ($show_graph) {
