@@ -1565,15 +1565,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $index2++;
             }
 
-            $index1++;
-            $index2 = 0;
-         }
-
-         //TEXTE GAUCHE Y
-         $index = 0;
-         //pour chaque mois
-         foreach ($labels2 as $label) {
-            $lx = 54 + $index * $width_bar;
+            //create label 2
+            $lx = 54 + $index1 * $width_bar;
             $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
@@ -1588,8 +1581,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                Html::clean($label)
             );
 
-            $index++;
+            $index1++;
+            $index2 = 0;
          }
+
 
          //legend (align right)
          $index = 0;
