@@ -1266,15 +1266,28 @@ class PluginMreportingCommon extends CommonDBTM {
                } else {
                   $newpage->csvdata->setVars('TitreCategorie', $label, true, 'UTF-8');
                }
-               foreach($types as $label2 => $cols) {
+               if ($template == "word.odt") {
+                  foreach($types as $label2 => $cols) {
 
-                  $newpage->csvdata->label1->label_1(utf8_decode($label2));
-                  $newpage->csvdata->label1->merge();
-                  
-                  if (!empty($unit)) {
-                     $cols = $cols." ".$unit;
+                     $newpage->csvdata->label1->label_1(utf8_decode($label2));
+                     $newpage->csvdata->label1->merge();
+                     
+                     if (!empty($unit)) {
+                        $cols = $cols." ".$unit;
+                     }
+                     $newpage->csvdata->data1->data_1($cols);
+                     $newpage->csvdata->merge();
                   }
-                  $newpage->csvdata->data1->data_1($cols);
+               } else {
+                  foreach($types as $label2 => $cols) {
+                     if (!empty($unit)) {
+                        $cols = $cols." ".$unit;
+                     }
+
+                     $newpage->csvdata->csvdata2->label_1(utf8_decode($label2));
+                     $newpage->csvdata->csvdata2->data_1($cols);
+                     $newpage->csvdata->csvdata2->merge();
+                  }
                   $newpage->csvdata->merge();
                }
                
