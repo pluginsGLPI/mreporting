@@ -1304,14 +1304,13 @@ class PluginMreportingCommon extends CommonDBTM {
                
                   foreach($types as $label2 => $cols) {
                      
-                     $newpage->csvdata->setVars('TitreCategorie', $label2, true, 'UTF-8');
-
                      foreach($cols as $date => $nb) {
                         if (!empty($unit)) {
                            $nb = $nb." ".$unit;
                         }
-                        $newpage->csvdata->data1->label_1(utf8_decode($date));
-                        $newpage->csvdata->data1->data_1(utf8_decode($nb));
+                        $newpage->csvdata->setVars('TitreCategorie', $label2, true, 'UTF-8');
+                        $newpage->csvdata->label1->label_1(utf8_decode($label2));
+                        if (!is_array($nb)) $newpage->csvdata->data1->data_1(utf8_decode($nb));
                         $newpage->csvdata->data1->merge();
                      }
                      
