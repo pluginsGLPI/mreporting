@@ -1174,7 +1174,8 @@ class PluginMreportingCommon extends CommonDBTM {
       
       if (PluginMreportingPreference::atLeastOneTemplateExists()) {
 
-         $template = PluginMreportingPreference::checkPreferenceTemplateValue(Session::getLoginUserID());
+         $template = PluginMreportingPreference::checkPreferenceTemplateValue(
+            Session::getLoginUserID());
          $odf    = new odf("../templates/$template", $config);
 
          $titre = '';
@@ -1304,14 +1305,18 @@ class PluginMreportingCommon extends CommonDBTM {
                
                   foreach($types as $label2 => $cols) {
                      
-                     foreach($cols as $date => $nb) {
+                     foreach($cols as $label1 => $nb) {
                         if (!empty($unit)) {
                            $nb = $nb." ".$unit;
                         }
                         $newpage->csvdata->setVars('TitreCategorie', $label2, true, 'UTF-8');
-                        $newpage->csvdata->label1->label_1(utf8_decode($label2));
-                        if (!is_array($nb)) $newpage->csvdata->data1->data_1(utf8_decode($nb));
-                        $newpage->csvdata->data1->merge();
+                        $newpage->csvdata->csvdata2->setVars(
+                           'label_1', utf8_decode($label1), true, 'UTF-8');
+                        if (!is_array($nb)) {
+                           $newpage->csvdata->csvdata2->setVars(
+                              'data_1', utf8_decode($nb), true, 'UTF-8');
+                        }
+                        $newpage->csvdata->csvdata2->merge();
                      }
                      
                      $newpage->csvdata->merge();
