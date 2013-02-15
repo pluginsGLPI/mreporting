@@ -736,6 +736,55 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
 
+   function reportHbarTicketNumberByLocation($configs = array()) {
+      global $DB, $LANG;
+      
+      /*Must be defined*/
+      if (count($configs) == 0) {
+         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      }
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      /*End Must be defined*/
+      
+      //Init delay value
+      $this->sql_date = PluginMreportingMisc::getSQLDate("`glpi_tickets`.`date`", 
+         $delay, $randname);
+      
+      $datas = array();
+      $query = "
+         SELECT
+         COUNT(glpi_tickets.id) as count,
+         glpi_locations.name as name
+      FROM glpi_tickets
+      LEFT JOIN glpi_tickets_users 
+         ON (glpi_tickets.id = glpi_tickets_users.tickets_id
+               AND glpi_tickets_users.type = 1)
+      LEFT JOIN glpi_users
+         ON (glpi_tickets_users.users_id = glpi_users.id)
+      LEFT JOIN glpi_locations
+         ON (glpi_locations.id = glpi_users.locations_id)
+      WHERE ".$this->sql_date." ";
+      $query.= "AND glpi_tickets.is_deleted = '0'
+      GROUP BY glpi_locations.name
+      ORDER BY glpi_locations.name ASC
+      ";//
+      $result = $DB->query($query);
+         
+      while ($ticket = $DB->fetch_assoc($result)) {
+         if(empty($ticket['name'])) {
+            $label = "Aucun";
+         } else {
+            $label = $ticket['name'];
+         }
+         $datas['datas'][$label] = $ticket['count'];
+      }
+
+      return $datas;
+
+   }
+
 
 }
 
