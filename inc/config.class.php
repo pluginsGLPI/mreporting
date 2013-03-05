@@ -176,15 +176,28 @@ class PluginMreportingConfig extends CommonDBTM {
       foreach($classes as $classname) {
       
          $functions = get_class_methods($classname);
-
+         
+         // We check if a config function exists in class
+         foreach($functions as $funct_name) {
+            if($funct_name == 'preconfig'){ // If a preconfig exists we construct the class
+               $classConfig = true;
+               $classObject = new $classname();
+            }
+         }
+         
          foreach($functions as $funct_name) {
             
             $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);
             if ($ex_func[0] != 'report') continue;
                
             $input = array();
-            
-            $input = $this->preconfig($funct_name, $classname);
+
+            if($classConfig){ // If a preconfig exists in class we do it
+               $input = $classObject->preconfig($funct_name, $classname, $this);
+            } else {// Else we get the default preconfig
+               $input = $this->preconfig($funct_name, $classname);
+            }
+
             $input["firstconfig"] = 1;
             unset($input["id"]);
             $newid = $this->add($input);
