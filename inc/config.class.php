@@ -485,6 +485,18 @@ class PluginMreportingConfig extends CommonDBTM {
       return $input;
    }
    
+   function prepareInputForUpdate($input) {
+
+      if (method_exists(new $input["classname"](), 'checkConfig')) {
+           $object = new $input["classname"]();
+           $checkConfig = $object->checkConfig($input);
+           if(!$checkConfig['result']) 
+              Session::addMessageAfterRedirect($checkConfig['message'],ERROR,true);
+      }
+      
+      return $input;
+   }
+   
    function showForm ($ID, $options=array()) {
       global $CFG_GLPI, $LANG;
       
