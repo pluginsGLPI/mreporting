@@ -1979,18 +1979,20 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $width = $this->width;
       
       $nb_bar = count($datas);
-      $height = 20 * $nb_bar + 50;
+      $height = 17 * $nb_bar;
+      $delta = 0;
       if ($height < 450) {
-         $height = 450;
+         $height = 150;
+         $delta = 300;
       }
-      
+      $height_tot = 450 + $height;
       $width_line = ($width - 45) / $nb;
       $index1 = 0;
       $index3 = 1;
       $step = ceil($nb / 20);
    
       //create image
-      $image = imagecreatetruecolor ($width, $height);
+      $image = imagecreatetruecolor ($width, $height_tot);
       
       if ($show_graph) {
          //colors
@@ -2001,14 +2003,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //background
          $bg_color = $this->white;
          if ($export) $bg_color = $this->white;
-         imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
+         imagefilledrectangle($image, 0, 0, $width - 1, $height_tot - 1, $bg_color);
 
          //draw x-axis grey step line and value ticks 
-         $xstep = round(($height - 120) / 13);
+         $xstep = round(($height +$delta+40) / 13);
          for ($i = 0; $i< 13; $i++) {
-            $yaxis = $height- 30 - $xstep * $i ;
+            $yaxis = $height_tot - 30 - $xstep * $i ;
 
-            //grey lines
+            //horizontal grey lines
             imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $this->grey);
 
             //value ticks
@@ -2020,21 +2022,21 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                25-$textwidth, $yaxis+5, $this->darkgrey, $this->font, $val);
          }
 
-         //draw y-axis grey step line
+         //draw y-axis vertical grey step line
          for ($i = 0; $i< $nb; $i++) {
             $xaxis = 30 + $width_line * $i;
-            imageLine($image, $xaxis, 120, $xaxis, $height-25, $this->grey);
+            imageLine($image, $xaxis, $height-40, $xaxis, $height_tot, $this->grey);
          }
 
          //draw y-axis
-         imageLine($image, 30, 120, 30, $height-25, $this->black);
+         imageLine($image, 30, $height-40, 30, $height_tot-25, $this->black);
 
          //draw y-axis
-         imageLine($image, 30, $height-30, $width - 50, $height-30, $this->black);
+         imageLine($image, 30, $height_tot-30, $width - 50, $height_tot-30, $this->black);
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
+            imagerectangle($image, 0, 0, $width - 1, $height_tot - 1, $this->black);
          }
 
          //on png graph, no way to draw curved polygons, force area reports to be linear
@@ -2063,17 +2065,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                // determine coords
                $x1 = $index2 * $width_line - $width_line + 30;
-               $y1 = $height - 30 - $old_data * ($height - 150) / $max;
+               $y1 = $height_tot - 30 - $old_data * ($height_tot - $height) / $max;
                $x2 = $x1 + $width_line;
-               $y2 = $height - 30 - $subdata * ($height - 150) / $max;
+               $y2 = $height_tot - 30 - $subdata * ($height_tot - $height) / $max;
 
                //in case of area chart fill under point space
                if ($area > 0) {
                   $points = array(
                      $x1, $y1,
                      $x2, $y2,
-                     $x2, $height - 30,
-                     $x1, $height - 30
+                     $x2, $height_tot - 30,
+                     $x1, $height_tot - 30
                   );
                   imagefilledpolygon($image, $points , 4,  $alphapalette[$index1]);
                }
@@ -2112,9 +2114,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                // determine coords
                $x1 = $index2 * $width_line - $width_line + 30;
-               $y1 = $height - 30 - $old_data * ($height - 150) / $max;
+               $y1 = $height_tot - 30 - $old_data * ($height_tot - $height) / $max;
                $x2 = $x1 + $width_line;
-               $y2 = $height - 30 - $subdata * ($height - 150) / $max;
+               $y2 = $height_tot - 30 - $subdata * ($height_tot - $height) / $max;
 
                //trace dots
                $color_rbg = self::colorHexToRGB($darkerpalette[$index1]);
@@ -2131,7 +2133,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                //show x-axis ticks
                if ($step!=0 && ($index3 / $step) == round($index3 / $step)) {
-                  imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[$index1]);
+                  imageline($image, $x1, $height_tot-30, $x1, $height_tot-27, $darkerpalette[$index1]);
                }
 
                $old_data = $subdata;
@@ -2165,7 +2167,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $x = $index * $width_line + 20;
 
             if ($step!=0 && ($index / $step) == round($index / $step)) {
-               imagettftext($image, $this->fontsize-1, $this->fontangle, $x , $height-10, 
+               imagettftext($image, $this->fontsize-1, $this->fontangle, $x , $height_tot-10, 
                   $this->black, $this->font, $label);
             }
 
