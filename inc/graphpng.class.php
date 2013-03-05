@@ -1994,9 +1994,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       if ($show_graph) {
          //colors
-         $palette = self::getPalette($nb);
-         $alphapalette = self::getPalette($nb, "50");
-         $darkerpalette = self::getDarkerPalette($nb);
+         $palette = self::getPalette($nb_bar);
+         $alphapalette = self::getPalette($nb_bar, "50");
+         $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
          $bg_color = $this->white;
