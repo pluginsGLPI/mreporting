@@ -920,6 +920,11 @@ class PluginMreportingCommon extends CommonDBTM {
                            
                            $s = strtotime($opt['date2'])-strtotime($opt['date1']); 
                            
+                           // If customExportDates exists in class : we configure the dates
+                           if(method_exists($obj, 'customExportDates')){
+                              $opt = $obj->configExportDates($opt, $func['function']);
+                           }
+                        
                            $_REQUEST['date1'.$randname] = $opt['date1'];
                            $_REQUEST['date2'.$randname] = $opt['date2'];
                         }
@@ -1247,8 +1252,6 @@ class PluginMreportingCommon extends CommonDBTM {
                      if (isset($labels2[$key]))
                         $types[$key][$k] = $val;
                   }
-               } else {
-                  $types[$k] = $v;
                }
             }
             
