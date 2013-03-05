@@ -478,7 +478,7 @@ class PluginMreportingConfig extends CommonDBTM {
                Session::addMessageAfterRedirect($LANG['plugin_mreporting']["error"][4], 
                   false, ERROR);
             }
-            return array ();
+            return array();
          }
       }
       
@@ -488,10 +488,12 @@ class PluginMreportingConfig extends CommonDBTM {
    function prepareInputForUpdate($input) {
 
       if (method_exists(new $input["classname"](), 'checkConfig')) {
-           $object = new $input["classname"]();
-           $checkConfig = $object->checkConfig($input);
-           if(!$checkConfig['result']) 
-              Session::addMessageAfterRedirect($checkConfig['message'],ERROR,true);
+         $object = new $input["classname"]();
+         $checkConfig = $object->checkConfig($input);
+         if(!$checkConfig['result']) {
+            Session::addMessageAfterRedirect($checkConfig['message'],ERROR,true);
+            return array();
+         } 
       }
       
       return $input;
