@@ -1247,6 +1247,8 @@ class PluginMreportingCommon extends CommonDBTM {
                      if (isset($labels2[$key]))
                         $types[$key][$k] = $val;
                   }
+               } else {
+                  $types[$k] = $v;
                }
             }
             
