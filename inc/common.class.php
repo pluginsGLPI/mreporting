@@ -922,7 +922,7 @@ class PluginMreportingCommon extends CommonDBTM {
                            
                            // If customExportDates exists in class : we configure the dates
                            if(method_exists($obj, 'customExportDates')){
-                              $opt = $obj->configExportDates($opt, $func['function']);
+                              $opt = $obj->customExportDates($opt, $func['function']);
                            }
                         
                            $_REQUEST['date1'.$randname] = $opt['date1'];
