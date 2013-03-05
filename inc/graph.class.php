@@ -949,7 +949,7 @@ JAVASCRIPT;
        .width(w)
        .height(h)
        .bottom(100)
-       .left(30)
+       .left(50)
        .right(5)
        .top(5);
    
@@ -1348,7 +1348,7 @@ JAVASCRIPT;
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
       
       $nb_bar = count($datas);
-      $height = 20 * $nb_bar + 50;
+      $height = 20 * $nb_bar + 250;
       if ($height < 450) {
          $height = 450;
       }
@@ -1370,7 +1370,7 @@ JAVASCRIPT;
       .width(width_area)
       .height(height_area)
       .bottom(20)
-      .left(30)
+      .left(50)
       .right(15)
       .top(5);
 
