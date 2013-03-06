@@ -753,7 +753,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //pie
          $index = 0;
-         $x = $width / 4+50;
+         $x = $width / 4+350;
          $y = $height / 2;
          $radius = $height / 1.5;
          $start_angle = 0;
@@ -791,29 +791,20 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             }
             $index++;
          }
-
-         //legend (align right)
+         
+         //legend (align left)
          $index = 0;
          foreach ($labels as $label) {
-            $box = @imageTTFBbox($this->fontsize+1,$this->fontangle,$this->font,$label);
+            //legend label
+            $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
-
-            //legend label
-            imagettftext(
-               $image,
-               $this->fontsize,
-               $this->fontangle,
-               $width - $textwidth - 15,
-               15 + $index * (15) ,
-               $darkerpalette[$index],
-               $this->font,
-               Html::clean($label)
-            );
+            imagettftext($image, $this->fontsize, $this->fontangle, 
+               20, 55 + $index * 14 , $this->black, $this->font, $label);
 
             //legend circle
             $color_rbg = self::colorHexToRGB($palette[$index]);
-            imageSmoothArc($image, $width - 10, 10 + $index * 15, 8, 8, $color_rbg, 0, 2 * M_PI);
+            imageSmoothArc($image, 10, 50 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
 
             $index++;
          }
