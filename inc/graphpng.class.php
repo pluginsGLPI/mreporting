@@ -1979,12 +1979,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $width = $this->width;
       
       $nb_bar = count($datas);
-      $height = 17 * $nb_bar;
-      $delta = 0;
-      if ($height < 450) {
-         $height = 150;
-         $delta = 300;
-      }
+      if($nb_bar > 1)
+         $percent = 2*(450+18 * $nb_bar)/(18 * $nb_bar * 100);
+      else $percent = 0.20;
+      $height = ($percent*450) + 18* $nb_bar ;
+
+      $delta = 450 - $height;
       $height_tot = 450 + $height;
       $width_line = ($width - 45) / $nb;
       $index1 = 0;
@@ -2014,7 +2014,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $this->grey);
 
             //value ticks
-            $val = round($i * $max / 12);
+            if($i * $max / 12 < 10)
+               $val = round($i * $max / 12, 1);
+            else $val = round($i * $max / 12);
+            
             $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$val);
             $textwidth = abs($box[4] - $box[0]);
          
