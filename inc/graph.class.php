@@ -88,7 +88,20 @@ class PluginMreportingGraph {
       PluginMreportingMisc::showSelector(
          $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
       echo "</div>";
+      
+      $ex_func = explode($options['short_classname'], $options['randname']);
+      $classname = $ex_func[0].$options['short_classname'];
+      $functionname = $ex_func[1];
+         
+      // We check if a configuration is needed for the graph
+      if (method_exists(new $classname(), 'needConfig')) {
 
+         $configs = PluginMreportingConfig::initConfigParams($functionname, $classname);
+
+         $object = new $classname();
+         $object->needConfig($configs); 
+      }
+      
       //Script for graph display
       if ($randname !== false) {
          echo "<div class='graph' id='graph_content$randname'>";
@@ -1315,7 +1328,7 @@ JAVASCRIPT;
          $$k=$v;
       }
       
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      //if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       $options = array("title" => $title,
                         "desc" => $desc,
