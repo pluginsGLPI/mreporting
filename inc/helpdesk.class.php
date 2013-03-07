@@ -784,8 +784,104 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
 
    }
+   
+   
+   /**
+   * Check the update of a config
+   * 
+   * @global type $LANG
+   * @param type $configs
+   * @return type
+   */
+   function checkConfig($configs){
+      global $LANG;
+      
+      if(preg_match_all('#PieTicketNumberByEntity#', $configs['name'],$names)){// If fonction name contains PieTicketNumberByEntity
+         if(empty($configs['condition'])){
+            return array('result' => false,
+                           'message' =>  'Example : this graph need a mysql condition');
+         } else {
+            return array ('result' => true, 
+                        'message' => '');
+         }
+      } else {
+      
+         return array ('result' => true, 
+                        'message' => '');
+      }
+   }
 
+   /**
+   * Check if a graph needs a config
+   * Function calls in graph.class for the init graph
+   * @global type $LANG
+   * @param type $configs : array of graph configs
+   * @return array : result (true or false), message (error message to display)
+   */
+   function needConfig($configs){
+      global $LANG;
+      
+      if(preg_match_all('#PieTicketNumberByEntity#', $configs['randname'],$names)){// If fonction name contains PieTicketNumberByEntity
+         if(empty($configs['condition'])){
+            echo '<div class="red">Example : this graph need a config</div>';
+         }
+      }
+   }
+   
+   /**
+   * Custom dates for allodt export
+   * You can configure your dates for the Allodt export
+   * 
+   * @param array $opt : contains the dates
+   * @param type $functionname
+   * @return $opt
+   */
+   function customExportDates($opt = array(), $functionname){
+      $configs = PluginMreportingConfig::initConfigParams($functionname, __CLASS__);
 
+      $opt['date1'] = date('Y-m-j', strtotime($opt['date2'].' -'.$configs['delay'].' days'));
+      
+      return $opt;
+   }
+   
+   /**
+   * Preconfig datas with your values when init config is done
+   * 
+   * @param type $funct_name
+   * @param type $classname
+   * @param PluginMreportingConfig $config
+   * @return $config
+   */
+    function preconfig($funct_name, $classname, PluginMreportingConfig $config) {
+     
+      if ($funct_name != -1 && $classname) {
+         
+         $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);
+         if ($ex_func[0] != 'report') return false;
+         $gtype = strtolower($ex_func[1]);
+         
+         switch($gtype) {
+            case 'pie':
+               $config->fields["name"]=$funct_name;
+               $config->fields["classname"]=$classname;
+               $config->fields["is_active"]="1";
+               $config->fields["show_label"]="hover";
+               $config->fields["spline"]="0";
+               $config->fields["show_area"]="0";
+               $config->fields["show_graph"]="1";
+               $config->fields["default_delay"]="30";
+               $config->fields["show_label"]="hover";
+               break;
+            default :
+               $config->preconfig($funct_name, $classname);
+               break;
+
+         }
+         
+      }
+      return $config->fields;
+   }
+   
 }
 
 ?>
