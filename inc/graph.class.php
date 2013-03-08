@@ -206,7 +206,7 @@ class PluginMreportingGraph {
          var len = x(d) - r;
          return len;
       })
-      .height(28)
+      .height(23)
       .event("mouseover", function() { return this.parent.active(true);})
       .event("mouseout", function()  { return this.parent.active(false);})
       .fillStyle(function() {
