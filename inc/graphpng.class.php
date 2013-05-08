@@ -148,11 +148,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $image       = "";
       $export      = "png";
       $f_name      = "";
-      $class      = "";
+      $class       = "";
       $title       = "";
       $unit        = '';
       $raw_datas   = array();
-
+      $withdata    = 0;
+      
       foreach ($params as $key => $val) {
          $$key=$val;
       }
@@ -170,7 +171,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                           "f_name"     => $f_name,
                           "class"      => $class,
                           "randname"   => $randname,
-                          "raw_datas"  => $raw_datas);
+                          "raw_datas"  => $raw_datas,
+                          "withdata"   => $withdata);
          $common->generateOdt($options);
          return true;
          
@@ -186,7 +188,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                                                               "f_name"     => $f_name,
                                                               "class"      => $class,
                                                               "randname"   => $randname,
-                                                              "raw_datas"  => $raw_datas);
+                                                              "raw_datas"  => $raw_datas,
+                                                               "withdata"   => $withdata);
          }
          
          return true;
@@ -626,7 +629,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "class" => $opt['class'],
                       "title" => $title,
                       "randname" => $randname,
-                      "raw_datas" => $raw_datas);
+                      "raw_datas" => $raw_datas,
+                       "withdata"   => $opt['withdata']);
                      
       $contents = $this->generateImage($params);
       if ($show_graph) {
@@ -809,14 +813,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $index++;
          }
       }
+      
       $params = array("image" => $image,
                       "export" => $export,
                       "f_name" => $opt['f_name'],
                       "class" => $opt['class'],
                       "title" => $title,
                       "randname" => $randname,
-                      "raw_datas" => $raw_datas);
-                      
+                      "raw_datas" => $raw_datas,
+                       "withdata"   => $opt['withdata']);
+              
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
@@ -952,7 +958,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "class" => $opt['class'],
                       "title" => $title,
                       "randname" => $randname,
-                      "raw_datas" => $raw_datas);
+                      "raw_datas" => $raw_datas,
+                       "withdata"   => $opt['withdata']);
       $contents = $this->generateImage($params);
       $this->showImage($contents,$export);
       
@@ -1324,7 +1331,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "class" => $opt['class'],
                       "title" => $title,
                       "randname" => $randname,
-                      "raw_datas" => $raw_datas);
+                      "raw_datas" => $raw_datas,
+                       "withdata"   => $opt['withdata']);
       
       $contents = $this->generateImage($params);
       if ($show_graph) {
@@ -1611,7 +1619,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                      "class" => $opt['class'],
                      "title" => $title,
                      "randname" => $randname,
-                     "raw_datas" => $raw_datas);
+                     "raw_datas" => $raw_datas,
+                       "withdata"   => $opt['withdata']);
 
       $contents = $this->generateImage($params);
       if ($show_graph) {
@@ -1875,7 +1884,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "class" => $opt['class'],
                       "title" => $title,
                       "randname" => $randname,
-                      "raw_datas" => $raw_datas);
+                      "raw_datas" => $raw_datas,
+                       "withdata"   => $opt['withdata']);
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
@@ -2192,7 +2202,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "class" => $opt['class'],
                       "title" => $title,
                       "randname" => $randname,
-                      "raw_datas" => $raw_datas);
+                      "raw_datas" => $raw_datas,
+                       "withdata"   => $opt['withdata']);
       $contents = $this->generateImage($params);
       
       if ($show_graph) {

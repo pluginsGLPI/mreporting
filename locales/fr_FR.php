@@ -38,6 +38,8 @@ $LANG['plugin_mreporting']["error"][4] = "L'objet existe déjà";
 $LANG['plugin_mreporting']["export"][0] = "Rapport général - ODT";
 $LANG['plugin_mreporting']["export"][1] = "Nombre";
 $LANG['plugin_mreporting']["export"][2] = "Données";
+$LANG['plugin_mreporting']["export"][3] = "Sans les données";
+$LANG['plugin_mreporting']["export"][4] = "Avec les données";
 
 $LANG['plugin_mreporting']["config"][0] = "Configuration";
 $LANG['plugin_mreporting']["config"][1] = "Voir l'aire";
