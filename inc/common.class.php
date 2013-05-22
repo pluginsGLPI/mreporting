@@ -490,6 +490,7 @@ class PluginMreportingCommon extends CommonDBTM {
         $des_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
       
       $opt['class'] = $classname;
+      $opt['withdata'] = 1;
       $params = array("raw_datas"   => $datas,
                        "title"      => $title_func,
                        "desc"       => $des_func,
@@ -893,11 +894,13 @@ class PluginMreportingCommon extends CommonDBTM {
             $graph = new PluginMreportingGraphpng();
             //check the format display charts configured in glpi
             $opt = $this->initParams($opt, true);
-            $opt['export'] = 'png';
+            $opt['export']    = 'png';
+            $opt['withdata']  = 1;
             break;
          case 'csv':
             $graph = new PluginMreportingGraphcsv();
-            $opt['export'] = 'csv';
+            $opt['export']    = 'csv';
+            $opt['withdata']  = 1;
             break;
          case 'odt':
             $graph = new PluginMreportingGraphpng();
