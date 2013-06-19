@@ -40,7 +40,7 @@ if (!defined('PLUGIN_MREPORTING_TEMPLATE_EXTENSION')) {
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
-      
+
    /* CRSF */
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
@@ -52,10 +52,12 @@ function plugin_init_mreporting() {
 
       Plugin::registerClass('PluginMreportingProfile',
                       array('addtabon' => 'Profile'));
-                      
-      Plugin::registerClass('PluginMreportingPreference', 
-                     array('addtabon' => array('Preference')));
-      
+
+      if ($_SESSION['glpiactiveprofile']['interface'] != "helpdesk") {
+         Plugin::registerClass('PluginMreportingPreference',
+                               array('addtabon' => array('Preference')));
+      }
+
       /* Reports Link */
       if (plugin_mreporting_haveRight("reports","r")) {
          $menu_entry = "front/central.php";
@@ -101,7 +103,7 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
-      
+
    //Add specific files to add to the header : css
    $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
 }
