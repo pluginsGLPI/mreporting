@@ -650,6 +650,24 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          $flat_datas[$data['id']] = $data;
       }
       
+      //get full parent list
+      krsort($flat_datas);      
+      $itilcategory = new ITILCategory;
+      foreach ($flat_datas as $cat_id => $current_datas) {
+      	if (!isset($flat_datas[$current_datas['parent']])) {
+
+      		if ($current_datas['parent'] != 0 
+      			 && $itilcategory->getFromDB($current_datas['parent'])) {
+	      		$flat_datas[$current_datas['parent']] = array(
+	      			'id'     => $current_datas['parent'],
+	      			'name'   => $itilcategory->fields['name'],
+	      			'parent' => $itilcategory->fields['itilcategories_id'],
+	      			'count'  => 0
+	      		);
+	      	}
+      	}
+      }
+
       $tree_datas['datas'] = PluginMreportingMisc::buildTree($flat_datas);
 
       return $tree_datas;
