@@ -33,17 +33,17 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginMreportingProfile extends CommonDBTM {
 
-   static function getTypeName() {
+   static function getTypeName($nb = 0) {
       global $LANG;
 
       return $LANG['plugin_mreporting']["name"];
    }
    
-   function canCreate() {
+   static function canCreate() {
       return Session::haveRight('profile', 'w');
    }
 
-   function canView() {
+   static function canView() {
       return Session::haveRight('profile', 'r');
    }
    
@@ -144,11 +144,11 @@ class PluginMreportingProfile extends CommonDBTM {
       echo "</tr>";
       echo "<tr class='tab_bg_2'>";
       
-      echo "<td>".$LANG['reports'][15].":</td><td>";
+      echo "<td>".__("Display report").":</td><td>";
       Profile::dropdownNoneReadWrite("reports",$this->fields["reports"],1,1,0);
       echo "</td>";
 
-      echo "<td>".$LANG['common'][12].":</td><td>";
+      echo "<td>".__("Setup").":</td><td>";
       Profile::dropdownNoneReadWrite("config",$this->fields["config"],1,0,1);
       echo "</td>";
 

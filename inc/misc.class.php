@@ -33,7 +33,7 @@ class PluginMreportingMisc {
       global $LANG;
 
       echo "<div class='center'>";
-      echo "<a href='central.php'>".$LANG['buttons'][13]."</a>";
+      echo "<a href='central.php'>".__("Back")."</a>";
       echo "</div>";
    }
 
@@ -80,7 +80,7 @@ class PluginMreportingMisc {
       echo "</td>\n";
 
       echo "<td rowspan='2' class='center'>";
-      echo "<input type='submit' class='button' name='submit' Value=\"". $LANG['buttons'][7] ."\">";
+      echo "<input type='submit' class='button' name='submit' Value=\"". _sx('button', 'Post') ."\">";
       echo "</td>\n";
 
       echo "<td rowspan='2' class='center'>";

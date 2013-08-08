@@ -27,10 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-	define('GLPI_ROOT', '../../..');
-	include (GLPI_ROOT . "/inc/includes.php");
-}
+include ("../../../inc/includes.php");
 
 Session::checkRight("config","w");
 
@@ -47,7 +44,7 @@ $plugin = new Plugin();
          
       } else {
          
-         Html::header($LANG['common'][12],'',"plugins","mreporting","config");
+         Html::header(__("Setup"),'',"plugins","mreporting","config");
          
          PluginMreportingConfig::addFirstconfigLink();
          
@@ -55,7 +52,7 @@ $plugin = new Plugin();
       }
 
 	} else {
-		Html::header($LANG['common'][12],'',"config","plugins");
+		Html::header(__("Setup"),'',"config","plugins");
 		echo "<div align='center'>";
 		echo "<br><br>";
 		echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt=\"warning\">";

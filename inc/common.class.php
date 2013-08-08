@@ -67,8 +67,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $reports = array();
       
       $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
-      $front_dir = GLPI_ROOT."/plugins/mreporting/front";
-      $pics_dir = GLPI_ROOT."/plugins/mreporting/pics";
+      $pics_dir = "../pics";
       
       //parse inc dir to search report classes
       $classes = self::parseAllClasses($inc_dir);
@@ -106,9 +105,9 @@ class PluginMreportingCommon extends CommonDBTM {
                   if (isset($LANG['plugin_mreporting'][$scn][$f_name]['desc']))
                      $des_func = $LANG['plugin_mreporting'][$scn][$f_name]['desc'];
                      
-                  $url_graph  = $front_dir."/graph.php?short_classname=$scn".
+                  $url_graph  = "graph.php?short_classname=$scn".
                      "&amp;f_name=$f_name&amp;gtype=$gtype";
-                  $min_url_graph  = "front/graph.php?short_classname=$scn".
+                  $min_url_graph  = "graph.php?short_classname=$scn".
                      "&amp;f_name=$f_name&amp;gtype=$gtype";
                   
                   $reports[$classname]['title'] = $title;
@@ -155,7 +154,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $reports = $self->getAllReports(true,$params);
       
       echo "<table class='tab_cadre_fixe'>";
-      echo "<tr><th colspan='2'>".$LANG['stats'][0]."&nbsp;:</th></tr>";
+      echo "<tr><th colspan='2'>".__("Select statistics to be displayed")."&nbsp;:</th></tr>";
       echo "<tr class='tab_bg_1'><td class='center'>";
       echo "<select name='graphmenu' onchange='window.location.href=this.options
     [this.selectedIndex].value'>";
@@ -275,9 +274,8 @@ class PluginMreportingCommon extends CommonDBTM {
             echo "<tr class='tab_bg_1'>";
             echo "<th colspan='2'>";
             echo "<div class='right'>";
-            echo $LANG['buttons'][31]." : ";
-            echo "<a href='#' onClick=\"var w = window.open('".$CFG_GLPI["root_doc"].
-                  "/plugins/mreporting/front/popup.php?classname=$classname' ,'glpipopup', ".
+            echo __("Export")." : ";
+            echo "<a href='#' onClick=\"var w = window.open('popup.php?classname=$classname' ,'glpipopup', ".
                   "'height=$height, width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";
             echo "ODT";
             echo "</a></div>";
@@ -619,7 +617,7 @@ class PluginMreportingCommon extends CommonDBTM {
                   echo "<br><br>";
                   echo "<form method='post' action='export.php?$request_string' 
                            style='margin: 0; padding: 0' target='_blank'>";
-                  echo "<b>".$LANG['buttons'][31]."</b> : ";
+                  echo "<b>".__("Export")."</b> : ";
                   $params = array('myname'   => 'ext',
                    'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",
                    'class'                   => __CLASS__,

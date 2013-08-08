@@ -35,19 +35,19 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       $this->filters = array(
          'open' => array(
-            'label' => $LANG['job'][14],
+            'label' => __("Opened"),
             'status' => array(
-               'new' => $LANG['joblist'][9],
-               'assign' => $LANG['joblist'][18],
-               'plan' => $LANG['joblist'][19],
-               'waiting' => $LANG['joblist'][26]
+               'new'     => _x('ticket', 'New'),
+               'assign'  => __('Processing (assigned)'),
+               'plan'    => __('Processing (planned)'),
+               'waiting' => __('Pending')
             )
          ),
          'close' => array(
-            'label' => $LANG['job'][16],
+            'label' => __("Closed"),
             'status' => array(
-               'solved' => $LANG['joblist'][32],
-               'closed' => $LANG['joblist'][33]
+               'solved' => __("Solved"),
+               'closed' => __("Closed")
             )
          )
       );
@@ -142,7 +142,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $res_cat = $DB->query($query_cat);
       $categories = array();
       while ($data = $DB->fetch_assoc($res_cat)) {
-         if (empty($data['category'])) $data['category'] = $LANG['job'][32];
+         if (empty($data['category'])) $data['category'] = __("None");
          $categories[$data['category']] = $data['itilcategories_id'];
       }
 
@@ -367,7 +367,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       while ($ticket = $DB->fetch_assoc($result)) {
          if(is_null($ticket['category_id'])) {
             $ticket['category_id'] = 0;
-            $ticket['category_name'] = $LANG['job'][32];
+            $ticket['category_name'] = __("None");
          }
          if($ticket['type']==0) {
             $type = $LANG['plugin_mreporting']["error"][2];
@@ -413,7 +413,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ";
          $result = $DB->query($query);
 
-         $datas['datas'][$LANG['common'][49]][$filter['label']] = $DB->result($result, 0, 0);
+         $datas['datas'][__("None")][$filter['label']] = $DB->result($result, 0, 0);
 
          $query = "
             SELECT
@@ -482,7 +482,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       while ($ticket = $DB->fetch_assoc($result)) {
          if(is_null($ticket['category_name'])) {
-            $ticket['category_name'] = $LANG['job'][32];
+            $ticket['category_name'] = __("None");
          }
          $datas['labels2'][$ticket['status']] = $status[$ticket['status']];
          $datas['datas'][$ticket['category_name']][$ticket['status']] = $ticket['count'];
@@ -745,7 +745,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       while ($ticket = $DB->fetch_assoc($result)) {
          if(is_null($ticket['technician'])) {
-            $ticket['technician'] = $LANG['job'][32];
+            $ticket['technician'] = __("None");
          }
          $datas['labels2'][$ticket['username']] = $ticket['technician'];
          $datas['datas'][$status[$ticket['status']]][$ticket['username']] = $ticket['count'];

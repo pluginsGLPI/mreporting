@@ -33,17 +33,17 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginMreportingConfig extends CommonDBTM {
 
-   static function getTypeName() {
+   static function getTypeName($nb = 0) {
       global $LANG;
 
       return $LANG['plugin_mreporting']["name"]." - ".$LANG['plugin_mreporting']["config"][0];
    }
 
-   function canCreate() {
+   static function canCreate() {
       return plugin_mreporting_haveRight('config', 'w');
    }
 
-   function canView() {
+   static function canView() {
       return plugin_mreporting_haveRight('config', 'r');
    }
    
@@ -56,13 +56,13 @@ class PluginMreportingConfig extends CommonDBTM {
 
       $tab[1]['table']          = $this->getTable();
       $tab[1]['field']          ='name';
-      $tab[1]['name']           = $LANG['common'][16];
+      $tab[1]['name']           = __("Name");
       $tab[1]['datatype']       ='itemlink';
       $tab[1]['itemlink_type']  = $this->getType();
       
       $tab[2]['table']          = $this->getTable();
       $tab[2]['field']          = 'is_active';
-      $tab[2]['name']           = $LANG['common'][60];
+      $tab[2]['name']           = __("Active");
       $tab[2]['datatype']       = 'bool';
       
       $tab[3]['table']          = $this->getTable();
@@ -114,7 +114,7 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[12]['table']         = $this->getTable();
       $tab[12]['field']         = 'graphtype';
       $tab[12]['searchtype']    = 'equals';
-      $tab[12]['name']          = $LANG['setup'][47];
+      $tab[12]['name']          = __("Default chart format");
       $tab[12]['massiveaction'] = true;
       
       return $tab;
@@ -149,14 +149,14 @@ class PluginMreportingConfig extends CommonDBTM {
       global $LANG, $CFG_GLPI;
 
       $buttons = array();
-      $title = $LANG['Menu'][14];
+      $title = _n("User", "Users", 2);
 
       if (plugin_mreporting_haveRight('config', 'w')) {
          $buttons["config.php?new=1"] = $LANG['plugin_mreporting']["config"][10];
          $title = "";
       }
       Html::displayTitle($CFG_GLPI["root_doc"] . "/plugins/mreporting/pics/config2.png", 
-                        $LANG['Menu'][14], $title,$buttons);
+                        _n("User", "Users", 2), $title,$buttons);
    
    }
    

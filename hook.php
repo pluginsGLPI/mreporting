@@ -28,7 +28,7 @@
  */
  
 function plugin_mreporting_install() {
-   global $DB,$LANG;
+   global $DB;
    
    //create profiles table
    $queries = array();
@@ -39,7 +39,7 @@ function plugin_mreporting_install() {
       `config` CHAR(1),
    PRIMARY KEY (`id`)
    )
-   ENGINE = InnoDB;";
+   ENGINE = MyISAM;";
    
    //create configuration table
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
@@ -89,7 +89,7 @@ function plugin_mreporting_install() {
    }
    
    foreach($queries as $query)
-      mysql_query($query);
+      $DB->query($query);
 
    require_once "inc/profile.class.php";
    PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
@@ -145,7 +145,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
    $table=$searchopt[$ID]["table"];
    $field=$searchopt[$ID]["field"];
    
-   $output_type=HTML_OUTPUT;
+   $output_type=Search::HTML_OUTPUT;
    if (isset($_GET['display_type']))
       $output_type=$_GET['display_type'];
       
