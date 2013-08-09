@@ -371,14 +371,14 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "<div align='center'>";
          echo "<table><tr class='tab_bg_2'>";
          echo "<td>";
-         echo $LANG['search'][8];
+         echo __("Begin date");
          echo "</td>";
          echo "<td>";
          $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
          Html::showDateFormItem("date1",$date1,true);
          echo "</td>";
          echo "<td>";
-         echo $LANG['search'][9];
+         echo __("End date");
          echo "</td>";
          echo "<td>";
          $date2 =  strftime("%Y-%m-%d");
@@ -398,7 +398,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $option[1] = $LANG['plugin_mreporting']["export"][4];
          Dropdown::showFromArray("withdata", $option, array());
          echo "&nbsp;";
-         echo "<input type='submit' name='submit' value='".$LANG['buttons'][31]."' ";
+         echo "<input type='submit' name='submit' value='".__("Export")."' ";
          echo "class='submit'>";
          echo "</td></tr>";
          echo "</table>";
