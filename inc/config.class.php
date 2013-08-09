@@ -523,7 +523,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr>";
-      echo "<td class='tab_bg_2 center' colspan='2'>".$LANG['ldap'][16]."&nbsp;";
+      echo "<td class='tab_bg_2 center' colspan='2'>".__("Preconfiguration")."&nbsp;";
       $opt = array('value' => $_GET['preconfig']);
       $rand = self::dropdownGraph('graphname', $opt);
       $params = array('graphname' => '__VALUE__');
@@ -549,7 +549,7 @@ class PluginMreportingConfig extends CommonDBTM {
       $this->showFormHeader($options);
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".$LANG['common'][16]."</td>";
+      echo "<td>".__("Name")."</td>";
       echo "<td>";
       echo $this->fields["name"];
       echo "<input type='hidden' name='name' value=\"".$this->fields["name"]."\">\n";
@@ -589,7 +589,7 @@ class PluginMreportingConfig extends CommonDBTM {
       Dropdown::showYesNo("show_graph",$this->fields["show_graph"]);
       echo "</td>";
       
-      echo "<td>".$LANG['setup'][47]."</td>";
+      echo "<td>".__("Default chart format")."</td>";
       echo "<td>";
       Dropdown::showFromArray("graphtype", 
          array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'), 
@@ -598,7 +598,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</tr>";
       
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".$LANG['common'][60]."</td>";
+      echo "<td>".__("Active")."</td>";
       echo "<td>";
       Dropdown::showYesNo("is_active",$this->fields["is_active"]);
       echo "</td>";

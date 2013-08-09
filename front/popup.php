@@ -40,6 +40,6 @@ Html::popHeader($LANG['plugin_mreporting']["export"][0], $_SERVER['PHP_SELF']);
 $common = new PluginMreportingCommon();
 $common->showExportForm($_POST);
 
-echo "<div class='center'><br><a href='javascript:window.close()'>".$LANG['buttons'][60]."</a>";
+echo "<div class='center'><br><a href='javascript:window.close()'>".__("Close")."</a>";
 echo "</div>";
 Html::popFooter();

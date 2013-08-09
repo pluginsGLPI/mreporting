@@ -54,7 +54,7 @@ if (isset($_POST["add"])) {
    
 } else {
 
-	Html::header($LANG['common'][12],'',"plugins","mreporting","config");
+	Html::header(__("Setup"),'',"plugins","mreporting","config");
    
    //Link from graph
    if (isset($_GET["name"]) && isset($_GET["classname"])) {
