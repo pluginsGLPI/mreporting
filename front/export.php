@@ -43,7 +43,7 @@ if (PluginMreportingPreference::atLeastOneTemplateExists()) {
       $common->export($_REQUEST);
    } else {
       Session::addMessageAfterRedirect($LANG['plugin_mreporting']["parser"][2], false, ERROR);
-      Html::redirect(GLPI_ROOT."/front/preference.php");
+      Html::redirect("../../../front/preference.php");
    }
 } else {
    Session::addMessageAfterRedirect($LANG['plugin_mreporting']["parser"][3], false, ERROR);
