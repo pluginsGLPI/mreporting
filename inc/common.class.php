@@ -616,7 +616,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
                   echo "<br><br>";
                   echo "<form method='post' action='export.php?$request_string' 
-                           style='margin: 0; padding: 0' target='_blank'>";
+                           style='margin: 0; padding: 0' target='_blank' id='export_form'>";
                   echo "<b>".__("Export")."</b> : ";
                   $params = array('myname'   => 'ext',
                    'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",

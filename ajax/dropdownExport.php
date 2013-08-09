@@ -45,8 +45,23 @@ if (isset($_POST['ext'])
       $option[1] = $LANG['plugin_mreporting']["export"][4];
       Dropdown::showFromArray("withdata", $option, array());
       
-      echo "&nbsp;<input type='submit' name='export' value=\"".
+      echo "&nbsp;<input type='submit' id='export_submit' name='export' value=\"".
       __("Post")."\" class='submit'>";
+      echo "<script type='text/javascript'>
+         Ext.get('export_submit').on('click', function () {
+            //get new crsf
+            Ext.Ajax.request({
+               url: '../ajax/get_new_crsf_token.php',
+               success: function(response, opts) {
+                  var token = response.responseText;
+                  Ext.select('#export_form input[name=_glpi_csrf_token]')
+                     .set({'value': token});
+                  
+               }
+            });
+         });
+
+      </script>";
    } else if ($_POST['ext'] == "svg") {
       
       $randname = $_POST['randname'];
@@ -70,10 +85,6 @@ if (isset($_POST['ext'])
                      var token = response.responseText;
                      Ext.select('#export_svg_form input[name=_glpi_csrf_token]')
                         .set({'value': token});
-                     
-                  },
-                  failure: function(response, opts) {
-                     console.log('server-side failure with status code '+response.status);
                   }
                });
                
@@ -84,10 +95,6 @@ if (isset($_POST['ext'])
                      var token = response.responseText;
                      Ext.select('#mreporting_date_selector input[name=_glpi_csrf_token]')
                         .set({'value': token});
-                     
-                  },
-                  failure: function(response, opts) {
-                     console.log('server-side failure with status code '+response.status);
                   }
                });
                
