@@ -48,6 +48,7 @@ if (isset($_POST['ext'])
    } 
 
    if ($_POST['ext'] == "svg") {
+      //close previous form 
       Html::Closeform();
 
       $randname = $_POST['randname'];
