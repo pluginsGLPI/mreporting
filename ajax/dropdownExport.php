@@ -46,7 +46,7 @@ if (isset($_POST['ext'])
       Dropdown::showFromArray("withdata", $option, array());
       
       echo "&nbsp;<input type='submit' name='export' value=\"".
-      $LANG['buttons'][2]."\" class='submit'>";
+      __("Post")."\" class='submit'>";
    } else if ($_POST['ext'] == "svg") {
       
       $randname = $_POST['randname'];
@@ -96,7 +96,7 @@ if (isset($_POST['ext'])
    } else {
       
       echo "&nbsp;<input type='submit' name='export' value=\"".
-      $LANG['buttons'][2]."\" class='submit'>";
+      __("Post")."\" class='submit'>";
    }
    
 }
