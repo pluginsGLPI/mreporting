@@ -46,6 +46,7 @@ class PluginMreportingMisc {
       
       $request_string = "";
       foreach($var as $key => $value) {
+         if (is_array($value)) $value = self::getRequestString($value);
          $request_string.= "$key=$value&";
       }
 
