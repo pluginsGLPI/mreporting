@@ -54,7 +54,7 @@ if (isset($_POST['ext'])
          "style='margin: 0; padding: 0' target='_blank'>";
       echo "<input type='hidden' name='svg_content' value='none' />";
       echo "<p><a class='submit' id='export_svg_link' target='_blank' href='#' ".
-                        "onClick='return false;'>".$LANG['buttons'][2]."</a></p>";
+                        "onClick='return false;'>".__("post")."</a></p>";
       Html::Closeform();
       echo "<script type='text/javascript'>
             Ext.get('export_svg_link').on('click', function () {
