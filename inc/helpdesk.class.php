@@ -35,17 +35,17 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          'open' => array(
             'label' => __("Opened"),
             'status' => array(
-               'new'     => _x('ticket', 'New'),
-               'assign'  => __('Processing (assigned)'),
-               'plan'    => __('Processing (planned)'),
-               'waiting' => __('Pending')
+               CommonITILObject::INCOMING => _x('ticket', 'New'),
+               CommonITILObject::ASSIGNED => __('Processing (assigned)'),
+               CommonITILObject::PLANNED  => __('Processing (planned)'),
+               CommonITILObject::WAITING  => __('Pending')
             )
          ),
          'close' => array(
             'label' => __("Closed"),
             'status' => array(
-               'solved' => __("Solved"),
-               'closed' => __("Closed")
+               CommonITILObject::SOLVED => __("Solved"),
+               CommonITILObject::CLOSED => __("Closed")
             )
          )
       );
