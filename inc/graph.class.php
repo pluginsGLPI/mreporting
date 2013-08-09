@@ -90,16 +90,18 @@ class PluginMreportingGraph {
       echo "</div>";
       
       $ex_func = explode($options['short_classname'], $options['randname']);
-      $classname = $ex_func[0].$options['short_classname'];
-      $functionname = $ex_func[1];
-         
-      // We check if a configuration is needed for the graph
-      if (method_exists(new $classname(), 'needConfig')) {
+      if (!is_numeric($ex_func[0])) {
+         $classname = $ex_func[0].$options['short_classname'];
+         $functionname = $ex_func[1];
+            
+         // We check if a configuration is needed for the graph
+         if (method_exists(new $classname(), 'needConfig')) {
 
-         $configs = PluginMreportingConfig::initConfigParams($functionname, $classname);
+            $configs = PluginMreportingConfig::initConfigParams($functionname, $classname);
 
-         $object = new $classname();
-         $object->needConfig($configs); 
+            $object = new $classname();
+            $object->needConfig($configs); 
+         }
       }
       
       //Script for graph display
