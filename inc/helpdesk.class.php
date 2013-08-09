@@ -31,8 +31,6 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    private $sql_date, $filters, $where_entities;
 
    function __construct() {
-      global $LANG;
-      
       $this->filters = array(
          'open' => array(
             'label' => __("Opened"),
@@ -60,7 +58,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
    
    function reportHbarTicketNumberByEntity($configs = array()) {
-      global $DB, $LANG;
+      global $DB;
       
       /*Must be defined*/
       if (count($configs) == 0) {
@@ -96,7 +94,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          
       while ($ticket = $DB->fetch_assoc($result)) {
          if(empty($ticket['name'])) {
-            $label = $LANG['entity'][2];
+            $label = __("Root entity");
          } else {
             $label = $ticket['name'];
          }
@@ -108,7 +106,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportHgbarTicketNumberByCatAndEntity() {
-      global $DB, $LANG;
+      global $DB;
       
       $datas = array();
       $tmp_datas = array();
@@ -173,7 +171,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       ORDER BY glpi_entities.name ASC, glpi_tickets.itilcategories_id ASC";
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
-         if (empty($data['entity'])) $data['entity'] = $LANG['entity'][2];
+         if (empty($data['entity'])) $data['entity'] = __("Root entity");
          $tmp_datas[$data['entity']]["cat_".$data['cat_id']] = $data['nb'];
       }
 
@@ -382,7 +380,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportHgbarTicketNumberByService() {
-      global $DB, $LANG;
+      global $DB;
       
       $datas = array();
       /*Must be defined*/
@@ -443,7 +441,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportHgbarOpenedTicketNumberByCategory() {
-      global $DB, $LANG;
+      global $DB;
       
       $datas = array();
       /*Must be defined*/
@@ -499,7 +497,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
    
    function reportAreaNbTicket($area = true, $configs=array()) {
-      global $DB, $LANG;
+      global $DB;
       
       $datas = array();
       /*Must be defined*/ 
@@ -546,7 +544,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportGlineNbTicket($area = false, $configs = array()) {
-      global $DB, $LANG;
+      global $DB;
       
       $datas = array();
       $tmp_datas = array();
@@ -615,7 +613,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportSunburstTicketByCategories() {
-      global $DB, $LANG;
+      global $DB;
       
       /*Must be defined*/
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
@@ -675,7 +673,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
 
    function reportVstackbarTicketStatusByTechnician() {
-      global $DB, $LANG;
+      global $DB;
       
       $datas = array();
       /*Must be defined*/
@@ -755,7 +753,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportHbarTicketNumberByLocation($configs = array()) {
-      global $DB, $LANG;
+      global $DB;
       
       /*Must be defined*/
       if (count($configs) == 0) {
@@ -807,13 +805,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    /**
    * Check the update of a config
    * 
-   * @global type $LANG
    * @param type $configs
    * @return type
    */
    function checkConfig($configs){
-      global $LANG;
-      
       if(preg_match_all('#PieTicketNumberByEntity#', $configs['name'],$names)){// If fonction name contains PieTicketNumberByEntity
          if(empty($configs['condition'])){
             return array('result' => false,
@@ -832,13 +827,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    /**
    * Check if a graph needs a config
    * Function calls in graph.class for the init graph
-   * @global type $LANG
    * @param type $configs : array of graph configs
    * @return array : result (true or false), message (error message to display)
    */
    function needConfig($configs){
-      global $LANG;
-      
       if(preg_match_all('#PieTicketNumberByEntity#', $configs['randname'],$names)){// If fonction name contains PieTicketNumberByEntity
          if(empty($configs['condition'])){
             echo '<div class="red">Example : this graph need a config</div>';
