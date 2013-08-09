@@ -285,8 +285,6 @@ class PluginMreportingConfig extends CommonDBTM {
     *@return nothing
     **/
    static function dropdownGraph($name, $options=array()) {
-      global $LANG;
-      
       $self = new self();
       $common = new PluginMreportingCommon();
       $rand = mt_rand();
@@ -355,8 +353,6 @@ class PluginMreportingConfig extends CommonDBTM {
     *@return nothing
     **/
    static function dropdownLabel($name, $options=array(),$notall = false) {
-      global $LANG;
-
       $params['value']       = 0;
       $params['toadd']       = array();
       $params['on_change']   = '';
@@ -500,7 +496,7 @@ class PluginMreportingConfig extends CommonDBTM {
    }
    
    function showForm ($ID, $options=array()) {
-      global $CFG_GLPI, $LANG;
+      global $LANG;
       
       if (!$this->canView()) return false;
       

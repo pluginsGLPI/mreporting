@@ -137,13 +137,11 @@ function plugin_mreporting_check_prerequisites() {
 // Check configuration process for plugin : need to return true if succeeded
 // Can display a message only if failure and $verbose is true
 function plugin_mreporting_check_config($verbose=false) {
-   global $LANG;
-
    if (true) { // Your configuration check
       return true;
    }
    if ($verbose) {
-      echo $LANG['plugins'][2];
+      echo _x('plugin', 'Installed / not configured');
    }
    return false;
 }

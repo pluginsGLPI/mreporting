@@ -30,8 +30,6 @@
 class PluginMreportingMisc {
 
    static function showNavigation() {
-      global $LANG;
-
       echo "<div class='center'>";
       echo "<a href='central.php'>".__("Back")."</a>";
       echo "</div>";
@@ -63,8 +61,6 @@ class PluginMreportingMisc {
     * @return nothing
     */
    static function showSelector($date1, $date2, $randname) {
-      global $LANG, $DB;
-
       $request_string = self::getRequestString($_GET);
 
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'"

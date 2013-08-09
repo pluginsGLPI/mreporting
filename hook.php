@@ -139,7 +139,7 @@ function plugin_mreporting_getDatabaseRelations() {
 }
 
 function plugin_mreporting_giveItem($type,$ID,$data,$num) {
-   global $CFG_GLPI, $DB, $LANG;
+   global $LANG;
 
    $searchopt=&Search::getOptions($type);
    $table=$searchopt[$ID]["table"];
