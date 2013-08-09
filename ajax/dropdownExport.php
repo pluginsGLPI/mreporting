@@ -44,32 +44,18 @@ if (isset($_POST['ext'])
       $option[0] = $LANG['plugin_mreporting']["export"][3];
       $option[1] = $LANG['plugin_mreporting']["export"][4];
       Dropdown::showFromArray("withdata", $option, array());
-      
-      echo "&nbsp;<input type='submit' id='export_submit' name='export' value=\"".
-      __("Post")."\" class='submit'>";
-      echo "<script type='text/javascript'>
-         Ext.get('export_submit').on('click', function () {
-            //get new crsf
-            Ext.Ajax.request({
-               url: '../ajax/get_new_crsf_token.php',
-               success: function(response, opts) {
-                  var token = response.responseText;
-                  Ext.select('#export_form input[name=_glpi_csrf_token]')
-                     .set({'value': token});
-                  
-               }
-            });
-         });
 
-      </script>";
-   } else if ($_POST['ext'] == "svg") {
-      
+   } 
+
+   if ($_POST['ext'] == "svg") {
+      Html::Closeform();
+
       $randname = $_POST['randname'];
       echo "<form method='post' action='export_svg.php' id='export_svg_form' ".
          "style='margin: 0; padding: 0' target='_blank'>";
       echo "<input type='hidden' name='svg_content' value='none' />";
-      echo "<p><a class='submit' id='export_svg_link' target='_blank' href='#' ".
-                        "onClick='return false;'>".__("post")."</a></p>";
+      echo "<input type='button' class='submit' id='export_svg_link' target='_blank' href='#' ".
+                        "onClick='return false;' value='".__("Post")."' />";
       Html::Closeform();
       echo "<script type='text/javascript'>
             Ext.get('export_svg_link').on('click', function () {
@@ -102,8 +88,24 @@ if (isset($_POST['ext'])
          </script>";
    } else {
       
-      echo "&nbsp;<input type='submit' name='export' value=\"".
+      echo "&nbsp;<input type='submit' id='export_submit' name='export' value=\"".
       __("Post")."\" class='submit'>";
+
+      echo "<script type='text/javascript'>
+         Ext.get('export_submit').on('click', function () {
+            //get new crsf
+            Ext.Ajax.request({
+               url: '../ajax/get_new_crsf_token.php',
+               success: function(response, opts) {
+                  var token = response.responseText;
+                  Ext.select('#export_form input[name=_glpi_csrf_token]')
+                     .set({'value': token});
+                  
+               }
+            });
+         });
+
+      </script>";
    }
    
 }
