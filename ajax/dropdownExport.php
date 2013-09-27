@@ -56,7 +56,7 @@ if (isset($_POST['ext'])
          "style='margin: 0; padding: 0' target='_blank'>";
       echo "<input type='hidden' name='svg_content' value='none' />";
       echo "<input type='button' class='submit' id='export_svg_link' target='_blank' href='#' ".
-                        "onClick='return false;' value='".__("Post")."' />";
+                        "onClick='return false;' value='"._sx('button', 'Post')."' />";
       Html::Closeform();
       echo "<script type='text/javascript'>
             Ext.get('export_svg_link').on('click', function () {
@@ -90,7 +90,7 @@ if (isset($_POST['ext'])
    } else {
       
       echo "&nbsp;<input type='submit' id='export_submit' name='export' value=\"".
-      __("Post")."\" class='submit'>";
+      _sx('button', 'Post')."\" class='submit'>";
 
       echo "<script type='text/javascript'>
          Ext.get('export_submit').on('click', function () {
