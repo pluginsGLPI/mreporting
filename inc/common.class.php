@@ -107,7 +107,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      
                   $url_graph  = "graph.php?short_classname=$scn".
                      "&amp;f_name=$f_name&amp;gtype=$gtype";
-                  $min_url_graph  = "graph.php?short_classname=$scn".
+                  $min_url_graph  = "front/graph.php?short_classname=$scn".
                      "&amp;f_name=$f_name&amp;gtype=$gtype";
                   
                   $reports[$classname]['title'] = $title;
