@@ -177,7 +177,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       //merge missing datas (0 ticket for a category)
       foreach($tmp_datas as &$data) {
-         $data = array_merge(array_fill_keys($tmp_cat, 0), $data);
+         $data = $data + array_fill_keys($tmp_cat, 0);
       }
 
       //replace cat_id by labels2
@@ -455,10 +455,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
       
-      $status = array_merge(
-         $this->filters['open']['status'],
-         $this->filters['close']['status']
-      );
+      $status = $this->filters['open']['status'] + $this->filters['close']['status'];
       $status_keys = array_keys($status);
 
       $query = "
@@ -603,7 +600,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //merge missing datas (not defined status for a month)
       if (isset($tmp_datas['datas'])) {
          foreach($tmp_datas['datas'] as &$data) {
-            $data = array_merge(array_fill_keys($tmp_date, 0), $data);
+            $data = $data + array_fill_keys($tmp_date, 0);
          }
       }
       
@@ -687,10 +684,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
       
-      $status = array_merge(
-         $this->filters['open']['status'],
-         $this->filters['close']['status']
-      );
+      $status = $this->filters['open']['status'] + $this->filters['close']['status'];
       $status_keys = array_keys($status);
 
       //get technician list
@@ -745,7 +739,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          if(is_null($ticket['technician'])) {
             $ticket['technician'] = __("None");
          }
-         $datas['labels2'][$ticket['username']] = $ticket['technician'];
+         $datas['labels2'][$ticket['username']] = $ticket['username'];
          $datas['datas'][$status[$ticket['status']]][$ticket['username']] = $ticket['count'];
       }
 
