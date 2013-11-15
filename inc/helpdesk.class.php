@@ -249,7 +249,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
 
       $datas = array();
-      foreach($this->filters['open']['status'] as $key => $val) {
+      $status = $this->filters['open']['status'] + $this->filters['close']['status'];
+      foreach($status as $key => $val) {
 
          $query = "
             SELECT COUNT(glpi_tickets.id) as count
@@ -265,7 +266,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             $datas['datas'][$val] = $ticket['count'];
          }
       }
-
+      
       return $datas;
    }
    
