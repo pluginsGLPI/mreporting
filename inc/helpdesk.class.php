@@ -100,7 +100,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          }
          $datas['datas'][$label] = $ticket['count'];
       }
-
+      
       return $datas;
 
    }
@@ -810,43 +810,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
 
    }
-   
-   
-   /**
-   * Check the update of a config
-   * 
-   * @param type $configs
-   * @return type
-   */
-   function checkConfig($configs){
-      if(preg_match_all('#PieTicketNumberByEntity#', $configs['name'],$names)){// If fonction name contains PieTicketNumberByEntity
-         if(empty($configs['condition'])){
-            return array('result' => false,
-                           'message' =>  'Example : this graph need a mysql condition');
-         } else {
-            return array ('result' => true, 
-                        'message' => '');
-         }
-      } else {
-      
-         return array ('result' => true, 
-                        'message' => '');
-      }
-   }
 
-   /**
-   * Check if a graph needs a config
-   * Function calls in graph.class for the init graph
-   * @param type $configs : array of graph configs
-   * @return array : result (true or false), message (error message to display)
-   */
-   function needConfig($configs){
-      if(preg_match_all('#PieTicketNumberByEntity#', $configs['randname'],$names)){// If fonction name contains PieTicketNumberByEntity
-         if(empty($configs['condition'])){
-            echo '<div class="red">Example : this graph need a config</div>';
-         }
-      }
-   }
    
    /**
    * Custom dates for allodt export
