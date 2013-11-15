@@ -160,4 +160,3 @@ function plugin_mreporting_haveRight($module,$right) {
    else return false;
 }
 
-?>

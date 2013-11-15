@@ -637,7 +637,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          WHERE {$this->sql_date}
             AND glpi_tickets.entities_id IN ({$this->where_entities})
             AND glpi_tickets.is_deleted = '0'
-         GROUP BY glpi_itilcategories.id, glpi_tickets.status
+         GROUP BY glpi_itilcategories.id
          ORDER BY glpi_itilcategories.name
       ";
       $res = $DB->query($query);
@@ -887,5 +887,3 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
    
 }
-
-?>
