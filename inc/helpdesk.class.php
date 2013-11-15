@@ -479,8 +479,19 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          if(is_null($ticket['category_name'])) {
             $ticket['category_name'] = __("None");
          }
-         $datas['labels2'][$ticket['status']] = $status[$ticket['status']];
-         $datas['datas'][$ticket['category_name']][$ticket['status']] = $ticket['count'];
+         
+         if (!isset($datas['datas'][$ticket['category_name']])) {
+            foreach($status as $statusKey => $statusLabel) {
+               $datas['datas'][$ticket['category_name']][$statusLabel] = 0;
+            }
+         }
+             
+         $datas['datas'][$ticket['category_name']][$status[$ticket['status']]] = $ticket['count'];
+      }
+      
+      //Define legend for all ticket status available in GLPI
+      foreach($status as $label) {
+         $datas['labels2'][$label] = $label;
       }
 
       return $datas;
