@@ -145,6 +145,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       $labels2 = array_keys($categories);
+      
       $tmp_cat = array();
       foreach(array_values($categories) as $id) {
          $tmp_cat[] = "cat_$id";
@@ -193,8 +194,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       $datas['datas'] = $tmp_datas;
-      $datas['labels2'] = $labels2;
 
+      foreach($categories as $key => $value) {
+         $datas['labels2'][$key] = $key;
+      }
+      
       return $datas;
    }
 
