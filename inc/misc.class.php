@@ -240,9 +240,14 @@ class PluginMreportingMisc {
       
       foreach ($raw_tree as $id => $node) {
          if (isset($node['children'])) {
-            $current = array($node['name'] => intval($node['count']));
             $sub = self::cleanTree($node['children']);
-            $tree[$node['name']] = array_merge($current, $sub);
+            
+            if ($node['count'] > 0) {
+               $current = array($node['name'] => intval($node['count']));
+               $tree[$node['name']] = array_merge($current, $sub);
+            } else {
+               $tree[$node['name']] = $sub;
+            } 
          } else {
             $tree[$node['name']] = intval($node['count']);
          }
