@@ -817,7 +817,11 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "<th></th>";
       }
       foreach($datas as $label => $cols) {
-         echo "<th>".$label."</th>";
+         if (!empty($labels2)) {
+            echo "<th>".$labels2[$label]."</th>";
+         } else {
+            echo "<th>".$label."</th>";
+         }
       }
       echo "</tr>";
       if (($treedatas)) {
