@@ -112,7 +112,7 @@ function plugin_mreporting_uninstall() {
    );
 
    foreach($queries as $query)
-      mysql_query($query);
+      $DB->query($query);
    
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
 
