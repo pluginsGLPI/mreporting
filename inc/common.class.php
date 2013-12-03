@@ -398,12 +398,25 @@ class PluginMreportingCommon extends CommonDBTM {
          $option[1] = $LANG['plugin_mreporting']["export"][4];
          Dropdown::showFromArray("withdata", $option, array());
          echo "&nbsp;";
-         echo "<input type='submit' name='submit' value='".__("Export")."' ";
-         echo "class='submit'>";
+         echo "<input type='button' id='export_submit'  value='".__("Export")."' class='submit'>";
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
          echo "</div>";
+
+         echo "<script type='text/javascript'>
+            Ext.get('export_submit').on('click', function () {
+               //get new crsf
+               Ext.Ajax.request({
+                  url: '../ajax/get_new_crsf_token.php',
+                  success: function(response, opts) {
+                     var token = response.responseText;
+                     Ext.select('#exportform input[name=_glpi_csrf_token]').set({'value': token});
+                     document.getElementById('exportform').submit();
+                  }
+               });
+            });
+         </script>";
       }
    }
    
