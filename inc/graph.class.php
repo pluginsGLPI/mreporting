@@ -38,7 +38,7 @@ class PluginMreportingGraph {
     * @params $options ($rand, short_classname, title, desc, delay)
    */
    function initGraph($options) {
-      global $LANG;
+      global $LANG, $CFG_GLPI;
       
       $width = $this->width + 100;
       $randname = $options['randname'];
@@ -55,7 +55,7 @@ class PluginMreportingGraph {
       $backtrace = debug_backtrace();
       $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
          
-      echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
+      echo "<img src='".$CFG_GLPI['root_doc']."/plugins/mreporting/pics/chart-$prev_function.png' class='title_pics' />";
       echo $options['title'];
       echo "</div>";
       

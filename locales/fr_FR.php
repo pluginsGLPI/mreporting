@@ -55,10 +55,32 @@ $LANG['plugin_mreporting']["config"][10] = "Initialiser la configuration des gra
 $LANG['plugin_mreporting']["config"][11] = "Condition supplémentaire Mysql";
 $LANG['plugin_mreporting']["config"][12] = "Voir le graphique";
 $LANG['plugin_mreporting']["config"][13] = "Classe";
+$LANG['plugin_mreporting']["config"][14] = "Envoyer ce rapport avec les notifications";
 
 $LANG['plugin_mreporting']['parser'][1] = "Utiliser ce modèle";
 $LANG['plugin_mreporting']['parser'][2] = "Merci de sélectionner un modèle dans vos préférences";
 $LANG['plugin_mreporting']['parser'][3] = "Aucun modèle n'existe";
+
+$LANG['plugin_mreporting']['notification_name']    = 'Notification "plus de rapports"';
+$LANG['plugin_mreporting']['notification_comment'] = '';
+$LANG['plugin_mreporting']['notification_subject'] = 'Rapports mensuels GLPI';
+$LANG['plugin_mreporting']['notification_text'] = <<<EOT
+Bonjour,
+
+Les rapports de GLPI sont disponibles.
+Vous pouvez les télécharger à l\'adresse : ##mreporting.file_url##
+
+EOT;
+
+$LANG['plugin_mreporting']['notification_html'] = <<<EOT
+<p>Bonjour,</p>
+
+<p>Les rapports de GLPI sont disponibles.<br />
+   Vous pouvez les télécharger à l\'adresse : <a href="##mreporting.file_url##">##mreporting.file_url##</a></p>
+
+EOT;
+$LANG['plugin_mreporting']['notification_event']   = "Plus de rapports";
+$LANG['plugin_mreporting']['notification_log']     = "Notification(s) envoyée(s) !";
 
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Nombre de ticket par entités";

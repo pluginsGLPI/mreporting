@@ -109,12 +109,18 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[11]['table']         = $this->getTable();
       $tab[11]['field']         = 'classname';
       $tab[11]['name']          = $LANG['plugin_mreporting']["config"][13];
-      $tab[11]['massiveaction'] = false;      
+      $tab[11]['massiveaction'] = false;
       
       $tab[12]['table']         = $this->getTable();
       $tab[12]['field']         = 'graphtype';
       $tab[12]['searchtype']    = 'equals';
       $tab[12]['name']          = __("Default chart format");
+      $tab[12]['massiveaction'] = true;
+      
+      $tab[12]['table']         = $this->getTable();
+      $tab[12]['field']         = 'is_notified';
+      $tab[12]['datatype']      = 'bool';
+      $tab[12]['name']          = $LANG['plugin_mreporting']["config"][14];
       $tab[12]['massiveaction'] = true;
       
       return $tab;
@@ -483,7 +489,7 @@ class PluginMreportingConfig extends CommonDBTM {
    
    function prepareInputForUpdate($input) {
 
-      if (method_exists(new $input["classname"](), 'checkConfig')) {
+      if (isset($input["classname"]) && method_exists(new $input["classname"](), 'checkConfig')) {
          $object = new $input["classname"]();
          $checkConfig = $object->checkConfig($input);
          if(!$checkConfig['result']) {
@@ -677,6 +683,17 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "<td>";
       Html::autocompletionTextField($this,'condition');
       echo "</td>"; 
+      echo "</tr>";
+      
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
+      echo $LANG['plugin_mreporting']["config"][14];
+      echo "</td>";
+      echo "<td>";
+      Dropdown::showYesNo("is_notified",$this->fields["is_notified"]);
+      echo "</td>";
+      echo "<td>&nbsp;</td>";
+      echo "<td>&nbsp;</td>";
       echo "</tr>";
       
       $this->showFormButtons($options);

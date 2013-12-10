@@ -27,8 +27,8 @@
  --------------------------------------------------------------------------
  */
  
-require_once "../lib/imagesmootharc/imageSmoothArc.php";
-require_once "../lib/cubic_splines/classes/CubicSplines.php";
+require_once GLPI_ROOT . '/plugins/mreporting/lib/imagesmootharc/imageSmoothArc.php';
+require_once GLPI_ROOT . '/plugins/mreporting/lib/cubic_splines/classes/CubicSplines.php';
 
 class PluginMreportingGraphpng extends PluginMreportingGraph {
    
@@ -41,10 +41,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    private $darkgrey = "0x00B4B4B4";
 
    //define font
-   private $font      =  "../fonts/FreeSans.ttf";
+   private $font      =  '';
    private $fontsize  = 8;
    private $fontangle = 0;
 
+   function __construct() {
+      $this->font = GLPI_ROOT . '/plugins/mreporting/fonts/FreeSans.ttf';
+   }
+   
+   
    /**
     * init Graph : Show Titles / Date selector
     *
@@ -79,7 +84,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             echo "</div>";
          }
          echo "<div class='graph_title'>";
-         echo "<img src='../pics/chart-$prev_function.png' class='title_pics' />";
+         echo "<img src='" . GLPI_ROOT . "/plugins/mreporting/pics/chart-$prev_function.png' class='title_pics' />";
          echo $options['title'];
          echo "</div>";
 
@@ -555,8 +560,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
-         $bg_color = $this->grey;
-         if ($export) $bg_color = $this->white;
+         $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
          //create border on export
@@ -739,8 +743,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
-         $bg_color = $this->grey;
-         if ($export) $bg_color = $this->white;
+         $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
          //create border on export
@@ -920,8 +923,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($show_graph) {
          
          //background
-         $bg_color = $this->grey;
-         if ($export) $bg_color = $this->white;
+         $bg_color = $this->white;
          imagefilledrectangle($image, 1, 1, $width - 2, $height-2, $bg_color);
 
          //create border on export
@@ -1218,8 +1220,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
-         $bg_color = $this->grey;
-         if ($export) $bg_color = $this->white;
+         $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
          //create border on export
@@ -1481,8 +1482,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
-         $bg_color = $this->grey;
-         //if ($export) $bg_color = $this->white;
+         $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width, $height + $maxtextwidth, $this->white);
 
          //create border on export
@@ -1733,7 +1733,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //background
          $bg_color = $this->white;
-         if ($export) $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height - 1, $bg_color);
 
          //draw x-axis grey step line and values
@@ -2007,7 +2006,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //background
          $bg_color = $this->white;
-         if ($export) $bg_color = $this->white;
          imagefilledrectangle($image, 0, 0, $width - 1, $height_tot - 1, $bg_color);
 
          //draw x-axis grey step line and value ticks 

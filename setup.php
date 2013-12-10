@@ -40,6 +40,8 @@ if (!defined('PLUGIN_MREPORTING_TEMPLATE_EXTENSION')) {
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
+   
+   $PLUGIN_HOOKS['redirect_page']['mreporting'] = 'front/download.php';
 
    /* CRSF */
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
@@ -47,6 +49,10 @@ function plugin_init_mreporting() {
    /* Profile */
    $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
                                                                         'changeProfile');
+   
+   Plugin::registerClass('PluginMreportingNotification',
+   array('notificationtemplates_types' => true));
+   //Plugin::registerClass('PluginMreportingNotificationTargetNotification');
 
    if (Session::getLoginUserID()) {
 
@@ -106,6 +112,10 @@ function plugin_init_mreporting() {
 
    //Add specific files to add to the header : css
    $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
+   
+   
+   
+   
 }
 
 // Get the name and the version of the plugin - Needed

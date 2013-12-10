@@ -1401,7 +1401,8 @@ class PluginMreportingCommon extends CommonDBTM {
          'short_classname' => "test",
          'f_name' => "test",
          'class' => "test",
-         'gtype' => "test"
+         'gtype' => "test",
+         'withdata' => false,
       );
 
       $params = $this->initParams($params);

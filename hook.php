@@ -47,6 +47,7 @@ function plugin_mreporting_install() {
    `name` varchar(255) collate utf8_unicode_ci default NULL,
    `classname` varchar(255) collate utf8_unicode_ci default NULL,
    `is_active` tinyint(1) NOT NULL default '0',
+   `is_notified` tinyint(1) NOT NULL default '1',
    `show_graph` tinyint(1) NOT NULL default '0',
    `show_area` tinyint(1) NOT NULL default '0',
    `spline` tinyint(1) NOT NULL default '0',
@@ -88,6 +89,21 @@ function plugin_mreporting_install() {
          VALUES (NULL,'PluginMreportingConfig','8','8','0');";
    }
    
+   $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_notifications` (
+      `id` int(11) NOT NULL auto_increment,
+      `entities_id` int(11) NOT NULL default '0',
+      `is_recursive` tinyint(1) NOT NULL default '0',
+      `name` varchar(255) collate utf8_unicode_ci default NULL,
+      `notepad` longtext collate utf8_unicode_ci,
+      `date_envoie` DATE DEFAULT NULL,
+      `notice`INT(11) NOT NULL DEFAULT 0,
+      `alert` INT(11) NOT NULL DEFAULT 0,
+      `comment` text collate utf8_unicode_ci,
+      `date_mod` datetime default NULL,
+      `is_deleted` tinyint(1) NOT NULL default '0',
+      PRIMARY KEY  (`id`)
+      ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+   
    foreach($queries as $query)
       $DB->query($query);
 
@@ -97,6 +113,13 @@ function plugin_mreporting_install() {
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
    if (!is_dir($rep_files_mreporting))
       mkdir($rep_files_mreporting);
+   $notifications_folder = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications";
+   if (!is_dir($notifications_folder))
+      mkdir($notifications_folder);
+
+   require_once "inc/notification.class.php";
+   PluginMreportingNotification::install();
+   CronTask::Register('PluginMreportingNotification', 'SendNotifications', MONTH_TIMESTAMP);
    
    return true;
 }
@@ -106,16 +129,19 @@ function plugin_mreporting_uninstall() {
    global $DB;
    
    $queries = array(
-      "DROP TABLE glpi_plugin_mreporting_profiles",
-      "DROP TABLE glpi_plugin_mreporting_configs",
-      "DROP TABLE glpi_plugin_mreporting_preferences"
+      "DROP TABLE IF EXISTS glpi_plugin_mreporting_profiles",
+      "DROP TABLE IF EXISTS glpi_plugin_mreporting_configs",
+      "DROP TABLE IF EXISTS glpi_plugin_mreporting_preferences",
+      "DROP TABLE IF EXISTS glpi_plugin_mreporting_notifications"
    );
 
    foreach($queries as $query)
       $DB->query($query);
    
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
+   $notifications_folder = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications";
 
+   Toolbox::deleteDir($notifications_folder);
    Toolbox::deleteDir($rep_files_mreporting);
    
    $tables_glpi = array("glpi_displaypreferences",
@@ -124,6 +150,10 @@ function plugin_mreporting_uninstall() {
    foreach($tables_glpi as $table_glpi)
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginMreportingConfig' ;");
       
+
+   require_once "inc/notification.class.php";
+   PluginMreportingNotification::uninstall();
+   
    return true;
 }
 
