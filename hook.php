@@ -29,9 +29,14 @@
  
 function plugin_mreporting_install() {
    global $DB;
+
+   //get version
+   $plugin = new Plugin;
+   $found = $plugin->find("name = 'mreporting'");
+   $plugin_mreporting = array_shift($found);
    
    //init migration
-   $migration = new Migration( $plugin_escalade['version']);
+   $migration = new Migration( $plugin_mreporting['version']);
    
    //create profiles table
    $queries = array();
