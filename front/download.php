@@ -1,7 +1,7 @@
 <?php
 include ("../../../inc/includes.php");
 
-Html::nullHeader('Plus de rapports');
+Html::nullHeader($LANG['plugin_mreporting']['download_reports']);
 
 if(!isset($_GET['id']) || empty($_GET['id'])) {
    Html::displayErrorAndDie('You don\'t have the right to access to this file !');
@@ -14,10 +14,10 @@ if(!isset($_GET['id']) || empty($_GET['id'])) {
 
    <div class="box-mleft"></div>
    <div class="box-mcenter">
-      <h3>Téléchargement des rapports GLPI</h3>
-      <p>Le téléchargement de vos rapports est en cours...</p>
-      <p>Si le téléchargement ne démarre pas automatiquement, veuillez 
-         <a href="get_report.php?s=<?php echo $_GET['id']; ?>" target="_blank">cliquer ici</a></p>
+      <h3><?php echo $LANG['plugin_mreporting']['download_reports']; ?></h3>
+      <p><?php echo $LANG['plugin_mreporting']['download_in_progress']; ?></p>
+      <p><?php echo $LANG['plugin_mreporting']['download_dont_start']; ?> 
+         <a href="get_report.php?s=<?php echo $_GET['id']; ?>" target="_blank"><?php  echo $LANG['plugin_mreporting']['download_clic_here']; ?></a></p>
       <iframe hidden="hidden" height="0" width="0" src="get_report.php?s=<?php echo $_GET['id']; ?>"></iframe>
       <p><b><a href="central.php">&lt;&lt;&nbsp;Retour à la liste des rapports</a></b></p>
    </div>

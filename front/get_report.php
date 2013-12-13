@@ -13,14 +13,10 @@ $dir  = GLPI_PLUGIN_DOC_DIR . '/mreporting/notifications';
 foreach(glob($dir . '/*.pdf') as $file) {
    $file_name = trim(strrchr($file, '/'), '/');
    if(sha1($file_name) == $sha1) {
-
-      Html::nullHeader('Plus de rapports');
-      Html::nullFooter();
-      
-      
       header('Content-Type: application/pdf');
       header('Content-disposition: attachment;filename=' . $file_name);
       echo file_get_contents($file);
+      exit();
    }
 }
 

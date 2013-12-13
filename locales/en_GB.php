@@ -82,6 +82,11 @@ EOT;
 $LANG['plugin_mreporting']['notification_event']   = "More Reporting";
 $LANG['plugin_mreporting']['notification_log']     = "Notification(s) sent !";
 
+$LANG['plugin_mreporting']['download_reports']     = "Download of GLPI reports";
+$LANG['plugin_mreporting']['download_in_progress'] = "The download of GLPI reports is in progress...";
+$LANG['plugin_mreporting']['download_dont_start']  = "If it doesn't start automaticaly";
+$LANG['plugin_mreporting']['download_clic_here']   = "click here";
+
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Number of ticket by entities";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['desc'] = "Bars";
