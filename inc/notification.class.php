@@ -15,35 +15,38 @@ class PluginMreportingNotification extends CommonDBTM {
       
       // Création du template de la notification
       $template = new NotificationTemplate();
-      $template_id = $template->add(array(
-         'name'                     => $LANG['plugin_mreporting']['notification_name'],
-         'comment'                  => $LANG['plugin_mreporting']['notification_comment'],
-         'itemtype'                 => 'PluginMreportingNotification',
-      ));
-      
-      // Ajout d'une traduction (texte) en Français
-      $translation = new NotificationTemplateTranslation();
-      $translation->add(array(
-      	'notificationtemplates_id' => $template_id,
-         'language'                 => '',
-      	'subject'                  => $LANG['plugin_mreporting']['notification_subject'],
-      	'content_text'             => $LANG['plugin_mreporting']['notification_text'],
-      	'content_html'             => $LANG['plugin_mreporting']['notification_html'],
-      ));
-
-      // Création de la notification
-      $notification = new Notification();
-      $notification_id = $notification->add(array(
-         'name'                     => $LANG['plugin_mreporting']['notification_name'],
-         'comment'                  => $LANG['plugin_mreporting']['notification_comment'],
-         'entities_id'              => 0,
-         'is_recursive'             => 1,
-         'is_active'                => 1,
-         'itemtype'                 => 'PluginMreportingNotification',
-         'notificationtemplates_id' => $template_id,
-         'event'                    => 'sendReporting',
-         'mode'                     => 'mail',
-      ));
+      $found_template = $template->find("itemtype = 'PluginMreportingNotification'");
+      if (count($found_template) == 0) {
+         $template_id = $template->add(array(
+            'name'                     => $LANG['plugin_mreporting']['notification_name'],
+            'comment'                  => $LANG['plugin_mreporting']['notification_comment'],
+            'itemtype'                 => 'PluginMreportingNotification',
+         ));
+         
+         // Ajout d'une traduction (texte) en Français
+         $translation = new NotificationTemplateTranslation();
+         $translation->add(array(
+         	'notificationtemplates_id' => $template_id,
+            'language'                 => '',
+         	'subject'                  => $LANG['plugin_mreporting']['notification_subject'],
+         	'content_text'             => $LANG['plugin_mreporting']['notification_text'],
+         	'content_html'             => $LANG['plugin_mreporting']['notification_html'],
+         ));
+   
+         // Création de la notification
+         $notification = new Notification();
+         $notification_id = $notification->add(array(
+            'name'                     => $LANG['plugin_mreporting']['notification_name'],
+            'comment'                  => $LANG['plugin_mreporting']['notification_comment'],
+            'entities_id'              => 0,
+            'is_recursive'             => 1,
+            'is_active'                => 1,
+            'itemtype'                 => 'PluginMreportingNotification',
+            'notificationtemplates_id' => $template_id,
+            'event'                    => 'sendReporting',
+            'mode'                     => 'mail',
+         ));
+      }
 
       $DB->query('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id) 
                VALUES (1, 1, ' . $notification_id . ');');

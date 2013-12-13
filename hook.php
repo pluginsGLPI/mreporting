@@ -30,6 +30,9 @@
 function plugin_mreporting_install() {
    global $DB;
    
+   //init migration
+   $migration = new Migration( $plugin_escalade['version']);
+   
    //create profiles table
    $queries = array();
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
@@ -107,6 +110,14 @@ function plugin_mreporting_install() {
    foreach($queries as $query)
       $DB->query($query);
 
+   // == Update to 2.1 ==
+   if (!FieldExists('glpi_plugin_mreporting_configs', 'is_notified')) {
+      $migration->addField('glpi_plugin_mreporting_configs', 'is_notified',
+               'tinyint(1) NOT NULL default "1"',
+               array('after' => 'is_active'));
+      $migration->migrationOneTable('glpi_plugin_mreporting_configs');
+   }
+   
    require_once "inc/profile.class.php";
    PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
    
