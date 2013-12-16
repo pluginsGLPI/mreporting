@@ -180,6 +180,12 @@ class PluginMreportingConfig extends CommonDBTM {
       $classes = PluginMreportingCommon::parseAllClasses($inc_dir);
       
       foreach($classes as $classname) {
+         
+         if (!class_exists($classname)) {
+            $class_filedir = GLPI_ROOT."/plugins/mreporting/inc/".
+                             strtolower(str_replace('PluginMreporting', '', $classname)).".class.php";
+            require_once $class_filedir;
+         }
       
          $functions = get_class_methods($classname);
          

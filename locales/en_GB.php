@@ -159,4 +159,13 @@ $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarTicketStatusByTechnician'
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['title'] = "Number of ticket by requester location";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['desc'] = "Bars";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['category'] = "By requester";
-?>
+
+
+$LANG['plugin_mreporting']['selector']["status"]   = "Status";
+
+$LANG['plugin_mreporting']['selector']["period"][0] = "Period";
+$LANG['plugin_mreporting']['selector']["period"][1] = "Day";
+$LANG['plugin_mreporting']['selector']["period"][2] = "Week";
+$LANG['plugin_mreporting']['selector']["period"][3] = "Month";
+$LANG['plugin_mreporting']['selector']["period"][4] = "Year";
+

@@ -59,6 +59,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    
    function reportHbarTicketNumberByEntity($configs = array()) {
       global $DB;
+      $_SESSION['mreporting_selector'] = array('limit');
       
       /*Must be defined*/
       if (count($configs) == 0) {
@@ -72,6 +73,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("`glpi_tickets`.`date`", 
          $delay, $randname);
+      $nb_ligne = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
       
       $datas = array();
       $query = "
@@ -89,7 +91,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $query.= "AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name
       ORDER BY glpi_entities.name ASC
-      ";//
+      LIMIT 0, ".$nb_ligne;
       $result = $DB->query($query);
          
       while ($ticket = $DB->fetch_assoc($result)) {
@@ -240,6 +242,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    
    function reportPieTicketOpenedbyStatus() {
       global $DB;
+      $_SESSION['mreporting_selector'] = array('allstates');
       
       /*Must be defined*/
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
@@ -251,23 +254,33 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      
+      // Get status to show
+      if(isset($_POST['status_1'])) {
+         foreach($_POST as $key => $value) {
+            if((substr($key, 0, 7) == 'status_') && ($value == 1)) $status_to_show[] = substr($key, 7, 1);
+         }
+      }else{
+         $status_to_show = array('1', '2', '3', '4');
+      }
 
       $datas = array();
       $status = $this->filters['open']['status'] + $this->filters['close']['status'];
       foreach($status as $key => $val) {
-
-         $query = "
-            SELECT COUNT(glpi_tickets.id) as count
-            FROM glpi_tickets
-            WHERE ".$this->sql_date."
-            AND glpi_tickets.is_deleted = '0'
-            AND glpi_tickets.entities_id IN (".$this->where_entities.")
-            AND glpi_tickets.status ='".$key."'
-         ";
-         $result = $DB->query($query);
-         
-         while ($ticket = $DB->fetch_assoc($result)) {
-            $datas['datas'][$val] = $ticket['count'];
+         if(in_array($key, $status_to_show)) {
+            $query = "
+               SELECT COUNT(glpi_tickets.id) as count
+               FROM glpi_tickets
+               WHERE ".$this->sql_date."
+               AND glpi_tickets.is_deleted = '0'
+               AND glpi_tickets.entities_id IN (".$this->where_entities.")
+               AND glpi_tickets.status ='".$key."'
+            ";
+            $result = $DB->query($query);
+            
+            while ($ticket = $DB->fetch_assoc($result)) {
+               $datas['datas'][$val] = $ticket['count'];
+            }
          }
       }
       
@@ -448,6 +461,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHgbarOpenedTicketNumberByCategory() {
       global $DB;
       
+      $_SESSION['mreporting_selector'] = array('allstates');
+      
       $datas = array();
       /*Must be defined*/
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
@@ -459,6 +474,15 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
+
+      // Get status to show
+      if(isset($_POST['status_1'])) {
+         foreach($_POST as $key => $value) {
+            if((substr($key, 0, 7) == 'status_') && ($value == 1)) $status_to_show[] = substr($key, 7, 1);
+         }
+      }else{
+         $status_to_show = array('1', '2', '3', '4');
+      }
       
       $status = $this->filters['open']['status'] + $this->filters['close']['status'];
       $status_keys = array_keys($status);
@@ -475,6 +499,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.status IN('".implode("', '",$status_keys)."')
          AND glpi_tickets.is_deleted = '0'
+         AND status IN (".implode(',', $status_to_show).")
          GROUP BY glpi_itilcategories.id, glpi_tickets.status
          ORDER BY glpi_itilcategories.name
       ";
@@ -495,15 +520,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
       
       //Define legend for all ticket status available in GLPI
-      foreach($status as $label) {
-         $datas['labels2'][$label] = $label;
+      foreach($status as $key => $label) {
+         if(in_array($key, $status_to_show)) {
+            $datas['labels2'][$label] = $label;
+         }
       }
 
       return $datas;
    }
    
    function reportLineNbTicket() {
-
       $area = false;
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportAreaNbTicket($area, $configs);
@@ -511,6 +537,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    
    function reportAreaNbTicket($area = true, $configs=array()) {
       global $DB;
+      
+      $_SESSION['mreporting_selector'] = array('period');
+      $this->_getPeriod();
       
       $datas = array();
       /*Must be defined*/ 
@@ -527,18 +556,18 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
       
       $query = "SELECT
-         DISTINCT DATE_FORMAT(date, '%y%m') as month,
-         DATE_FORMAT(date, '%b%y') as month_l,
+         DISTINCT DATE_FORMAT(date, '".$this->_period_sort."') as period,
+         DATE_FORMAT(date, '".$this->_period_label."') as period_name,
          COUNT(id) as nb
       FROM glpi_tickets
       WHERE ".$this->sql_date."
       AND glpi_tickets.entities_id IN (".$this->where_entities.")
       AND glpi_tickets.is_deleted = '0'
-      GROUP BY month
-      ORDER BY month";
+      GROUP BY period
+      ORDER BY period";
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
-         $datas['datas'][$data['month_l']] = $data['nb'];
+         $datas['datas'][$data['period_name']] = $data['nb'];
       }
 
       return $datas;
@@ -559,6 +588,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportGlineNbTicket($area = false, $configs = array()) {
       global $DB;
       
+      $_SESSION['mreporting_selector'] = array('period', 'allstates');
+      $this->_getPeriod();
+      
       $datas = array();
       $tmp_datas = array();
       /*Must be defined*/
@@ -573,12 +605,21 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
+
+      // Get status to show
+      if(isset($_POST['status_1'])) {
+         foreach($_POST as $key => $value) {
+            if((substr($key, 0, 7) == 'status_') && ($value == 1)) $status_to_show[] = substr($key, 7, 1);
+         }
+      }else{
+         $status_to_show = array('1', '2', '3', '4');
+      }
       
       //get dates used in this period
       $query_date = "SELECT
          DISTINCT
-         DATE_FORMAT(`date`, '%y%m') AS month,
-         DATE_FORMAT(`date`, '%b%y') AS month_l
+         DATE_FORMAT(`date`, '".$this->_period_sort."') AS period,
+         DATE_FORMAT(`date`, '".$this->_period_label."') AS period_name
       FROM `glpi_tickets`
       WHERE ".$this->sql_date."
       AND `glpi_tickets`.`entities_id` IN (".$this->where_entities.")
@@ -587,7 +628,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $res_date = $DB->query($query_date);
       $dates = array();
       while ($data = $DB->fetch_assoc($res_date)) {
-         $dates[$data['month']] = $data['month_l'];
+         $dates[$data['period']] = $data['period_name'];
       }
       
       $tmp_date = array();
@@ -596,21 +637,22 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
       
       $query = "SELECT DISTINCT
-         DATE_FORMAT(date, '%y%m') as month,
-         DATE_FORMAT(date, '%b%y') as month_l,
+         DATE_FORMAT(date, '".$this->_period_sort."') as period,
+         DATE_FORMAT(date, '".$this->_period_label."') as period_name,
          status,
          COUNT(id) as nb
       FROM glpi_tickets
       WHERE ".$this->sql_date."
       AND glpi_tickets.entities_id IN (".$this->where_entities.")
       AND glpi_tickets.is_deleted = '0'
-      GROUP BY month, status
-      ORDER BY month, status";
+      AND status IN(".implode(',', $status_to_show).")
+      GROUP BY period, status
+      ORDER BY period, status";
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
          $status =Ticket::getStatus($data['status']);
-         $tmp_datas['labels2'][$data['month_l']] = $data['month_l'];
-         $tmp_datas['datas'][$status][$data['month_l']] = $data['nb'];
+         $tmp_datas['labels2'][$data['period_name']] = $data['period_name'];
+         $tmp_datas['datas'][$status][$data['period_name']] = $data['nb'];
       }
       
       //merge missing datas (not defined status for a month)
@@ -765,6 +807,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHbarTicketNumberByLocation($configs = array()) {
       global $DB;
       
+      $_SESSION['mreporting_selector'] = array('limit');
+      
       /*Must be defined*/
       if (count($configs) == 0) {
          $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
@@ -777,6 +821,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //Init delay value
       $this->sql_date = PluginMreportingMisc::getSQLDate("`glpi_tickets`.`date`", 
          $delay, $randname);
+      $nb_ligne = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
       
       $datas = array();
       $query = "
@@ -795,7 +840,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $query.= "AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_locations.name
       ORDER BY glpi_locations.name ASC
-      ";//
+      LIMIT 0, ".$nb_ligne;
       $result = $DB->query($query);
          
       while ($ticket = $DB->fetch_assoc($result)) {
@@ -866,4 +911,91 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $config->fields;
    }
    
+   
+   //  ---------------------------------------------------------------------------------------------
+   //                                    === COMMON FUNCTION ===
+   //  ---------------------------------------------------------------------------------------------
+   /**
+    * Update the object period formater for SQL request
+    */
+   private function _getPeriod() {
+      if(isset($_REQUEST['period']) && !empty($_REQUEST['period'])) {
+         switch($_REQUEST['period']) {
+         	case 'day':
+         	   $this->_period_sort = '%y%m%d';
+         	   $this->_period_label = '%d %b %Y';
+         	   break;
+         	case 'week':
+         	   $this->_period_sort = '%y%u';
+         	   $this->_period_label = 'S-%u %Y';
+         	   break;
+         	case 'month':
+         	   $this->_period_sort = '%y%m';
+         	   $this->_period_label = '%b %Y';
+         	   break;
+         	case 'year':
+         	   $this->_period_sort = '%Y';
+         	   $this->_period_label = '%Y';
+         	   break;
+         	default :
+         	   $this->_period_sort = '%y%m';
+         	   $this->_period_label = '%b %Y';
+         	   break;
+         }
+      }else{
+         $this->_period_sort = '%y%m';
+         $this->_period_label = '%b %Y';
+      }
+   }
+   
+
+   //  ---------------------------------------------------------------------------------------------
+   //                                  === SPECIFIC SELECTORS ===
+   //  ---------------------------------------------------------------------------------------------
+   /**
+    * Show a dropdown list with period type (Day, Week, Month, Year)
+    */
+    static function selectorPeriod() {
+    global $LANG;
+       
+      $elements = array(
+         'day'    => $LANG['plugin_mreporting']['selector']["period"][1],
+         'week'   => $LANG['plugin_mreporting']['selector']["period"][2],
+         'month'  => $LANG['plugin_mreporting']['selector']["period"][3],
+         'year'   => $LANG['plugin_mreporting']['selector']["period"][4]
+      );
+       
+      echo '<b>'.$LANG['plugin_mreporting']['selector']["period"][0].' : </b><br />';
+      Dropdown::showFromArray("period", $elements, array('value' => isset($_REQUEST['period']) ? $_REQUEST['period'] : 'month'));
+   }
+   
+   /**
+    * Show a dropdown list to select the number of datas to show
+    */
+   static function selectorLimit() {
+      Dropdown::showListLimit();
+   }
+   
+   /**
+    * Show the selector for tickets status (new, open, solved, closed...)
+    */
+   static function selectorAllstates() {
+      global $LANG;
+      
+      echo "<b>".$LANG['plugin_mreporting']['selector']["status"]." : </b><br />";
+      $default = array('1', '2', '3', '4');
+      
+      foreach(Ticket::getAllStatusArray() as $value => $name) {
+         echo '<label>';
+         echo '<input type="hidden" name="status_'.$value.'" value="0" /> ';
+         echo '<input type="checkbox" name="status_'.$value.'" value="1"';
+         if((isset($_REQUEST['status_'.$value]) && ($_REQUEST['status_'.$value] == '1'))
+               || (!isset($_REQUEST['status_'.$value]) && in_array($value, $default))) {
+            echo ' checked="checked"';
+         }
+            echo ' /> ';
+            echo $name;
+            echo '</label>';
+      }
+   }
 }

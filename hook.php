@@ -136,6 +136,12 @@ function plugin_mreporting_install() {
    require_once "inc/notification.class.php";
    PluginMreportingNotification::install();
    CronTask::Register('PluginMreportingNotification', 'SendNotifications', MONTH_TIMESTAMP);
+
+   require_once "inc/baseclass.class.php";
+   require_once "inc/common.class.php";
+   require_once "inc/config.class.php";
+   $config = new PluginMreportingConfig();
+   $config->createFirstConfig();
    
    return true;
 }

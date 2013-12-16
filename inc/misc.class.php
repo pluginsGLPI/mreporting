@@ -26,6 +26,9 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+if (!defined('GLPI_ROOT')) {
+   die("Sorry. You can't access directly to this file");
+}
  
 class PluginMreportingMisc {
 
@@ -66,7 +69,9 @@ class PluginMreportingMisc {
 
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
          ." id='mreporting_date_selector'>\n";
-      echo "<table class='tab_cadre' width='20%'><tr class='tab_bg_1'>";
+      echo "<table class='tab_cadre'><tr class='tab_bg_1'>";
+
+      echo '<td><table><tr class="tab_bg_1">';
 
       echo "<td>";
       Html::showDateFormItem("date1".$randname, $date1, false);
@@ -76,11 +81,15 @@ class PluginMreportingMisc {
       Html::showDateFormItem("date2".$randname, $date2, false);
       echo "</td>\n";
 
+      self::getReportSelectors();
+
+      echo "</tr></table></td>";
+
       echo "<td rowspan='2' class='center'>";
       echo "<input type='submit' class='button' name='submit' Value=\"". _sx('button', 'Post') ."\">";
       echo "</td>\n";
 
-      echo "<td rowspan='2' class='center'>";
+      echo "<td class='center'>";
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
       $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
       Bookmark::showSaveButton(Bookmark::URI);
@@ -90,6 +99,33 @@ class PluginMreportingMisc {
       echo "</table>";
       Html::closeForm();
       echo "</div>\n";
+   }
+
+   /**
+    * Parse and include selectors functions
+    */
+   static function getReportSelectors() {
+      if(!isset($_SESSION['mreporting_selector']) || empty($_SESSION['mreporting_selector'])) return;
+   
+      $classname = 'PluginMreporting'.$_REQUEST['short_classname'];
+      if(!class_exists($classname)) return;
+   
+      $i = 2;
+      foreach ($_SESSION['mreporting_selector'] as $selector) {
+         if($i%4 == 0) echo '</tr><tr class="tab_bg_1">';
+         $selector = 'selector'.ucfirst($selector);
+         if(!method_exists($classname, $selector)) continue;
+   
+         $i++;
+         echo '<td>';
+         $classname::$selector();
+         echo '</td>';
+      }
+      while($i%4 != 0) {
+         $i++;
+         echo '<td>&nbsp;</td>';
+      }
+      unset($_SESSION['mreporting_selector']);
    }
 
    /**
