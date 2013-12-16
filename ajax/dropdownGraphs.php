@@ -47,4 +47,3 @@ if ($_POST['graphname'] != -1) {
       }
 }
 
-?>

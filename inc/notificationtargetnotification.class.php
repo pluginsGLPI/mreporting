@@ -123,3 +123,4 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       return mt_rand(1, 9) . sha1($file_name);
    }
 }
+

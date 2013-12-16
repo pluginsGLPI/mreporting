@@ -292,4 +292,4 @@ class PluginMreportingMisc {
       return $tree;
    }
 }
-?>
+

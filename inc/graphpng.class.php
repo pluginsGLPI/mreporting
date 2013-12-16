@@ -2223,4 +2223,3 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 }// End Class
 
-?>

@@ -37,4 +37,4 @@ echo "<iframe id='debug_ifr' src='../ajax/debug_content.php'
    frameborder='0' border='0' cellspacing='0' />";
 
 Html::ajaxFooter();
-?>
+

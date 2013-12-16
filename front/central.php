@@ -59,4 +59,3 @@ if (count($tabs) > 0){
 
 Html::footer();
 
-?>

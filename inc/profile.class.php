@@ -162,4 +162,3 @@ class PluginMreportingProfile extends CommonDBTM {
 
 }
 
-?>

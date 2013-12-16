@@ -128,3 +128,4 @@ class PluginMreportingNotification extends CommonDBTM {
       return 1;
    }
 }
+

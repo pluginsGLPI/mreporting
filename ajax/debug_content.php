@@ -40,4 +40,4 @@ $common->debugGraph();
 
 echo "</div></div></div>";
 echo "</body></html>";
-?>
+

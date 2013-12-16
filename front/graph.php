@@ -35,4 +35,3 @@ $common->showGraph($_REQUEST);
 
 Html::footer();
 
-?>

@@ -191,4 +191,3 @@ class PluginMreportingPreference extends CommonDBTM {
    
 }
 
-?>

@@ -50,4 +50,3 @@ if (PluginMreportingPreference::atLeastOneTemplateExists()) {
    Html::back();
 }
 
-?>

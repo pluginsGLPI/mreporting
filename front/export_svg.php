@@ -10,4 +10,3 @@ header("Content-type: image/svg+xml");
 
 echo $_REQUEST['svg_content'];
 
-?>

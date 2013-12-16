@@ -234,4 +234,3 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
    }
 }
 
-?>

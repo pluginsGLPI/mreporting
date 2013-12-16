@@ -777,4 +777,3 @@ class PluginMreportingConfig extends CommonDBTM {
    }
 }
 
-?>

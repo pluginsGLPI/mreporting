@@ -64,6 +64,4 @@ vis.render();
   </div></div>
 
 <?php
-   commonFooter();
-?>
-
+commonFooter();
