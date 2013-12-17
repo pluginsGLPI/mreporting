@@ -753,6 +753,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $technicians = array();
       $query = "
          SELECT
+            CONCAT(glpi_users.firstname, ' ', glpi_users.realname) as fullname,
             glpi_users.name as username
          FROM glpi_tickets
          INNER JOIN glpi_tickets_users
@@ -763,24 +764,34 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          WHERE ".$this->sql_date."
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.is_deleted = '0'
+         ORDER BY fullname, username
       ";
       $result = $DB->query($query);
 
       while ($technician = $DB->fetch_assoc($result)) {
-         $technicians[] = $technician['username'];
+         $technicians[] = array('username' => $technician['username'],
+                                 'fullname' => $technician['fullname'],
+                                 );
       }
 
       //prepare empty values with technician list
       foreach ($status as $key_status => $current_status) {
          foreach ($technicians as $technician) {
-            $datas['datas'][$current_status][$technician] = 0;
+            $datas['datas'][$current_status][$technician['username']] = 0;
+            
+            $fullname = trim($technician['fullname']);
+            if(!empty($fullname)) {
+               $datas['labels2'][$technician['username']] = $fullname;
+            }else{
+               $datas['labels2'][$technician['username']] = $technician['username'];
+            }
          }
       }
 
       $query = "
          SELECT
             glpi_tickets.status,
-            CONCAT(glpi_users.firstname, glpi_users.realname) as technician,
+            CONCAT(glpi_users.firstname, ' ', glpi_users.realname) as technician,
             glpi_users.name as username,
             COUNT(glpi_tickets.id) as count
          FROM glpi_tickets
@@ -793,7 +804,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          AND glpi_tickets.entities_id IN (".$this->where_entities.")
          AND glpi_tickets.is_deleted = '0'
          GROUP BY status, technician
-         ORDER BY technician
+         ORDER BY technician, username
       ";
       $result = $DB->query($query);
 
@@ -801,10 +812,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          if(is_null($ticket['technician'])) {
             $ticket['technician'] = __("None");
          }
-         $datas['labels2'][$ticket['username']] = $ticket['username'];
          $datas['datas'][$status[$ticket['status']]][$ticket['username']] = $ticket['count'];
       }
-
+      Html::printCleanArray($datas);
+      
       return $datas;
    }
 
