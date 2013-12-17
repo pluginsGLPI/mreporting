@@ -624,11 +624,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       WHERE ".$this->sql_date."
       AND `glpi_tickets`.`entities_id` IN (".$this->where_entities.")
       AND `glpi_tickets`.`is_deleted` = '0'
+      AND status IN(".implode(',', $status_to_show).")
       ORDER BY `date` ASC";
       $res_date = $DB->query($query_date);
       $dates = array();
       while ($data = $DB->fetch_assoc($res_date)) {
-         $dates[$data['period']] = $data['period_name'];
+         $dates[$data['period']] = $data['period'];
       }
       
       $tmp_date = array();
@@ -651,19 +652,22 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
          $status =Ticket::getStatus($data['status']);
-         $tmp_datas['labels2'][$data['period_name']] = $data['period_name'];
-         $tmp_datas['datas'][$status][$data['period_name']] = $data['nb'];
+         $datas['labels2'][$data['period']] = $data['period_name'];
+         $datas['datas'][$status][$data['period']] = $data['nb'];
       }
-      
+
       //merge missing datas (not defined status for a month)
-      if (isset($tmp_datas['datas'])) {
-         foreach($tmp_datas['datas'] as &$data) {
+      if (isset($datas['datas'])) {
+         foreach($datas['datas'] as &$data) {
             $data = $data + array_fill_keys($tmp_date, 0);
          }
       }
-      
-      $datas = $tmp_datas;
-      
+
+      //fix order of datas
+      foreach ($datas['datas'] as &$data) {
+         ksort($data);
+      }
+
       return $datas;
    }
 
