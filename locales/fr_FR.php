@@ -62,8 +62,9 @@ $LANG['plugin_mreporting']['parser'][2] = "Merci de sélectionner un modèle dan
 $LANG['plugin_mreporting']['parser'][3] = "Aucun modèle n'existe";
 
 $LANG['plugin_mreporting']['notification_name']    = 'Notification "plus de rapports"';
+$LANG['plugin_mreporting']['notification_creator'] = 'Généré automatiquement par GLPI';
 $LANG['plugin_mreporting']['notification_comment'] = '';
-$LANG['plugin_mreporting']['notification_subject'] = 'Rapports mensuels GLPI';
+$LANG['plugin_mreporting']['notification_subject'] = 'Rapports statistiques de GLPI';
 $LANG['plugin_mreporting']['notification_text'] = <<<EOT
 Bonjour,
 

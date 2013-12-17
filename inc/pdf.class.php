@@ -6,10 +6,15 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginMreportingPdf extends TCPDF {
 
+   /**
+    * Create PDF header and initialize presentation
+    */
    function Init() {
-      $title   = "Statistiques de notre support";
-      $creator = "TECLIB' support center";
-      $author  = $_SESSION['glpifirstname'] . " " . $_SESSION['glpirealname'];
+      global $LANG, $CFG_GLPI;
+      $title   = $LANG['plugin_mreporting']['notification_subject'];
+      $creator = $LANG['plugin_mreporting']['notification_creator'];
+      $version = plugin_version_mreporting();
+      $author  = $CFG_GLPI["version"].' - ' . $version['name'].' v' . $version['version'];
       
       $this->SetCreator($creator);
       $this->SetAuthor($author);
@@ -22,6 +27,11 @@ class PluginMreportingPdf extends TCPDF {
       $this->AddPage();
    }
 
+   /**
+    * Insert content and graphs
+    * 
+    * @param array $images Array of reports
+    */
    function Content($images) {
       $images_lengh = sizeof($images);
       $i = 0;
@@ -41,6 +51,9 @@ class PluginMreportingPdf extends TCPDF {
       }
    }
 
+   /**
+    * Create the PDF footer
+    */
    function Footer() {
       $this->SetY(-15);
       $this->SetFontSize(8);

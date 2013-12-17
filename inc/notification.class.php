@@ -2,14 +2,29 @@
 
 class PluginMreportingNotification extends CommonDBTM {
 
+   /**
+    * @var boolean activate the history for the plugin
+    */
    public $dohistory = true;
 
+   /**
+    * Return the localized name of the current Type (PluginMreporting)
+    * 
+    * @see CommonGLPI::getTypeName()
+    * @param string $nb
+    * @return string name of the plugin
+    */
    static function getTypeName($nb = 0) {
       global $LANG;
       
       return $LANG['plugin_mreporting']['name'];
    }
    
+   /**
+    * Install mreporting notifications.
+    * 
+    * @return array 'success' => true on success
+    */
    static function install() {
       global $LANG, $DB;
       
@@ -54,12 +69,17 @@ class PluginMreportingNotification extends CommonDBTM {
        return array('success' => true);
    }
    
+   /**
+    * Remove mreporting notifications from GLPI.
+    * 
+    * @return array 'success' => true on success
+    */
    static function uninstall() {
       global $DB;
 
       $queries = array();
       
-      // Suppression des NotificationTargets et des Notifications
+      // Remove NotificationTargets and Notifications
       $notification = new Notification();
       $result = $notification->find("itemtype = 'PluginMreportingNotification'");
       foreach($result as $row) {
@@ -70,7 +90,7 @@ class PluginMreportingNotification extends CommonDBTM {
                         WHERE id = " . $notification_id;
       }
 
-      // Suppression des NotificationTemplateTranslations et des NotificationTemplates
+      // Remove NotificationTemplateTranslations and NotificationTemplates
       $template = new NotificationTemplate();
       $result = $template->find("itemtype = 'PluginMreportingNotification'");
       foreach($result as $row) {
@@ -88,8 +108,6 @@ class PluginMreportingNotification extends CommonDBTM {
       return array('success' => true);
    }
    
-   
-
    /**
     * Give localized information about 1 task
     *
@@ -106,7 +124,6 @@ class PluginMreportingNotification extends CommonDBTM {
       }
       return array();
    }
-   
    
    /**
     * Execute 1 task manage by the plugin
