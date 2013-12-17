@@ -56,7 +56,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @params $options ($rand, short_classname, title, desc, delay)
    */
    function initGraph($options) {
-      global $LANG;
+      global $LANG, $CFG_GLPI;
       
       //if ($options['export']=="odt" || $options['export']=="odtall") {
          //$this->width = $this->width - 100;
@@ -84,7 +84,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             echo "</div>";
          }
          echo "<div class='graph_title'>";
-         echo "<img src='" . GLPI_ROOT . "/plugins/mreporting/pics/chart-$prev_function.png' class='title_pics' />";
+         echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/mreporting/pics/chart-$prev_function.png' class='title_pics' />";
          echo $options['title'];
          echo "</div>";
 
