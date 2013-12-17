@@ -90,7 +90,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
       $query.= "AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name
-      ORDER BY glpi_entities.name ASC
+      ORDER BY count DESC
       LIMIT 0, ".$nb_ligne;
       $result = $DB->query($query);
          
