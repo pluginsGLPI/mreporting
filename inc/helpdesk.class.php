@@ -814,7 +814,6 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          }
          $datas['datas'][$status[$ticket['status']]][$ticket['username']] = $ticket['count'];
       }
-      Html::printCleanArray($datas);
       
       return $datas;
    }
