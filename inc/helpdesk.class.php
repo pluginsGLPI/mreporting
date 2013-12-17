@@ -843,7 +843,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       WHERE ".$this->sql_date." ";
       $query.= "AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_locations.name
-      ORDER BY glpi_locations.name ASC
+      ORDER BY count DESC
       LIMIT 0, ".$nb_ligne;
       $result = $DB->query($query);
          
