@@ -1673,10 +1673,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$k=$v;
       }
       
-      if (DEBUG_MREPORTING == true) {
-         $area = true;
-      }
-      
       if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
       
       if (isset($raw_datas['datas'])) {
