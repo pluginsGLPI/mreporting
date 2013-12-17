@@ -200,7 +200,6 @@ class PluginMreportingGraph {
    .add(pv.Panel)
       .def("active", false)
    .add(pv.Bar)
-      .visible(function() {return this.parent.parent.index < (offset / 5); })
       .left(0)
       .width(function(d) {
          var r = 360 - 20 * offset;
@@ -220,9 +219,6 @@ class PluginMreportingGraph {
       .top(2)
       .bottom(2)
    .anchor("right").add(pv.Label)
-      .visible(function(d) {
-         return ((this.parent.active() || d <= max / 100)  && {$hover} || {$always}) ? true : false;
-      })
       .textAlign("left")
       .text(function(d) { return  d+" {$unit}"; })
       .textMargin(5)
