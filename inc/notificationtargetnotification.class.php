@@ -6,7 +6,7 @@ if (!defined('GLPI_ROOT')){
 
 // Class NotificationTarget
 class PluginMreportingNotificationTargetNotification extends NotificationTarget {
-
+   
    function getEvents() {
       global $LANG;
       
@@ -22,18 +22,110 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
 
       $this->datas['##mreporting.file_url##'] = $link;
    }
+   
+   /**
+    * Override standard validation and sending notification to send the good PDF reports with 
+    * appropriate rigths.
+    * 
+    * @see NotificationTarget::validateSendTo()
+    * 
+    * @param string $event notification event
+    * @param Array $infos Current user informations
+    * @param Boolean $notify_me Notify the current user of his own actions ?
+    * 
+    * @return boolean false to prevent standard mail sending
+    */
+   function validateSendTo($event, array $infos, $notify_me=false) {
+      global $DB;
+      
+      Toolbox::logDebug($this);
+   
+      //$infos contient l'utilisateur courant.
+      //$this contient notamment
+      //$this->options (qui est le parametre envoyé via le raiseevent dans l'autre classe de notification de mreporting)
+      if (isset($infos['users_id'])) {
+         
+         // save session variables
+         $saved_session = $_SESSION;
+   
+         // Get current user full informations
+         $user = new User;
+         $user->getFromDB($infos['users_id']);
+         
+         // inialize session for user to build the proper PDF report
+         unset($_SESSION['glpiprofiles'], $_SESSION['glpiactiveentities'], $_SESSION['glpiactiveprofile']);
+         Session::initEntityProfiles($infos['users_id']);
+         
+         // Use default profile if exist
+         if (isset($_SESSION['glpiprofiles'][$user->fields['profiles_id']])) {
+            Session::changeProfile($user->fields['profiles_id']);
+            
+         // Else use first
+         } else { 
+            Session::changeProfile(key($_SESSION['glpiprofiles']));
+         }
+         
+         $user_name  = $infos['username'].'_';
+         $file_name  = $this->_buildPDF($user_name);
+         $path       = GLPI_PLUGIN_DOC_DIR . '/mreporting/notifications/'.$file_name;
+          
+         $mmail = new NotificationMail();
+         $mmail->AddCustomHeader("Auto-Submitted: auto-generated");
+         // For exchange
+         $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");
+
+         // Get current entity administrator info to send the email from him
+         $admin = $this->getSender();
+         $mmail->From      = $admin['email'];
+         $mmail->FromName  = $admin['name'];
+   
+         // Attach pdf to mail
+         //Toolbox::logDebug($path, $file_name);
+         $mmail->AddAttachment($path, $file_name);
+
+         // Get content infos
+         $query = 'SELECT * 
+                  FROM glpi_notificationtemplatetranslations
+                  WHERE notificationtemplates_id = (
+                     SELECT id 
+                     FROM glpi_notificationtemplates 
+                     WHERE itemtype = "PluginMreportingNotification"
+                  )
+                  AND (language LIKE "'.$_SESSION['glpilanguage'].'" OR language LIKE "")
+                  ORDER BY language DESC
+                  LIMIT 0, 1';
+         $result = $DB->query($query);
+         $translation = $result->fetch_array();
+         $mmail->isHTML(true);
+         $mmail->Subject   = $translation['subject'];
+         $mmail->Body      = $translation['content_html'];
+         $mmail->AltBody   = $translation['content_text'];
+         
+         $mmail->AddAddress($infos['email']);
+         if($mmail->Send()) {
+            
+         }
+   
+         
+         //restore session
+         unset($_SESSION);
+         $_SESSION = $saved_session;
+      }
+   
+      return false;
+   }
 
 
    /**
-    * Génère le fichier PDF
+    * Generate a PDF file with mreporting reports to be send in the notifications
     * 
-    * @return string hash du nom du fichier créer
+    * @return string hash Name of the created file
     */
-   private function _buildPDF($options) {
+   private function _buildPDF($user_name = '') {
       global $CFG_GLPI, $DB, $LANG;
    
-      $dir        = GLPI_PLUGIN_DOC_DIR . '/mreporting/notifications';
-      $file_name  = 'glpi_report_'.date('d-m-Y').'.pdf';
+      $dir           = GLPI_PLUGIN_DOC_DIR . '/mreporting/notifications';
+      $file_name     = 'glpi_report_'.$user_name.date('d-m-Y').'.pdf';
    
       if(!is_dir($dir)) return false;
       
@@ -74,7 +166,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
             'gtype'           => $graph['type'],
             'date1PluginMreporting' . $graph['class'] . $graph['method'] => $graph['start'],
             'date2PluginMreporting' . $graph['class'] . $graph['method'] => $graph['end'],
-            'randname'        => 'PluginMreporting' . $graph['class'] . $graph['method'],
+            'randname'        => 'PluginMreporting' . $graph['class'] . $graph['method']
          );
           
          $common = new PluginMreportingCommon();
@@ -117,10 +209,9 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       $pdf->Content($images);
       $pdf->Output($dir . '/' . $file_name, 'F');
        
-       
       // Retour du nom de fichier hasché (SHA1) + un chiffre aléatoire pour hack GLPI
       // Celui-ci vérifie que la chaîne soit supérieur 0 (voir converions PHP chaîne >> int)
-      return mt_rand(1, 9) . sha1($file_name);
+      return $file_name;
    }
 }
 

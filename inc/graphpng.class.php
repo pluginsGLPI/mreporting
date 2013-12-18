@@ -122,22 +122,24 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $show_inline = true;
         
          //test browser (if ie < 9, show img from temp dir instead base64 inline)
-         $ua = trim(strtolower($_SERVER["HTTP_USER_AGENT"]));
-         $pattern = "/msie\s(\d+)\.0/";
-         if(preg_match($pattern,$ua,$arr)){
-            $ie_version = $arr[1];
-            if (version_compare($ie_version, '9') < 0) {
-               $show_inline = false;
-               $rand=mt_rand();
-               $filename = "mreporting_img_$rand.png";
-               $filedir = GLPI_ROOT."/files/_plugins/mreporting/$filename";
-               file_put_contents($filedir, $contents);
-
-               echo "<img src='".$CFG_GLPI['root_doc'].
-                  "/front/pluginimage.send.php?plugin=mreporting&name=".$filename.
-                  "' alt='graph' title='graph' />";
-            }
-         } 
+         if (isset($_SERVER["HTTP_USER_AGENT"])) {
+            $ua = trim(strtolower($_SERVER["HTTP_USER_AGENT"]));
+            $pattern = "/msie\s(\d+)\.0/";
+            if(preg_match($pattern,$ua,$arr)){
+               $ie_version = $arr[1];
+               if (version_compare($ie_version, '9') < 0) {
+                  $show_inline = false;
+                  $rand=mt_rand();
+                  $filename = "mreporting_img_$rand.png";
+                  $filedir = GLPI_ROOT."/files/_plugins/mreporting/$filename";
+                  file_put_contents($filedir, $contents);
+   
+                  echo "<img src='".$CFG_GLPI['root_doc'].
+                     "/front/pluginimage.send.php?plugin=mreporting&name=".$filename.
+                     "' alt='graph' title='graph' />";
+               }
+            } 
+         }
             
          if ($show_inline) 
             echo "<img src='data:image/png;base64,".base64_encode($contents)

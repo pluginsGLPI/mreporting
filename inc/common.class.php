@@ -850,7 +850,9 @@ class PluginMreportingCommon extends CommonDBTM {
             self::showGraphTreeDatas($cols, $flip_data);
          } else { //multiple array
             foreach($cols as $date => $nb) {
-               echo "<td class='center'>".$nb." ".$unit."</td>";
+               if (!is_array($nb)) {
+                  echo "<td class='center'>".$nb." ".$unit."</td>";
+               }
             }
          }
          echo "</tr>";

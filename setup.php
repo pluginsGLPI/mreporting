@@ -37,6 +37,12 @@ if (!defined('PLUGIN_MREPORTING_TEMPLATE_EXTENSION')) {
    define ("PLUGIN_MREPORTING_TEMPLATE_EXTENSION", "odt");
 }
 
+if(isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+   define('DEBUG_MREPORTING', true);
+} else {
+   define('DEBUG_MREPORTING', false);
+}
+
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
@@ -92,11 +98,6 @@ function plugin_init_mreporting() {
                }
             }
          }
-      }
-      if($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-         define('DEBUG_MREPORTING', true);
-      } else {
-         define('DEBUG_MREPORTING', false);
       }
    }
 
