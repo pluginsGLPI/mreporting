@@ -37,14 +37,8 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
     */
    function validateSendTo($event, array $infos, $notify_me=false) {
       global $DB;
-      
-      Toolbox::logDebug($this);
    
-      //$infos contient l'utilisateur courant.
-      //$this contient notamment
-      //$this->options (qui est le parametre envoyé via le raiseevent dans l'autre classe de notification de mreporting)
       if (isset($infos['users_id'])) {
-         
          // save session variables
          $saved_session = $_SESSION;
    
@@ -80,7 +74,6 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
          $mmail->FromName  = $admin['name'];
    
          // Attach pdf to mail
-         //Toolbox::logDebug($path, $file_name);
          $mmail->AddAttachment($path, $file_name);
 
          // Get content infos
@@ -209,8 +202,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       $pdf->Content($images);
       $pdf->Output($dir . '/' . $file_name, 'F');
        
-      // Retour du nom de fichier hasché (SHA1) + un chiffre aléatoire pour hack GLPI
-      // Celui-ci vérifie que la chaîne soit supérieur 0 (voir converions PHP chaîne >> int)
+      // Return the generated filename
       return $file_name;
    }
 }
