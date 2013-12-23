@@ -30,22 +30,22 @@
 $LANG['plugin_mreporting']["name"] = "More Reporting";
 
 $LANG['plugin_mreporting']["error"][0] = "No report is available !";
-$LANG['plugin_mreporting']["error"][1] = "No datas for this date range !";
+$LANG['plugin_mreporting']["error"][1] = "No data for this date range !";
 $LANG['plugin_mreporting']["error"][2] = "Undefined";
 $LANG['plugin_mreporting']["error"][3] = "No graphic selected";
 $LANG['plugin_mreporting']["error"][4] = "Object already exists";
 
 $LANG['plugin_mreporting']["export"][0] = "General Report - ODT";
 $LANG['plugin_mreporting']["export"][1] = "Number";
-$LANG['plugin_mreporting']["export"][2] = "Datas";
-$LANG['plugin_mreporting']["export"][3] = "Without datas";
-$LANG['plugin_mreporting']["export"][4] = "Without datas";
+$LANG['plugin_mreporting']["export"][2] = "Data";
+$LANG['plugin_mreporting']["export"][3] = "Without data";
+$LANG['plugin_mreporting']["export"][4] = "Without data";
 
 $LANG['plugin_mreporting']["config"][0] = "Configuration";
 $LANG['plugin_mreporting']["config"][1] = "See area";
 $LANG['plugin_mreporting']["config"][2] = "Curves lines (SVG)";
 $LANG['plugin_mreporting']["config"][3] = "See values";
-$LANG['plugin_mreporting']["config"][4] = "Reverser datas array";
+$LANG['plugin_mreporting']["config"][4] = "Reverser data array";
 $LANG['plugin_mreporting']["config"][5] = "On mouse over";
 $LANG['plugin_mreporting']["config"][6] = "Always";
 $LANG['plugin_mreporting']["config"][7] = "Never";
