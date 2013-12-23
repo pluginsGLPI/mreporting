@@ -37,7 +37,7 @@ $LANG['plugin_mreporting']["error"][4] = "Object already exists";
 
 $LANG['plugin_mreporting']["export"][0] = "General Report - ODT";
 $LANG['plugin_mreporting']["export"][1] = "Number";
-$LANG['plugin_mreporting']["export"][2] = "Data";
+$LANG['plugin_mreporting']["export"][2] = "data";
 $LANG['plugin_mreporting']["export"][3] = "Without data";
 $LANG['plugin_mreporting']["export"][4] = "Without data";
 
@@ -58,7 +58,7 @@ $LANG['plugin_mreporting']["config"][13] = "Class";
 $LANG['plugin_mreporting']["config"][14] = "Send this report with the notification";
 
 $LANG['plugin_mreporting']['parser'][1] = "Use this model";
-$LANG['plugin_mreporting']['parser'][2] = "Please, select a model in yours preferences";
+$LANG['plugin_mreporting']['parser'][2] = "Please, select a model in your preferences";
 $LANG['plugin_mreporting']['parser'][3] = "No model available";
 
 $LANG['plugin_mreporting']['notification_name']    = 'Notification for "More Reporting"';
