@@ -171,9 +171,8 @@ class PluginMreportingConfig extends CommonDBTM {
     *@return nothing
     **/
    function createFirstConfig() {
-      
-      
       $reports = array();
+      $classConfig = false;
       
       $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
       //parse inc dir to search report classes
