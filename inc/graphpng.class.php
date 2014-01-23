@@ -1572,7 +1572,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
             //create label 2
             $lx = 54 + $index1 * $width_bar;
-            $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$label);
+            $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$labels2[$label]);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext(
@@ -1583,7 +1583,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $height-20,
                $this->black,
                $this->font,
-               Html::clean($label)
+               Html::clean($labels2[$label])
             );
 
             $index1++;
