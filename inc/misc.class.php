@@ -47,13 +47,7 @@ class PluginMreportingMisc {
    static function getRequestString($var) {
       unset($var['submit']);
       
-      $request_string = "";
-      foreach($var as $key => $value) {
-         if (is_array($value)) $value = self::getRequestString($value);
-         $request_string.= "$key=$value&";
-      }
-
-      return substr($request_string, 0, -1);
+      return http_build_query($var);
    }
 
 
