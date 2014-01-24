@@ -29,6 +29,8 @@
  
 include ("../../../inc/includes.php");
 
+Session::checkLoginUser();
+
 Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
 
 $common = new PluginMreportingCommon();
