@@ -1555,11 +1555,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                //create data label  // Affichage des données à côté des barres
                if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
+                  $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$subdata.$unit);
+                  $textwidth = abs($box[4] - $box[6]);
+                  
                   imagettftext(
                      $image,
                      $this->fontsize-1,
                      $this->fontangle,
-                     $bx1 + 2,
+                     $bx1 + ($width_bar / 2) - ($textwidth / 2) - 4,
                      $by1 - ($by1 - $by2)/2 + 5,
                      $darkerpalette[$index2],
                      $this->font,
@@ -1571,10 +1574,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             }
 
             //create label 2
-            $lx = 54 + $index1 * $width_bar;
             $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$labels2[$label]);
-            $textwidth = abs($box[4] - $box[0]);
-            $textheight = abs($box[5] - $box[1]);
+            $textwidth = abs($box[4] - $box[6]);
+            $textwidth = abs(sqrt((pow($textwidth, 2) / 2)));
+
+            
+            $lx = 39 + ($index1 * $width_bar) + ($width_bar / 2) - ($textwidth / 2);
+            if($lx < 39 + ($index1 * $width_bar)) $lx = 39 + ($index1 * $width_bar);
             imagettftext(
                $image,
                $this->fontsize-1,
