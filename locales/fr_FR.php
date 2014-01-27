@@ -69,7 +69,7 @@ $LANG['plugin_mreporting']['notification_text'] = <<<EOT
 Bonjour,
 
 Les rapports de GLPI sont disponibles.
-Vous pouvez les télécharger à l\'adresse : ##mreporting.file_url##
+Vous les trouverez en pièce jointe dans cet e-mail.
 
 EOT;
 
@@ -77,7 +77,7 @@ $LANG['plugin_mreporting']['notification_html'] = <<<EOT
 <p>Bonjour,</p>
 
 <p>Les rapports de GLPI sont disponibles.<br />
-   Vous pouvez les télécharger à l\'adresse : <a href="##mreporting.file_url##">##mreporting.file_url##</a></p>
+   Vous les trouverez en pièce jointe dans cet e-mail.</p>
 
 EOT;
 $LANG['plugin_mreporting']['notification_event']   = "Plus de rapports";

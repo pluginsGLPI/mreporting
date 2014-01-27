@@ -69,7 +69,7 @@ $LANG['plugin_mreporting']['notification_text'] = <<<EOT
 Hello,
 
 GLPI reports are available.
-You can download it at : ##mreporting.file_url##
+You will find attached in this email.
 
 EOT;
 
@@ -77,7 +77,7 @@ $LANG['plugin_mreporting']['notification_html'] = <<<EOT
 <p>Hello,</p>
 
 <p>GLPI reports are available.<br />
-   You can download it at : <a href="##mreporting.file_url##">##mreporting.file_url##</a></p>
+   You will find attached in this email.</p>
 
 EOT;
 $LANG['plugin_mreporting']['notification_event']   = "More Reporting";
