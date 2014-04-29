@@ -139,12 +139,7 @@ class PluginMreportingNotification extends CommonDBTM {
       global $LANG;
 
       $task->log($LANG['plugin_mreporting']['notification_log']);
-      $entity = new Entity();
-      $found_entities = $entity->find();
-      foreach ($found_entities as $entity_data) {
-         $params = $task->fields + array('entities_id' => $entity_data['id']);
-         NotificationEvent::raiseEvent('sendReporting', new self(), $params);
-      }
+      NotificationEvent::raiseEvent('sendReporting', new Self(), $task->fields);
       return 1;
    }
 }
