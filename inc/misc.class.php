@@ -29,7 +29,7 @@
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
- 
+
 class PluginMreportingMisc {
 
    static function showNavigation() {
@@ -46,7 +46,7 @@ class PluginMreportingMisc {
     */
    static function getRequestString($var) {
       unset($var['submit']);
-      
+
       return http_build_query($var);
    }
 
@@ -100,16 +100,16 @@ class PluginMreportingMisc {
     */
    static function getReportSelectors() {
       if(!isset($_SESSION['mreporting_selector']) || empty($_SESSION['mreporting_selector'])) return;
-   
+
       $classname = 'PluginMreporting'.$_REQUEST['short_classname'];
       if(!class_exists($classname)) return;
-   
+
       $i = 2;
       foreach ($_SESSION['mreporting_selector'] as $selector) {
          if($i%4 == 0) echo '</tr><tr class="tab_bg_1">';
          $selector = 'selector'.ucfirst($selector);
          if(!method_exists($classname, $selector)) continue;
-   
+
          $i++;
          echo '<td>';
          $classname::$selector();
@@ -125,16 +125,16 @@ class PluginMreportingMisc {
    /**
     * Generate a SQL date test with $_REQUEST date fields
     * @param  string  $field     the sql table field to compare
-    * @param  integer $delay     if $_REQUET date fields not provided, 
-    *                            generate them from $delay (in days) 
+    * @param  integer $delay     if $_REQUET date fields not provided,
+    *                            generate them from $delay (in days)
     * @param  string $randname   random string (to prevent conflict in js selection)
     * @return string             The sql test to insert in your query
     */
    static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname) {
 
-      if (!isset($_REQUEST['date1'.$randname])) 
+      if (!isset($_REQUEST['date1'.$randname]))
          $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
-      if (!isset($_REQUEST['date2'.$randname])) 
+      if (!isset($_REQUEST['date2'.$randname]))
          $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
 
       $date_array1=explode("-",$_REQUEST['date1'.$randname]);
@@ -147,7 +147,7 @@ class PluginMreportingMisc {
       if ($time1 > $time2) {
          list($time1, $time2) = array($time2, $time1);
          list($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname]) = array(
-            $_REQUEST['date2'.$randname], 
+            $_REQUEST['date2'.$randname],
             $_REQUEST['date1'.$randname]
          );
       }
@@ -158,9 +158,9 @@ class PluginMreportingMisc {
       return "($field >= '$begin' AND $field <= ADDDATE('$end' , INTERVAL 1 DAY) )";
    }
 
-   
+
    /**
-    * Get the max value of a multidimensionnal array 
+    * Get the max value of a multidimensionnal array
     * @param  array() $array the array to compute
     * @return number the sum
     */
@@ -176,14 +176,14 @@ class PluginMreportingMisc {
          } else{
             if ($value > $max) $max = $value;
          }
-      }  
+      }
 
       return $max;
    }
 
 
    /**
-    * Computes the sum of a multidimensionnal array 
+    * Computes the sum of a multidimensionnal array
     * @param  array() $array the array where to seek
     * @return number the sum
     */
@@ -197,14 +197,14 @@ class PluginMreportingMisc {
          } else{
             $sum+= $value;
          }
-      }  
+      }
 
       return $sum;
    }
 
 
    /**
-    * Get the depth of a multidimensionnal array 
+    * Get the depth of a multidimensionnal array
     * @param  array() $array the array where to seek
     * @return number the sum
     */
@@ -230,7 +230,7 @@ class PluginMreportingMisc {
     * @param  array $flat_array the flat array. Format : array('id', 'parent', 'name', 'count')
     * @return array the tree array. Format : array(name => array(name2 => array(count), ...)
     */
-   static function buildTree($flat_array) {   
+   static function buildTree($flat_array) {
       $raw_tree = self::mapTree($flat_array);
       $tree = self::cleanTree($raw_tree);
       return $tree;
@@ -260,24 +260,24 @@ class PluginMreportingMisc {
 
    /**
     * Transform a tree array to a tree array (with clean keyss)
-    * @param  array $flat_array the tree array. 
+    * @param  array $flat_array the tree array.
     *               Format : array('id', 'parent', 'name', 'count', children => array(...)
-    * @return array the tree array. 
+    * @return array the tree array.
     *               Format : array(name => array(name2 => array(count), ...)
     */
    static function cleanTree($raw_tree) {
       $tree = array();
-      
+
       foreach ($raw_tree as $id => $node) {
          if (isset($node['children'])) {
             $sub = self::cleanTree($node['children']);
-            
+
             if ($node['count'] > 0) {
                $current = array($node['name'] => intval($node['count']));
                $tree[$node['name']] = array_merge($current, $sub);
             } else {
                $tree[$node['name']] = $sub;
-            } 
+            }
          } else {
             $tree[$node['name']] = intval($node['count']);
          }

@@ -45,10 +45,10 @@ if (isset($_POST['ext'])
       $option[1] = $LANG['plugin_mreporting']["export"][4];
       Dropdown::showFromArray("withdata", $option, array());
 
-   } 
+   }
 
    if ($_POST['ext'] == "svg") {
-      //close previous form 
+      //close previous form
       Html::Closeform();
 
       $randname = $_POST['randname'];
@@ -74,7 +74,7 @@ if (isset($_POST['ext'])
                         .set({'value': token});
                   }
                });
-               
+
                //set new crsf token for main form
                Ext.Ajax.request({
                   url: '../ajax/get_new_crsf_token.php',
@@ -84,11 +84,11 @@ if (isset($_POST['ext'])
                         .set({'value': token});
                   }
                });
-               
+
             });
          </script>";
    } else {
-      
+
       echo "&nbsp;<input type='submit' id='export_submit' name='export' value=\"".
       _sx('button', 'Post')."\" class='submit'>";
 
@@ -101,13 +101,13 @@ if (isset($_POST['ext'])
                   var token = response.responseText;
                   Ext.select('#export_form input[name=_glpi_csrf_token]')
                      .set({'value': token});
-                  
+
                }
             });
          });
 
       </script>";
    }
-   
+
 }
 

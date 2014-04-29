@@ -26,7 +26,7 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 include ("../../../inc/includes.php");
 
 Session::checkLoginUser();
@@ -39,7 +39,7 @@ $common = new PluginMreportingCommon();
 $reports = $common->getAllReports();
 $tabs = array();
 foreach ($reports as $classname => $report) {
-     
+
    $tabs[$classname]=array('title'=>$report['title'],
                            'url'=>$CFG_GLPI['root_doc']."/plugins/mreporting/ajax/common.tabs.php",
                            'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname");

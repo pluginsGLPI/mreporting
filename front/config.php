@@ -33,7 +33,7 @@ Session::checkRight("config","w");
 
 $plugin = new Plugin();
 if ($plugin->isActivated("mreporting")) {
-   
+
    //Create first config for graphs
    if (isset($_GET["new"])) {
 
@@ -41,13 +41,13 @@ if ($plugin->isActivated("mreporting")) {
       $config= new PluginMreportingConfig();
       $config->createFirstConfig();
       Html::back();
-      
+
    } else {
-      
+
       Html::header(__("Setup"),'',"plugins","mreporting","config");
-      
+
       PluginMreportingConfig::addFirstconfigLink();
-      
+
       Search::show("PluginMreportingConfig");
    }
 
@@ -62,4 +62,3 @@ if ($plugin->isActivated("mreporting")) {
 
 Html::footer();
 
-	

@@ -46,7 +46,7 @@ if(isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::D
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
-   
+
    $PLUGIN_HOOKS['redirect_page']['mreporting'] = 'front/download.php';
 
    /* CRSF */
@@ -55,7 +55,7 @@ function plugin_init_mreporting() {
    /* Profile */
    $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
                                                                         'changeProfile');
-   
+
    Plugin::registerClass('PluginMreportingNotification',
    array('notificationtemplates_types' => true));
    //Plugin::registerClass('PluginMreportingNotificationTargetNotification');
@@ -113,10 +113,10 @@ function plugin_init_mreporting() {
 
    //Add specific files to add to the header : css
    $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
-   
-   
-   
-   
+
+
+
+
 }
 
 // Get the name and the version of the plugin - Needed

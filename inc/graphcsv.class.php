@@ -26,7 +26,7 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 class PluginMreportingGraphcsv extends PluginMreportingGraph {
    const DEBUG_CSV = false;
 
@@ -38,36 +38,36 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
    }
 
    function showHbar($params) {
-      
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
+
       if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
+
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
       } else {
          $datas = array();
       }
-      
+
       if (count($datas) <= 0) return false;
-      
+
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      
+
       if ($unit == '%') {
          $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       }
-      
+
       $values = array_values($datas);
       $labels = array_keys($datas);
-      
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
@@ -96,45 +96,45 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
    }
 
    function showHgbar($params) {
-      
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
+
       if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-   
+
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
       } else {
          $datas = array();
       }
-      
+
       if (count($datas) <= 0) return false;
-      
+
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      
+
       if ($unit == '%') {
          $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       }
-      
+
       $labels2 = array_values($raw_datas['labels2']);
-      
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
                         "export" => $export);
-                  
+
       $this->initGraph($options);
 
       $out = $title." - ".$desc."\r\n";
-      
+
       foreach($datas as $label2 => $cols) {
          //title
          $out.= $label2."\r\n";
@@ -157,52 +157,52 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
       echo $out;
    }
-   
+
    function showVstackbar($params) {
       $this->showHGbar($params);
    }
-   
+
    function showArea($params) {
       $this->showHbar($params);
    }
-   
+
    function showGarea($params) {
       $this->showHGbar($params);
    }
 
    function showSunburst($params) {
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
+
       if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-   
+
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
       } else {
          $datas = array();
       }
-      
+
       if (count($datas) <= 0) return false;
-      
+
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      
+
       if ($unit == '%') {
          $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       }
-            
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
                         "export" => $export);
-                  
+
       $this->initGraph($options);
 
       $out = $title." - ".$desc."\r\n";
@@ -216,7 +216,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
       $i = 0;
       foreach($datas as $label => $value) {
-         for ($j=0; $j < $level; $j++) { 
+         for ($j=0; $j < $level; $j++) {
            if ($i > 0) $out.= ";";
          }
 

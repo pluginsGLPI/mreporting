@@ -26,7 +26,7 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -38,7 +38,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
       return $LANG['plugin_mreporting']["name"];
    }
-   
+
    static function canCreate() {
       return Session::haveRight('profile', 'w');
    }
@@ -46,13 +46,13 @@ class PluginMreportingProfile extends CommonDBTM {
    static function canView() {
       return Session::haveRight('profile', 'r');
    }
-   
+
    //if profile deleted
    static function purgeProfiles(Profile $prof) {
       $plugprof = new self();
       $plugprof->deleteByCriteria(array('profiles_id' => $prof->getField("id")));
    }
-   
+
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       global $LANG;
 
@@ -69,19 +69,19 @@ class PluginMreportingProfile extends CommonDBTM {
       if ($item->getType()=='Profile') {
          $ID = $item->getField('id');
          $prof = new self();
-         
+
          if (!$prof->getFromDBByProfile($item->getField('id'))) {
             $prof->createAccess($item->getField('id'));
          }
-         $prof->showForm($item->getField('id'), array('target' => 
+         $prof->showForm($item->getField('id'), array('target' =>
                      $CFG_GLPI["root_doc"]."/plugins/mreporting/front/profile.form.php"));
       }
       return true;
    }
-   
+
    function getFromDBByProfile($profiles_id) {
       global $DB;
-      
+
       $query = "SELECT * FROM `".$this->getTable()."`
                WHERE `profiles_id` = '" . $profiles_id . "' ";
       if ($result = $DB->query($query)) {
@@ -97,7 +97,7 @@ class PluginMreportingProfile extends CommonDBTM {
       }
       return false;
    }
-  
+
    static function createFirstAccess($ID) {
       $myProf = new self();
       if (!$myProf->getFromDBByProfile($ID)) {
@@ -114,7 +114,7 @@ class PluginMreportingProfile extends CommonDBTM {
       $this->add(array(
       'profiles_id' => $ID));
    }
-   
+
    static function changeProfile() {
       $prof = new self();
       if ($prof->getFromDBByProfile($_SESSION['glpiactiveprofile']['id'])) {
@@ -122,7 +122,7 @@ class PluginMreportingProfile extends CommonDBTM {
       }
       else unset($_SESSION["glpi_plugin_mreporting_profile"]);
    }
-   
+
    function showForm ($ID, $options=array()) {
       global $LANG;
 
@@ -137,13 +137,13 @@ class PluginMreportingProfile extends CommonDBTM {
       $this->showFormHeader($options);
 
       echo "<tr class='tab_bg_2'>";
-      
+
       echo "<th colspan='4'>".$LANG['plugin_mreporting']["name"]." ".
                               $prof->fields["name"]."</th>";
-      
+
       echo "</tr>";
       echo "<tr class='tab_bg_2'>";
-      
+
       echo "<td>".__("Display report").":</td><td>";
       Profile::dropdownNoneReadWrite("reports",$this->fields["reports"],1,1,0);
       echo "</td>";
@@ -155,7 +155,7 @@ class PluginMreportingProfile extends CommonDBTM {
       echo "</tr>";
 
       echo "<input type='hidden' name='id' value=".$this->fields["id"].">";
-      
+
       $options['candel'] = false;
       $this->showFormButtons($options);
    }

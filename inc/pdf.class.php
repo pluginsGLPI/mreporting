@@ -15,7 +15,7 @@ class PluginMreportingPdf extends TCPDF {
       $creator = $LANG['plugin_mreporting']['notification_creator'];
       $version = plugin_version_mreporting();
       $author  = $CFG_GLPI["version"].' - ' . $version['name'].' v' . $version['version'];
-      
+
       $this->SetCreator($creator);
       $this->SetAuthor($author);
       $this->SetTitle($title);
@@ -29,7 +29,7 @@ class PluginMreportingPdf extends TCPDF {
 
    /**
     * Insert content and graphs
-    * 
+    *
     * @param array $images Array of reports
     */
    function Content($images) {
@@ -39,13 +39,13 @@ class PluginMreportingPdf extends TCPDF {
          $i++;
          $file = '@' . base64_decode($image['base64']);
          $w    = 210 - PDF_MARGIN_LEFT * 2;
-         
+
          if ($image['width'] == 0) continue;
-         
+
          $h    = floor(($image['height'] * $w) / $image['width']);
          $this->Image($file, '', '',$w ,$h);
          $this->Ln($h);
-         
+
          $this->writeHTMLCell('', '', '', '', $image['title'], 0, 1, false, true, 'C');
          if($i < $images_lengh) $this->AddPage();
       }

@@ -26,18 +26,18 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 if (!defined('GLPI_ROOT')){
    die("Sorry. You can't access directly to this file");
 }
 
 class PluginMreportingPreference extends CommonDBTM {
 
-   
+
    static function checkIfPreferenceExists($users_id) {
       return self::checkPreferenceValue('id', $users_id);
    }
-   
+
    function addDefaultPreference($users_id) {
       $id = self::checkIfPreferenceExists($users_id);
       if (!$id) {
@@ -47,7 +47,7 @@ class PluginMreportingPreference extends CommonDBTM {
       }
       return $id;
    }
-   
+
    /**
     *
     * Get a preference for an user
@@ -64,7 +64,7 @@ class PluginMreportingPreference extends CommonDBTM {
          return 0;
       }
    }
-   
+
    static function checkPreferenceTemplateValue($users_id) {
       return self::checkPreferenceValue('template', $users_id);
    }
@@ -79,7 +79,7 @@ class PluginMreportingPreference extends CommonDBTM {
                                      PLUGIN_MREPORTING_TEMPLATE_DIR, $value);
    }
 
-   
+
    /**
     *
     * Display a dropdown which contains all files of a certain type in a directory
@@ -99,7 +99,7 @@ class PluginMreportingPreference extends CommonDBTM {
       }
       return Dropdown::showFromArray($name, $values, array('value' => $value));
    }
-   
+
    /**
     *
     * Check if at least one template exists
@@ -109,13 +109,13 @@ class PluginMreportingPreference extends CommonDBTM {
       $files = self::getFiles(PLUGIN_MREPORTING_TEMPLATE_DIR, PLUGIN_MREPORTING_TEMPLATE_EXTENSION);
       return (!empty($files));
    }
-   
+
    function showForm($ID){
       global $LANG,$CFG_GLPI;
-      
+
       $version = plugin_version_mreporting();
       $this->getFromDB($ID);
-      
+
       echo "<form method='post' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'><div align='center'>";
       echo "<table class='tab_cadre_fixe' cellpadding='5'>";
       echo "<tr><th colspan='2'>" . $version['name'] . " - ". $version['version'] . "</th></tr>";
@@ -129,17 +129,17 @@ class PluginMreportingPreference extends CommonDBTM {
       echo "<input type='hidden' name='users_id' value='".$this->fields['users_id']."'>";
       echo "<input type='submit' name='update' value='"._sx('button', 'Post')."' class='submit' ></td>";
       echo "</tr>";
-         
+
       echo "</table>";
       echo "</div>";
       Html::closeForm();
    }
-   
+
    static function getFiles($directory , $ext) {
-      
+
       $array_dir  = array();
       $array_file = array();
-      
+
       if (is_dir($directory)) {
          if ($dh = opendir($directory)) {
             while (($file = readdir($dh)) !== false) {
@@ -152,9 +152,9 @@ class PluginMreportingPreference extends CommonDBTM {
                   echo "";
                } else {
                   if ($filetype == 'file' && $extension ==$ext) {
-                  
+
                         $array_file[] = array($filename, $filedate, $extension);
-                     
+
                   } elseif ($filetype == "dir") {
                      $array_dir[] = $filename;
                      }
@@ -165,10 +165,10 @@ class PluginMreportingPreference extends CommonDBTM {
       }
 
       rsort($array_file);
-      
+
       return $array_file;
    }
-   
+
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       global $LANG;
@@ -188,6 +188,6 @@ class PluginMreportingPreference extends CommonDBTM {
       }
       return true;
    }
-   
+
 }
 

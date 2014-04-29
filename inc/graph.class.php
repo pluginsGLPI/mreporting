@@ -26,12 +26,12 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 class PluginMreportingGraph {
 
    const DEBUG_GRAPH = false;
    protected $width = 850;
-   
+
    /**
     * init Graph : Show Titles / Date selector
     *
@@ -39,10 +39,10 @@ class PluginMreportingGraph {
    */
    function initGraph($options) {
       global $LANG, $CFG_GLPI;
-      
+
       $width = $this->width + 100;
       $randname = $options['randname'];
-      
+
       echo "<div class='center'><div id='fig' style='width:{$width}px'>";
       //Show global title
       if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
@@ -54,56 +54,56 @@ class PluginMreportingGraph {
       echo "<div class='graph_title'>";
       $backtrace = debug_backtrace();
       $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
-         
+
       echo "<img src='".$CFG_GLPI['root_doc']."/plugins/mreporting/pics/chart-$prev_function.png' class='title_pics' />";
       echo $options['title'];
       echo "</div>";
-      
+
       $desc = '';
       if (!empty($options['desc'])) {
          $desc =$options['desc'];
       }
-      if (!empty($options['desc']) 
-            && isset($_REQUEST['date1'.$randname]) 
+      if (!empty($options['desc'])
+            && isset($_REQUEST['date1'.$randname])
                && isset($_REQUEST['date1'.$randname])) {
          $desc.= " - ";
       }
-      if (isset($_REQUEST['date1'.$randname]) 
+      if (isset($_REQUEST['date1'.$randname])
             && isset($_REQUEST['date1'.$randname])) {
          $desc.= Html::convdate($_REQUEST['date1'.$randname])." / ".
             Html::convdate($_REQUEST['date2'.$randname]);
       }
       echo "<div class='graph_desc'>".$desc."</div>";
-      
+
       //Show date selector
       //using rand for display x graphs on same page
-      
-      if (!isset($_REQUEST['date1'.$randname])) 
-            $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", 
+
+      if (!isset($_REQUEST['date1'.$randname]))
+            $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d",
                time() - ($options['delay'] * 24 * 60 * 60));
-      if (!isset($_REQUEST['date2'.$randname])) 
+      if (!isset($_REQUEST['date2'.$randname]))
          $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
 
       echo "<div class='graph_navigation'>";
       PluginMreportingMisc::showSelector(
          $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
       echo "</div>";
-      
+
       $ex_func = explode($options['short_classname'], $options['randname']);
       if (!is_numeric($ex_func[0])) {
          $classname = $ex_func[0].$options['short_classname'];
          $functionname = $ex_func[1];
-            
+
          // We check if a configuration is needed for the graph
          if (method_exists(new $classname(), 'needConfig')) {
 
             $configs = PluginMreportingConfig::initConfigParams($functionname, $classname);
 
             $object = new $classname();
-            $object->needConfig($configs); 
+            $object->needConfig($configs);
          }
       }
-      
+
       //Script for graph display
       if ($randname !== false) {
          echo "<div class='graph' id='graph_content$randname'>";
@@ -130,19 +130,19 @@ class PluginMreportingGraph {
     */
    function showHbar($params) {
       global $LANG;
-      
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      
+
       if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
 
       $options = array("title" => $title,
@@ -151,9 +151,9 @@ class PluginMreportingGraph {
                         "delay" => $delay,
                         "export" => $export,
                         "short_classname" => $opt["short_classname"]);
-                  
+
       $this->initGraph($options);
-      
+
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
@@ -164,9 +164,9 @@ class PluginMreportingGraph {
          PluginMreportingCommon::endGraph($end);
          return false;
       }
-      
+
       $datas = $raw_datas['datas'];
-      
+
       $datas = $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
@@ -250,11 +250,11 @@ class PluginMreportingGraph {
    }, 20);
 
 JAVASCRIPT;
-      
+
       if ($show_graph) {
          echo $JS;
       }
-      
+
       $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
@@ -280,30 +280,30 @@ JAVASCRIPT;
     */
    function showPie($params) {
       global $LANG;
-      
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      
+
       if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
-                  
+
       $this->initGraph($options);
-      
+
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
@@ -314,9 +314,9 @@ JAVASCRIPT;
          PluginMreportingCommon::endGraph($end);
          return false;
       }
-      
+
       $datas = $raw_datas['datas'];
-      
+
       $datas = $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
@@ -363,13 +363,13 @@ JAVASCRIPT;
             return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
          })
          .event("mouseover", function() {
-            this.parent.o(this.index) ; 
-            Hilighted[this.index] = true; 
+            this.parent.o(this.index) ;
+            Hilighted[this.index] = true;
             return vis{$randname};
          })
-         .event("mouseout", function() {  
-            this.parent.o(-1) ; 
-            Hilighted[this.index] = false; 
+         .event("mouseout", function() {
+            this.parent.o(-1) ;
+            Hilighted[this.index] = false;
             return vis{$randname};
          })
          .strokeStyle(function() { return colors(this.index).darker(); })
@@ -395,7 +395,7 @@ JAVASCRIPT;
       .right(5)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
-         return (this.parent.o() == this.index) ? colors(this.index).alpha(.6) : colors(this.index) 
+         return (this.parent.o() == this.index) ? colors(this.index).alpha(.6) : colors(this.index)
          && Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
       })
       .event("mouseover", function() {Hilighted[this.index] = true; return vis{$randname};})
@@ -420,7 +420,7 @@ JAVASCRIPT;
       if ($show_graph) {
          echo $JS;
       }
-      
+
       $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
@@ -434,9 +434,9 @@ JAVASCRIPT;
     *
     * @params :
     * @param $raw_datas : an array with :
-    *    - key 'datas', ex : 
-    *          array( 
-    *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val), 
+    *    - key 'datas', ex :
+    *          array(
+    *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val),
     *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
     *          )
     *    - key 'root', root label in graph center
@@ -452,31 +452,31 @@ JAVASCRIPT;
       global $LANG;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
+
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      
+
       if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
-                  
+
       $this->initGraph($options);
 
       if (isset($_REQUEST['export'])) $export_txt = "true";
       else $export_txt =  "false";
-      
+
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
@@ -487,9 +487,9 @@ JAVASCRIPT;
          PluginMreportingCommon::endGraph($end);
          return false;
       }
-      
+
       $datas = $raw_datas['datas'];
-      
+
       $labels2 = array();
       if (isset($raw_datas['labels2'])) {
          $labels2 = $raw_datas['labels2'];
@@ -553,7 +553,7 @@ JAVASCRIPT;
             var nbLevelParentNode = getLevelNbNode(d.parentNode);
             var alpha_index = 1 - levelIndex / (nbLevelNode+1);
             var alpha_index_parent  = 1 - levelIndexParent / (nbLevelParentNode+1);
-            
+
             //specific case alpha index when 1st lvl
             if (d.parentNode == root) alpha_index_parent = 1;
 
@@ -594,7 +594,7 @@ JAVASCRIPT;
          if (this.index == i) return 4;
          else return 1;
       });
-      
+
    if ({$export_txt} == false) wedge.event("mouseover", pv.Behavior.extjsTooltips(this.nodeName));
 
    /*** wedge interaction ***/
@@ -623,7 +623,7 @@ JAVASCRIPT;
          //if (d.depth == 1) out = 1.13;
          return - out * ((height-20) / 2) * d.depth * Math.sin(d.midAngle) + height/2;
       })
-      .text(function(d) { 
+      .text(function(d) {
          var label = d.nodeName;
          if (label && label.length > 8) {
             label = label.substring(0, 8)+"..";
@@ -657,7 +657,7 @@ JAVASCRIPT;
       if (offset > 100) clearInterval(interval);
    }, 20);
 
-   
+
 
 
 JAVASCRIPT;
@@ -692,30 +692,30 @@ JAVASCRIPT;
     */
    function showHgbar($params) {
       global $LANG;
-      
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      
+
       if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
-                  
+
       $this->initGraph($options);
-      
+
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
@@ -726,11 +726,11 @@ JAVASCRIPT;
          PluginMreportingCommon::endGraph($end);
          return false;
       }
-      
+
       $datas = $raw_datas['datas'];
-      
+
       $labels2 = $raw_datas['labels2'];
-      
+
       $datas = $this->initDatasMultiple($datas, $labels2, $unit);
 
       $nb_bar = count($datas);
@@ -757,7 +757,7 @@ JAVASCRIPT;
       .left(240)
       .right(10)
       .top(5);
-   
+
    // axis and tick
    vis{$randname}.add(pv.Rule)
          .data(x.ticks(6))
@@ -770,7 +770,7 @@ JAVASCRIPT;
          .strokeStyle(function(d) d ? "#eee" : "black")
       .anchor("bottom").add(pv.Label)
          .text(x.tickFormat);
-         
+
    panel = vis{$randname}.add(pv.Panel)
       .data(datas)
       .top(function() { return y(this.index) + m*14; })
@@ -786,7 +786,7 @@ JAVASCRIPT;
 
    panel_bar = panel.add(pv.Panel)
       .def("active", false);
-     
+
    bar = panel_bar.add(pv.Bar)
       .left(0)
       .width(function(d) {
@@ -805,16 +805,16 @@ JAVASCRIPT;
          }
          else return colors(this.parent.parent.index);
       })
-      .event("mouseover", function() { 
-         this.parent.active(true); 
+      .event("mouseover", function() {
+         this.parent.active(true);
          Hilighted[this.parent.active] = true;
          index_active = this.parent.parent.index;
          return vis{$randname};
       })
 //      .event("mouseover", pv.Behavior.extjsTooltips("test"))
-      .event("mouseout", function() { 
-         this.parent.active(false); 
-         Hilighted[this.parent.active] = false; 
+      .event("mouseout", function() {
+         this.parent.active(false);
+         Hilighted[this.parent.active] = false;
          index_active = -1;
          return vis{$randname};
       })
@@ -823,7 +823,7 @@ JAVASCRIPT;
    .anchor("right").add(pv.Label)
       .textAlign("left")
       .visible(function(d) {
-         return ((this.parent.active() || (d <= max / 100 && d!=0) 
+         return ((this.parent.active() || (d <= max / 100 && d!=0)
             || Hilighted[this.parent.parent.index])  && {$hover} || {$always}) ? true : false;
       })
       .textStyle(function() { return colors(this.parent.parent.index).darker(); })
@@ -838,11 +838,11 @@ JAVASCRIPT;
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
       })
       .event("mouseover", function() {
-         Hilighted[this.index] = true; 
+         Hilighted[this.index] = true;
          return vis{$randname};
       }) // override
-      .event("mouseout", function() { 
-         Hilighted[this.index] = false; 
+      .event("mouseout", function() {
+         Hilighted[this.index] = false;
          return vis{$randname};
       })
       .strokeStyle(function() { return colors(this.index).darker(); })
@@ -864,7 +864,7 @@ JAVASCRIPT;
       if ($show_graph) {
          echo $JS;
       }
-      
+
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -876,7 +876,7 @@ JAVASCRIPT;
 
    }
 
-   
+
    /**
     * Show a horizontal grouped bar chart
     *
@@ -893,30 +893,30 @@ JAVASCRIPT;
     */
    function showVstackbar($params) {
       global $LANG;
-      
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
+
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      
+
       if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
-                  
+
       $this->initGraph($options);
-      
+
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
@@ -927,21 +927,21 @@ JAVASCRIPT;
          PluginMreportingCommon::endGraph($end);
          return false;
       }
-      
+
       $datas = $raw_datas['datas'];
 
       $labels2 = $raw_datas['labels2'];
-      
+
       $datas = $this->initDatasMultiple($datas, $labels2, $unit, true);
 
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
-      
+
       $height = 20 * $nb_bar + 50;
       if ($height < 400) {
          $height = 400;
       }
-      
+
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
@@ -955,7 +955,7 @@ JAVASCRIPT;
        i = -1 // mouseover index
        Hilighted = [false, false,false, false,false, false];
 
-   
+
    vis{$randname} = new pv.Panel()
        .width(w)
        .height(h)
@@ -963,7 +963,7 @@ JAVASCRIPT;
        .left(50)
        .right(5)
        .top(5);
-   
+
    /*** y-axis ticks and labels ***/
    vis{$randname}.add(pv.Rule)
        .data(y.ticks())
@@ -973,13 +973,13 @@ JAVASCRIPT;
        .strokeStyle(function(d) d ? "#eee" : "black")
        .anchor("left").add(pv.Label)
        .text(y.tickFormat);
-       
+
    /*** stacks of bar ***/
    var stack{$randname} = vis{$randname}.add(pv.Layout.Stack)
       .layers(datas)
       .x(function() x(this.index))
       .y(function(d) 1- 50/offset + y(d))
-   
+
    /*** bars ***/
    var bar{$randname} = stack{$randname}.layer.add(pv.Bar)
       .width(x.range().band)
@@ -989,7 +989,7 @@ JAVASCRIPT;
       })
       .strokeStyle(function(d) {
          if ((this.index == i || Hilighted[this.parent.index]) && d!=0)
-         return colors(this.parent.index).darker(); 
+         return colors(this.parent.index).darker();
       })
       .event("mouseover", function(d) {
          i = this.index;
@@ -1002,7 +1002,7 @@ JAVASCRIPT;
 
    bar{$randname}.anchor("center").add(pv.Label)
       .visible(function(d){
-         return ( (this.index == i || Hilighted[this.parent.index]) 
+         return ( (this.index == i || Hilighted[this.parent.index])
             && ({$hover} && (d!=0)) || ({$always}  && (d!=0)) ) ? true : false ;
       })
       .textBaseline("center")
@@ -1025,7 +1025,7 @@ JAVASCRIPT;
       .text(function() { return labels2[this.index]; })
    .anchor("bottom").add(pv.Rule)
       .height(3);
-  
+
    // legend
    dot{$randname} = vis{$randname}.add(pv.Dot) // legend dots
       .data(labels)
@@ -1038,8 +1038,8 @@ JAVASCRIPT;
          Hilighted[this.index] = true;
          return vis{$randname};
       })
-      .event("mouseout", function() { 
-         Hilighted[this.index] = false; 
+      .event("mouseout", function() {
+         Hilighted[this.index] = false;
          return vis{$randname};
       })
       .strokeStyle(function() { return colors(this.index).darker(); })
@@ -1048,7 +1048,7 @@ JAVASCRIPT;
       .textMargin(12)
       .textBaseline("middle")
       .textStyle(function() { return colors(this.index).darker(); });
-   
+
    dot{$randname}.anchor("left").add(pv.Label) // legend labels
       .textAlign("left")
       .textBaseline("middle")
@@ -1071,7 +1071,7 @@ JAVASCRIPT;
       if ($show_graph) {
          echo $JS;
       }
-      
+
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -1098,22 +1098,22 @@ JAVASCRIPT;
     */
    function showArea($params) {
       global $LANG;
-      
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
       if (DEBUG_MREPORTING == true) {
          $area = true;
       }
-      
+
       if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
 
       $options = array("title" => $title,
@@ -1122,9 +1122,9 @@ JAVASCRIPT;
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
-                  
+
       $this->initGraph($options);
-      
+
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
@@ -1135,7 +1135,7 @@ JAVASCRIPT;
          PluginMreportingCommon::endGraph($end);
          return false;
       }
-      
+
       $datas = $raw_datas['datas'];
 
       $datas = $this->initDatasSimple($datas, $unit);
@@ -1269,7 +1269,7 @@ JAVASCRIPT;
       if ($show_graph) {
          echo $JS;
       }
-      
+
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -1293,7 +1293,7 @@ JAVASCRIPT;
     * @return nothing
     */
    function showLine($params) {
-      
+
       $this->showArea($params);
    }
 
@@ -1313,30 +1313,30 @@ JAVASCRIPT;
     */
    function showGarea($params) {
       global $LANG;
-      
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
-      
+
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      
+
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      
+
       //if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-      
+
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"]);
-                  
+
       $this->initGraph($options);
-      
+
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
@@ -1347,23 +1347,23 @@ JAVASCRIPT;
          PluginMreportingCommon::endGraph($end);
          return false;
       }
-      
+
       $datas = $raw_datas['datas'];
-      
+
       $labels2 = $raw_datas['labels2'];
-      
+
       $datas = $this->initDatasMultiple($datas, $labels2, $unit);
 
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-      
+
       $nb_bar = count($datas);
       $height = 20 * $nb_bar + 250;
       if ($height < 450) {
          $height = 450;
       }
-      
+
       $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
    var height_area = {$height};
@@ -1499,11 +1499,11 @@ JAVASCRIPT;
    }, 20);
 
 JAVASCRIPT;
-      
+
       if ($show_graph) {
          echo $JS;
       }
-      
+
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -1530,7 +1530,7 @@ JAVASCRIPT;
    function showGline($params) {
       $this->showGarea($params);
    }
-   
+
    /**
     * Compile simple datas
     *
@@ -1538,15 +1538,15 @@ JAVASCRIPT;
     * @param $unit, ex : '%', 'Kg' (optionnal)
     * @return nothing
     */
-    
+
    function initDatasSimple($datas, $unit = '') {
-      
+
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-      
+
       $labels = array_keys($datas);
       $values = array_values($datas);
-      
-      
+
+
       $out = "var datas = [\n";
       foreach ($values as $value) {
          $out.= "\t".addslashes($value).",\n";
@@ -1568,10 +1568,10 @@ JAVASCRIPT;
 
       echo "var max = $max;";
       echo "var n = ".count($values).";";
-      
+
       return $datas;
    }
-   
+
    /**
     * Compile multiple datas
     *
@@ -1581,20 +1581,20 @@ JAVASCRIPT;
     * @param $stacked : if stacked graph, option to compile the max value
     * @return nothing
     */
-    
+
    function initDatasMultiple($datas, $labels2, $unit = '',$stacked = false) {
-      
+
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-      
+
       $labels = array_keys($datas);
       $values = array_values($datas);
       $max = 0;
-      
+
       if ($stacked) {
-         
+
          $tmp = array();
          foreach($values as $k => $v) {
-                  
+
             foreach($v as $key => $val) {
                   $tmp[$key][$k] = $val;
             }
@@ -1642,7 +1642,7 @@ JAVASCRIPT;
       $out = substr($out,0, -2)."\n";
       $out.= "];\n";
       echo $out;
-      
+
       if (!$stacked) {
          $max = ($max*1.2);
       }
@@ -1651,35 +1651,35 @@ JAVASCRIPT;
       echo "var n = ".count($labels).";";
       echo "var m = ".count($labels2).";";
       echo "var max = $max;";
-      
+
       return $datas;
-      
+
    }
-   
+
 
    /**
     * Compile Tree datas
     *
-    * @param $datas, ex : 
-    *          array( 
-    *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val), 
+    * @param $datas, ex :
+    *          array(
+    *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val),
     *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
     *          )
     * @param $unit, ex : '%', 'Kg' (optionnal)
     * @return nothing
     */
-    
+
    function initDatasTree($datas, $unit = '') {
-      
+
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-      
+
       echo "var datas = ".json_encode($datas).";";
       echo "var sum = ".PluginMreportingMisc::getArraySum($datas).";";
-      
+
       return $datas;
    }
 
-   
+
 
    function legend($datas) {
 

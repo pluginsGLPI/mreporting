@@ -26,7 +26,7 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 function plugin_mreporting_install() {
    global $DB;
 
@@ -34,10 +34,10 @@ function plugin_mreporting_install() {
    $plugin = new Plugin;
    $found = $plugin->find("name = 'mreporting'");
    $plugin_mreporting = array_shift($found);
-   
+
    //init migration
    $migration = new Migration( $plugin_mreporting['version']);
-   
+
    //create profiles table
    $queries = array();
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
@@ -48,7 +48,7 @@ function plugin_mreporting_install() {
    PRIMARY KEY (`id`)
    )
    ENGINE = MyISAM;";
-   
+
    //create configuration table
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
    `id` int(11) NOT NULL auto_increment,
@@ -77,26 +77,26 @@ function plugin_mreporting_install() {
    KEY `users_id` (`users_id`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
-   // add display preferences 
-   $query_display_pref = "SELECT id 
+   // add display preferences
+   $query_display_pref = "SELECT id
       FROM glpi_displaypreferences
       WHERE itemtype = 'PluginMreportingConfig'";
    $res_display_pref = $DB->query($query_display_pref);
    if ($DB->numrows($res_display_pref) == 0) {
-      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      $queries[] = "INSERT INTO `glpi_displaypreferences`
          VALUES (NULL,'PluginMreportingConfig','2','2','0');";
-      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      $queries[] = "INSERT INTO `glpi_displaypreferences`
          VALUES (NULL,'PluginMreportingConfig','3','3','0');";
-      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      $queries[] = "INSERT INTO `glpi_displaypreferences`
          VALUES (NULL,'PluginMreportingConfig','4','4','0');";
-      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      $queries[] = "INSERT INTO `glpi_displaypreferences`
          VALUES (NULL,'PluginMreportingConfig','5','5','0');";
-      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      $queries[] = "INSERT INTO `glpi_displaypreferences`
          VALUES (NULL,'PluginMreportingConfig','6','6','0');";
-      $queries[] = "INSERT INTO `glpi_displaypreferences` 
+      $queries[] = "INSERT INTO `glpi_displaypreferences`
          VALUES (NULL,'PluginMreportingConfig','8','8','0');";
    }
-   
+
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_notifications` (
       `id` int(11) NOT NULL auto_increment,
       `entities_id` int(11) NOT NULL default '0',
@@ -111,7 +111,7 @@ function plugin_mreporting_install() {
       `is_deleted` tinyint(1) NOT NULL default '0',
       PRIMARY KEY  (`id`)
       ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-   
+
    foreach($queries as $query)
       $DB->query($query);
 
@@ -122,10 +122,10 @@ function plugin_mreporting_install() {
                array('after' => 'is_active'));
       $migration->migrationOneTable('glpi_plugin_mreporting_configs');
    }
-   
+
    require_once "inc/profile.class.php";
    PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
-   
+
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
    if (!is_dir($rep_files_mreporting))
       mkdir($rep_files_mreporting);
@@ -142,14 +142,14 @@ function plugin_mreporting_install() {
    require_once "inc/config.class.php";
    $config = new PluginMreportingConfig();
    $config->createFirstConfig();
-   
+
    return true;
 }
 
 
 function plugin_mreporting_uninstall() {
    global $DB;
-   
+
    $queries = array(
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_profiles",
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_configs",
@@ -159,23 +159,23 @@ function plugin_mreporting_uninstall() {
 
    foreach($queries as $query)
       $DB->query($query);
-   
+
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
    $notifications_folder = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications";
 
    Toolbox::deleteDir($notifications_folder);
    Toolbox::deleteDir($rep_files_mreporting);
-   
+
    $tables_glpi = array("glpi_displaypreferences",
                "glpi_bookmarks");
 
    foreach($tables_glpi as $table_glpi)
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginMreportingConfig' ;");
-      
+
 
    require_once "inc/notification.class.php";
    PluginMreportingNotification::uninstall();
-   
+
    return true;
 }
 
@@ -196,15 +196,15 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
    $searchopt=&Search::getOptions($type);
    $table=$searchopt[$ID]["table"];
    $field=$searchopt[$ID]["field"];
-   
+
    $output_type=Search::HTML_OUTPUT;
    if (isset($_GET['display_type']))
       $output_type=$_GET['display_type'];
-      
+
    switch ($type) {
-      
+
       case 'PluginMreportingConfig':
-         
+
          switch ($table.'.'.$field) {
             case "glpi_plugin_mreporting_configs.show_label":
                $out = ' ';
@@ -216,25 +216,25 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
             case "glpi_plugin_mreporting_configs.name":
                $out = ' ';
                if (!empty($data["ITEM_$num"])) {
-                  
+
                   $title_func = '';
                   $short_classname = '';
                   $f_name = '';
-                  
+
                   $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
                   //parse inc dir to search report classes
                   $classes = PluginMreportingCommon::parseAllClasses($inc_dir);
-                  
+
                   foreach($classes as $classname) {
-                     
+
                      $functions = get_class_methods($classname);
-                     
+
                      foreach($functions as $funct_name) {
                         $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);
                         if ($ex_func[0] != 'report') continue;
-            
+
                         $gtype = strtolower($ex_func[1]);
-                        
+
                         if ($data["ITEM_$num"] == $funct_name) {
                            if (!empty($classname) && !empty($funct_name)) {
                               $short_classname = str_replace('PluginMreporting', '', $classname);
@@ -243,7 +243,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
                               }
                            }
                         }
-                     }  
+                     }
                   }
                   $out="<a href='config.form.php?id=".$data["id"]."'>".
                         $data["ITEM_$num"]."</a> (".$title_func.")";
@@ -253,7 +253,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
          }
          return "";
          break;
-      
+
    }
    return "";
 }
@@ -276,7 +276,7 @@ function plugin_mreporting_addWhere($link, $nott, $type, $ID, $val, $searchtype)
 }
 
 function plugin_mreporting_MassiveActionsFieldsDisplay($options=array()) {
-   
+
    $table = $options['options']['table'];
    $field = $options['options']['field'];
    $linkfield = $options['options']['linkfield'];
@@ -284,15 +284,15 @@ function plugin_mreporting_MassiveActionsFieldsDisplay($options=array()) {
 
       // Table fields
       switch ($table.".".$field) {
-         
+
          case "glpi_plugin_mreporting_configs.show_label":
             PluginMreportingConfig::dropdownLabel('show_label');
             return true;
             break;
 
          case "glpi_plugin_mreporting_configs.graphtype":
-            Dropdown::showFromArray("graphtype", 
-               array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG')); 
+            Dropdown::showFromArray("graphtype",
+               array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'));
             return true;
             break;
       }
@@ -310,8 +310,8 @@ function plugin_mreporting_searchOptionsValues($options = array()) {
 
    switch ($table.".".$field) {
       case "glpi_plugin_mreporting_configs.graphtype":
-         Dropdown::showFromArray("graphtype", 
-            array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'));         
+         Dropdown::showFromArray("graphtype",
+            array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'));
          return true;
    }
    return false;

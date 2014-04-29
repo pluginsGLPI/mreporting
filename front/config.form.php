@@ -39,7 +39,7 @@ if (isset($_POST["add"])) {
 	Session::checkRight("config","w");
 	$newID=$config->add($_POST);
 	Html::back();
-	
+
 } else if (isset($_POST["update"])) {
 
 	Session::checkRight("config","w");
@@ -51,11 +51,11 @@ if (isset($_POST["add"])) {
 	Session::checkRight("config","w");
 	$config->delete($_POST,1);
 	Html::redirect("./config.form.php");
-   
+
 } else {
 
 	Html::header(__("Setup"),'',"plugins","mreporting","config");
-   
+
    //Link from graph
    if (isset($_GET["name"]) && isset($_GET["classname"])) {
       if ($config->getFromDBByFunctionAndClassname($_GET["name"],$_GET["classname"])) {
@@ -63,7 +63,7 @@ if (isset($_POST["add"])) {
       }
    }
 	$config->showForm($_GET["id"]);
-	
+
 	Html::footer();
 
 }

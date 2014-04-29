@@ -34,7 +34,7 @@ Session::checkLoginUser();
 if (isset($_GET["classname"])) {
    $_POST["classname"] = $_GET["classname"];
 }
-  
+
 Html::popHeader($LANG['plugin_mreporting']["export"][0], $_SERVER['PHP_SELF']);
 
 $common = new PluginMreportingCommon();

@@ -26,17 +26,17 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 include ("../../../inc/includes.php");
 
 if (!isset ($_GET["id"])) {
    $_GET["id"] = "";
 }
-   
+
 $pref= new PluginMreportingPreference();
 
 if (isset($_POST["update"])) {
-   
+
    $pref->update($_POST);
    Html::redirect($_SERVER['HTTP_REFERER']);
 
