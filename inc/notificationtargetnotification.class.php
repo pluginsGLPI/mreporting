@@ -91,7 +91,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
          $translation = $result->fetch_array();
          $mmail->isHTML(true);
          $mmail->Subject   = $translation['subject'];
-         $mmail->Body      = $translation['content_html'];
+         $mmail->Body      = html_entity_decode($translation['content_html']);
          $mmail->AltBody   = $translation['content_text'];
 
          $mmail->AddAddress($infos['email']);
