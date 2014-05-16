@@ -87,6 +87,12 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
                   AND (language LIKE "'.$_SESSION['glpilanguage'].'" OR language LIKE "")
                   ORDER BY language DESC
                   LIMIT 0, 1';
+
+         //restore session
+         unset($_SESSION);
+         $_SESSION = $saved_session;
+
+         // Get datas and send mail
          $result = $DB->query($query);
          $translation = $result->fetch_array();
          $mmail->isHTML(true);
