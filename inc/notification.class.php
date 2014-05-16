@@ -139,7 +139,7 @@ class PluginMreportingNotification extends CommonDBTM {
       global $LANG;
 
       $task->log($LANG['plugin_mreporting']['notification_log']);
-      NotificationEvent::raiseEvent('sendReporting', new Self(), $task->fields);
+      NotificationEvent::raiseEvent('sendReporting', new self(), $task->fields);
       return 1;
    }
 }
