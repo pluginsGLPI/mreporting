@@ -26,6 +26,10 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
+$USEDBREPLICATE         = 1;
+$DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
+
 include ("../../../inc/includes.php");
 
 Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
