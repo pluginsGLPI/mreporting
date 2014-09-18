@@ -26,9 +26,11 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
-define('GLPI_ROOT', '../../..');
-include (GLPI_ROOT."/inc/includes.php");
+
+$USEDBREPLICATE         = 1;
+$DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
+
+include ("../../../inc/includes.php");
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
