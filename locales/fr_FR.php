@@ -170,3 +170,7 @@ $LANG['plugin_mreporting']['selector']["period"][2] = "Semaine";
 $LANG['plugin_mreporting']['selector']["period"][3] = "Mois";
 $LANG['plugin_mreporting']['selector']["period"][4] = "Année";
 
+$LANG['plugin_mreporting']['Other']['title'] = "Autres";
+$LANG['plugin_mreporting']['Other']['reportHbarLogs']['title'] = "Répartition des logs";
+$LANG['plugin_mreporting']['Other']['reportHbarLogs']['desc'] = "Barres";
+$LANG['plugin_mreporting']['Other']['reportHbarLogs']['category'] = "Logs";
