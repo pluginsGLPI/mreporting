@@ -121,7 +121,6 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       $result = $DB->query($query_genericobject);
       $datas['datas'][__('Genericobject plugin logs')] = $DB->result($result, 0, 'cpt');
 
-      $datas['datas'] = arsort($datas['datas']);
       return $datas;
 
    }
