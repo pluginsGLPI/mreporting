@@ -185,7 +185,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      $desc = " (".$comment.")";
                   }
                   echo "<option value='".$v["url_graph"]."' title=\"".
-                                 Html::cleanInputText($comment)."\">".$v["title"].$desc."</option>";
+                                 Html::cleanInputText($comment)."\">".$v["title"]."</option>";
                   $i++;
                }
             }

@@ -110,9 +110,11 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
+   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
 
    //Add specific files to add to the header : css
    $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
+   $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
 
 
 
