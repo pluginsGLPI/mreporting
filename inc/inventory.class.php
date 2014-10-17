@@ -409,6 +409,32 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $this->reportHbarFusionInventory($configs);
    }  
 
+  function reportHbarMonitors($configs = array()) {
+      global $DB, $LANG;
+
+      /*Must be defined*/
+      if (count($configs) == 0) {
+         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      }
+      foreach ($configs as $k => $v) {
+         $$k=$v;
+      }
+      /*End Must be defined*/
+
+      $query = "select count(*) as cpt from glpi_computers_items where itemtype='Monitor' and is_deleted=0 group by computers_id order by cpt";
+
+
+      $data = array();
+      foreach ($DB->request($query) as $result) {
+         if (!isset($data['datas'][$result['cpt']])) {
+            $data['datas'][$result['cpt']] = 0;
+         }
+         $data['datas'][$result['cpt']] = $data['datas'][$result['cpt']]+1;
+      }
+
+      return $data;
+  }
+
 }
 
 ?>
