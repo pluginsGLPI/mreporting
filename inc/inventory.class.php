@@ -393,7 +393,6 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       foreach ($DB->request($query) as $agent) {
          $values = array();
          if (preg_match('/FusionInventory-Agent_v(.*)/i', $agent['useragent'], $values)) {
-            Toolbox::logDebug($values);
             $useragent = $values['1'];
          } else {
             $useragent = $agent['useragent'];
@@ -421,15 +420,26 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       }
       /*End Must be defined*/
 
-      $query = "select count(*) as cpt from glpi_computers_items where itemtype='Monitor' and is_deleted=0 group by computers_id order by cpt";
+      $condition = " AND c.entities_id IN (".$this->where_entities.")";
 
+      $query = "SELECT COUNT(*) AS cpt 
+                FROM `glpi_computers_items` AS ci,
+                     `glpi_computers` AS c
+                WHERE `ci`.`itemtype`='Monitor' 
+                   AND `c`.`is_deleted`='0' 
+                     AND `ci`.`computers_id`=c.`id`
+                     AND `c`.`is_template`='0'
+                     $condition
+                GROUP BY `ci`.`computers_id` 
+                ORDER BY `cpt`";
 
       $data = array();
       foreach ($DB->request($query) as $result) {
-         if (!isset($data['datas'][$result['cpt']])) {
-            $data['datas'][$result['cpt']] = 0;
+         $label = $result['cpt']." "._n('Monitor', 'Monitors', $result['cpt']);
+         if (!isset($data['datas'][$label])) {
+            $data['datas'][$label] = 0;
          }
-         $data['datas'][$result['cpt']] = $data['datas'][$result['cpt']]+1;
+         $data['datas'][$label] = $data['datas'][$label]+1;
       }
 
       return $data;

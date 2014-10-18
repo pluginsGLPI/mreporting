@@ -216,7 +216,7 @@ $LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['title'] = "
 $LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['desc'] = "Camembert";
 $LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['category'] = "Inventaire";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['title'] = "Nombre d'écrans par ordinateur";
+$LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['title'] = "Répartition du nombre d'écrans par ordinateur";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['desc'] = "Barres";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['category'] = "Inventaire";
 
