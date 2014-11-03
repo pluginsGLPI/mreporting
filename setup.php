@@ -129,7 +129,7 @@ function plugin_version_mreporting() {
    global $LANG;
 
    return array('name'         => $LANG['plugin_mreporting']["name"],
-                'version'        => "2.2",
+                'version'        => "2.3",
                 'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
                                        & <a href='http://www.infotel.com'>Infotel</a>",
                 'homepage'       => "https://forge.indepnet.net/projects/mreporting",
