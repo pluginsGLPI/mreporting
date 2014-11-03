@@ -98,16 +98,42 @@ class PluginMreportingProfile extends CommonDBTM {
       return false;
    }
 
+
    static function createFirstAccess($ID) {
-      $myProf = new self();
-      if (!$myProf->getFromDBByProfile($ID)) {
-         $myProf->add(array(
-            'profiles_id' => $ID,
-            'reports'   => 'r',
-            'config'    => 'w'
-         ));
-      }
+       global $DB;
+
+       $profiles = "SELECT `id` FROM `glpi_profiles`";
+       $reports = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
+
+       foreach ($DB->request($profiles) as $prof) {
+           foreach ($DB->request($reports) as $report){
+
+               $mreportProfile = new self();
+               $mreportProfile->add(array(
+                   'profiles_id' => $prof['id'],
+                   'reports'   => $report['id']
+               ));
+
+           }
+       }
+
    }
+
+
+    function addRightToReports($config_id){
+
+        global $DB;
+        $profiles = "SELECT `id` FROM `glpi_profiles`";
+
+        foreach ($DB->request($profiles) as $prof) {
+            $reportProfile = new self();
+            $reportProfile->add(array(
+                'profiles_id' => $prof['id'],
+                'reports'   => $config_id
+            ));
+        }
+
+    }
 
    function createAccess($ID) {
 
@@ -159,6 +185,64 @@ class PluginMreportingProfile extends CommonDBTM {
       $options['candel'] = false;
       $this->showFormButtons($options);
    }
+
+
+    function showFormForManageProfile($items){
+        global $DB, $LANG;
+
+
+        echo "<table class='tab_cadre_fixe'>\n";
+        echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
+
+        $query = "SELECT `id`, `name`
+                FROM `glpi_profiles`
+                ORDER BY `name`";
+
+        foreach ($DB->request($query) as $profile) {
+            $reportProfiles=new Self();
+            $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'],$items->fields['id']);
+            echo "<tr class='tab_bg_1'><td>" . $profile['name'] . "&nbsp: </td><td>";
+
+            $values = array();
+            $values['NULL'] = __('No access');
+            $values['r'] = __('Read');
+
+            Dropdown::showFromArray($profile['id'], $values,
+                array('value'   => $reportProfiles->fields['right'],
+                    'rand'    => false,
+                    'display' => true,
+                    'on_change' => "changeRightForProfilAndReport(".$profile['id'].",".$reportProfiles->fields['id'].");"));
+
+
+            echo "</td>\n";
+            echo "<td style='width:24px;'><div id='div_info_".$profile['id']."'></div></td></tr>\n";
+        }
+
+
+        echo "<tr class='tab_bg_4'><td colspan='2'> ";
+
+        echo "</tr>";
+
+        echo "</table>\n";
+    }
+
+
+    function findByProfileAndReport($profil_id, $report_id){
+        $reportProfile = new Self();
+        $reportProfile->getFromDBByQuery(" where `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
+        return $reportProfile;
+    }
+
+
+    static function canViewReports($profil_id, $report_id){
+        $reportProfile = new Self();
+
+        $reportProfile->getFromDBByQuery(" where `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
+        if($reportProfile->fields['right'] == 'r'){
+            return true;
+        }
+        return false;
+    }
 
 }
 
