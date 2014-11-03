@@ -118,13 +118,16 @@ class PluginMreportingCommon extends CommonDBTM {
                   $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
                   $reports[$classname]['functions'][$i]['gtype'] = $gtype;
                   $reports[$classname]['functions'][$i]['short_classname'] = $scn;
-                  $reports[$classname]['functions'][$i]['is_active'] = false;
+                   $reports[$classname]['functions'][$i]['is_active'] = false;
+
                   $config = new PluginMreportingConfig();
                   if ($config->getFromDBByFunctionAndClassname($f_name,$classname)) {
                      if ($config->fields['is_active'] == 1) {
                         $reports[$classname]['functions'][$i]['is_active'] = true;
                      }
+                      $reports[$classname]['functions'][$i]['right'] = PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'],$config->fields['id']);
                   }
+
                   if ($with_url) {
                      $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
                      $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
@@ -211,6 +214,8 @@ class PluginMreportingCommon extends CommonDBTM {
       global $LANG, $CFG_GLPI;
 
       $reports = $this->getAllReports(true, $params);
+
+
       if ($reports === false) {
          echo "<div class='center'>".$LANG['plugin_mreporting']["error"][0]."</div>";
          return false;
@@ -219,6 +224,7 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "<table class='tab_cadre_fixe' id='mreporting_functions'>";
 
       foreach($reports as $classname => $report) {
+
 
          $i = 0;
          $nb_per_line = 2;
@@ -238,21 +244,34 @@ class PluginMreportingCommon extends CommonDBTM {
 
                foreach($graph as $k => $v) {
 
-                  if ($v['is_active']) {
-                     if ($i%$nb_per_line == 0) {
-                        if ($i != 0) {
-                           echo "</tr>";
-                        }
-                        echo "<tr class='tab_bg_1' valign='top'>";
-                     }
+                   if($v['right']){
+                       if ($v['is_active']) {
+                           if ($i%$nb_per_line == 0) {
+                               if ($i != 0) {
+                                   echo "</tr>";
+                               }
+                               echo "<tr class='tab_bg_1' valign='top'>";
+                           }
 
-                     echo "<td>";
-                     echo "<a href='".$v['url_graph']."'>";
-                     echo "<img src='".$v['pic']."' />&nbsp;";
-                     echo $v['title'];
-                     echo "</a></td>";
-                     $i++;
-                  }
+                           echo "<td>";
+
+
+
+                           echo "<a href='".$v['url_graph']."'>";
+                           echo "<img src='".$v['pic']."' />&nbsp;";
+                           echo $v['title'];
+                           echo "</a>";
+
+
+
+
+
+                           echo"</td>";
+                           $i++;
+                       }
+                   }
+
+
                   $count++;
                   if ($i%$nb_per_line > 0) {
                      $count++;
