@@ -88,6 +88,15 @@ $LANG['plugin_mreporting']['download_in_progress'] = "Le téléchargement de vos
 $LANG['plugin_mreporting']['download_dont_start']  = "Si le téléchargement ne démarre pas automatiquement, veuillez";
 $LANG['plugin_mreporting']['download_clic_here']   = "cliquer ici";
 
+$LANG['plugin_mreporting']['selector']["status"]   = "Status";
+$LANG['plugin_mreporting']['selector']["period"][0] = "Période";
+$LANG['plugin_mreporting']['selector']["period"][1] = "Jour";
+$LANG['plugin_mreporting']['selector']["period"][2] = "Semaine";
+$LANG['plugin_mreporting']['selector']["period"][3] = "Mois";
+$LANG['plugin_mreporting']['selector']["period"][4] = "Année";
+
+
+
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Nombre de ticket par entités";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['desc'] = "Barres";
@@ -160,13 +169,4 @@ $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarTicketStatusByTechnician'
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['title'] = "Nombre de ticket par lieu des demandeurs";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['desc'] = "Barres";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['category'] = "Par demandeurs";
-
-
-$LANG['plugin_mreporting']['selector']["status"]   = "Status";
-
-$LANG['plugin_mreporting']['selector']["period"][0] = "Période";
-$LANG['plugin_mreporting']['selector']["period"][1] = "Jour";
-$LANG['plugin_mreporting']['selector']["period"][2] = "Semaine";
-$LANG['plugin_mreporting']['selector']["period"][3] = "Mois";
-$LANG['plugin_mreporting']['selector']["period"][4] = "Année";
 
