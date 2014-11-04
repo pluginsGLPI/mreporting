@@ -99,26 +99,38 @@ class PluginMreportingProfile extends CommonDBTM {
    }
 
 
-   static function createFirstAccess($ID) {
-       global $DB;
+    static function createFirstAccess($ID) {
 
-       $profiles = "SELECT `id` FROM `glpi_profiles`";
-       $reports = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
+        $myProf = new self();
+        if (!$myProf->getFromDBByProfile($ID)) {
+            $myProf->add(array(
+                'profiles_id' => $ID,
+                'reports' => 'r',
+                'config' => 'w'
+            ));
+        }
 
-       foreach ($DB->request($profiles) as $prof) {
-           foreach ($DB->request($reports) as $report){
+        $myProf->add(array(
+            'profiles_id' => 1,
+            'reports' => 'NULL',
+            'config' => 'w'
+        ));
+    }
 
-               $mreportProfile = new self();
-               $mreportProfile->add(array(
-                   'profiles_id' => $prof['id'],
-                   'reports'   => $report['id']
-               ));
 
-           }
+
+    static function haveRightFromOldVersion($profiles_id){
+        global $DB;
+        $query = "select * from `glpi_plugin_mreporting_oldprofile` where `profiles_id` = ".$profiles_id." and reports = 'r' ";
+        $res = $DB->queryOrDie($query,'PB SQL');
+
+       if($res->num_rows == 0){
+           return false;
+       }else{
+           return true;
        }
 
-   }
-
+    }
 
     function addRightToReports($config_id){
 
@@ -126,13 +138,27 @@ class PluginMreportingProfile extends CommonDBTM {
         $profiles = "SELECT `id` FROM `glpi_profiles`";
 
         foreach ($DB->request($profiles) as $prof) {
-            $reportProfile = new self();
-            $reportProfile->add(array(
-                'profiles_id' => $prof['id'],
-                'reports'   => $config_id
-            ));
-        }
 
+            $right = PluginMreportingProfile::haveRightFromOldVersion($prof['id']);
+
+
+            if(!$right){
+                $reportProfile = new PluginMreportingProfile();
+                $reportProfile->add(array(
+                    'profiles_id' => $prof['id'],
+                    'reports'   => $config_id
+                ));
+            }else{
+                $reportProfile1 = new PluginMreportingProfile();
+                $reportProfile1->add(array(
+                    'profiles_id' => $prof['id'],
+                    'reports'   => $config_id
+                ));
+            }
+
+
+
+        }
     }
 
    function createAccess($ID) {
