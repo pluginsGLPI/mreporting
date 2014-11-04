@@ -104,8 +104,11 @@ function plugin_init_mreporting() {
    }
 
    if (class_exists('PluginMreportingProfile')) { // only if plugin activated
-      $PLUGIN_HOOKS['pre_item_purge']['mreporting']
-                     = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'));
+       $PLUGIN_HOOKS['pre_item_purge']['mreporting']
+           = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'));
+
+       $PLUGIN_HOOKS['item_add']['mreporting']
+           = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'));
    }
 
    // Add specific files to add to the header : javascript
@@ -120,6 +123,8 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
+
+
 
 }
 
