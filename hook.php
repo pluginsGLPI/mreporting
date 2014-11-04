@@ -145,12 +145,32 @@ function plugin_mreporting_install() {
     $query = "truncate table `glpi_plugin_mreporting_profiles`";
     $DB->query($query);
 
-    $migration->changeField('glpi_plugin_mreporting_profiles', 'reports','reports','int(11) NOT NULL default "0"',  array());
-    $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id','profiles_id','int(11) NOT NULL default "0"',  array());
-    $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
-    $migration->addField('glpi_plugin_mreporting_profiles', 'right','varchar(1) default "r"', array());
+    // == Update to 2.2 ==
+     if (FieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
+         $migration->changeField('glpi_plugin_mreporting_profiles', 'reports','reports',
+             'int(11) NOT NULL default "0"', array());
+         $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
+         }
 
-    $migration->executeMigration();
+ if (FieldExists('glpi_plugin_mreporting_profiles', 'profiles_id')) {
+         $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id','profiles_id',
+             'int(11) NOT NULL default "0"', array());
+         $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
+         }
+
+
+ if (FieldExists('glpi_plugin_mreporting_profiles', 'config')) {
+         $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
+         $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
+         }
+
+ if (!FieldExists('glpi_plugin_mreporting_profiles', 'right')) {
+         $migration->addField('glpi_plugin_mreporting_profiles', 'right',
+             'varchar(1) default "r"', array());
+         $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
+         }
+
+
 
 
 
