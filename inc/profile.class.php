@@ -110,15 +110,14 @@ class PluginMreportingProfile extends CommonDBTM {
             ));
         }
 
-        $myProf->add(array(
-            'profiles_id' => 1,
-            'reports' => 'NULL',
-            'config' => 'w'
-        ));
     }
 
 
-
+    /**
+     * function to know if profile have right before migration
+     * @param $profiles_id
+     * @return bool
+     */
     static function haveRightFromOldVersion($profiles_id){
         global $DB;
         $query = "select * from `glpi_plugin_mreporting_oldprofile` where `profiles_id` = ".$profiles_id." and reports = 'r' ";
@@ -133,6 +132,10 @@ class PluginMreportingProfile extends CommonDBTM {
     }
 
 
+    /**
+     * Function to add right on report to a profile
+     * @param $idProfile
+     */
     function addRightToProfile($idProfile){
 
         //get all reports
@@ -152,7 +155,11 @@ class PluginMreportingProfile extends CommonDBTM {
     }
 
 
-    function addRightToReports($config_id){
+    /**
+     * Function to add right of a new report
+     * @param $report_id
+     */
+    function addRightToReports($report_id){
 
         global $DB;
         $profiles = "SELECT `id` FROM `glpi_profiles`";
@@ -166,13 +173,13 @@ class PluginMreportingProfile extends CommonDBTM {
                 $reportProfile = new PluginMreportingProfile();
                 $reportProfile->add(array(
                     'profiles_id' => $prof['id'],
-                    'reports'   => $config_id
+                    'reports'   => $report_id
                 ));
             }else{
                 $reportProfile1 = new PluginMreportingProfile();
                 $reportProfile1->add(array(
                     'profiles_id' => $prof['id'],
-                    'reports'   => $config_id
+                    'reports'   => $report_id
                 ));
             }
 
@@ -195,6 +202,13 @@ class PluginMreportingProfile extends CommonDBTM {
       else unset($_SESSION["glpi_plugin_mreporting_profile"]);
    }
 
+
+    /**
+     * Form to manage report right on profile
+     * @param $ID (id of profile)
+     * @param array $options
+     * @return bool
+     */
     function showForm ($ID, $options=array()) {
         global $LANG;
 
@@ -242,6 +256,10 @@ class PluginMreportingProfile extends CommonDBTM {
     }
 
 
+    /**
+     * Form to manage right on reports
+     * @param $items
+     */
     function showFormForManageProfile($items){
         global $DB, $LANG;
 
