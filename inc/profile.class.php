@@ -132,6 +132,26 @@ class PluginMreportingProfile extends CommonDBTM {
 
     }
 
+
+    function addRightToProfile($idProfile){
+
+        //get all reports
+        $config = new PluginMreportingConfig();
+        $res = $config->find();
+
+        foreach( $res as $report) {
+            //add right for any reports for profile
+            $reportProfile1 = new PluginMreportingProfile();
+            $reportProfile1->add(array(
+                'profiles_id' => $idProfile,
+                'reports'   => $report['id']
+            ));
+
+        }
+
+    }
+
+
     function addRightToReports($config_id){
 
         global $DB;
@@ -175,42 +195,51 @@ class PluginMreportingProfile extends CommonDBTM {
       else unset($_SESSION["glpi_plugin_mreporting_profile"]);
    }
 
-   function showForm ($ID, $options=array()) {
-      global $LANG;
+    function showForm ($ID, $options=array()) {
+        global $LANG;
 
-      if (!Session::haveRight("profile","r")) return false;
+        if (!Session::haveRight("profile","r")) return false;
 
-      $prof = new Profile();
-      if ($ID) {
-         $this->getFromDBByProfile($ID);
-         $prof->getFromDB($ID);
-      }
+        global $DB, $LANG;
 
-      $this->showFormHeader($options);
 
-      echo "<tr class='tab_bg_2'>";
+        $config = new PluginMreportingConfig();
+        $res = $config->find();
 
-      echo "<th colspan='4'>".$LANG['plugin_mreporting']["name"]." ".
-                              $prof->fields["name"]."</th>";
 
-      echo "</tr>";
-      echo "<tr class='tab_bg_2'>";
+        echo "<table class='tab_cadre_fixe'>\n";
+        echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
 
-      echo "<td>".__("Display report").":</td><td>";
-      Profile::dropdownNoneReadWrite("reports",$this->fields["reports"],1,1,0);
-      echo "</td>";
 
-      echo "<td>".__("Setup").":</td><td>";
-      Profile::dropdownNoneReadWrite("config",$this->fields["config"],1,0,1);
-      echo "</td>";
+        foreach( $res as $report) {
 
-      echo "</tr>";
+            $profile = $this->findByProfileAndReport($ID,$report['id']);
 
-      echo "<input type='hidden' name='id' value=".$this->fields["id"].">";
 
-      $options['candel'] = false;
-      $this->showFormButtons($options);
-   }
+            echo "<tr class='tab_bg_1'><td>" . $report['name'] . "&nbsp: </td><td>";
+
+            $values = array();
+            $values['NULL'] = __('No access');
+            $values['r'] = __('Read');
+
+            Dropdown::showFromArray($report['id'], $values,
+                array('value'   => $profile->fields['right'],
+                    'rand'    => false,
+                    'display' => true,
+                    'on_change' => "changeRightForProfilAndReport(".$report['id'].",".$profile->fields['id'].");"));
+
+
+            echo "</td>\n";
+            echo "<td style='width:24px;'><div id='div_info_".$report['id']."'></div></td></tr>\n";
+        }
+
+
+        echo "<tr class='tab_bg_4'><td colspan='2'> ";
+
+        echo "</tr>";
+
+        echo "</table>\n";
+    }
 
 
     function showFormForManageProfile($items){
@@ -259,6 +288,12 @@ class PluginMreportingProfile extends CommonDBTM {
         return $reportProfile;
     }
 
+    function findReportByProfiles($profil_id){
+        $reportProfile = new Self();
+        $reportProfile->getFromDBByQuery(" where `profiles_id` = ".$profil_id);
+        return $reportProfile;
+    }
+
 
     static function canViewReports($profil_id, $report_id){
         $reportProfile = new Self();
@@ -269,6 +304,20 @@ class PluginMreportingProfile extends CommonDBTM {
         }
         return false;
     }
+
+    // Hook done on add item case
+    static function addProfiles(Profile $item) {
+
+        if($item->getType()=='Profile' && $item->getField('interface')!='helpdesk'){
+            Session::addMessageAfterRedirect("Add Profile Hook, ID=".$item->getID(), true);
+            $profile = new PluginMreportingProfile();
+            $profile->addRightToProfile($item->getID());
+        }
+
+        return true;
+    }
+
+
 
 }
 
