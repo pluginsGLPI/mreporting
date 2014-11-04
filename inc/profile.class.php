@@ -162,7 +162,7 @@ class PluginMreportingProfile extends CommonDBTM {
     function addRightToReports($report_id){
 
         global $DB;
-        $profiles = "SELECT `id` FROM `glpi_profiles`";
+        $profiles = "SELECT `id` FROM `glpi_profiles` where `interface` = 'central'";
 
         foreach ($DB->request($profiles) as $prof) {
 
