@@ -113,24 +113,63 @@ class PluginMreportingProfile extends CommonDBTM {
     }
 
 
-    /**
-     * function to know if profile have right before migration
-     * @param $profiles_id
-     * @return bool
-     */
-    static function haveRightFromOldVersion($profiles_id){
-        global $DB;
-        $query = "select * from `glpi_plugin_mreporting_oldprofile` where `profiles_id` = ".$profiles_id." and reports = 'r' ";
-        $res = $DB->queryOrDie($query,'PB SQL');
+    static function addRightToProfiles($right){
 
-       if($res->num_rows == 0){
-           return false;
-       }else{
-           return true;
-       }
+        global $DB;
+
+        $profiles = "SELECT `id` FROM `glpi_profiles` where `interface` = 'central'";
+        $reports = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
+
+        $report = new PluginMreportingProfile();
+        $table_fields = $DB->list_fields($report->getTable());
+        var_dump($table_fields);
+
+
+
+        foreach ($DB->request($profiles) as $prof) {
+
+            foreach($DB->request($reports) as $report){
+
+                //If profiles have right
+                if(in_array($prof['id'],$right)){
+                    var_dump("HAVE RIGHT");
+                    $reportProfile = new PluginMreportingProfile();
+                    $reportProfile->add(array(
+                        'profiles_id' => $prof['id'],
+                        'reports'   => $report['id'],
+                        'right' => 'r'
+                    ));
+                }else{
+                    $reportProfile = new PluginMreportingProfile();
+                    $reportProfile->add(array(
+                        'profiles_id' => $prof['id'],
+                        'reports'   => $report['id']
+                    ));
+                }
+
+            }
+
+
+
+
+
+        }
 
     }
 
+
+    static function getRight(){
+
+        global $DB;
+        $query = "select `profiles_id` from `glpi_plugin_mreporting_profiles` where reports = 'r' ";
+
+        $right = array();
+        foreach ($DB->request($query) as $profile) {
+            $right[] = $profile['profiles_id'];
+        }
+
+        return $right;
+    }
 
     /**
      * Function to add right on report to a profile
@@ -147,7 +186,8 @@ class PluginMreportingProfile extends CommonDBTM {
             $reportProfile1 = new PluginMreportingProfile();
             $reportProfile1->add(array(
                 'profiles_id' => $idProfile,
-                'reports'   => $report['id']
+                'reports'   => $report['id'],
+                'right' => 'r'
             ));
 
         }
@@ -166,24 +206,12 @@ class PluginMreportingProfile extends CommonDBTM {
 
         foreach ($DB->request($profiles) as $prof) {
 
-            $right = PluginMreportingProfile::haveRightFromOldVersion($prof['id']);
-
-
-            if(!$right){
-                $reportProfile = new PluginMreportingProfile();
-                $reportProfile->add(array(
-                    'profiles_id' => $prof['id'],
-                    'reports'   => $report_id
-                ));
-            }else{
                 $reportProfile1 = new PluginMreportingProfile();
                 $reportProfile1->add(array(
                     'profiles_id' => $prof['id'],
-                    'reports'   => $report_id
+                    'reports'   => $report_id,
+                    'right' => 'r'
                 ));
-            }
-
-
 
         }
     }
