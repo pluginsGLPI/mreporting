@@ -27,6 +27,7 @@
  --------------------------------------------------------------------------
  */
 
+$LANG['plugin_mreporting']["right"]["manage"] = "Gestion des droits";
 $LANG['plugin_mreporting']["name"] = "Plus de rapports";
 
 $LANG['plugin_mreporting']["error"][0] = "Aucun rapport disponible !";

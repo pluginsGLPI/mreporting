@@ -26,6 +26,7 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+$LANG['plugin_mreporting']["right"]["manage"] = "Right management";
 
 $LANG['plugin_mreporting']["name"] = "More Reporting";
 
