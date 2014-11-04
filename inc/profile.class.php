@@ -268,7 +268,7 @@ class PluginMreportingProfile extends CommonDBTM {
         echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
 
         $query = "SELECT `id`, `name`
-                FROM `glpi_profiles`
+                FROM `glpi_profiles` where `interface` = 'central'
                 ORDER BY `name`";
 
         foreach ($DB->request($query) as $profile) {
