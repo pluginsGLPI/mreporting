@@ -50,25 +50,28 @@ $JS = <<<JAVASCRIPT
 
 function changeRightForProfilAndReport(idDropdown , id){
 
-var right = $('#dropdown_'+idDropdown).val();
-var div_info = $('#div_info_'+idDropdown);
+    var right = $('#dropdown_'+idDropdown).val();
+    var div_info = Ext.fly('div_info_'+idDropdown);
 
-    div_info.empty();
+    div_info.update('');
 
-    $.ajax({ // fonction permettant de faire de l'ajax
-        type: "POST", // methode de transmission des données au fichier php
-        url: "{$root_ajax}", // url du fichier php
-        data: "action=updateReportProfile&" +
-        "id=" + id + "&" +
-        "right=" + right , // données à transmettre
-
-        success: function (msg) { // si l'appel a bien fonctionné
-            div_info.html(msg);
+    Ext.Ajax.request({
+        url: "{$root_ajax}",
+         method: 'POST',
+        params: {
+            id: id,
+            right:right
         },
-        error: function () {
-           div_info.html("Ajax problem !");
+        success: function(response, opts) {
+            div_info.update(response.responseText);
+        },
+        failure: function(response, opts) {
+            div_info.update('Ajax problem !!');
         }
     });
+
+
+
 
 }
 
