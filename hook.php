@@ -118,10 +118,11 @@ function plugin_mreporting_install() {
    foreach($queries as $query)
       $DB->query($query);
 
-    if($plugin_mreporting['version'] != '2.3'){
-        require_once "inc/profile.class.php";
-        PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
-    }
+
+
+    require_once "inc/profile.class.php";
+    PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+
 
 
     // == Update to 2.1 ==
@@ -137,44 +138,20 @@ function plugin_mreporting_install() {
 
     // == Update to 2.3 ==
 
-    //on fait une sauvegarde de la table des profile avant de la modifier
-    $query = "create table `glpi_plugin_mreporting_oldprofile` as (select * from `glpi_plugin_mreporting_profiles`)";
-    $DB->query($query);
+    //save all profile with right 'r'
+    $right = PluginMreportingProfile::getRight();
 
-    //et on vide la table
+    //truncate profile table
     $query = "truncate table `glpi_plugin_mreporting_profiles`";
     $DB->query($query);
 
-    // == Update to 2.2 ==
-     if (FieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
-         $migration->changeField('glpi_plugin_mreporting_profiles', 'reports','reports',
-             'int(11) NOT NULL default "0"', array());
-         $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
-         }
+    //migration of field
+     $migration->addField('glpi_plugin_mreporting_profiles', 'right','char');
+     $migration->changeField('glpi_plugin_mreporting_profiles', 'reports','reports','integer');
+     $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id','profiles_id','integer');
+     $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
 
- if (FieldExists('glpi_plugin_mreporting_profiles', 'profiles_id')) {
-         $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id','profiles_id',
-             'int(11) NOT NULL default "0"', array());
-         $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
-         }
-
-
- if (FieldExists('glpi_plugin_mreporting_profiles', 'config')) {
-         $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
-         $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
-         }
-
- if (!FieldExists('glpi_plugin_mreporting_profiles', 'right')) {
-         $migration->addField('glpi_plugin_mreporting_profiles', 'right',
-             'varchar(1) default "r"', array());
-         $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
-         }
-
-
-
-
-
-
+     $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
 
 
 
@@ -195,6 +172,9 @@ function plugin_mreporting_install() {
    $config = new PluginMreportingConfig();
    $config->createFirstConfig();
 
+    PluginMreportingProfile::addRightToProfiles($right);
+
+
 
    return true;
 }
@@ -207,8 +187,7 @@ function plugin_mreporting_uninstall() {
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_profiles",
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_configs",
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_preferences",
-       "DROP TABLE IF EXISTS glpi_plugin_mreporting_notifications",
-       "DROP TABLE IF EXISTS glpi_plugin_mreporting_oldprofile"
+       "DROP TABLE IF EXISTS glpi_plugin_mreporting_notifications"
 
 
    );

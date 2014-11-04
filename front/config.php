@@ -47,7 +47,6 @@ if ($plugin->isActivated("mreporting")) {
       Html::header(__("Setup"),'',"plugins","mreporting","config");
 
       PluginMreportingConfig::addFirstconfigLink();
-
       Search::show("PluginMreportingConfig");
    }
 
