@@ -289,10 +289,10 @@ class PluginMreportingProfile extends CommonDBTM {
 
         echo "<div style='float:right;'>";
         echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
-        name='giveReadAccessForAllReport' value='' title='".$LANG['plugin_mreporting']["right"]["giveAllRight"]."'>";
+        name='giveReadAccessForAllReport' value='' title='".__('Select all')."'>";
 
         echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
-        name='giveNoneAccessForAllReport' value='' title='".$LANG['plugin_mreporting']["right"]["giveNoRight"]."'><br><br>";
+        name='giveNoneAccessForAllReport' value='' title='".__('Deselect all')."'><br><br>";
         echo "</div>";
 
 
@@ -349,10 +349,10 @@ class PluginMreportingProfile extends CommonDBTM {
 
         echo "<div style='float:right;'>";
         echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
-        name='giveReadAccessForAllProfile' value='' title='".$LANG['plugin_mreporting']["right"]["giveAllRightOnProfile"]."'>";
+        name='giveReadAccessForAllProfile' value='' title='".__('Select all')."'>";
 
         echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
-        name='giveNoneAccessForAllProfile' value='' title='".$LANG['plugin_mreporting']["right"]["giveNoRightOnProfile"]."'><br><br>";
+        name='giveNoneAccessForAllProfile' value='' title='".__('Deselect all')."'><br><br>";
         echo "</div>";
 
         //echo "<input type='submit' name='giveNoneAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRightOnProfile"]."\" class='submit'><br><br><br>";
