@@ -287,7 +287,6 @@ class PluginMreportingProfile extends CommonDBTM {
         echo "<input type='submit' name='giveReadAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRight"]."\" class='submit'><br><br>";
         echo "<input type='submit' name='giveNoneAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRight"]."\" class='submit'><br><br><br>";
 
-
         $options['candel'] = false;
         $this->showFormButtons($options);
     }
@@ -302,7 +301,13 @@ class PluginMreportingProfile extends CommonDBTM {
 
         if (!Session::haveRight("config","r")) return false;
 
-        $this->showFormHeader($options);
+
+        $target = $this->getFormURL();
+        if (isset($options['target'])) {
+            $target = $options['target'];
+        }
+        echo'<form action="'.$target.'" method="post" name="form">';
+
 
         echo "<table class='tab_cadre_fixe'>\n";
         echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
@@ -315,7 +320,12 @@ class PluginMreportingProfile extends CommonDBTM {
 
             $reportProfiles=new Self();
             $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'],$items->fields['id']);
-            echo "<tr class='tab_bg_1'><td>" . $profile['name'] . "&nbsp: </td><td>";
+
+            $prof = new Profile();
+            $prof->getFromDB($profile['id']);
+
+
+            echo "<tr class='tab_bg_1'><td>" . $prof->getLink() . "</td><td>";
             Profile::dropdownNoneReadWrite($profile['id'],$reportProfiles->fields['right'],1,1,0);
             echo "</td></tr>\n";
 
@@ -334,10 +344,9 @@ class PluginMreportingProfile extends CommonDBTM {
 
         echo "<input type='submit' name='giveReadAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRightOnProfile"]."\" class='submit'><br><br>";
         echo "<input type='submit' name='giveNoneAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRightOnProfile"]."\" class='submit'><br><br><br>";
+        echo "<input type='submit' name='add' value=\""._sx('button','Save')."\" class='submit'>";
+        echo "<input type='hidden' name='_glpi_csrf_token' value='".Session::getNewCSRFToken()."'>";
 
-
-        $options['candel'] = false;
-        $this->showFormButtons($options);
     }
 
 
