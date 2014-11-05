@@ -289,6 +289,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
         $options['candel'] = false;
         $this->showFormButtons($options);
+
     }
 
 
@@ -297,7 +298,7 @@ class PluginMreportingProfile extends CommonDBTM {
      * @param $items
      */
     function showFormForManageProfile($items,$options=array()){
-        global $DB, $LANG;
+        global $DB, $LANG,$CFG_GLPI;
 
         if (!Session::haveRight("config","r")) return false;
 
@@ -347,6 +348,8 @@ class PluginMreportingProfile extends CommonDBTM {
         echo "<input type='submit' name='add' value=\""._sx('button','Save')."\" class='submit'>";
         echo "<input type='hidden' name='_glpi_csrf_token' value='".Session::getNewCSRFToken()."'>";
 
+
+
     }
 
 
@@ -366,10 +369,15 @@ class PluginMreportingProfile extends CommonDBTM {
     static function canViewReports($profil_id, $report_id){
         $reportProfile = new Self();
 
-        $reportProfile->getFromDBByQuery(" where `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
-        if($reportProfile->fields['right'] == 'r'){
-            return true;
+        $res = $reportProfile->getFromDBByQuery(" where `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
+
+        if($res){
+            if($reportProfile->fields['right'] == 'r'){
+                return true;
+            }
         }
+
+
         return false;
     }
 
