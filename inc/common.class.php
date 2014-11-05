@@ -241,48 +241,53 @@ class PluginMreportingCommon extends CommonDBTM {
          if (isset($graphs[$classname])) {
             foreach($graphs[$classname] as $cat => $graph) {
 
-               echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
+                if($this->haveSomeThingToShow($graph)){
+                    echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
 
-               foreach($graph as $k => $v) {
+                    foreach($graph as $k => $v) {
 
-                   if($v['right']){
-                       if ($v['is_active']) {
-                           if ($i%$nb_per_line == 0) {
-                               if ($i != 0) {
-                                   echo "</tr>";
-                               }
-                               echo "<tr class='tab_bg_1' valign='top'>";
-                           }
+                        if($v['right']){
+                            if ($v['is_active']) {
+                                if ($i%$nb_per_line == 0) {
+                                    if ($i != 0) {
+                                        echo "</tr>";
+                                    }
+                                    echo "<tr class='tab_bg_1' valign='top'>";
+                                }
 
-                           echo "<td>";
-
-
-
-                           echo "<a href='".$v['url_graph']."'>";
-                           echo "<img src='".$v['pic']."' />&nbsp;";
-                           echo $v['title'];
-                           echo "</a>";
+                                echo "<td>";
 
 
 
+                                echo "<a href='".$v['url_graph']."'>";
+                                echo "<img src='".$v['pic']."' />&nbsp;";
+                                echo $v['title'];
+                                echo "</a>";
 
 
-                           echo"</td>";
-                           $i++;
-                       }
-                   }
 
 
-                  $count++;
-                  if ($i%$nb_per_line > 0) {
-                     $count++;
-                  }
-               }
 
-               while ($i%$nb_per_line != 0) {
-                  echo "<td>&nbsp;</td>";
-                  $i++;
-               }
+                                echo"</td>";
+                                $i++;
+                            }
+                        }
+
+
+                        $count++;
+                        if ($i%$nb_per_line > 0) {
+                            $count++;
+                        }
+                    }
+
+                    while ($i%$nb_per_line != 0) {
+                        echo "<td>&nbsp;</td>";
+                        $i++;
+                    }
+                }
+
+
+
             }
          }
          echo "</tr>";
@@ -314,6 +319,15 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "</table>";
 
    }
+
+    function haveSomeThingToShow($graph){
+        foreach($graph as $k => $v) {
+            if($v['right']){
+                return true;
+            }
+        }
+        return false;
+    }
 
    /**
     * show Export Form from popup.php
