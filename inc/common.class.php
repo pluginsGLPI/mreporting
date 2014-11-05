@@ -177,23 +177,26 @@ class PluginMreportingCommon extends CommonDBTM {
 
          foreach($graphs as $cat => $graph) {
 
-            echo "<optgroup label=\"". $cat ."\">";
+             if(PluginMreportingCommon::haveSomeThingToShow($graph)){
+                 echo "<optgroup label=\"". $cat ."\">";
 
-            foreach($graph as $k => $v) {
+                 foreach($graph as $k => $v) {
 
-                if ($v['right']) {
-               if ($v['is_active']) {
-                  $comment = "";
-                  if (isset($v["desc"])) {
-                     $comment = $v["desc"];
-                  }
-                  echo "<option value='".$v["url_graph"]."' title=\"".
+                     if ($v['right']) {
+                         if ($v['is_active']) {
+                             $comment = "";
+                             if (isset($v["desc"])) {
+                                 $comment = $v["desc"];
+                             }
+                             echo "<option value='".$v["url_graph"]."' title=\"".
                                  Html::cleanInputText($comment)."\">".$v["title"]."</option>";
-                  $i++;
-               }
-                }
-            }
-            echo "</optgroup>";
+                             $i++;
+                         }
+                     }
+                 }
+                 echo "</optgroup>";
+             }
+
 
          }
          echo "</optgroup>";
@@ -241,7 +244,7 @@ class PluginMreportingCommon extends CommonDBTM {
          if (isset($graphs[$classname])) {
             foreach($graphs[$classname] as $cat => $graph) {
 
-                if($this->haveSomeThingToShow($graph)){
+                if(PluginMreportingCommon::haveSomeThingToShow($graph)){
                     echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
 
                     foreach($graph as $k => $v) {
@@ -320,7 +323,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
    }
 
-    function haveSomeThingToShow($graph){
+    static function haveSomeThingToShow($graph){
         foreach($graph as $k => $v) {
             if($v['right']){
                 return true;
