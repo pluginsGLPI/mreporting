@@ -47,11 +47,19 @@ class PluginMreportingProfile extends CommonDBTM {
       return Session::haveRight('profile', 'r');
    }
 
-   //if profile deleted
-   static function purgeProfiles(Profile $prof) {
-      $plugprof = new self();
-      $plugprof->deleteByCriteria(array('profiles_id' => $prof->getField("id")));
-   }
+    //if profile deleted
+    static function purgeProfiles(Profile $prof) {
+        $plugprof = new self();
+        $plugprof->deleteByCriteria(array('profiles_id' => $prof->getField("id")));
+    }
+
+
+
+    //if reports  deleted
+    static function purgeProfilesByReports($id_report) {
+        $plugprof = new self();
+        $plugprof->deleteByCriteria(array('reports' => $id_report));
+    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       global $LANG;
@@ -127,8 +135,7 @@ class PluginMreportingProfile extends CommonDBTM {
         $myreport = new PluginMreportingProfile();
         $table_fields = $DB->list_fields($myreport->getTable(),false);
 
-        var_dump($table_fields);
-        Toolbox::logDebug($right);
+
         foreach ($DB->request($profiles) as $prof) {
 
             foreach($DB->request($reports) as $report){
@@ -139,7 +146,6 @@ class PluginMreportingProfile extends CommonDBTM {
                         'profiles_id' => $prof['id'],
                         'reports'   => $report['id'],
                         'right' => 'r');
-                    Toolbox::logDebug($tmp);
                     $myreport->add($tmp);
                 }else{
                     $tmp = array(
@@ -311,8 +317,10 @@ class PluginMreportingProfile extends CommonDBTM {
 
         echo "<input type='hidden' name='report_id' value=".$items->fields['id'].">";
 
-        echo "<input type='submit' name='giveReadAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRight"]."\" class='submit'><br><br>";
-        echo "<input type='submit' name='giveNoneAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRight"]."\" class='submit'><br><br><br>";
+
+
+        echo "<input type='submit' name='giveReadAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRightOnProfile"]."\" class='submit'><br><br>";
+        echo "<input type='submit' name='giveNoneAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRightOnProfile"]."\" class='submit'><br><br><br>";
 
 
         $options['candel'] = false;
