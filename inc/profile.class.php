@@ -377,7 +377,6 @@ class PluginMreportingProfile extends CommonDBTM {
     static function addProfiles(Profile $item) {
 
         if($item->getType()=='Profile' && $item->getField('interface')!='helpdesk'){
-            Session::addMessageAfterRedirect("Add Profile Hook, ID=".$item->getID(), true);
             $profile = new PluginMreportingProfile();
             $profile->addRightToProfile($item->getID());
         }
