@@ -181,6 +181,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
             foreach($graph as $k => $v) {
 
+                if ($v['right']) {
                if ($v['is_active']) {
                   $comment = "";
                   if (isset($v["desc"])) {
@@ -190,6 +191,7 @@ class PluginMreportingCommon extends CommonDBTM {
                                  Html::cleanInputText($comment)."\">".$v["title"]."</option>";
                   $i++;
                }
+                }
             }
             echo "</optgroup>";
 
