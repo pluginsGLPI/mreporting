@@ -28,6 +28,10 @@
  */
 $LANG['plugin_mreporting']["right"]["giveAllRight"] = "Give read rights on all reports";
 $LANG['plugin_mreporting']["right"]["giveNoRight"] = "Remove all permissions to all reports";
+
+$LANG['plugin_mreporting']["right"]["giveAllRightOnProfile"] = "Give read rights on all profiles";
+$LANG['plugin_mreporting']["right"]["giveNoRightOnProfile"] = "Remove all permissions to all profiles";
+
 $LANG['plugin_mreporting']["right"]["manage"] = "Right management";
 
 $LANG['plugin_mreporting']["name"] = "More Reporting";
