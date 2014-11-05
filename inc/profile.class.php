@@ -56,9 +56,9 @@ class PluginMreportingProfile extends CommonDBTM {
 
 
     //if reports  deleted
-    static function purgeProfilesByReports($id_report) {
+    static function purgeProfilesByReports(PluginMreportingProfile $config) {
         $plugprof = new self();
-        $plugprof->deleteByCriteria(array('reports' => $id_report));
+        $plugprof->deleteByCriteria(array('reports' => $config->getField("id")));
     }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
