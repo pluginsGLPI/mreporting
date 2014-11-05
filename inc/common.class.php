@@ -177,22 +177,6 @@ class PluginMreportingCommon extends CommonDBTM {
 
          foreach($graphs as $cat => $graph) {
 
-            echo "<optgroup label=\"". $cat ."\">";
-
-            foreach($graph as $k => $v) {
-
-               if ($v['is_active']) {
-                  $comment = "";
-                  if (isset($v["desc"])) {
-                     $comment = $v["desc"];
-                     $desc = " (".$comment.")";
-                  }
-                  echo "<option value='".$v["url_graph"]."' title=\"".
-                                 Html::cleanInputText($comment)."\">".$v["title"].$desc."</option>";
-                  $i++;
-               }
-            }
-            echo "</optgroup>";
              if(PluginMreportingCommon::haveSomeThingToShow($graph)){
                  echo "<optgroup label=\"". $cat ."\">";
 
