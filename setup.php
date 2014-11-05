@@ -105,7 +105,7 @@ function plugin_init_mreporting() {
 
    if (class_exists('PluginMreportingProfile')) { // only if plugin activated
        $PLUGIN_HOOKS['pre_item_purge']['mreporting']
-           = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'));
+           = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),'PluginMreportingConfig' => array('PluginMreportingProfile', 'purgeProfilesByReports') );
 
        $PLUGIN_HOOKS['item_add']['mreporting']
            = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'));
