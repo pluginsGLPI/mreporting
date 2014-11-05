@@ -118,13 +118,16 @@ class PluginMreportingCommon extends CommonDBTM {
                   $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
                   $reports[$classname]['functions'][$i]['gtype'] = $gtype;
                   $reports[$classname]['functions'][$i]['short_classname'] = $scn;
-                  $reports[$classname]['functions'][$i]['is_active'] = false;
+                   $reports[$classname]['functions'][$i]['is_active'] = false;
+
                   $config = new PluginMreportingConfig();
                   if ($config->getFromDBByFunctionAndClassname($f_name,$classname)) {
                      if ($config->fields['is_active'] == 1) {
                         $reports[$classname]['functions'][$i]['is_active'] = true;
                      }
+                      $reports[$classname]['functions'][$i]['right'] = PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'],$config->fields['id']);
                   }
+
                   if ($with_url) {
                      $reports[$classname]['functions'][$i]['url_graph'] = $url_graph;
                      $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
@@ -190,6 +193,25 @@ class PluginMreportingCommon extends CommonDBTM {
                }
             }
             echo "</optgroup>";
+             if(PluginMreportingCommon::haveSomeThingToShow($graph)){
+                 echo "<optgroup label=\"". $cat ."\">";
+
+                 foreach($graph as $k => $v) {
+
+                     if ($v['right']) {
+                         if ($v['is_active']) {
+                             $comment = "";
+                             if (isset($v["desc"])) {
+                                 $comment = $v["desc"];
+                             }
+                             echo "<option value='".$v["url_graph"]."' title=\"".
+                                 Html::cleanInputText($comment)."\">".$v["title"]."</option>";
+                             $i++;
+                         }
+                     }
+                 }
+                 echo "</optgroup>";
+             }
 
          }
          echo "</optgroup>";
@@ -211,6 +233,7 @@ class PluginMreportingCommon extends CommonDBTM {
       global $LANG, $CFG_GLPI;
 
       $reports = $this->getAllReports(true, $params);
+
       if ($reports === false) {
          echo "<div class='center'>".$LANG['plugin_mreporting']["error"][0]."</div>";
          return false;
@@ -234,35 +257,53 @@ class PluginMreportingCommon extends CommonDBTM {
          if (isset($graphs[$classname])) {
             foreach($graphs[$classname] as $cat => $graph) {
 
-               echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
+                if(PluginMreportingCommon::haveSomeThingToShow($graph)){
+                    echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
 
-               foreach($graph as $k => $v) {
+                    foreach($graph as $k => $v) {
 
-                  if ($v['is_active']) {
-                     if ($i%$nb_per_line == 0) {
-                        if ($i != 0) {
-                           echo "</tr>";
+                        if($v['right']){
+                            if ($v['is_active']) {
+                                if ($i%$nb_per_line == 0) {
+                                    if ($i != 0) {
+                                        echo "</tr>";
+                                    }
+                                    echo "<tr class='tab_bg_1' valign='top'>";
+                                }
+
+                                echo "<td>";
+
+
+
+                                echo "<a href='".$v['url_graph']."'>";
+                                echo "<img src='".$v['pic']."' />&nbsp;";
+                                echo $v['title'];
+                                echo "</a>";
+
+
+
+
+
+                                echo"</td>";
+                                $i++;
+                            }
                         }
-                        echo "<tr class='tab_bg_1' valign='top'>";
-                     }
 
-                     echo "<td>";
-                     echo "<a href='".$v['url_graph']."'>";
-                     echo "<img src='".$v['pic']."' />&nbsp;";
-                     echo $v['title'];
-                     echo "</a></td>";
-                     $i++;
-                  }
-                  $count++;
-                  if ($i%$nb_per_line > 0) {
-                     $count++;
-                  }
-               }
 
-               while ($i%$nb_per_line != 0) {
-                  echo "<td>&nbsp;</td>";
-                  $i++;
-               }
+                        $count++;
+                        if ($i%$nb_per_line > 0) {
+                            $count++;
+                        }
+                    }
+
+                    while ($i%$nb_per_line != 0) {
+                        echo "<td>&nbsp;</td>";
+                        $i++;
+                    }
+                }
+
+
+
             }
          }
          echo "</tr>";
@@ -294,6 +335,15 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "</table>";
 
    }
+
+    static function haveSomeThingToShow($graph){
+        foreach($graph as $k => $v) {
+            if($v['right']){
+                return true;
+            }
+        }
+        return false;
+    }
 
    /**
     * show Export Form from popup.php

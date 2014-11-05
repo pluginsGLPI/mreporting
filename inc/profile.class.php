@@ -47,11 +47,26 @@ class PluginMreportingProfile extends CommonDBTM {
       return Session::haveRight('profile', 'r');
    }
 
-   //if profile deleted
-   static function purgeProfiles(Profile $prof) {
-      $plugprof = new self();
-      $plugprof->deleteByCriteria(array('profiles_id' => $prof->getField("id")));
-   }
+    //if profile deleted
+    static function purgeProfiles(Profile $prof) {
+        $plugprof = new self();
+        $plugprof->deleteByCriteria(array('profiles_id' => $prof->getField("id")));
+    }
+
+
+    //if reports add
+    static function addReport(PluginMreportingConfig $config) {
+        $plugprof = new self();
+        $plugprof->addRightToReports($config->getField("id"));
+    }
+
+
+
+    //if reports  deleted
+    static function purgeProfilesByReports(PluginMreportingConfig $config) {
+        $plugprof = new self();
+        $plugprof->deleteByCriteria(array('reports' => $config->getField("id")));
+    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       global $LANG;
@@ -98,16 +113,117 @@ class PluginMreportingProfile extends CommonDBTM {
       return false;
    }
 
-   static function createFirstAccess($ID) {
-      $myProf = new self();
-      if (!$myProf->getFromDBByProfile($ID)) {
-         $myProf->add(array(
-            'profiles_id' => $ID,
-            'reports'   => 'r',
-            'config'    => 'w'
-         ));
-      }
-   }
+    static function createFirstAccess($ID) {
+
+        $myProf = new self();
+        if (!$myProf->getFromDBByProfile($ID)) {
+            $myProf->add(array(
+                'profiles_id' => $ID,
+                'reports' => 'r',
+                'config' => 'w'
+            ));
+        }
+
+    }
+
+
+    /**
+     * @param $right array
+     */
+    static function addRightToProfiles($right){
+
+        global $DB;
+
+        $profiles = "SELECT `id` FROM `glpi_profiles` where `interface` = 'central'";
+        $reports = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
+
+        //TODO : We need to reload cache before else glpi don't show migration table
+        $myreport = new PluginMreportingProfile();
+        $table_fields = $DB->list_fields($myreport->getTable(),false);
+
+
+        foreach ($DB->request($profiles) as $prof) {
+
+            foreach($DB->request($reports) as $report){
+
+                //If profiles have right
+                if(in_array($prof['id'],$right)){
+                    $tmp = array(
+                        'profiles_id' => $prof['id'],
+                        'reports'   => $report['id'],
+                        'right' => 'r');
+                    $myreport->add($tmp);
+                }else{
+                    $tmp = array(
+                        'profiles_id' => $prof['id'],
+                        'reports'   => $report['id']
+                    );
+                    $myreport->add($tmp);
+                }
+            }
+        }
+
+
+    }
+
+
+    static function getRight(){
+
+        global $DB;
+        $query = "select `profiles_id` from `glpi_plugin_mreporting_profiles` where reports = 'r' ";
+
+        $right = array();
+        foreach ($DB->request($query) as $profile) {
+            $right[] = $profile['profiles_id'];
+        }
+
+        return $right;
+    }
+
+    /**
+     * Function to add right on report to a profile
+     * @param $idProfile
+     */
+    function addRightToProfile($idProfile){
+
+        //get all reports
+        $config = new PluginMreportingConfig();
+        $res = $config->find();
+
+        foreach( $res as $report) {
+            //add right for any reports for profile
+            $reportProfile1 = new PluginMreportingProfile();
+            $reportProfile1->add(array(
+                'profiles_id' => $idProfile,
+                'reports'   => $report['id'],
+                'right' => 'r'
+            ));
+
+        }
+
+    }
+
+
+    /**
+     * Function to add right of a new report
+     * @param $report_id
+     */
+    function addRightToReports($report_id){
+
+        global $DB;
+        $profiles = "SELECT `id` FROM `glpi_profiles` where `interface` = 'central'";
+
+        foreach ($DB->request($profiles) as $prof) {
+
+                $reportProfile1 = new PluginMreportingProfile();
+                $reportProfile1->add(array(
+                    'profiles_id' => $prof['id'],
+                    'reports'   => $report_id,
+                    'right' => 'r'
+                ));
+
+        }
+    }
 
    function createAccess($ID) {
 
@@ -123,42 +239,173 @@ class PluginMreportingProfile extends CommonDBTM {
       else unset($_SESSION["glpi_plugin_mreporting_profile"]);
    }
 
-   function showForm ($ID, $options=array()) {
-      global $LANG;
+    /**
+     * Form to manage report right on profile
+     * @param $ID (id of profile)
+     * @param array $options
+     * @return bool
+     */
+    function showForm ($ID, $options=array()) {
 
-      if (!Session::haveRight("profile","r")) return false;
 
-      $prof = new Profile();
-      if ($ID) {
-         $this->getFromDBByProfile($ID);
-         $prof->getFromDB($ID);
-      }
+        if (!Session::haveRight("profile","r")) return false;
 
-      $this->showFormHeader($options);
+        global $LANG,$CFG_GLPI;
 
-      echo "<tr class='tab_bg_2'>";
 
-      echo "<th colspan='4'>".$LANG['plugin_mreporting']["name"]." ".
-                              $prof->fields["name"]."</th>";
+        $config = new PluginMreportingConfig();
+        $res = $config->find();
 
-      echo "</tr>";
-      echo "<tr class='tab_bg_2'>";
+        $this->showFormHeader($options);
 
-      echo "<td>".__("Display report").":</td><td>";
-      Profile::dropdownNoneReadWrite("reports",$this->fields["reports"],1,1,0);
-      echo "</td>";
+        echo "<table class='tab_cadre_fixe'>\n";
+        echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
 
-      echo "<td>".__("Setup").":</td><td>";
-      Profile::dropdownNoneReadWrite("config",$this->fields["config"],1,0,1);
-      echo "</td>";
+        foreach( $res as $report) {
 
-      echo "</tr>";
+            $mreportingConfig = new PluginMreportingConfig();
+            $mreportingConfig->getFromDB($report['id']);
 
-      echo "<input type='hidden' name='id' value=".$this->fields["id"].">";
+            $profile = $this->findByProfileAndReport($ID,$report['id']);
+            $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
+            $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
 
-      $options['candel'] = false;
-      $this->showFormButtons($options);
-   }
+            echo "<tr class='tab_bg_1'><td>" . $mreportingConfig->getLink() . "&nbsp(".$title."): </td><td>";
+            Profile::dropdownNoneReadWrite($report['id'],$profile->fields['right'],1,1,0);
+            echo "</td></tr>\n";
+        }
 
+
+        echo "<tr class='tab_bg_4'><td colspan='2'> ";
+        echo "</tr>";
+
+        echo "</table>\n";
+        echo "<input type='hidden' name='profile_id' value=".$ID.">";
+
+        //echo "<input type='submit' name='giveReadAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRight"]."\" class='submit'><br><br>";
+        //echo "<input type='submit' name='giveNoneAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRight"]."\" class='submit'><br><br><br>";
+
+        echo "<div style='float:right;'>";
+        echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
+        name='giveReadAccessForAllReport' value='' title='".__('Select all')."'>";
+
+        echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
+        name='giveNoneAccessForAllReport' value='' title='".__('Deselect all')."'><br><br>";
+        echo "</div>";
+
+
+        $options['candel'] = false;
+        $this->showFormButtons($options);
+
+    }
+
+
+    /**
+     * Form to manage right on reports
+     * @param $items
+     */
+    function showFormForManageProfile($items,$options=array()){
+        global $DB, $LANG,$CFG_GLPI;
+
+        if (!Session::haveRight("config","r")) return false;
+
+
+        $target = $this->getFormURL();
+        if (isset($options['target'])) {
+            $target = $options['target'];
+        }
+        echo'<form action="'.$target.'" method="post" name="form">';
+
+
+        echo "<table class='tab_cadre_fixe'>\n";
+        echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
+
+        $query = "SELECT `id`, `name`
+                FROM `glpi_profiles` where `interface` = 'central'
+                ORDER BY `name`";
+
+        foreach ($DB->request($query) as $profile) {
+
+            $reportProfiles=new Self();
+            $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'],$items->fields['id']);
+
+            $prof = new Profile();
+            $prof->getFromDB($profile['id']);
+
+
+            echo "<tr class='tab_bg_1'><td>" . $prof->getLink() . "</td><td>";
+            Profile::dropdownNoneReadWrite($profile['id'],$reportProfiles->fields['right'],1,1,0);
+            echo "</td></tr>\n";
+
+        }
+
+
+        echo "<tr class='tab_bg_4'><td colspan='2'> ";
+
+        echo "</tr>";
+        echo "</table>\n";
+
+        echo "<div style='float:right;'>";
+        echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
+        name='giveReadAccessForAllProfile' value='' title='".__('Select all')."'>";
+
+        echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
+        name='giveNoneAccessForAllProfile' value='' title='".__('Deselect all')."'><br><br>";
+        echo "</div>";
+
+        //echo "<input type='submit' name='giveNoneAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRightOnProfile"]."\" class='submit'><br><br><br>";
+        echo "<input type='submit' name='add' value=\""._sx('button','Save')."\" class='submit'>";
+        echo "<input type='hidden' name='_glpi_csrf_token' value='".Session::getNewCSRFToken()."'>";
+
+
+        echo "<input type='hidden' name='report_id' value=".$items->fields['id'].">";
+
+
+
+        echo "</form>";
+
+
+
+    }
+
+
+    function findByProfileAndReport($profil_id, $report_id){
+        $reportProfile = new Self();
+        $reportProfile->getFromDBByQuery(" where `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
+        return $reportProfile;
+    }
+
+    function findReportByProfiles($profil_id){
+        $reportProfile = new Self();
+        $reportProfile->getFromDBByQuery(" where `profiles_id` = ".$profil_id);
+        return $reportProfile;
+    }
+
+
+    static function canViewReports($profil_id, $report_id){
+        $reportProfile = new Self();
+
+        $res = $reportProfile->getFromDBByQuery(" where `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
+
+        if($res){
+            if($reportProfile->fields['right'] == 'r'){
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+    // Hook done on add item case
+    static function addProfiles(Profile $item) {
+
+        if($item->getType()=='Profile' && $item->getField('interface')!='helpdesk'){
+            $profile = new PluginMreportingProfile();
+            $profile->addRightToProfile($item->getID());
+        }
+
+        return true;
+    }
 }
 

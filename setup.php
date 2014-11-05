@@ -71,13 +71,13 @@ function plugin_init_mreporting() {
       }
 
       /* Reports Link */
-      if (plugin_mreporting_haveRight("reports","r")) {
          $menu_entry = "front/central.php";
          $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
-      }
+
+
       /* Configuration Link */
-      if (plugin_mreporting_haveRight("config","w")) {
+      if (Session::haveRight('profile', 'w')) {
          $config_entry = 'front/config.php';
          $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
@@ -102,20 +102,24 @@ function plugin_init_mreporting() {
    }
 
    if (class_exists('PluginMreportingProfile')) { // only if plugin activated
-      $PLUGIN_HOOKS['pre_item_purge']['mreporting']
-                     = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'));
+       $PLUGIN_HOOKS['pre_item_purge']['mreporting']
+           = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),'PluginMreportingConfig' => array('PluginMreportingProfile', 'purgeProfilesByReports') );
+
+       $PLUGIN_HOOKS['item_add']['mreporting']
+           = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'),'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
    }
 
    // Add specific files to add to the header : javascript
+   $PLUGIN_HOOKS['add_javascript']['mreporting'] = array();
+   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
 
    //Add specific files to add to the header : css
-   $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
-
-
-
+   $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
+   $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
+   $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
 
 }
 
@@ -124,7 +128,7 @@ function plugin_version_mreporting() {
    global $LANG;
 
    return array('name'         => $LANG['plugin_mreporting']["name"],
-                'version'        => "2.2",
+                'version'        => "2.3",
                 'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
                                        & <a href='http://www.infotel.com'>Infotel</a>",
                 'homepage'       => "https://forge.indepnet.net/projects/mreporting",
