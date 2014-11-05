@@ -248,11 +248,11 @@ class PluginMreportingProfile extends CommonDBTM {
      * @return bool
      */
     function showForm ($ID, $options=array()) {
-        global $LANG;
+
 
         if (!Session::haveRight("profile","r")) return false;
 
-        global $LANG;
+        global $LANG,$CFG_GLPI;
 
 
         $config = new PluginMreportingConfig();
@@ -284,8 +284,17 @@ class PluginMreportingProfile extends CommonDBTM {
         echo "</table>\n";
         echo "<input type='hidden' name='profile_id' value=".$ID.">";
 
-        echo "<input type='submit' name='giveReadAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRight"]."\" class='submit'><br><br>";
-        echo "<input type='submit' name='giveNoneAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRight"]."\" class='submit'><br><br><br>";
+        //echo "<input type='submit' name='giveReadAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRight"]."\" class='submit'><br><br>";
+        //echo "<input type='submit' name='giveNoneAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRight"]."\" class='submit'><br><br><br>";
+
+        echo "<div style='float:right;'>";
+        echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
+        name='giveReadAccessForAllReport' value='' title='".$LANG['plugin_mreporting']["right"]["giveAllRight"]."'>";
+
+        echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
+        name='giveNoneAccessForAllReport' value='' title='".$LANG['plugin_mreporting']["right"]["giveNoRight"]."'><br><br>";
+        echo "</div>";
+
 
         $options['candel'] = false;
         $this->showFormButtons($options);
@@ -336,17 +345,26 @@ class PluginMreportingProfile extends CommonDBTM {
         echo "<tr class='tab_bg_4'><td colspan='2'> ";
 
         echo "</tr>";
-
         echo "</table>\n";
+
+        echo "<div style='float:right;'>";
+        echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
+        name='giveReadAccessForAllProfile' value='' title='".$LANG['plugin_mreporting']["right"]["giveAllRightOnProfile"]."'>";
+
+        echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
+        name='giveNoneAccessForAllProfile' value='' title='".$LANG['plugin_mreporting']["right"]["giveNoRightOnProfile"]."'><br><br>";
+        echo "</div>";
+
+        //echo "<input type='submit' name='giveNoneAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRightOnProfile"]."\" class='submit'><br><br><br>";
+        echo "<input type='submit' name='add' value=\""._sx('button','Save')."\" class='submit'>";
+        echo "<input type='hidden' name='_glpi_csrf_token' value='".Session::getNewCSRFToken()."'>";
+
 
         echo "<input type='hidden' name='report_id' value=".$items->fields['id'].">";
 
 
 
-        echo "<input type='submit' name='giveReadAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRightOnProfile"]."\" class='submit'><br><br>";
-        echo "<input type='submit' name='giveNoneAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRightOnProfile"]."\" class='submit'><br><br><br>";
-        echo "<input type='submit' name='add' value=\""._sx('button','Save')."\" class='submit'>";
-        echo "<input type='hidden' name='_glpi_csrf_token' value='".Session::getNewCSRFToken()."'>";
+        echo "</form>";
 
 
 
