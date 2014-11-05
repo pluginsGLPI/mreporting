@@ -26,6 +26,8 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+$LANG['plugin_mreporting']["right"]["giveAllRight"] = "Give read rights on all reports";
+$LANG['plugin_mreporting']["right"]["giveNoRight"] = "Remove all permissions to all reports";
 $LANG['plugin_mreporting']["right"]["manage"] = "Right management";
 
 $LANG['plugin_mreporting']["name"] = "More Reporting";

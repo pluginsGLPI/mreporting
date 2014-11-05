@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+$LANG['plugin_mreporting']["right"]["giveAllRight"] = "Donner les droits de lecture sur tous les rapports";
+$LANG['plugin_mreporting']["right"]["giveNoRight"] = "Retirer les droits de lecture sur tous les rapports";
 $LANG['plugin_mreporting']["right"]["manage"] = "Gestion des droits";
 $LANG['plugin_mreporting']["name"] = "Plus de rapports";
 
