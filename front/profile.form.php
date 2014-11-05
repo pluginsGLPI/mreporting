@@ -35,7 +35,25 @@ $prof=new PluginMreportingProfile();
 
 //Save profile
 if (isset ($_POST['update'])) {
-	$prof->update($_POST);
+
+    $config = new PluginMreportingConfig();
+    $res = $config->find();
+
+    foreach( $res as $report) {
+
+        $access = $_POST[$report['id']];
+        $idReport = $report['id'];
+        $idProfil = $_POST['profile_id'];
+
+        $profil = new PluginMreportingProfile();
+        $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+        $profil->fields['right'] = $access;
+        $profil->update($profil->fields);
+
+    }
+
+
+
 	Html::back();
 }
 

@@ -113,6 +113,9 @@ class PluginMreportingProfile extends CommonDBTM {
     }
 
 
+    /**
+     * @param $right array
+     */
     static function addRightToProfiles($right){
 
         global $DB;
@@ -120,40 +123,34 @@ class PluginMreportingProfile extends CommonDBTM {
         $profiles = "SELECT `id` FROM `glpi_profiles` where `interface` = 'central'";
         $reports = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
 
-        $report = new PluginMreportingProfile();
-        $table_fields = $DB->list_fields($report->getTable());
+        //TODO : We need to reload cache before else glpi don't show migration table
+        $myreport = new PluginMreportingProfile();
+        $table_fields = $DB->list_fields($myreport->getTable(),false);
+
         var_dump($table_fields);
-
-
-
+        Toolbox::logDebug($right);
         foreach ($DB->request($profiles) as $prof) {
 
             foreach($DB->request($reports) as $report){
 
                 //If profiles have right
                 if(in_array($prof['id'],$right)){
-                    var_dump("HAVE RIGHT");
-                    $reportProfile = new PluginMreportingProfile();
-                    $reportProfile->add(array(
+                    $tmp = array(
                         'profiles_id' => $prof['id'],
                         'reports'   => $report['id'],
-                        'right' => 'r'
-                    ));
+                        'right' => 'r');
+                    Toolbox::logDebug($tmp);
+                    $myreport->add($tmp);
                 }else{
-                    $reportProfile = new PluginMreportingProfile();
-                    $reportProfile->add(array(
+                    $tmp = array(
                         'profiles_id' => $prof['id'],
                         'reports'   => $report['id']
-                    ));
+                    );
+                    $myreport->add($tmp);
                 }
-
             }
-
-
-
-
-
         }
+
 
     }
 
@@ -242,45 +239,34 @@ class PluginMreportingProfile extends CommonDBTM {
 
         if (!Session::haveRight("profile","r")) return false;
 
-        global $DB, $LANG;
+        global $LANG;
 
 
         $config = new PluginMreportingConfig();
         $res = $config->find();
 
+        $this->showFormHeader($options);
 
         echo "<table class='tab_cadre_fixe'>\n";
         echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
 
-
         foreach( $res as $report) {
 
             $profile = $this->findByProfileAndReport($ID,$report['id']);
-
-
             echo "<tr class='tab_bg_1'><td>" . $report['name'] . "&nbsp: </td><td>";
-
-            $values = array();
-            $values['NULL'] = __('No access');
-            $values['r'] = __('Read');
-
-            Dropdown::showFromArray($report['id'], $values,
-                array('value'   => $profile->fields['right'],
-                    'rand'    => false,
-                    'display' => true,
-                    'on_change' => "changeRightForProfilAndReport(".$report['id'].",".$profile->fields['id'].");"));
-
-
-            echo "</td>\n";
-            echo "<td style='width:24px;'><div id='div_info_".$report['id']."'></div></td></tr>\n";
+            Profile::dropdownNoneReadWrite($report['id'],$profile->fields['right'],1,1,0);
+            echo "</td></tr>\n";
         }
 
 
         echo "<tr class='tab_bg_4'><td colspan='2'> ";
-
         echo "</tr>";
 
         echo "</table>\n";
+        echo "<input type='hidden' name='profile_id' value=".$ID.">";
+
+        $options['candel'] = false;
+        $this->showFormButtons($options);
     }
 
 
@@ -288,9 +274,10 @@ class PluginMreportingProfile extends CommonDBTM {
      * Form to manage right on reports
      * @param $items
      */
-    function showFormForManageProfile($items){
+    function showFormForManageProfile($items,$options=array()){
         global $DB, $LANG;
 
+        $this->showFormHeader($options);
 
         echo "<table class='tab_cadre_fixe'>\n";
         echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
@@ -325,6 +312,11 @@ class PluginMreportingProfile extends CommonDBTM {
         echo "</tr>";
 
         echo "</table>\n";
+
+        echo "<input type='hidden' name='id' value=".$items->fields['id'].">";
+
+        $options['candel'] = false;
+        $this->showFormButtons($options);
     }
 
 
