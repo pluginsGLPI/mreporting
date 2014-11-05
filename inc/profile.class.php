@@ -54,9 +54,16 @@ class PluginMreportingProfile extends CommonDBTM {
     }
 
 
+    //if reports add
+    static function addReport(PluginMreportingConfig $config) {
+        $plugprof = new self();
+        $plugprof->addRightToReports($config->getField("id"));
+    }
+
+
 
     //if reports  deleted
-    static function purgeProfilesByReports(PluginMreportingProfile $config) {
+    static function purgeProfilesByReports(PluginMreportingConfig $config) {
         $plugprof = new self();
         $plugprof->deleteByCriteria(array('reports' => $config->getField("id")));
     }
