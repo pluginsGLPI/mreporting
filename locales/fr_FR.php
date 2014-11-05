@@ -29,6 +29,8 @@
 
 $LANG['plugin_mreporting']["name"] = "Plus de rapports";
 
+$LANG['plugin_mreporting']["right"]["manage"] = "Gestion des droits";
+
 $LANG['plugin_mreporting']["error"][0] = "Aucun rapport disponible !";
 $LANG['plugin_mreporting']["error"][1] = "Aucune données pour cette plage de date !";
 $LANG['plugin_mreporting']["error"][2] = "Non défini";

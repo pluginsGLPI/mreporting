@@ -29,6 +29,7 @@
 
 $LANG['plugin_mreporting']["name"] = "More Reporting";
 
+$LANG['plugin_mreporting']["right"]["manage"] = "Rights management";
 $LANG['plugin_mreporting']["error"][0] = "No report is available !";
 $LANG['plugin_mreporting']["error"][1] = "No data for this date range !";
 $LANG['plugin_mreporting']["error"][2] = "Undefined";
