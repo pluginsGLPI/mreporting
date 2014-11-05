@@ -108,7 +108,7 @@ function plugin_init_mreporting() {
            = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),'PluginMreportingConfig' => array('PluginMreportingProfile', 'purgeProfilesByReports') );
 
        $PLUGIN_HOOKS['item_add']['mreporting']
-           = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'));
+           = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'),'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
    }
 
    // Add specific files to add to the header : javascript
