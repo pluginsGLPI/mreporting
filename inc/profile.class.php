@@ -265,8 +265,14 @@ class PluginMreportingProfile extends CommonDBTM {
 
         foreach( $res as $report) {
 
+            $mreportingConfig = new PluginMreportingConfig();
+            $mreportingConfig->getFromDB($report['id']);
+
             $profile = $this->findByProfileAndReport($ID,$report['id']);
-            echo "<tr class='tab_bg_1'><td>" . $report['name'] . "&nbsp: </td><td>";
+            $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
+            $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
+
+            echo "<tr class='tab_bg_1'><td>" . $mreportingConfig->getLink() . "&nbsp(".$title."): </td><td>";
             Profile::dropdownNoneReadWrite($report['id'],$profile->fields['right'],1,1,0);
             echo "</td></tr>\n";
         }
