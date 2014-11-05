@@ -255,16 +255,9 @@ class PluginMreportingConfig extends CommonDBTM {
             unset($input["id"]);
             $newid = $this->add($input);
 
-
-             //If is new report, we insert right
-             if($newid != false){
-                 require_once('profile.class.php');
-                 $reportProfile = new PluginMreportingProfile();
-                 $reportProfile->addRightToReports($newid);
-             }
-
          }
       }
+
    }
 
    /**
