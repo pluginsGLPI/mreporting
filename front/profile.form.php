@@ -29,9 +29,7 @@
 
 include ("../../../inc/includes.php");
 
-Session::checkRight("profile","r");
-
-$prof=new PluginMreportingProfile();
+//Session::checkRight("profile","r");
 
 //Save profile
 if (isset ($_POST['update'])) {
@@ -52,8 +50,112 @@ if (isset ($_POST['update'])) {
 
     }
 
-
-
 	Html::back();
+
+}else if (isset ($_POST['add'])) {
+
+    global $DB;
+
+    $query = "SELECT `id`, `name`
+                FROM `glpi_profiles` where `interface` = 'central'
+                ORDER BY `name`";
+
+    foreach ($DB->request($query) as $profile) {
+
+        $access = $_POST[$profile['id']];
+        $idProfil = $profile['id'];
+        $idReport = $_POST['report_id'];
+
+        $profil = new PluginMreportingProfile();
+        $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+        $profil->fields['right'] = $access;
+        $profil->update($profil->fields);
+
+    }
+
+    Html::back();
+
+}else if (isset($_POST['giveReadAccessForAllReport'])){
+
+    $config = new PluginMreportingConfig();
+    $res = $config->find();
+
+    foreach( $res as $report) {
+
+        $idReport = $report['id'];
+        $idProfil = $_POST['profile_id'];
+
+        $profil = new PluginMreportingProfile();
+        $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+        $profil->fields['right'] = 'r';
+        $profil->update($profil->fields);
+
+    }
+
+    Html::back();
+
+}else if (isset($_POST['giveNoneAccessForAllReport'])){
+
+    $config = new PluginMreportingConfig();
+    $res = $config->find();
+
+    foreach( $res as $report) {
+
+        $idReport = $report['id'];
+        $idProfil = $_POST['profile_id'];
+
+        $profil = new PluginMreportingProfile();
+        $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+        $profil->fields['right'] = 'null';
+        $profil->update($profil->fields);
+
+    }
+
+    Html::back();
+
+}else if (isset($_POST['giveNoneAccessForAllProfile'])){
+
+    global $DB;
+
+    $query = "SELECT `id`, `name`
+                FROM `glpi_profiles` where `interface` = 'central'
+                ORDER BY `name`";
+
+    foreach ($DB->request($query) as $profile) {
+
+        $idProfil = $profile['id'];
+        $idReport = $_POST['report_id'];
+
+        $profil = new PluginMreportingProfile();
+        $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+        $profil->fields['right'] = 'null';
+        $profil->update($profil->fields);
+
+    }
+
+    Html::back();
+
+}else if (isset($_POST['giveReadAccessForAllProfile'])){
+
+    global $DB;
+
+    $query = "SELECT `id`, `name`
+                FROM `glpi_profiles` where `interface` = 'central'
+                ORDER BY `name`";
+
+    foreach ($DB->request($query) as $profile) {
+
+        $idProfil = $profile['id'];
+        $idReport = $_POST['report_id'];
+
+        $profil = new PluginMreportingProfile();
+        $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+        $profil->fields['right'] = 'r';
+        $profil->update($profil->fields);
+
+    }
+
+    Html::back();
+
 }
 

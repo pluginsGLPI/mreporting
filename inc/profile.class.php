@@ -265,6 +265,10 @@ class PluginMreportingProfile extends CommonDBTM {
         echo "</table>\n";
         echo "<input type='hidden' name='profile_id' value=".$ID.">";
 
+        echo "<input type='submit' name='giveReadAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRight"]."\" class='submit'><br><br>";
+        echo "<input type='submit' name='giveNoneAccessForAllReport' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRight"]."\" class='submit'><br><br><br>";
+
+
         $options['candel'] = false;
         $this->showFormButtons($options);
     }
@@ -277,6 +281,8 @@ class PluginMreportingProfile extends CommonDBTM {
     function showFormForManageProfile($items,$options=array()){
         global $DB, $LANG;
 
+        if (!Session::haveRight("config","r")) return false;
+
         $this->showFormHeader($options);
 
         echo "<table class='tab_cadre_fixe'>\n";
@@ -287,23 +293,13 @@ class PluginMreportingProfile extends CommonDBTM {
                 ORDER BY `name`";
 
         foreach ($DB->request($query) as $profile) {
+
             $reportProfiles=new Self();
             $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'],$items->fields['id']);
             echo "<tr class='tab_bg_1'><td>" . $profile['name'] . "&nbsp: </td><td>";
+            Profile::dropdownNoneReadWrite($profile['id'],$reportProfiles->fields['right'],1,1,0);
+            echo "</td></tr>\n";
 
-            $values = array();
-            $values['NULL'] = __('No access');
-            $values['r'] = __('Read');
-
-            Dropdown::showFromArray($profile['id'], $values,
-                array('value'   => $reportProfiles->fields['right'],
-                    'rand'    => false,
-                    'display' => true,
-                    'on_change' => "changeRightForProfilAndReport(".$profile['id'].",".$reportProfiles->fields['id'].");"));
-
-
-            echo "</td>\n";
-            echo "<td style='width:24px;'><div id='div_info_".$profile['id']."'></div></td></tr>\n";
         }
 
 
@@ -313,7 +309,11 @@ class PluginMreportingProfile extends CommonDBTM {
 
         echo "</table>\n";
 
-        echo "<input type='hidden' name='id' value=".$items->fields['id'].">";
+        echo "<input type='hidden' name='report_id' value=".$items->fields['id'].">";
+
+        echo "<input type='submit' name='giveReadAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveAllRight"]."\" class='submit'><br><br>";
+        echo "<input type='submit' name='giveNoneAccessForAllProfile' value=\"".$LANG['plugin_mreporting']["right"]["giveNoRight"]."\" class='submit'><br><br><br>";
+
 
         $options['candel'] = false;
         $this->showFormButtons($options);
