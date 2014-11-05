@@ -37,6 +37,8 @@ if (isset ($_POST['update'])) {
     $config = new PluginMreportingConfig();
     $res = $config->find();
 
+
+
     foreach( $res as $report) {
 
         $access = $_POST[$report['id']];
@@ -106,7 +108,7 @@ if (isset ($_POST['update'])) {
 
         $profil = new PluginMreportingProfile();
         $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
-        $profil->fields['right'] = 'null';
+        $profil->fields['right'] = 'NULL';
         $profil->update($profil->fields);
 
     }
@@ -128,7 +130,7 @@ if (isset ($_POST['update'])) {
 
         $profil = new PluginMreportingProfile();
         $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
-        $profil->fields['right'] = 'null';
+        $profil->fields['right'] = 'NULL';
         $profil->update($profil->fields);
 
     }
