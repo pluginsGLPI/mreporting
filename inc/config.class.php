@@ -39,12 +39,51 @@ class PluginMreportingConfig extends CommonDBTM {
       return $LANG['plugin_mreporting']["name"]." - ".$LANG['plugin_mreporting']["config"][0];
    }
 
-   static function canCreate() {
-      return plugin_mreporting_haveRight('config', 'w');
+    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+        global $LANG;
+
+        $ong = array();
+        $ong[1] = $LANG['plugin_mreporting']["name"]." - ".$LANG['plugin_mreporting']["config"][0];
+        $ong[2] = $LANG['plugin_mreporting']["right"]["manage"];
+        return $ong;
+    }
+
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+
+
+
+        switch ($tabnum) {
+            case 1 : // mon premier onglet
+
+                break;
+
+            case 2 : // mon second onglet
+                $reportProfile = new PluginMreportingProfile();
+                $reportProfile->showFormForManageProfile($item);
+                break;
+        }
+        return true;
+    }
+
+
+    /**
+     * Définition des onglets
+     **/
+    function defineTabs($options=array()) {
+
+        $ong = array();
+        $this->addStandardTab('PluginMreportingConfig', $ong, $options);
+        return $ong;
+    }
+
+
+
+    static function canCreate() {
+      return Session::haveRight('config', 'w');
    }
 
    static function canView() {
-      return plugin_mreporting_haveRight('config', 'r');
+       return Session::haveRight('config', 'r');
    }
 
    function getSearchOptions() {
@@ -157,7 +196,7 @@ class PluginMreportingConfig extends CommonDBTM {
       $buttons = array();
       $title = _n("User", "Users", 2);
 
-      if (plugin_mreporting_haveRight('config', 'w')) {
+      if (Session::haveRight('config', 'r')) {
          $buttons["config.php?new=1"] = $LANG['plugin_mreporting']["config"][10];
          $title = "";
       }
@@ -214,6 +253,7 @@ class PluginMreportingConfig extends CommonDBTM {
             $newid = $this->add($input);
          }
       }
+
    }
 
    /**
@@ -507,6 +547,7 @@ class PluginMreportingConfig extends CommonDBTM {
    }
 
    function showForm ($ID, $options=array()) {
+
       global $LANG;
 
       if (!$this->canView()) return false;
@@ -514,7 +555,6 @@ class PluginMreportingConfig extends CommonDBTM {
       if ($ID>0) {
          $this->check($ID,'r');
       } else {
-         $this->check(-1,'w');
          $this->getEmpty();
          if (isset($_GET['name']) && isset($_GET['classname'])) {
             $this->preconfig($_GET['name'], $_GET['classname']);
