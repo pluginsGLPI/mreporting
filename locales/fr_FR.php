@@ -170,6 +170,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['titl
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['desc'] = "Barres";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['category'] = "Par demandeurs";
 
+<<<<<<< HEAD
 $LANG['plugin_mreporting']['Inventory']['title'] = "Reporting inventaire";
 
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['title'] = "Ordinateurs par OS";
@@ -267,3 +268,8 @@ $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['title'
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['desc'] = "Le graphique suivant affiche les nombres de tickets classé par nombre de changements.<br>
 En ordonnée est affiché le nombre de ticket.<br>
 En abscisse, le nombre de changements.";
+
+$LANG['plugin_mreporting']['Other']['title'] = "Autres";
+$LANG['plugin_mreporting']['Other']['reportHbarLogs']['title'] = "Répartition des logs";
+$LANG['plugin_mreporting']['Other']['reportHbarLogs']['desc'] = "Barres";
+$LANG['plugin_mreporting']['Other']['reportHbarLogs']['category'] = "Logs";
