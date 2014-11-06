@@ -117,17 +117,9 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
 
    //Add specific files to add to the header : css
-<<<<<<< HEAD
    $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
-=======
-   $PLUGIN_HOOKS['add_css']['mreporting']= array ("mreporting.css");
-   $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
-
-
-
->>>>>>> 0.84/helpdeskplus
 
 }
 
