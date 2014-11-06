@@ -75,9 +75,8 @@ function plugin_init_mreporting() {
          $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
 
-
       /* Configuration Link */
-      if (Session::haveRight('profile', 'w')) {
+      if (Session::haveRight('config', 'w')) {
          $config_entry = 'front/config.php';
          $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
