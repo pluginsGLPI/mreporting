@@ -41,15 +41,16 @@ if (isset ($_POST['update'])) {
 
     foreach( $res as $report) {
 
-        $access = $_POST[$report['id']];
-        $idReport = $report['id'];
-        $idProfil = $_POST['profile_id'];
+        if (class_exists($report['classname'])) {
+          $access = $_POST[$report['id']];
+          $idReport = $report['id'];
+          $idProfil = $_POST['profile_id'];
 
-        $profil = new PluginMreportingProfile();
-        $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
-        $profil->fields['right'] = $access;
-        $profil->update($profil->fields);
-
+          $profil = new PluginMreportingProfile();
+          $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+          $profil->fields['right'] = $access;
+          $profil->update($profil->fields);
+        }
     }
 
 	Html::back();

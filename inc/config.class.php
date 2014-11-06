@@ -246,15 +246,11 @@ class PluginMreportingConfig extends CommonDBTM {
                $input = $classObject->preconfig($funct_name, $classname, $this);
             } else {// Else we get the default preconfig
                $input = $this->preconfig($funct_name, $classname);
-
-
-
             }
 
             $input["firstconfig"] = 1;
             unset($input["id"]);
             $newid = $this->add($input);
-
          }
       }
 
@@ -559,7 +555,6 @@ class PluginMreportingConfig extends CommonDBTM {
       if ($ID>0) {
          $this->check($ID,'r');
       } else {
-         //$this->check(-1,'w');
          $this->getEmpty();
          if (isset($_GET['name']) && isset($_GET['classname'])) {
             $this->preconfig($_GET['name'], $_GET['classname']);

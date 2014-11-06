@@ -62,7 +62,6 @@ function plugin_init_mreporting() {
 
    if (Session::getLoginUserID()) {
 
-       Plugin::registerClass('PluginMreportingReportProfile');
       Plugin::registerClass('PluginMreportingProfile',
                       array('addtabon' => 'Profile'));
 
@@ -72,14 +71,12 @@ function plugin_init_mreporting() {
       }
 
       /* Reports Link */
-
          $menu_entry = "front/central.php";
          $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
 
-
       /* Configuration Link */
-      if (Session::haveRight('profile', 'w')) {
+      if (Session::haveRight('config', 'w')) {
          $config_entry = 'front/config.php';
          $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
          $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
@@ -118,13 +115,10 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
 
-
    //Add specific files to add to the header : css
    $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
-
-
 
 }
 

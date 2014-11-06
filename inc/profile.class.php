@@ -113,7 +113,6 @@ class PluginMreportingProfile extends CommonDBTM {
       return false;
    }
 
-
     static function createFirstAccess($ID) {
 
         $myProf = new self();
@@ -240,7 +239,6 @@ class PluginMreportingProfile extends CommonDBTM {
       else unset($_SESSION["glpi_plugin_mreporting_profile"]);
    }
 
-
     /**
      * Form to manage report right on profile
      * @param $ID (id of profile)
@@ -268,13 +266,16 @@ class PluginMreportingProfile extends CommonDBTM {
             $mreportingConfig = new PluginMreportingConfig();
             $mreportingConfig->getFromDB($report['id']);
 
-            $profile = $this->findByProfileAndReport($ID,$report['id']);
-            $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
-            $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
+            //If classname doesn't exists, don't display the report
+            if (class_exists($mreportingConfig->fields['classname'])) {
+               $profile = $this->findByProfileAndReport($ID,$report['id']);
+               $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
+               $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
 
-            echo "<tr class='tab_bg_1'><td>" . $mreportingConfig->getLink() . "&nbsp(".$title."): </td><td>";
-            Profile::dropdownNoneReadWrite($report['id'],$profile->fields['right'],1,1,0);
-            echo "</td></tr>\n";
+               echo "<tr class='tab_bg_1'><td>" . $mreportingConfig->getLink() . "&nbsp(".$title."): </td><td>";
+               Profile::dropdownNoneReadWrite($report['id'],$profile->fields['right'],1,1,0);
+               echo "</td></tr>\n";
+            }
         }
 
 
@@ -409,8 +410,5 @@ class PluginMreportingProfile extends CommonDBTM {
 
         return true;
     }
-
-
-
 }
 

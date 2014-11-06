@@ -112,18 +112,11 @@ function plugin_mreporting_install() {
       PRIMARY KEY  (`id`)
       ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
-
-
-
    foreach($queries as $query)
       $DB->query($query);
 
-
-
     require_once "inc/profile.class.php";
     PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
-
-
 
     // == Update to 2.1 ==
     if (!FieldExists('glpi_plugin_mreporting_configs', 'is_notified')) {
@@ -153,8 +146,6 @@ function plugin_mreporting_install() {
 
      $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
 
-
-
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
    if (!is_dir($rep_files_mreporting))
       mkdir($rep_files_mreporting);
@@ -172,10 +163,7 @@ function plugin_mreporting_install() {
    $config = new PluginMreportingConfig();
    $config->createFirstConfig();
 
-    PluginMreportingProfile::addRightToProfiles($right);
-
-
-
+   PluginMreportingProfile::addRightToProfiles($right);
    return true;
 }
 
@@ -187,9 +175,7 @@ function plugin_mreporting_uninstall() {
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_profiles",
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_configs",
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_preferences",
-       "DROP TABLE IF EXISTS glpi_plugin_mreporting_notifications"
-
-
+      "DROP TABLE IF EXISTS glpi_plugin_mreporting_notifications"
    );
 
    foreach($queries as $query)

@@ -197,7 +197,6 @@ class PluginMreportingCommon extends CommonDBTM {
                  echo "</optgroup>";
              }
 
-
          }
          echo "</optgroup>";
 
@@ -219,7 +218,6 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $reports = $this->getAllReports(true, $params);
 
-
       if ($reports === false) {
          echo "<div class='center'>".$LANG['plugin_mreporting']["error"][0]."</div>";
          return false;
@@ -228,7 +226,6 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "<table class='tab_cadre_fixe' id='mreporting_functions'>";
 
       foreach($reports as $classname => $report) {
-
 
          $i = 0;
          $nb_per_line = 2;

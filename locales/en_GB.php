@@ -27,10 +27,9 @@
  --------------------------------------------------------------------------
  */
 
-$LANG['plugin_mreporting']["right"]["manage"] = "Right management";
-
 $LANG['plugin_mreporting']["name"] = "More Reporting";
 
+$LANG['plugin_mreporting']["right"]["manage"] = "Rights management";
 $LANG['plugin_mreporting']["error"][0] = "No report is available !";
 $LANG['plugin_mreporting']["error"][1] = "No data for this date range !";
 $LANG['plugin_mreporting']["error"][2] = "Undefined";
@@ -96,8 +95,6 @@ $LANG['plugin_mreporting']['selector']["period"][1] = "Day";
 $LANG['plugin_mreporting']['selector']["period"][2] = "Week";
 $LANG['plugin_mreporting']['selector']["period"][3] = "Month";
 $LANG['plugin_mreporting']['selector']["period"][4] = "Year";
-
-
 
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Number of ticket by entities";
