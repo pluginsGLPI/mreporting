@@ -170,7 +170,6 @@ $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['titl
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['desc'] = "Barres";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['category'] = "Par demandeurs";
 
-<<<<<<< HEAD
 $LANG['plugin_mreporting']['Inventory']['title'] = "Reporting inventaire";
 
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['title'] = "Ordinateurs par OS";
