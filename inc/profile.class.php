@@ -329,7 +329,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
         foreach ($DB->request($query) as $profile) {
 
-            $reportProfiles=new Self();
+            $reportProfiles=new self();
             $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'],$items->fields['id']);
 
             $prof = new Profile();
@@ -373,20 +373,20 @@ class PluginMreportingProfile extends CommonDBTM {
 
 
     function findByProfileAndReport($profil_id, $report_id){
-        $reportProfile = new Self();
+        $reportProfile = new self();
         $reportProfile->getFromDBByQuery(" where `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
         return $reportProfile;
     }
 
     function findReportByProfiles($profil_id){
-        $reportProfile = new Self();
+        $reportProfile = new self();
         $reportProfile->getFromDBByQuery(" where `profiles_id` = ".$profil_id);
         return $reportProfile;
     }
 
 
     static function canViewReports($profil_id, $report_id){
-        $reportProfile = new Self();
+        $reportProfile = new self();
 
         $res = $reportProfile->getFromDBByQuery(" where `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
 
