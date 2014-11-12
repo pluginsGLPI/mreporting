@@ -51,10 +51,48 @@ if (DEBUG_MREPORTING) {
                            'url'=>$CFG_GLPI['root_doc']."/plugins/mreporting/ajax/debug.php");
 }
 
+
 if (count($tabs) > 0){
-   echo "<div id='tabspanel' class='center-h'></div>";
-   Ajax::createTabs('tabspanel','tabcontent',$tabs,'PluginMreportingCommon');
-   $common->addDivForTabs();
+
+    //foreach tabs
+    foreach($tabs as $tab){
+        global $DB;
+        $params = $tab['params'];
+        //we get the classname
+        $classname = str_replace("target=".$_SERVER['PHP_SELF']."&classname=",'',$params);
+
+        //we found all reports for classname where current profil have right
+        $query = "SELECT *
+                FROM `glpi_plugin_mreporting_configs`,`glpi_plugin_mreporting_profiles`
+                WHERE `glpi_plugin_mreporting_configs`.`id` = `glpi_plugin_mreporting_profiles`.`reports`
+                AND `glpi_plugin_mreporting_configs`.`classname` = '".$classname."'
+                AND `glpi_plugin_mreporting_profiles`.`right` = 'r'
+                AND `glpi_plugin_mreporting_profiles`.`profiles_id` = ".$_SESSION['glpiactiveprofile']['id'];
+
+        //for this classname if current user have no right on any reports
+        if ($result = $DB->query($query)) {
+            if ($DB->numrows($result) == 0) {
+                //we unset the index
+                unset($tabs[$classname]);
+            }
+        }
+
+
+    }
+
+    //finally if tabs is empty
+    if(empty($tabs)){
+        echo "<div class='center'><br>".$LANG['plugin_mreporting']["error"][0]."</div>";
+    }else{
+        echo "<div id='tabspanel' class='center-h'></div>";
+        Ajax::createTabs('tabspanel','tabcontent',$tabs,'PluginMreportingCommon');
+        $common->addDivForTabs();
+    }
+
+
+
+
+
 } else {
    echo "<div class='center'><br>".$LANG['plugin_mreporting']["error"][0]."</div>";
 }
