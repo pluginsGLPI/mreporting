@@ -57,7 +57,7 @@ if (count($tabs) > 0){
     //foreach tabs
     foreach($tabs as $tab){
         global $DB;
-        $params = $tab['params'];
+        $params = (isset($tab['params'])?$tab['params']:'');
         //we get the classname
         $classname = str_replace("target=".$_SERVER['PHP_SELF']."&classname=",'',$params);
 
