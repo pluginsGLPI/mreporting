@@ -522,7 +522,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    
    
 
-
+/*
    function reportVstackbarWorkflow() {
       global $DB;
       $_SESSION['mreporting_selector'] = array('grouprequest', 'groupassign', 'cat');
@@ -597,7 +597,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       
       return $datas;
    }
-   
+  */ 
    
    
 
