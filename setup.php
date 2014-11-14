@@ -45,7 +45,7 @@ if(isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::D
 
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
-   global $PLUGIN_HOOKS;
+   global $PLUGIN_HOOKS,$CFG_GLPI;
 
    $PLUGIN_HOOKS['redirect_page']['mreporting'] = 'front/download.php';
 
@@ -74,7 +74,7 @@ function plugin_init_mreporting() {
          $menu_entry = "front/central.php";
          $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
        $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
-       $PLUGIN_HOOKS['submenu_entry']['mreporting']['dashboard'] = "front/dashboard.form.php";
+       $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/dashboard.png">'] = 'front/dashboard.form.php';
 
       /* Configuration Link */
       if (Session::haveRight('config', 'w')) {
@@ -115,8 +115,7 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
-    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
-    $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/mreporting.js";
+   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
 
    //Add specific files to add to the header : css
    $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
