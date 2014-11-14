@@ -49,8 +49,8 @@ function plugin_mreporting_install() {
    )
    ENGINE = MyISAM;";
 
-   //create configuration table
-   $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
+    //create configuration table
+    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
    `id` int(11) NOT NULL auto_increment,
    `name` varchar(255) collate utf8_unicode_ci default NULL,
    `classname` varchar(255) collate utf8_unicode_ci default NULL,
@@ -68,6 +68,17 @@ function plugin_mreporting_install() {
    PRIMARY KEY  (`id`),
    KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+
+
+    //create configuration table
+    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_dashboards` (
+   `id` int(11) NOT NULL auto_increment,
+   `users_id` int(11) NOT NULL,
+   `reports_id`int(11) NOT NULL,
+   `configuration` VARCHAR(500) default NULL,
+   PRIMARY KEY  (`id`)
+   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+
 
    $queries[] = "CREATE TABLE  IF NOT EXISTS `glpi_plugin_mreporting_preferences` (
    `id` int(11) NOT NULL auto_increment,
@@ -175,7 +186,8 @@ function plugin_mreporting_uninstall() {
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_profiles",
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_configs",
       "DROP TABLE IF EXISTS glpi_plugin_mreporting_preferences",
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_notifications"
+      "DROP TABLE IF EXISTS glpi_plugin_mreporting_notifications",
+      "DROP TABLE IF EXISTS glpi_plugin_mreporting_dashboards"
    );
 
    foreach($queries as $query)
