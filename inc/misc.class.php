@@ -99,13 +99,15 @@ class PluginMreportingMisc {
     * Parse and include selectors functions
     */
    static function getReportSelectors() {
-      if(!isset($_SESSION['mreporting_selector']) || empty($_SESSION['mreporting_selector'])) return;
+      $graphname = $_REQUEST['f_name'];
+      if(!isset($_SESSION['mreporting_selector'][$graphname]) || empty($_SESSION['mreporting_selector'][$graphname])) return;
 
+      self::saveSelectInSession($graphname);
       $classname = 'PluginMreporting'.$_REQUEST['short_classname'];
       if(!class_exists($classname)) return;
 
       $i = 2;
-      foreach ($_SESSION['mreporting_selector'] as $selector) {
+      foreach ($_SESSION['mreporting_selector'][$graphname] as $selector) {
          if($i%4 == 0) echo '</tr><tr class="tab_bg_1">';
          $selector = 'selector'.ucfirst($selector);
          if(!method_exists($classname, $selector)) continue;
@@ -119,7 +121,16 @@ class PluginMreportingMisc {
          $i++;
          echo '<td>&nbsp;</td>';
       }
-      unset($_SESSION['mreporting_selector']);
+      //unset($_SESSION['mreporting_selector']);
+   }
+
+   static function saveSelectInSession($graphname) {
+      $remove = array('short_classname', 'f_name', 'gtype');
+      foreach ($_REQUEST as $key => $value) {
+         if (!preg_match("/^_/", $key) && !in_array($key, $remove) ) {
+            $_SESSION['mreporting_values'][$graphname][$key] = $value;
+         }
+      }
    }
 
    /**
