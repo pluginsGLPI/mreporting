@@ -278,8 +278,15 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showPie($params) {
+   function showPie($params, $return = false , $width = false) {
+       ob_start();
       global $LANG;
+
+
+
+       if ($width !== false){
+           $this->setWidth($width);
+       }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -303,6 +310,8 @@ JAVASCRIPT;
                         "short_classname" => $opt["short_classname"]);
 
       $this->initGraph($options);
+
+
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
@@ -421,12 +430,24 @@ JAVASCRIPT;
          echo $JS;
       }
 
+
+
+
       $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
                         "unit"   => $unit);
+
       PluginMreportingCommon::endGraph($options);
+
+
+       if($return){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
+
    }
 
    /**
@@ -1684,5 +1705,26 @@ JAVASCRIPT;
    function legend($datas) {
 
    }
+
+    /**
+     * @param int $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+
+
+
+
 }
 
