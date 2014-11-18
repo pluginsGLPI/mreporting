@@ -95,8 +95,10 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    function reportGlineBacklogs() {
       global $DB, $LANG;
 
-      $_SESSION['mreporting_selector']['reportGlineBacklogs'] = array('period', 'backlogstates', 'multiplegrouprequest', 'userassign', 'cat', 'multiplegroupassign');
-      $tab = array();
+      $_SESSION['mreporting_selector']['reportGlineBacklogs'] = 
+         array('dateinterval', 'period', 'backlogstates', 'multiplegrouprequest', 
+               'userassign', 'cat', 'multiplegroupassign');
+      $tab   = array();
       $datas = array();
 
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
@@ -295,7 +297,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    function reportVstackbarLifetime() {
       global $DB;
       $tab = $datas = $labels2 = array();
-      $_SESSION['mreporting_selector']['reportVstackbarLifetime'] = array('period', 'allstates', 'multiplegrouprequest', 'multiplegroupassign', 'userassign', 'cat');
+      $_SESSION['mreporting_selector']['reportVstackbarLifetime'] 
+         = array('dateinterval', 'period', 'allstates', 'multiplegrouprequest', 
+                 'multiplegroupassign', 'userassign', 'cat');
    
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       foreach ($configs as $k => $v) {
@@ -374,7 +378,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportVstackbarTicketsgroups() {
       global $DB;
-      $_SESSION['mreporting_selector']['reportVstackbarTicketsgroups'] = array('allstates', 'multiplegroupassign', 'cat');
+      $_SESSION['mreporting_selector']['reportVstackbarTicketsgroups'] = 
+         array('dateinterval', 'allstates', 'multiplegroupassign', 'cat');
       $tab = array();
       $datas = array();
       
@@ -440,7 +445,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportVstackbarTicketstech() {
       global $DB;
-      $_SESSION['mreporting_selector']['reportVstackbarTicketstech'] = array('multiplegroupassign', 'allstates', 'cat');
+      $_SESSION['mreporting_selector']['reportVstackbarTicketstech'] 
+         = array('dateinterval', 'multiplegroupassign', 'allstates', 'cat');
       $tab = array();
       $datas = array();
       
@@ -604,9 +610,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportHbarTopcategory() {
       global $DB;
-      $_SESSION['mreporting_selector']['reportHbarTopcategory'] = array('limit', 'userassign', 
-                                               'multiplegrouprequest', 'multiplegroupassign', 
-                                               'type');
+      $_SESSION['mreporting_selector']['reportHbarTopcategory'] 
+         = array('dateinterval', 'limit', 'userassign', 
+                 'multiplegrouprequest', 'multiplegroupassign', 'type');
       $tab = array();
       $datas = array();
 
@@ -671,7 +677,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportHbarTopapplicant() {
       global $DB;
-      $_SESSION['mreporting_selector']['reportHbarTopapplicant'] = array('limit', 'type');
+      $_SESSION['mreporting_selector']['reportHbarTopapplicant'] 
+         = array('dateinterval', 'limit', 'type');
       $tab = array();
       $datas = array();
 
@@ -712,7 +719,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportVstackbarGroupChange() {
       global $DB;
-      $_SESSION['mreporting_selector']['reportVstackbarGroupChange'] = array('userassign', 'cat', 'multiplegrouprequest', 'multiplegroupassign');
+      $_SESSION['mreporting_selector']['reportVstackbarGroupChange'] 
+         = array('dateinterval', 'userassign', 'cat', 'multiplegrouprequest', 'multiplegroupassign');
       
       $datas = array();
       
@@ -808,154 +816,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       return $datas;
    }
    
-
-   
-   // === SELECTOR FUNCTIONS ====
-
-
-   static function selectorGrouprequest() {
-      echo "<b>".__("Requester group")." : </b><br />";
-      Dropdown::show("Group",array(
-      'comments'  => false,
-      'name'    => 'groups_request_id',
-      'value'     => isset($_SESSION['mreporting_values']['groups_request_id']) ? $_SESSION['mreporting_values']['groups_request_id'] : 0,
-      'condition' => 'is_requester = 1'
-      ));
-   }
-   
-   static function selectorMultipleGrouprequest() {
-      global $DB;
-
-      $selected_groups_requester = array();
-      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
-         $selected_groups_requester = $_SESSION['mreporting_values']['groups_request_id'];
-      }
-
-      echo "<b>".__("Requester group")." : </b><br />";
-
-      $query = "SELECT * FROM glpi_groups WHERE is_requester = 1";
-      $res = $DB->query($query);
-      echo "<select name='groups_request_id[]' multiple class='chzn-select' data-placeholder='-----'>";
-      while ($datas = $DB->fetch_assoc($res)) {
-         $selected = "";
-         if (in_array($datas['id'], $selected_groups_requester)) $selected = "selected ";
-         echo "<option value='".$datas['id']."' $selected>".$datas['completename']."</option>";
-      }
-      echo "</select>";
-   
-      if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
-         echo "<script type='text/javascript'>
-         var elements = document.querySelectorAll('.chzn-select');
-         for (var i = 0; i < elements.length; i++) {
-            new Chosen(elements[i], {});
-         }
-         </script>";
-      }
-   }
-   
-   static function selectorGroupassign() {
-
-      $rand = mt_rand();
-      echo "<b>".__("Group in charge of the ticket")." : </b><br />";
-      Dropdown::show("Group",array(
-      'comments'  => false,
-      'rand'      => $rand,
-      'name'      => 'groups_assign_id',
-      'value'     => isset($_SESSION['mreporting_values']['groups_assign_id']) ? $_SESSION['mreporting_values']['groups_assign_id'] : 0,
-      'condition' => 'is_assign = 1', 
-      ));
-   }
-
-   static function selectorMultipleGroupassign() {
-      global $DB;
-
-      $selected_groups_assign = array();
-      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
-         $selected_groups_assign = $_SESSION['mreporting_values']['groups_assign_id'];
-      }
-
-      echo "<b>".__("Group in charge of the ticket")." : </b><br />";
-
-      $query = "SELECT * FROM glpi_groups WHERE is_assign = 1";
-      $res = $DB->query($query);
-      echo "<select name='groups_assign_id[]' multiple class='chzn-select' data-placeholder='-----'>";
-      while ($datas = $DB->fetch_assoc($res)) {
-         $selected = "";
-         if (in_array($datas['id'], $selected_groups_assign)) $selected = "selected ";
-         echo "<option value='".$datas['id']."' $selected>".$datas['completename']."</option>";
-      }
-      echo "</select>";
-   
-      if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
-         echo "<script type='text/javascript'>
-         var elements = document.querySelectorAll('.chzn-select');
-         for (var i = 0; i < elements.length; i++) {
-            new Chosen(elements[i], {});
-         }
-         </script>";
-      }
-   }
-   
-   static function selectorUserassign() {
-      echo "<b>".__("Technician in charge of the ticket")." : </b><br />";
-      $options = array('name'        => 'users_assign_id',
-                       'entity'      => $_SESSION['glpiactive_entity'],
-                       'right'       => 'own_ticket',
-                       'value'       => isset($_SESSION['mreporting_values']['users_assign_id']) ? $_SESSION['mreporting_values']['users_assign_id'] : 0,
-                       'ldap_import' => false, 
-                       'comments'    => false);
-      User::dropdown($options);
-   }
-   
-   static function selectorPeriod($period = "day") {
-      global $LANG;
-      $elements = array(
-         'day'    => _n("Day", "Days", 2),
-         'week'   => __("Week"),
-         'month'  => _n("Month", "Months", 2),
-         'year'   => __("By year"),
-      );
-   
-      echo '<b>'.$LANG['plugin_mreporting']['Helpdeskplus']['period'].' : </b><br />';
-      Dropdown::showFromArray("period", $elements, array('value' => isset($_SESSION['mreporting_values']['period']) ? $_SESSION['mreporting_values']['period'] : 'month'));
-   }
-
-   static function selectorType() {
-      echo "<b>"._n("Type of ticket", "Types of ticket", 2) ." : </b><br />";
-      Ticket::dropdownType('type', array('value' => isset($_SESSION['mreporting_values']['type']) ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
-
-   }
-   
-   static function selectorCat($type = true) {
-      global $CFG_GLPI;
-
-      echo "<b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
-      if ($type) {
-         $rand = Ticket::dropdownType('type', array('value' => isset($_SESSION['mreporting_values']['type']) ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
-         $params = array('type'            => '__VALUE__',
-                         'currenttype'     => Ticket::INCIDENT_TYPE,
-                         'entity_restrict' => $_SESSION['glpiactive_entity'],
-                         'value'           => isset($_SESSION['mreporting_values']['itilcategories_id']) ? $_SESSION['mreporting_values']['itilcategories_id'] : 0);
-         echo "<span id='show_category_by_type'>";
-         $params['condition'] = "`is_incident`='1'";
-      }
-      $params['comments'] = false;
-      ITILCategory::dropdown($params);
-      if ($type) {
-         echo "</span>";
-
-         Ajax::updateItemOnSelectEvent("dropdown_type$rand", "show_category_by_type",
-                                       $CFG_GLPI["root_doc"]."/ajax/dropdownTicketCategories.php",
-                                       $params);
-      }
-   }
-
-   static function selectorLimit() {
-      echo "<b>".__("Maximal count")." :</b><br />";
-      Dropdown::showListLimit(); // glpilist_limit
-   }
-
-
    static function selectorBacklogstates() {
       global $LANG;
       echo "<b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
@@ -998,33 +858,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo __("Closed");
       echo '</label>';
    }
-   
-   static function selectorAllstates() {
-      global $LANG;
-
-      echo "<b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
-      $default = array(CommonITILObject::INCOMING,
-                       CommonITILObject::ASSIGNED,
-                       CommonITILObject::PLANNED,
-                       CommonITILObject::WAITING);
-      
-      $i = 1;
-      foreach(Ticket::getAllStatusArray() as $value => $name) {
-         echo '<label>';
-         echo '<input type="hidden" name="status_'.$value.'" value="0" /> ';
-         echo '<input type="checkbox" name="status_'.$value.'" value="1"';
-         if((isset($_SESSION['mreporting_values']['status_'.$value]) && ($_SESSION['mreporting_values']['status_'.$value] == '1'))
-            || (!isset($_SESSION['mreporting_values']['status_'.$value]) && in_array($value, $default))) {
-            echo ' checked="checked"';
-         }
-         echo ' /> ';
-         echo $name;
-         echo '</label>';
-         if ($i%3 == 0) echo "<br />";
-         $i++;
-      }
-   }
-   
+  
 }
-
 ?>

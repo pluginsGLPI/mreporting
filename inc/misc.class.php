@@ -65,26 +65,13 @@ class PluginMreportingMisc {
          ." id='mreporting_date_selector'>\n";
       echo "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
 
-      //echo '<td><table><tr class="tab_bg_1">';
-
-      echo "<td>";
-      Html::showDateFormItem("date1".$randname, $date1, false);
-      //echo "</td>\n";
-      //echo "<td>";
-      Html::showDateFormItem("date2".$randname, $date2, false);
-      echo "</td>\n";
-
       self::getReportSelectors();
-
-      //echo "</tr></table></td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td colspan='2' class='center'>";
-      echo "<input type='submit' class='button' name='submit' Value=\"". _sx('button', 'Post') ."\">";
-      //echo "</td>\n";
-
-      //echo "<td class='center'>";
+      echo "<input type='submit' class='button' name='submit' 
+             value=\"". _sx('button', 'Post') ."\">";
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
       $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
       Bookmark::showSaveButton(Bookmark::URI);
@@ -102,27 +89,34 @@ class PluginMreportingMisc {
    static function getReportSelectors() {
       self::addToSelector();
       $graphname = $_REQUEST['f_name'];
-      if(!isset($_SESSION['mreporting_selector'][$graphname]) || empty($_SESSION['mreporting_selector'][$graphname])) return;
+      if(!isset($_SESSION['mreporting_selector'][$graphname]) 
+         || empty($_SESSION['mreporting_selector'][$graphname])) return;
 
       $classname = 'PluginMreporting'.$_REQUEST['short_classname'];
       if(!class_exists($classname)) return;
 
-      $i = 1;
+      $i = 0;
       foreach ($_SESSION['mreporting_selector'][$graphname] as $selector) {
          if($i%2 == 0) echo '</tr><tr class="tab_bg_1">';
          $selector = 'selector'.ucfirst($selector);
-         if(!method_exists($classname, $selector)) continue;
-
+         if(method_exists('PluginMreportingCommon', $selector)) {
+            $classselector = 'PluginMreportingCommon';
+         } elseif (method_exists($classname, $selector)) {
+            $classselector = $classname;
+         } else {
+            continue;
+         }
+      
          $i++;
          echo '<td>';
-         $classname::$selector();
+         $classselector::$selector();
          echo '</td>';
       }
       while($i%2 != 0) {
          $i++;
          echo '<td>&nbsp;</td>';
       }
-      //unset($_SESSION['mreporting_selector']);
+      unset($_SESSION['mreporting_selector']);
    }
 
    static function saveSelectors($graphname) {
@@ -133,16 +127,24 @@ class PluginMreportingMisc {
 
       foreach ($_REQUEST as $key => $value) {
          if (!preg_match("/^_/", $key) && !in_array($key, $remove) ) {
-            $values[$graphname][$key] = $value;
+            $values[$key] = $value;
          }
       }
       if (!empty($values)) {
           $id               = $pref->addDefaultPreference(Session::getLoginUserID());
           $tmp['id']        = $id;
-          $tmp['selectors'] = addslashes(json_encode($values));
+          $pref->getFromDB($id);
+          if (!is_null($pref->fields['selectors'])) {
+            $selectors = $pref->fields['selectors'];
+            $sel = json_decode(stripslashes($selectors), true);
+            $sel[$graphname] = $values;
+          } else {
+             $sel = $values;
+          }
+          $tmp['selectors'] = addslashes(json_encode($sel));
           $pref->update($tmp);
       }
-      $_SESSION['mreporting_values'] = $values[$graphname];
+      $_SESSION['mreporting_values'] = $values;
    }
 
    static function getSelectorValuesByUser() {
@@ -163,8 +165,8 @@ class PluginMreportingMisc {
 
    static function addToSelector() {
       foreach ($_REQUEST as $key => $value) {
-         if (!isset($_SESSION['mreporting_value'][$key])) {
-             $_SESSION['mreporting_value'][$key] = $value;
+         if (!isset($_SESSION['mreporting_values'][$key])) {
+             $_SESSION['mreporting_values'][$key] = $value;
          }
       }
    }
@@ -193,7 +195,8 @@ class PluginMreportingMisc {
       //if data inverted, reverse it
       if ($time1 > $time2) {
          list($time1, $time2) = array($time2, $time1);
-         list($_SESSION['mreporting_values']['date1'.$randname], $_SESSION['mreporting_values']['date2'.$randname]) = array(
+         list($_SESSION['mreporting_values']['date1'.$randname], 
+            $_SESSION['mreporting_values']['date2'.$randname]) = array(
             $_SESSION['mreporting_values']['date2'.$randname],
             $_SESSION['mreporting_values']['date1'.$randname]
          );

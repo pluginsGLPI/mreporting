@@ -86,7 +86,9 @@ class PluginMreportingGraph {
 
       echo "<div class='graph_navigation'>";
       PluginMreportingMisc::showSelector(
-         $_SESSION['mreporting_values']['date1'.$randname], $_SESSION['mreporting_values']['date2'.$randname],$randname);
+         $_SESSION['mreporting_values']['date1'.$randname], 
+         $_SESSION['mreporting_values']['date2'.$randname],
+         $randname);
       echo "</div>";
 
       $ex_func = explode($options['short_classname'], $options['randname']);

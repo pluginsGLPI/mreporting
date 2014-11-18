@@ -53,13 +53,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportPieTicketNumberByEntity() {
+      $_SESSION['mreporting_selector']['reportPieTicketNumberByEntity'] 
+         = array('dateinterval');
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportHbarTicketNumberByEntity($configs);
    }
 
    function reportHbarTicketNumberByEntity($configs = array()) {
       global $DB;
-      $_SESSION['mreporting_selector'] = array('limit');
+      $_SESSION['mreporting_selector']['reportHbarTicketNumberByEntity'] 
+         = array('dateinterval', 'limit');
 
       /*Must be defined*/
       if (count($configs) == 0) {
@@ -109,6 +112,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportHgbarTicketNumberByCatAndEntity() {
       global $DB;
+
+      $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCatAndEntity'] 
+         = array('dateinterval');
 
       $datas = array();
       $tmp_datas = array();
@@ -207,6 +213,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportPieTicketOpenedAndClosed() {
       global $DB;
 
+      $_SESSION['mreporting_selector']['reportPieTicketOpenedAndClosed'] 
+         = array('dateinterval');
+
       /*Must be defined*/
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
 
@@ -242,7 +251,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportPieTicketOpenedbyStatus() {
       global $DB;
-      $_SESSION['mreporting_selector'] = array('allstates');
+      $_SESSION['mreporting_selector']['reportPieTicketOpenedbyStatus'] 
+         = array('dateinterval', 'allstates');
 
       /*Must be defined*/
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
@@ -289,6 +299,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportPieTopTenAuthor() {
       global $DB, $LANG;
+
+      $_SESSION['mreporting_selector']['reportPieTopTenAuthor'] 
+         = array('dateinterval');
 
       /*Must be defined*/
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
@@ -345,6 +358,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    private function reportHgbarTicketNumberByCategoryAndByType($filter, $configs=array()) {
       global $DB, $LANG;
 
+      $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCategoryAndByType'] 
+         = array('dateinterval');
+
       $datas = array();
 
       /*Must be defined*/
@@ -399,6 +415,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportHgbarTicketNumberByService() {
       global $DB;
+
+      $_SESSION['mreporting_selector']['reportHgbarTicketNumberByService'] 
+         = array('dateinterval');
 
       $datas = array();
       /*Must be defined*/
@@ -461,7 +480,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHgbarOpenedTicketNumberByCategory() {
       global $DB;
 
-      $_SESSION['mreporting_selector'] = array('allstates');
+      $_SESSION['mreporting_selector']['reportHgbarOpenedTicketNumberByCategory'] 
+         = array('dateinterval', 'allstates');
 
       $datas = array();
       /*Must be defined*/
@@ -530,6 +550,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportLineNbTicket() {
+      $_SESSION['mreporting_selector']['reportLineNbTicket'] = array('dateinterval');
+
       $area = false;
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportAreaNbTicket($area, $configs);
@@ -538,7 +560,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportAreaNbTicket($area = true, $configs=array()) {
       global $DB;
 
-      $_SESSION['mreporting_selector'] = array('period');
+      $_SESSION['mreporting_selector']['reportAreaNbTicket'] = array('dateinterval', 'period');
       $this->_getPeriod();
 
       $datas = array();
@@ -574,12 +596,14 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportVstackbarNbTicket() {
+      $_SESSION['mreporting_selector']['reportVstackbarNbTicket'] = array('dateinterval');
       $area = false;
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportGlineNbTicket($area, $configs);
    }
 
    function reportGareaNbTicket() {
+      $_SESSION['mreporting_selector']['reportGareaNbTicket'] = array('dateinterval');
       $area = true;
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportGlineNbTicket($area, $configs);
@@ -588,7 +612,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportGlineNbTicket($area = false, $configs = array()) {
       global $DB;
 
-      $_SESSION['mreporting_selector'] = array('period', 'allstates');
+      $_SESSION['mreporting_selector']['reportGlineNbTicket'] 
+         = array('dateinterval', 'period', 'allstates');
       $this->_getPeriod();
 
       $datas = array();
@@ -673,7 +698,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportSunburstTicketByCategories() {
       global $DB;
-
+      
+      $_SESSION['mreporting_selector']['reportSunburstTicketByCategories'] = array('dateinterval');
+      
       /*Must be defined*/
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
 
@@ -734,6 +761,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportVstackbarTicketStatusByTechnician() {
       global $DB;
 
+      $_SESSION['mreporting_selector']['reportVstackbarTicketStatusByTechnician'] = array('dateinterval');
+      
       $datas = array();
       /*Must be defined*/
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
@@ -821,7 +850,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHbarTicketNumberByLocation($configs = array()) {
       global $DB;
 
-      $_SESSION['mreporting_selector'] = array('limit');
+      $_SESSION['mreporting_selector']['reportHbarTicketNumberByLocation'] 
+         = array('dateinterval', 'limit');
 
       /*Must be defined*/
       if (count($configs) == 0) {
