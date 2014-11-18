@@ -541,7 +541,6 @@ class PluginMreportingCommon extends CommonDBTM {
                        "desc"       => $des_func,
                        "export"     => $export,
                        "opt"        => $opt);
-
       $graph->{'show'.$opt['gtype']}($params);
 
    }

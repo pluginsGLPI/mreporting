@@ -99,10 +99,10 @@ class PluginMreportingMisc {
     * Parse and include selectors functions
     */
    static function getReportSelectors() {
+      self::addToSelector();
       $graphname = $_REQUEST['f_name'];
       if(!isset($_SESSION['mreporting_selector'][$graphname]) || empty($_SESSION['mreporting_selector'][$graphname])) return;
 
-      self::saveSelectInSession($graphname);
       $classname = 'PluginMreporting'.$_REQUEST['short_classname'];
       if(!class_exists($classname)) return;
 
@@ -124,15 +124,50 @@ class PluginMreportingMisc {
       //unset($_SESSION['mreporting_selector']);
    }
 
-   static function saveSelectInSession($graphname) {
-      $remove = array('short_classname', 'f_name', 'gtype');
+   static function saveSelectors($graphname) {
+
+      $remove = array('short_classname', 'f_name', 'gtype', 'submit');
+      $values = array();
+      $pref   = new PluginMreportingPreference();
+
       foreach ($_REQUEST as $key => $value) {
          if (!preg_match("/^_/", $key) && !in_array($key, $remove) ) {
-            $_SESSION['mreporting_values'][$graphname][$key] = $value;
+            $values[$graphname][$key] = $value;
+         }
+      }
+      if (!empty($values)) {
+          $id               = $pref->addDefaultPreference(Session::getLoginUserID());
+          $tmp['id']        = $id;
+          $tmp['selectors'] = addslashes(json_encode($values));
+          $pref->update($tmp);
+      }
+      $_SESSION['mreporting_values'] = $values[$graphname];
+   }
+
+   static function getSelectorValuesByUser() {
+      global $DB;
+
+      $myvalues  = (isset($_SESSION['mreporting_values'])?$_SESSION['mreporting_values']:array());
+      $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', Session::getLoginUserID());
+      if ($selectors) {
+         $values = json_decode(stripslashes($selectors), true);
+         if (isset($values[$_REQUEST['f_name']])) {
+            foreach ($values[$_REQUEST['f_name']] as $key => $value) {
+               $myvalues[$key] = $value;
+            }
+         }
+      }
+      $_SESSION['mreporting_values'] = $myvalues;
+   }
+
+   static function addToSelector() {
+      foreach ($_REQUEST as $key => $value) {
+         if (!isset($_SESSION['mreporting_value'][$key])) {
+             $_SESSION['mreporting_value'][$key] = $value;
          }
       }
    }
-
+   
    /**
     * Generate a SQL date test with $_REQUEST date fields
     * @param  string  $field     the sql table field to compare
@@ -143,23 +178,23 @@ class PluginMreportingMisc {
     */
    static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname) {
 
-      if (!isset($_REQUEST['date1'.$randname]))
-         $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
-      if (!isset($_REQUEST['date2'.$randname]))
-         $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
+      if (!isset($_SESSION['mreporting_values']['date1'.$randname]))
+         $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+      if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
+         $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
 
-      $date_array1=explode("-",$_REQUEST['date1'.$randname]);
+      $date_array1=explode("-",$_SESSION['mreporting_values']['date1'.$randname]);
       $time1=mktime(0,0,0,$date_array1[1],$date_array1[2],$date_array1[0]);
 
-      $date_array2=explode("-",$_REQUEST['date2'.$randname]);
+      $date_array2=explode("-",$_SESSION['mreporting_values']['date2'.$randname]);
       $time2=mktime(0,0,0,$date_array2[1],$date_array2[2],$date_array2[0]);
 
       //if data inverted, reverse it
       if ($time1 > $time2) {
          list($time1, $time2) = array($time2, $time1);
-         list($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname]) = array(
-            $_REQUEST['date2'.$randname],
-            $_REQUEST['date1'.$randname]
+         list($_SESSION['mreporting_values']['date1'.$randname], $_SESSION['mreporting_values']['date2'.$randname]) = array(
+            $_SESSION['mreporting_values']['date2'.$randname],
+            $_SESSION['mreporting_values']['date1'.$randname]
          );
       }
 

@@ -933,8 +933,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
     * Update the object period formater for SQL request
     */
    private function _getPeriod() {
-      if(isset($_REQUEST['period']) && !empty($_REQUEST['period'])) {
-         switch($_REQUEST['period']) {
+      if(isset($_SESSION['mreporting_values']['period']) && !empty($_SESSION['mreporting_values']['period'])) {
+         switch($_SESSION['mreporting_values']['period']) {
          	case 'day':
          	   $this->_period_sort = '%y%m%d';
          	   $this->_period_label = '%d %b %Y';
@@ -980,7 +980,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       );
 
       echo '<b>'.$LANG['plugin_mreporting']['selector']["period"][0].' : </b><br />';
-      Dropdown::showFromArray("period", $elements, array('value' => isset($_REQUEST['period']) ? $_REQUEST['period'] : 'month'));
+      Dropdown::showFromArray("period", $elements, array('value' => isset($_SESSION['mreporting_values']['period']) ? $_SESSION['mreporting_values']['period'] : 'month'));
    }
 
    /**
@@ -1003,8 +1003,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          echo '<label>';
          echo '<input type="hidden" name="status_'.$value.'" value="0" /> ';
          echo '<input type="checkbox" name="status_'.$value.'" value="1"';
-         if((isset($_REQUEST['status_'.$value]) && ($_REQUEST['status_'.$value] == '1'))
-               || (!isset($_REQUEST['status_'.$value]) && in_array($value, $default))) {
+         if((isset($_SESSION['mreporting_values']['status_'.$value]) && ($_SESSION['mreporting_values']['status_'.$value] == '1'))
+               || (!isset($_SESSION['mreporting_values']['status_'.$value]) && in_array($value, $default))) {
             echo ' checked="checked"';
          }
             echo ' /> ';

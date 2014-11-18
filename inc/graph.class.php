@@ -30,7 +30,7 @@
 class PluginMreportingGraph {
 
    const DEBUG_GRAPH = false;
-   protected $width = 850;
+   protected $width  = 850;
 
    /**
     * init Graph : Show Titles / Date selector
@@ -40,8 +40,8 @@ class PluginMreportingGraph {
    function initGraph($options) {
       global $LANG, $CFG_GLPI;
 
-      $width = $this->width + 100;
-      $randname = $options['randname'];
+      $width        = $this->width + 100;
+      $randname     = $options['randname'];
 
       echo "<div class='center'><div id='fig' style='width:{$width}px'>";
       //Show global title
@@ -64,29 +64,29 @@ class PluginMreportingGraph {
          $desc =$options['desc'];
       }
       if (!empty($options['desc'])
-            && isset($_REQUEST['date1'.$randname])
-               && isset($_REQUEST['date1'.$randname])) {
+            && isset($_SESSION['mreporting_values']['date1'.$randname])
+               && isset($_SESSION['mreporting_values']['date1'.$randname])) {
          $desc.= " - ";
       }
-      if (isset($_REQUEST['date1'.$randname])
-            && isset($_REQUEST['date1'.$randname])) {
-         $desc.= Html::convdate($_REQUEST['date1'.$randname])." / ".
-            Html::convdate($_REQUEST['date2'.$randname]);
+      if (isset($_SESSION['mreporting_values']['date1'.$randname])
+            && isset($_SESSION['mreporting_values']['date1'.$randname])) {
+         $desc.= Html::convdate($_SESSION['mreporting_values']['date1'.$randname])." / ".
+            Html::convdate($_SESSION['mreporting_values']['date2'.$randname]);
       }
       echo "<div class='graph_desc'>".$desc."</div>";
 
       //Show date selector
       //using rand for display x graphs on same page
 
-      if (!isset($_REQUEST['date1'.$randname]))
-            $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d",
+      if (!isset($_SESSION['mreporting_values']['date1'.$randname]))
+            $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d",
                time() - ($options['delay'] * 24 * 60 * 60));
-      if (!isset($_REQUEST['date2'.$randname]))
-         $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
+      if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
+         $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
 
       echo "<div class='graph_navigation'>";
       PluginMreportingMisc::showSelector(
-         $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
+         $_SESSION['mreporting_values']['date1'.$randname], $_SESSION['mreporting_values']['date2'.$randname],$randname);
       echo "</div>";
 
       $ex_func = explode($options['short_classname'], $options['randname']);
