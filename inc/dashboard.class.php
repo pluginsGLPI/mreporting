@@ -49,11 +49,20 @@ global $CFG_GLPI,$LANG;
         "export"     => $export,
         "opt"        => $opt);
 
-    $graph->{'show'.$opt['gtype']}($params);
+    $re =   $graph->{'show'.$opt['gtype']}($params , true,400);
 
 
+        //LE DONNEES
+    /*$re = str_replace('"','\\"',$re);
+    $re = str_replace("'",'"',$re);
+    $re = str_replace('\"','',$re);*/
 
+    //LES GRAPH
+    $re = str_replace("'",'"',$re);
 
+    Toolbox::logInFile('mreporting',$re);
+
+    return $re;
 }
 
 
@@ -61,89 +70,61 @@ global $CFG_GLPI,$LANG;
     function showDashBoard(){
 
         global $LANG,$CFG_GLPI;
-
         $root_ajax = $CFG_GLPI['root_doc']."/plugins/mreporting/ajax/dashboard.php";
 
         $this->showDropdownReports();
-        echo "dashboard";
 
 
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr class='tab_bg_1'><td class='center' id='dashboard'>";
+        echo "<div  class='tab_cadre_fixe' id='dashboard'>";
 
 
-echo "<script type='text/javascript'>";
-echo "
+        echo "<script type='text/javascript'>";
+        echo "
 
-/*Function to add items on panel*/
-function addItemsType(){
+            /*Function to remove items on panel*/
+            function removeItemsType(panel,id){
 
-    Ext.getCmp('panel').add({
-        title: 'panel 1',
-        html: '<p>Cell A content</p>',
-                    tools: [{
-                        id:'gear',
-                        tooltip: 'Expand All',
-                        handler: function(event, toolEl,panel){ Ext.Msg.alert('Status', 'config'); }
-                    },{
-                        id:'close',
-                        tooltip: 'Collapse All',
-                        handler: function(event, toolEl,panel){ removeItemsType(panel,null); }
-                    }]
-        });
-    Ext.getCmp('panel').doLayout();
-}
+                Ext.Ajax.request({
+                    url: '".$root_ajax."',
+                    params: {
+                        id: id,
+                        action: 'removeReportFromDashboard'
+                    },
+                    failure: function(opt,success,respon){
+                        Ext.Msg.alert('Status', 'ko');
+                    } ,
+                    success: function(){
+                        Ext.Msg.alert('Status', 'ok');
+                        Ext.getCmp('panel').remove(panel,true);
+                        Ext.getCmp('panel').doLayout();
+                    }
+                });
 
-/*Function to remove items on panel*/
-function removeItemsType(panel,id){
+            }
 
 
 
-    Ext.Ajax.request({
-        url: '".$root_ajax."',
-        params: {
-            id: id,
-            action: 'removeReportFromDashboard'
-        },
-        failure: function(opt,success,respon){
-            Ext.Msg.alert('Status', 'ko');
-        } ,
-        success: function(){
-            Ext.Msg.alert('Status', 'ok');
-            Ext.getCmp('panel').remove(panel,true);
-            Ext.getCmp('panel').doLayout();
-        }
-    });
-
-
-
-}
-
-
-
-
-
-Ext.onReady(function() {
-    new Ext.Panel({
-    itemId: 'panel',
-    id:'panel',
-    title: 'Table Layout',
-    renderTo : 'dashboard',
-    layout:'table',
-    /*tools: [{
-                id:'plus',
-                tooltip: 'Collapse All',
-                handler: function(){ addItemsType(); }
-            }],*/
-    defaults: {
-        // applied to each contained panel
-        bodyStyle:'padding:20px'
-    },
-    layoutConfig: {
-        // The total column count must be specified here
-        columns: 3
-    },
-    items: [";
+            Ext.onReady(function() {
+                new Ext.Panel({
+                itemId: 'panel',
+                id:'panel',
+                title: 'Dashboard',
+                renderTo : 'dashboard',
+                layout:'table',
+                /*tools: [{
+                            id:'plus',
+                            tooltip: 'Collapse All',
+                            handler: function(){ addItemsType(); }
+                        }],*/
+                defaults: {
+                    // applied to each contained panel
+                    bodyStyle:'padding:20px'
+                },
+                layoutConfig: {
+                    // The total column count must be specified here
+                    columns: 3
+                },
+                items: [";
 
         $dashboard= new PluginMreportingDashboard();
         $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
@@ -156,7 +137,7 @@ Ext.onReady(function() {
             $index = str_replace('PluginMreporting','',$report->fields['classname']);
             $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
-            $data = "Nothing to show" ;
+            $re = "Nothing to show" ;
 
             $f_name = $report->fields["name"];
 
@@ -173,56 +154,42 @@ Ext.onReady(function() {
                 if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
                     $opt = array('short_classname' => $short_classname , 'f_name' =>$f_name , 'gtype' => $gtype );
                     $dash = new PluginMreportingDashboard();
-                    $data = $dash->showGraphOnDashboard($opt);
+                    $re   = $dash->showGraphOnDashboard($opt);
+
                 }
             }
 
 
 
-
-
-
-
             echo "{
+             xtype: 'panel',
                     title: '".$title."',
-
-                    html: '<p>".$data."</p>',
-                                tools: [{
-                                    id:'gear',
-                                    tooltip: 'Configure this report',
-                                    handler: function(event, toolEl,panel){ Ext.Msg.alert('Status', 'config'); }
-                                },{
-                                    id:'close',
-                                    tooltip: 'Remove this report',
-                                    handler: function(event, toolEl,panel){ removeItemsType(panel,".$data['id']."); }
-                                }]
+                    html : '".json_encode($re)."',
+                    tools: [{
+                        id:'gear',
+                        tooltip: 'Configure this report',
+                        handler: function(event, toolEl,panel){ Ext.Msg.alert('Status', 'config'); }
+                    },{
+                        id:'close',
+                        tooltip: 'Remove this report',
+                        handler: function(event, toolEl,panel){ removeItemsType(panel,".$data['id']."); }
+                    }]
                     }";
 
-
             if($i != count($res)) echo',';
-
-
         }
 
-echo "]  }); }); ";
+        echo "]  }); }); ";
 
 
-echo "</script>";
-        echo "</td>";
-        echo "</tr>";
-        echo "</table>";
-
+        echo "</script>";
+                echo "</div>";
 
     }
 
-    function popupConfigReport($idreport){
-        $report = new PluginMreportingConfig();
-        $report->getFromDB($idreport);
 
 
 
-
-    }
 
 
     function showDropdownReports(){
@@ -240,13 +207,6 @@ echo "</script>";
         foreach($DB->request($reports) as $report){
             $mreportingConfig = new PluginMreportingConfig();
             $mreportingConfig->getFromDB($report['id']);
-
-
-            /*echo "<div id='popupConfigReport".$report['id']."' ></div>";
-            Ajax::createModalWindow("popupConfigReport".$report['id'],
-                $CFG_GLPI["root_doc"] . '/plugins/mreporting/front/dashboard.form.php?action=popupConfigReport&idReport=' .
-                $report['id'], array('title'  => 'Set configuration','width'  => 530,'height' => 400));*/
-
 
             $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
             $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
