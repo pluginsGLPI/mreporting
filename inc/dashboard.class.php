@@ -45,6 +45,7 @@ global $CFG_GLPI,$LANG;
     $opt['withdata'] = 1;
     $params = array("raw_datas"   => $datas,
         "title"      => $title_func,
+        "randname"      => $title_func.$opt['short_classname'],
         "desc"       => $des_func,
         "export"     => $export,
         "opt"        => $opt);
@@ -52,15 +53,45 @@ global $CFG_GLPI,$LANG;
     $re =   $graph->{'show'.$opt['gtype']}($params , true,400);
 
 
-        //LE DONNEES
-    /*$re = str_replace('"','\\"',$re);
+
+
+    //$re = str_replace("<script type='text/javascript+protovis'>","<scr'+'ipt type='text/javascript+protovis'>",$re);
+    //$re = str_replace("</script>","</scr'+'ipt>",$re);
+
+
+    //LE DONNEES
+    $re = str_replace('"','\\"',$re);
+
+    $re = str_replace('\"','',$re);
     $re = str_replace("'",'"',$re);
-    $re = str_replace('\"','',$re);*/
+
+    //$re = preg_replace('/[\r\n]+/', "", $re);
+
 
     //LES GRAPH
-    $re = str_replace("'",'"',$re);
+    //$re = str_replace("'",'"',$re);
+    //Toolbox::logInFile('mreporting',$re);
 
-    Toolbox::logInFile('mreporting',$re);
+
+    //$re = str_replace("'","\\'",$re);
+
+    /*$re = rtrim($re,"\t");
+    $re = rtrim($re,"\n");
+    $re = rtrim($re,"\r");
+    $re = rtrim($re,"\0");
+    $re = rtrim($re,"\x0B");*/
+
+    //$re = addcslashes($re,"\\\'\"\n\r");
+    //$re = rtrim($re);
+    //$re = ltrim($re);
+
+    //$re= str_replace(array("\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $re);
+
+
+    //Toolbox::logInFile('mreporting',$re);
+    //return $title_func.$opt['short_classname'];
+
+    //$re = str_replace(array(chr(92), "'"), array(chr(92) . chr(92), "\'"), $re);
 
     return $re;
 }
@@ -75,7 +106,7 @@ global $CFG_GLPI,$LANG;
         $this->showDropdownReports();
 
 
-        echo "<div  class='tab_cadre_fixe' id='dashboard'>";
+        echo "<div   id='dashboard'>";
 
 
         echo "<script type='text/javascript'>";
@@ -164,7 +195,7 @@ global $CFG_GLPI,$LANG;
             echo "{
              xtype: 'panel',
                     title: '".$title."',
-                    html : '".json_encode($re)."',
+                    html: ".json_encode($re).",
                     tools: [{
                         id:'gear',
                         tooltip: 'Configure this report',
