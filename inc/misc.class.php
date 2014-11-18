@@ -63,27 +63,28 @@ class PluginMreportingMisc {
 
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
          ." id='mreporting_date_selector'>\n";
-      echo "<table class='tab_cadre'><tr class='tab_bg_1'>";
+      echo "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
 
-      echo '<td><table><tr class="tab_bg_1">';
+      //echo '<td><table><tr class="tab_bg_1">';
 
       echo "<td>";
       Html::showDateFormItem("date1".$randname, $date1, false);
-      echo "</td>\n";
-
-      echo "<td>";
+      //echo "</td>\n";
+      //echo "<td>";
       Html::showDateFormItem("date2".$randname, $date2, false);
       echo "</td>\n";
 
       self::getReportSelectors();
 
-      echo "</tr></table></td>";
+      //echo "</tr></table></td>";
+      echo "</tr>";
 
-      echo "<td rowspan='2' class='center'>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td colspan='2' class='center'>";
       echo "<input type='submit' class='button' name='submit' Value=\"". _sx('button', 'Post') ."\">";
-      echo "</td>\n";
+      //echo "</td>\n";
 
-      echo "<td class='center'>";
+      //echo "<td class='center'>";
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
       $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
       Bookmark::showSaveButton(Bookmark::URI);
@@ -106,9 +107,9 @@ class PluginMreportingMisc {
       $classname = 'PluginMreporting'.$_REQUEST['short_classname'];
       if(!class_exists($classname)) return;
 
-      $i = 2;
+      $i = 1;
       foreach ($_SESSION['mreporting_selector'][$graphname] as $selector) {
-         if($i%4 == 0) echo '</tr><tr class="tab_bg_1">';
+         if($i%2 == 0) echo '</tr><tr class="tab_bg_1">';
          $selector = 'selector'.ucfirst($selector);
          if(!method_exists($classname, $selector)) continue;
 
@@ -117,7 +118,7 @@ class PluginMreportingMisc {
          $classname::$selector();
          echo '</td>';
       }
-      while($i%4 != 0) {
+      while($i%2 != 0) {
          $i++;
          echo '<td>&nbsp;</td>';
       }
