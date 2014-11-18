@@ -1711,18 +1711,22 @@ class PluginMreportingCommon extends CommonDBTM {
       );
    
       echo '<b>'.$LANG['plugin_mreporting']['Helpdeskplus']['period'].' : </b><br />';
-      Dropdown::showFromArray("period", $elements, array('value' => isset($_SESSION['mreporting_values']['period']) ? $_SESSION['mreporting_values']['period'] : 'month'));
+      Dropdown::showFromArray("period", $elements, 
+                              array('value' => isset($_SESSION['mreporting_values']['period']) 
+                                 ? $_SESSION['mreporting_values']['period'] : 'month'));
    }
 
    static function selectorType() {
       echo "<b>"._n("Type of ticket", "Types of ticket", 2) ." : </b><br />";
-      Ticket::dropdownType('type', array('value' => isset($_SESSION['mreporting_values']['type']) ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
+      Ticket::dropdownType('type', 
+                           array('value' => isset($_SESSION['mreporting_values']['type']) 
+                              ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
 
    }
    
    static function selectorCat($type = true) {
       global $CFG_GLPI;
-
+Toolbox::logDebug("aaa");
       echo "<b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
       if ($type) {
          $rand = Ticket::dropdownType('type', array('value' => isset($_SESSION['mreporting_values']['type']) ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));

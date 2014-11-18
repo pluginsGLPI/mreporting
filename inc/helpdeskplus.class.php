@@ -154,8 +154,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   $sql_itilcat
                GROUP BY period
                ORDER BY period";
-         $res = $DB->query($sql_create);
-         while ($data = $DB->fetch_assoc($res)) {
+         foreach ($DB->request($sql_create) as $data) {
             $tab[$data['period']]['open'] = $data['nb'];
             $tab[$data['period']]['period_name'] = $data['period_name'];
          }
@@ -180,8 +179,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   $sql_itilcat
                GROUP BY period
                ORDER BY period";
-         $res = $DB->query($sql_solved);
-         while ($data = $DB->fetch_assoc($res)) {
+         foreach ($DB->request($sql_solved) as $data) {
             $tab[$data['period']]['solved'] = $data['nb'];
             $tab[$data['period']]['period_name'] = $data['period_name'];
          }
@@ -243,8 +241,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                $sql_itilcat_backlog
                AND $sql_date_backlog
          GROUP BY period";
-         $res = $DB->query($sql_backlog);
-         while ($data = $DB->fetch_assoc($res)) {
+         foreach ($DB->request($sql_backlog) as $data) {
             $tab[$data['period']]['backlog'] = $data['nb'];
             $tab[$data['period']]['period_name'] = $data['period_name'];
          }
@@ -270,8 +267,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   $sql_itilcat
                GROUP BY period
                ORDER BY period";
-         $res = $DB->query($sql_closed);
-         while ($data = $DB->fetch_assoc($res)) {
+         foreach ($DB->request($sql_closed) as $data) {
             $tab[$data['period']]['closed'] = $data['nb'];
             $tab[$data['period']]['period_name'] = $data['period_name'];
          }
