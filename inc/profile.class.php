@@ -134,8 +134,8 @@ class PluginMreportingProfile extends CommonDBTM {
 
         global $DB;
 
-        $profiles = "SELECT `id` FROM `glpi_profiles` where `interface` = 'central'";
-        $reports = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
+        $profiles = "SELECT `id` FROM `glpi_profiles`";
+        $reports  = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
 
         //TODO : We need to reload cache before else glpi don't show migration table
         $myreport = new PluginMreportingProfile();

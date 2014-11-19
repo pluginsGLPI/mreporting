@@ -48,86 +48,89 @@ function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
 
    $plugin = new Plugin();
-   $PLUGIN_HOOKS['redirect_page']['mreporting'] = 'front/download.php';
 
    /* CRSF */
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
-   /* Profile */
-   $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
-                                                         'changeProfile');
+   if ($plugin->isActivated("mreporting")) {
+      /* Profile */
+      $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
+                                                            'changeProfile');
+      $PLUGIN_HOOKS['redirect_page']['mreporting']  = 'front/download.php';
 
-   Plugin::registerClass('PluginMreportingNotification',
-   array('notificationtemplates_types' => true));
-   //Plugin::registerClass('PluginMreportingNotificationTargetNotification');
 
-   if (Session::getLoginUserID()) {
+      Plugin::registerClass('PluginMreportingNotification',
+      array('notificationtemplates_types' => true));
+      //Plugin::registerClass('PluginMreportingNotificationTargetNotification');
 
-      Plugin::registerClass('PluginMreportingProfile',
-                      array('addtabon' => 'Profile'));
+      if (Session::getLoginUserID()) {
 
-      Plugin::registerClass('PluginMreportingPreference',
-                            array('addtabon' => array('Preference')));
+         Plugin::registerClass('PluginMreportingProfile',
+                         array('addtabon' => 'Profile'));
 
-      /* Reports Link */
-         $menu_entry = "front/central.php";
-         $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
+         Plugin::registerClass('PluginMreportingPreference',
+                               array('addtabon' => array('Preference')));
 
-      /* Configuration Link */
-      if (Session::haveRight('config', 'w')) {
-         $config_entry = 'front/config.php';
-         $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['config']
-                  = '/plugins/mreporting/'.$config_entry;
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['add']
-                  = '/plugins/mreporting/front/config.form.php';
-      }
+         /* Reports Link */
+            $menu_entry = "front/central.php";
+            $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
 
-      /* Show Reports in standart stats page */
-      if (class_exists('PluginMreportingCommon')) {
-         $mreporting_common = new PluginMreportingCommon();
-         $reports = $mreporting_common->getAllReports();
-         if ($reports !== false) {
-            foreach($reports as $report) {
-               foreach($report['functions'] as $func) {
-                  $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
+         /* Configuration Link */
+         if (Session::haveRight('config', 'w')) {
+            $config_entry = 'front/config.php';
+            $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['config']
+                     = '/plugins/mreporting/'.$config_entry;
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['add']
+                     = '/plugins/mreporting/front/config.form.php';
+         }
+
+         /* Show Reports in standart stats page */
+            $mreporting_common = new PluginMreportingCommon();
+            $reports = $mreporting_common->getAllReports();
+            if ($reports !== false) {
+               foreach($reports as $report) {
+                  foreach($report['functions'] as $func) {
+                     $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
+                  }
                }
             }
-         }
-         if (PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
-            $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
-         }
+            
+            if (isset($_SESSION['glpiactiveprofile']['id']) 
+               && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
+               $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
+            }
+
+          $PLUGIN_HOOKS['pre_item_purge']['mreporting']
+              = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),
+                      'PluginMreportingConfig' => array('PluginMreportingProfile', 
+                                                        'purgeProfilesByReports') );
+          $PLUGIN_HOOKS['item_add']['mreporting']
+              = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'),
+                      'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
+
       }
+      
+
+      // Add specific files to add to the header : javascript
+      $PLUGIN_HOOKS['add_javascript']['mreporting'] = array();
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
+
+      //Add specific files to add to the header : css
+      $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
+      $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
+      $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
+      
+      //Load additionnal language files in needed
+      includeAdditionalLanguageFiles();
    }
 
-   if ($plugin->isActivated("mreporting")) {
-       $PLUGIN_HOOKS['pre_item_purge']['mreporting']
-           = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),
-                   'PluginMreportingConfig' => array('PluginMreportingProfile', 
-                                                     'purgeProfilesByReports') );
-       $PLUGIN_HOOKS['item_add']['mreporting']
-           = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'),
-                   'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
-                   
-   }
-
-   // Add specific files to add to the header : javascript
-   $PLUGIN_HOOKS['add_javascript']['mreporting'] = array();
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
-
-   //Add specific files to add to the header : css
-   $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
-   $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
-   $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
-   
-   //Load additionnal language files in needed
-   includeAdditionalLanguageFiles();
 }
 
 // Get the name and the version of the plugin - Needed
