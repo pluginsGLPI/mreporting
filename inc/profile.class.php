@@ -71,8 +71,8 @@ class PluginMreportingProfile extends CommonDBTM {
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       global $LANG;
 
-      if ($item->getType()=='Profile' && $item->getField('interface')!='helpdesk') {
-            return $LANG['plugin_mreporting']["name"];
+      if ($item->getType()=='Profile') {
+         return $LANG['plugin_mreporting']["name"];
       }
       return '';
    }
@@ -170,7 +170,9 @@ class PluginMreportingProfile extends CommonDBTM {
     static function getRight(){
 
         global $DB;
-        $query = "select `profiles_id` from `glpi_plugin_mreporting_profiles` where reports = 'r' ";
+        $query = "SELECT `profiles_id` 
+                  FROM `glpi_plugin_mreporting_profiles` 
+                  WHERE `reports` = 'r' ";
 
         $right = array();
         foreach ($DB->request($query) as $profile) {
@@ -209,9 +211,8 @@ class PluginMreportingProfile extends CommonDBTM {
      * @param $report_id
      */
     function addRightToReports($report_id){
-
         global $DB;
-        $profiles = "SELECT `id` FROM `glpi_profiles` where `interface` = 'central'";
+        $profiles = "SELECT `id` FROM `glpi_profiles`";
 
         foreach ($DB->request($profiles) as $prof) {
 
@@ -226,7 +227,6 @@ class PluginMreportingProfile extends CommonDBTM {
     }
 
    function createAccess($ID) {
-
       $this->add(array(
       'profiles_id' => $ID));
    }
@@ -324,8 +324,8 @@ class PluginMreportingProfile extends CommonDBTM {
         echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
 
         $query = "SELECT `id`, `name`
-                FROM `glpi_profiles` where `interface` = 'central'
-                ORDER BY `name`";
+                  FROM `glpi_profiles`
+                  ORDER BY `name`";
 
         foreach ($DB->request($query) as $profile) {
 

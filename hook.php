@@ -32,7 +32,7 @@ function plugin_mreporting_install() {
 
    //get version
    $plugin = new Plugin;
-   $found = $plugin->find("name = 'mreporting'");
+   $found  = $plugin->find("name = 'mreporting'");
    $plugin_mreporting = array_shift($found);
 
    //init migration
@@ -127,8 +127,6 @@ function plugin_mreporting_install() {
     }
 
 
-
-
     // == Update to 2.3 ==
 
     //save all profile with right 'r'
@@ -172,17 +170,16 @@ function plugin_mreporting_install() {
 
 
 function plugin_mreporting_uninstall() {
-   global $DB;
-
-   $queries = array(
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_profiles",
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_configs",
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_preferences",
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_notifications"
+   $migration = new Migration();
+   $tables = array("glpi_plugin_mreporting_profiles",
+                   "glpi_plugin_mreporting_configs",
+                   "glpi_plugin_mreporting_preferences",
+                  "glpi_plugin_mreporting_notifications"
    );
 
-   foreach($queries as $query)
-      $DB->query($query);
+   foreach($tables as $table) {
+      $migration->dropTable($table);  
+   }
 
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
    $notifications_folder = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications";
@@ -190,12 +187,12 @@ function plugin_mreporting_uninstall() {
    Toolbox::deleteDir($notifications_folder);
    Toolbox::deleteDir($rep_files_mreporting);
 
-   $tables_glpi = array("glpi_displaypreferences",
-               "glpi_bookmarks");
+   $objects = array("DisplayPreferences", "Bookmark");
 
-   foreach($tables_glpi as $table_glpi)
-      $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginMreportingConfig' ;");
-
+   foreach($objects as $object) {
+      $obj = new $object();
+      $obj->deleteByCriteria(array('itemtype' => 'PluginMreportingConfig'));
+   }
 
    require_once "inc/notification.class.php";
    PluginMreportingNotification::uninstall();
@@ -207,11 +204,11 @@ function plugin_mreporting_uninstall() {
 function plugin_mreporting_getDatabaseRelations() {
 
    $plugin = new Plugin();
-   if ($plugin->isActivated("mreporting"))
-
+   if ($plugin->isActivated("mreporting")) {
       return array("glpi_profiles" => array ("glpi_plugin_mreporting_profiles" => "profiles_id"));
-   else
+   } else {
       return array();
+   }
 }
 
 function plugin_mreporting_giveItem($type,$ID,$data,$num) {

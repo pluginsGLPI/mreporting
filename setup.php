@@ -47,6 +47,7 @@ if(isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::D
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS;
 
+   $plugin = new Plugin();
    $PLUGIN_HOOKS['redirect_page']['mreporting'] = 'front/download.php';
 
    /* CRSF */
@@ -54,7 +55,7 @@ function plugin_init_mreporting() {
 
    /* Profile */
    $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
-                                                                        'changeProfile');
+                                                         'changeProfile');
 
    Plugin::registerClass('PluginMreportingNotification',
    array('notificationtemplates_types' => true));
@@ -65,10 +66,8 @@ function plugin_init_mreporting() {
       Plugin::registerClass('PluginMreportingProfile',
                       array('addtabon' => 'Profile'));
 
-      if ($_SESSION['glpiactiveprofile']['interface'] != "helpdesk") {
-         Plugin::registerClass('PluginMreportingPreference',
-                               array('addtabon' => array('Preference')));
-      }
+      Plugin::registerClass('PluginMreportingPreference',
+                            array('addtabon' => array('Preference')));
 
       /* Reports Link */
          $menu_entry = "front/central.php";
@@ -97,15 +96,21 @@ function plugin_init_mreporting() {
                }
             }
          }
+         if (PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
+            $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
+         }
       }
    }
 
-   if (class_exists('PluginMreportingProfile')) { // only if plugin activated
+   if ($plugin->isActivated("mreporting")) {
        $PLUGIN_HOOKS['pre_item_purge']['mreporting']
-           = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),'PluginMreportingConfig' => array('PluginMreportingProfile', 'purgeProfilesByReports') );
-
+           = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),
+                   'PluginMreportingConfig' => array('PluginMreportingProfile', 
+                                                     'purgeProfilesByReports') );
        $PLUGIN_HOOKS['item_add']['mreporting']
-           = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'),'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
+           = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'),
+                   'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
+                   
    }
 
    // Add specific files to add to the header : javascript
@@ -120,6 +125,8 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
+   
+   //Load additionnal language files in needed
    includeAdditionalLanguageFiles();
 }
 
