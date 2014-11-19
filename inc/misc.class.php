@@ -76,11 +76,15 @@ class PluginMreportingMisc {
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
       $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
       Bookmark::showSaveButton(Bookmark::URI);
-      echo "<a href='?$request_string&reset=reset' >";
-      echo "&nbsp;&nbsp;<img title=\"".__s('Blank')."\" alt=\"".__s('Blank')."\" src='".
-            $CFG_GLPI["root_doc"]."/pics/reset.png' class='calendrier'></a>";
+      
+      //If there's no selector for the report, there's no need for a reset button !              
+      if (isset($_SESSION['mreporting_selector'][$_REQUEST['f_name']])) {
+         echo "<a href='?$request_string&reset=reset' >";
+         echo "&nbsp;&nbsp;<img title=\"".__s('Blank')."\" alt=\"".__s('Blank')."\" src='".
+               $CFG_GLPI["root_doc"]."/pics/reset.png' class='calendrier'></a>";
+      }
       echo "</td>\n";
-
+      unset($_SESSION['mreporting_selector']);
 
 
       echo "</tr>";
@@ -122,7 +126,7 @@ class PluginMreportingMisc {
          $i++;
          echo '<td>&nbsp;</td>';
       }
-      unset($_SESSION['mreporting_selector']);
+      
    }
 
    static function saveSelectors($graphname) {
