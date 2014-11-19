@@ -50,50 +50,8 @@ global $CFG_GLPI,$LANG;
         "export"     => $export,
         "opt"        => $opt);
 
-    $re =   $graph->{'show'.$opt['gtype']}($params , true,400);
+    return  $graph->{'show'.$opt['gtype']}($params , true,220);
 
-
-
-
-    //$re = str_replace("<script type='text/javascript+protovis'>","<scr'+'ipt type='text/javascript+protovis'>",$re);
-    //$re = str_replace("</script>","</scr'+'ipt>",$re);
-
-
-    //LE DONNEES
-    $re = str_replace('"','\\"',$re);
-
-    $re = str_replace('\"','',$re);
-    $re = str_replace("'",'"',$re);
-
-    //$re = preg_replace('/[\r\n]+/', "", $re);
-
-
-    //LES GRAPH
-    //$re = str_replace("'",'"',$re);
-    //Toolbox::logInFile('mreporting',$re);
-
-
-    //$re = str_replace("'","\\'",$re);
-
-    /*$re = rtrim($re,"\t");
-    $re = rtrim($re,"\n");
-    $re = rtrim($re,"\r");
-    $re = rtrim($re,"\0");
-    $re = rtrim($re,"\x0B");*/
-
-    //$re = addcslashes($re,"\\\'\"\n\r");
-    //$re = rtrim($re);
-    //$re = ltrim($re);
-
-    //$re= str_replace(array("\r\n", "\r", "\n", PHP_EOL, chr(10), chr(13), chr(10).chr(13)), "", $re);
-
-
-    //Toolbox::logInFile('mreporting',$re);
-    //return $title_func.$opt['short_classname'];
-
-    //$re = str_replace(array(chr(92), "'"), array(chr(92) . chr(92), "\'"), $re);
-
-    return $re;
 }
 
 
@@ -149,11 +107,11 @@ global $CFG_GLPI,$LANG;
                         }],*/
                 defaults: {
                     // applied to each contained panel
-                    bodyStyle:'padding:20px'
+                    bodyStyle:'padding:5px;'
                 },
                 layoutConfig: {
                     // The total column count must be specified here
-                    columns: 3
+                    columns: 5
                 },
                 items: [";
 
@@ -195,7 +153,7 @@ global $CFG_GLPI,$LANG;
             echo "{
              xtype: 'panel',
                     title: '".$title."',
-                    html: ".json_encode($re).",
+                    html: ".json_encode($re,JSON_HEX_APOS).",
                     tools: [{
                         id:'gear',
                         tooltip: 'Configure this report',
