@@ -62,7 +62,7 @@ class PluginMreportingMisc {
       global $CFG_GLPI;
       
       $request_string = self::getRequestString($_GET);
-
+      $has_selector   = (isset($_SESSION['mreporting_selector'][$_REQUEST['f_name']]));
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
          ." id='mreporting_date_selector'>\n";
       echo "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
@@ -71,14 +71,16 @@ class PluginMreportingMisc {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td colspan='2' class='center'>";
-      echo "<input type='submit' class='button' name='submit' 
-             value=\"". _sx('button', 'Post') ."\">";
+      if ($has_selector) {
+         echo "<input type='submit' class='button' name='submit' 
+                value=\"". _sx('button', 'Post') ."\">";
+      }
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
       $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
       Bookmark::showSaveButton(Bookmark::URI);
       
       //If there's no selector for the report, there's no need for a reset button !              
-      if (isset($_SESSION['mreporting_selector'][$_REQUEST['f_name']])) {
+      if ($has_selector) {
          echo "<a href='?$request_string&reset=reset' >";
          echo "&nbsp;&nbsp;<img title=\"".__s('Blank')."\" alt=\"".__s('Blank')."\" src='".
                $CFG_GLPI["root_doc"]."/pics/reset.png' class='calendrier'></a>";
