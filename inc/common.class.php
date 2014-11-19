@@ -1795,5 +1795,9 @@ class PluginMreportingCommon extends CommonDBTM {
       Html::showDateFormItem("date2".$randname, $date2, false);   
       echo "</td></tr></table>";
    } 
+   
+   static function canAccessAtLeastOneReport($profiles_id) {
+      return countElementsInTable("glpi_plugin_mreporting_profiles", "`profiles_id`='$profiles_id' AND `right`='r'");
+   }
 }
 

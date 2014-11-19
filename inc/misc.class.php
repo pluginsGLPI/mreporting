@@ -62,12 +62,18 @@ class PluginMreportingMisc {
       global $CFG_GLPI;
       
       $request_string = self::getRequestString($_GET);
-      $has_selector   = (isset($_SESSION['mreporting_selector'][$_REQUEST['f_name']]));
+      if (!isset($_REQUEST['f_name'])) {
+         $has_selector = false;
+      } else {
+         $has_selector   = (isset($_SESSION['mreporting_selector'][$_REQUEST['f_name']]));
+      }
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
          ." id='mreporting_date_selector'>\n";
       echo "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
       
-      self::getReportSelectors();
+      if ($has_selector) {
+         self::getReportSelectors();
+      }
 
       echo "<tr class='tab_bg_1'>";
       echo "<td colspan='2' class='center'>";
