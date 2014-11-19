@@ -120,7 +120,7 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
    $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
-
+   includeAdditionalLanguageFiles();
 }
 
 // Get the name and the version of the plugin - Needed
@@ -136,6 +136,14 @@ function plugin_version_mreporting() {
                 'minGlpiVersion' => "0.84");
 }
 
+function includeAdditionalLanguageFiles() {
+   if (isset($_SESSION["glpilanguage"])) {
+      $template = "*_".$_SESSION["glpilanguage"].".php";
+      foreach (glob(GLPI_ROOT.'/plugins/mreporting/locales/'.$template) as $path) {
+         include_once($path);
+      }
+   }
+}
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_mreporting_check_prerequisites() {

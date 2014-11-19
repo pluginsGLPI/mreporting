@@ -346,11 +346,15 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
 
    function reportHgbarOpenTicketNumberByCategoryAndByType() {
+      $_SESSION['mreporting_selector']['reportHgbarOpenTicketNumberByCategoryAndByType'] 
+         = array('dateinterval');
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportHgbarTicketNumberByCategoryAndByType('open',$configs);
    }
 
    function reportHgbarCloseTicketNumberByCategoryAndByType() {
+      $_SESSION['mreporting_selector']['reportHgbarCloseTicketNumberByCategoryAndByType'] 
+         = array('dateinterval');
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportHgbarTicketNumberByCategoryAndByType('close',$configs);
    }
