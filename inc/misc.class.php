@@ -59,14 +59,15 @@ class PluginMreportingMisc {
     * @return nothing
     */
    static function showSelector($date1, $date2, $randname) {
+      global $CFG_GLPI;
+      
       $request_string = self::getRequestString($_GET);
 
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
          ." id='mreporting_date_selector'>\n";
       echo "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
-
+      
       self::getReportSelectors();
-      echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td colspan='2' class='center'>";
@@ -75,7 +76,12 @@ class PluginMreportingMisc {
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
       $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
       Bookmark::showSaveButton(Bookmark::URI);
+      echo "<a href='?$request_string&reset=reset' >";
+      echo "&nbsp;&nbsp;<img title=\"".__s('Blank')."\" alt=\"".__s('Blank')."\" src='".
+            $CFG_GLPI["root_doc"]."/pics/reset.png' class='calendrier'></a>";
       echo "</td>\n";
+
+
 
       echo "</tr>";
       echo "</table>";
@@ -95,9 +101,9 @@ class PluginMreportingMisc {
       $classname = 'PluginMreporting'.$_REQUEST['short_classname'];
       if(!class_exists($classname)) return;
 
-      $i = 0;
+      $i = 2;
       foreach ($_SESSION['mreporting_selector'][$graphname] as $selector) {
-         if($i%2 == 0) echo '</tr><tr class="tab_bg_1">';
+         if($i%4 == 0) echo '</tr><tr class="tab_bg_1">';
          $selector = 'selector'.ucfirst($selector);
          if(method_exists('PluginMreportingCommon', $selector)) {
             $classselector = 'PluginMreportingCommon';
@@ -112,7 +118,7 @@ class PluginMreportingMisc {
          $classselector::$selector();
          echo '</td>';
       }
-      while($i%2 != 0) {
+      while($i%4 != 0) {
          $i++;
          echo '<td>&nbsp;</td>';
       }
@@ -168,6 +174,24 @@ class PluginMreportingMisc {
          if (!isset($_SESSION['mreporting_values'][$key])) {
              $_SESSION['mreporting_values'][$key] = $value;
          }
+      }
+   }
+   
+   static function resetSelectorsForReport($report) {
+      global $DB;
+      
+      $users_id  = Session::getLoginUserID();
+      $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', $users_id);
+      if ($selectors) {
+         $values = json_decode(stripslashes($selectors), true);
+         if (isset($values[$report])) {
+            unset($values[$report]);
+         }
+         $sel = addslashes(json_encode($values));
+         $query = "UPDATE `glpi_plugin_mreporting_preferences` 
+                   SET `selectors`='$sel' 
+                   WHERE `users_id`='$users_id'";
+         $DB->query($query);
       }
    }
    

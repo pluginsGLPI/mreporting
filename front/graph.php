@@ -38,6 +38,8 @@ $common = new PluginMreportingCommon;
 
 if (isset($_POST['submit'])) {
    PluginMreportingMisc::saveSelectors($_GET['f_name']);
+} elseif (isset($_GET['reset'])) {
+   PluginMreportingMisc::resetSelectorsForReport($_GET['f_name']);
 }
 
 PluginMreportingMisc::getSelectorValuesByUser();

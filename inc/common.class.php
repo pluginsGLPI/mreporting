@@ -1726,7 +1726,7 @@ class PluginMreportingCommon extends CommonDBTM {
    
    static function selectorCat($type = true) {
       global $CFG_GLPI;
-Toolbox::logDebug("aaa");
+
       echo "<b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
       if ($type) {
          $rand = Ticket::dropdownType('type', array('value' => isset($_SESSION['mreporting_values']['type']) ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
@@ -1783,14 +1783,17 @@ Toolbox::logDebug("aaa");
    static function selectorDateinterval() {
       echo "<b>";
 
+      echo "<table><tr class=\"tab_bg_1\">";
       $randname    = 'PluginMreporting'.$_REQUEST['short_classname'].$_REQUEST['f_name'];
       $date1 = $_SESSION['mreporting_values']["date1".$randname];
       $date2 = $_SESSION['mreporting_values']["date2".$randname];
-      
+      echo "<td>";
       echo __("Start date")."&nbsp;";
       Html::showDateFormItem("date1".$randname, $date1, false);
+      echo "</td><td>";
       echo __("End date")."&nbsp;";
       Html::showDateFormItem("date2".$randname, $date2, false);   
+      echo "</td></tr></table>";
    } 
 }
 
