@@ -97,7 +97,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       $_SESSION['mreporting_selector']['reportGlineBacklogs'] = 
          array('dateinterval', 'period', 'backlogstates', 'multiplegrouprequest', 
-               'userassign', 'cat', 'multiplegroupassign');
+               'userassign', 'category', 'multiplegroupassign');
       $tab   = array();
       $datas = array();
 
@@ -106,9 +106,12 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $$k=$v;
       }
       
-      $this->sql_date_create = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
-      $this->sql_date_solve = PluginMreportingMisc::getSQLDate("glpi_tickets.solvedate",$delay,$randname);
-      $this->sql_date_closed = PluginMreportingMisc::getSQLDate("glpi_tickets.closedate",$delay,$randname);     
+      $this->sql_date_create 
+         = PluginMreportingMisc::getSQLDate("glpi_tickets.date", $delay, $randname);
+      $this->sql_date_solve 
+         = PluginMreportingMisc::getSQLDate("glpi_tickets.solvedate", $delay, $randname);
+      $this->sql_date_closed 
+         = PluginMreportingMisc::getSQLDate("glpi_tickets.closedate", $delay, $randname);     
 
       $sql_group_assign = "";
       if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
@@ -295,7 +298,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $tab = $datas = $labels2 = array();
       $_SESSION['mreporting_selector']['reportVstackbarLifetime'] 
          = array('dateinterval', 'period', 'allstates', 'multiplegrouprequest', 
-                 'multiplegroupassign', 'userassign', 'cat');
+                 'multiplegroupassign', 'userassign', 'category');
    
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       foreach ($configs as $k => $v) {
@@ -375,7 +378,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    function reportVstackbarTicketsgroups() {
       global $DB;
       $_SESSION['mreporting_selector']['reportVstackbarTicketsgroups'] = 
-         array('dateinterval', 'allstates', 'multiplegroupassign', 'cat');
+         array('dateinterval', 'allstates', 'multiplegroupassign', 'category');
       $tab = array();
       $datas = array();
       
@@ -442,7 +445,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    function reportVstackbarTicketstech() {
       global $DB;
       $_SESSION['mreporting_selector']['reportVstackbarTicketstech'] 
-         = array('dateinterval', 'multiplegroupassign', 'allstates', 'cat');
+         = array('dateinterval', 'multiplegroupassign', 'allstates', 'category');
       $tab = array();
       $datas = array();
       
@@ -528,7 +531,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 /*
    function reportVstackbarWorkflow() {
       global $DB;
-      $_SESSION['mreporting_selector']['reportVstackbarWorkflow'] = array('grouprequest', 'groupassign', 'cat');
+      $_SESSION['mreporting_selector']['reportVstackbarWorkflow'] = array('grouprequest', 'groupassign', 'category');
       $tab = array();
       $datas = array();
       
@@ -716,7 +719,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    function reportVstackbarGroupChange() {
       global $DB;
       $_SESSION['mreporting_selector']['reportVstackbarGroupChange'] 
-         = array('dateinterval', 'userassign', 'cat', 'multiplegrouprequest', 'multiplegroupassign');
+         = array('dateinterval', 'userassign', 'category', 'multiplegrouprequest', 'multiplegroupassign');
       
       $datas = array();
       
