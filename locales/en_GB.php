@@ -97,173 +97,75 @@ $LANG['plugin_mreporting']['selector']["period"][3] = "Month";
 $LANG['plugin_mreporting']['selector']["period"][4] = "Year";
 
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
-$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Number of ticket by entities";
+$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Number of ticket per entity";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['category'] = "By entities";
+$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['category'] = "Per entity";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['title'] = "Number of ticket by entities";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['title'] = "Number of ticket per entity";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['category'] = "By entities";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['category'] = "Per entity";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['title'] = "Number of ticket by categories and entities";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['title'] = "Number of ticket per category and entity";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['desc'] = "Grouped bar";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['category'] = "By entities";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['category'] = "Per entity";
 
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTopTenAuthor']['title'] = "Top 10 requesters";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTopTenAuthor']['desc'] = "Pie";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTopTenAuthor']['category'] = "By requester";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['title'] = "Number of opened tickets by categories and types";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['title'] = "Number of opened tickets per category and type";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['desc'] = "grouped bar";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['category'] = "by categories";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['category'] = "by category";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['title'] = "Number of tickets clôturés by categories and types";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['title'] = "Number of closed tickets per category and type";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['desc'] = "grouped bar";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['category'] = "by categories";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['category'] = "per category";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['title'] = "Number of openened tickets by categories and status";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['title'] = "Number of openened tickets per category and status";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['desc'] = "Grouped bar";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['category'] = "by categories";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['category'] = "by category";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByService']['title'] = "Number of opened and closed tickets by services";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByService']['title'] = "Number of opened and closed tickets per service";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByService']['desc'] = "Grouped bar";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByService']['category'] = "By services";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByService']['category'] = "Per service";
 
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedAndClosed']['title'] = "Number of opened and closed tickets";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedAndClosed']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedAndClosed']['category'] = "By tickets";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedAndClosed']['category'] = "Per ticket";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['title'] = "Number of opened tickets by status";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['title'] = "Number of opened tickets per status";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['category'] = "By tickets";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['category'] = "Per ticket";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Evolution of number of ticket over the period";
+$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Number of ticket evolution over the period";
 $LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['desc'] = "Area";
-$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['category'] = "By tickets";
+$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['category'] = "Per ticket";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['title'] = "Evolution of number of ticket over the period";
+$LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['title'] = "Number of ticket evolution over the period";
 $LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['desc'] = "Line";
-$LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['category'] = "By tickets";
+$LANG['plugin_mreporting']['Helpdesk']['reportLineNbTicket']['category'] = "Per ticket";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportGlineNbTicket']['title'] = "Evolution of number of ticket over the period (By status)";
+$LANG['plugin_mreporting']['Helpdesk']['reportGlineNbTicket']['title'] = "Number of ticket evolution over the period (per status)";
 $LANG['plugin_mreporting']['Helpdesk']['reportGlineNbTicket']['desc'] = "Lines";
-$LANG['plugin_mreporting']['Helpdesk']['reportGlineNbTicket']['category'] = "By tickets";
+$LANG['plugin_mreporting']['Helpdesk']['reportGlineNbTicket']['category'] = "Per ticket";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['title'] = "Evolution of number of ticket over the period (By status)";
+$LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['title'] = "Number of ticket evolution over the period (per status)";
 $LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['desc'] = "Area";
-$LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['category'] = "By tickets";
+$LANG['plugin_mreporting']['Helpdesk']['reportGareaNbTicket']['category'] = "Per ticket";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['title'] = "Evolution of number of ticket over the period (By status)";
+$LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['title'] = "Number of ticket evolution over the period (per status)";
 $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['desc'] = "Stacked bars";
-$LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['category'] = "By tickets";
+$LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['category'] = "Per ticket";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['title'] = "Distribution of tickets by categories and child categories";
+$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['title'] = "Distribution of tickets per category and child categories";
 $LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['desc'] = "Donut";
-$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['category'] = "By categories";
+$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['category'] = "Per category";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportVstackbarTicketStatusByTechnician']['title'] = "Number of tickets by status and technician";
+$LANG['plugin_mreporting']['Helpdesk']['reportVstackbarTicketStatusByTechnician']['title'] = "Number of tickets per status and technician";
 $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarTicketStatusByTechnician']['desc'] = "Stacked bars";
-$LANG['plugin_mreporting']['Helpdesk']['reportVstackbarTicketStatusByTechnician']['category'] = "By tickets";
+$LANG['plugin_mreporting']['Helpdesk']['reportVstackbarTicketStatusByTechnician']['category'] = "Per ticket";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['title'] = "Number of ticket by requester location";
+$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['title'] = "Number of ticket per requester location";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['category'] = "By requester";
+$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByLocation']['category'] = "Per requester";
 
-$LANG['plugin_mreporting']['Inventory']['title'] = "Inventory reports";
-
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['title'] = "Computers by OS";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['title'] = "Computers by OS";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['desc'] = "Camenbert";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByFabricant']['title'] = "Computers by manufacturer";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByFabricant']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByFabricant']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByFabricant']['title'] = "Computers by manufacturer";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByFabricant']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByFabricant']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByType']['title'] = "Computers by type";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByType']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByType']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['title'] = "Computers by type";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['title'] = "Windows distribution";
-$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['title'] = "Linux distribution";
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['title'] = "Computer by age";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['title'] = "Computer by age";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportHbarFusionInventory']['title'] = "FusionInventory agent distribution";
-$LANG['plugin_mreporting']['Inventory']['reportHbarFusionInventory']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarFusionInventory']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['title'] = "FusionInventory agent distribution";
-$LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['title'] = "Screens by computer distribution";
-$LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['category'] = "Inventory";
-
-$LANG['plugin_mreporting']['Helpdeskplus']['title'] = 'Advanced Helpdesk reporting';
-
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['title']            = 'Backlog';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['desc']             = 'Ce rapport affiche le nombre de ticket groupé par la période selectionnée (jour, semaine, ...).<br> Il ajoute par ailleurs une nouvelle ligne nommée "Backlogs" permettant de visualiser <i>l\'en cours</i> des tickets à une date donnée';
-
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['title']        = 'Gestion de l\'ancienneté';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['desc']         = 'Ce rapport affiche des Bars indiquant le nombre de tickets pour la période selectionnée (jour, semaine, ...).<br>
-Les tickets sont affichés dans leurs statuts courants. Par exemple, les blocs \'Nouveau\' affiche les tickets dans un statut nouveau à la date d\'aujourd\'hui.';
-
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketsgroups']['title']   = 'Gestion du quantitatif par groupes';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketsgroups']['desc']    = 'Ce rapport affiche le nombre de tickets ouverts entre les dates selectionnées par leur groupe d\'attribution';
-
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketstech']['title']     = 'Gestion du quantitatif par technicien';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketstech']['desc']      = 'Ce rapport affiche le nombre de tickets ouverts entre les dates selectionnées groupés par techniciens.<br>
-<b>Vous devez selectionner au préalable un groupe de technicien pour afficher les données.</b>';
-
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['title']        = 'Orientation des files';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['desc']         = 'Nombre de tickets pour chaque groupe d\'arrivée en fonction d\'un groupe de départ.<br />
-                                                                                       - Sélectionnez un groupe demandeur pour afficher le nombre de ticket pour les groupes attribués.<br />
-                                                                                       - Sélectionnez un groupe chargé du ticket pour afficher le nombre de ticket pour les groupes demandeurs.<br />
-                                                                                       <b>Vous ne pouvez sélectionner qu\'un critère à la fois !</b>';
-
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['title']          = 'TOP categories';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['desc']           = 'Nombre croissant de ticket affiché par catégorie. <br>
-Il est possible limiter le nombre de catégories affichées !';
-
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['title']         = 'TOP requester groups';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['desc']          = 'Nombre croissant de ticket affiché par groupe demandeur. <br>
-Il est possible limiter le nombre de groupes affichés !';
-
-$LANG['plugin_mreporting']['Helpdeskplus']['backlogs']        = 'Backlogs';
-$LANG['plugin_mreporting']['Helpdeskplus']['period']          = 'Period';
-$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']   = 'Status to display';
-
-
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['title'] = "Number of group changes";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['desc'] = "Le graphique suivant affiche les nombres de tickets classé par nombre de changements.<br>
-En ordonnée est affiché le nombre de ticket.<br>
-En abscisse, le nombre de changements.";
-
-$LANG['plugin_mreporting']['Other']['title'] = "Other";
-$LANG['plugin_mreporting']['Other']['reportHbarLogs']['title'] = "Logs distribution";
-$LANG['plugin_mreporting']['Other']['reportHbarLogs']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Other']['reportHbarLogs']['category'] = "Logs";

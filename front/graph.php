@@ -35,7 +35,15 @@ include ("../../../inc/includes.php");
 Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
 
 $common = new PluginMreportingCommon;
-$common->showGraph($_REQUEST);
 
+if (isset($_POST['submit'])) {
+   PluginMreportingMisc::saveSelectors($_GET['f_name']);
+} elseif (isset($_GET['reset'])) {
+   PluginMreportingMisc::resetSelectorsForReport($_GET['f_name']);
+}
+
+PluginMreportingMisc::getSelectorValuesByUser();
+
+$common->showGraph($_REQUEST);
 Html::footer();
 

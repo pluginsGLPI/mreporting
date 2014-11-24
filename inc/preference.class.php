@@ -42,7 +42,8 @@ class PluginMreportingPreference extends CommonDBTM {
       $id = self::checkIfPreferenceExists($users_id);
       if (!$id) {
          $input["users_id"]  = $users_id;
-         $input["template"] = "";
+         $input["template"]  = "";
+         $input["selectors"] = NULL;
          $id = $this->add($input);
       }
       return $id;

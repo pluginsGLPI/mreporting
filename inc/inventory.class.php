@@ -179,10 +179,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 	WHERE c.computertypes_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
 	GROUP BY t.name 
 	ORDER BY 1 DESC
-	";//
+	";
       $result = $DB->query($query);
-      
-/*Fetching du résultat de la requête en vue de l'affichage des résultats*/      
+
       while ($computer = $DB->fetch_assoc($result)) {
          $pourcentage = round($computer['Pourcentage'], 2);
          $datas['datas'][$computer['Type']." ($pourcentage %)"] = $computer['Total'];
@@ -210,7 +209,6 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       }
       /*End Must be defined*/
       
-      /*Ajout d'une condition englobant les entités*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -271,10 +269,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 	AND c.`is_deleted`=0 AND c.`is_template`=0
 	AND itemtype = 'Computer'
 	AND i.warranty_date IS NULL $condition;
-	";//
+	";
       $result = $DB->query($query);
       
-	/*Fetching du résultat de la requête en vue de l'affichage des résultats*/      
       while ($computer = $DB->fetch_assoc($result)) {
          $pourcentage = round($computer['Pourcentage'], 2);
          $datas['datas'][$computer['Age']." ($pourcentage %)"] = $computer['Total'];
@@ -296,8 +293,6 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          $$k=$v;
       }
       /*End Must be defined*/
-      
-      /*Ajout d'une condition englobant les entités*/
       $condition = " AND entities_id IN (".$this->where_entities.")";
 
       $data = array();
@@ -377,7 +372,6 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       }
       /*End Must be defined*/
       
-      /*Ajout d'une condition englobant les entités*/
       $condition = " AND entities_id IN (".$this->where_entities.")";
 
       $data = array();

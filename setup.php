@@ -47,91 +47,101 @@ if(isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::D
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS,$CFG_GLPI;
 
-   $PLUGIN_HOOKS['redirect_page']['mreporting'] = 'front/download.php';
+   $plugin = new Plugin();
 
    /* CRSF */
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
-   /* Profile */
-   $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
-                                                                        'changeProfile');
+   if ($plugin->isActivated("mreporting")) {
+      /* Profile */
+      $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
+                                                            'changeProfile');
+      $PLUGIN_HOOKS['redirect_page']['mreporting']  = 'front/download.php';
 
-   Plugin::registerClass('PluginMreportingNotification',
-   array('notificationtemplates_types' => true));
-   //Plugin::registerClass('PluginMreportingNotificationTargetNotification');
 
-   if (Session::getLoginUserID()) {
+      Plugin::registerClass('PluginMreportingNotification',
+      array('notificationtemplates_types' => true));
+      //Plugin::registerClass('PluginMreportingNotificationTargetNotification');
 
-      Plugin::registerClass('PluginMreportingProfile',
-                      array('addtabon' => 'Profile'));
+      if (Session::getLoginUserID()) {
 
-      if ($_SESSION['glpiactiveprofile']['interface'] != "helpdesk") {
+         Plugin::registerClass('PluginMreportingProfile',
+                         array('addtabon' => 'Profile'));
+
          Plugin::registerClass('PluginMreportingPreference',
                                array('addtabon' => array('Preference')));
-      }
-
-      /* Reports Link */
-         $menu_entry = "front/central.php";
-         $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
-       $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
 
 
-
-       //var_dump($_SERVER['REQUEST_URI']);
-       if(strpos($_SERVER['REQUEST_URI'],'front/dashboard.form.php') !== false){
-           $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/list_dashboard.png">'] = 'front/central.php';
-       }else{
-           $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/dashboard.png">'] = 'front/dashboard.form.php';
-       }
+         /* Reports Link */
+            $menu_entry = "front/central.php";
+            $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
 
 
+          //var_dump($_SERVER['REQUEST_URI']);
+          if(strpos($_SERVER['REQUEST_URI'],'front/dashboard.form.php') !== false){
+              $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/list_dashboard.png">'] = 'front/central.php';
+          }else{
+              $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/dashboard.png">'] = 'front/dashboard.form.php';
+          }
 
 
-      /* Configuration Link */
-      if (Session::haveRight('config', 'w')) {
-         $config_entry = 'front/config.php';
-         $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['config']
-                  = '/plugins/mreporting/'.$config_entry;
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['add']
-                  = '/plugins/mreporting/front/config.form.php';
-      }
+          /* Configuration Link */
+         if (Session::haveRight('config', 'w')) {
 
-      /* Show Reports in standart stats page */
-      if (class_exists('PluginMreportingCommon')) {
-         $mreporting_common = new PluginMreportingCommon();
-         $reports = $mreporting_common->getAllReports();
-         if ($reports !== false) {
-            foreach($reports as $report) {
-               foreach($report['functions'] as $func) {
-                  $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
+            $config_entry = 'front/config.php';
+            $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['config']
+                     = '/plugins/mreporting/'.$config_entry;
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['add']
+                     = '/plugins/mreporting/front/config.form.php';
+         }
+
+
+         /* Show Reports in standart stats page */
+            $mreporting_common = new PluginMreportingCommon();
+            $reports = $mreporting_common->getAllReports();
+            if ($reports !== false) {
+               foreach($reports as $report) {
+                  foreach($report['functions'] as $func) {
+                     $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
+                  }
                }
             }
-         }
+            
+            if (isset($_SESSION['glpiactiveprofile']['id']) 
+               && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
+               $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
+            }
+
+          $PLUGIN_HOOKS['pre_item_purge']['mreporting']
+              = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),
+                      'PluginMreportingConfig' => array('PluginMreportingProfile', 
+                                                        'purgeProfilesByReports') );
+          $PLUGIN_HOOKS['item_add']['mreporting']
+              = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'),
+                      'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
+
       }
+      
+
+      // Add specific files to add to the header : javascript
+      $PLUGIN_HOOKS['add_javascript']['mreporting'] = array();
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
+      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
+
+      //Add specific files to add to the header : css
+      $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
+      $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
+      $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
+      
+      //Load additionnal language files in needed
+      includeAdditionalLanguageFiles();
    }
-
-   if (class_exists('PluginMreportingProfile')) { // only if plugin activated
-       $PLUGIN_HOOKS['pre_item_purge']['mreporting']
-           = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),'PluginMreportingConfig' => array('PluginMreportingProfile', 'purgeProfilesByReports') );
-
-       $PLUGIN_HOOKS['item_add']['mreporting']
-           = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'),'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
-   }
-
-   // Add specific files to add to the header : javascript
-   $PLUGIN_HOOKS['add_javascript']['mreporting'] = array();
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
-   $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
-
-   //Add specific files to add to the header : css
-   $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
-   $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
-   $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
 
 }
 
@@ -148,6 +158,14 @@ function plugin_version_mreporting() {
                 'minGlpiVersion' => "0.84");
 }
 
+function includeAdditionalLanguageFiles() {
+   if (isset($_SESSION["glpilanguage"])) {
+      $template = "*_".$_SESSION["glpilanguage"].".php";
+      foreach (glob(GLPI_ROOT.'/plugins/mreporting/locales/'.$template) as $path) {
+         include_once($path);
+      }
+   }
+}
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_mreporting_check_prerequisites() {

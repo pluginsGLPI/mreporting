@@ -179,7 +179,7 @@ global $CFG_GLPI,$LANG;
 
         echo "]  }); });";
 
-        echo "Ext.getCmp('panel').doLayout(true,true);";
+
         echo "</script>";
                 echo "</div>";
 

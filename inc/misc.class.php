@@ -59,35 +59,41 @@ class PluginMreportingMisc {
     * @return nothing
     */
    static function showSelector($date1, $date2, $randname) {
+      global $CFG_GLPI;
+      
       $request_string = self::getRequestString($_GET);
-
+      if (!isset($_REQUEST['f_name'])) {
+         $has_selector = false;
+      } else {
+         $has_selector   = (isset($_SESSION['mreporting_selector'][$_REQUEST['f_name']]));
+      }
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
          ." id='mreporting_date_selector'>\n";
-      echo "<table class='tab_cadre'><tr class='tab_bg_1'>";
+      echo "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
+      
+      if ($has_selector) {
+         self::getReportSelectors();
+      }
 
-      echo '<td><table><tr class="tab_bg_1">';
-
-      echo "<td>";
-      Html::showDateFormItem("date1".$randname, $date1, false);
-      echo "</td>\n";
-
-      echo "<td>";
-      Html::showDateFormItem("date2".$randname, $date2, false);
-      echo "</td>\n";
-
-      self::getReportSelectors();
-
-      echo "</tr></table></td>";
-
-      echo "<td rowspan='2' class='center'>";
-      echo "<input type='submit' class='button' name='submit' Value=\"". _sx('button', 'Post') ."\">";
-      echo "</td>\n";
-
-      echo "<td class='center'>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td colspan='2' class='center'>";
+      if ($has_selector) {
+         echo "<input type='submit' class='button' name='submit' 
+                value=\"". _sx('button', 'Post') ."\">";
+      }
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
       $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
       Bookmark::showSaveButton(Bookmark::URI);
+      
+      //If there's no selector for the report, there's no need for a reset button !              
+      if ($has_selector) {
+         echo "<a href='?$request_string&reset=reset' >";
+         echo "&nbsp;&nbsp;<img title=\"".__s('Blank')."\" alt=\"".__s('Blank')."\" src='".
+               $CFG_GLPI["root_doc"]."/pics/reset.png' class='calendrier'></a>";
+      }
       echo "</td>\n";
+      unset($_SESSION['mreporting_selector']);
+
 
       echo "</tr>";
       echo "</table>";
@@ -99,29 +105,108 @@ class PluginMreportingMisc {
     * Parse and include selectors functions
     */
    static function getReportSelectors() {
-      if(!isset($_SESSION['mreporting_selector']) || empty($_SESSION['mreporting_selector'])) return;
+      self::addToSelector();
+      $graphname = $_REQUEST['f_name'];
+      if(!isset($_SESSION['mreporting_selector'][$graphname]) 
+         || empty($_SESSION['mreporting_selector'][$graphname])) return;
 
       $classname = 'PluginMreporting'.$_REQUEST['short_classname'];
       if(!class_exists($classname)) return;
 
       $i = 2;
-      foreach ($_SESSION['mreporting_selector'] as $selector) {
+      foreach ($_SESSION['mreporting_selector'][$graphname] as $selector) {
          if($i%4 == 0) echo '</tr><tr class="tab_bg_1">';
          $selector = 'selector'.ucfirst($selector);
-         if(!method_exists($classname, $selector)) continue;
-
+         if(method_exists('PluginMreportingCommon', $selector)) {
+            $classselector = 'PluginMreportingCommon';
+         } elseif (method_exists($classname, $selector)) {
+            $classselector = $classname;
+         } else {
+            continue;
+         }
+      
          $i++;
          echo '<td>';
-         $classname::$selector();
+         $classselector::$selector();
          echo '</td>';
       }
       while($i%4 != 0) {
          $i++;
          echo '<td>&nbsp;</td>';
       }
-      unset($_SESSION['mreporting_selector']);
+      
    }
 
+   static function saveSelectors($graphname) {
+
+      $remove = array('short_classname', 'f_name', 'gtype', 'submit');
+      $values = array();
+      $pref   = new PluginMreportingPreference();
+
+      foreach ($_REQUEST as $key => $value) {
+         if (!preg_match("/^_/", $key) && !in_array($key, $remove) ) {
+            $values[$key] = $value;
+         }
+      }
+      if (!empty($values)) {
+          $id               = $pref->addDefaultPreference(Session::getLoginUserID());
+          $tmp['id']        = $id;
+          $pref->getFromDB($id);
+          if (!is_null($pref->fields['selectors'])) {
+            $selectors = $pref->fields['selectors'];
+            $sel = json_decode(stripslashes($selectors), true);
+            $sel[$graphname] = $values;
+          } else {
+             $sel = $values;
+          }
+          $tmp['selectors'] = addslashes(json_encode($sel));
+          $pref->update($tmp);
+      }
+      $_SESSION['mreporting_values'] = $values;
+   }
+
+   static function getSelectorValuesByUser() {
+      global $DB;
+
+      $myvalues  = (isset($_SESSION['mreporting_values'])?$_SESSION['mreporting_values']:array());
+      $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', Session::getLoginUserID());
+      if ($selectors) {
+         $values = json_decode(stripslashes($selectors), true);
+         if (isset($values[$_REQUEST['f_name']])) {
+            foreach ($values[$_REQUEST['f_name']] as $key => $value) {
+               $myvalues[$key] = $value;
+            }
+         }
+      }
+      $_SESSION['mreporting_values'] = $myvalues;
+   }
+
+   static function addToSelector() {
+      foreach ($_REQUEST as $key => $value) {
+         if (!isset($_SESSION['mreporting_values'][$key])) {
+             $_SESSION['mreporting_values'][$key] = $value;
+         }
+      }
+   }
+   
+   static function resetSelectorsForReport($report) {
+      global $DB;
+      
+      $users_id  = Session::getLoginUserID();
+      $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', $users_id);
+      if ($selectors) {
+         $values = json_decode(stripslashes($selectors), true);
+         if (isset($values[$report])) {
+            unset($values[$report]);
+         }
+         $sel = addslashes(json_encode($values));
+         $query = "UPDATE `glpi_plugin_mreporting_preferences` 
+                   SET `selectors`='$sel' 
+                   WHERE `users_id`='$users_id'";
+         $DB->query($query);
+      }
+   }
+   
    /**
     * Generate a SQL date test with $_REQUEST date fields
     * @param  string  $field     the sql table field to compare
@@ -132,23 +217,24 @@ class PluginMreportingMisc {
     */
    static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname) {
 
-      if (!isset($_REQUEST['date1'.$randname]))
-         $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
-      if (!isset($_REQUEST['date2'.$randname]))
-         $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
+      if (!isset($_SESSION['mreporting_values']['date1'.$randname]))
+         $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+      if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
+         $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
 
-      $date_array1=explode("-",$_REQUEST['date1'.$randname]);
+      $date_array1=explode("-",$_SESSION['mreporting_values']['date1'.$randname]);
       $time1=mktime(0,0,0,$date_array1[1],$date_array1[2],$date_array1[0]);
 
-      $date_array2=explode("-",$_REQUEST['date2'.$randname]);
+      $date_array2=explode("-",$_SESSION['mreporting_values']['date2'.$randname]);
       $time2=mktime(0,0,0,$date_array2[1],$date_array2[2],$date_array2[0]);
 
       //if data inverted, reverse it
       if ($time1 > $time2) {
          list($time1, $time2) = array($time2, $time1);
-         list($_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname]) = array(
-            $_REQUEST['date2'.$randname],
-            $_REQUEST['date1'.$randname]
+         list($_SESSION['mreporting_values']['date1'.$randname], 
+            $_SESSION['mreporting_values']['date2'.$randname]) = array(
+            $_SESSION['mreporting_values']['date2'.$randname],
+            $_SESSION['mreporting_values']['date1'.$randname]
          );
       }
 

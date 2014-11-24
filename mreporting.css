@@ -61,3 +61,7 @@
 .debug_content {
    background: white;
 }
+
+.chzn-container {
+   width: 250px !important;
+}

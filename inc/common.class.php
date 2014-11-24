@@ -541,7 +541,6 @@ class PluginMreportingCommon extends CommonDBTM {
                        "desc"       => $des_func,
                        "export"     => $export,
                        "opt"        => $opt);
-
       $graph->{'show'.$opt['gtype']}($params);
 
    }
@@ -700,6 +699,8 @@ class PluginMreportingCommon extends CommonDBTM {
 
       //destroy specific palette
       unset($_SESSION['mreporting']['colors']);
+      unset($_SESSION['mreporting_values']);
+
 
    }
 
@@ -1111,138 +1112,6 @@ class PluginMreportingCommon extends CommonDBTM {
       }
    }
 
-   /*function generateOdt($params) {
-      global $LANG;
-
-      $config = array('PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp');
-      $template = "../templates/label2.odt";
-
-      $odf = new odf($template, $config);
-
-      $reports = $this->getAllReports();
-      foreach($reports as $classname => $report) {
-         $titre = $report['title'];
-      }
-
-      $odf->setVars('titre', $titre, true, 'UTF-8');
-
-      $newpage = $odf->setSegment('newpage');
-
-      foreach ($params as $result => $page) {
-
-         // Default values of parameters
-         $title       = "";
-         $f_name      = "";
-         $raw_datas   = array();
-
-         foreach ($page as $key => $val) {
-            $$key=$val;
-         }
-
-         $datas = $raw_datas['datas'];
-
-         $labels2 = array();
-         if (isset($raw_datas['labels2'])) {
-            $labels2 = $raw_datas['labels2'];
-         }
-
-         $configs = PluginMreportingConfig::initConfigParams($f_name, $class);
-
-         foreach ($configs as $k => $v) {
-            $$k=$v;
-         }
-
-         if ($unit == '%') {
-
-            $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
-         }
-
-         $newpage->setVars('message', $title, true, 'UTF-8');
-
-         $path = GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
-
-         $newpage->setImage('image', $path);
-
-         $simpledatas = false;
-
-         //simple array
-         if (!$labels2) {
-            $labels2 = array();
-            $simpledatas = true;
-         }
-
-         if ($flip_data == true) {
-            $labels2 = array_flip($labels2);
-         }
-
-         $types = array();
-
-         foreach($datas as $k => $v) {
-
-            if (is_array($v)) {
-               foreach($v as $key => $val) {
-                  if (isset($labels2[$key]))
-                     $types[$key][$k] = $val;
-               }
-            }
-         }
-
-         if ($flip_data != true) {
-            $tmp = $datas;
-            $datas = $types;
-            $types = $tmp;
-         }
-         //simple array
-         if ($simpledatas) {
-
-            $label = $LANG['plugin_mreporting']["export"][1];
-            $newpage->data0->label_0(utf8_decode($label));
-            $newpage->data0->merge();
-
-            foreach($types as $label2 => $cols) {
-
-               $newpage->csvdata->label1->label_1(utf8_decode($label2));
-               $newpage->csvdata->label1->merge();
-
-               if (!empty($unit)) {
-                  $cols = $cols." ".$unit;
-               }
-               $newpage->csvdata->data1->data_1($cols);
-               $newpage->csvdata->merge();
-            }
-
-         } else {
-
-            foreach($datas as $label => $val) {
-               $newpage->data0->label_0(utf8_decode($label));
-               $newpage->data0->merge();
-            }
-
-            foreach($types as $label2 => $cols) {
-
-               $newpage->csvdata->label1->label_1(utf8_decode($label2));
-               $newpage->csvdata->label1->merge();
-
-               foreach($cols as $date => $nb) {
-                  if (!empty($unit)) {
-                     $nb = $nb." ".$unit;
-                  }
-                  $newpage->csvdata->data1->data_1(utf8_decode($nb));
-                  $newpage->csvdata->data1->merge();
-               }
-
-               $newpage->csvdata->merge();
-            }
-         }
-         $newpage->merge();
-
-      }
-      $odf->mergeSegment($newpage);
-      // We export the file
-      $odf->exportAsAttachedFile();
-      unset($_SESSION['glpi_plugin_mreporting_odtarray']);
-   }*/
-
    static function generateOdt($params) {
       global $LANG;
 
@@ -1605,7 +1474,184 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $graph->showGArea($params6);
 
+   }
+   
+   // === SELECTOR FUNCTIONS ====
 
+   static function selectorForMultipleGroups($field, $condition = '', $label = '') {
+      global $DB;
+
+      $selected_groups_requester = array();
+      if (isset($_SESSION['mreporting_values'][$field])) {
+         $selected_groups_requester = $_SESSION['mreporting_values'][$field];
+      }
+
+      echo "<b>".$label." : </b><br />";
+
+      echo "<select name='".$field."[]' multiple class='chzn-select' data-placeholder='-----'>";
+      foreach (getAllDatasFromTable('glpi_groups', $condition) as $data) {
+         $selected = "";
+         if (in_array($data['id'], $selected_groups_requester)) {
+            $selected = "selected ";
+         }
+         echo "<option value='".$data['id']."' $selected>".$datas['completename']."</option>";
+      }
+      echo "</select>";
+   
+      if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
+         echo "<script type='text/javascript'>
+         var elements = document.querySelectorAll('.chzn-select');
+         for (var i = 0; i < elements.length; i++) {
+            new Chosen(elements[i], {});
+         }
+         </script>";
+      }
+   }
+
+   static function selectorForSingleGroup($field, $conditon = '', $label = '') {
+      echo "<b>".$label." : </b><br />";
+      if (isset($_SESSION['mreporting_values'][$field])) {
+         $value = isset($_SESSION['mreporting_values'][$field]);
+      } else {
+         $value = 0;
+      }
+      Dropdown::show("Group",array('comments'  => false,
+                                   'name'      => $field,
+                                   'value'     => $value,
+                                   'condition' => $condition)
+                    );
+   }
+
+
+   static function selectorGrouprequest() {
+      self::selectorForSingleGroup('groups_request_id', 'is_requester = 1', __("Requester group"));
+   }
+
+   static function selectorGroupassign() {
+      self::selectorForSingleGroup('groups_assign_id', 'is_assign = 1', 
+                                   __("Group in charge of the ticket"));
+   }
+   
+   static function selectorMultipleGrouprequest() {
+      self::selectorForMultipleGroups('groups_request_id', "`is_requester`='1'", __("Requester group"));
+   }
+
+   static function selectorMultipleGroupassign() {
+      self::selectorForMultipleGroups('groups_assign_id', "`is_assign`='1'", 
+                                      __("Group in charge of the ticket"));
+   }
+   
+   static function selectorUserassign() {
+      echo "<b>".__("Technician in charge of the ticket")." : </b><br />";
+      $options = array('name'        => 'users_assign_id',
+                       'entity'      => $_SESSION['glpiactive_entity'],
+                       'right'       => 'own_ticket',
+                       'value'       => isset($_SESSION['mreporting_values']['users_assign_id']) ? $_SESSION['mreporting_values']['users_assign_id'] : 0,
+                       'ldap_import' => false, 
+                       'comments'    => false);
+      User::dropdown($options);
+   }
+   
+   static function selectorPeriod($period = "day") {
+      global $LANG;
+      $elements = array(
+         'day'    => _n("Day", "Days", 2),
+         'week'   => __("Week"),
+         'month'  => _n("Month", "Months", 2),
+         'year'   => __("By year"),
+      );
+   
+      echo '<b>'.$LANG['plugin_mreporting']['Helpdeskplus']['period'].' : </b><br />';
+      Dropdown::showFromArray("period", $elements, 
+                              array('value' => isset($_SESSION['mreporting_values']['period']) 
+                                 ? $_SESSION['mreporting_values']['period'] : 'month'));
+   }
+
+   static function selectorType() {
+      echo "<b>"._n("Type of ticket", "Types of ticket", 2) ." : </b><br />";
+      Ticket::dropdownType('type', 
+                           array('value' => isset($_SESSION['mreporting_values']['type']) 
+                              ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
+
+   }
+   
+   static function selectorCategory($type = true) {
+      global $CFG_GLPI;
+
+      echo "<b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
+      if ($type) {
+         $rand = Ticket::dropdownType('type', array('value' => isset($_SESSION['mreporting_values']['type']) ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
+         $params = array('type'            => '__VALUE__',
+                         'currenttype'     => Ticket::INCIDENT_TYPE,
+                         'entity_restrict' => $_SESSION['glpiactive_entity'],
+                         'value'           => isset($_SESSION['mreporting_values']['itilcategories_id']) ? $_SESSION['mreporting_values']['itilcategories_id'] : 0);
+         echo "<span id='show_category_by_type'>";
+         $params['condition'] = "`is_incident`='1'";
+      }
+      $params['comments'] = false;
+      ITILCategory::dropdown($params);
+      if ($type) {
+         echo "</span>";
+
+         Ajax::updateItemOnSelectEvent("dropdown_type$rand", "show_category_by_type",
+                                       $CFG_GLPI["root_doc"]."/ajax/dropdownTicketCategories.php",
+                                       $params);
+      }
+   }
+
+   static function selectorLimit() {
+      echo "<b>".__("Maximal count")." :</b><br />";
+      Dropdown::showListLimit(); // glpilist_limit
+   }
+
+   
+   static function selectorAllstates() {
+      global $LANG;
+
+      echo "<b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
+      $default = array(CommonITILObject::INCOMING,
+                       CommonITILObject::ASSIGNED,
+                       CommonITILObject::PLANNED,
+                       CommonITILObject::WAITING);
+      
+      $i = 1;
+      foreach(Ticket::getAllStatusArray() as $value => $name) {
+         echo '<label>';
+         echo '<input type="hidden" name="status_'.$value.'" value="0" /> ';
+         echo '<input type="checkbox" name="status_'.$value.'" value="1"';
+         if((isset($_SESSION['mreporting_values']['status_'.$value]) 
+            && ($_SESSION['mreporting_values']['status_'.$value] == '1'))
+               || (!isset($_SESSION['mreporting_values']['status_'.$value]) 
+                  && in_array($value, $default))) {
+            echo ' checked="checked"';
+         }
+         echo ' /> ';
+         echo $name;
+         echo '</label>';
+         if ($i%3 == 0) echo "<br />";
+         $i++;
+      }
+   }  
+   
+   static function selectorDateinterval() {
+      echo "<b>";
+
+      echo "<table><tr class=\"tab_bg_1\">";
+      $randname = 'PluginMreporting'.$_REQUEST['short_classname'].$_REQUEST['f_name'];
+      $date1    = $_SESSION['mreporting_values']["date1".$randname];
+      $date2    = $_SESSION['mreporting_values']["date2".$randname];
+      echo "<td>";
+      echo __("Start date")."&nbsp;";
+      Html::showDateFormItem("date1".$randname, $date1, false);
+      echo "</td><td>";
+      echo __("End date")."&nbsp;";
+      Html::showDateFormItem("date2".$randname, $date2, false);   
+      echo "</td></tr></table>";
+   } 
+   
+   static function canAccessAtLeastOneReport($profiles_id) {
+      return countElementsInTable("glpi_plugin_mreporting_profiles", 
+                                  "`profiles_id`='$profiles_id' AND `right`='r'");
    }
 }
 

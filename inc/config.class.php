@@ -222,7 +222,11 @@ class PluginMreportingConfig extends CommonDBTM {
          if (!class_exists($classname)) {
             $class_filedir = GLPI_ROOT."/plugins/mreporting/inc/".
                              strtolower(str_replace('PluginMreporting', '', $classname)).".class.php";
-            require_once $class_filedir;
+            if (file_exists($class_filedir)) {
+               require_once $class_filedir;
+            } else {
+               continue;
+            }
          }
 
          $functions = get_class_methods($classname);

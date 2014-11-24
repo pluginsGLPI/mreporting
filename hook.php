@@ -32,11 +32,11 @@ function plugin_mreporting_install() {
 
    //get version
    $plugin = new Plugin;
-   $found = $plugin->find("name = 'mreporting'");
+   $found  = $plugin->find("name = 'mreporting'");
    $plugin_mreporting = array_shift($found);
 
    //init migration
-   $migration = new Migration( $plugin_mreporting['version']);
+   $migration = new Migration($plugin_mreporting['version']);
 
    //create profiles table
    $queries = array();
@@ -45,9 +45,9 @@ function plugin_mreporting_install() {
       `profiles_id` VARCHAR(45) NOT NULL,
       `reports` CHAR(1),
       `config` CHAR(1),
-   PRIMARY KEY (`id`)
-   )
-   ENGINE = MyISAM;";
+      PRIMARY KEY (`id`)
+      )
+      ENGINE = MyISAM;";
 
     //create configuration table
     $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
@@ -123,36 +123,33 @@ function plugin_mreporting_install() {
       PRIMARY KEY  (`id`)
       ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
-   foreach($queries as $query)
+   foreach($queries as $query) {
       $DB->query($query);
+   }
+    
+   require_once "inc/profile.class.php";
+   PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
 
-    require_once "inc/profile.class.php";
-    PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+   // == Update to 2.1 ==
+   $migration->addField('glpi_plugin_mreporting_configs', 'is_notified',
+                        'tinyint(1) NOT NULL default "1"', array('after' => 'is_active'));
+   $migration->migrationOneTable('glpi_plugin_mreporting_configs');
 
-    // == Update to 2.1 ==
-    if (!FieldExists('glpi_plugin_mreporting_configs', 'is_notified')) {
-        $migration->addField('glpi_plugin_mreporting_configs', 'is_notified',
-            'tinyint(1) NOT NULL default "1"',
-            array('after' => 'is_active'));
-        $migration->migrationOneTable('glpi_plugin_mreporting_configs');
-    }
+   // == Update to 2.3 ==
 
+   //save all profile with right 'r'
+   $right = PluginMreportingProfile::getRight();
 
-
-
-    // == Update to 2.3 ==
-
-    //save all profile with right 'r'
-    $right = PluginMreportingProfile::getRight();
-
-    //truncate profile table
-    $query = "truncate table `glpi_plugin_mreporting_profiles`";
-    $DB->query($query);
+   //truncate profile table
+   $query = "TRUNCATE TABLE `glpi_plugin_mreporting_profiles`";
+   $DB->query($query);
 
     //migration of field
-     $migration->addField('glpi_plugin_mreporting_profiles', 'right','char');
-     $migration->changeField('glpi_plugin_mreporting_profiles', 'reports','reports','integer');
-     $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id','profiles_id','integer');
+     $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
+     $migration->changeField('glpi_plugin_mreporting_profiles', 'reports', 
+                             'reports','integer');
+     $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id', 
+                             'profiles_id','integer');
      $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
 
      $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
@@ -168,6 +165,9 @@ function plugin_mreporting_install() {
    PluginMreportingNotification::install();
    CronTask::Register('PluginMreportingNotification', 'SendNotifications', MONTH_TIMESTAMP);
 
+   $migration->addField("glpi_plugin_mreporting_preferences", "selectors", "text");
+   $migration->migrationOneTable('glpi_plugin_mreporting_preferences');
+
    require_once "inc/baseclass.class.php";
    require_once "inc/common.class.php";
    require_once "inc/config.class.php";
@@ -182,29 +182,28 @@ function plugin_mreporting_install() {
 function plugin_mreporting_uninstall() {
    global $DB;
 
-   $queries = array(
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_profiles",
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_configs",
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_preferences",
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_notifications",
-      "DROP TABLE IF EXISTS glpi_plugin_mreporting_dashboards"
+
+   $migration = new Migration("2.3.0");
+   $tables = array("glpi_plugin_mreporting_profiles",
+                   "glpi_plugin_mreporting_configs",
+                   "glpi_plugin_mreporting_preferences",
+                   "glpi_plugin_mreporting_notifications",
+                   "DROP TABLE IF EXISTS glpi_plugin_mreporting_dashboards"
    );
 
-   foreach($queries as $query)
-      $DB->query($query);
+   foreach($tables as $table) {
+      $migration->dropTable($table);  
+   }
 
-   $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
-   $notifications_folder = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications";
+   Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR."/mreporting/notifications");
+   Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR."/mreporting");
 
-   Toolbox::deleteDir($notifications_folder);
-   Toolbox::deleteDir($rep_files_mreporting);
+   $objects = array("DisplayPreference", "Bookmark");
 
-   $tables_glpi = array("glpi_displaypreferences",
-               "glpi_bookmarks");
-
-   foreach($tables_glpi as $table_glpi)
-      $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginMreportingConfig' ;");
-
+   foreach($objects as $object) {
+      $obj = new $object();
+      $obj->deleteByCriteria(array('itemtype' => 'PluginMreportingConfig'));
+   }
 
    require_once "inc/notification.class.php";
    PluginMreportingNotification::uninstall();
@@ -216,11 +215,11 @@ function plugin_mreporting_uninstall() {
 function plugin_mreporting_getDatabaseRelations() {
 
    $plugin = new Plugin();
-   if ($plugin->isActivated("mreporting"))
-
+   if ($plugin->isActivated("mreporting")) {
       return array("glpi_profiles" => array ("glpi_plugin_mreporting_profiles" => "profiles_id"));
-   else
+   } else {
       return array();
+   }
 }
 
 function plugin_mreporting_giveItem($type,$ID,$data,$num) {
@@ -259,7 +258,9 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
                   $classes = PluginMreportingCommon::parseAllClasses($inc_dir);
 
                   foreach($classes as $classname) {
-
+                     if (!class_exists($classname)) {
+                        continue;
+                     }
                      $functions = get_class_methods($classname);
 
                      foreach($functions as $funct_name) {
