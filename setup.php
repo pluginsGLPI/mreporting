@@ -74,7 +74,18 @@ function plugin_init_mreporting() {
          $menu_entry = "front/central.php";
          $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
        $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
-       $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/dashboard.png">'] = 'front/dashboard.form.php';
+
+
+
+       //var_dump($_SERVER['REQUEST_URI']);
+       if(strpos($_SERVER['REQUEST_URI'],'front/dashboard.form.php') !== false){
+           $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/list_dashboard.png">'] = 'front/central.php';
+       }else{
+           $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/dashboard.png">'] = 'front/dashboard.form.php';
+       }
+
+
+
 
       /* Configuration Link */
       if (Session::haveRight('config', 'w')) {
