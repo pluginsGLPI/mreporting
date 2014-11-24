@@ -669,7 +669,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showPie($params) {
+   function showPie($params,$return = false,$width= false) {
+       ob_start();
       global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -677,7 +678,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
-      
+
+      if ($width !== false){
+         $this->setWidth($width);
+      }
+
       //$rand = $opt['rand'];
       
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
@@ -843,6 +848,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "unit"   => $unit);
       
       PluginMreportingCommon::endGraph($options);
+
+
+       if($return){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
 

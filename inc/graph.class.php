@@ -43,6 +43,7 @@ class PluginMreportingGraph {
       $width = $this->width + 100;
       $randname = $options['randname'];
 
+       if(!$options['showConfiguration']){
       echo "<div class='center'><div id='fig' style='width:{$width}px'>";
       //Show global title
       if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
@@ -84,10 +85,15 @@ class PluginMreportingGraph {
       if (!isset($_REQUEST['date2'.$randname]))
          $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
 
-      echo "<div class='graph_navigation'>";
-      PluginMreportingMisc::showSelector(
-         $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
-      echo "</div>";
+
+
+
+           echo "<div class='graph_navigation'>";
+           PluginMreportingMisc::showSelector(
+              $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
+           echo "</div>";
+
+
 
       $ex_func = explode($options['short_classname'], $options['randname']);
       if (!is_numeric($ex_func[0])) {
@@ -103,7 +109,7 @@ class PluginMreportingGraph {
             $object->needConfig($configs);
          }
       }
-
+       }
       //Script for graph display
       if ($randname !== false) {
          echo "<div class='graph' id='graph_content$randname'>";
@@ -128,8 +134,14 @@ class PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHbar($params) {
+   function showHbar($params,$dashboard = false , $width = false) {
+
       global $LANG;
+
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -150,7 +162,8 @@ class PluginMreportingGraph {
                         "randname" => $randname,
                         "delay" => $delay,
                         "export" => $export,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -175,6 +188,14 @@ class PluginMreportingGraph {
       $always = '';
       $hover = '';
 
+
+        $left = 240;
+       if($dashboard){
+           $left = 100;
+           $height = 200;
+           $this->setWidth($this->width+200);
+       }
+
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
       $JS = <<<JAVASCRIPT
@@ -189,7 +210,7 @@ class PluginMreportingGraph {
       .width(width_hbar)
       .height(height_hbar)
       .bottom(20)
-      .left(240)
+      .left({$left})
       .right(10)
       .top(5);
 
@@ -260,7 +281,12 @@ JAVASCRIPT;
                         "export" => $export,
                         "datas"  => $datas,
                         "unit"   => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
 
@@ -278,8 +304,15 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showPie($params) {
+   function showPie($params, $dashboard = false , $width = false) {
+
       global $LANG;
+
+
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -300,9 +333,12 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+                        "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
+
+
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
@@ -326,20 +362,37 @@ JAVASCRIPT;
       }
       $always = '';
       $hover = '';
+
+       $radius = 150;
+
+       $left = 10;
+       $top = 5;
+       $right_legend = 5;
+
+       if($dashboard){
+           $height = 200;
+           $radius = 120;
+           $this->setWidth($this->width);
+           $left = 110;
+           $top = 20;
+           $right_legend = 5;
+       }
+
+
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
       $JS = <<<JAVASCRIPT
    var width_pie = {$this->width};
    var height_pie = {$height};
-   var radius = 150;
+   var radius = {$radius};
    var angle = pv.Scale.linear(0, pv.sum(datas)).range(0, 2 * Math.PI);
    var Hilighted = [false, false,false, false,false, false];
 
    var offset = 0;
 
    vis{$randname} = new pv.Panel()
-      .top(5)
-      .left(10)
+      .top({$top})
+      .left({$left})
       .bottom(5)
       .width(width_pie)
       .height(height_pie)
@@ -392,7 +445,7 @@ JAVASCRIPT;
    // legend
    vis{$randname}.add(pv.Dot)
       .data(labels)
-      .right(5)
+      .right({$right_legend})
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
          return (this.parent.o() == this.index) ? colors(this.index).alpha(.6) : colors(this.index)
@@ -421,12 +474,24 @@ JAVASCRIPT;
          echo $JS;
       }
 
+
+
+
       $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
                         "unit"   => $unit);
-      PluginMreportingCommon::endGraph($options);
+
+      PluginMreportingCommon::endGraph($options,$dashboard);
+
+
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
+
    }
 
    /**
@@ -448,9 +513,12 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showSunburst($params) {
+   function showSunburst($params,$dashboard = false , $width = false) {
       global $LANG;
-
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -470,7 +538,8 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -500,6 +569,12 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
+        $height = 450;
+       $width = $this->width;
+       if($dashboard){
+           $height = 200;
+           $width = 390;
+       }
 
       $JS = <<<JAVASCRIPT
 
@@ -519,8 +594,8 @@ JAVASCRIPT;
       return node.parentNode.childNodes.length;
    }
 
-   var   width = {$this->width},
-         height = 450
+   var   width = {$width},
+         height = {$height}
          i = -1, //mouseover index
          offset = 99; // animation offset
 
@@ -673,7 +748,13 @@ JAVASCRIPT;
                         "flip_data" => $flip_data,
                         "labels2"   => $labels2,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
    /**
@@ -690,11 +771,14 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHgbar($params) {
+   function showHgbar($params,$dashboard = false , $width = false) {
       global $LANG;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
-
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width+160);
+       }
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
@@ -712,7 +796,8 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -741,6 +826,19 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
+
+       $left = 240;
+       $width_hgbar = $this->width;
+       $right = 160;
+       if($dashboard){
+           $left = 80;
+           $height = 200;
+           $this->setWidth($this->width);
+           $width_hgbar = $this->width-100;
+           $right = 5;
+       }
+
+
       $JS = <<<JAVASCRIPT
    var width_hgbar = {$this->width};
    var height_hgbar = {$height};
@@ -751,10 +849,10 @@ JAVASCRIPT;
    var offset = 0, index_active = -1;
 
    vis{$randname} = new pv.Panel()
-      .width(width_hgbar)
+      .width({$width_hgbar})
       .height(height_hgbar)
       .bottom(20)
-      .left(240)
+      .left({$left})
       .right(10)
       .top(5);
 
@@ -832,7 +930,7 @@ JAVASCRIPT;
    // legend
    vis{$randname}.add(pv.Dot)
       .data(labels2)
-      .right(160)
+      .right({$right})
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
@@ -872,8 +970,12 @@ JAVASCRIPT;
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
-
+      PluginMreportingCommon::endGraph($options,$dashboard);
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
 
@@ -891,9 +993,12 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showVstackbar($params) {
+   function showVstackbar($params,$dashboard = false , $width = false) {
       global $LANG;
-
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width+100);
+       }
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -913,7 +1018,8 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -946,8 +1052,22 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
+       $bottom = 100;
+       $rightLabel = 40;
+       $top = 5;
+      $right = 5;
+       $width = $this->width;
+       if($dashboard){
+           $height = 180;
+           $bottom = 50;
+           $rightLabel = 40;
+           $right = 20;
+           $top = 10;
+           $width = $this->width+20;
+       }
+
       $JS = <<<JAVASCRIPT
-   var w = {$this->width},
+   var w = {$width},
        h = {$height},
        x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w-300, 4/5),
        y = pv.Scale.linear(0, max+10).range(0, h),
@@ -959,10 +1079,10 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
        .width(w)
        .height(h)
-       .bottom(100)
+       .bottom({$bottom})
        .left(50)
-       .right(5)
-       .top(5);
+       .right({$right})
+       .top({$top});
 
    /*** y-axis ticks and labels ***/
    vis{$randname}.add(pv.Rule)
@@ -1029,7 +1149,7 @@ JAVASCRIPT;
    // legend
    dot{$randname} = vis{$randname}.add(pv.Dot) // legend dots
       .data(labels)
-      .right(40)
+      .right({$rightLabel})
       .top(function(d) { return (15 * $nb_bar) + (this.index * -15); })
       .fillStyle(function(d) {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
@@ -1079,7 +1199,12 @@ JAVASCRIPT;
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
    /**
     * Show a Area chart
@@ -1096,8 +1221,13 @@ JAVASCRIPT;
     * @param $area : show plain chart instead only a line (optionnal)
     * @return nothing
     */
-   function showArea($params) {
+   function showArea($params,$dashboard = false , $width = false ) {
       global $LANG;
+
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -1121,14 +1251,15 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $end['opt']["export"] = false;
+          $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
@@ -1143,10 +1274,17 @@ JAVASCRIPT;
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+       $height = 350;
+       $width = $this->width;
+       if($dashboard){
+           $height = 200;
+           $width = 350;
+       }
+
 
       $JS = <<<JAVASCRIPT
-   var width_area = {$this->width};
-   var height_area = 350;
+   var width_area = {$width};
+   var height_area = {$height};
    var offset = 0;
    var step = Math.round(n / 20);
 
@@ -1270,12 +1408,20 @@ JAVASCRIPT;
          echo $JS;
       }
 
+
+
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
    /**
@@ -1292,9 +1438,14 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showLine($params) {
+   function showLine($params,$dashboard = false , $width = false) {
 
-      $this->showArea($params);
+       if($dashboard){
+           return  $this->showArea($params,$dashboard  , $width);
+       }else{
+           $this->showArea($params,$dashboard  , $width);
+       }
+
    }
 
     /**
@@ -1311,9 +1462,12 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGarea($params) {
+   function showGarea($params,$dashboard = false , $width = false) {
       global $LANG;
-
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -1333,7 +1487,8 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -1364,8 +1519,15 @@ JAVASCRIPT;
          $height = 450;
       }
 
+
+       $width = $this->width;
+       if($dashboard){
+           $height = 200;
+           $width = 300;
+       }
+
       $JS = <<<JAVASCRIPT
-   var width_area = {$this->width};
+   var width_area = {$width};
    var height_area = {$height};
    var offset = 0;
    var step = Math.round(m / 20);
@@ -1511,7 +1673,13 @@ JAVASCRIPT;
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
    /**
@@ -1527,8 +1695,14 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGline($params) {
-      $this->showGarea($params);
+   function showGline($params,$dashboard = false , $width = false) {
+
+       if($dashboard){
+           return $this->showGarea($params,$dashboard, $width);
+       }else{
+           $this->showGarea($params,$dashboard, $width);
+       }
+
    }
 
    /**
@@ -1684,5 +1858,26 @@ JAVASCRIPT;
    function legend($datas) {
 
    }
+
+    /**
+     * @param int $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+
+
+
+
 }
 

@@ -45,7 +45,7 @@ if(isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::D
 
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
-   global $PLUGIN_HOOKS;
+   global $PLUGIN_HOOKS,$CFG_GLPI;
 
    $PLUGIN_HOOKS['redirect_page']['mreporting'] = 'front/download.php';
 
@@ -73,7 +73,19 @@ function plugin_init_mreporting() {
       /* Reports Link */
          $menu_entry = "front/central.php";
          $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
+       $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
+
+
+
+       //var_dump($_SERVER['REQUEST_URI']);
+       if(strpos($_SERVER['REQUEST_URI'],'front/dashboard.form.php') !== false){
+           $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/list_dashboard.png">'] = 'front/central.php';
+       }else{
+           $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/dashboard.png">'] = 'front/dashboard.form.php';
+       }
+
+
+
 
       /* Configuration Link */
       if (Session::haveRight('config', 'w')) {
