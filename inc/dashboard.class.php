@@ -82,7 +82,8 @@ global $CFG_GLPI,$LANG;
                     } ,
                     success: function(){
                         Ext.getCmp('panel').remove(panel,true);
-                        Ext.getCmp('panel').doLayout();
+                        //Ext.getCmp('panel').doLayout(true);
+                        window.location.reload();
                     }
                 });
 
