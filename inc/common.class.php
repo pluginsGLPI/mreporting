@@ -595,7 +595,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * @params $options ($opt, export, datas, unit, labels2, flip_data)
    */
 
-   static function endGraph($options) {
+   static function endGraph($options,$dashboard = false) {
       global $LANG, $CFG_GLPI;
 
 
@@ -635,65 +635,69 @@ class PluginMreportingCommon extends CommonDBTM {
 
          }
       }
-      $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
 
-      if ($export != "odtall") {
-         if ($randname !== false && !$export) {
+       if(!$dashboard){
+           $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
 
-            $show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'],$opt['class']);
-            self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
+           if ($export != "odtall") {
+               if ($randname !== false && !$export) {
 
-         }
-         if (!$export) {
+                   $show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'],$opt['class']);
+                   self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
 
-            if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
-               echo "<div class='graph_bottom'>";
-               echo "<span style='float:left'>";
-               echo "<br><br>";
-               PluginMreportingMisc::showNavigation();
-               echo "</span>";
-               echo "<span style='float:right'>";
-               if (plugin_mreporting_haveRight('config', 'w')) {
-                  echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
-                  echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
-                     "&classname=".$opt['class']."' target='_blank'>";
-                  echo "<img src='../pics/config.png' class='title_pics'/></a>";
                }
-               if ($randname !== false) {
+               if (!$export) {
 
-                  echo "<br><br>";
-                  echo "<form method='post' action='export.php?$request_string'
+                   if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
+                       echo "<div class='graph_bottom'>";
+                       echo "<span style='float:left'>";
+                       echo "<br><br>";
+                       PluginMreportingMisc::showNavigation();
+                       echo "</span>";
+                       echo "<span style='float:right'>";
+                       if (plugin_mreporting_haveRight('config', 'w')) {
+                           echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
+                           echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
+                               "&classname=".$opt['class']."' target='_blank'>";
+                           echo "<img src='../pics/config.png' class='title_pics'/></a>";
+                       }
+                       if ($randname !== false) {
+
+                           echo "<br><br>";
+                           echo "<form method='post' action='export.php?$request_string'
                            style='margin: 0; padding: 0' target='_blank' id='export_form'>";
-                  echo "<b>".__("Export")."</b> : ";
-                  $params = array('myname'   => 'ext',
-                   'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",
-                   'class'                   => __CLASS__,
-                   'span'                    => 'show_ext',
-                   'gtype'                   => $_REQUEST['gtype'],
-                   'show_graph'              => $show_graph,
-                   'randname'                => $randname);
+                           echo "<b>".__("Export")."</b> : ";
+                           $params = array('myname'   => 'ext',
+                               'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",
+                               'class'                   => __CLASS__,
+                               'span'                    => 'show_ext',
+                               'gtype'                   => $_REQUEST['gtype'],
+                               'show_graph'              => $show_graph,
+                               'randname'                => $randname);
 
-                  self::dropdownExt($params);
+                           self::dropdownExt($params);
 
-                  echo "<span id='show_ext'>";
-                  echo "</span>";
-                  Html::Closeform();
+                           echo "<span id='show_ext'>";
+                           echo "</span>";
+                           Html::Closeform();
 
+                       }
+                       echo "</span>";
+                   }
+                   echo "<div style='clear:both;'></div>";
+                   echo "</div>";
+
+                   if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
+                       echo "</div></div>";
+                   }
                }
-               echo "</span>";
-            }
-            echo "<div style='clear:both;'></div>";
-            echo "</div>";
 
-            if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
-               echo "</div></div>";
-            }
-         }
+               if ($randname == false) {
+                   echo "</div>";
+               }
+           }
+       }
 
-         if ($randname == false) {
-            echo "</div>";
-         }
-      }
       //destroy specific palette
       unset($_SESSION['mreporting']['colors']);
 
