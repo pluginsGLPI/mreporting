@@ -63,9 +63,7 @@ global $CFG_GLPI,$LANG;
 
         $this->showDropdownReports();
 
-
-        echo "<div   id='dashboard'>";
-
+        echo "<div  id='dashboard'>";
 
         echo "<script type='text/javascript'>";
         echo "
@@ -74,16 +72,15 @@ global $CFG_GLPI,$LANG;
             function removeItemsType(panel,id){
 
                 Ext.Ajax.request({
-                    url: '".$root_ajax."',
+                    url: '{$root_ajax}',
                     params: {
                         id: id,
                         action: 'removeReportFromDashboard'
                     },
                     failure: function(opt,success,respon){
-                        Ext.Msg.alert('Status', 'ko');
+                        Ext.Msg.alert('Status', 'Ajax problem !');
                     } ,
                     success: function(){
-                        Ext.Msg.alert('Status', 'ok');
                         Ext.getCmp('panel').remove(panel,true);
                         Ext.getCmp('panel').doLayout();
                     }
@@ -93,25 +90,23 @@ global $CFG_GLPI,$LANG;
 
 
 
-            Ext.onReady(function() {
-                new Ext.Panel({
+             Ext.onReady(function() {
+
+                var dash = new Ext.Panel({
                 itemId: 'panel',
                 id:'panel',
                 title: 'Dashboard',
+                width: '67.5%',
+                 style: 'margin:auto',
                 renderTo : 'dashboard',
                 layout:'table',
-                /*tools: [{
-                            id:'plus',
-                            tooltip: 'Collapse All',
-                            handler: function(){ addItemsType(); }
-                        }],*/
                 defaults: {
-                    // applied to each contained panel
-                    bodyStyle:'padding:5px;'
+                    height: 300,
+                    width: 400,
+                    style: 'margin: 10px 10px 10px 10px'
                 },
                 layoutConfig: {
-                    // The total column count must be specified here
-                    columns: 5
+                    columns: 3
                 },
                 items: [";
 
@@ -153,7 +148,20 @@ global $CFG_GLPI,$LANG;
             echo "{
              xtype: 'panel',
                     title: '".$title."',
-                    html: ".json_encode($re,JSON_HEX_APOS).",
+                    id: '".$data['id']."',
+                    //html: '".json_encode($re,JSON_HEX_APOS)."',
+                    autoLoad: {
+                    url: '".$root_ajax."',
+                    scripts: false,
+                    method : 'POST',
+                    params: {action: 'updateWidget', id: '".$data['id']."'}
+                    },
+                    //listeners: {
+                    //    afterrender: function(c) {
+                    //        c.getUpdater().startAutoRefresh(20,'".$root_ajax."', {action: 'updateWidget', id: '".$data['id']."'});
+                    //        c.doLayout();
+                    //    }
+                    //},
                     tools: [{
                         id:'gear',
                         tooltip: 'Configure this report',
@@ -168,8 +176,7 @@ global $CFG_GLPI,$LANG;
             if($i != count($res)) echo',';
         }
 
-        echo "]  }); }); ";
-
+        echo "]  }); });";
 
         echo "</script>";
                 echo "</div>";
