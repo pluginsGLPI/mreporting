@@ -98,7 +98,7 @@ global $CFG_GLPI,$LANG;
                 id:'panel',
                 title: 'Dashboard',
                 width: '67.5%',
-                 style: 'margin:auto',
+                style: 'margin:auto',
                 renderTo : 'dashboard',
                 layout:'table',
                 defaults: {
@@ -179,6 +179,7 @@ global $CFG_GLPI,$LANG;
 
         echo "]  }); });";
 
+        echo "Ext.getCmp('panel').doLayout(true,true);";
         echo "</script>";
                 echo "</div>";
 
