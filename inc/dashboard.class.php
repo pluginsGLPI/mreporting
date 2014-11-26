@@ -287,6 +287,21 @@ global $CFG_GLPI,$LANG;
 
 
 
+    public static function CurrentUserHaveDashboard(){
+
+        //$_SESSION['glpiactiveprofile']['id']
+
+        $dashboard = new PluginMreportingDashboard();
+        $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
+
+        if(count($res) > 0){
+            return true;
+        }else{
+            return false;
+        }
+
+
+    }
 
     function getFormForColumn(){
 
