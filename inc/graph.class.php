@@ -176,7 +176,7 @@ class PluginMreportingGraph {
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -286,6 +286,7 @@ JAVASCRIPT;
                         "datas"  => $datas,
                         "unit"   => $unit);
       PluginMreportingCommon::endGraph($options,$dashboard);
+
        if($dashboard){
            return ob_get_clean();
        }else{
@@ -351,7 +352,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -557,7 +558,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -814,7 +815,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -1038,7 +1039,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -1271,7 +1272,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -1517,7 +1518,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
