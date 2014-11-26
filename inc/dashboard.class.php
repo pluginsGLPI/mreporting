@@ -214,12 +214,11 @@ global $CFG_GLPI,$LANG;
                 }
             }
 
-
-
+            $href = '<a href="'.$CFG_GLPI['root_doc'].'/plugins/mreporting/front/graph.php?short_classname='.$short_classname.'&amp;f_name='.$f_name.'&amp;gtype='.$gtype.'">&nbsp;'.$title.'</a>';
 
             echo "{
              xtype: 'panel',
-                    title: '".addslashes($title)."',
+                    title: '".addslashes($href)."',
                     id: '".$data['id']."',
                     html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
                     //autoLoad: {
@@ -232,9 +231,6 @@ global $CFG_GLPI,$LANG;
                         id:'gear',
                         tooltip: 'Configure this report',
                         handler: function(event, toolEl,panel){
-
-
-
 
                             win = new Ext.Window({
                                 title: 'Configuration',
