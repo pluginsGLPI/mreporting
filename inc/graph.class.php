@@ -192,10 +192,12 @@ class PluginMreportingGraph {
 
 
         $left = 240;
+       $top = 5;
        if($dashboard){
-           $left = 100;
-           $height = 200;
-           $this->setWidth($this->width+200);
+           $left = 250;
+           $height = 100;
+           $this->setWidth($this->width+150);
+           $top = 100;
        }
 
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
@@ -214,15 +216,15 @@ class PluginMreportingGraph {
       .bottom(20)
       .left({$left})
       .right(10)
-      .top(5);
+      .top({$top});
 
    vis{$randname}.add(pv.Panel)
       .data(datas)
       .top(function() y(this.index))
       .height(y.range().band)
-   .add(pv.Panel)
+      .add(pv.Panel)
       .def("active", false)
-   .add(pv.Bar)
+      .add(pv.Bar)
       .left(0)
       .width(function(d) {
          var r = 360 - 20 * offset;
@@ -573,9 +575,11 @@ JAVASCRIPT;
 
         $height = 450;
        $width = $this->width;
+       $top = 10;
        if($dashboard){
-           $height = 200;
-           $width = 390;
+           $height = 300;
+           $width = 490;
+           $top = 40;
        }
 
       $JS = <<<JAVASCRIPT
@@ -604,7 +608,7 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
       .width(width)
       .height(height)
-      .top(10)
+      .top({$top})
       .event("mousemove", pv.Behavior.point(Infinity));
 
    /*** Radial layout ***/
@@ -1062,12 +1066,12 @@ JAVASCRIPT;
       $right = 5;
        $width = $this->width;
        if($dashboard){
-           $height = 180;
+           $height = 300;
            $bottom = 50;
-           $rightLabel = 40;
-           $right = 20;
+           $rightLabel = 130;
+           $right = -110;
            $top = 10;
-           $width = $this->width+20;
+           $width = 500;
        }
 
       $JS = <<<JAVASCRIPT
@@ -1280,9 +1284,15 @@ JAVASCRIPT;
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
        $height = 350;
        $width = $this->width;
+       $bottom = 20;
+       $left = 20;
+       $right = 10;
        if($dashboard){
-           $height = 200;
-           $width = 350;
+           $height = 300;
+           $width = 420;
+           $bottom = 50;
+           $left = 30;
+           $right = 50;
        }
 
 
@@ -1300,9 +1310,9 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
       .width(width_area)
       .height(height_area)
-      .bottom(20)
-      .left(20)
-      .right(10)
+      .bottom({$bottom})
+      .left({$left})
+      .right({$right})
       .top(5);
 
    /* Y-axis and ticks. */
@@ -1329,6 +1339,7 @@ JAVASCRIPT;
             if ((this.index / step) == Math.round(this.index / step)) return true;
             else return false;
          })
+         .textAngle(Math.PI / 4)
          .text(function() { return labels[this.index]; })
          .textAlign("left")
          .textMargin(5)
