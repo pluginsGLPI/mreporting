@@ -58,6 +58,30 @@ if (isset($_POST['action'])) {
 
             break;
 
+        case 'getconfig':
+
+            $_REQUEST['f_name'] = $_POST['f_name'];
+            $_REQUEST['short_classname'] = $_POST['short_classname'];
+            PluginMreportingMisc::getSelectorValuesByUser();
+
+            $content =  "";
+
+            $content .= "<form method='POST'  action='" . $_POST['target'] . "' name='form' id='mreporting_date_selector'>";
+            $content .= PluginMreportingMisc::getReportSelectors(true);
+            $content .= "<input type='hidden' name='short_classname' value='".$_POST['short_classname']."' class='submit'>";
+            $content .= "<input type='hidden' name='f_name' value='".$_POST['f_name']."' class='submit'><input type='hidden' name='gtype' value='".$_POST['gtype']."' class='submit'>";
+            $content .= "<input type='submit' class='button' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
+            $content .= Html::closeForm(false);
+
+            if(PluginMreportingMisc::getReportSelectors(true) == ""){
+                echo "No configuration for this report";
+            }else{
+                echo $content;
+            }
+
+
+            break;
+
 
         default:
             echo 0;
