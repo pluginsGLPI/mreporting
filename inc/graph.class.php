@@ -32,6 +32,9 @@ class PluginMreportingGraph {
    const DEBUG_GRAPH = false;
    protected $width  = 850;
 
+
+
+
    /**
     * init Graph : Show Titles / Date selector
     *
@@ -369,10 +372,10 @@ JAVASCRIPT;
        $right_legend = 5;
 
        if($dashboard){
-           $height = 200;
-           $radius = 120;
+           $height = 400;
+           $radius = 150;
            $this->setWidth($this->width);
-           $left = 110;
+           $left = 180;
            $top = 20;
            $right_legend = 5;
        }
@@ -829,12 +832,14 @@ JAVASCRIPT;
        $left = 240;
        $width_hgbar = $this->width;
        $right = 160;
+       $bottomAxis = 5;
        if($dashboard){
-           $left = 80;
-           $height = 200;
+           $left = 210;
+           $height = 340;
            $this->setWidth($this->width);
            $width_hgbar = $this->width-100;
-           $right = 5;
+           $right = 20;
+           $bottomAxis = -15;
        }
 
 
@@ -850,7 +855,7 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
       .width({$width_hgbar})
       .height(height_hgbar)
-      .bottom(20)
+      .bottom(40)
       .left({$left})
       .right(10)
       .top(5);
@@ -862,7 +867,7 @@ JAVASCRIPT;
          .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "#000"; })
          .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
       .add(pv.Rule)
-         .bottom(0)
+         .bottom({$bottomAxis})
          .height(height_hgbar)
          .strokeStyle(function(d) d ? "#eee" : "black")
       .anchor("bottom").add(pv.Label)
@@ -1324,7 +1329,10 @@ JAVASCRIPT;
             if ((this.index / step) == Math.round(this.index / step)) return true;
             else return false;
          })
-         .text(function() { return labels[this.index]; });
+         .text(function() { return labels[this.index]; })
+         .textAlign("left")
+         .textMargin(5)
+         .textBaseline("top");
 
    /* add mini black lines in front of labels tick */
    vis{$randname}.add(pv.Rule)
@@ -1520,9 +1528,12 @@ JAVASCRIPT;
 
 
        $width = $this->width;
+       $bottom = 20;
+
        if($dashboard){
            $height = 200;
            $width = 300;
+           $bottom = 100;
        }
 
       $JS = <<<JAVASCRIPT
@@ -1541,7 +1552,7 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
       .width(width_area)
       .height(height_area)
-      .bottom(20)
+      .bottom(100)
       .left(50)
       .right(15)
       .top(5);
@@ -1565,6 +1576,9 @@ JAVASCRIPT;
       .height(height_area - (n*14))
       .bottom(-5)
      .anchor("bottom").add(pv.Label)
+
+     .textAngle(Math.PI / 4)
+      .textMargin(15)
          .text(function(d) labels2[this.index])
          .visible(function() {
             if ((this.index / step) == Math.round(this.index / step)) return true;
