@@ -14,6 +14,7 @@ function showGraphOnDashboard($opt,$export = false){
 
 global $CFG_GLPI,$LANG;
 
+    ob_start();
     $common = new PluginMreportingCommon();
 
     //check the format display charts configured in glpi
@@ -54,11 +55,14 @@ global $CFG_GLPI,$LANG;
 
 
 
-    $res =   $graph->{'show'.$opt['gtype']}($params , true,220);
+    echo  $graph->{'show'.$opt['gtype']}($params , true,220);
 
-    //var_dump($res);
+    $ob = ob_get_clean();
 
-    return $res;
+
+    return $ob;
+
+
 
 }
 
@@ -166,7 +170,7 @@ global $CFG_GLPI,$LANG;
 
             echo "{
              xtype: 'panel',
-                    title: '".$title."',
+                    title: '".addslashes($title)."',
                     id: '".$data['id']."',
                     html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
                     //autoLoad: {
