@@ -54,7 +54,11 @@ global $CFG_GLPI,$LANG;
 
 
 
-    return  $graph->{'show'.$opt['gtype']}($params , true,220);
+    $res =   $graph->{'show'.$opt['gtype']}($params , true,220);
+
+    //var_dump($res);
+
+    return $res;
 
 }
 
@@ -87,7 +91,7 @@ global $CFG_GLPI,$LANG;
                     success: function(){
                         Ext.getCmp('panel').remove(panel,true);
                         //Ext.getCmp('panel').doLayout(true);
-                        window.location.reload();
+                        window.location.reload(true);
                     }
                 });
             }
@@ -99,7 +103,7 @@ global $CFG_GLPI,$LANG;
                 itemId: 'panel',
                 id:'panel',
                 title: 'Dashboard',
-                width: '67.5%',
+                width: '84%',
                 style: 'margin:auto',
                 renderTo : 'dashboard',
                 layout:'table',
@@ -159,23 +163,18 @@ global $CFG_GLPI,$LANG;
 
 
 
+
             echo "{
              xtype: 'panel',
                     title: '".$title."',
                     id: '".$data['id']."',
-                    //html: '".json_encode($re,JSON_HEX_APOS)."',
-                    autoLoad: {
-                    url: '".$root_ajax."',
-                    scripts: false,
-                    method : 'POST',
-                    params: {action: 'updateWidget', id: '".$data['id']."'}
-                    },
-                    listeners: {
-                        afterrender: function(c) {
-                            //c.getUpdater().startAutoRefresh(20,'".$root_ajax."', {action: 'updateWidget', id: '".$data['id']."'});
-                           //Ext.getCmp('panel').doLayout(true);
-                        }
-                    },
+                    html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
+                    //autoLoad: {
+                    //url: '".$root_ajax."',
+                    //scripts: false,
+                    //method : 'POST',
+                    //params: {action: 'updateWidget', id: '".$data['id']."'}
+                    //},
                     tools: [{
                         id:'gear',
                         tooltip: 'Configure this report',
@@ -191,7 +190,8 @@ global $CFG_GLPI,$LANG;
                                     method : 'POST',
                                     params: {action: 'getconfig', target: '".$target."',f_name:'".$f_name."',short_classname:'".$short_classname."',gtype:'".$gtype."'}
                                     },
-                                //html: '".json_encode($this->getconfiguration($f_name,$short_classname,$gtype,$target),JSON_HEX_APOS)."' ,
+                                //scripts:false,
+                                //html: '".substr(json_encode($this->getconfiguration($f_name,$short_classname,$gtype,$target),JSON_HEX_APOS),1,-1)."' ,
                             });
                             win.show();
 
