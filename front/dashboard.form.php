@@ -6,8 +6,15 @@ global $LANG;
 Session::checkLoginUser();
 
 
+if (isset($_POST['saveConfig'])) {
 
-if (isset($_POST['addReports'])) {
+
+    PluginMreportingMisc::saveSelectors($_POST['f_name']);
+
+    Html::back();
+
+
+}else if (isset($_POST['addReports'])) {
 
     $dashboard = new PluginMreportingDashboard();
     $post = array('users_id' => $_SESSION['glpiID'], 'reports_id' => $_POST['report']);
@@ -16,14 +23,7 @@ if (isset($_POST['addReports'])) {
 
     Html::back();
 
-}else if (isset($_GET['action']) && $_GET['action'] == 'popupConfigReport') {
-
-    Html::popHeader('Configuration for report '.$_GET['idReport'], $_SERVER['PHP_SELF']);
-    $dashboard = new PluginMreportingDashboard();
-    $dashboard->popupConfigReport($_GET['idReport']);
-    Html::popFooter();
-
-} else {
+}else {
     Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
     $dashboard = new PluginMreportingDashboard();
     $dashboard->showDashBoard();
