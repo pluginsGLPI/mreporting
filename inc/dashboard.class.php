@@ -9,6 +9,7 @@
 class PluginMreportingDashboard extends CommonDBTM {
 
 
+
 function showGraphOnDashboard($opt,$export = false){
 
 global $CFG_GLPI,$LANG;
@@ -32,6 +33,7 @@ global $CFG_GLPI,$LANG;
     $classname = 'PluginMreporting'.$opt['short_classname'];
     $obj = new $classname();
 
+
     //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
     $datas = $obj->$opt['f_name']();
 
@@ -49,6 +51,8 @@ global $CFG_GLPI,$LANG;
         "desc"       => $des_func,
         "export"     => $export,
         "opt"        => $opt);
+
+
 
     return  $graph->{'show'.$opt['gtype']}($params , true,220);
 
@@ -86,13 +90,11 @@ global $CFG_GLPI,$LANG;
                         window.location.reload();
                     }
                 });
-
             }
 
 
 
              Ext.onReady(function() {
-
                 var dash = new Ext.Panel({
                 itemId: 'panel',
                 id:'panel',
@@ -102,18 +104,30 @@ global $CFG_GLPI,$LANG;
                 renderTo : 'dashboard',
                 layout:'table',
                 defaults: {
-                    height: 300,
-                    width: 400,
+                    height: 400,
+                    width: 500,
                     style: 'margin: 10px 10px 10px 10px'
                 },
                 layoutConfig: {
                     columns: 3
+                },
+                listeners: {
+                    afterrender: function(c) {
+                        c.doLayout();
+                    }
                 },
                 items: [";
 
         $dashboard= new PluginMreportingDashboard();
         $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
         $i = 0;
+
+        $target = $this->getFormURL();
+        if (isset($options['target'])) {
+            $target = $options['target'];
+        }
+
+
         foreach($res as $data){
             $i++;
             $report = new PluginMreportingConfig();
@@ -123,6 +137,7 @@ global $CFG_GLPI,$LANG;
             $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
             $re = "Nothing to show" ;
+            $config = "No configuration";
 
             $f_name = $report->fields["name"];
 
@@ -134,13 +149,11 @@ global $CFG_GLPI,$LANG;
 
             $short_classname = str_replace('PluginMreporting', '', $report->fields["classname"]);
 
-
             if (!empty($short_classname) && !empty($f_name)) {
                 if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
                     $opt = array('short_classname' => $short_classname , 'f_name' =>$f_name , 'gtype' => $gtype );
                     $dash = new PluginMreportingDashboard();
                     $re   = $dash->showGraphOnDashboard($opt);
-
                 }
             }
 
@@ -157,16 +170,32 @@ global $CFG_GLPI,$LANG;
                     method : 'POST',
                     params: {action: 'updateWidget', id: '".$data['id']."'}
                     },
-                    //listeners: {
-                    //    afterrender: function(c) {
-                    //        c.getUpdater().startAutoRefresh(20,'".$root_ajax."', {action: 'updateWidget', id: '".$data['id']."'});
-                    //        c.doLayout();
-                    //    }
-                    //},
+                    listeners: {
+                        afterrender: function(c) {
+                            //c.getUpdater().startAutoRefresh(20,'".$root_ajax."', {action: 'updateWidget', id: '".$data['id']."'});
+                           //Ext.getCmp('panel').doLayout(true);
+                        }
+                    },
                     tools: [{
                         id:'gear',
                         tooltip: 'Configure this report',
-                        handler: function(event, toolEl,panel){ Ext.Msg.alert('Status', 'config'); }
+                        handler: function(event, toolEl,panel){
+
+
+                            win = new Ext.Window({
+                                title: 'Configuration',
+                                closeAction: 'hide',
+                                autoLoad: {
+                                    url: '".$root_ajax."',
+                                    scripts: true,
+                                    method : 'POST',
+                                    params: {action: 'getconfig', target: '".$target."',f_name:'".$f_name."',short_classname:'".$short_classname."',gtype:'".$gtype."'}
+                                    },
+                                //html: '".json_encode($this->getconfiguration($f_name,$short_classname,$gtype,$target),JSON_HEX_APOS)."' ,
+                            });
+                            win.show();
+
+                        }
                     },{
                         id:'close',
                         tooltip: 'Remove this report',
@@ -178,16 +207,32 @@ global $CFG_GLPI,$LANG;
         }
 
         echo "]  }); });";
-
-
         echo "</script>";
-                echo "</div>";
+        echo "</div>";
 
     }
 
 
 
+    function getconfiguration($f_name,$short_classname,$gtype,$target){
 
+
+        $_REQUEST['f_name'] = $f_name;
+        $_REQUEST['short_classname'] = $short_classname;
+        PluginMreportingMisc::getSelectorValuesByUser();
+
+        $content =  "";
+
+        $content .= "<form method='POST'  action='" . $target . "' name='form' id='mreporting_date_selector'>";
+        $content .= PluginMreportingMisc::getReportSelectors(true);
+        $content .= "<input type='hidden' name='short_classname' value='".$short_classname."' class='submit'>";
+        $content .= "<input type='hidden' name='f_name' value='".$f_name."' class='submit'><input type='hidden' name='gtype' value='".$gtype."' class='submit'>";
+        $content .= "<input type='submit' class='button' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
+        $content .= Html::closeForm(false);
+
+        return $content;
+
+    }
 
 
     function showDropdownReports(){
