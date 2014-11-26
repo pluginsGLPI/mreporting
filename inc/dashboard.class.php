@@ -75,10 +75,48 @@ global $CFG_GLPI,$LANG;
 
         $this->showDropdownReports();
 
+        $target = $this->getFormURL();
+        if (isset($options['target'])) {
+            $target = $options['target'];
+        }
+
+        $_REQUEST['f_name'] = 'option';
+        PluginMreportingMisc::getSelectorValuesByUser();
+
+
+        $nbColumn = 4;
+        if(isset($_SESSION['mreporting_values']['column']))
+            $nbColumn = $_SESSION['mreporting_values']['column'];
+
+
         echo "<div  id='dashboard'>";
 
         echo "<script type='text/javascript'>";
         echo "
+
+        /*Function to remove items on panel*/
+            function HelloWorld(){
+
+                var combo = document.getElementById('dropdown_columnTableLayout');
+                var index = combo.options[combo.selectedIndex].value;
+
+                alert(index);
+
+                Ext.Ajax.request({
+                    url: '{$root_ajax}',
+                    params: {
+                        column: index,
+                        action: 'changeColumn'
+                    },
+                    failure: function(opt,success,respon){
+                        Ext.Msg.alert('Status', 'Ajax problem !');
+                    } ,
+                    success: function(){
+                       window.location.reload(true);
+                    }
+                });
+
+            }
 
             /*Function to remove items on panel*/
             function removeItemsType(panel,id){
@@ -107,7 +145,7 @@ global $CFG_GLPI,$LANG;
                 itemId: 'panel',
                 id:'panel',
                 title: 'Dashboard',
-                width: '84%',
+                //width: '84%',
                 style: 'margin:auto',
                 renderTo : 'dashboard',
                 layout:'table',
@@ -117,23 +155,35 @@ global $CFG_GLPI,$LANG;
                     style: 'margin: 10px 10px 10px 10px'
                 },
                 layoutConfig: {
-                    columns: 3
+                    columns: ".$nbColumn."
                 },
                 listeners: {
                     afterrender: function(c) {
                         c.doLayout();
                     }
                 },
+                tools: [{
+                        id:'gear',
+                        tooltip: 'Configure dashboard',
+                        handler: function(event, toolEl,panel){
+
+
+                            win = new Ext.Window({
+                                title: 'Configuration du dashboard',
+                                closeAction: 'hide',
+                                html: 'Nombre de colonne :<br>".substr(json_encode($this->getFormForColumn($target),JSON_HEX_APOS),1,-1)."' ,
+                            });
+                            win.show();
+
+
+                        }
+                    }],
                 items: [";
 
         $dashboard= new PluginMreportingDashboard();
         $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
         $i = 0;
 
-        $target = $this->getFormURL();
-        if (isset($options['target'])) {
-            $target = $options['target'];
-        }
 
 
         foreach($res as $data){
@@ -183,6 +233,8 @@ global $CFG_GLPI,$LANG;
                         id:'gear',
                         tooltip: 'Configure this report',
                         handler: function(event, toolEl,panel){
+
+
 
 
                             win = new Ext.Window({
@@ -280,6 +332,23 @@ global $CFG_GLPI,$LANG;
         echo "</table>";
         Html::closeForm(true);
 
+
+    }
+
+    function getFormForColumn($target){
+
+        $nbColumn = 4;
+        if(isset($_SESSION['mreporting_values']['column']))
+            $nbColumn = $_SESSION['mreporting_values']['column'];
+
+
+        $content =  "";
+
+        $content .= "<form method='POST'  action='" . $target . "' name='form' id='mreporting_date_selector'>";
+        $content .= Dropdown::showFromArray('columnTableLayout',array(1=>1,2=>2,3=>3,4=>4),array('value' =>$nbColumn, 'on_change' => 'HelloWorld()','display'=>false,'rand' => ''));
+        $content .= Html::closeForm(false);
+
+        return $content;
 
     }
 
