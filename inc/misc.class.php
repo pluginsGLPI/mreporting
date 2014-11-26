@@ -70,7 +70,7 @@ class PluginMreportingMisc {
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
          ." id='mreporting_date_selector'>\n";
       echo "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
-      
+
       if ($has_selector) {
          self::getReportSelectors();
       }
@@ -104,7 +104,8 @@ class PluginMreportingMisc {
    /**
     * Parse and include selectors functions
     */
-   static function getReportSelectors() {
+   static function getReportSelectors($export = false) {
+       ob_start();
       self::addToSelector();
       $graphname = $_REQUEST['f_name'];
       if(!isset($_SESSION['mreporting_selector'][$graphname]) 
@@ -124,7 +125,7 @@ class PluginMreportingMisc {
          } else {
             continue;
          }
-      
+
          $i++;
          echo '<td>';
          $classselector::$selector();
@@ -134,7 +135,11 @@ class PluginMreportingMisc {
          $i++;
          echo '<td>&nbsp;</td>';
       }
-      
+
+       $res = ob_get_clean();
+
+       if($export)return $res;
+       else echo $res;
    }
 
    static function saveSelectors($graphname) {
