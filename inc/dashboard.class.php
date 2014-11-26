@@ -286,49 +286,7 @@ global $CFG_GLPI,$LANG;
     }
 
 
-    function showDropdownReports(){
 
-        global $DB,$LANG,$CFG_GLPI;
-
-
-        $reports = "SELECT `glpi_plugin_mreporting_configs`.`id` , `glpi_plugin_mreporting_configs`.`name`
-                     FROM `glpi_plugin_mreporting_configs`,`glpi_plugin_mreporting_profiles`
-                     WHERE `glpi_plugin_mreporting_configs`.`id` = `glpi_plugin_mreporting_profiles`.`reports`
-                     AND `glpi_plugin_mreporting_profiles`.`right` = 'r'
-                     AND `glpi_plugin_mreporting_profiles`.`profiles_id` = ".$_SESSION['glpiactiveprofile']['id'];
-
-        $items = array();
-        foreach($DB->request($reports) as $report){
-            $mreportingConfig = new PluginMreportingConfig();
-            $mreportingConfig->getFromDB($report['id']);
-
-            $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
-            $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
-
-            $items[$report['id']] = $report['name']."&nbsp(".$title.")";
-        }
-
-
-        $target = $this->getFormURL();
-        if (isset($options['target'])) {
-            $target = $options['target'];
-        }
-
-        echo "<form method='post' action='" . $target . "' method='post'>";
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr><th colspan='2'>".__("Select statistics to be added to dashboard")."&nbsp;:</th></tr>";
-        echo "<tr class='tab_bg_1'><td class='center'>";
-        Dropdown::showFromArray('report',$items,array('rand' =>''));
-        echo "</td>";
-        echo "<td>";
-        echo "<input type='submit' name='addReports' value='add report to dashboard' class='submit' >";
-        echo "</td>";
-        echo "</tr>";
-        echo "</table>";
-        Html::closeForm(true);
-
-
-    }
 
     function getFormForColumn(){
 
@@ -353,7 +311,7 @@ global $CFG_GLPI,$LANG;
             $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
             $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
 
-            $items[$report['id']] = $report['name']."&nbsp(".$title.")";
+            $items[$report['id']] = $title;
         }
 
 
