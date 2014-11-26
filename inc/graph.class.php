@@ -1543,8 +1543,8 @@ JAVASCRIPT;
        $bottom = 20;
 
        if($dashboard){
-           $height = 200;
-           $width = 300;
+           $height = 300;
+           $width = 400;
            $bottom = 100;
        }
 
