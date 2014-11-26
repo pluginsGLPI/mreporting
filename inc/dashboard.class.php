@@ -73,8 +73,6 @@ global $CFG_GLPI,$LANG;
         global $LANG,$CFG_GLPI;
         $root_ajax = $CFG_GLPI['root_doc']."/plugins/mreporting/ajax/dashboard.php";
 
-        $this->showDropdownReports();
-
         $target = $this->getFormURL();
         if (isset($options['target'])) {
             $target = $options['target'];
@@ -84,9 +82,12 @@ global $CFG_GLPI,$LANG;
         PluginMreportingMisc::getSelectorValuesByUser();
 
 
-        $nbColumn = 4;
+        $nbColumn = 2;
         if(isset($_SESSION['mreporting_values']['column']))
             $nbColumn = $_SESSION['mreporting_values']['column'];
+
+
+        $widthDashboard = ($nbColumn * 400) + ($nbColumn * 120) ;
 
 
         echo "<div  id='dashboard'>";
@@ -143,7 +144,7 @@ global $CFG_GLPI,$LANG;
                 itemId: 'panel',
                 id:'panel',
                 title: 'Dashboard',
-                //width: '84%',
+                width: '".$widthDashboard."',
                 style: 'margin:auto',
                 renderTo : 'dashboard',
                 layout:'table',
@@ -169,7 +170,7 @@ global $CFG_GLPI,$LANG;
                             win = new Ext.Window({
                                 title: 'Configuration du dashboard',
                                 closeAction: 'hide',
-                                html: 'Nombre de colonne :<br>".substr(json_encode($this->getFormForColumn($target),JSON_HEX_APOS),1,-1)."' ,
+                                html: '".substr(json_encode($this->getFormForColumn(),JSON_HEX_APOS),1,-1)."' ,
                             });
                             win.show();
 
@@ -333,17 +334,63 @@ global $CFG_GLPI,$LANG;
 
     }
 
-    function getFormForColumn($target){
+    function getFormForColumn(){
 
-        $nbColumn = 4;
+        $nbColumn = 2;
         if(isset($_SESSION['mreporting_values']['column']))
             $nbColumn = $_SESSION['mreporting_values']['column'];
 
+        global $DB,$LANG,$CFG_GLPI;
 
+
+        $reports = "SELECT `glpi_plugin_mreporting_configs`.`id` , `glpi_plugin_mreporting_configs`.`name`
+                     FROM `glpi_plugin_mreporting_configs`,`glpi_plugin_mreporting_profiles`
+                     WHERE `glpi_plugin_mreporting_configs`.`id` = `glpi_plugin_mreporting_profiles`.`reports`
+                     AND `glpi_plugin_mreporting_profiles`.`right` = 'r'
+                     AND `glpi_plugin_mreporting_profiles`.`profiles_id` = ".$_SESSION['glpiactiveprofile']['id'];
+
+        $items = array();
+        foreach($DB->request($reports) as $report){
+            $mreportingConfig = new PluginMreportingConfig();
+            $mreportingConfig->getFromDB($report['id']);
+
+            $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
+            $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
+
+            $items[$report['id']] = $report['name']."&nbsp(".$title.")";
+        }
+
+
+        $target = $this->getFormURL();
+        if (isset($options['target'])) {
+            $target = $options['target'];
+        }
         $content =  "";
 
+        $content .= "<form method='post' action='" . $target . "' method='post'>";
+        $content .= "<table class='tab_cadre_fixe'>";
+        $content .= "<tr><th colspan='2'>".__("Select statistics to be added to dashboard")."&nbsp;:</th></tr>";
+        $content .= "<tr class='tab_bg_1'><td class='center'>";
+        $content .= Dropdown::showFromArray('report',$items,array('rand' =>'','display'=>false));
+        $content .= "</td>";
+        $content .= "<td>";
+        $content .= "<input type='submit' name='addReports' value='add report to dashboard' class='submit' >";
+        $content .= "</td>";
+        $content .= "</tr>";
+        $content .= "</table>";
+        $content .= Html::closeForm(false);
+
+
+
+
         $content .= "<form method='POST'  action='" . $target . "' name='form' id='mreporting_date_selector'>";
+        $content .= "<table class='tab_cadre_fixe'>";
+        $content .= "<tr><th colspan='2'>".__("Select number of column")."&nbsp;:</th></tr>";
+        $content .= "<tr class='tab_bg_1'><td class='center'>";
         $content .= Dropdown::showFromArray('columnTableLayout',array(1=>1,2=>2,3=>3,4=>4),array('value' =>$nbColumn, 'on_change' => 'changeColumn()','display'=>false,'rand' => ''));
+        $content .= "</td>";
+        $content .= "</tr>";
+        $content .= "</table>";
         $content .= Html::closeForm(false);
 
         return $content;
