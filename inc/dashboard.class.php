@@ -183,7 +183,7 @@ global $CFG_GLPI,$LANG;
         $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
         $i = 0;
 
-
+        $content = "";
 
         foreach($res as $data){
             $i++;
@@ -206,17 +206,28 @@ global $CFG_GLPI,$LANG;
 
             $short_classname = str_replace('PluginMreporting', '', $report->fields["classname"]);
 
+
             if (!empty($short_classname) && !empty($f_name)) {
                 if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
                     $opt = array('short_classname' => $short_classname , 'f_name' =>$f_name , 'gtype' => $gtype );
                     $dash = new PluginMreportingDashboard();
                     $re   = $dash->showGraphOnDashboard($opt);
+
                 }
             }
 
             $href = '<a href="'.$CFG_GLPI['root_doc'].'/plugins/mreporting/front/graph.php?short_classname='.$short_classname.'&amp;f_name='.$f_name.'&amp;gtype='.$gtype.'">&nbsp;'.$title.'</a>';
 
-            echo "{
+            $needConfig = true;
+            $_REQUEST['f_name'] =$f_name;
+            $_REQUEST['short_classname'] = $short_classname;
+            PluginMreportingMisc::getSelectorValuesByUser();
+
+            if(PluginMreportingMisc::getReportSelectors(true) == null){
+                $needConfig = false;
+            }
+
+            $content .=  "{
              xtype: 'panel',
                     title: '".addslashes($href)."',
                     id: '".$data['id']."',
@@ -227,7 +238,10 @@ global $CFG_GLPI,$LANG;
                     //method : 'POST',
                     //params: {action: 'updateWidget', id: '".$data['id']."'}
                     //},
-                    tools: [{
+                    tools: [";
+
+            if($needConfig){
+                $content .="{
                         id:'gear',
                         tooltip: 'Configure this report',
                         handler: function(event, toolEl,panel){
@@ -247,19 +261,25 @@ global $CFG_GLPI,$LANG;
                             win.show();
 
                         }
-                    },{
+                    },";
+            }
+
+
+            $content .= "{
                         id:'close',
                         tooltip: 'Remove this report',
                         handler: function(event, toolEl,panel){ removeItemsType(panel,".$data['id']."); }
                     }]
                     }";
 
-            if($i != count($res)) echo',';
+            if($i != count($res))   $content .=',';
         }
 
-        echo "]  }); });";
-        echo "</script>";
-        echo "</div>";
+        $content .= "]  }); });";
+        $content .= "</script>";
+        $content .= "</div>";
+
+        echo $content;
 
     }
 
