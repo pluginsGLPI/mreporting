@@ -74,8 +74,18 @@ function plugin_init_mreporting() {
 
          /* Reports Link */
             $menu_entry = "front/central.php";
-            $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
-            $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
+
+          $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
+
+          if(PluginMreportingDashboard::CurrentUserHaveDashboard()){
+              $PLUGIN_HOOKS['menu_entry']['mreporting'] = 'front/dashboard.form.php';
+          }else{
+              $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
+          }
+
+
+
+
 
 
           //var_dump($_SERVER['REQUEST_URI']);
