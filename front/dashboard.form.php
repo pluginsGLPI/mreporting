@@ -11,6 +11,10 @@ if (isset($_POST['saveConfig'])) {
 
     PluginMreportingMisc::saveSelectors($_POST['f_name']);
 
+    $_REQUEST['f_name'] = $_POST['f_name'];
+    $_REQUEST['short_classname'] = $_POST['short_classname'];
+    PluginMreportingMisc::getSelectorValuesByUser();
+
     Html::back();
 
 
