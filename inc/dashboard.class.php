@@ -95,12 +95,10 @@ global $CFG_GLPI,$LANG;
         echo "
 
         /*Function to remove items on panel*/
-            function HelloWorld(){
+            function changeColumn(){
 
                 var combo = document.getElementById('dropdown_columnTableLayout');
                 var index = combo.options[combo.selectedIndex].value;
-
-                alert(index);
 
                 Ext.Ajax.request({
                     url: '{$root_ajax}',
@@ -345,7 +343,7 @@ global $CFG_GLPI,$LANG;
         $content =  "";
 
         $content .= "<form method='POST'  action='" . $target . "' name='form' id='mreporting_date_selector'>";
-        $content .= Dropdown::showFromArray('columnTableLayout',array(1=>1,2=>2,3=>3,4=>4),array('value' =>$nbColumn, 'on_change' => 'HelloWorld()','display'=>false,'rand' => ''));
+        $content .= Dropdown::showFromArray('columnTableLayout',array(1=>1,2=>2,3=>3,4=>4),array('value' =>$nbColumn, 'on_change' => 'changeColumn()','display'=>false,'rand' => ''));
         $content .= Html::closeForm(false);
 
         return $content;
