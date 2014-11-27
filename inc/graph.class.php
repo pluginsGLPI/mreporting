@@ -375,12 +375,12 @@ JAVASCRIPT;
        $right_legend = 5;
 
        if($dashboard){
-           $height = 400;
+           $height = 350;
            $radius = 150;
            $this->setWidth($this->width);
-           $left = 180;
-           $top = 20;
-           $right_legend = 5;
+           $left = 40;
+           $top = 30;
+           $right_legend = 50;
        }
 
 
