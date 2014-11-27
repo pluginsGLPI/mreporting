@@ -55,7 +55,7 @@ global $CFG_GLPI,$LANG;
 
 
 
-    echo  $graph->{'show'.$opt['gtype']}($params , true,220);
+    echo  $graph->{'show'.$opt['gtype']}($params , true,480);
 
     $ob = ob_get_clean();
 
@@ -156,11 +156,6 @@ global $CFG_GLPI,$LANG;
                 layoutConfig: {
                     columns: ".$nbColumn."
                 },
-                listeners: {
-                    afterrender: function(c) {
-                        c.doLayout();
-                    }
-                },
                 tools: [{
                         id:'gear',
                         tooltip: 'Configure dashboard',
@@ -206,6 +201,10 @@ global $CFG_GLPI,$LANG;
 
             $short_classname = str_replace('PluginMreporting', '', $report->fields["classname"]);
 
+            $_REQUEST['f_name'] =$f_name;
+            $_REQUEST['short_classname'] = $short_classname;
+            PluginMreportingMisc::getSelectorValuesByUser();
+
 
             if (!empty($short_classname) && !empty($f_name)) {
                 if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
@@ -219,11 +218,9 @@ global $CFG_GLPI,$LANG;
             $href = '<a href="'.$CFG_GLPI['root_doc'].'/plugins/mreporting/front/graph.php?short_classname='.$short_classname.'&amp;f_name='.$f_name.'&amp;gtype='.$gtype.'">&nbsp;'.$title.'</a>';
 
             $needConfig = true;
-            $_REQUEST['f_name'] =$f_name;
-            $_REQUEST['short_classname'] = $short_classname;
-            PluginMreportingMisc::getSelectorValuesByUser();
 
-            if(PluginMreportingMisc::getReportSelectors(true) == null){
+
+            if(PluginMreportingMisc::getReportSelectors(true) == null || PluginMreportingMisc::getReportSelectors(true) == ""){
                 $needConfig = false;
             }
 
@@ -245,7 +242,6 @@ global $CFG_GLPI,$LANG;
                         id:'gear',
                         tooltip: 'Configure this report',
                         handler: function(event, toolEl,panel){
-
                             win = new Ext.Window({
                                 title: 'Configuration',
                                 closeAction: 'hide',
@@ -255,11 +251,8 @@ global $CFG_GLPI,$LANG;
                                     method : 'POST',
                                     params: {action: 'getconfig', target: '".$target."',f_name:'".$f_name."',short_classname:'".$short_classname."',gtype:'".$gtype."'}
                                     },
-                                //scripts:false,
-                                //html: '".substr(json_encode($this->getconfiguration($f_name,$short_classname,$gtype,$target),JSON_HEX_APOS),1,-1)."' ,
                             });
                             win.show();
-
                         }
                     },";
             }
@@ -346,7 +339,14 @@ global $CFG_GLPI,$LANG;
             $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
             $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
 
-            $items[$report['id']] = $title;
+            /*** DEBUG Tab ***/
+            if (DEBUG_MREPORTING) {
+                $items[$report['id']] = $report['name']."&nbsp(".$title.")";
+            }else{
+                $items[$report['id']] = $title;
+            }
+
+
         }
 
 
