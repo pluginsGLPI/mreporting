@@ -194,10 +194,10 @@ class PluginMreportingGraph {
         $left = 240;
        $top = 5;
        if($dashboard){
-           $left = 250;
-           $height = 100;
-           $this->setWidth($this->width+150);
-           $top = 100;
+           $left = 200;
+           $height = 350;
+           $this->setWidth($this->width-50);
+           $top = 5;
        }
 
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
@@ -839,11 +839,11 @@ JAVASCRIPT;
        $right = 160;
        $bottomAxis = 5;
        if($dashboard){
-           $left = 210;
-           $height = 340;
+           $left = 50;
+           $height = 300;
            $this->setWidth($this->width);
            $width_hgbar = $this->width-100;
-           $right = 20;
+           $right = 50;
            $bottomAxis = -15;
        }
 
