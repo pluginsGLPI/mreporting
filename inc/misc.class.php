@@ -123,7 +123,7 @@ class PluginMreportingMisc {
       $classname = 'PluginMreporting'.$_REQUEST['short_classname'];
       if(!class_exists($classname)) return;
 
-      $i = 2;
+      $i = 1;
       foreach ($_SESSION['mreporting_selector'][$graphname] as $selector) {
          if($i%4 == 0) echo '</tr><tr class="tab_bg_1">';
          $selector = 'selector'.ucfirst($selector);

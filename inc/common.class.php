@@ -1625,19 +1625,15 @@ class PluginMreportingCommon extends CommonDBTM {
    }  
    
    static function selectorDateinterval() {
-      echo "<b>";
-
-      echo "<table><tr class=\"tab_bg_1\">";
       $randname = 'PluginMreporting'.$_REQUEST['short_classname'].$_REQUEST['f_name'];
       $date1    = $_SESSION['mreporting_values']["date1".$randname];
       $date2    = $_SESSION['mreporting_values']["date2".$randname];
-      echo "<td>";
-      echo __("Start date")."&nbsp;";
+      echo "<b>".__("Start date")."</b>";
       Html::showDateFormItem("date1".$randname, $date1, false);
       echo "</td><td>";
-      echo __("End date")."&nbsp;";
+      echo "<b>".__("End date")."</b>";
       Html::showDateFormItem("date2".$randname, $date2, false);   
-      echo "</td></tr></table>";
+      echo "</td>";
    } 
    
    static function canAccessAtLeastOneReport($profiles_id) {
