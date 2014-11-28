@@ -65,3 +65,16 @@
 .chzn-container {
    width: 250px !important;
 }
+
+.glpi-header {
+    background-color: #e1d39e;
+
+    padding: 10px;
+}
+
+.glpi{
+    border-color: #e1d39e;
+    border-style: solid;
+    border-width: 1px;
+}
+

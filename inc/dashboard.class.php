@@ -144,6 +144,7 @@ global $CFG_GLPI,$LANG;
                 itemId: 'panel',
                 id:'panel',
                 title: 'Dashboard',
+                baseCls:'glpi',
                 width: '".$widthDashboard."',
                 style: 'margin:auto',
                 renderTo : 'dashboard',
@@ -229,6 +230,7 @@ global $CFG_GLPI,$LANG;
                     title: '".addslashes($href)."',
                     id: '".$data['id']."',
                     html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
+                    baseCls:'glpi',
                     //autoLoad: {
                     //url: '".$root_ajax."',
                     //scripts: false,
