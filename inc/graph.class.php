@@ -1061,25 +1061,22 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-       $bottom = 100;
-       $rightLabel = 40;
-       $top = 5;
+      $bottom = 100;
+      $rightLabel = 40;
+      $top = 5;
       $right = 5;
-       $width = $this->width;
-       if($dashboard){
-           $height = 300;
-           $bottom = 50;
-           $rightLabel = 130;
-           $right = -110;
-           $top = 10;
-           $width = 500;
-       }
+      $width = $this->width;
+      if($dashboard){
+         $height = 300;
+         $bottom = 50;
+         $width = 400;
+      }
 
       $JS = <<<JAVASCRIPT
    var w = {$width},
        h = {$height},
-       x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w-300, 4/5),
-       y = pv.Scale.linear(0, max+10).range(0, h),
+       x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w, 4/5),
+       y = pv.Scale.linear(0, 1.1 * max).range(0, h - {$nb_bar2} * 5.5),
        offset = 0, // animation
        i = -1 // mouseover index
        Hilighted = [false, false,false, false,false, false];
@@ -1098,7 +1095,7 @@ JAVASCRIPT;
        .data(y.ticks())
        .bottom(y)
        .left(function(d) d ? 0 : null)
-       .width(function(d) d ? w-200 : null)
+       .width(function(d) d ? w : null)
        .strokeStyle(function(d) d ? "#eee" : "black")
        .anchor("left").add(pv.Label)
        .text(y.tickFormat);
