@@ -793,6 +793,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
 
    function fillStatusMissingValues($tab, $labels2 = array()) {
+       $datas = array();
       foreach($tab as $name => $data) {
          foreach ($this->status as $current_status) {
             if(!isset($_SESSION['mreporting_values']['status_'.$current_status]) 
