@@ -1494,7 +1494,7 @@ class PluginMreportingCommon extends CommonDBTM {
          if (in_array($data['id'], $selected_groups_requester)) {
             $selected = "selected ";
          }
-         echo "<option value='".$data['id']."' $selected>".$datas['completename']."</option>";
+         echo "<option value='".$data['id']."' $selected>".$data['completename']."</option>";
       }
       echo "</select>";
    
