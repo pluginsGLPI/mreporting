@@ -1566,7 +1566,7 @@ JAVASCRIPT;
       .height(height_area)
       .bottom(100)
       .left(50)
-      .right(15)
+      .right(50)
       .top(5);
 
    /* Y-ticks. */
@@ -1588,14 +1588,14 @@ JAVASCRIPT;
       .height(height_area - (n*14))
       .bottom(-5)
      .anchor("bottom").add(pv.Label)
-
-     .textAngle(Math.PI / 4)
-      .textMargin(15)
-         .text(function(d) labels2[this.index])
-         .visible(function() {
-            if ((this.index / step) == Math.round(this.index / step)) return true;
-            else return false;
-         });
+      .textAngle(Math.PI / 4)
+      .textAlign("left")
+      .textMargin(5)
+      .text(function(d) labels2[this.index])
+      .visible(function() {
+         if ((this.index / step) == Math.round(this.index / step)) return true;
+         else return false;
+      });
 
    /* add mini black lines in front of labels tick */
    vis{$randname}.add(pv.Rule)
