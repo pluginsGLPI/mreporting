@@ -1067,7 +1067,6 @@ JAVASCRIPT;
       $width = $this->width;
       if($dashboard){
          $height = 300;
-         $bottom = 50;
          $width = 400;
       }
 
