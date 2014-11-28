@@ -1658,7 +1658,8 @@ JAVASCRIPT;
             var text = labels[this.parent.index];
             if (i > -1 && {$hover}) text += " : "+d+" {$unit}"; // mouse over labels
             return text;
-         });
+         })
+         .textStyle(function() { return colors(this.parent.index).darker(); });
 
 
    /* An invisible bar to capture events (without flickering). */
