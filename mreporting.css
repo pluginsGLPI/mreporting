@@ -66,7 +66,7 @@
    width: 200px !important;
 }
 
-.chzn-container li:nth-child(even) {background: #EEE}
+.chzn-container .chzn-drop li:nth-child(even) {background: #EEE}
 
 .glpi-header {
     background-color: #e1d39e;
