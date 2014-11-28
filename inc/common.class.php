@@ -1497,15 +1497,6 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "<option value='".$data['id']."' $selected>".$data['completename']."</option>";
       }
       echo "</select>";
-   
-      if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
-         echo "<script type='text/javascript'>
-         var elements = document.querySelectorAll('.chzn-select');
-         for (var i = 0; i < elements.length; i++) {
-            new Chosen(elements[i], {});
-         }
-         </script>";
-      }
    }
 
    static function selectorForSingleGroup($field, $conditon = '', $label = '') {

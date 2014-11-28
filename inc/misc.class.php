@@ -99,6 +99,15 @@ class PluginMreportingMisc {
       echo "</table>";
       Html::closeForm();
       echo "</div>\n";
+
+      if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
+         echo "<script type='text/javascript'>
+         var elements = document.querySelectorAll('.chzn-select');
+         for (var i = 0; i < elements.length; i++) {
+            new Chosen(elements[i], {});
+         }
+         </script>";
+      }
    }
 
    /**
