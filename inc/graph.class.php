@@ -190,15 +190,14 @@ class PluginMreportingGraph {
       $always = '';
       $hover = '';
 
-
-        $left = 240;
-       $top = 5;
-       if($dashboard){
-           $left = 200;
-           $height = 350;
-           $this->setWidth($this->width-50);
-           $top = 5;
-       }
+      $left = 240;
+      $top = 5;
+      if($dashboard){
+         $left = 200;
+         $height = 340;
+         $this->setWidth($this->width-50);
+         $top = 5;
+      }
 
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
@@ -223,49 +222,49 @@ class PluginMreportingGraph {
       .top(function() y(this.index))
       .height(y.range().band)
       .add(pv.Panel)
-      .def("active", false)
-      .add(pv.Bar)
-      .left(0)
-      .width(function(d) {
-         var r = 360 - 20 * offset;
-         if (r < 0) r = 0;
-         var len = x(d) - r;
-         return len;
-      })
-      .height(23)
-      .event("mouseover", function() { return this.parent.active(true);})
-      .event("mouseout", function()  { return this.parent.active(false);})
-      .fillStyle(function() {
-         if (this.parent.active()) return colors(this.parent.parent.index).alpha(.5);
-         else return colors(this.parent.parent.index);
-      })
-      .strokeStyle(function() { return colors(this.parent.parent.index).darker(); })
-      .lineWidth(2)
-      .top(2)
-      .bottom(2)
-   .anchor("right").add(pv.Label)
-      .textAlign("left")
-      .text(function(d) { return  d+" {$unit}"; })
-      .textMargin(5)
-      .textBaseline("middle")
-      .textStyle(function() { return colors(this.parent.parent.index).darker(); })
-      .textShadow("0.1em 0.1em 0.1em rgba(4,4,4,.5)")
-   .parent.anchor("left").add(pv.Label)
-      .textMargin(5)
-      .textAlign("right")
-      .text(function() { return labels[this.parent.parent.index]; })
-   .root.add(pv.Rule) // axis
-      .data(x.ticks(5))
-      .left(x)
-      .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "black"; })
-      .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
-   .add(pv.Rule)
-      .bottom(0)
-      .height(height_hbar)
-      .strokeStyle(function(d) d ? "#eee" : "black")
-   .anchor("bottom").add(pv.Label)
-      .strokeStyle("black")
-      .text(x.tickFormat);
+         .def("active", false)
+      .add(pv.Bar) // horizontal bar
+         .left(0)
+         .width(function(d) {
+            var r = 360 - 20 * offset;
+            if (r < 0) r = 0;
+            var len = x(d) - r;
+            return len;
+         })
+         .height(y.range().band)
+         .event("mouseover", function() { return this.parent.active(true);})
+         .event("mouseout", function()  { return this.parent.active(false);})
+         .fillStyle(function() {
+            if (this.parent.active()) return colors(this.parent.parent.index).alpha(.5);
+            else return colors(this.parent.parent.index);
+         })
+         .strokeStyle(function() { return colors(this.parent.parent.index).darker(); })
+         .lineWidth(2)
+         .top(2)
+         .bottom(2)
+      .anchor("right").add(pv.Label) // bar value with unit (on right)
+         .textAlign("left")
+         .text(function(d) { return  d+" {$unit}"; })
+         .textMargin(5)
+         .textBaseline("middle")
+         .textStyle(function() { return colors(this.parent.parent.index).darker(); })
+         .textShadow("0.1em 0.1em 0.1em rgba(4,4,4,.5)")
+      .parent.anchor("left").add(pv.Label) // bar label (on left )
+         .textMargin(5)
+         .textAlign("right")
+         .text(function() { return labels[this.parent.parent.index]; })
+      .root.add(pv.Rule) // axis
+         .data(x.ticks(5))
+         .left(x)
+         .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "black"; })
+         .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
+      .add(pv.Rule)
+         .bottom(0)
+         .height(height_hbar)
+         .strokeStyle(function(d) d ? "#eee" : "black")
+      .anchor("bottom").add(pv.Label) // x axis labels
+         .strokeStyle("black")
+         .text(x.tickFormat);
 
    //render in loop to animate
    var interval = setInterval(function() {
