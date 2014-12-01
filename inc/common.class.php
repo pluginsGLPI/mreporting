@@ -1626,6 +1626,12 @@ class PluginMreportingCommon extends CommonDBTM {
    
    static function selectorDateinterval() {
       $randname = 'PluginMreporting'.$_REQUEST['short_classname'].$_REQUEST['f_name'];
+
+      if (!isset($_SESSION['mreporting_values']['date1'.$randname]))
+         $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d", time() - (365 * 24 * 60 * 60));
+      if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
+         $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
+      
       $date1    = $_SESSION['mreporting_values']["date1".$randname];
       $date2    = $_SESSION['mreporting_values']["date2".$randname];
       echo "<b>".__("Start date")."</b>";
