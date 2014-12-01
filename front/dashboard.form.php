@@ -9,11 +9,11 @@ Session::checkLoginUser();
 if (isset($_POST['saveConfig'])) {
 
 
-    PluginMreportingMisc::saveSelectors($_POST['f_name']);
+    PluginMreportingCommon::saveSelectors($_POST['f_name']);
 
     $_REQUEST['f_name'] = $_POST['f_name'];
     $_REQUEST['short_classname'] = $_POST['short_classname'];
-    PluginMreportingMisc::getSelectorValuesByUser();
+    PluginMreportingCommon::getSelectorValuesByUser();
 
     Html::back();
 

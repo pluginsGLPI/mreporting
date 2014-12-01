@@ -74,7 +74,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("`glpi_tickets`.`date`",
+      $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
          $delay, $randname);
       $nb_ligne = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 
@@ -128,7 +128,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay, $randname);
 
       //get categories used in this period
       $query_cat = "SELECT
@@ -225,7 +225,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
 
       $datas = array();
       foreach($this->filters as $filter) {
@@ -263,7 +263,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
 
       // Get status to show
       if(isset($_POST['status_1'])) {
@@ -312,8 +312,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
-      $this->sql_closedate = PluginMreportingMisc::getSQLDate("glpi_tickets.closedate",
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay, $randname);
+      $this->sql_closedate = PluginMreportingCommon::getSQLDate("glpi_tickets.closedate",
          $delay, $randname);
 
       $datas = array();
@@ -378,7 +378,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
 
       $query = "
          SELECT
@@ -433,7 +433,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
 
       foreach($this->filters as $class=>$filter) {
 
@@ -497,7 +497,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay, $randname);
 
       // Get status to show
       if(isset($_POST['status_1'])) {
@@ -579,7 +579,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
 
       $query = "SELECT
          DISTINCT DATE_FORMAT(date, '".$this->_period_sort."') as period,
@@ -633,7 +633,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay, $randname);
 
       // Get status to show
       if(isset($_POST['status_1'])) {
@@ -714,7 +714,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay, $randname);
 
       $flat_datas = array();
       $datas = array();
@@ -756,7 +756,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       	}
       }
 
-      $tree_datas['datas'] = PluginMreportingMisc::buildTree($flat_datas);
+      $tree_datas['datas'] = PluginMreportingCommon::buildTree($flat_datas);
 
       return $tree_datas;
    }
@@ -777,7 +777,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay, $randname);
+      $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay, $randname);
 
       $status = $this->filters['open']['status'] + $this->filters['close']['status'];
       $status_keys = array_keys($status);
@@ -867,7 +867,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       /*End Must be defined*/
 
       //Init delay value
-      $this->sql_date = PluginMreportingMisc::getSQLDate("`glpi_tickets`.`date`",
+      $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
          $delay, $randname);
       $nb_ligne = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 

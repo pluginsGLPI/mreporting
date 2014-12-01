@@ -90,7 +90,7 @@ class PluginMreportingGraph {
 
 
       echo "<div class='graph_navigation'>";
-      PluginMreportingMisc::showSelector(
+      PluginMreportingCommon::showSelector(
          $_SESSION['mreporting_values']['date1'.$randname], 
          $_SESSION['mreporting_values']['date2'.$randname],
          $randname);
@@ -1894,7 +1894,7 @@ JAVASCRIPT;
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
 
       echo "var datas = ".json_encode($datas).";";
-      echo "var sum = ".PluginMreportingMisc::getArraySum($datas).";";
+      echo "var sum = ".PluginMreportingCommon::getArraySum($datas).";";
 
       return $datas;
    }

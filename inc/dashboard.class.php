@@ -79,7 +79,7 @@ global $CFG_GLPI,$LANG;
         }
 
         $_REQUEST['f_name'] = 'option';
-        PluginMreportingMisc::getSelectorValuesByUser();
+        PluginMreportingCommon::getSelectorValuesByUser();
 
 
 
@@ -179,7 +179,7 @@ global $CFG_GLPI,$LANG;
 
             $_REQUEST['f_name'] =$f_name;
             $_REQUEST['short_classname'] = $short_classname;
-            PluginMreportingMisc::getSelectorValuesByUser();
+            PluginMreportingCommon::getSelectorValuesByUser();
 
 
             if (!empty($short_classname) && !empty($f_name)) {
@@ -196,7 +196,7 @@ global $CFG_GLPI,$LANG;
             $needConfig = true;
 
 
-            if(PluginMreportingMisc::getReportSelectors(true) == null || PluginMreportingMisc::getReportSelectors(true) == ""){
+            if(PluginMreportingCommon::getReportSelectors(true) == null || PluginMreportingCommon::getReportSelectors(true) == ""){
                 $needConfig = false;
             }
 
@@ -260,12 +260,12 @@ global $CFG_GLPI,$LANG;
 
         $_REQUEST['f_name'] = $f_name;
         $_REQUEST['short_classname'] = $short_classname;
-        PluginMreportingMisc::getSelectorValuesByUser();
+        PluginMreportingCommon::getSelectorValuesByUser();
 
         $content =  "";
 
         $content .= "<form method='POST'  action='" . $target . "' name='form' id='mreporting_date_selector'>";
-        $content .= PluginMreportingMisc::getReportSelectors(true);
+        $content .= PluginMreportingCommon::getReportSelectors(true);
         $content .= "<input type='hidden' name='short_classname' value='".$short_classname."' class='submit'>";
         $content .= "<input type='hidden' name='f_name' value='".$f_name."' class='submit'><input type='hidden' name='gtype' value='".$gtype."' class='submit'>";
         $content .= "<input type='submit' class='button' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";

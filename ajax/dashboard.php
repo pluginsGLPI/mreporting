@@ -62,13 +62,13 @@ if (isset($_POST['action'])) {
 
             $_REQUEST['f_name'] = $_POST['f_name'];
             $_REQUEST['short_classname'] = $_POST['short_classname'];
-            PluginMreportingMisc::getSelectorValuesByUser();
+            PluginMreportingCommon::getSelectorValuesByUser();
 
             $content =  "";
 
             $content .= "<form method='POST'  action='" . $_POST['target'] . "' name='form' id='mreporting_date_selector'>";
             $content .= "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
-            $content .= PluginMreportingMisc::getReportSelectors(true);
+            $content .= PluginMreportingCommon::getReportSelectors(true);
             $content .= "</table>";
             $content .= "<input type='hidden' name='short_classname' value='".$_POST['short_classname']."' class='submit'>";
             $content .= "<input type='hidden' name='f_name' value='".$_POST['f_name']."' class='submit'><input type='hidden' name='gtype' value='".$_POST['gtype']."' class='submit'>";
@@ -83,7 +83,7 @@ if (isset($_POST['action'])) {
                </script>";
             }
 
-            if(PluginMreportingMisc::getReportSelectors(true) == ""){
+            if(PluginMreportingCommon::getReportSelectors(true) == ""){
                 echo "No configuration for this report";
             }else{
                 echo $content;

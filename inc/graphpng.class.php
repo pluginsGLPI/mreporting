@@ -105,7 +105,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          echo "<div class='graph_desc'>".$desc."</div>";
       
          echo "<div class='graph_navigation'>";
-         PluginMreportingMisc::showSelector(
+         PluginMreportingCommon::showSelector(
             $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
          echo "</div>";
       }
@@ -999,14 +999,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $width  = $params['width'] - 70;
       $height = $params['height'] - 120;
 
-      $gsum = PluginMreportingMisc::getArraySum($datas);
+      $gsum = PluginMreportingCommon::getArraySum($datas);
 
       $index = 0;
       $x = $width / 2;
       $y = $height / 2 + 60;
       $params['depth'] = isset($params['depth']) 
          ? $params['depth'] 
-         : PluginMreportingMisc::getArrayDepth($datas);
+         : PluginMreportingCommon::getArrayDepth($datas);
       $params['start_angle'] = isset($params['start_angle']) ? $params['start_angle'] : 0;
       $params['max_angle'] = isset($params['max_angle']) ? $params['max_angle'] : 360;
       $params['level'] = isset($params['level']) ? $params['level'] : 0;
@@ -1024,7 +1024,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $params2 = array();
             $params2 = $params;
 
-            $sum = PluginMreportingMisc::getArraySum($data);
+            $sum = PluginMreportingCommon::getArraySum($data);
             $angle = ($params['max_angle'] * $sum) / $gsum;
 
             $params2['max_angle'] = $angle;

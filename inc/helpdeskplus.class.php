@@ -107,11 +107,11 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       }
       
       $this->sql_date_create 
-         = PluginMreportingMisc::getSQLDate("glpi_tickets.date", $delay, $randname);
+         = PluginMreportingCommon::getSQLDate("glpi_tickets.date", $delay, $randname);
       $this->sql_date_solve 
-         = PluginMreportingMisc::getSQLDate("glpi_tickets.solvedate", $delay, $randname);
+         = PluginMreportingCommon::getSQLDate("glpi_tickets.solvedate", $delay, $randname);
       $this->sql_date_closed 
-         = PluginMreportingMisc::getSQLDate("glpi_tickets.closedate", $delay, $randname);     
+         = PluginMreportingCommon::getSQLDate("glpi_tickets.closedate", $delay, $randname);     
 
       $sql_group_assign = "";
       if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
@@ -305,7 +305,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $$k=$v;
       }
       
-      $this->sql_date_create = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
       
       if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
          $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
@@ -387,7 +387,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $$k=$v;
       }
       
-      $this->sql_date_create = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
       
       if (!isset($_SESSION['mreporting_values']['date2'.$randname])) {
          $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
@@ -454,7 +454,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $$k=$v;
       }
       
-      $this->sql_date_create = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
       
       if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
          $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
@@ -551,7 +551,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          return array();
       }
       
-      $this->sql_date_create = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
       $sql_type    = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
       $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
 
@@ -620,7 +620,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $$k=$v;
       }
       
-      $this->sql_date_create = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
       $sql_type    = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
       $nb_ligne    = (isset($_SESSION['mreporting_values']['glpilist_limit'])) ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
       
@@ -686,7 +686,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $$k=$v;
       }
       
-      $this->sql_date_create = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
       $nb_ligne = (isset($_SESSION['mreporting_values']['glpilist_limit'])) ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
       $sql_type = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
       
@@ -744,7 +744,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
          }
       }
-      $this->sql_date_create = PluginMreportingMisc::getSQLDate("glpi_tickets.date",$delay,$randname);
+      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",$delay,$randname);
       $sql_user_assign = isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0 ? " AND tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'] : "";
       $sql_type        = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
       $sql_itilcat     = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
