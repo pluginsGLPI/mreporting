@@ -28,15 +28,9 @@
  */
  
 class PluginMreportingInventory Extends PluginMreportingBaseclass {
-   private $sql_date, $filters, $where_entities;
 
-   function __construct() {
-      global $LANG;
-      $this->where_entities = "'".implode("', '", $_SESSION['glpiactiveentities'])."'";
-   }
-   
    /*************************************Fonctions pour les indicateurs par OS*************************************/
-  function reportPieComputersByOS() {
+   function reportPieComputersByOS() {
       $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportHbarComputersByOS($configs);
    }  

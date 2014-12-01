@@ -28,11 +28,6 @@
  */
  
 class PluginMreportingOther Extends PluginMreportingBaseclass {
-   private $sql_date, $filters, $where_entities;
-
-   function __construct() {
-   }
-   
    function reportHbarLogs($configs = array()) {
       global $DB;
       

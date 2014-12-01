@@ -28,30 +28,6 @@
  */
 
 class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
-   private $sql_date, $filters, $where_entities;
-
-   function __construct() {
-      $this->filters = array(
-         'open' => array(
-            'label' => __("Opened"),
-            'status' => array(
-               CommonITILObject::INCOMING => _x('ticket', 'New'),
-               CommonITILObject::ASSIGNED => __('Processing (assigned)'),
-               CommonITILObject::PLANNED  => __('Processing (planned)'),
-               CommonITILObject::WAITING  => __('Pending')
-            )
-         ),
-         'close' => array(
-            'label' => __("Closed"),
-            'status' => array(
-               CommonITILObject::SOLVED => __("Solved"),
-               CommonITILObject::CLOSED => __("Closed")
-            )
-         )
-      );
-      $this->where_entities = "'".implode("', '", $_SESSION['glpiactiveentities'])."'";
-   }
-
    function reportPieTicketNumberByEntity() {
       $_SESSION['mreporting_selector']['reportPieTicketNumberByEntity'] 
          = array('dateinterval');
