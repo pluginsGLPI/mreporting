@@ -52,7 +52,7 @@ global $CFG_GLPI,$LANG;
       "export"     => $export,
       "opt"        => $opt);
 
-   echo  $graph->{'show'.$opt['gtype']}($params , true, 200);
+   echo  $graph->{'show'.$opt['gtype']}($params , true, 420);
    $ob = ob_get_clean();
 
    return $ob;
