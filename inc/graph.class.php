@@ -1149,6 +1149,9 @@ JAVASCRIPT;
       .textBaseline("top")
       .textAngle(Math.PI / 4)
       .text(function() { return labels2[this.index]; })
+      .font(function() {
+         return (i == this.index) ? "bold 11px sans-serif" : "";
+      })
    .anchor("bottom").add(pv.Rule)
       .height(3);
 
