@@ -132,7 +132,7 @@ global $CFG_GLPI,$LANG;
 
                 layout: 'column',
                 defaults: {
-                    style: 'margin: 10px 10px 10px 10px '
+                    //style: 'margin: 10px 10px 10px 10px '
                 },
                 tools: [{
                         id:'gear',
@@ -205,9 +205,7 @@ global $CFG_GLPI,$LANG;
                     title: '".addslashes($href)."',
                     id: '".$data['id']."',
                     html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
-                    baseCls:'glpi',
-                    maxHeight:400,
-                    width:400,
+                    baseCls:'mreportingwidget',
                     //autoLoad: {
                     //url: '".$root_ajax."',
                     //scripts: false,

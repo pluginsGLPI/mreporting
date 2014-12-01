@@ -68,13 +68,15 @@
 
 .chzn-container .chzn-drop li:nth-child(even) {background: #EEE}
 
-.glpi-header {
+.mreportingwidget-header {
     background-color: #e1d39e;
 
     padding: 10px;
 }
 
-.glpi{
+.mreportingwidget{
+    height: 441px;
+    width:461px;
     border-color: #e1d39e;
     border-style: solid;
     border-width: 1px;
