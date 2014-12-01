@@ -577,7 +577,7 @@ JAVASCRIPT;
        $width = $this->width;
        $top = 10;
        if($dashboard){
-           $height = 348;
+           $height = 346;
            $width = 400;
            $top = 5;
        }
@@ -1538,7 +1538,7 @@ JAVASCRIPT;
 
        if($dashboard){
            $height = 300;
-           $width = 340;
+           $width = 330;
        }
 
       $JS = <<<JAVASCRIPT
