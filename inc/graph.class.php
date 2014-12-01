@@ -1587,6 +1587,10 @@ JAVASCRIPT;
       .textAlign("left")
       .textMargin(5)
       .text(function(d) labels2[this.index])
+      .font(function() {
+         if (this.index == 0) return "";
+         return (i == this.index) ? "bold 11px sans-serif" : "";
+      }) 
       .visible(function() {
          if ((this.index / step) == Math.round(this.index / step)) return true;
          else return false;
