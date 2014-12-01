@@ -70,7 +70,7 @@ if (isset($_POST['action'])) {
             $content .= PluginMreportingMisc::getReportSelectors(true);
             $content .= "<input type='hidden' name='short_classname' value='".$_POST['short_classname']."' class='submit'>";
             $content .= "<input type='hidden' name='f_name' value='".$_POST['f_name']."' class='submit'><input type='hidden' name='gtype' value='".$_POST['gtype']."' class='submit'>";
-            $content .= "<input type='submit' class='button' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
+            $content .= "<br><br><input type='submit' class='submit' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
             $content .= Html::closeForm(false);
 
             if(PluginMreportingMisc::getReportSelectors(true) == ""){
