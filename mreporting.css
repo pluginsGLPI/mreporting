@@ -69,17 +69,16 @@
 .chzn-container .chzn-drop li:nth-child(even) {background: #EEE}
 
 .mreportingwidget-header {
-    background-color: #e1d39e;
-
-    padding: 10px;
+   background-color: #e1d39e;
+   padding: 10px;
 }
 
 .mreportingwidget{
-    height: 441px;
-    width:461px;
-    border-color: #e1d39e;
-    border-style: solid;
-    border-width: 1px;
+   height: 441px;
+   width:461px;
+   border-color: #e1d39e;
+   border-style: solid;
+   border-width: 1px;
 }
 
 .x-window-body {
