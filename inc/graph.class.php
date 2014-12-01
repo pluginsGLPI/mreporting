@@ -823,8 +823,8 @@ JAVASCRIPT;
          return false;
       }
 
-      $labels2 = $raw_datas['labels2'];
       $datas = $raw_datas['datas'];
+      $labels2 = $raw_datas['labels2'];
       $datas = $this->initDatasMultiple($datas, $labels2, $unit);
 
       $nb_bar = count($datas);
@@ -1044,8 +1044,8 @@ JAVASCRIPT;
       }
 
       $datas = $raw_datas['datas'];
-      $datas = $this->initDatasMultiple($datas, $labels2, $unit, true);
       $labels2 = $raw_datas['labels2'];
+      $datas = $this->initDatasMultiple($datas, $labels2, $unit, true);
 
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
@@ -1063,10 +1063,10 @@ JAVASCRIPT;
       $right = 5;
       $width = $this->width;
       if($dashboard){
-          $top = 60;
+         $top = 60;
          $height = 260;
          $width = 380;
-          $rightLabel = 18;
+         $rightLabel = 18;
       }
 
       $JS = <<<JAVASCRIPT
@@ -1514,9 +1514,7 @@ JAVASCRIPT;
       }
 
       $datas = $raw_datas['datas'];
-
       $labels2 = $raw_datas['labels2'];
-
       $datas = $this->initDatasMultiple($datas, $labels2, $unit);
 
       $always = '';
