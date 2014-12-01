@@ -818,7 +818,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    
    static function selectorBacklogstates() {
       global $LANG;
-      echo "<b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
+      echo "<br /><b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
       
       // Ouverts
       echo '<label>';
