@@ -1870,25 +1870,19 @@ JAVASCRIPT;
 
    }
 
-    /**
-     * @param int $width
-     */
-    public function setWidth($width)
-    {
-        $this->width = $width;
-    }
+   /**
+   * @param int $width
+   */
+   public function setWidth($width) {
+     $this->width = $width;
+   }
 
-    /**
-     * @return int
-     */
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-
-
-
+   /**
+   * @return int
+   */
+   public function getWidth() {
+     return $this->width;
+   }
 
 }
 
