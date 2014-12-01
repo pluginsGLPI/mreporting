@@ -232,8 +232,12 @@ class PluginMreportingGraph {
             return len;
          })
          .height(y.range().band)
-         .event("mouseover", function() { return this.parent.active(true);})
-         .event("mouseout", function()  { return this.parent.active(false);})
+         .event("mouseover", function() { 
+            return this.parent.active(true);
+         })
+         .event("mouseout", function()  { 
+            return this.parent.active(false);
+         })
          .fillStyle(function() {
             if (this.parent.active()) return colors(this.parent.parent.index).alpha(.5);
             else return colors(this.parent.parent.index);
