@@ -32,6 +32,9 @@ class PluginMreportingGraph {
    const DEBUG_GRAPH = false;
    protected $width  = 850;
 
+
+
+
    /**
     * init Graph : Show Titles / Date selector
     *
@@ -43,6 +46,7 @@ class PluginMreportingGraph {
       $width        = $this->width + 100;
       $randname     = $options['randname'];
 
+       if(!$options['showConfiguration']){
       echo "<div class='center'><div id='fig' style='width:{$width}px'>";
       //Show global title
       if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
@@ -84,12 +88,14 @@ class PluginMreportingGraph {
       if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
          $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
 
+
       echo "<div class='graph_navigation'>";
       PluginMreportingMisc::showSelector(
          $_SESSION['mreporting_values']['date1'.$randname], 
          $_SESSION['mreporting_values']['date2'.$randname],
          $randname);
       echo "</div>";
+
 
       $ex_func = explode($options['short_classname'], $options['randname']);
       if (!is_numeric($ex_func[0])) {
@@ -105,7 +111,7 @@ class PluginMreportingGraph {
             $object->needConfig($configs);
          }
       }
-
+       }
       //Script for graph display
       if ($randname !== false) {
          echo "<div class='graph' id='graph_content$randname'>";
@@ -130,8 +136,14 @@ class PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHbar($params) {
+   function showHbar($params,$dashboard = false , $width = false) {
+
       global $LANG;
+
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -152,7 +164,8 @@ class PluginMreportingGraph {
                         "randname" => $randname,
                         "delay" => $delay,
                         "export" => $export,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -163,7 +176,7 @@ class PluginMreportingGraph {
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -176,6 +189,15 @@ class PluginMreportingGraph {
 
       $always = '';
       $hover = '';
+
+      $left = 240;
+      $top = 5;
+      if($dashboard){
+         $left = 180;
+         $height = 380;
+         $this->setWidth($this->width);
+         $top = 5;
+      }
 
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
@@ -191,58 +213,58 @@ class PluginMreportingGraph {
       .width(width_hbar)
       .height(height_hbar)
       .bottom(20)
-      .left(240)
+      .left({$left})
       .right(10)
-      .top(5);
+      .top({$top});
 
    vis{$randname}.add(pv.Panel)
       .data(datas)
       .top(function() y(this.index))
       .height(y.range().band)
-   .add(pv.Panel)
-      .def("active", false)
-   .add(pv.Bar)
-      .left(0)
-      .width(function(d) {
-         var r = 360 - 20 * offset;
-         if (r < 0) r = 0;
-         var len = x(d) - r;
-         return len;
-      })
-      .height(23)
-      .event("mouseover", function() { return this.parent.active(true);})
-      .event("mouseout", function()  { return this.parent.active(false);})
-      .fillStyle(function() {
-         if (this.parent.active()) return colors(this.parent.parent.index).alpha(.5);
-         else return colors(this.parent.parent.index);
-      })
-      .strokeStyle(function() { return colors(this.parent.parent.index).darker(); })
-      .lineWidth(2)
-      .top(2)
-      .bottom(2)
-   .anchor("right").add(pv.Label)
-      .textAlign("left")
-      .text(function(d) { return  d+" {$unit}"; })
-      .textMargin(5)
-      .textBaseline("middle")
-      .textStyle(function() { return colors(this.parent.parent.index).darker(); })
-      .textShadow("0.1em 0.1em 0.1em rgba(4,4,4,.5)")
-   .parent.anchor("left").add(pv.Label)
-      .textMargin(5)
-      .textAlign("right")
-      .text(function() { return labels[this.parent.parent.index]; })
-   .root.add(pv.Rule) // axis
-      .data(x.ticks(5))
-      .left(x)
-      .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "black"; })
-      .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
-   .add(pv.Rule)
-      .bottom(0)
-      .height(height_hbar)
-      .strokeStyle(function(d) d ? "#eee" : "black")
-   .anchor("bottom").add(pv.Label)
-      .strokeStyle("black")
-      .text(x.tickFormat);
+      .add(pv.Panel)
+         .def("active", false)
+      .add(pv.Bar) // horizontal bar
+         .left(0)
+         .width(function(d) {
+            var r = 360 - 20 * offset;
+            if (r < 0) r = 0;
+            var len = x(d) - r;
+            return len;
+         })
+         .height(y.range().band)
+         .event("mouseover", function() { return this.parent.active(true);})
+         .event("mouseout", function()  { return this.parent.active(false);})
+         .fillStyle(function() {
+            if (this.parent.active()) return colors(this.parent.parent.index).alpha(.5);
+            else return colors(this.parent.parent.index);
+         })
+         .strokeStyle(function() { return colors(this.parent.parent.index).darker(); })
+         .lineWidth(2)
+         .top(2)
+         .bottom(2)
+      .anchor("right").add(pv.Label) // bar value with unit (on right)
+         .textAlign("left")
+         .text(function(d) { return  d+" {$unit}"; })
+         .textMargin(5)
+         .textBaseline("middle")
+         .textStyle(function() { return colors(this.parent.parent.index).darker(); })
+         .textShadow("0.1em 0.1em 0.1em rgba(4,4,4,.5)")
+      .parent.anchor("left").add(pv.Label) // bar label (on left )
+         .textMargin(5)
+         .textAlign("right")
+         .text(function() { return labels[this.parent.parent.index]; })
+      .root.add(pv.Rule) // axis
+         .data(x.ticks(5))
+         .left(x)
+         .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "black"; })
+         .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
+      .add(pv.Rule)
+         .bottom(0)
+         .height(height_hbar)
+         .strokeStyle(function(d) d ? "#eee" : "black")
+      .anchor("bottom").add(pv.Label) // x axis labels
+         .strokeStyle("black")
+         .text(x.tickFormat);
 
    //render in loop to animate
    var interval = setInterval(function() {
@@ -262,7 +284,13 @@ JAVASCRIPT;
                         "export" => $export,
                         "datas"  => $datas,
                         "unit"   => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
 
@@ -280,8 +308,15 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showPie($params) {
+   function showPie($params, $dashboard = false , $width = false) {
+
       global $LANG;
+
+
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -302,9 +337,12 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+                        "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
+
+
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
@@ -313,7 +351,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -328,20 +366,37 @@ JAVASCRIPT;
       }
       $always = '';
       $hover = '';
+
+       $radius = 150;
+
+       $left = 10;
+       $top = 5;
+       $right_legend = 5;
+
+       if($dashboard){
+           $height = 380;
+           $radius = 150;
+           $this->setWidth($this->width);
+           $left = 50;
+           $top = 10;
+           $right_legend = 20;
+       }
+
+
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
       $JS = <<<JAVASCRIPT
    var width_pie = {$this->width};
    var height_pie = {$height};
-   var radius = 150;
+   var radius = {$radius};
    var angle = pv.Scale.linear(0, pv.sum(datas)).range(0, 2 * Math.PI);
    var Hilighted = [false, false,false, false,false, false];
 
    var offset = 0;
 
    vis{$randname} = new pv.Panel()
-      .top(5)
-      .left(10)
+      .top({$top})
+      .left({$left})
       .bottom(5)
       .width(width_pie)
       .height(height_pie)
@@ -394,7 +449,7 @@ JAVASCRIPT;
    // legend
    vis{$randname}.add(pv.Dot)
       .data(labels)
-      .right(5)
+      .right({$right_legend})
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
          return (this.parent.o() == this.index) ? colors(this.index).alpha(.6) : colors(this.index)
@@ -423,12 +478,24 @@ JAVASCRIPT;
          echo $JS;
       }
 
+
+
+
       $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
                         "unit"   => $unit);
-      PluginMreportingCommon::endGraph($options);
+
+      PluginMreportingCommon::endGraph($options,$dashboard);
+
+
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
+
    }
 
    /**
@@ -450,9 +517,12 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showSunburst($params) {
+   function showSunburst($params,$dashboard = false , $width = false) {
       global $LANG;
-
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -472,7 +542,8 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -486,7 +557,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -502,6 +573,14 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
+       $height = 450;
+       $width = $this->width;
+       $top = 10;
+       if($dashboard){
+           $height = 380;
+           $width = 400;
+           $top = 10;
+       }
 
       $JS = <<<JAVASCRIPT
 
@@ -521,15 +600,15 @@ JAVASCRIPT;
       return node.parentNode.childNodes.length;
    }
 
-   var   width = {$this->width},
-         height = 450
+   var   width = {$width},
+         height = {$height}
          i = -1, //mouseover index
          offset = 99; // animation offset
 
    vis{$randname} = new pv.Panel()
       .width(width)
       .height(height)
-      .top(10)
+      .top({$top})
       .event("mousemove", pv.Behavior.point(Infinity));
 
    /*** Radial layout ***/
@@ -675,7 +754,13 @@ JAVASCRIPT;
                         "flip_data" => $flip_data,
                         "labels2"   => $labels2,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
    /**
@@ -692,11 +777,14 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHgbar($params) {
+   function showHgbar($params,$dashboard = false , $width = false) {
       global $LANG;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
-
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width+160);
+       }
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
@@ -714,7 +802,8 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -725,7 +814,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -743,6 +832,21 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
+
+       $left = 240;
+       $width_hgbar = $this->width;
+       $right = 160;
+       $bottomAxis = 5;
+       if($dashboard){
+           $left = 50;
+           $height = 300;
+           $this->setWidth($this->width);
+           $width_hgbar = $this->width-100;
+           $right = 50;
+           $bottomAxis = -15;
+       }
+
+
       $JS = <<<JAVASCRIPT
    var width_hgbar = {$this->width};
    var height_hgbar = {$height};
@@ -753,10 +857,10 @@ JAVASCRIPT;
    var offset = 0, index_active = -1;
 
    vis{$randname} = new pv.Panel()
-      .width(width_hgbar)
+      .width({$width_hgbar})
       .height(height_hgbar)
-      .bottom(20)
-      .left(240)
+      .bottom(40)
+      .left({$left})
       .right(10)
       .top(5);
 
@@ -767,7 +871,7 @@ JAVASCRIPT;
          .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "#000"; })
          .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
       .add(pv.Rule)
-         .bottom(0)
+         .bottom({$bottomAxis})
          .height(height_hgbar)
          .strokeStyle(function(d) d ? "#eee" : "black")
       .anchor("bottom").add(pv.Label)
@@ -834,7 +938,7 @@ JAVASCRIPT;
    // legend
    vis{$randname}.add(pv.Dot)
       .data(labels2)
-      .right(160)
+      .right({$right})
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
@@ -874,8 +978,12 @@ JAVASCRIPT;
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
-
+      PluginMreportingCommon::endGraph($options,$dashboard);
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
 
@@ -893,9 +1001,12 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showVstackbar($params) {
+   function showVstackbar($params,$dashboard = false , $width = false) {
       global $LANG;
-
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width+100);
+       }
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -915,7 +1026,8 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -926,7 +1038,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -948,11 +1060,23 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
+      $bottom = 100;
+      $rightLabel = 40;
+      $top = 5;
+      $right = 5;
+      $width = $this->width;
+      if($dashboard){
+          $top = 60;
+         $height = 260;
+         $width = 380;
+          $rightLabel = 18;
+      }
+
       $JS = <<<JAVASCRIPT
-   var w = {$this->width},
+   var w = {$width},
        h = {$height},
-       x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w-300, 4/5),
-       y = pv.Scale.linear(0, max+10).range(0, h),
+       x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w, 4/5),
+       y = pv.Scale.linear(0, 1.1 * max).range(0, h - {$nb_bar2} * 5.5),
        offset = 0, // animation
        i = -1 // mouseover index
        Hilighted = [false, false,false, false,false, false];
@@ -961,17 +1085,17 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
        .width(w)
        .height(h)
-       .bottom(100)
+       .bottom({$bottom})
        .left(50)
-       .right(5)
-       .top(5);
+       .right({$right})
+       .top({$top});
 
    /*** y-axis ticks and labels ***/
    vis{$randname}.add(pv.Rule)
        .data(y.ticks())
        .bottom(y)
        .left(function(d) d ? 0 : null)
-       .width(function(d) d ? w-200 : null)
+       .width(function(d) d ? w : null)
        .strokeStyle(function(d) d ? "#eee" : "black")
        .anchor("left").add(pv.Label)
        .text(y.tickFormat);
@@ -1031,7 +1155,7 @@ JAVASCRIPT;
    // legend
    dot{$randname} = vis{$randname}.add(pv.Dot) // legend dots
       .data(labels)
-      .right(40)
+      .right({$rightLabel})
       .top(function(d) { return (15 * $nb_bar) + (this.index * -15); })
       .fillStyle(function(d) {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
@@ -1081,7 +1205,12 @@ JAVASCRIPT;
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
    /**
     * Show a Area chart
@@ -1098,8 +1227,13 @@ JAVASCRIPT;
     * @param $area : show plain chart instead only a line (optionnal)
     * @return nothing
     */
-   function showArea($params) {
+   function showArea($params,$dashboard = false , $width = false ) {
       global $LANG;
+
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -1123,18 +1257,19 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-         $end['opt']["export"] = false;
+          $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -1145,10 +1280,23 @@ JAVASCRIPT;
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+       $height = 350;
+       $width = $this->width;
+       $bottom = 20;
+       $left = 20;
+       $right = 10;
+       if($dashboard){
+           $height = 340;
+           $width = 395;
+           $bottom = 50;
+           $left = 30;
+           $right = 50;
+       }
+
 
       $JS = <<<JAVASCRIPT
-   var width_area = {$this->width};
-   var height_area = 350;
+   var width_area = {$width};
+   var height_area = {$height};
    var offset = 0;
    var step = Math.round(n / 20);
 
@@ -1160,9 +1308,9 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
       .width(width_area)
       .height(height_area)
-      .bottom(20)
-      .left(20)
-      .right(10)
+      .bottom({$bottom})
+      .left({$left})
+      .right({$right})
       .top(5);
 
    /* Y-axis and ticks. */
@@ -1189,7 +1337,11 @@ JAVASCRIPT;
             if ((this.index / step) == Math.round(this.index / step)) return true;
             else return false;
          })
-         .text(function() { return labels[this.index]; });
+         .textAngle(Math.PI / 4)
+         .text(function() { return labels[this.index]; })
+         .textAlign("left")
+         .textMargin(5)
+         .textBaseline("top");
 
    /* add mini black lines in front of labels tick */
    vis{$randname}.add(pv.Rule)
@@ -1272,12 +1424,20 @@ JAVASCRIPT;
          echo $JS;
       }
 
+
+
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
    /**
@@ -1294,9 +1454,14 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showLine($params) {
+   function showLine($params,$dashboard = false , $width = false) {
 
-      $this->showArea($params);
+       if($dashboard){
+           return  $this->showArea($params,$dashboard  , $width);
+       }else{
+           $this->showArea($params,$dashboard  , $width);
+       }
+
    }
 
     /**
@@ -1313,9 +1478,12 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGarea($params) {
+   function showGarea($params,$dashboard = false , $width = false) {
       global $LANG;
-
+       ob_start();
+       if ($width !== false){
+           $this->setWidth($width);
+       }
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -1335,7 +1503,8 @@ JAVASCRIPT;
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+          "showConfiguration" => $dashboard);
 
       $this->initGraph($options);
 
@@ -1346,7 +1515,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end);
+         PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
       }
 
@@ -1366,8 +1535,16 @@ JAVASCRIPT;
          $height = 450;
       }
 
+
+       $width = $this->width;
+
+       if($dashboard){
+           $height = 350;
+           $width = 360;
+       }
+
       $JS = <<<JAVASCRIPT
-   var width_area = {$this->width};
+   var width_area = {$width};
    var height_area = {$height};
    var offset = 0;
    var step = Math.round(m / 20);
@@ -1382,9 +1559,9 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
       .width(width_area)
       .height(height_area)
-      .bottom(20)
+      .bottom(60)
       .left(50)
-      .right(15)
+      .right(50)
       .top(5);
 
    /* Y-ticks. */
@@ -1406,11 +1583,14 @@ JAVASCRIPT;
       .height(height_area - (n*14))
       .bottom(-5)
      .anchor("bottom").add(pv.Label)
-         .text(function(d) labels2[this.index])
-         .visible(function() {
-            if ((this.index / step) == Math.round(this.index / step)) return true;
-            else return false;
-         });
+      .textAngle(Math.PI / 4)
+      .textAlign("left")
+      .textMargin(5)
+      .text(function(d) labels2[this.index])
+      .visible(function() {
+         if ((this.index / step) == Math.round(this.index / step)) return true;
+         else return false;
+      });
 
    /* add mini black lines in front of labels tick */
    vis{$randname}.add(pv.Rule)
@@ -1477,7 +1657,8 @@ JAVASCRIPT;
             var text = labels[this.parent.index];
             if (i > -1 && {$hover}) text += " : "+d+" {$unit}"; // mouse over labels
             return text;
-         });
+         })
+         .textStyle(function() { return colors(this.parent.index).darker(); });
 
 
    /* An invisible bar to capture events (without flickering). */
@@ -1513,7 +1694,13 @@ JAVASCRIPT;
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      PluginMreportingCommon::endGraph($options,$dashboard);
+
+       if($dashboard){
+           return ob_get_clean();
+       }else{
+           echo ob_get_clean();
+       }
    }
 
    /**
@@ -1529,8 +1716,14 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGline($params) {
-      $this->showGarea($params);
+   function showGline($params,$dashboard = false , $width = false) {
+
+       if($dashboard){
+           return $this->showGarea($params,$dashboard, $width);
+       }else{
+           $this->showGarea($params,$dashboard, $width);
+       }
+
    }
 
    /**
@@ -1686,5 +1879,26 @@ JAVASCRIPT;
    function legend($datas) {
 
    }
+
+    /**
+     * @param int $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+
+
+
+
 }
 

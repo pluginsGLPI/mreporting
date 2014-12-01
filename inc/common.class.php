@@ -594,7 +594,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * @params $options ($opt, export, datas, unit, labels2, flip_data)
    */
 
-   static function endGraph($options) {
+   static function endGraph($options,$dashboard = false) {
       global $LANG, $CFG_GLPI;
 
 
@@ -634,65 +634,69 @@ class PluginMreportingCommon extends CommonDBTM {
 
          }
       }
-      $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
 
-      if ($export != "odtall") {
-         if ($randname !== false && !$export) {
+       if(!$dashboard){
+           $request_string = PluginMreportingMisc::getRequestString($_REQUEST);
 
-            $show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'],$opt['class']);
-            self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
+           if ($export != "odtall") {
+               if ($randname !== false && !$export) {
 
-         }
-         if (!$export) {
+                   $show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'],$opt['class']);
+                   self::showGraphDatas($datas, $unit, $labels2, $flip_data,$show_graph);
 
-            if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
-               echo "<div class='graph_bottom'>";
-               echo "<span style='float:left'>";
-               echo "<br><br>";
-               PluginMreportingMisc::showNavigation();
-               echo "</span>";
-               echo "<span style='float:right'>";
-               if (plugin_mreporting_haveRight('config', 'w')) {
-                  echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
-                  echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
-                     "&classname=".$opt['class']."' target='_blank'>";
-                  echo "<img src='../pics/config.png' class='title_pics'/></a>";
                }
-               if ($randname !== false) {
+               if (!$export) {
 
-                  echo "<br><br>";
-                  echo "<form method='post' action='export.php?$request_string'
+                   if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
+                       echo "<div class='graph_bottom'>";
+                       echo "<span style='float:left'>";
+                       echo "<br><br>";
+                       PluginMreportingMisc::showNavigation();
+                       echo "</span>";
+                       echo "<span style='float:right'>";
+                       if (plugin_mreporting_haveRight('config', 'w')) {
+                           echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
+                           echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
+                               "&classname=".$opt['class']."' target='_blank'>";
+                           echo "<img src='../pics/config.png' class='title_pics'/></a>";
+                       }
+                       if ($randname !== false) {
+
+                           echo "<br><br>";
+                           echo "<form method='post' action='export.php?$request_string'
                            style='margin: 0; padding: 0' target='_blank' id='export_form'>";
-                  echo "<b>".__("Export")."</b> : ";
-                  $params = array('myname'   => 'ext',
-                   'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",
-                   'class'                   => __CLASS__,
-                   'span'                    => 'show_ext',
-                   'gtype'                   => $_REQUEST['gtype'],
-                   'show_graph'              => $show_graph,
-                   'randname'                => $randname);
+                           echo "<b>".__("Export")."</b> : ";
+                           $params = array('myname'   => 'ext',
+                               'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",
+                               'class'                   => __CLASS__,
+                               'span'                    => 'show_ext',
+                               'gtype'                   => $_REQUEST['gtype'],
+                               'show_graph'              => $show_graph,
+                               'randname'                => $randname);
 
-                  self::dropdownExt($params);
+                           self::dropdownExt($params);
 
-                  echo "<span id='show_ext'>";
-                  echo "</span>";
-                  Html::Closeform();
+                           echo "<span id='show_ext'>";
+                           echo "</span>";
+                           Html::Closeform();
 
+                       }
+                       echo "</span>";
+                   }
+                   echo "<div style='clear:both;'></div>";
+                   echo "</div>";
+
+                   if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
+                       echo "</div></div>";
+                   }
                }
-               echo "</span>";
-            }
-            echo "<div style='clear:both;'></div>";
-            echo "</div>";
 
-            if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
-               echo "</div></div>";
-            }
-         }
+               if ($randname == false) {
+                   echo "</div>";
+               }
+           }
+       }
 
-         if ($randname == false) {
-            echo "</div>";
-         }
-      }
       //destroy specific palette
       unset($_SESSION['mreporting']['colors']);
       unset($_SESSION['mreporting_values']);
@@ -1482,30 +1486,21 @@ class PluginMreportingCommon extends CommonDBTM {
          $selected_groups_requester = $_SESSION['mreporting_values'][$field];
       }
 
-      echo "<b>".$label." : </b><br />";
 
+      echo "<br /><b>".$label." : </b><br />";
       echo "<select name='".$field."[]' multiple class='chzn-select' data-placeholder='-----'>";
       foreach (getAllDatasFromTable('glpi_groups', $condition) as $data) {
          $selected = "";
          if (in_array($data['id'], $selected_groups_requester)) {
             $selected = "selected ";
          }
-         echo "<option value='".$data['id']."' $selected>".$datas['completename']."</option>";
+         echo "<option value='".$data['id']."' $selected>".$data['completename']."</option>";
       }
       echo "</select>";
-   
-      if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
-         echo "<script type='text/javascript'>
-         var elements = document.querySelectorAll('.chzn-select');
-         for (var i = 0; i < elements.length; i++) {
-            new Chosen(elements[i], {});
-         }
-         </script>";
-      }
    }
 
    static function selectorForSingleGroup($field, $conditon = '', $label = '') {
-      echo "<b>".$label." : </b><br />";
+      echo "<br /><b>".$label." : </b><br />";
       if (isset($_SESSION['mreporting_values'][$field])) {
          $value = isset($_SESSION['mreporting_values'][$field]);
       } else {
@@ -1538,7 +1533,7 @@ class PluginMreportingCommon extends CommonDBTM {
    }
    
    static function selectorUserassign() {
-      echo "<b>".__("Technician in charge of the ticket")." : </b><br />";
+      echo "<br /><b>".__("Technician in charge of the ticket")." : </b><br />";
       $options = array('name'        => 'users_assign_id',
                        'entity'      => $_SESSION['glpiactive_entity'],
                        'right'       => 'own_ticket',
@@ -1564,7 +1559,7 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    static function selectorType() {
-      echo "<b>"._n("Type of ticket", "Types of ticket", 2) ." : </b><br />";
+      echo "<br /><b>"._n("Type of ticket", "Types of ticket", 2) ." : </b><br />";
       Ticket::dropdownType('type', 
                            array('value' => isset($_SESSION['mreporting_values']['type']) 
                               ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
@@ -1574,7 +1569,7 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorCategory($type = true) {
       global $CFG_GLPI;
 
-      echo "<b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
+      echo "<br /><b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
       if ($type) {
          $rand = Ticket::dropdownType('type', array('value' => isset($_SESSION['mreporting_values']['type']) ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
          $params = array('type'            => '__VALUE__',
@@ -1604,7 +1599,7 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorAllstates() {
       global $LANG;
 
-      echo "<b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
+      echo "<br><b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
       $default = array(CommonITILObject::INCOMING,
                        CommonITILObject::ASSIGNED,
                        CommonITILObject::PLANNED,
@@ -1630,19 +1625,15 @@ class PluginMreportingCommon extends CommonDBTM {
    }  
    
    static function selectorDateinterval() {
-      echo "<b>";
-
-      echo "<table><tr class=\"tab_bg_1\">";
       $randname = 'PluginMreporting'.$_REQUEST['short_classname'].$_REQUEST['f_name'];
       $date1    = $_SESSION['mreporting_values']["date1".$randname];
       $date2    = $_SESSION['mreporting_values']["date2".$randname];
-      echo "<td>";
-      echo __("Start date")."&nbsp;";
+      echo "<b>".__("Start date")."</b>";
       Html::showDateFormItem("date1".$randname, $date1, false);
       echo "</td><td>";
-      echo __("End date")."&nbsp;";
+      echo "<b>".__("End date")."</b>";
       Html::showDateFormItem("date2".$randname, $date2, false);   
-      echo "</td></tr></table>";
+      echo "</td>";
    } 
    
    static function canAccessAtLeastOneReport($profiles_id) {
