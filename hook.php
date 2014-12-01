@@ -292,7 +292,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
    return "";
 }
 
-function plugin_mreporting_addWhere($link, $nott, $type, $ID, $val, $searchtype) {
+function plugin_mreporting_addWhere($link, $nott, $type, $ID, $val) {
 
    $searchopt = &Search::getOptions($type);
    $table     = $searchopt[$ID]["table"];
