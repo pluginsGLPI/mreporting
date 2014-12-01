@@ -1486,7 +1486,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $selected_groups_requester = $_SESSION['mreporting_values'][$field];
       }
 
-      echo "<b>".$label." : </b><br />";
+      echo "<br /><b>".$label." : </b><br />";
 
       echo "<select name='".$field."[]' multiple class='chzn-select' data-placeholder='-----'>";
       foreach (getAllDatasFromTable('glpi_groups', $condition) as $data) {
@@ -1500,7 +1500,7 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    static function selectorForSingleGroup($field, $conditon = '', $label = '') {
-      echo "<b>".$label." : </b><br />";
+      echo "<br /><b>".$label." : </b><br />";
       if (isset($_SESSION['mreporting_values'][$field])) {
          $value = isset($_SESSION['mreporting_values'][$field]);
       } else {
@@ -1533,7 +1533,7 @@ class PluginMreportingCommon extends CommonDBTM {
    }
    
    static function selectorUserassign() {
-      echo "<b>".__("Technician in charge of the ticket")." : </b><br />";
+      echo "<br /><b>".__("Technician in charge of the ticket")." : </b><br />";
       $options = array('name'        => 'users_assign_id',
                        'entity'      => $_SESSION['glpiactive_entity'],
                        'right'       => 'own_ticket',
@@ -1559,7 +1559,7 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    static function selectorType() {
-      echo "<b>"._n("Type of ticket", "Types of ticket", 2) ." : </b><br />";
+      echo "<br /><b>"._n("Type of ticket", "Types of ticket", 2) ." : </b><br />";
       Ticket::dropdownType('type', 
                            array('value' => isset($_SESSION['mreporting_values']['type']) 
                               ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
@@ -1569,7 +1569,7 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorCategory($type = true) {
       global $CFG_GLPI;
 
-      echo "<b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
+      echo "<br /><b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
       if ($type) {
          $rand = Ticket::dropdownType('type', array('value' => isset($_SESSION['mreporting_values']['type']) ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
          $params = array('type'            => '__VALUE__',
@@ -1599,7 +1599,7 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorAllstates() {
       global $LANG;
 
-      echo "<b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
+      echo "<br><b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
       $default = array(CommonITILObject::INCOMING,
                        CommonITILObject::ASSIGNED,
                        CommonITILObject::PLANNED,
