@@ -193,7 +193,7 @@ class PluginMreportingGraph {
       $left = 240;
       $top = 5;
       if($dashboard){
-         $left = 200;
+         $left = 150;
          $height = 340;
          $this->setWidth($this->width-50);
          $top = 5;
@@ -378,7 +378,7 @@ JAVASCRIPT;
            $radius = 150;
            $this->setWidth($this->width);
            $left = 40;
-           $top = 30;
+           $top = 10;
            $right_legend = 50;
        }
 
@@ -577,9 +577,9 @@ JAVASCRIPT;
        $width = $this->width;
        $top = 10;
        if($dashboard){
-           $height = 300;
-           $width = 490;
-           $top = 40;
+           $height = 348;
+           $width = 400;
+           $top = 5;
        }
 
       $JS = <<<JAVASCRIPT
@@ -1535,12 +1535,10 @@ JAVASCRIPT;
 
 
        $width = $this->width;
-       $bottom = 20;
 
        if($dashboard){
            $height = 300;
-           $width = 400;
-           $bottom = 100;
+           $width = 340;
        }
 
       $JS = <<<JAVASCRIPT
@@ -1559,7 +1557,7 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
       .width(width_area)
       .height(height_area)
-      .bottom(100)
+      .bottom(60)
       .left(50)
       .right(50)
       .top(5);

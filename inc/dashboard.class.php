@@ -55,7 +55,7 @@ global $CFG_GLPI,$LANG;
 
 
 
-    echo  $graph->{'show'.$opt['gtype']}($params , true,480);
+    echo  $graph->{'show'.$opt['gtype']}($params , true,400);
 
     $ob = ob_get_clean();
 
@@ -207,8 +207,8 @@ global $CFG_GLPI,$LANG;
                     id: '".$data['id']."',
                     html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
                     baseCls:'glpi',
-                    Height: 400,
-                    width:480,
+                    maxHeight:400,
+                    width:400,
                     //autoLoad: {
                     //url: '".$root_ajax."',
                     //scripts: false,
