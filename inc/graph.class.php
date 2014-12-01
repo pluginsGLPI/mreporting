@@ -193,9 +193,9 @@ class PluginMreportingGraph {
       $left = 240;
       $top = 5;
       if($dashboard){
-         $left = 150;
-         $height = 340;
-         $this->setWidth($this->width-50);
+         $left = 180;
+         $height = 380;
+         $this->setWidth($this->width);
          $top = 5;
       }
 
@@ -374,12 +374,12 @@ JAVASCRIPT;
        $right_legend = 5;
 
        if($dashboard){
-           $height = 350;
+           $height = 380;
            $radius = 150;
            $this->setWidth($this->width);
-           $left = 40;
+           $left = 50;
            $top = 10;
-           $right_legend = 50;
+           $right_legend = 20;
        }
 
 
@@ -573,13 +573,13 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-        $height = 450;
+       $height = 450;
        $width = $this->width;
        $top = 10;
        if($dashboard){
-           $height = 346;
+           $height = 380;
            $width = 400;
-           $top = 5;
+           $top = 10;
        }
 
       $JS = <<<JAVASCRIPT
@@ -1066,8 +1066,10 @@ JAVASCRIPT;
       $right = 5;
       $width = $this->width;
       if($dashboard){
-         $height = 300;
-         $width = 400;
+          $top = 60;
+         $height = 260;
+         $width = 380;
+          $rightLabel = 18;
       }
 
       $JS = <<<JAVASCRIPT
@@ -1284,8 +1286,8 @@ JAVASCRIPT;
        $left = 20;
        $right = 10;
        if($dashboard){
-           $height = 300;
-           $width = 420;
+           $height = 340;
+           $width = 395;
            $bottom = 50;
            $left = 30;
            $right = 50;
@@ -1537,8 +1539,8 @@ JAVASCRIPT;
        $width = $this->width;
 
        if($dashboard){
-           $height = 300;
-           $width = 330;
+           $height = 350;
+           $width = 360;
        }
 
       $JS = <<<JAVASCRIPT
