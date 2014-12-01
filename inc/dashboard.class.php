@@ -95,6 +95,8 @@ global $CFG_GLPI,$LANG;
         echo "<script type='text/javascript'>";
         echo "
 
+
+
         /*Function to remove items on panel*/
             function changeColumn(){
 
@@ -140,28 +142,31 @@ global $CFG_GLPI,$LANG;
 
 
              Ext.onReady(function() {
+
+
+             window.onresize = function() {
+             Ext.getCmp('panel').doLayout(true);
+             }
+
+
                 var dash = new Ext.Panel({
                 itemId: 'panel',
                 id:'panel',
                 title: 'Dashboard',
                 baseCls:'glpi',
-                width: '".$widthDashboard."',
+                autoHeight : true,
+                autoWidth:true,
                 style: 'margin:auto',
                 renderTo : 'dashboard',
-                layout:'table',
+
+                //layout: 'column',
                 defaults: {
-                    height: 400,
-                    width: 500,
-                    style: 'margin: 10px 10px 10px 10px'
-                },
-                layoutConfig: {
-                    columns: ".$nbColumn."
+                    style: 'margin: 10px 10px 10px 10px '
                 },
                 tools: [{
                         id:'gear',
                         tooltip: 'Configure dashboard',
                         handler: function(event, toolEl,panel){
-
 
                             win = new Ext.Window({
                                 title: 'Configuration du dashboard',
@@ -169,7 +174,6 @@ global $CFG_GLPI,$LANG;
                                 html: '".substr(json_encode($this->getFormForColumn(),JSON_HEX_APOS),1,-1)."' ,
                             });
                             win.show();
-
 
                         }
                     }],
@@ -231,6 +235,8 @@ global $CFG_GLPI,$LANG;
                     id: '".$data['id']."',
                     html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
                     baseCls:'glpi',
+                    minHeight: 400,
+                    width:480,clear
                     //autoLoad: {
                     //url: '".$root_ajax."',
                     //scripts: false,
