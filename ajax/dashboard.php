@@ -67,11 +67,21 @@ if (isset($_POST['action'])) {
             $content =  "";
 
             $content .= "<form method='POST'  action='" . $_POST['target'] . "' name='form' id='mreporting_date_selector'>";
+            $content .= "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
             $content .= PluginMreportingMisc::getReportSelectors(true);
+            $content .= "</table>";
             $content .= "<input type='hidden' name='short_classname' value='".$_POST['short_classname']."' class='submit'>";
             $content .= "<input type='hidden' name='f_name' value='".$_POST['f_name']."' class='submit'><input type='hidden' name='gtype' value='".$_POST['gtype']."' class='submit'>";
             $content .= "<br><br><input type='submit' class='submit' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
             $content .= Html::closeForm(false);
+            if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
+               $content .= "<script type='text/javascript'>
+               var elements = document.querySelectorAll('.chzn-select');
+               for (var i = 0; i < elements.length; i++) {
+                  new Chosen(elements[i], {});
+               }
+               </script>";
+            }
 
             if(PluginMreportingMisc::getReportSelectors(true) == ""){
                 echo "No configuration for this report";
