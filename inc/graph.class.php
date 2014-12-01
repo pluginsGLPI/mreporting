@@ -1142,7 +1142,7 @@ JAVASCRIPT;
    // legend
    dot{$randname} = vis{$randname}.add(pv.Dot) // legend dots
       .data(labels)
-      .right(10)
+      .right(50)
       .top(function(d) { return (15 * $nb_bar) + (this.index * -15); })
       .fillStyle(function(d) {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
