@@ -1513,7 +1513,6 @@ JAVASCRIPT;
       }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-
       foreach ($configs as $k => $v) {
          $$k=$v;
       }

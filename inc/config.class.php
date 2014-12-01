@@ -790,7 +790,6 @@ class PluginMreportingConfig extends CommonDBTM {
       }
       if (DEBUG_MREPORTING == true) {
          $crit['show_graph']  = 1;
-         $crit['spline']      = 0;
       }
 
       return $crit;
