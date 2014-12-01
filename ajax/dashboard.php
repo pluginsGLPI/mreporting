@@ -82,18 +82,6 @@ if (isset($_POST['action'])) {
 
             break;
 
-        case 'changeColumn':
-
-            $nbColumn = $_POST ['column'];
-
-
-
-            PluginMreportingMisc::saveSelectors('option');
-
-
-            break;
-
-
         default:
             echo 0;
     }

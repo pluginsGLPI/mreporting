@@ -82,12 +82,6 @@ global $CFG_GLPI,$LANG;
         PluginMreportingMisc::getSelectorValuesByUser();
 
 
-        $nbColumn = 2;
-        if(isset($_SESSION['mreporting_values']['column']))
-            $nbColumn = $_SESSION['mreporting_values']['column'];
-
-
-        $widthDashboard = ($nbColumn * 400) + ($nbColumn * 120) ;
 
 
         echo "<div  id='dashboard'>";
@@ -96,28 +90,6 @@ global $CFG_GLPI,$LANG;
         echo "
 
 
-
-        /*Function to remove items on panel*/
-            function changeColumn(){
-
-                var combo = document.getElementById('dropdown_columnTableLayout');
-                var index = combo.options[combo.selectedIndex].value;
-
-                Ext.Ajax.request({
-                    url: '{$root_ajax}',
-                    params: {
-                        column: index,
-                        action: 'changeColumn'
-                    },
-                    failure: function(opt,success,respon){
-                        Ext.Msg.alert('Status', 'Ajax problem !');
-                    } ,
-                    success: function(){
-                       window.location.reload(true);
-                    }
-                });
-
-            }
 
             /*Function to remove items on panel*/
             function removeItemsType(panel,id){
@@ -159,7 +131,7 @@ global $CFG_GLPI,$LANG;
                 style: 'margin:auto',
                 renderTo : 'dashboard',
 
-                //layout: 'column',
+                layout: 'column',
                 defaults: {
                     style: 'margin: 10px 10px 10px 10px '
                 },
@@ -235,8 +207,8 @@ global $CFG_GLPI,$LANG;
                     id: '".$data['id']."',
                     html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
                     baseCls:'glpi',
-                    minHeight: 400,
-                    width:480,clear
+                    Height: 400,
+                    width:480,
                     //autoLoad: {
                     //url: '".$root_ajax."',
                     //scripts: false,
@@ -377,18 +349,6 @@ global $CFG_GLPI,$LANG;
         $content .= "</table>";
         $content .= Html::closeForm(false);
 
-
-
-
-        $content .= "<form method='POST'  action='" . $target . "' name='form' id='mreporting_date_selector'>";
-        $content .= "<table class='tab_cadre_fixe'>";
-        $content .= "<tr><th colspan='2'>".__("Select number of column")."&nbsp;:</th></tr>";
-        $content .= "<tr class='tab_bg_1'><td class='center'>";
-        $content .= Dropdown::showFromArray('columnTableLayout',array(1=>1,2=>2,3=>3,4=>4),array('value' =>$nbColumn, 'on_change' => 'changeColumn()','display'=>false,'rand' => ''));
-        $content .= "</td>";
-        $content .= "</tr>";
-        $content .= "</table>";
-        $content .= Html::closeForm(false);
 
         return $content;
 
