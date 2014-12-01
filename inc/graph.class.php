@@ -265,6 +265,9 @@ class PluginMreportingGraph {
          .text(function() { 
             return labels[this.parent.parent.index]; 
          })
+         .font(function() {
+            return (this.parent.active()) ? "bold 11px sans-serif" : "";
+         })
       .root.add(pv.Rule) // axis
          .data(x.ticks(5))
          .left(x)
