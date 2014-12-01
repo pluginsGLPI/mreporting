@@ -1591,7 +1591,6 @@ JAVASCRIPT;
       .textMargin(5)
       .text(function(d) labels2[this.index])
       .font(function() {
-         if (this.index == 0) return "";
          return (i == this.index) ? "bold 11px sans-serif" : "";
       }) 
       .visible(function() {
