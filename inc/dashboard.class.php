@@ -124,8 +124,7 @@ global $CFG_GLPI,$LANG;
                 var dash = new Ext.Panel({
                 itemId: 'panel',
                 id:'panel',
-                title: 'Dashboard',
-                baseCls:'glpi',
+                baseCls:' ',
                 autoHeight : true,
                 autoWidth:true,
                 style: 'margin:auto',
