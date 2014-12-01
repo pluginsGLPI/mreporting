@@ -82,3 +82,11 @@
     border-width: 1px;
 }
 
+.x-window-body {
+   overflow: visible !important;
+}
+
+.x-window-bwrap {
+   overflow: visible !important;
+}
+
