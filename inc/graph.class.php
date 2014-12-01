@@ -242,26 +242,38 @@ class PluginMreportingGraph {
             if (this.parent.active()) return colors(this.parent.parent.index).alpha(.5);
             else return colors(this.parent.parent.index);
          })
-         .strokeStyle(function() { return colors(this.parent.parent.index).darker(); })
+         .strokeStyle(function() { 
+            return colors(this.parent.parent.index).darker(); 
+         })
          .lineWidth(2)
          .top(2)
          .bottom(2)
       .anchor("right").add(pv.Label) // bar value with unit (on right)
          .textAlign("left")
-         .text(function(d) { return  d+" {$unit}"; })
+         .text(function(d) { 
+            return  d+" {$unit}"; 
+         })
          .textMargin(5)
          .textBaseline("middle")
-         .textStyle(function() { return colors(this.parent.parent.index).darker(); })
+         .textStyle(function() { 
+            return colors(this.parent.parent.index).darker(); 
+         })
          .textShadow("0.1em 0.1em 0.1em rgba(4,4,4,.5)")
       .parent.anchor("left").add(pv.Label) // bar label (on left )
          .textMargin(5)
          .textAlign("right")
-         .text(function() { return labels[this.parent.parent.index]; })
+         .text(function() { 
+            return labels[this.parent.parent.index]; 
+         })
       .root.add(pv.Rule) // axis
          .data(x.ticks(5))
          .left(x)
-         .strokeStyle(function(d) { return d ? "rgba(255,255,255,.3)" : "black"; })
-         .lineWidth(function() { return (this.index == 0) ? 2 : 1; })
+         .strokeStyle(function(d) { 
+            return d ? "rgba(255,255,255,.3)" : "black"; 
+         })
+         .lineWidth(function() { 
+            return (this.index == 0) ? 2 : 1; 
+         })
       .add(pv.Rule)
          .bottom(0)
          .height(height_hbar)
