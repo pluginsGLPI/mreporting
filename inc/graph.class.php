@@ -33,8 +33,6 @@ class PluginMreportingGraph {
    protected $width  = 850;
 
 
-
-
    /**
     * init Graph : Show Titles / Date selector
     *
@@ -142,10 +140,10 @@ class PluginMreportingGraph {
 
       global $LANG;
 
-       ob_start();
-       if ($width !== false){
-           $this->setWidth($width);
-       }
+      ob_start();
+      if ($width !== false){
+         $this->width = $width;
+      }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -183,7 +181,6 @@ class PluginMreportingGraph {
       }
 
       $datas = $raw_datas['datas'];
-
       $datas = $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
@@ -193,20 +190,21 @@ class PluginMreportingGraph {
       $hover = '';
 
       $left = 240;
-      $top = 5;
       if($dashboard){
          $left = 180;
-         $height = 380;
-         $this->setWidth($this->width);
-         $top = 5;
+         if ($height > 380) {
+            $height = 380;
+         }
       }
 
+      $always = '';
+      $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
       $JS = <<<JAVASCRIPT
    var width_hbar = {$this->width};
    var height_hbar = {$height};
-   var x = pv.Scale.linear(0, max).range(0, width_hbar-145);
+   var x = pv.Scale.linear(0, max).range(0, .67 * width_hbar);
    var y = pv.Scale.ordinal(pv.range(n)).splitBanded(0, height_hbar, 4/5);
 
    var offset = 0;
@@ -216,8 +214,8 @@ class PluginMreportingGraph {
       .height(height_hbar)
       .bottom(20)
       .left({$left})
-      .right(10)
-      .top({$top});
+      .right(0)
+      .top(5);
 
    vis{$randname}.add(pv.Panel)
       .data(datas)
@@ -334,10 +332,10 @@ JAVASCRIPT;
       global $LANG;
 
 
-       ob_start();
-       if ($width !== false){
-           $this->setWidth($width);
-       }
+      ob_start();
+      if ($width !== false){
+         $this->width = $width;
+      }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -386,18 +384,11 @@ JAVASCRIPT;
       $hover = '';
       $radius = 150;
       $left = 10;
-      $top = 5;
       $right_legend = 5;
 
       if($dashboard){
-         $height = 380;
-         $radius = 150;
-         $this->setWidth($this->width);
-         $left = 50;
-         $top = 10;
-         $right_legend = 20;
+         $left = 40;
       }
-
 
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
@@ -411,14 +402,14 @@ JAVASCRIPT;
    var offset = 0;
 
    vis{$randname} = new pv.Panel()
-      .top({$top})
       .left({$left})
       .bottom(5)
       .width(width_pie)
-      .height(height_pie)
+      .height(height_pie + 50)
       .def("o", -1)
       .lineWidth(0)
    vis{$randname}.add(pv.Wedge)
+         .top(210)
          .data(datas)
          .outerRadius(radius-40)
          .angle(function(d) {
@@ -529,10 +520,11 @@ JAVASCRIPT;
     */
    function showSunburst($params,$dashboard = false , $width = false) {
       global $LANG;
-       ob_start();
-       if ($width !== false){
-           $this->setWidth($width);
-       }
+      
+      ob_start();
+      if ($width !== false){
+         $this->width = $width;
+      }
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -585,10 +577,11 @@ JAVASCRIPT;
       $height = 450;
       $width = $this->width;
       $top = 10;
+      $left = 10;
       if($dashboard){
+         $top = 25;
          $height = 380;
-         $width = 400;
-         $top = 10;
+         $left = 50;
       }
 
       $JS = <<<JAVASCRIPT
@@ -618,6 +611,7 @@ JAVASCRIPT;
       .width(width)
       .height(height)
       .top({$top})
+      .left({$left})
       .event("mousemove", pv.Behavior.point(Infinity));
 
    /*** Radial layout ***/
@@ -786,10 +780,10 @@ JAVASCRIPT;
       global $LANG;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
-       ob_start();
-       if ($width !== false){
-           $this->setWidth($width+160);
-       }
+      ob_start();
+      if ($width !== false){
+         $this->width = $width;
+      }
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
@@ -835,15 +829,12 @@ JAVASCRIPT;
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
       $left = 240;
-      $width_hgbar = $this->width;
-      $right = 160;
       $bottomAxis = 5;
       if($dashboard){
-         $left = 50;
-         $height = 300;
-         $this->setWidth($this->width);
-         $width_hgbar = $this->width-100;
-         $right = 50;
+         $left = 100;
+         if ($height > 300) {
+            $height = 300;
+         }            
          $bottomAxis = -15;
       }
 
@@ -851,18 +842,18 @@ JAVASCRIPT;
       $JS = <<<JAVASCRIPT
    var width_hgbar = {$this->width};
    var height_hgbar = {$height};
-   var x = pv.Scale.linear(0, max).range(0, width_hgbar - 150);
+   var x = pv.Scale.linear(0, max).range(0, .7 * width_hgbar);
    var y = pv.Scale.ordinal(pv.range(n+1)).splitBanded(0, height_hgbar, 4/5);
    var Hilighted = [false, false,false, false,false, false];
 
    var offset = 0, index_active = -1;
 
    vis{$randname} = new pv.Panel()
-      .width({$width_hgbar})
+      .width({$this->width})
       .height(height_hgbar)
       .bottom(40)
       .left({$left})
-      .right(10)
+      .right(50)
       .top(5);
 
    // axis and tick
@@ -939,7 +930,7 @@ JAVASCRIPT;
    // legend
    vis{$randname}.add(pv.Dot)
       .data(labels2)
-      .right({$right})
+      .right(80)
       .top(function(d) { return 5 + this.index * 15; })
       .fillStyle(function() {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
@@ -1004,10 +995,11 @@ JAVASCRIPT;
     */
    function showVstackbar($params,$dashboard = false , $width = false) {
       global $LANG;
-       ob_start();
-       if ($width !== false){
-           $this->setWidth($width+100);
-       }
+
+      ob_start();
+      if ($width !== false){
+         $this->width = $width;
+      }
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -1050,29 +1042,24 @@ JAVASCRIPT;
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
 
+      $always = '';
+      $hover = '';
+      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+
       $height = 20 * $nb_bar + 50;
       if ($height < 400) {
          $height = 400;
       }
-      $always = '';
-      $hover = '';
-      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-      $bottom = 100;
-      $rightLabel = 40;
-      $top = 5;
-      $right = 5;
       $width = $this->width;
       if($dashboard){
-         $top = 60;
-         $height = 260;
-         $width = 380;
-         $rightLabel = 18;
+         $height = 250;
       }
+
 
       $JS = <<<JAVASCRIPT
    var w = {$width},
        h = {$height},
-       x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, w, 4/5),
+       x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, .8 * w, 4/5),
        y = pv.Scale.linear(0, 1.1 * max).range(0, h - {$nb_bar2} * 5.5),
        offset = 0, // animation
        i = -1 // mouseover index
@@ -1082,20 +1069,20 @@ JAVASCRIPT;
    vis{$randname} = new pv.Panel()
        .width(w)
        .height(h)
-       .bottom({$bottom})
+       .bottom(150)
        .left(50)
-       .right({$right})
-       .top({$top});
+       .right(50)
+       .top(5);
 
    /*** y-axis ticks and labels ***/
    vis{$randname}.add(pv.Rule)
-       .data(y.ticks())
-       .bottom(y)
-       .left(function(d) d ? 0 : null)
-       .width(function(d) d ? w : null)
-       .strokeStyle(function(d) d ? "#eee" : "black")
-       .anchor("left").add(pv.Label)
-       .text(y.tickFormat);
+      .data(y.ticks())
+      .bottom(y)
+      .left(function(d) d ? 0 : null)
+      .width(function(d) d ? w : null)
+      .strokeStyle(function(d) d ? "#eee" : "black")
+      .anchor("left").add(pv.Label)
+        .text(y.tickFormat);
 
    /*** stacks of bar ***/
    var stack{$randname} = vis{$randname}.add(pv.Layout.Stack)
@@ -1155,7 +1142,7 @@ JAVASCRIPT;
    // legend
    dot{$randname} = vis{$randname}.add(pv.Dot) // legend dots
       .data(labels)
-      .right({$rightLabel})
+      .right(10)
       .top(function(d) { return (15 * $nb_bar) + (this.index * -15); })
       .fillStyle(function(d) {
          return Hilighted[this.index]? colors(this.index).alpha(.6) : colors(this.index);
@@ -1230,10 +1217,10 @@ JAVASCRIPT;
    function showArea($params,$dashboard = false , $width = false ) {
       global $LANG;
 
-       ob_start();
-       if ($width !== false){
-           $this->setWidth($width);
-       }
+      ob_start();
+      if ($width !== false){
+         $this->width = $width;
+      }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -1475,10 +1462,10 @@ JAVASCRIPT;
     */
    function showGarea($params,$dashboard = false , $width = false) {
       global $LANG;
-       ob_start();
-       if ($width !== false){
-           $this->setWidth($width);
-       }
+      ob_start();
+      if ($width !== false){
+         $this->width = $width;
+      }
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -1869,20 +1856,5 @@ JAVASCRIPT;
    function legend($datas) {
 
    }
-
-   /**
-   * @param int $width
-   */
-   public function setWidth($width) {
-     $this->width = $width;
-   }
-
-   /**
-   * @return int
-   */
-   public function getWidth() {
-     return $this->width;
-   }
-
 }
 
