@@ -46,72 +46,74 @@ class PluginMreportingGraph {
       $width        = $this->width + 100;
       $randname     = $options['randname'];
 
-       if(!$options['showConfiguration']){
-      echo "<div class='center'><div id='fig' style='width:{$width}px'>";
-      //Show global title
-      if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
+      if(!$options['showConfiguration']){
+         echo "<div class='center'><div id='fig' style='width:{$width}px'>";
+         //Show global title
+         if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
+            echo "<div class='graph_title'>";
+            echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+            echo "</div>";
+         }
+         //Show graph title
          echo "<div class='graph_title'>";
-         echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+         $backtrace = debug_backtrace();
+         $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
+
+         echo "<img src='".$CFG_GLPI['root_doc']."/plugins/mreporting/pics/chart-$prev_function.png' class='title_pics' />";
+         echo $options['title'];
          echo "</div>";
-      }
-      //Show graph title
-      echo "<div class='graph_title'>";
-      $backtrace = debug_backtrace();
-      $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
 
-      echo "<img src='".$CFG_GLPI['root_doc']."/plugins/mreporting/pics/chart-$prev_function.png' class='title_pics' />";
-      echo $options['title'];
-      echo "</div>";
-
-      $desc = '';
-      if (!empty($options['desc'])) {
-         $desc =$options['desc'];
-      }
-      if (!empty($options['desc'])
-            && isset($_SESSION['mreporting_values']['date1'.$randname])
+         $desc = '';
+         if (!empty($options['desc'])) {
+            $desc =$options['desc'];
+         }
+         if (!empty($options['desc'])
+               && isset($_SESSION['mreporting_values']['date1'.$randname])
+                  && isset($_SESSION['mreporting_values']['date1'.$randname])) {
+            $desc.= " - ";
+         }
+         if (isset($_SESSION['mreporting_values']['date1'.$randname])
                && isset($_SESSION['mreporting_values']['date1'.$randname])) {
-         $desc.= " - ";
-      }
-      if (isset($_SESSION['mreporting_values']['date1'.$randname])
-            && isset($_SESSION['mreporting_values']['date1'.$randname])) {
-         $desc.= Html::convdate($_SESSION['mreporting_values']['date1'.$randname])." / ".
-            Html::convdate($_SESSION['mreporting_values']['date2'.$randname]);
-      }
-      echo "<div class='graph_desc'>".$desc."</div>";
+            $desc.= Html::convdate($_SESSION['mreporting_values']['date1'.$randname])." / ".
+               Html::convdate($_SESSION['mreporting_values']['date2'.$randname]);
+         }
+         echo "<div class='graph_desc'>".$desc."</div>";
 
-      //Show date selector
-      //using rand for display x graphs on same page
+         //Show date selector
+         //using rand for display x graphs on same page
 
-      if (!isset($_SESSION['mreporting_values']['date1'.$randname]))
-            $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d",
-               time() - ($options['delay'] * 24 * 60 * 60));
-      if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
-         $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
+         if (!isset($_SESSION['mreporting_values']['date1'.$randname])) {
+               $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d",
+                  time() - ($options['delay'] * 24 * 60 * 60));
+         }
+         if (!isset($_SESSION['mreporting_values']['date2'.$randname])) {
+            $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
+         }
 
-
-      echo "<div class='graph_navigation'>";
-      PluginMreportingCommon::showSelector(
-         $_SESSION['mreporting_values']['date1'.$randname], 
-         $_SESSION['mreporting_values']['date2'.$randname],
-         $randname);
-      echo "</div>";
+         echo "<div class='graph_navigation'>";
+         PluginMreportingCommon::showSelector(
+            $_SESSION['mreporting_values']['date1'.$randname], 
+            $_SESSION['mreporting_values']['date2'.$randname],
+            $randname);
+         echo "</div>";
 
 
-      $ex_func = explode($options['short_classname'], $options['randname']);
-      if (!is_numeric($ex_func[0])) {
-         $classname = $ex_func[0].$options['short_classname'];
-         $functionname = $ex_func[1];
+         $ex_func = explode($options['short_classname'], $options['randname']);
+         if (!is_numeric($ex_func[0])) {
+            $classname = $ex_func[0].$options['short_classname'];
+            $functionname = $ex_func[1];
 
-         // We check if a configuration is needed for the graph
-         if (method_exists(new $classname(), 'needConfig')) {
+            // We check if a configuration is needed for the graph
+            if (method_exists(new $classname(), 'needConfig')) {
 
-            $configs = PluginMreportingConfig::initConfigParams($functionname, $classname);
+               $configs = PluginMreportingConfig::initConfigParams($functionname, $classname);
 
-            $object = new $classname();
-            $object->needConfig($configs);
+               $object = new $classname();
+               $object->needConfig($configs);
+            }
          }
       }
-       }
+
       //Script for graph display
       if ($randname !== false) {
          echo "<div class='graph' id='graph_content$randname'>";
@@ -305,11 +307,11 @@ JAVASCRIPT;
                         "unit"   => $unit);
       PluginMreportingCommon::endGraph($options,$dashboard);
 
-       if($dashboard){
-           return ob_get_clean();
-       }else{
-           echo ob_get_clean();
-       }
+      if ($dashboard) {
+         return ob_get_clean();
+      } else {
+         echo ob_get_clean();
+      }
    }
 
 
@@ -361,8 +363,6 @@ JAVASCRIPT;
 
       $this->initGraph($options);
 
-
-
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
@@ -375,7 +375,6 @@ JAVASCRIPT;
       }
 
       $datas = $raw_datas['datas'];
-
       $datas = $this->initDatasSimple($datas, $unit);
 
       $nb_bar = count($datas);
@@ -385,21 +384,19 @@ JAVASCRIPT;
       }
       $always = '';
       $hover = '';
+      $radius = 150;
+      $left = 10;
+      $top = 5;
+      $right_legend = 5;
 
-       $radius = 150;
-
-       $left = 10;
-       $top = 5;
-       $right_legend = 5;
-
-       if($dashboard){
-           $height = 380;
-           $radius = 150;
-           $this->setWidth($this->width);
-           $left = 50;
-           $top = 10;
-           $right_legend = 20;
-       }
+      if($dashboard){
+         $height = 380;
+         $radius = 150;
+         $this->setWidth($this->width);
+         $left = 50;
+         $top = 10;
+         $right_legend = 20;
+      }
 
 
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
@@ -497,9 +494,6 @@ JAVASCRIPT;
          echo $JS;
       }
 
-
-
-
       $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
@@ -507,14 +501,11 @@ JAVASCRIPT;
                         "unit"   => $unit);
 
       PluginMreportingCommon::endGraph($options,$dashboard);
-
-
-       if($dashboard){
-           return ob_get_clean();
-       }else{
-           echo ob_get_clean();
-       }
-
+      if ($dashboard) {
+         return ob_get_clean();
+      } else {
+         echo ob_get_clean();
+      }
    }
 
    /**
@@ -591,15 +582,14 @@ JAVASCRIPT;
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-
-       $height = 450;
-       $width = $this->width;
-       $top = 10;
-       if($dashboard){
-           $height = 380;
-           $width = 400;
-           $top = 10;
-       }
+      $height = 450;
+      $width = $this->width;
+      $top = 10;
+      if($dashboard){
+         $height = 380;
+         $width = 400;
+         $top = 10;
+      }
 
       $JS = <<<JAVASCRIPT
 
@@ -756,10 +746,6 @@ JAVASCRIPT;
       //limit loop
       if (offset > 100) clearInterval(interval);
    }, 20);
-
-
-
-
 JAVASCRIPT;
 
       if ($show_graph) {
@@ -775,11 +761,11 @@ JAVASCRIPT;
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options,$dashboard);
 
-       if($dashboard){
-           return ob_get_clean();
-       }else{
-           echo ob_get_clean();
-       }
+      if ($dashboard) {
+         return ob_get_clean();
+      } else {
+         echo ob_get_clean();
+      }
    }
 
    /**
@@ -837,10 +823,8 @@ JAVASCRIPT;
          return false;
       }
 
-      $datas = $raw_datas['datas'];
-
       $labels2 = $raw_datas['labels2'];
-
+      $datas = $raw_datas['datas'];
       $datas = $this->initDatasMultiple($datas, $labels2, $unit);
 
       $nb_bar = count($datas);
@@ -850,20 +834,18 @@ JAVASCRIPT;
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-
-
-       $left = 240;
-       $width_hgbar = $this->width;
-       $right = 160;
-       $bottomAxis = 5;
-       if($dashboard){
-           $left = 50;
-           $height = 300;
-           $this->setWidth($this->width);
-           $width_hgbar = $this->width-100;
-           $right = 50;
-           $bottomAxis = -15;
-       }
+      $left = 240;
+      $width_hgbar = $this->width;
+      $right = 160;
+      $bottomAxis = 5;
+      if($dashboard){
+         $left = 50;
+         $height = 300;
+         $this->setWidth($this->width);
+         $width_hgbar = $this->width-100;
+         $right = 50;
+         $bottomAxis = -15;
+      }
 
 
       $JS = <<<JAVASCRIPT
@@ -998,11 +980,11 @@ JAVASCRIPT;
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options,$dashboard);
-       if($dashboard){
-           return ob_get_clean();
-       }else{
-           echo ob_get_clean();
-       }
+      if ($dashboard) {
+         return ob_get_clean();
+      } else {
+         echo ob_get_clean();
+      }
    }
 
 
@@ -1062,10 +1044,8 @@ JAVASCRIPT;
       }
 
       $datas = $raw_datas['datas'];
-
-      $labels2 = $raw_datas['labels2'];
-
       $datas = $this->initDatasMultiple($datas, $labels2, $unit, true);
+      $labels2 = $raw_datas['labels2'];
 
       $nb_bar = count($datas);
       $nb_bar2 = count($labels2);
@@ -1074,11 +1054,9 @@ JAVASCRIPT;
       if ($height < 400) {
          $height = 400;
       }
-
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-
       $bottom = 100;
       $rightLabel = 40;
       $top = 5;
@@ -1228,11 +1206,11 @@ JAVASCRIPT;
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options,$dashboard);
-       if($dashboard){
-           return ob_get_clean();
-       }else{
-           echo ob_get_clean();
-       }
+      if ($dashboard) {
+         return ob_get_clean();
+      } else {
+         echo ob_get_clean();
+      }
    }
    /**
     * Show a Area chart
@@ -1287,7 +1265,7 @@ JAVASCRIPT;
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
          echo $LANG['plugin_mreporting']["error"][1];
-          $end['opt']["export"] = false;
+         $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
@@ -1302,19 +1280,18 @@ JAVASCRIPT;
       $always = '';
       $hover = '';
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-       $height = 350;
-       $width = $this->width;
-       $bottom = 20;
-       $left = 20;
-       $right = 10;
-       if($dashboard){
-           $height = 340;
-           $width = 395;
-           $bottom = 50;
-           $left = 30;
-           $right = 50;
-       }
-
+      $height = 350;
+      $width = $this->width;
+      $bottom = 20;
+      $left = 20;
+      $right = 10;
+      if($dashboard){
+         $height = 340;
+         $width = 395;
+         $bottom = 50;
+         $left = 30;
+         $right = 50;
+      }
 
       $JS = <<<JAVASCRIPT
    var width_area = {$width};
@@ -1446,8 +1423,6 @@ JAVASCRIPT;
          echo $JS;
       }
 
-
-
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
@@ -1455,11 +1430,11 @@ JAVASCRIPT;
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options,$dashboard);
 
-       if($dashboard){
-           return ob_get_clean();
-       }else{
-           echo ob_get_clean();
-       }
+      if ($dashboard) {
+         return ob_get_clean();
+      } else {
+         echo ob_get_clean();
+      }
    }
 
    /**
@@ -1477,13 +1452,11 @@ JAVASCRIPT;
     * @return nothing
     */
    function showLine($params,$dashboard = false , $width = false) {
-
-       if($dashboard){
-           return  $this->showArea($params,$dashboard  , $width);
-       }else{
-           $this->showArea($params,$dashboard  , $width);
-       }
-
+      if ($dashboard) {
+         return  $this->showArea($params,$dashboard  , $width);
+      } else {
+         $this->showArea($params,$dashboard  , $width);
+      }
    }
 
     /**
@@ -1555,14 +1528,11 @@ JAVASCRIPT;
       if ($height < 450) {
          $height = 450;
       }
-
-
-       $width = $this->width;
-
-       if($dashboard){
-           $height = 350;
-           $width = 360;
-       }
+      $width = $this->width;
+      if($dashboard){
+        $height = 350;
+        $width = 360;
+      }
 
       $JS = <<<JAVASCRIPT
    var width_area = {$width};
@@ -1720,11 +1690,11 @@ JAVASCRIPT;
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options,$dashboard);
 
-       if($dashboard){
-           return ob_get_clean();
-       }else{
-           echo ob_get_clean();
-       }
+      if ($dashboard) {
+         return ob_get_clean();
+      } else {
+         echo ob_get_clean();
+      }
    }
 
    /**
@@ -1741,13 +1711,11 @@ JAVASCRIPT;
     * @return nothing
     */
    function showGline($params,$dashboard = false , $width = false) {
-
-       if($dashboard){
-           return $this->showGarea($params,$dashboard, $width);
-       }else{
-           $this->showGarea($params,$dashboard, $width);
-       }
-
+      if ($dashboard) {
+         return $this->showGarea($params,$dashboard, $width);
+      } else {
+         $this->showGarea($params,$dashboard, $width);
+      }
    }
 
    /**
