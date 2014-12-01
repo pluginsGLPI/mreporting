@@ -71,6 +71,7 @@
 .mreportingwidget-header {
    background-color: #e1d39e;
    padding: 10px;
+   border-right: 1px dashed white;
 }
 
 .mreportingwidget {
