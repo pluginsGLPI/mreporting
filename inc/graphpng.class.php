@@ -2032,26 +2032,24 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $nb = count($labels2);
       $width = $this->width;
 
-      $nb_bar = count($datas);
-      if($nb_bar > 1)
-         $percent = 2*(450+18 * $nb_bar)/(18 * $nb_bar * 100);
-      else $percent = 0.20;
-      $height = ($percent*450) + 18* $nb_bar ;
+      $nb_bar = count($labels2);
+      $nb_labels2 = count($datas);
 
-      $delta = 450 - $height;
-      $height_tot = 450 + $height;
-      $width_line = ($width - 45) / $nb;
+      $width_line = ($this->width - 45) / $nb;
       $index1 = 0;
       $index3 = 1;
-      $step = ceil($nb / 20);
-
+      $step = ceil($nb / 21);
+      $height = 450;
       if($dashboard){
         $height = 350;
-        $height_tot = 400;
       }
+      $y_labels_width = .1 * $this->width;
+      $x_labels_height = 60;
+      $x_bar = 30;
+      $legend_height = $nb_labels2 * 15 + 20;
    
       //create image
-      $image = imagecreatetruecolor ($width, $height_tot);
+      $image = imagecreatetruecolor ($width, $height);
       
       if ($show_graph) {
          //colors
@@ -2061,20 +2059,20 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //background
          $bg_color = $this->white;
-         imagefilledrectangle($image, 0, 0, $width - 1, $height_tot - 1, $bg_color);
+         imagefilledrectangle($image, 0, 0, $width - 1, $height, $bg_color);
 
          //draw x-axis grey step line and value ticks 
-         $xstep = round(($height +$delta+40) / 13);
-         for ($i = 0; $i< 13; $i++) {
-            $yaxis = $height_tot - 30 - $xstep * $i ;
+         $xstep = round(($height - $legend_height - $x_labels_height) / 12);
+         for ($i = 0; $i< 12; $i++) {
+            $yaxis = $height - $x_labels_height - $xstep * $i ;
 
             //horizontal grey lines
-            imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $this->grey);
+            imageLine($image, $x_bar, $yaxis, $x_bar+$width_line*($nb-1), $yaxis, $this->grey);
 
             //value ticks
-            if($i * $max / 12 < 10)
+            if($i * $max / 12 < 10) {
                $val = round($i * $max / 12, 1);
-            else $val = round($i * $max / 12);
+            } else $val = round($i * $max / 12);
             
             $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$val);
             $textwidth = abs($box[4] - $box[0]);
@@ -2085,15 +2083,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //draw y-axis vertical grey step line
          for ($i = 0; $i< $nb; $i++) {
-            $xaxis = 30 + $width_line * $i;
-            imageLine($image, $xaxis, $height-40, $xaxis, $height_tot, $this->grey);
+            $xaxis = $x_bar + $width_line * $i;
+            imageLine($image, $xaxis, $height-$x_labels_height, $xaxis, $legend_height, $this->grey);
          }
 
          //draw y-axis
-         imageLine($image, 30, $height-40, 30, $height_tot-25, $this->black);
+         imageLine($image, $x_bar, $height - $x_labels_height, $x_bar, $legend_height, $this->black);
 
          //draw y-axis
-         imageLine($image, 30, $height_tot-30, $width - 50, $height_tot-30, $this->black);
+         imageLine($image, $x_bar, $height - $x_labels_height,  $width - 50, $height - $x_labels_height, $this->black);
 
          //create border on export
          if ($export) {
@@ -2125,18 +2123,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                }
 
                // determine coords
-               $x1 = $index2 * $width_line - $width_line + 30;
-               $y1 = $height_tot - 30 - $old_data * ($height_tot - $height) / $max;
+               $x1 = $index2 * $width_line - $width_line + $x_bar;
+               $y1 = $height - $x_labels_height - $old_data * ($height - $legend_height - $x_labels_height) / $max;
                $x2 = $x1 + $width_line;
-               $y2 = $height_tot - 30 - $subdata * ($height_tot - $height) / $max;
+               $y2 = $height - $x_labels_height - $subdata * ($height - $legend_height - $x_labels_height) / $max;
 
                //in case of area chart fill under point space
                if ($area > 0) {
                   $points = array(
                      $x1, $y1,
                      $x2, $y2,
-                     $x2, $height_tot - 30,
-                     $x1, $height_tot - 30
+                     $x2, $height - $x_labels_height,
+                     $x1, $height - $x_labels_height
                   );
                   imagefilledpolygon($image, $points , 4,  $alphapalette[$index1]);
                }
@@ -2144,46 +2142,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                //trace lines between points (if linear)
                if (!$spline)
                   $this->imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $palette[$index1]);
-               $aCoords[$x1]=$y1;            
-
-               $old_data = $subdata;
-               $index2++;
-               $index3++;
-            }
-
-            //if curved spline activated, draw cubic spline for the current line
-            if ($spline) {
-               $aCoords[$x2] = $y2;
-               $this->imageCubicSmoothLine($image, $palette[$index1], $aCoords);
-
-               $index2 = 0;
-               $old_data = 0;
-               $old_label = "";
-            }
-
-            //draw labels and dots
-            $index2 = 0;
-            $old_data = 0;
-            foreach ($data as $subdata) {
-               //if first index, continue
-               if ($index2 == 0) {
-                  $old_data = $subdata;
-                  $old_label = $label;
-                  $index2++;
-                  continue;
-               }
-
-               // determine coords
-               $x1 = $index2 * $width_line - $width_line + 30;
-               $y1 = $height_tot - 30 - $old_data * ($height_tot - $height) / $max;
-               $x2 = $x1 + $width_line;
-               $y2 = $height_tot - 30 - $subdata * ($height_tot - $height) / $max;
+               $aCoords[$x1]=$y1;     
 
                //trace dots
                $color_rbg = self::colorHexToRGB($darkerpalette[$index1]);
                imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
-               imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
-
+               imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);  
 
                //display values label
                if($show_label == "always" || $show_label == "hover") {
@@ -2194,16 +2158,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
                //show x-axis ticks
                if ($step!=0 && ($index3 / $step) == round($index3 / $step)) {
-                  imageline($image, $x1, $height_tot-30, $x1, $height_tot-27, $darkerpalette[$index1]);
-               }
+                  imageline($image, $x1, $height-$x_labels_height, $x1, 
+                            $height-$x_labels_height+3, $darkerpalette[$index1]);
+               }    
 
                $old_data = $subdata;
-               $old_label = $label;
                $index2++;
                $index3++;
             }
 
-            /*** display last value ***/
+            //if curved spline activated, draw cubic spline for the current line
+            if ($spline) {
+               $aCoords[$x2] = $y2;
+               $this->imageCubicSmoothLine($image, $palette[$index1], $aCoords);
+            }
+
+            // display last value
             if (isset($x2)) {
                //trace dots
                $color_rbg = self::colorHexToRGB($darkerpalette[$index1]);
@@ -2217,7 +2187,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                      $darkerpalette[$index1], $this->font, $old_data);
                }
             }
-            /*** end display last value ***/
 
             $index1++;
          }
@@ -2225,10 +2194,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //display labels2
          $index = 0;
          foreach ($labels2 as $label) {
-            $x = $index * $width_line + 20;
+            $x = $x_bar + $index * $width_line - 2 ;
 
             if ($step!=0 && ($index / $step) == round($index / $step)) {
-               imagettftext($image, $this->fontsize-1, $this->fontangle, $x , $height_tot-10, 
+               imagettftext($image, $this->fontsize-1, -45, $x , $height - $x_labels_height + 11, 
                   $this->black, $this->font, $label);
             }
 
@@ -2243,11 +2212,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext($image, $this->fontsize-1, $this->fontangle, 
-               20, 35 + $index * 14 , $this->black, $this->font, $label);
+               20, 15 + $index * 14 , $this->black, $this->font, $label);
 
             //legend circle
             $color_rbg = self::colorHexToRGB($palette[$index]);
-            imageSmoothArc($image, 10, 30 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
+            imageSmoothArc($image, 10, 10 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
 
             $index++;
          }
