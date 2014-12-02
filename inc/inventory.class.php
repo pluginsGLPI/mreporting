@@ -30,22 +30,12 @@
 class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
    /*************************************Fonctions pour les indicateurs par OS*************************************/
-   function reportPieComputersByOS() {
-      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportHbarComputersByOS($configs);
+   function reportPieComputersByOS($config = array()) {
+      return $this->reportHbarComputersByOS($config);
    }  
 
-  function reportHbarComputersByOS($configs = array()) {
+  function reportHbarComputersByOS($config = array()) {
       global $DB, $LANG;
-      
-      /*Must be defined*/
-      if (count($configs) == 0) {
-         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
-      /*End Must be defined*/
       
       /*Ajout d'une condition englobant les entités*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
@@ -92,22 +82,12 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    
    
    /*************************************Fonctions pour les indicateurs par fabricant*************************************/
-   function reportPieComputersByFabricant() {
-      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportHbarComputersByFabricant($configs);
+   function reportPieComputersByFabricant($config = array()) {
+      return $this->reportHbarComputersByFabricant($config);
    } 
    
-   function reportHbarComputersByFabricant($configs = array()) {
+   function reportHbarComputersByFabricant($config = array()) {
       global $DB, $LANG;
-      
-      /*Must be defined*/
-      if (count($configs) == 0) {
-         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
-      /*End Must be defined*/
       
       /*Ajout d'une condition englobant les entités*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
@@ -143,23 +123,13 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
    
    /*************************************Fonctions pour les indicateurs par type*************************************/
-  function reportPieComputersByType() {
-      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportHbarComputersByType($configs);
+  function reportPieComputersByType($config = array()) {
+      return $this->reportHbarComputersByType($config);
    }  
 
-  function reportHbarComputersByType($configs = array()) {
+  function reportHbarComputersByType($config = array()) {
       global $DB, $LANG;
       
-      /*Must be defined*/
-      if (count($configs) == 0) {
-         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
-      /*End Must be defined*/
-
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -186,22 +156,13 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
    
    /*************************************Fonctions pour les indicateurs par âge*************************************/
-  function reportPieComputersByAge() {
-      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportHbarComputersByAge($configs);
+  function reportPieComputersByAge($config = array()) {
+      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      return $this->reportHbarComputersByAge($config);
    }  
 
-  function reportHbarComputersByAge($configs = array()) {
+  function reportHbarComputersByAge($config = array()) {
       global $DB, $LANG;
-      
-      /*Must be defined*/
-      if (count($configs) == 0) {
-         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
-      /*End Must be defined*/
       
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
@@ -276,17 +237,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
 
   
-  function reportHbarWindows($configs = array()) {
+  function reportHbarWindows($config = array()) {
       global $DB, $LANG;
 
-      /*Must be defined*/
-      if (count($configs) == 0) {
-         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
-      /*End Must be defined*/
       $condition = " AND entities_id IN (".$this->where_entities.")";
 
       $data = array();
@@ -314,16 +267,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $data;
   }
 
-  function reportHbarLinux($configs = array()) {
+  function reportHbarLinux($config = array()) {
       global $DB, $LANG;
 
-      if (count($configs) == 0) {
-         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
-      
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%'") as $os) {
          $number = countElementsInTable('glpi_computers', 
@@ -349,22 +295,13 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $data;
   }
 
-  function reportHbarFusionInventory($configs = array()) {
+  function reportHbarFusionInventory($config = array()) {
       global $DB, $LANG;
 
       $plugin = new Plugin();
       if (!$plugin->isActivated('fusioninventory')) {
          return array();
       }
-      
-      /*Must be defined*/
-      if (count($configs) == 0) {
-         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
-      /*End Must be defined*/
       
       $condition = " AND entities_id IN (".$this->where_entities.")";
 
@@ -391,22 +328,12 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $data;
   }
   
-  function reportPieFusionInventory() {
-      $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportHbarFusionInventory($configs);
+  function reportPieFusionInventory($config = array()) {
+      return $this->reportHbarFusionInventory($config);
    }  
 
-  function reportHbarMonitors($configs = array()) {
+  function reportHbarMonitors($config = array()) {
       global $DB, $LANG;
-
-      /*Must be defined*/
-      if (count($configs) == 0) {
-         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
-      /*End Must be defined*/
 
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
 

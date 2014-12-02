@@ -31,18 +31,13 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
    function reportHbarLogs($configs = array()) {
       global $DB;
       
-      /*Must be defined*/
-      if (count($configs) == 0) {
-         $configs = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+      if (count($config) == 0) {
+         $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       }
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
-      /*End Must be defined*/
       
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`", 
-         $delay, $randname);
+         $config['delay'], $config['randname']);
       
       $prefix = "SELECT count(*) as cpt FROM `glpi_logs` WHERE ";
       //Add/remove a software on a computer
