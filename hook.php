@@ -188,7 +188,7 @@ function plugin_mreporting_uninstall() {
                    "glpi_plugin_mreporting_configs",
                    "glpi_plugin_mreporting_preferences",
                    "glpi_plugin_mreporting_notifications",
-                   "DROP TABLE IF EXISTS glpi_plugin_mreporting_dashboards"
+                   "glpi_plugin_mreporting_dashboards"
    );
 
    foreach($tables as $table) {
