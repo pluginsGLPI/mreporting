@@ -264,22 +264,7 @@ class PluginMreportingDashboard extends CommonDBTM {
          $nbColumn = $_SESSION['mreporting_values']['column'];
       }
 
-      $reports = "SELECT `glpi_plugin_mreporting_configs`.`id` , `glpi_plugin_mreporting_configs`.`name`
-                     FROM `glpi_plugin_mreporting_configs`,`glpi_plugin_mreporting_profiles`
-                  WHERE `glpi_plugin_mreporting_configs`.`id` = `glpi_plugin_mreporting_profiles`.`reports`
-                  AND `glpi_plugin_mreporting_profiles`.`right` = 'r'
-                  AND `glpi_plugin_mreporting_profiles`.`profiles_id` = ".$_SESSION['glpiactiveprofile']['id'];
-
-      $items = array();
-      foreach($DB->request($reports) as $report){
-         $tmp[] = 
-         $config = new PluginMreportingConfig();
-         $config->getFromDB($report['id']);
-
-         $index = str_replace('PluginMreporting', '', $config->fields['classname']);
-         $icon = PluginMreportingCommon::getIcon($report['name']);
-         $items[$report['id']] = "$icon&nbsp;".$LANG['plugin_mreporting'][$index][$report['name']]['title'];         
-      }
+      
 
       $target = $this->getFormURL();
       if (isset($options['target'])) {
@@ -291,7 +276,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       $content .= "<table class='tab_cadre_fixe'>";
       $content .= "<tr><th colspan='2'>".__("Select statistics to be added to dashboard")."&nbsp;:</th></tr>";
       $content .= "<tr class='tab_bg_1'><td class='center'>";
-      $content .= Dropdown::showFromArray('report', $items, array('rand' => '', 'display' => false));
+      $content .= PluginMreportingCommon::getSelectAllReports();
       $content .= "</td>";
       $content .= "<td>";
       $content .= "<input type='submit' name='addReports' value='add report to dashboard' class='submit' >";

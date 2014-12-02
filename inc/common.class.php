@@ -147,67 +147,59 @@ class PluginMreportingCommon extends CommonDBTM {
     *
     * @param array $opt : short_classname,f_name,gtype,rand
    */
-
    static function title($opt) {
-      global $LANG;
-
-      $self = new self();
-
-      $params['classname'] = 'PluginMreporting'.$opt['short_classname'];
-      $reports = $self->getAllReports(true,$params);
-
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr><th colspan='2'>".__("Select statistics to be displayed")."&nbsp;:</th></tr>";
       echo "<tr class='tab_bg_1'><td class='center'>";
-      echo "<select name='graphmenu' onchange='window.location.href=this.options
-    [this.selectedIndex].value'>";
-      echo "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
+      echo self::getSelectAllReports(true);
+      echo "</td>";
+      echo "</tr>";
+      echo "</table>";
+   }
 
-      $i = 0;
+   static function getSelectAllReports($onchange = false) {
+      $js_onchange = "";
+      if ($onchange) {
+         $js_onchange = " onchange='window.location.href=this.options[this.selectedIndex].value'";
+      }
 
+      $common = new self;
+      $reports = $common->getAllReports(true);
+      $select = "<select name='report' $js_onchange>";
+      $select.= "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
       foreach($reports as $classname => $report) {
-
+         $graphs = array();
          foreach($report['functions'] as $function) {
             if ($function['is_active']) {
                $graphs[$function['category_func']][] = $function;
             }
          }
 
-         echo "<optgroup label=\"". $report['title'] ."\">";
+         $select.= "<optgroup label='".$report['title']."'>";
          foreach($graphs as $cat => $graph) {
-
-             if(self::haveSomeThingToShow($graph)){
-                 echo "<optgroup label=\"". $cat ."\">";
-
-                 foreach($graph as $k => $v) {
-
-                     if ($v['right']) {
-                         if ($v['is_active']) {
-                             $comment = "";
-                             if (isset($v["desc"])) {
-                                 $comment = $v["desc"];
-                             }
-                             $icon = PluginMreportingCommon::getIcon($v['function']);
-                             echo "<option value='".$v["url_graph"]."' title=\"".
-                                 Html::cleanInputText($comment)."\">".
+            $select.= "<optgroup label='&nbsp;&nbsp;&nbsp;$cat'>";
+            foreach($graph as $key => $value) {
+               if ($value['right']) {
+                   if ($value['is_active']) {
+                       $comment = "";
+                       if (isset($value["desc"])) {
+                           $comment = $value["desc"];
+                       }
+                       $icon = self::getIcon($value['function']);
+                       $select.= "<option value='".$value["url_graph"]."' title=\"".
+                                 Html::cleanInputText($comment)."\">&nbsp;&nbsp;&nbsp;".
                                  $icon."&nbsp;".
-                                 $v["title"]."</option>";
-                             $i++;
-                         }
-                     }
-                 }
-                 echo "</optgroup>";
-             }
-
+                                 $value["title"]."</option>";
+                   }
+               }
+            }
+            $select.= "</optgroup>";
          }
-         echo "</optgroup>";
-
+         $select.= "</optgroup>";
       }
+      $select.= "</select>";
 
-      echo "</select>";
-      echo "</td>";
-      echo "</tr>";
-      echo "</table>";
+      return $select;
    }
 
    /**
