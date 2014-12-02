@@ -1681,16 +1681,16 @@ class PluginMreportingCommon extends CommonDBTM {
       }
       echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
          ." id='mreporting_date_selector'>\n";
-      echo "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
+      echo "<table class='tab_cadre_fixe'>";
+      echo "<tr class='tab_bg_1'>";
 
       if ($has_selector) {
          self::getReportSelectors();
       }
 
-      echo "<tr class='tab_bg_1'>";
       echo "<td colspan='2' class='center'>";
       if ($has_selector) {
-         echo "<input type='submit' class='button' name='submit' 
+         echo "<input type='submit' class='submit' name='submit' 
                 value=\"". _sx('button', 'Post') ."\">";
       }
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
