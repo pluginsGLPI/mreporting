@@ -28,22 +28,15 @@
  */
 
 class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
-   function reportPieTicketNumberByEntity() {
-      $_SESSION['mreporting_selector']['reportPieTicketNumberByEntity'] 
-         = array('dateinterval');
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
+   function reportPieTicketNumberByEntity($config = array()) {
+      $_SESSION['mreporting_selector']['reportPieTicketNumberByEntity'] = array('dateinterval');
       return $this->reportHbarTicketNumberByEntity($config);
    }
 
    function reportHbarTicketNumberByEntity($config = array()) {
       global $DB;
-      $_SESSION['mreporting_selector']['reportHbarTicketNumberByEntity'] 
-         = array('dateinterval', 'limit');
-
-      if (count($config) == 0) {
-         $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      /*End Must be defined*/
+      $_SESSION['mreporting_selector']['reportHbarTicketNumberByEntity'] = array('dateinterval', 
+                                                                                 'limit');
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`", 
@@ -83,7 +76,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    }
 
-   function reportHgbarTicketNumberByCatAndEntity() {
+   function reportHgbarTicketNumberByCatAndEntity($config = array()) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCatAndEntity'] 
@@ -91,8 +84,6 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $datas = array();
       $tmp_datas = array();
-
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
@@ -179,13 +170,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   function reportPieTicketOpenedAndClosed() {
+   function reportPieTicketOpenedAndClosed($config = array()) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportPieTicketOpenedAndClosed'] 
          = array('dateinterval');
-
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
@@ -214,12 +203,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return array('datas' => $datas);
    }
 
-   function reportPieTicketOpenedbyStatus() {
+   function reportPieTicketOpenedbyStatus($config = array()) {
       global $DB;
       $_SESSION['mreporting_selector']['reportPieTicketOpenedbyStatus'] 
          = array('dateinterval', 'allstates');
-
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
@@ -258,13 +245,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   function reportPieTopTenAuthor() {
+   function reportPieTopTenAuthor($config = array()) {
       global $DB, $LANG;
 
       $_SESSION['mreporting_selector']['reportPieTopTenAuthor'] 
          = array('dateinterval');
-
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
@@ -303,31 +288,25 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
 
-   function reportHgbarOpenTicketNumberByCategoryAndByType() {
+   function reportHgbarOpenTicketNumberByCategoryAndByType($config = array()) {
       $_SESSION['mreporting_selector']['reportHgbarOpenTicketNumberByCategoryAndByType'] 
          = array('dateinterval');
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportHgbarTicketNumberByCategoryAndByType('open',$config);
+      return $this->reportHgbarTicketNumberByCategoryAndByType($config, 'open');
    }
 
-   function reportHgbarCloseTicketNumberByCategoryAndByType() {
+   function reportHgbarCloseTicketNumberByCategoryAndByType($config = array()) {
       $_SESSION['mreporting_selector']['reportHgbarCloseTicketNumberByCategoryAndByType'] 
          = array('dateinterval');
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportHgbarTicketNumberByCategoryAndByType('close',$config);
+      return $this->reportHgbarTicketNumberByCategoryAndByType($config, 'close');
    }
 
-   private function reportHgbarTicketNumberByCategoryAndByType($filter, $config=array()) {
+   private function reportHgbarTicketNumberByCategoryAndByType($config=array(), $filter) {
       global $DB, $LANG;
 
       $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCategoryAndByType'] 
          = array('dateinterval');
 
       $datas = array();
-
-      if (count($config) == 0) {
-         $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
@@ -371,21 +350,20 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   function reportHgbarTicketNumberByService() {
+   function reportHgbarTicketNumberByService($config = array()) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHgbarTicketNumberByService'] 
          = array('dateinterval');
 
       $datas = array();
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'], 
                                                            $config['randname']);
 
-      foreach($this->filters as $class=>$filter) {
+      foreach($this->filters as $class => $filter) {
 
          $datas['labels2'][$filter['label']] = $filter['label'];
          $query = "
@@ -431,14 +409,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   function reportHgbarOpenedTicketNumberByCategory() {
+   function reportHgbarOpenedTicketNumberByCategory($config = array()) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHgbarOpenedTicketNumberByCategory'] 
          = array('dateinterval', 'allstates');
 
       $datas = array();
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
@@ -499,24 +476,18 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   function reportLineNbTicket() {
+   function reportLineNbTicket($config = array()) {
       $_SESSION['mreporting_selector']['reportLineNbTicket'] = array('dateinterval');
 
-      $area = false;
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportAreaNbTicket($area, $config);
+      return $this->reportAreaNbTicket($config, false);
    }
 
-   function reportAreaNbTicket($area = true, $config=array()) {
+   function reportAreaNbTicket($config=array(), $area = true) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportAreaNbTicket'] = array('dateinterval', 'period');
-      $this->_getPeriod();
 
       $datas = array();
-      if (count($config) == 0) {
-         $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
@@ -524,8 +495,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                                                            $config['randname']);
 
       $query = "SELECT
-         DISTINCT DATE_FORMAT(date, '".$this->_period_sort."') as period,
-         DATE_FORMAT(date, '".$this->_period_label."') as period_name,
+         DISTINCT DATE_FORMAT(date, '".$this->period_sort."') as period,
+         DATE_FORMAT(date, '".$this->period_label."') as period_name,
          COUNT(id) as nb
       FROM glpi_tickets
       WHERE ".$this->sql_date."
@@ -541,32 +512,24 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   function reportVstackbarNbTicket() {
+   function reportVstackbarNbTicket($config = array()) {
       $_SESSION['mreporting_selector']['reportVstackbarNbTicket'] = array('dateinterval');
-      $area = false;
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportGlineNbTicket($area, $config);
+      return $this->reportGlineNbTicket($config, false);
    }
 
-   function reportGareaNbTicket() {
+   function reportGareaNbTicket($config = array()) {
       $_SESSION['mreporting_selector']['reportGareaNbTicket'] = array('dateinterval');
-      $area = true;
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportGlineNbTicket($area, $config);
+      return $this->reportGlineNbTicket($config, true);
    }
 
-   function reportGlineNbTicket($area = false, $config = array()) {
+   function reportGlineNbTicket($config = array(), $area = false) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportGlineNbTicket'] 
          = array('dateinterval', 'period', 'allstates');
-      $this->_getPeriod();
 
       $datas = array();
       $tmp_datas = array();
-      if (count($config) == 0) {
-         $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
@@ -585,8 +548,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       //get dates used in this period
       $query_date = "SELECT
          DISTINCT
-         DATE_FORMAT(`date`, '".$this->_period_sort."') AS period,
-         DATE_FORMAT(`date`, '".$this->_period_label."') AS period_name
+         DATE_FORMAT(`date`, '".$this->period_sort."') AS period,
+         DATE_FORMAT(`date`, '".$this->period_label."') AS period_name
       FROM `glpi_tickets`
       WHERE ".$this->sql_date."
       AND `glpi_tickets`.`entities_id` IN (".$this->where_entities.")
@@ -605,8 +568,8 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       $query = "SELECT DISTINCT
-         DATE_FORMAT(date, '".$this->_period_sort."') as period,
-         DATE_FORMAT(date, '".$this->_period_label."') as period_name,
+         DATE_FORMAT(date, '".$this->period_sort."') as period,
+         DATE_FORMAT(date, '".$this->period_label."') as period_name,
          status,
          COUNT(id) as nb
       FROM glpi_tickets
@@ -638,13 +601,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   function reportSunburstTicketByCategories() {
+   function reportSunburstTicketByCategories($config = array()) {
       global $DB;
       
       $_SESSION['mreporting_selector']['reportSunburstTicketByCategories'] = array('dateinterval');
       
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'], 
@@ -696,14 +657,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
 
-   function reportVstackbarTicketStatusByTechnician() {
+   function reportVstackbarTicketStatusByTechnician($config = array()) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportVstackbarTicketStatusByTechnician'] = array('dateinterval');
       
       $datas = array();
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'], 
@@ -786,11 +745,6 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $_SESSION['mreporting_selector']['reportHbarTicketNumberByLocation'] 
          = array('dateinterval', 'limit');
-
-      if (count($config) == 0) {
-         $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      /*End Must be defined*/
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`", 
@@ -884,94 +838,6 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       }
       return $config->fields;
-   }
-
-
-   //  ---------------------------------------------------------------------------------------------
-   //                                    === COMMON FUNCTION ===
-   //  ---------------------------------------------------------------------------------------------
-   /**
-    * Update the object period formater for SQL request
-    */
-   private function _getPeriod() {
-      if(isset($_SESSION['mreporting_values']['period']) && !empty($_SESSION['mreporting_values']['period'])) {
-         switch($_SESSION['mreporting_values']['period']) {
-         	case 'day':
-         	   $this->_period_sort = '%y%m%d';
-         	   $this->_period_label = '%d %b %Y';
-         	   break;
-         	case 'week':
-         	   $this->_period_sort = '%y%u';
-         	   $this->_period_label = 'S-%u %Y';
-         	   break;
-         	case 'month':
-         	   $this->_period_sort = '%y%m';
-         	   $this->_period_label = '%b %Y';
-         	   break;
-         	case 'year':
-         	   $this->_period_sort = '%Y';
-         	   $this->_period_label = '%Y';
-         	   break;
-         	default :
-         	   $this->_period_sort = '%y%m';
-         	   $this->_period_label = '%b %Y';
-         	   break;
-         }
-      }else{
-         $this->_period_sort = '%y%m';
-         $this->_period_label = '%b %Y';
-      }
-   }
-
-
-   //  ---------------------------------------------------------------------------------------------
-   //                                  === SPECIFIC SELECTORS ===
-   //  ---------------------------------------------------------------------------------------------
-   /**
-    * Show a dropdown list with period type (Day, Week, Month, Year)
-    */
-    static function selectorPeriod() {
-    global $LANG;
-
-      $elements = array(
-         'day'    => $LANG['plugin_mreporting']['selector']["period"][1],
-         'week'   => $LANG['plugin_mreporting']['selector']["period"][2],
-         'month'  => $LANG['plugin_mreporting']['selector']["period"][3],
-         'year'   => $LANG['plugin_mreporting']['selector']["period"][4]
-      );
-
-      echo '<b>'.$LANG['plugin_mreporting']['selector']["period"][0].' : </b><br />';
-      Dropdown::showFromArray("period", $elements, array('value' => isset($_SESSION['mreporting_values']['period']) ? $_SESSION['mreporting_values']['period'] : 'month'));
-   }
-
-   /**
-    * Show a dropdown list to select the number of datas to show
-    */
-   static function selectorLimit() {
-      Dropdown::showListLimit();
-   }
-
-   /**
-    * Show the selector for tickets status (new, open, solved, closed...)
-    */
-   static function selectorAllstates() {
-      global $LANG;
-
-      echo "<b>".$LANG['plugin_mreporting']['selector']["status"]." : </b><br />";
-      $default = array('1', '2', '3', '4');
-
-      foreach(Ticket::getAllStatusArray() as $value => $name) {
-         echo '<label>';
-         echo '<input type="hidden" name="status_'.$value.'" value="0" /> ';
-         echo '<input type="checkbox" name="status_'.$value.'" value="1"';
-         if((isset($_SESSION['mreporting_values']['status_'.$value]) && ($_SESSION['mreporting_values']['status_'.$value] == '1'))
-               || (!isset($_SESSION['mreporting_values']['status_'.$value]) && in_array($value, $default))) {
-            echo ' checked="checked"';
-         }
-            echo ' /> ';
-            echo $name;
-            echo '</label>';
-      }
    }
 }
 
