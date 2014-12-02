@@ -208,11 +208,17 @@ class PluginMreportingDashboard extends CommonDBTM {
                              title: 'Configuration',
                              closeAction: 'hide',
                              autoLoad: {
-                                 url: '".$root_ajax."',
+                                 url: '$root_ajax',
                                  scripts: true,
                                  method : 'POST',
-                                 params: {action: 'getConfig', target: '".$target."',f_name:'".$f_name."',short_classname:'".$short_classname."',gtype:'".$gtype."'}
-                                 },
+                                 params: {
+                                    action: 'getConfig', 
+                                    target: '$target',
+                                    f_name:'$f_name',
+                                    short_classname:'$short_classname',
+                                    gtype:'$gtype'
+                                 }
+                              },
                          });
                          win.show();
                      }
@@ -237,28 +243,10 @@ class PluginMreportingDashboard extends CommonDBTM {
       $content .= "</div>";
 
       echo $content;
-    }
-
-
-
-    function getconfiguration($f_name,$short_classname,$gtype,$target){
-      $_REQUEST['f_name'] = $f_name;
-      $_REQUEST['short_classname'] = $short_classname;
-      PluginMreportingCommon::getSelectorValuesByUser();
-
-      $content =  "";
-      $content .= "<form method='POST'  action='" . $target . "' name='form' id='mreporting_date_selector'>";
-      $content .= PluginMreportingCommon::getReportSelectors(true);
-      $content .= "<input type='hidden' name='short_classname' value='".$short_classname."' class='submit'>";
-      $content .= "<input type='hidden' name='f_name' value='".$f_name."' class='submit'><input type='hidden' name='gtype' value='".$gtype."' class='submit'>";
-      $content .= "<input type='submit' class='button' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
-      $content .= Html::closeForm(false);
-
-      return $content;
    }
 
 
-   public static function CurrentUserHaveDashboard(){
+   public static function CurrentUserHaveDashboard() {
       $dashboard = new PluginMreportingDashboard();
       $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
 
@@ -289,7 +277,7 @@ class PluginMreportingDashboard extends CommonDBTM {
          $config->getFromDB($report['id']);
 
          $index = str_replace('PluginMreporting', '', $config->fields['classname']);
-         $items[$report['id']]  = $LANG['plugin_mreporting'][$index][$report['name']]['title'];         
+         $items[$report['id']] = $LANG['plugin_mreporting'][$index][$report['name']]['title'];         
       }
 
 
@@ -333,14 +321,14 @@ class PluginMreportingDashboard extends CommonDBTM {
       $index = str_replace('PluginMreporting','',$report->fields['classname']);
       $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
-      $re = "Nothing to show" ;
+      $out = "Nothing to show" ;
 
       $f_name = $report->fields["name"];
 
       $gtype = '';
       $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
       if (isset($ex_func[1])) {
-          $gtype = strtolower($ex_func[1]);
+         $gtype = strtolower($ex_func[1]);
       }
 
       $short_classname = str_replace('PluginMreporting', '', $report->fields["classname"]);
@@ -349,12 +337,12 @@ class PluginMreportingDashboard extends CommonDBTM {
           if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
               $opt = array('short_classname' => $short_classname , 'f_name' =>$f_name , 'gtype' => $gtype );
               $dash = new PluginMreportingDashboard();
-              $re   = $dash->showGraphOnDashboard($opt);
+              $out = $dash->showGraphOnDashboard($opt);
 
           }
       }
 
-      echo $re;
+      echo $out;
    }
 
    static function getConfig() {
@@ -363,7 +351,6 @@ class PluginMreportingDashboard extends CommonDBTM {
       PluginMreportingCommon::getSelectorValuesByUser();
 
       $content =  "";
-
       $content .= "<form method='POST'  action='" . $_POST['target'] . "' name='form' id='mreporting_date_selector'>";
       $content .= "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
       $content .= PluginMreportingCommon::getReportSelectors(true);
@@ -381,10 +368,10 @@ class PluginMreportingDashboard extends CommonDBTM {
          </script>";
       }
 
-      if(PluginMreportingCommon::getReportSelectors(true) == ""){
-          echo "No configuration for this report";
-      }else{
-          echo $content;
+      if(PluginMreportingCommon::getReportSelectors(true) == "") {
+         echo "No configuration for this report";
+      } else {
+         echo $content;
       }
    }
 
