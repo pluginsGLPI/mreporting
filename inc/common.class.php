@@ -174,7 +174,6 @@ class PluginMreportingCommon extends CommonDBTM {
          }
 
          echo "<optgroup label=\"". $report['title'] ."\">";
-
          foreach($graphs as $cat => $graph) {
 
              if(self::haveSomeThingToShow($graph)){
@@ -188,8 +187,11 @@ class PluginMreportingCommon extends CommonDBTM {
                              if (isset($v["desc"])) {
                                  $comment = $v["desc"];
                              }
+                             $icon = PluginMreportingCommon::getIcon($v['function']);
                              echo "<option value='".$v["url_graph"]."' title=\"".
-                                 Html::cleanInputText($comment)."\">".$v["title"]."</option>";
+                                 Html::cleanInputText($comment)."\">".
+                                 $icon."&nbsp;".
+                                 $v["title"]."</option>";
                              $i++;
                          }
                      }
@@ -1077,7 +1079,7 @@ class PluginMreportingCommon extends CommonDBTM {
       } else {
          $config = PluginMreportingConfig::initConfigParams($opt['f_name'],
          "PluginMreporting".$opt['short_classname']);
-         
+
          //dynamic instanciation of class passed by 'short_classname' GET parameter
          $classname = 'PluginMreporting'.$opt['short_classname'];
          $obj = new $classname($config);
@@ -2002,6 +2004,26 @@ class PluginMreportingCommon extends CommonDBTM {
       }
 
       return $tree;
+   }
+
+   static function getIcon($report_name) {
+      $extract    = preg_split('/(?<=\\w)(?=[A-Z])/', $report_name);
+      $chart_type = strtolower($extract[1]);
+
+      //see font-awesome : http://fortawesome.github.io/Font-Awesome/cheatsheet/
+      $icons = array(
+         'pie'       => "&#xf200",
+         'hbar'      => "&#xf036;",
+         'hgbar'     => "&#xf036;",
+         'line'      => "&#xf201;", 
+         'gline'     => "&#xf201;", 
+         'area'      => "&#xf1fe;", 
+         'garea'     => "&#xf1fe;", 
+         'vstackbar' => "&#xf080;",
+         'sunburst'  => "&#xf185;",
+      );
+
+      return $icons[strtolower($chart_type)];
    }
 }
 

@@ -90,3 +90,8 @@
    overflow: visible !important;
 }
 
+select[name=report],
+select[name=graphmenu] {
+   font-family: FontAwesome, 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif';
+   font-size: 1.4em;
+}

@@ -141,6 +141,7 @@ function plugin_init_mreporting() {
       $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
       $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
       $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
+      $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/font-awesome-4.2.0/css/font-awesome.min.css";
       
       //Load additionnal language files in needed
       includeAdditionalLanguageFiles();

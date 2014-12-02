@@ -265,20 +265,21 @@ class PluginMreportingDashboard extends CommonDBTM {
       }
 
       $reports = "SELECT `glpi_plugin_mreporting_configs`.`id` , `glpi_plugin_mreporting_configs`.`name`
-                  FROM `glpi_plugin_mreporting_configs`,`glpi_plugin_mreporting_profiles`
+                     FROM `glpi_plugin_mreporting_configs`,`glpi_plugin_mreporting_profiles`
                   WHERE `glpi_plugin_mreporting_configs`.`id` = `glpi_plugin_mreporting_profiles`.`reports`
                   AND `glpi_plugin_mreporting_profiles`.`right` = 'r'
                   AND `glpi_plugin_mreporting_profiles`.`profiles_id` = ".$_SESSION['glpiactiveprofile']['id'];
 
       $items = array();
       foreach($DB->request($reports) as $report){
+         $tmp[] = 
          $config = new PluginMreportingConfig();
          $config->getFromDB($report['id']);
 
          $index = str_replace('PluginMreporting', '', $config->fields['classname']);
-         $items[$report['id']] = $LANG['plugin_mreporting'][$index][$report['name']]['title'];         
+         $icon = PluginMreportingCommon::getIcon($report['name']);
+         $items[$report['id']] = "$icon&nbsp;".$LANG['plugin_mreporting'][$index][$report['name']]['title'];         
       }
-
 
       $target = $this->getFormURL();
       if (isset($options['target'])) {
