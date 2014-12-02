@@ -94,7 +94,8 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $datas = array();
 
       $manufacturers = array('Acer', 'Apple', 'Asus', 'Bull', 'Dell', 
-                             'Fujistu', 'HP', 'HTC', 'IBM', 'Lenovo', 'Oracle', 'Samsung', 'Toshiba');
+                             'Fujistu', 'HP', 'HTC', 'IBM', 'Lenovo', 
+                             'Oracle', 'Samsung', 'Toshiba');
       $query = "";
       $first = true;
       foreach ($manufacturers as $manufacturer) {
@@ -244,8 +245,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $total_computers = countElementsInTable('glpi_computers', 
                                               "`is_deleted`=0 AND `is_template`=0 $condition");
 
-      $list_windows = array('Windows 3.1', 'Windows 95', 'Windows 98', 'Windows 2000 Pro', 'Windows XP', 'Windows 7', 
-                            'Windows Vista', 'Windows 8', 'Windows 2000 Server', 'Server 2003', 'Server 2008', 'Server 2012');
+      $list_windows = array('Windows 3.1', 'Windows 95', 'Windows 98', 'Windows 2000 Pro', 
+                            'Windows XP', 'Windows 7', 'Windows Vista', 'Windows 8', 
+                            'Windows 2000 Server', 'Server 2003', 'Server 2008', 'Server 2012');
       foreach ($list_windows as $windows) {
          $oses = array();
          foreach ($DB->request('glpi_operatingsystems', "name LIKE '%$windows%'") as $os) {
