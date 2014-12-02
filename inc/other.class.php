@@ -31,10 +31,6 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
    function reportHbarLogs($configs = array()) {
       global $DB;
       
-      if (count($config) == 0) {
-         $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      }
-      
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`", 
          $config['delay'], $config['randname']);

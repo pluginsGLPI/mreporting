@@ -32,10 +32,10 @@ global $CFG_GLPI,$LANG;
 
    //dynamic instanciation of class passed by 'short_classname' GET parameter
    $classname = 'PluginMreporting'.$opt['short_classname'];
-   $obj = new $classname();
+   $obj = new $classname($config);
 
    //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-   $datas = $obj->$opt['f_name']();
+   $datas = $obj->$opt['f_name']($config);
 
    //show graph (pgrah type determined by first entry of explode of camelcase of function name
    $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
