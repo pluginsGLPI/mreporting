@@ -28,7 +28,7 @@
  */
 
 class PluginMreportingDashboard extends CommonDBTM {
-   function showGraphOnDashboard($opt,$export = false){
+   function showGraphOnDashboard($opt, $export = false) {
       global $CFG_GLPI,$LANG;
 
       ob_start();
@@ -64,12 +64,12 @@ class PluginMreportingDashboard extends CommonDBTM {
       $opt['withdata'] = 1;
       $params = array("raw_datas"   => $datas,
          "title"      => $title_func,
-         "randname"      => $title_func.$opt['short_classname'],
+         "randname"   => $title_func.$opt['short_classname'],
          "desc"       => $des_func,
          "export"     => $export,
          "opt"        => $opt);
 
-      echo  $graph->{'show'.$opt['gtype']}($params , true, 410);
+      echo $graph->{'show'.$opt['gtype']}($params , true, 410);
       $ob = ob_get_clean();
 
       return $ob;
@@ -147,7 +147,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       $content = "";
 
-      foreach($res as $data){
+      foreach($res as $data) {
          $i++;
          $report = new PluginMreportingConfig();
          $report->getFromDB($data['reports_id']);
@@ -168,7 +168,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
          $short_classname = str_replace('PluginMreporting', '', $report->fields["classname"]);
 
-         $_REQUEST['f_name'] =$f_name;
+         $_REQUEST['f_name'] = $f_name;
          $_REQUEST['short_classname'] = $short_classname;
          PluginMreportingCommon::getSelectorValuesByUser();
 
@@ -186,8 +186,9 @@ class PluginMreportingDashboard extends CommonDBTM {
          $href = '<a href="'.$CFG_GLPI['root_doc'].'/plugins/mreporting/front/graph.php?short_classname='.$short_classname.'&amp;f_name='.$f_name.'&amp;gtype='.$gtype.'">&nbsp;'.$title.'</a>';
          $needConfig = true;
 
-         if(PluginMreportingCommon::getReportSelectors(true) == null || PluginMreportingCommon::getReportSelectors(true) == ""){
-             $needConfig = false;
+         if(PluginMreportingCommon::getReportSelectors(true) == null 
+            || PluginMreportingCommon::getReportSelectors(true) == "") {
+            $needConfig = false;
          }
 
          $content .=  "{
@@ -261,9 +262,9 @@ class PluginMreportingDashboard extends CommonDBTM {
       $dashboard = new PluginMreportingDashboard();
       $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
 
-      if(count($res) > 0){
+      if(count($res) > 0) {
          return true;
-      } else{
+      } else {
          return false;
       }
    }
@@ -284,18 +285,11 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       $items = array();
       foreach($DB->request($reports) as $report){
-         $mreportingConfig = new PluginMreportingConfig();
-         $mreportingConfig->getFromDB($report['id']);
+         $config = new PluginMreportingConfig();
+         $config->getFromDB($report['id']);
 
-         $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
-         $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
-
-         /*** DEBUG Tab ***/
-         if (DEBUG_MREPORTING) {
-            $items[$report['id']] = $report['name']."&nbsp(".$title.")";
-         } else {
-            $items[$report['id']] = $title;
-         }
+         $index = str_replace('PluginMreporting', '', $config->fields['classname']);
+         $items[$report['id']]  = $LANG['plugin_mreporting'][$index][$report['name']]['title'];         
       }
 
 
@@ -305,11 +299,11 @@ class PluginMreportingDashboard extends CommonDBTM {
       }
 
       $content =  "";
-      $content .= "<form method='post' action='" . $target . "' method='post'>";
+      $content .= "<form method='post' action='".$target."' method='post'>";
       $content .= "<table class='tab_cadre_fixe'>";
       $content .= "<tr><th colspan='2'>".__("Select statistics to be added to dashboard")."&nbsp;:</th></tr>";
       $content .= "<tr class='tab_bg_1'><td class='center'>";
-      $content .= Dropdown::showFromArray('report',$items,array('rand' =>'','display'=>false));
+      $content .= Dropdown::showFromArray('report', $items, array('rand' => '', 'display' => false));
       $content .= "</td>";
       $content .= "<td>";
       $content .= "<input type='submit' name='addReports' value='add report to dashboard' class='submit' >";
