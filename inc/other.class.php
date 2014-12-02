@@ -33,7 +33,7 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`", 
-         $config['delay'], $config['randname']);
+         $configs['delay'], $configs['randname']);
       
       $prefix = "SELECT count(*) as cpt FROM `glpi_logs` WHERE ";
       //Add/remove a software on a computer
