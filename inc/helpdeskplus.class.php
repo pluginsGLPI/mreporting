@@ -5,7 +5,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
-   function reportGlineBacklogs() {
+   function reportGlineBacklogs($config = array()) {
       global $DB, $LANG;
 
       $_SESSION['mreporting_selector']['reportGlineBacklogs'] = 
@@ -13,18 +13,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                'userassign', 'category', 'multiplegroupassign');
       $tab   = array();
       $datas = array();
-
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      Toolbox::logDebug($config);
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date", 
-                                                                  $config['delay'], 
-                                                                  $config['randname']);
-      $this->sql_date_solve =  PluginMreportingCommon::getSQLDate("glpi_tickets.solvedate", 
-                                                                  $config['delay'], 
-                                                                  $config['randname']);
-      $this->sql_date_closed = PluginMreportingCommon::getSQLDate("glpi_tickets.closedate", 
-                                                                  $config['delay'], 
-                                                                  $config['randname']);  
 
       $sql_group_assign = "";
       if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
@@ -206,7 +194,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    
    
 
-   function reportVstackbarLifetime() {
+   function reportVstackbarLifetime($config = array()) {
       global $DB;
 
       $tab = $datas = $labels2 = array();
@@ -214,11 +202,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          = array('dateinterval', 'period', 'allstates', 'multiplegrouprequest', 
                  'multiplegroupassign', 'userassign', 'category');
    
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
       
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']]))
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
@@ -288,19 +271,13 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    
    
 
-   function reportVstackbarTicketsgroups() {
+   function reportVstackbarTicketsgroups($config = array()) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportVstackbarTicketsgroups'] = 
          array('dateinterval', 'allstates', 'multiplegroupassign', 'category');
       $tab = array();
       $datas = array();
-      
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date", 
-                                                                  $config['delay'], 
-                                                                  $config['randname']);
       
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']])) {
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
@@ -355,18 +332,12 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       
    
 
-   function reportVstackbarTicketstech() {
+   function reportVstackbarTicketstech($config = array()) {
       global $DB;
       $_SESSION['mreporting_selector']['reportVstackbarTicketstech'] 
          = array('dateinterval', 'multiplegroupassign', 'allstates', 'category');
       $tab = array();
       $datas = array();
-      
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
       
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']]))
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
@@ -440,7 +411,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    
    
 
-   function reportHbarTopcategory() {
+   function reportHbarTopcategory($config = array()) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHbarTopcategory'] 
@@ -448,12 +419,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                  'multiplegrouprequest', 'multiplegroupassign', 'type');
       $tab = array();
       $datas = array();
-
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
 
       $sql_type    = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
       $nb_ligne    = (isset($_SESSION['mreporting_values']['glpilist_limit'])) ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
@@ -508,19 +473,13 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    
 
 
-   function reportHbarTopapplicant() {
+   function reportHbarTopapplicant($config = array()) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHbarTopapplicant'] 
          = array('dateinterval', 'limit', 'type');
       $tab = array();
       $datas = array();
-
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
 
       $nb_ligne = (isset($_SESSION['mreporting_values']['glpilist_limit'])) ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
       $sql_type = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
@@ -551,14 +510,12 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    
 
 
-   function reportVstackbarGroupChange() {
+   function reportVstackbarGroupChange($config = array()) {
       global $DB;
       $_SESSION['mreporting_selector']['reportVstackbarGroupChange'] 
          = array('dateinterval', 'userassign', 'category', 'multiplegrouprequest', 'multiplegroupassign');
       
       $datas = array();
-      
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       
       $sql_group_assign = "";
       if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {

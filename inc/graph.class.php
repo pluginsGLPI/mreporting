@@ -101,13 +101,12 @@ class PluginMreportingGraph {
             $classname = $ex_func[0].$options['short_classname'];
             $functionname = $ex_func[1];
 
+            $config = PluginMreportingConfig::initConfigParams($functionname, $classname);
+            
             // We check if a configuration is needed for the graph
-            if (method_exists(new $classname(), 'needConfig')) {
-
-               $configs = PluginMreportingConfig::initConfigParams($functionname, $classname);
-
+            if (method_exists(new $classname($config), 'needConfig')) {
                $object = new $classname();
-               $object->needConfig($configs);
+               $object->needConfig($config);
             }
          }
       }
@@ -156,8 +155,6 @@ class PluginMreportingGraph {
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
 
       $options = array("title" => $title,
                         "desc" => $desc,
@@ -349,8 +346,6 @@ JAVASCRIPT;
          $$k=$v;
       }
 
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
@@ -536,8 +531,6 @@ JAVASCRIPT;
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
 
       $options = array("title" => $title,
                         "desc" => $desc,
@@ -794,8 +787,6 @@ JAVASCRIPT;
          $$k=$v;
       }
 
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-
       $options = array("title" => $title,
                         "desc" => $desc,
                         "randname" => $randname,
@@ -1011,8 +1002,6 @@ JAVASCRIPT;
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
 
       $options = array("title" => $title,
                         "desc" => $desc,
@@ -1236,8 +1225,6 @@ JAVASCRIPT;
       if (DEBUG_MREPORTING == true) {
          $area = true;
       }
-
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
 
       $options = array("title" => $title,
                         "desc" => $desc,
@@ -1476,8 +1463,6 @@ JAVASCRIPT;
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-
-      //if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
 
       $options = array("title" => $title,
                         "desc" => $desc,
