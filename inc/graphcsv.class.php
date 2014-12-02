@@ -37,7 +37,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       }
    }
 
-   function showHbar($params) {
+   function showHbar($params, $dashboard = false , $width = false) {
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -91,11 +91,11 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       echo $out;
    }
 
-   function showPie($params) {
+   function showPie($params, $dashboard = false , $width = false) {
       $this->showHbar($params);
    }
 
-   function showHgbar($params) {
+   function showHgbar($params, $dashboard = false , $width = false) {
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -158,19 +158,19 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       echo $out;
    }
 
-   function showVstackbar($params) {
+   function showVstackbar($params, $dashboard = false , $width = false) {
       $this->showHGbar($params);
    }
 
-   function showArea($params) {
+   function showArea($params, $dashboard = false , $width = false) {
       $this->showHbar($params);
    }
 
-   function showGarea($params) {
+   function showGarea($params, $dashboard = false , $width = false) {
       $this->showHGbar($params);
    }
 
-   function showSunburst($params) {
+   function showSunburst($params, $dashboard = false , $width = false) {
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {

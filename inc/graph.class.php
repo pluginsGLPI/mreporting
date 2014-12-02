@@ -44,7 +44,7 @@ class PluginMreportingGraph {
       $width        = $this->width + 100;
       $randname     = $options['randname'];
 
-      if(!$options['showConfiguration']){
+      if(!$options['showHeader']){
          echo "<div class='center'><div id='fig' style='width:{$width}px'>";
          //Show global title
          if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
@@ -162,7 +162,7 @@ class PluginMreportingGraph {
                         "delay" => $delay,
                         "export" => $export,
                         "short_classname" => $opt["short_classname"],
-          "showConfiguration" => $dashboard);
+                        "showHeader" => $dashboard);
 
       $this->initGraph($options);
 
@@ -352,7 +352,7 @@ JAVASCRIPT;
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"],
-                        "showConfiguration" => $dashboard);
+                        "showHeader" => $dashboard);
 
       $this->initGraph($options);
 
@@ -538,7 +538,7 @@ JAVASCRIPT;
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"],
-          "showConfiguration" => $dashboard);
+          "showHeader" => $dashboard);
 
       $this->initGraph($options);
 
@@ -793,7 +793,7 @@ JAVASCRIPT;
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"],
-          "showConfiguration" => $dashboard);
+          "showHeader" => $dashboard);
 
       $this->initGraph($options);
 
@@ -1009,7 +1009,7 @@ JAVASCRIPT;
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"],
-          "showConfiguration" => $dashboard);
+          "showHeader" => $dashboard);
 
       $this->initGraph($options);
 
@@ -1232,7 +1232,7 @@ JAVASCRIPT;
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"],
-          "showConfiguration" => $dashboard);
+          "showHeader" => $dashboard);
 
       $this->initGraph($options);
 
@@ -1470,7 +1470,7 @@ JAVASCRIPT;
                         "export" => $export,
                         "delay" => $delay,
                         "short_classname" => $opt["short_classname"],
-          "showConfiguration" => $dashboard);
+          "showHeader" => $dashboard);
 
       $this->initGraph($options);
 

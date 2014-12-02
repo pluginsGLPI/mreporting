@@ -57,14 +57,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    */
    function initGraph($options) {
       global $LANG, $CFG_GLPI;
-      
-      //if ($options['export']=="odt" || $options['export']=="odtall") {
-         //$this->width = $this->width - 100;
-      //}
-      
+            
       $randname = $options['randname'];
       
-      if (!$options['export']) {
+      if (!$options['export'] && !$options['showHeader']) {
           
          $width = $this->width + 100;
 
@@ -493,7 +489,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHbar($params) {
+   function showHbar($params, $dashboard = false , $width = false) {
       global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -523,7 +519,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+                        "showHeader" => $dashboard);
                   
       $this->initGraph($options);
       
@@ -651,7 +648,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "export" => $export,
                         "datas"  => $datas,
                         "unit"   => $unit);
-      PluginMreportingCommon::endGraph($options);
+      if (!$dashboard) {
+         PluginMreportingCommon::endGraph($options);
+      }
    }
    
 
@@ -669,8 +668,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showPie($params,$return = false,$width= false) {
-       ob_start();
+   function showPie($params, $dashboard = false , $width = false) {
       global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -680,11 +678,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       if ($width !== false){
-         $this->setWidth($width);
+         $this->width = $width;
       }
 
-      //$rand = $opt['rand'];
-      
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
       
       foreach ($configs as $k => $v) {
@@ -704,7 +700,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+                        "showHeader" => $dashboard);
       
       $this->initGraph($options);
       
@@ -835,7 +832,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "title" => $title,
                       "randname" => $randname,
                       "raw_datas" => $raw_datas,
-                       "withdata"   => $opt['withdata']);
+                      "withdata"   => $opt['withdata']);
               
       $contents = $this->generateImage($params);
       if ($show_graph) {
@@ -847,14 +844,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "datas"  => $datas,
                         "unit"   => $unit);
       
-      PluginMreportingCommon::endGraph($options);
-
-
-       if($return){
-           return ob_get_clean();
-       }else{
-           echo ob_get_clean();
-       }
+      if (!$dashboard) {
+         PluginMreportingCommon::endGraph($options);
+      }
    }
 
 
@@ -877,7 +869,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showSunburst($params) {
+   function showSunburst($params, $dashboard = false , $width = false) {
       global $LANG;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -902,7 +894,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+                        "showHeader" => $dashboard);
                   
       $this->initGraph($options);
       
@@ -990,7 +983,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      if (!$dashboard) {
+         PluginMreportingCommon::endGraph($options);
+      }
    }
 
    function drawSunburstLevel($image, $datas, $params=array()) {
@@ -1158,7 +1153,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHgbar($params) {
+   function showHgbar($params, $dashboard = false , $width = false) {
       global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1188,7 +1183,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+                        "showHeader" => $dashboard);
                   
       $this->initGraph($options);
       
@@ -1364,7 +1360,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      if (!$dashboard) {
+         PluginMreportingCommon::endGraph($options);
+      }
    }
 
 
@@ -1382,7 +1380,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showVstackbar($params) {
+   function showVstackbar($params, $dashboard = false , $width = false) {
       global $LANG;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1412,7 +1410,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+                        "showHeader" => $dashboard);
 
       $this->initGraph($options);
 
@@ -1644,7 +1643,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                      "title" => $title,
                      "randname" => $randname,
                      "raw_datas" => $raw_datas,
-                       "withdata"   => $opt['withdata']);
+                     "withdata"   => $opt['withdata']);
 
       $contents = $this->generateImage($params);
       if ($show_graph) {
@@ -1657,7 +1656,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      if (!$dashboard) {
+         PluginMreportingCommon::endGraph($options);
+      }
     }
 
    
@@ -1676,7 +1677,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @param $area : show plain chart instead only a line (optionnal)
     * @return nothing
     */
-   function showArea($params) {
+   function showArea($params, $dashboard = false , $width = false) {
       global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1706,7 +1707,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+                        "showHeader" => $dashboard);
                   
       $this->initGraph($options);
       
@@ -1904,7 +1906,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "title" => $title,
                       "randname" => $randname,
                       "raw_datas" => $raw_datas,
-                       "withdata"   => $opt['withdata']);
+                      "withdata"   => $opt['withdata']);
       $contents = $this->generateImage($params);
       if ($show_graph) {
          $this->showImage($contents,$export);
@@ -1914,7 +1916,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "export"    => $export,
                         "datas"     => $datas,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      if (!$dashboard) {
+         PluginMreportingCommon::endGraph($options);
+      }
    } // end Area
 
 
@@ -1932,7 +1936,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGArea($params) {
+   function showGArea($params, $dashboard = false , $width = false) {
       global $LANG;
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1962,7 +1966,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "randname" => $randname,
                         "export" => $export,
                         "delay" => $delay,
-                        "short_classname" => $opt["short_classname"]);
+                        "short_classname" => $opt["short_classname"],
+                        "showHeader" => $dashboard);
                   
       $this->initGraph($options);
       
@@ -2234,7 +2239,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options);
+      if (!$dashboard) {
+         PluginMreportingCommon::endGraph($options);
+      }
    }// End Garea
 
 }// End Class
