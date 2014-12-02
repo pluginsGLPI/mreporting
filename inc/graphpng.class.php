@@ -491,6 +491,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     */
    function showHbar($params, $dashboard = false , $width = false) {
       global $LANG;
+
+      if ($width !== false){
+         $this->width = $width + 50;
+      }      
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
       
@@ -547,15 +551,21 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if ($max == 1 && $unit == '%') $max = 100;
       
       $nb_bar = count($datas);
-      $width = $this->width;
+      $width  = $this->width;
       $height = 30 * $nb_bar + 80;
+      if($dashboard){
+         if ($height > 380) {
+            $height = 380;
+         }
+      }
+      $height_bar = .7 * $height / ($nb_bar+1);
 
       //create image
       $image = imagecreatetruecolor ($width, $height);
       
       if ($show_graph) {
          //colors
-         $palette = self::getPalette($nb_bar);
+         $palette       = self::getPalette($nb_bar);
          $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
@@ -566,7 +576,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          if ($export) {
             imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
-
 
          //add title on export
          if ($export) {
@@ -586,9 +595,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $index = 0;
          foreach ($datas as $label => $data) {
             $bx1 = 250;
-            $by1 = ($index+1) * 28 + 30;
+            $by1 = ($index+1) * 1.25 * $height_bar + .05 * $height + 2;
             $bx2 = $bx1 + round(($data*($width -300)) / $max);
-            $by2 = $by1 + 20;
+            $by2 = $by1 + $height_bar;
 
             //createbar
             ImageFilledRectangle($image, $bx1, $by1, $bx2, $by2, $palette[$index]);
@@ -768,7 +777,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //pie
          $index = 0;
-         $x = $width / 4+350;
+         $x = $width / 4 + .43 * $width;
          $y = $height / 2;
          $radius = $height / 1.5;
          $start_angle = 0;
@@ -1155,6 +1164,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     */
    function showHgbar($params, $dashboard = false , $width = false) {
       global $LANG;
+
+       if ($width !== false){
+         $this->width = $width;
+      }
+
+      
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
       
@@ -1383,6 +1398,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    function showVstackbar($params, $dashboard = false , $width = false) {
       global $LANG;
 
+      if ($width !== false){
+         $this->width = $width;
+      }     
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -1466,14 +1485,26 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
 
-      $nb_bar = count($datas);
-      $width = $this->width;
-      $width_bar = ($width - 350) / count($labels2);
-      
-      $height = 20 * $nb_bar + 50;
-      if ($height < 400) {
-         $height = 400;
+      $nb_bar = count($labels2);
+      $nb_labels2 = count($datas);
+      $height = 400;
+      if($dashboard) {
+         $height = 350;
       }
+      $x_bar = (0.85 * $this->width / $nb_bar);
+      $width_bar = $x_bar * .85;
+      $y_labels_width = .1 * $this->width;
+      $x_labels_height = $height - 0.95 * $height;
+      $legend_height = $nb_labels2 * 15 + 10;
+      
+
+      // Toolbox::logDebug($nb_bar,
+      //    $nb_labels2,
+      //    $x_bar,
+      //    $width_bar,
+      //    $y_labels_width,
+      //    $legend_height,
+      //    $height);
       
       //longueur du texte en dessous des barres
       $index = 0;
@@ -1486,44 +1517,44 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $maxtextwidth = max($textwidth) ;
 
       //create image
-      $image = imagecreatetruecolor ($width, $height+$maxtextwidth);
+      $image = imagecreatetruecolor ($this->width, $height + $maxtextwidth);
       
       if ($show_graph) {
          //colors
-         $palette = self::getPalette($nb_bar);
-         $alphapalette = self::getPalette($nb_bar, 90);
+         $palette       = self::getPalette($nb_bar);
+         $alphapalette  = self::getPalette($nb_bar, 90);
          $darkerpalette = self::getDarkerPalette($nb_bar);
 
          //background
          $bg_color = $this->white;
-         imagefilledrectangle($image, 0, 0, $width, $height + $maxtextwidth, $this->white);
+         imagefilledrectangle($image, 0, 0, $this->width, $height + $maxtextwidth, $this->white);
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height - 1 + $maxtextwidth, $this->black);
+            imagerectangle($image, 0, 0, $this->width - 1, $height - 1 + $maxtextwidth, $this->black);
          }
 
          //draw x-axis grey step line and values ticks
-         $xstep = round(($height - 60) / 13);
-         for ($i = 0; $i< 13; $i++) {
-            $yaxis = $height- 30 - $xstep * $i ;
-
-            imageLine($image, 30, $yaxis, $width - 125, $yaxis, $this->grey);
+         $xstep = round(($height - $legend_height - $x_labels_height) / 12);
+         for ($i = 0; $i <= 12; $i++) {
+            $yaxis = $height - $x_labels_height - $xstep * $i ;
+            imageLine($image, .9 * $y_labels_width, $yaxis, 0.95 * $this->width, $yaxis, $this->grey);
 
             //value label
-            $val = round($i * $cum / 12);
+            $val = round($i * $cum / 12, 1);
             $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $val);
             $textwidth = abs($box[4] - $box[0]);
 
             imagettftext($image, $this->fontsize, $this->fontangle, 
-               38-$textwidth, $yaxis+5, $this->darkgrey, $this->font, $val);
+               $y_labels_width - 2 - $textwidth, $yaxis + 5, $this->darkgrey, $this->font, $val);
          }
 
          //draw y-axis
-         imageLine($image, 40, 50, 40, $height-28, $this->black);
+         imageLine($image, $y_labels_width, $legend_height, $y_labels_width, $height-28, $this->black);
 
          //draw x-axis
-         imageline($image, 38, $height-30, $width - 100, $height-30, $this->black);
+         imageline($image, .9 * $y_labels_width, $height - $x_labels_height,
+                            0.95 * $this->width, $height - $x_labels_height, $this->black);
 
          //add title on export
          if ($export) {
@@ -1550,16 +1581,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //pour chaque mois
          foreach ($new_datas as $label => $data) {
-            //$step = $index1 * count($labels2) * 28;
-
-            $by2 = $height-30;
+            $by2 = $height - $x_labels_height;
 
             //pour chaque donnée
             foreach ($data as $subdata) {
                $by1 = $by2;
-               $bx1 = 45 + $index1 * $width_bar;
-               $by2 = $by1 - $subdata * ($height-90) / $cum;
-               $bx2 = $bx1 + $width_bar-10;
+               $bx1 = $y_labels_width + $index1 * $x_bar;
+               $by2 = $by1 - $subdata * ($height - $legend_height - $x_labels_height) / $cum;
+               $bx2 = $bx1 + $width_bar;
 
                imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $alphapalette[$index2]);
                imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
@@ -1590,14 +1619,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs(sqrt((pow($textwidth, 2) / 2)));
 
             
-            $lx = 39 + ($index1 * $width_bar) + ($width_bar / 2) - ($textwidth / 2);
-            if($lx < 39 + ($index1 * $width_bar)) $lx = 39 + ($index1 * $width_bar);
+            $lx = $y_labels_width + $index1 * $x_bar + ($width_bar / 2.5);
             imagettftext(
                $image,
                $this->fontsize-1,
                -45,
                $lx,
-               $height-20,
+               $height - $x_labels_height + 9,
                $this->black,
                $this->font,
                Html::clean($labels2[$label])
@@ -1614,14 +1642,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$labels[$index]);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
+            $y_legend = 5 + ($index + 1) * 15;
 
             //legend label
             imagettftext(
                $image,
                $this->fontsize-1,
                $this->fontangle,
-               $width - $textwidth - 18,
-               5+(15 * $nb_bar) + ($index * -15) ,
+               $this->width - $textwidth - 18,
+               $y_legend ,
                $this->black,
                $this->font,
                Html::clean($labels[$index])
@@ -1630,7 +1659,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             //legend circle
             $color_rbg = self::colorHexToRGB($palette[$index]);
             imageSmoothArc($image, 
-               $width - 10, (15 * $nb_bar) + ($index * -15), 8, 8, $color_rbg, 0, 2 * M_PI);
+               $this->width - 10, $y_legend - 4, 8, 8, $color_rbg, 0, 2 * M_PI);
 
             $index++;
          }
@@ -1679,6 +1708,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     */
    function showArea($params, $dashboard = false , $width = false) {
       global $LANG;
+
+      if ($width !== false){
+         $this->width = $width;
+      }      
       
       $criterias = PluginMreportingCommon::initGraphParams($params);
       
@@ -1938,7 +1971,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     */
    function showGArea($params, $dashboard = false , $width = false) {
       global $LANG;
-      
+
+      if ($width !== false){
+         $this->width = $width;
+      }
+
       $criterias = PluginMreportingCommon::initGraphParams($params);
       
       foreach ($criterias as $key => $val) {
@@ -2002,7 +2039,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $nb = count($labels2);
       $width = $this->width;
-      
+
       $nb_bar = count($datas);
       if($nb_bar > 1)
          $percent = 2*(450+18 * $nb_bar)/(18 * $nb_bar * 100);
@@ -2015,6 +2052,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $index1 = 0;
       $index3 = 1;
       $step = ceil($nb / 20);
+
+      if($dashboard){
+        $height = 350;
+        $height_tot = 400;
+      }
    
       //create image
       $image = imagecreatetruecolor ($width, $height_tot);

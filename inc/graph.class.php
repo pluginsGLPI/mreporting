@@ -1501,7 +1501,6 @@ JAVASCRIPT;
       $width = $this->width;
       if($dashboard){
         $height = 350;
-        $width = 360;
       }
 
       $JS = <<<JAVASCRIPT
