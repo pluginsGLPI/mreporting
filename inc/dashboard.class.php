@@ -95,46 +95,37 @@ class PluginMreportingDashboard extends CommonDBTM {
       echo "<script type='text/javascript'>
          /*Function to remove items on panel*/
          function removeItemsType(panel,id){
-
-             Ext.Ajax.request({
-                 url: '{$root_ajax}',
-                 params: {
-                     id: id,
-                     action: 'removeReportFromDashboard'
-                 },
-                 failure: function(opt,success,respon){
-                     Ext.Msg.alert('Status', 'Ajax problem !');
-                 } ,
-                 success: function(){
-                     Ext.getCmp('panel').remove(panel,true);
-                     //Ext.getCmp('panel').doLayout(true);
-                     window.location.reload(true);
-                 }
-             });
+            Ext.Ajax.request({
+               url: '{$root_ajax}',
+               params: {
+                  id: id,
+                  action: 'removeReportFromDashboard'
+               },
+               failure: function(opt,success,respon){
+                  Ext.Msg.alert('Status', 'Ajax problem !');
+               },
+               success: function(){
+                  Ext.getCmp('panel').remove(panel,true);
+                  window.location.reload(true);
+               }
+            });
          }
 
           Ext.onReady(function() {
+            window.onresize = function() {
+               Ext.getCmp('panel').doLayout(true);
+            }
 
-
-          window.onresize = function() {
-          Ext.getCmp('panel').doLayout(true);
-          }
-
-
-             var dash = new Ext.Panel({
-             itemId: 'panel',
-             id:'panel',
-             baseCls:' ',
-             autoHeight : true,
-             autoWidth:true,
-             style: 'margin:auto',
-             renderTo : 'dashboard',
-
-             layout: 'column',
-             defaults: {
-                 //style: 'margin: 10px 10px 10px 10px '
-             },
-             tools: [{
+            var dash = new Ext.Panel({
+               itemId: 'panel',
+               id:'panel',
+               baseCls:' ',
+               autoHeight : true,
+               autoWidth:true,
+               style: 'margin:auto',
+               renderTo : 'dashboard',
+               layout: 'column',
+               tools: [{
                      id:'gear',
                      tooltip: 'Configure dashboard',
                      handler: function(event, toolEl,panel){
@@ -148,7 +139,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
                      }
                  }],
-             items: [";
+               items: [";
 
       $dashboard= new PluginMreportingDashboard();
       $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
@@ -201,11 +192,11 @@ class PluginMreportingDashboard extends CommonDBTM {
 
          $content .=  "{
           xtype: 'panel',
-                 title: '".addslashes($href)."',
-                 id: '".$data['id']."',
-                 html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
-                 baseCls:'mreportingwidget,
-                 tools: [";
+                  title: '".addslashes($href)."',
+                  id: '".$data['id']."',
+                  html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
+                  baseCls:'mreportingwidget',
+                  tools: [";
 
          if($needConfig){
              $content .="{
@@ -245,7 +236,6 @@ class PluginMreportingDashboard extends CommonDBTM {
       $content .= "</div>";
 
       echo $content;
-
     }
 
 
