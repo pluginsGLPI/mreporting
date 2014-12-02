@@ -60,13 +60,13 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          $first = false;
       }
       $query .= " UNION
-	SELECT 'Autres' AS OS, count(*) Total, count(*)*100/(SELECT count(*)
-										FROM glpi_computers c, glpi_operatingsystems os
-										WHERE c.`is_deleted`=0 AND c.`is_template`=0 
-										AND c.operatingsystems_id = os.id $condition) Pourcentage
-	FROM glpi_computers c, glpi_operatingsystems os
-	WHERE c.operatingsystems_id = os.id
-	AND c.`is_deleted`=0 AND c.`is_template`=0 $notlike $condition";
+         SELECT 'Autres' AS OS, count(*) Total, count(*)*100/(SELECT count(*)
+                                    FROM glpi_computers c, glpi_operatingsystems os
+                                    WHERE c.`is_deleted`=0 AND c.`is_template`=0 
+                                    AND c.operatingsystems_id = os.id $condition) Pourcentage
+         FROM glpi_computers c, glpi_operatingsystems os
+         WHERE c.operatingsystems_id = os.id
+         AND c.`is_deleted`=0 AND c.`is_template`=0 $notlike $condition";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
@@ -133,17 +133,16 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
-      $query = "
-        SELECT t.name Type, count(*) Total, count(*)*100/(SELECT count(*)
-									FROM glpi_computers c, glpi_computertypes t
-									WHERE c.`is_deleted`=0 AND c.`is_template`=0 
-									AND c.computertypes_id = t.id $condition) Pourcentage 
-									
-	FROM glpi_computers c, glpi_computertypes t
-	WHERE c.computertypes_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
-	GROUP BY t.name 
-	ORDER BY 1 DESC
-	";
+      $query = "SELECT t.name Type, count(*) Total, count(*)*100/(SELECT count(*)
+                           FROM glpi_computers c, glpi_computertypes t
+                           WHERE c.`is_deleted`=0 AND c.`is_template`=0 
+                           AND c.computertypes_id = t.id $condition) Pourcentage 
+                           
+         FROM glpi_computers c, glpi_computertypes t
+         WHERE c.computertypes_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
+         GROUP BY t.name 
+         ORDER BY 1 DESC
+         ";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
@@ -167,64 +166,63 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
-      $query = "
-        SELECT '< 1 an' Age, count(*) Total, count(*)*100/(SELECT count(*)
-									FROM glpi_computers c,  glpi_infocoms i
-									WHERE c.id = i.items_id
-									AND c.`is_deleted`=0 AND c.`is_template`=0 
-									AND itemtype = 'Computer' $condition) Pourcentage
-	FROM glpi_computers c, glpi_infocoms i
-	WHERE c.id = i.items_id
-	AND c.`is_deleted`=0 AND c.`is_template`=0
-	AND itemtype = 'Computer'
-	AND i.warranty_date > CURRENT_DATE - INTERVAL 1 YEAR $condition
-	UNION
-	SELECT '1 a 3 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
-										FROM glpi_computers c,  glpi_infocoms i
-										WHERE c.id = i.items_id
-										AND c.`is_deleted`=0 AND c.`is_template`=0 
-										AND itemtype = 'Computer' $condition) Pourcentage
-	FROM glpi_computers c, glpi_infocoms i
-	WHERE c.id = i.items_id
-	AND c.`is_deleted`=0 AND c.`is_template`=0
-	AND itemtype = 'Computer'
-	AND i.warranty_date <= CURRENT_DATE - INTERVAL 1 YEAR
-	AND i.warranty_date > CURRENT_DATE - INTERVAL 3 YEAR $condition
-	UNION
-	SELECT '3 a 5 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
-										FROM glpi_computers c,  glpi_infocoms i
-										WHERE c.id = i.items_id
-										AND c.`is_deleted`=0 AND c.`is_template`=0 
-										AND itemtype = 'Computer' $condition) Pourcentage
-	FROM glpi_computers c, glpi_infocoms i
-	WHERE c.id = i.items_id
-	AND c.`is_deleted`=0 AND c.`is_template`=0
-	AND itemtype = 'Computer'
-	AND i.warranty_date <= CURRENT_DATE - INTERVAL 3 YEAR
-	AND i.warranty_date > CURRENT_DATE - INTERVAL 5 YEAR $condition
-	UNION
-	SELECT '> 5 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
-										FROM glpi_computers c,  glpi_infocoms i
-										WHERE c.id = i.items_id
-										AND c.`is_deleted`=0 AND c.`is_template`=0 
-										AND itemtype = 'Computer' $condition) Pourcentage
-	FROM glpi_computers c, glpi_infocoms i
-	WHERE c.id = i.items_id
-	AND c.`is_deleted`=0 AND c.`is_template`=0
-	AND itemtype = 'Computer'
-	AND i.warranty_date <= CURRENT_DATE - INTERVAL 5 YEAR $condition
-	UNION
-	SELECT 'Non defini' Age, count(*) Total, count(*)*100/(SELECT count(*)
-										FROM glpi_computers c,  glpi_infocoms i
-										WHERE c.id = i.items_id
-										AND c.`is_deleted`=0 AND c.`is_template`=0 
-										AND itemtype = 'Computer' $condition) Pourcentage
-	FROM glpi_computers c, glpi_infocoms i
-	WHERE c.id = i.items_id 
-	AND c.`is_deleted`=0 AND c.`is_template`=0
-	AND itemtype = 'Computer'
-	AND i.warranty_date IS NULL $condition;
-	";
+      $query = "SELECT '< 1 an' Age, count(*) Total, count(*)*100/(SELECT count(*)
+                           FROM glpi_computers c,  glpi_infocoms i
+                           WHERE c.id = i.items_id
+                           AND c.`is_deleted`=0 AND c.`is_template`=0 
+                           AND itemtype = 'Computer' $condition) Pourcentage
+         FROM glpi_computers c, glpi_infocoms i
+         WHERE c.id = i.items_id
+         AND c.`is_deleted`=0 AND c.`is_template`=0
+         AND itemtype = 'Computer'
+         AND i.warranty_date > CURRENT_DATE - INTERVAL 1 YEAR $condition
+         UNION
+         SELECT '1 a 3 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
+                                    FROM glpi_computers c,  glpi_infocoms i
+                                    WHERE c.id = i.items_id
+                                    AND c.`is_deleted`=0 AND c.`is_template`=0 
+                                    AND itemtype = 'Computer' $condition) Pourcentage
+         FROM glpi_computers c, glpi_infocoms i
+         WHERE c.id = i.items_id
+         AND c.`is_deleted`=0 AND c.`is_template`=0
+         AND itemtype = 'Computer'
+         AND i.warranty_date <= CURRENT_DATE - INTERVAL 1 YEAR
+         AND i.warranty_date > CURRENT_DATE - INTERVAL 3 YEAR $condition
+         UNION
+         SELECT '3 a 5 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
+                                    FROM glpi_computers c,  glpi_infocoms i
+                                    WHERE c.id = i.items_id
+                                    AND c.`is_deleted`=0 AND c.`is_template`=0 
+                                    AND itemtype = 'Computer' $condition) Pourcentage
+         FROM glpi_computers c, glpi_infocoms i
+         WHERE c.id = i.items_id
+         AND c.`is_deleted`=0 AND c.`is_template`=0
+         AND itemtype = 'Computer'
+         AND i.warranty_date <= CURRENT_DATE - INTERVAL 3 YEAR
+         AND i.warranty_date > CURRENT_DATE - INTERVAL 5 YEAR $condition
+         UNION
+         SELECT '> 5 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
+                                    FROM glpi_computers c,  glpi_infocoms i
+                                    WHERE c.id = i.items_id
+                                    AND c.`is_deleted`=0 AND c.`is_template`=0 
+                                    AND itemtype = 'Computer' $condition) Pourcentage
+         FROM glpi_computers c, glpi_infocoms i
+         WHERE c.id = i.items_id
+         AND c.`is_deleted`=0 AND c.`is_template`=0
+         AND itemtype = 'Computer'
+         AND i.warranty_date <= CURRENT_DATE - INTERVAL 5 YEAR $condition
+         UNION
+         SELECT 'Non defini' Age, count(*) Total, count(*)*100/(SELECT count(*)
+                                    FROM glpi_computers c,  glpi_infocoms i
+                                    WHERE c.id = i.items_id
+                                    AND c.`is_deleted`=0 AND c.`is_template`=0 
+                                    AND itemtype = 'Computer' $condition) Pourcentage
+         FROM glpi_computers c, glpi_infocoms i
+         WHERE c.id = i.items_id 
+         AND c.`is_deleted`=0 AND c.`is_template`=0
+         AND itemtype = 'Computer'
+         AND i.warranty_date IS NULL $condition;
+         ";
       $result = $DB->query($query);
       
       while ($computer = $DB->fetch_assoc($result)) {
