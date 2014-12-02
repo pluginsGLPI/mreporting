@@ -245,7 +245,6 @@ class PluginMreportingDashboard extends CommonDBTM {
       echo $content;
    }
 
-
    public static function CurrentUserHaveDashboard() {
       $dashboard = new PluginMreportingDashboard();
       $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);

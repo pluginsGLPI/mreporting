@@ -73,32 +73,26 @@ function plugin_init_mreporting() {
 
 
          /* Reports Link */
-            $menu_entry = "front/central.php";
+         $menu_entry = "front/central.php";
 
-          $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
+         $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
+         if(PluginMreportingDashboard::CurrentUserHaveDashboard()) {
+            $PLUGIN_HOOKS['menu_entry']['mreporting'] = 'front/dashboard.form.php';
+         } else {
+            $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
+         }
 
-          if(PluginMreportingDashboard::CurrentUserHaveDashboard()){
-              $PLUGIN_HOOKS['menu_entry']['mreporting'] = 'front/dashboard.form.php';
-          }else{
-              $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
-          }
-
-
-
-
-
-
-          //var_dump($_SERVER['REQUEST_URI']);
-          if(strpos($_SERVER['REQUEST_URI'],'front/dashboard.form.php') !== false){
-              $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/list_dashboard.png">'] = 'front/central.php';
-          }else{
-              $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"] . '/plugins/mreporting/pics/dashboard.png">'] = 'front/dashboard.form.php';
-          }
+         if(strpos($_SERVER['REQUEST_URI'],'front/dashboard.form.php') !== false) {
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"].
+               '/plugins/mreporting/pics/list_dashboard.png">'] = 'front/central.php';
+         } else {
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"].
+               '/plugins/mreporting/pics/dashboard.png">'] = 'front/dashboard.form.php';
+         }
 
 
           /* Configuration Link */
          if (Session::haveRight('config', 'w')) {
-
             $config_entry = 'front/config.php';
             $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
             $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
@@ -108,30 +102,29 @@ function plugin_init_mreporting() {
                      = '/plugins/mreporting/front/config.form.php';
          }
 
-
          /* Show Reports in standart stats page */
-            $mreporting_common = new PluginMreportingCommon();
-            $reports = $mreporting_common->getAllReports();
-            if ($reports !== false) {
-               foreach($reports as $report) {
-                  foreach($report['functions'] as $func) {
-                     $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
-                  }
+         $mreporting_common = new PluginMreportingCommon();
+         $reports = $mreporting_common->getAllReports();
+         if ($reports !== false) {
+            foreach($reports as $report) {
+               foreach($report['functions'] as $func) {
+                  $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
                }
             }
-            
-            if (isset($_SESSION['glpiactiveprofile']['id']) 
-               && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
-               $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
-            }
+         }
+         
+         if (isset($_SESSION['glpiactiveprofile']['id']) 
+            && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
+            $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
+         }
 
-          $PLUGIN_HOOKS['pre_item_purge']['mreporting']
-              = array('Profile'=>array('PluginMreportingProfile', 'purgeProfiles'),
-                      'PluginMreportingConfig' => array('PluginMreportingProfile', 
-                                                        'purgeProfilesByReports') );
-          $PLUGIN_HOOKS['item_add']['mreporting']
-              = array('Profile'=>array('PluginMreportingProfile', 'addProfiles'),
-                      'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
+         $PLUGIN_HOOKS['pre_item_purge']['mreporting']
+            = array('Profile'                => array('PluginMreportingProfile', 'purgeProfiles'),
+                    'PluginMreportingConfig' => array('PluginMreportingProfile', 
+                                                      'purgeProfilesByReports'));
+         $PLUGIN_HOOKS['item_add']['mreporting']
+            = array('Profile'                => array('PluginMreportingProfile', 'addProfiles'),
+                    'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
 
       }
       
