@@ -28,7 +28,12 @@
  */
 
 class PluginMreportingBaseclass{
-   protected $sql_date, $filters, $where_entities;
+   protected $sql_date, 
+             $sql_date_create, 
+             $sql_date_solve, 
+             $sql_date_closed, 
+             $filters, 
+             $where_entities;
 
    function __construct() {
       $this->filters = array(
@@ -49,14 +54,14 @@ class PluginMreportingBaseclass{
             )
          )
       );
-      $this->where_entities = "'".implode("', '", $_SESSION['glpiactiveentities'])."'";
-
       $this->status = array(CommonITILObject::INCOMING,
                             CommonITILObject::ASSIGNED,
                             CommonITILObject::PLANNED,
                             CommonITILObject::WAITING,
                             CommonITILObject::SOLVED,
                             CommonITILObject::CLOSED);
+
+      $this->where_entities = "'".implode("', '", $_SESSION['glpiactiveentities'])."'";
 
       // init default value for status selector
       if (!isset($_SESSION['mreporting_values']['status_1'])) {
