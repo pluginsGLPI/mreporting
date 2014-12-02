@@ -1496,15 +1496,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $y_labels_width = .1 * $this->width;
       $x_labels_height = $height - 0.95 * $height;
       $legend_height = $nb_labels2 * 15 + 10;
-      
-
-      // Toolbox::logDebug($nb_bar,
-      //    $nb_labels2,
-      //    $x_bar,
-      //    $width_bar,
-      //    $y_labels_width,
-      //    $legend_height,
-      //    $height);
+   
       
       //longueur du texte en dessous des barres
       $index = 0;
@@ -1579,35 +1571,35 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $index1 = 0;
          $index2 = 0;
 
-         //pour chaque mois
          foreach ($new_datas as $label => $data) {
             $by2 = $height - $x_labels_height;
 
-            //pour chaque donnée
             foreach ($data as $subdata) {
                $by1 = $by2;
                $bx1 = $y_labels_width + $index1 * $x_bar;
                $by2 = $by1 - $subdata * ($height - $legend_height - $x_labels_height) / $cum;
                $bx2 = $bx1 + $width_bar;
 
-               imagefilledrectangle($image, $bx1 ,$by1 , $bx2, $by2, $alphapalette[$index2]);
-               imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
+               if ($by1 != $by2) { // no draw for empty datas
+                  imagefilledrectangle($image, $bx1 , $by1 , $bx2, $by2, $alphapalette[$index2]);
+                  imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
 
-               //create data label  // Affichage des données à côté des barres
-               if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
-                  $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$subdata.$unit);
-                  $textwidth = abs($box[4] - $box[6]);
-                  
-                  imagettftext(
-                     $image,
-                     $this->fontsize-1,
-                     $this->fontangle,
-                     $bx1 + ($width_bar / 2) - ($textwidth / 2) - 4,
-                     $by1 - ($by1 - $by2)/2 + 5,
-                     $darkerpalette[$index2],
-                     $this->font,
-                     $subdata.$unit
-                  );
+                  //create data label  // Affichage des données à côté des barres
+                  if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
+                     $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$subdata.$unit);
+                     $textwidth = abs($box[4] - $box[6]);
+                     
+                     imagettftext(
+                        $image,
+                        $this->fontsize-1,
+                        $this->fontangle,
+                        $bx1 + ($width_bar / 2) - ($textwidth / 2) - 4,
+                        $by1 - ($by1 - $by2)/2 + 5,
+                        $darkerpalette[$index2],
+                        $this->font,
+                        $subdata.$unit
+                     );
+                  }
                }
                $tab[$index2]= $by1;
                $index2++;
