@@ -235,7 +235,7 @@ class PluginMreportingConfig extends CommonDBTM {
          foreach($functions as $funct_name) {
             if($funct_name == 'preconfig'){ // If a preconfig exists we construct the class
                $classConfig = true;
-               $classObject = new $classname();
+               $classObject = new $classname(array());
             }
          }
 
