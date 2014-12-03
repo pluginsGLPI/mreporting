@@ -58,7 +58,6 @@ function plugin_init_mreporting() {
                                                             'changeProfile');
       $PLUGIN_HOOKS['redirect_page']['mreporting']  = 'front/download.php';
 
-
       Plugin::registerClass('PluginMreportingNotification',
       array('notificationtemplates_types' => true));
       //Plugin::registerClass('PluginMreportingNotificationTargetNotification');
@@ -113,11 +112,6 @@ function plugin_init_mreporting() {
             }
          }
          
-         if (isset($_SESSION['glpiactiveprofile']['id']) 
-            && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
-            $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
-         }
-
          $PLUGIN_HOOKS['pre_item_purge']['mreporting']
             = array('Profile'                => array('PluginMreportingProfile', 'purgeProfiles'),
                     'PluginMreportingConfig' => array('PluginMreportingProfile', 
@@ -136,6 +130,15 @@ function plugin_init_mreporting() {
       $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
       $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
       $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
+      if (isset($_SESSION['glpiactiveprofile']['id'])
+         && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
+            if (PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
+            $PLUGIN_HOOKS['add_javascript']['mreporting'][] = 'scripts/helpdesk-menu.js';
+            $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = false;
+         }
+      } else {
+         $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
+      }
 
       //Add specific files to add to the header : css
       $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
