@@ -59,8 +59,8 @@ function plugin_init_mreporting() {
       $PLUGIN_HOOKS['redirect_page']['mreporting']  = 'front/download.php';
 
       Plugin::registerClass('PluginMreportingNotification',
-      array('notificationtemplates_types' => true));
-      //Plugin::registerClass('PluginMreportingNotificationTargetNotification');
+         array('notificationtemplates_types' => true));
+      Plugin::registerClass('PluginMreportingDashboard', array ('addtabon' => array('Central')));
 
       if (Session::getLoginUserID()) {
 

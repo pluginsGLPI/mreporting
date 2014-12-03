@@ -28,6 +28,27 @@
  */
 
 class PluginMreportingDashboard extends CommonDBTM {
+
+   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+      global $LANG;
+
+      if (get_class($item) == 'Central' 
+         && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
+         return array(1 => $LANG['plugin_mreporting']["dashboard"][1]);
+      }
+      return '';
+   }
+
+
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+      if (get_class($item) == 'Central' 
+         && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
+         $dashboard = new self();
+         $dashboard->showDashboard(false);
+      }
+      return true;
+   }
+
    function showGraphOnDashboard($opt, $export = false) {
       global $CFG_GLPI,$LANG;
 
@@ -77,7 +98,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
 
 
-   function showDashBoard(){
+   function showDashBoard($show_reports_dropdown = true){
       global $LANG,$CFG_GLPI;
 
       $root_ajax = $CFG_GLPI['root_doc']."/plugins/mreporting/ajax/dashboard.php";
@@ -97,15 +118,16 @@ class PluginMreportingDashboard extends CommonDBTM {
       //show dashboard
       echo "<div  id='dashboard'>";
 
-      echo "<div class='center'>";
-      echo "<b>".$LANG['plugin_mreporting']["dashboard"][4]."</b> : ";
-      echo PluginMreportingCommon::getSelectAllReports(true);
-      echo "</div>";
-      echo "</br/>";
+      if ($show_reports_dropdown) {
+         echo "<div class='center'>";
+         echo "<b>".$LANG['plugin_mreporting']["dashboard"][4]."</b> : ";
+         echo PluginMreportingCommon::getSelectAllReports(true);
+         echo "</div>";
+         echo "</br/>";      
+      }
 
       if (empty($widgets)) {
          echo "<div style='float:right'>";
-         //echo __('Your dashboard is empty. Please add reports by clicking on this button &#xf063;&nbsp;', 'mreporting');
          echo $LANG['plugin_mreporting']["dashboard"][3];
          echo "</div>";
          echo "<div style='clear:both'>";
