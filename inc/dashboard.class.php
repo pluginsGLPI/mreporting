@@ -90,7 +90,25 @@ class PluginMreportingDashboard extends CommonDBTM {
       $_REQUEST['f_name'] = 'option';
       PluginMreportingCommon::getSelectorValuesByUser();
 
+      //retrieve dashboard widgets;
+      $dashboard= new PluginMreportingDashboard();
+      $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID']);
+
+      //show dashboard
       echo "<div  id='dashboard'>";
+
+      echo "<div class='center'>";
+      echo "<b>".__("Rapid switch to a report", 'mreporting')."</b> : ";
+      echo PluginMreportingCommon::getSelectAllReports(true);
+      echo "</div>";
+
+      if (empty($widgets)) {
+         echo "<div style='float:right'>";
+         echo __('No reports ? You can add reports to your dashboard with a click on this button &#xf063;&nbsp;', 'mreporting');
+         echo "</div>";
+         echo "<div style='clear:both'>";
+         echo "</div>";
+      }
 
       echo "<script type='text/javascript'>
          /*Function to remove items on panel*/
@@ -129,7 +147,6 @@ class PluginMreportingDashboard extends CommonDBTM {
                      id:'gear',
                      tooltip: 'Configure dashboard',
                      handler: function(event, toolEl,panel){
-
                          win = new Ext.Window({
                              title: 'Configuration du dashboard',
                              closeAction: 'hide',
@@ -141,13 +158,11 @@ class PluginMreportingDashboard extends CommonDBTM {
                  }],
                items: [";
 
-      $dashboard= new PluginMreportingDashboard();
-      $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
       $i = 0;
 
       $content = "";
 
-      foreach($res as $data) {
+      foreach($widgets as $data) {
          $i++;
          $report = new PluginMreportingConfig();
          $report->getFromDB($data['reports_id']);
@@ -233,7 +248,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                  }]
                  }";
 
-         if($i != count($res)){
+         if($i != count($widgets)){
             $content .=',';
          }
       }
