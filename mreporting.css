@@ -90,8 +90,10 @@
    overflow: visible !important;
 }
 
+select[name=report],
 select[name=report] option,
+select[name=graphmenu],
 select[name=graphmenu] option {
    font-family: FontAwesome, 'Helvetica' !important;
-   font-size: 1.4em;
+   font-size: 1.2em;
 }
