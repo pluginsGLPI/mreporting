@@ -264,22 +264,19 @@ class PluginMreportingDashboard extends CommonDBTM {
          $nbColumn = $_SESSION['mreporting_values']['column'];
       }
 
-      
-
       $target = $this->getFormURL();
       if (isset($options['target'])) {
          $target = $options['target'];
       }
 
-      $content =  "";
-      $content .= "<form method='post' action='".$target."' method='post'>";
+      $content = "<form method='post' action='".$target."' method='post'>";
       $content .= "<table class='tab_cadre_fixe'>";
       $content .= "<tr><th colspan='2'>".__("Select statistics to be added to dashboard")."&nbsp;:</th></tr>";
       $content .= "<tr class='tab_bg_1'><td class='center'>";
-      $content .= PluginMreportingCommon::getSelectAllReports();
+      $content .= PluginMreportingCommon::getSelectAllReports(false, true);
       $content .= "</td>";
       $content .= "<td>";
-      $content .= "<input type='submit' name='addReports' value='add report to dashboard' class='submit' >";
+      $content .= "<input type='submit' name='addReports' value='".__('add report to dashboard')."' class='submit' >";
       $content .= "</td>";
       $content .= "</tr>";
       $content .= "</table>";

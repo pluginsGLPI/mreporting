@@ -118,12 +118,13 @@ class PluginMreportingCommon extends CommonDBTM {
                   $reports[$classname]['functions'][$i]['pic'] = $pics_dir."/chart-$gtype.png";
                   $reports[$classname]['functions'][$i]['gtype'] = $gtype;
                   $reports[$classname]['functions'][$i]['short_classname'] = $scn;
-                   $reports[$classname]['functions'][$i]['is_active'] = false;
+                  $reports[$classname]['functions'][$i]['is_active'] = false;
 
                   $config = new PluginMreportingConfig();
                   if ($config->getFromDBByFunctionAndClassname($f_name,$classname)) {
                      if ($config->fields['is_active'] == 1) {
                         $reports[$classname]['functions'][$i]['is_active'] = true;
+                        $reports[$classname]['functions'][$i]['id'] = $config->fields['id'];
                      }
                       $reports[$classname]['functions'][$i]['right'] = PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'],$config->fields['id']);
                   }
@@ -157,7 +158,7 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "</table>";
    }
 
-   static function getSelectAllReports($onchange = false) {
+   static function getSelectAllReports($onchange = false, $setIdInOptionsValues = false) {
       $js_onchange = "";
       if ($onchange) {
          $js_onchange = " onchange='window.location.href=this.options[this.selectedIndex].value'";
@@ -167,6 +168,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $reports = $common->getAllReports(true);
       $select = "<select name='report' $js_onchange>";
       $select.= "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
+
       foreach($reports as $classname => $report) {
          $graphs = array();
          foreach($report['functions'] as $function) {
@@ -185,10 +187,13 @@ class PluginMreportingCommon extends CommonDBTM {
                        if (isset($value["desc"])) {
                            $comment = $value["desc"];
                        }
+                       $option_value = $value["url_graph"];
+                       if ($setIdInOptionsValues) {
+                        $option_value = $value['id'];
+                       }
                        $icon = self::getIcon($value['function']);
-                       $select.= "<option value='".$value["url_graph"]."' title=\"".
-                                 Html::cleanInputText($comment)."\">&nbsp;&nbsp;&nbsp;".
-                                 $icon."&nbsp;".
+                       $select.= "<option value='$option_value' title=\"". Html::cleanInputText($comment).
+                                 "\">&nbsp;&nbsp;&nbsp;".$icon."&nbsp;".
                                  $value["title"]."</option>";
                    }
                }
