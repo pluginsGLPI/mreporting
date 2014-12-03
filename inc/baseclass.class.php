@@ -36,6 +36,11 @@ class PluginMreportingBaseclass{
              $where_entities;
 
    function __construct($config) {
+
+      if (empty($config)) {
+         return true;
+      }
+
       $this->filters = array(
          'open' => array(
             'label' => __("Opened"),
