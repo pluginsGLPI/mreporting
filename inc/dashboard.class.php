@@ -100,6 +100,8 @@ class PluginMreportingDashboard extends CommonDBTM {
       echo "<div class='center'>";
       echo "<b>".__("Rapid switch to a report", 'mreporting')."</b> : ";
       echo PluginMreportingCommon::getSelectAllReports(true);
+      echo "<br />";
+      echo "<br />";
       echo "</div>";
 
       if (empty($widgets)) {

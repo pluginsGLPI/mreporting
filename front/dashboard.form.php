@@ -5,7 +5,6 @@ include ("../../../inc/includes.php");
 global $LANG;
 Session::checkLoginUser();
 
-
 if (isset($_POST['saveConfig'])) {
 
 
