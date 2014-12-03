@@ -36,7 +36,7 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['desc'] = "Ba
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['category'] = "Inventory";
 
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['title'] = "Computers per OS";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['desc'] = "Camenbert";
+$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['desc'] = "Pie";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['category'] = "Inventory";
 
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByFabricant']['title'] = "Computers per manufacturer";
