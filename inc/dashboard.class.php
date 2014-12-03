@@ -133,7 +133,7 @@ class PluginMreportingDashboard extends CommonDBTM {
             });
          }
 
-          Ext.onReady(function() {
+         Ext.onReady(function() {
             window.onresize = function() {
                Ext.getCmp('panel').doLayout(true);
             }

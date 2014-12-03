@@ -80,6 +80,12 @@
    border-color: #e1d39e;
    border-style: solid;
    border-width: 1px;
+   display:inline-block;
+   float: none;
+}
+
+#panel .x-column-inner {
+   text-align:center;
 }
 
 .x-window-body {
