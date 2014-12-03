@@ -58,6 +58,11 @@ $LANG['plugin_mreporting']["config"][12] = "See graphic";
 $LANG['plugin_mreporting']["config"][13] = "Class";
 $LANG['plugin_mreporting']["config"][14] = "Send this report with the notification";
 
+$LANG['plugin_mreporting']["dashboard"][1] = "Dashboard";
+$LANG['plugin_mreporting']["dashboard"][2] = "Configure the dashboard";
+$LANG['plugin_mreporting']["dashboard"][3] = "Dashboard is empty. Please add reports by clicking on the icon";
+$LANG['plugin_mreporting']["dashboard"][4] = "Select report to display";
+ 
 $LANG['plugin_mreporting']['parser'][1] = "Use this model";
 $LANG['plugin_mreporting']['parser'][2] = "Please, select a model in your preferences";
 $LANG['plugin_mreporting']['parser'][3] = "No model available";

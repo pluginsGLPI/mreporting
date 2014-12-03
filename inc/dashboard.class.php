@@ -98,13 +98,15 @@ class PluginMreportingDashboard extends CommonDBTM {
       echo "<div  id='dashboard'>";
 
       echo "<div class='center'>";
-      echo "<b>".__("Rapid switch to a report", 'mreporting')."</b> : ";
+      echo "<b>".$LANG['plugin_mreporting']["dashboard"][4]."</b> : ";
       echo PluginMreportingCommon::getSelectAllReports(true);
       echo "</div>";
+      echo "</br/>";
 
       if (empty($widgets)) {
          echo "<div style='float:right'>";
-         echo __('No reports ? You can add reports to your dashboard with a click on this button &#xf063;&nbsp;', 'mreporting');
+         //echo __('Your dashboard is empty. Please add reports by clicking on this button &#xf063;&nbsp;', 'mreporting');
+         echo $LANG['plugin_mreporting']["dashboard"][3];
          echo "</div>";
          echo "<div style='clear:both'>";
          echo "</div>";
@@ -145,10 +147,10 @@ class PluginMreportingDashboard extends CommonDBTM {
                layout: 'column',
                tools: [{
                      id:'gear',
-                     tooltip: 'Configure dashboard',
+                     tooltip: '".$LANG['plugin_mreporting']['dashboard'][2]."',
                      handler: function(event, toolEl,panel){
                          win = new Ext.Window({
-                             title: 'Configuration du dashboard',
+                             title: '".$LANG['plugin_mreporting']['dashboard'][2]."',
                              closeAction: 'hide',
                              html: '".substr(json_encode($this->getFormForColumn(),JSON_HEX_APOS),1,-1)."' ,
                          });
@@ -291,7 +293,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       $content .= PluginMreportingCommon::getSelectAllReports(false, true);
       $content .= "</td>";
       $content .= "<td>";
-      $content .= "<input type='submit' name='addReports' value='".__('add report to dashboard')."' class='submit' >";
+      $content .= "<input type='submit' name='addReports' value='".__('Add')."' class='submit' >";
       $content .= "</td>";
       $content .= "</tr>";
       $content .= "</table>";
