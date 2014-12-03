@@ -52,7 +52,7 @@ function plugin_init_mreporting() {
    /* CRSF */
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
-   if ($plugin->isActivated("mreporting")) {
+   if ($plugin->isActivated("mreporting") && Session::getLoginUserID()) {
       /* Profile */
       $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
                                                             'changeProfile');
