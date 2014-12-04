@@ -74,6 +74,7 @@
    width: auto;
    height: auto;
    min-height: 500px;
+   background: white;
 }
 
 .mreportingwidget {
@@ -100,10 +101,16 @@
    clear: both;
 }
 
-#mreporting_central_dashboard {
+#mreporting_central_dashboard iframe {
+   width: 100%;
+   border-width: 0 1px 1px 1px;
+   border-style: solid;
+   border-color: #e1d39e;
    padding: 5px;
-   margin: -2px 2px 0 0;
+   margin: 0;
+   overflow: hidden;
 }
+
 
 body,
 select[name=report],

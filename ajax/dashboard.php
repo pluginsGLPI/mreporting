@@ -2,8 +2,8 @@
 include('../../../inc/includes.php');
 Html::header_nocache();
 
-if (isset($_POST['action'])) {
-   switch ($_POST['action']) {
+if (isset($_REQUEST['action'])) {
+   switch ($_REQUEST['action']) {
       case 'removeReportFromDashboard':
          PluginMreportingDashboard::removeReportFromDashboard($_POST['id']);
          break;
@@ -14,6 +14,15 @@ if (isset($_POST['action'])) {
 
       case 'getConfig':
          PluginMreportingDashboard::getConfig();            
+         break;
+
+      case 'centralDashboard' :
+         Html::includeHeader();
+         echo "<body>";
+         $dashboard = new PluginMreportingDashboard();
+         $dashboard->showDashboard(false);
+         echo "</body>";
+         echo "</html>";         
          break;
 
       default:
