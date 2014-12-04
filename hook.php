@@ -292,23 +292,6 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
    return "";
 }
 
-function plugin_mreporting_addWhere($link, $nott, $type, $ID, $val) {
-
-   $searchopt = &Search::getOptions($type);
-   $table     = $searchopt[$ID]["table"];
-   $field     = $searchopt[$ID]["field"];
-
-   $SEARCH = Search::makeTextSearch($val,$nott);
-
-   exit;
-
-   switch ($table.".".$field) {
-      case "glpi_plugin_mreporting_configs.graphtype" :
-         return $link." `$table`.`$field` = '$val' ";
-   }
-   return "";
-}
-
 function plugin_mreporting_MassiveActionsFieldsDisplay($options=array()) {
 
    $table = $options['options']['table'];
