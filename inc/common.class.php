@@ -83,6 +83,9 @@ class PluginMreportingCommon extends CommonDBTM {
       //construct array to list classes and functions
       foreach($classes as $classname) {
          $i = 0;
+         if (!class_exists($classname)) {
+            continue;
+         }
 
          //scn = short class name
          $scn = str_replace('PluginMreporting', '', $classname);
@@ -179,6 +182,18 @@ class PluginMreportingCommon extends CommonDBTM {
             foreach($report['functions'] as $function) {
                if ($function['is_active']) {
                   $graphs[$function['category_func']][] = $function;
+               }
+            }
+
+            foreach ($graphs as $cat => $graph) {
+               $remove = true;
+               foreach ($graph as $key => $value) {
+                  if ($value['right']) {
+                     $remove = false;
+                  }
+               }
+               if ($remove) {
+                  unset($graphs[$cat]);
                }
             }
 
