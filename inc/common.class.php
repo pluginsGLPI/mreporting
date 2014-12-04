@@ -902,8 +902,6 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    static function showGraphTreeDatas($cols, $flip_data = false) {
-
-
       if ($flip_data != true) {
          arsort($cols);
          foreach ($cols as $label => $value) {
@@ -940,7 +938,6 @@ class PluginMreportingCommon extends CommonDBTM {
     *
     * @param $opt
    */
-
    function export($opt) {
       global $LANG;
 
@@ -972,9 +969,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
       //export all with odt
       if (isset($opt['classname'])) {
-
          if (isset($opt['check'])) {
-
             unset($_SESSION['glpi_plugin_mreporting_odtarray']);
 
             $reports = $this->getAllReports(false, $opt);
@@ -1144,7 +1139,6 @@ class PluginMreportingCommon extends CommonDBTM {
          $newpage = $odf->setSegment('newpage');
 
          foreach ($params as $result => $page) {
-
             // Default values of parameters
             $title       = "";
             $f_name      = "";
@@ -1198,7 +1192,6 @@ class PluginMreportingCommon extends CommonDBTM {
                $types = array();
 
                foreach($datas as $k => $v) {
-
                   if (is_array($v)) {
                      foreach($v as $key => $val) {
                         if (isset($labels2[$key]))
@@ -1227,7 +1220,6 @@ class PluginMreportingCommon extends CommonDBTM {
                   }
                   if ($template == "word.odt") {
                      foreach($types as $label2 => $cols) {
-
                         $newpage->csvdata->label1->label_1(utf8_decode($label2));
                         $newpage->csvdata->label1->merge();
 
@@ -1259,7 +1251,6 @@ class PluginMreportingCommon extends CommonDBTM {
                      }
 
                      foreach($types as $label2 => $cols) {
-
                         $newpage->csvdata->label1->label_1(utf8_decode($label2));
                         $newpage->csvdata->label1->merge();
 
@@ -1274,9 +1265,7 @@ class PluginMreportingCommon extends CommonDBTM {
                         $newpage->csvdata->merge();
                      }
                   } else {
-
                      foreach($types as $label2 => $cols) {
-
                         foreach($cols as $label1 => $nb) {
                            if (!empty($unit)) {
                               $nb = $nb." ".$unit;
@@ -1539,7 +1528,6 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "</td>\n";
       unset($_SESSION['mreporting_selector']);
 
-
       echo "</tr>";
       echo "</table>";
       Html::closeForm();
@@ -1597,7 +1585,6 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    static function saveSelectors($graphname) {
-
       $remove = array('short_classname', 'f_name', 'gtype', 'submit');
       $values = array();
       $pref   = new PluginMreportingPreference();
