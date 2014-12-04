@@ -101,7 +101,7 @@ class PluginMreportingDashboard extends CommonDBTM {
             });
          }
 
-         global_config = new Ext.Window({
+         addReport = new Ext.Window({
             title: '".$LANG['plugin_mreporting']['dashboard'][2]."',
             closeAction: 'hide',
             html: '".substr(json_encode($this->getFormForColumn(),JSON_HEX_APOS),1,-1)."' ,
@@ -109,7 +109,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       </script>";
 
       echo "<div class='mreportingwidget-panel'>";
-      echo "<div class='x-tool x-tool-gear' onclick='global_config.show();'>&nbsp;</div>";
+      echo "<div class='x-tool x-tool-plus' onclick='addReport.show();'>&nbsp;</div>";
       echo "<div class='clear'></div>";
       $i = 0;
       foreach($widgets as $data) {
