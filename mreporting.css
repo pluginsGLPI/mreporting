@@ -100,6 +100,11 @@
    clear: both;
 }
 
+#mreporting_central_dashboard {
+   padding: 5px;
+   margin: -2px 2px 0 0;
+}
+
 body,
 select[name=report],
 select[name=report] option,

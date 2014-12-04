@@ -43,8 +43,10 @@ class PluginMreportingDashboard extends CommonDBTM {
    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
       if (get_class($item) == 'Central' 
          && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
+         echo "<div id='mreporting_central_dashboard' class='tab_cadre_central'>";
          $dashboard = new self();
          $dashboard->showDashboard(false);
+         echo "</div>";
       }
       return true;
    }
