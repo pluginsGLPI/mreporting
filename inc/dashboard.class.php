@@ -164,8 +164,6 @@ class PluginMreportingDashboard extends CommonDBTM {
             $needConfig = false;
          }
 
-         $href = addslashes($href);
-
          if($needConfig){
             echo "<script type='text/javascript'>
                var win$rand_widget = new Ext.Window({
