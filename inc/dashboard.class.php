@@ -96,7 +96,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                   action: 'removeReportFromDashboard'
                }, 
                success: function(){
-                  window.location.reload(true);
+                  Ext.get('mreportingwidget'+id).remove();
                }
             });
          }
@@ -175,7 +175,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                   },
                });
          </script>
-         <div class='mreportingwidget'>
+         <div class='mreportingwidget' id='mreportingwidget".$data['id']."'>
             <div class='mreportingwidget-header'>
                <div class='x-tool x-tool-close' onclick='removeWidget(".$data['id'].")'>&nbsp;</div>
                <div class='x-tool x-tool-gear' onclick='configWidget$rand_widget.show();'>&nbsp;</div>
