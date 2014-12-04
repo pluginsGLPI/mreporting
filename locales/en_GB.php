@@ -120,7 +120,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportPieTopTenAuthor']['category'] = "B
 
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['title'] = "Number of opened tickets per category and type";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['desc'] = "grouped bar";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['category'] = "by category";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['category'] = "per category";
 
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['title'] = "Number of closed tickets per category and type";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['desc'] = "grouped bar";
@@ -128,7 +128,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAn
 
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['title'] = "Number of openened tickets per category and status";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['desc'] = "Grouped bar";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['category'] = "by category";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenedTicketNumberByCategory']['category'] = "per category";
 
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByService']['title'] = "Number of opened and closed tickets per service";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByService']['desc'] = "Grouped bar";

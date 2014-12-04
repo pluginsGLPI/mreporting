@@ -104,7 +104,9 @@ class PluginMreportingCommon extends CommonDBTM {
 
                   if (isset($LANG['plugin_mreporting'][$scn][$f_name]['desc']))
                      $des_func = $LANG['plugin_mreporting'][$scn][$f_name]['desc'];
-
+                  else {
+                     $des_func = "";
+                  }
                   $url_graph  = "graph.php?short_classname=$scn".
                      "&amp;f_name=$f_name&amp;gtype=$gtype";
                   $min_url_graph  = "front/graph.php?short_classname=$scn".
