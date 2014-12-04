@@ -131,7 +131,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       if (empty($widgets)) {
          echo "<div style='float:right'>";
          echo $LANG['plugin_mreporting']["dashboard"][3];
-         echo "</div>";
+         echo "&nbsp;</div>";
          echo "<div style='clear:both'>";
          echo "</div>";
       }
