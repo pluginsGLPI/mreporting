@@ -150,9 +150,9 @@ class PluginMreportingDashboard extends CommonDBTM {
                ob_start();
                $report_script = $common->showGraph($opt);
                if ($report_script === false) {
-                  $report_script = "";
+                  $report_script = "</div>";
                }
-               $report_script.= ob_get_clean();
+               $report_script = ob_get_clean().$report_script;
             }
          }
 
