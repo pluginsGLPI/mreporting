@@ -153,7 +153,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
          echo "
          <script type='text/javascript'>
-            var win$rand_widget = new Ext.Window({
+            var configWidget$rand_widget = new Ext.Window({
                   title: 'Configuration',
                   closeAction: 'hide',
                   autoLoad: {
@@ -173,7 +173,7 @@ class PluginMreportingDashboard extends CommonDBTM {
          <div class='mreportingwidget'>
             <div class='mreportingwidget-header'>
                <div class='x-tool x-tool-close' onclick='removeWidget(".$data['id'].")'>&nbsp;</div>
-               <div class='x-tool x-tool-gear' onclick='win$rand_widget.show();'>&nbsp;</div>
+               <div class='x-tool x-tool-gear' onclick='configWidget$rand_widget.show();'>&nbsp;</div>
                <span class='mreportingwidget-header-text'>
                   <a href='".$CFG_GLPI['root_doc']."/plugins/mreporting/front/graph.php?short_classname=".
                   $short_classname."&amp;f_name=".$f_name."&amp;gtype=".$gtype."''>
