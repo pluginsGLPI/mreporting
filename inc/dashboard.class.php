@@ -147,7 +147,12 @@ class PluginMreportingDashboard extends CommonDBTM {
                             'width'           => 410, 
                             'hide_title'      => true);
                $common = new PluginMreportingCommon();
+               ob_start();
                $report_script = $common->showGraph($opt);
+               if ($report_script === false) {
+                  $report_script = "";
+               }
+               $report_script.= ob_get_clean();
             }
          }
 
