@@ -1498,13 +1498,13 @@ JAVASCRIPT;
       if ($height < 450) {
          $height = 450;
       }
-      $width = $this->width;
       if($dashboard){
-        $height = 350;
+         $this->width -= 35;
+         $height = 350;
       }
 
       $JS = <<<JAVASCRIPT
-   var width_area = {$width};
+   var width_area = {$this->width};
    var height_area = {$height};
    var offset = 0;
    var step = Math.round(m / 20);
@@ -1512,8 +1512,6 @@ JAVASCRIPT;
    var x = pv.Scale.linear(0, m-1).range(5, width_area);
    var y = pv.Scale.linear(0, max).range(0, height_area-(n*14));
    var i = -1;
-
-   //console.log(x.ticks());
 
    /* The root panel. */
    vis{$randname} = new pv.Panel()
