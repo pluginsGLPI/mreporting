@@ -109,7 +109,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       </script>";
 
       echo "<div class='mreportingwidget-panel'>";
-      echo "<div class='x-tool x-tool-gear' id='ext-gen6' onclick='global_config.show();'>&nbsp;</div>";
+      echo "<div class='x-tool x-tool-gear' onclick='global_config.show();'>&nbsp;</div>";
       echo "<div class='clear'></div>";
       $i = 0;
       foreach($widgets as $data) {
@@ -139,7 +139,6 @@ class PluginMreportingDashboard extends CommonDBTM {
          $_REQUEST['short_classname'] = $short_classname;
          PluginMreportingCommon::getSelectorValuesByUser();
 
-
          if (!empty($short_classname) && !empty($f_name)) {
             if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
                $opt = array('short_classname' => $short_classname, 
@@ -152,41 +151,35 @@ class PluginMreportingDashboard extends CommonDBTM {
             }
          }
 
-         $href = '<a href="'.$CFG_GLPI['root_doc'].'/plugins/mreporting/front/graph.php?short_classname='.$short_classname.'&amp;f_name='.$f_name.'&amp;gtype='.$gtype.'">&nbsp;'.$title.'</a>';
-         $needConfig = true;
-
-         if(PluginMreportingCommon::getReportSelectors(true) == null 
-            || PluginMreportingCommon::getReportSelectors(true) == "") {
-            $needConfig = false;
-         }
-
-         if($needConfig){
-            echo "<script type='text/javascript'>
-               var win$rand_widget = new Ext.Window({
-                     title: 'Configuration',
-                     closeAction: 'hide',
-                     autoLoad: {
-                        url: '$root_ajax',
-                        scripts: true,
-                        method : 'POST',
-                        params: {
-                           action: 'getConfig', 
-                           target: '$target',
-                           f_name:'$f_name',
-                           short_classname:'$short_classname',
-                           gtype:'$gtype'
-                        }
-                     },
-                  });
-            </script>";
-         }
-
          echo "
+         <script type='text/javascript'>
+            var win$rand_widget = new Ext.Window({
+                  title: 'Configuration',
+                  closeAction: 'hide',
+                  autoLoad: {
+                     url: '$root_ajax',
+                     scripts: true,
+                     method : 'POST',
+                     params: {
+                        action: 'getConfig', 
+                        target: '$target',
+                        f_name:'$f_name',
+                        short_classname:'$short_classname',
+                        gtype:'$gtype'
+                     }
+                  },
+               });
+         </script>
          <div class='mreportingwidget'>
             <div class='mreportingwidget-header'>
                <div class='x-tool x-tool-close' onclick='removeWidget(".$data['id'].")'>&nbsp;</div>
                <div class='x-tool x-tool-gear' onclick='win$rand_widget.show();'>&nbsp;</div>
-               <span class='mreportingwidget-header-text'>$href</span>
+               <span class='mreportingwidget-header-text'>
+                  <a href='".$CFG_GLPI['root_doc']."/plugins/mreporting/front/graph.php?short_classname=".
+                  $short_classname."&amp;f_name=".$f_name."&amp;gtype=".$gtype."''>
+                     &nbsp;$title
+                  </a>
+               </span>
             </div>
             <div class='mreportingwidget-body'>
                $report_script
