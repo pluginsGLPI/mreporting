@@ -49,12 +49,8 @@ class PluginMreportingConfig extends CommonDBTM {
     }
 
     static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-
-
-
         switch ($tabnum) {
             case 1 : // mon premier onglet
-
                 break;
 
             case 2 : // mon second onglet
