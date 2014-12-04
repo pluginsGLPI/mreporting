@@ -87,10 +87,6 @@ class PluginMreportingDashboard extends CommonDBTM {
          echo "</div>";
       }
 
-      $global_config = "
-      
-       global_config.show();";
-
       echo "<script type='text/javascript'>
          removeWidget = function(id){
             Ext.Ajax.request({
