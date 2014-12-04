@@ -95,7 +95,7 @@ $LANG['plugin_mreporting']['download_in_progress'] = "Le téléchargement de vos
 $LANG['plugin_mreporting']['download_dont_start']  = "Si le téléchargement ne démarre pas automatiquement, veuillez";
 $LANG['plugin_mreporting']['download_clic_here']   = "cliquer ici";
 
-$LANG['plugin_mreporting']['selector']["status"]   = "Status";
+$LANG['plugin_mreporting']['selector']["status"]   = "Statuts";
 $LANG['plugin_mreporting']['selector']["period"][0] = "Période";
 $LANG['plugin_mreporting']['selector']["period"][1] = "Jour";
 $LANG['plugin_mreporting']['selector']["period"][2] = "Semaine";
