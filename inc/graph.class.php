@@ -135,7 +135,7 @@ class PluginMreportingGraph {
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHbar($params,$dashboard = false , $width = false) {
+   function showHbar($params, $dashboard = false ,$width = false) {
 
       global $LANG;
 
@@ -324,7 +324,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showPie($params, $dashboard = false , $width = false) {
+   function showPie($params, $dashboard = false ,$width = false) {
 
       global $LANG;
 
@@ -513,7 +513,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showSunburst($params,$dashboard = false , $width = false) {
+   function showSunburst($params, $dashboard = false ,$width = false) {
       global $LANG;
       
       ob_start();
@@ -769,7 +769,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showHgbar($params,$dashboard = false , $width = false) {
+   function showHgbar($params, $dashboard = false ,$width = false) {
       global $LANG;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -984,7 +984,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showVstackbar($params,$dashboard = false , $width = false) {
+   function showVstackbar($params, $dashboard = false ,$width = false) {
       global $LANG;
 
       ob_start();
@@ -1203,7 +1203,7 @@ JAVASCRIPT;
     * @param $area : show plain chart instead only a line (optionnal)
     * @return nothing
     */
-   function showArea($params,$dashboard = false , $width = false ) {
+   function showArea($params, $dashboard = false ,$width = false ) {
       global $LANG;
 
       ob_start();
@@ -1425,11 +1425,11 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showLine($params,$dashboard = false , $width = false) {
+   function showLine($params, $dashboard = false ,$width = false) {
       if ($dashboard) {
-         return  $this->showArea($params,$dashboard  , $width);
+         return  $this->showArea($params, $dashboard  , $width);
       } else {
-         $this->showArea($params,$dashboard  , $width);
+         $this->showArea($params, $dashboard  , $width);
       }
    }
 
@@ -1447,7 +1447,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGarea($params,$dashboard = false , $width = false) {
+   function showGarea($params, $dashboard = false ,$width = false) {
       global $LANG;
       ob_start();
       if ($width !== false){
@@ -1679,11 +1679,11 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-   function showGline($params,$dashboard = false , $width = false) {
+   function showGline($params, $dashboard = false ,$width = false) {
       if ($dashboard) {
-         return $this->showGarea($params,$dashboard, $width);
+         return $this->showGarea($params, $dashboard, $width);
       } else {
-         $this->showGarea($params,$dashboard, $width);
+         $this->showGarea($params, $dashboard, $width);
       }
    }
 

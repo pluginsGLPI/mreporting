@@ -500,7 +500,14 @@ class PluginMreportingCommon extends CommonDBTM {
    function showGraph($opt, $export = false) {
       global $LANG, $CFG_GLPI;
 
-      self::title($opt);
+      if (!isset($opt['hide_title'])) {
+         self::title($opt);
+         $opt['hide_title'] = false;
+      }
+
+      if (!isset($opt['width'])) {
+         $opt['width'] = false;
+      }
 
       //check the format display charts configured in glpi
       $opt = $this->initParams($opt, $export);
@@ -535,8 +542,7 @@ class PluginMreportingCommon extends CommonDBTM {
                        "desc"       => $des_func,
                        "export"     => $export,
                        "opt"        => $opt);
-      $graph->{'show'.$opt['gtype']}($params);
-
+      return $graph->{'show'.$opt['gtype']}($params, $opt['hide_title'], $opt['width']);
    }
 
 

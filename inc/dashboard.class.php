@@ -49,55 +49,6 @@ class PluginMreportingDashboard extends CommonDBTM {
       return true;
    }
 
-   function showGraphOnDashboard($opt, $export = false) {
-      global $CFG_GLPI,$LANG;
-
-      ob_start();
-      $common = new PluginMreportingCommon();
-
-      //check the format display charts configured in glpi
-      $opt = $common->initParams($opt, $export);
-      $config = PluginMreportingConfig::initConfigParams($opt['f_name'],
-        "PluginMreporting".$opt['short_classname']);
-
-      if ($config['graphtype'] == 'PNG' ||
-         $config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'png') {
-         $graph = new PluginMreportingGraphpng();
-      } elseif ($config['graphtype'] == 'SVG' ||
-         $config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'svg') {
-         $graph = new PluginMreportingGraph();
-      }
-
-      //dynamic instanciation of class passed by 'short_classname' GET parameter
-      $classname = 'PluginMreporting'.$opt['short_classname'];
-      $obj = new $classname($config);
-
-      //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-      $datas = $obj->$opt['f_name']($config);
-
-      //show graph (pgrah type determined by first entry of explode of camelcase of function name
-      $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
-      $des_func = "";
-      if (isset($LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc']))
-         $des_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['desc'];
-
-      $opt['class'] = $classname;
-      $opt['withdata'] = 1;
-      $params = array("raw_datas"   => $datas,
-         "title"      => $title_func,
-         "randname"   => $title_func.$opt['short_classname'],
-         "desc"       => $des_func,
-         "export"     => $export,
-         "opt"        => $opt);
-
-      echo $graph->{'show'.$opt['gtype']}($params , true, 410);
-      $ob = ob_get_clean();
-
-      return $ob;
-   }
-
-
-
    function showDashBoard($show_reports_dropdown = true){
       global $LANG,$CFG_GLPI;
 
@@ -197,9 +148,11 @@ class PluginMreportingDashboard extends CommonDBTM {
             if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
                $opt = array('short_classname' => $short_classname, 
                             'f_name'          => $f_name, 
-                            'gtype'           => $gtype);
-               $dash = new self();
-               $report_script   = $dash->showGraphOnDashboard($opt);
+                            'gtype'           => $gtype, 
+                            'width'           => 410, 
+                            'hide_title'      => true);
+               $common = new PluginMreportingCommon();
+               $report_script = $common->showGraph($opt);
             }
          }
 
