@@ -68,10 +68,12 @@
 
 .chzn-container .chzn-drop li:nth-child(even) {background: #EEE}
 
-.mreportingwidget-header {
-   background-color: #e1d39e;
-   padding: 10px;
-   border-right: 1px dashed white;
+.mreportingwidget-panel {
+   text-align:center;
+   margin: auto; 
+   width: auto;
+   height: auto;
+   min-height: 500px;
 }
 
 .mreportingwidget {
@@ -81,19 +83,21 @@
    border-style: solid;
    border-width: 1px;
    display:inline-block;
-   float: none;
+   vertical-align: top;
+   margin: 2px 0 0 0;
 }
 
-#panel .x-column-inner {
-   text-align:center;
+.mreportingwidget-header {
+   background-color: #e1d39e;
+   padding: 10px;
 }
 
-.x-window-body {
-   overflow: visible !important;
+.mreportingwidget-body {
+   overflow: hidden;
 }
 
-.x-window-bwrap {
-   overflow: visible !important;
+.clear {
+   clear: both;
 }
 
 body,
@@ -101,5 +105,5 @@ select[name=report],
 select[name=report] option,
 select[name=graphmenu],
 select[name=graphmenu] option {
-   font-family: FontAwesome, 'Helvetica' !important;
+   font-family: FontAwesome, 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif' !important;
 }

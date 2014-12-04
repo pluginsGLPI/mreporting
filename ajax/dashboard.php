@@ -1,5 +1,6 @@
 <?php
 include('../../../inc/includes.php');
+Html::header_nocache();
 
 if (isset($_POST['action'])) {
    switch ($_POST['action']) {

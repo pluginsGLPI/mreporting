@@ -117,7 +117,7 @@ class PluginMreportingGraph {
 
          $colors = "'".implode ("', '", PluginMreportingConfig::getColors())."'";
          echo "<script type='text/javascript+protovis'>
-            function showGraph$randname() {
+            showGraph$randname = function() {
                colors = pv.colors($colors);";
       }
    }
@@ -1338,8 +1338,8 @@ JAVASCRIPT;
          if ({$spline}>0) return "cardinal";
          else return "linear";
       })
-      .left(function() x(this.index))
-      .bottom(function(d) y(d))
+      .left(function() { return x(this.index); })
+      .bottom(function(d) { return y(d); })
       .visible(function() {return this.index  < ((offset / 2) * ( n / 12));})
       .lineWidth(4);
 
@@ -1350,13 +1350,13 @@ JAVASCRIPT;
          })
          .bottom(1)
          .fillStyle(function() { return colors(0).alpha(.5); })
-         .height(function(d) y(d));
+         .height(function(d) { return y(d); });
    }
 
    /* Dots */
    var dot = line{$randname}.add(pv.Dot)
-      .left(function() x(this.index))
-      .bottom(function(d) y(d))
+      .left(function() { return x(this.index); })
+      .bottom(function(d) { return y(d); })
       .fillStyle(function () { return (i == this.index) ? "#ff7f0e" : "white";})
       .lineWidth(2)
       .size(function () { return (i == this.index) ? 20 : 10;});
@@ -1527,15 +1527,15 @@ JAVASCRIPT;
    /* Y-ticks. */
    vis{$randname}.add(pv.Rule)
       .data(y.ticks())
-      .bottom(function(d) Math.round(y(d)) - .5)
-      .strokeStyle(function(d) d ? "#eee" : "black")
+      .bottom(function(d) { return Math.round(y(d)) - .5; })
+      .strokeStyle(function(d) { return d ? "#eee" : "black"; })
      .anchor("left").add(pv.Label)
-       .text(function(d) d.toFixed(1));
+       .text(function(d) { return d.toFixed(1) });
 
    /* X-ticks. */
    vis{$randname}.add(pv.Rule)
       .data(x.ticks(m))
-      .left(function(d) Math.round(x(d)) - .5)
+      .left(function(d) { return Math.round(x(d)) - .5; })
       .strokeStyle(function() {
          if (this.index == 0) return "black";
          return (i == this.index) ? "black" : "#eee";
@@ -1546,7 +1546,7 @@ JAVASCRIPT;
       .textAngle(Math.PI / 4)
       .textAlign("left")
       .textMargin(5)
-      .text(function(d) labels2[this.index])
+      .text(function(d){ return  labels2[this.index]; })
       .font(function() {
          return (i == this.index) ? "bold 11px sans-serif" : "";
       }) 
@@ -1558,7 +1558,7 @@ JAVASCRIPT;
    /* add mini black lines in front of labels tick */
    vis{$randname}.add(pv.Rule)
       .data(x.ticks(m))
-      .left(function() x(this.index)-1)
+      .left(function() { return x(this.index)-1; })
       .bottom(-5)
       .strokeStyle("black")
       .height(5)
@@ -1576,15 +1576,15 @@ JAVASCRIPT;
       .tension(function () {
          return ('{$unit}' == '%') ? 0.9 : 0.7;
       })
-      .data(function(d) d)
+      .data(function(d) { return d; })
       .interpolate(function () { //curve line
          if ({$spline}>0) return "cardinal";
          else return "linear";
       })
       .strokeStyle(function() { return colors(this.parent.index); })
-      .left(function() x(this.index))
-      .bottom(function(d) y(d))
-      .visible(function() {return (this.index < ((offset / 2) * ( m / 12))); })
+      .left(function() { return x(this.index); })
+      .bottom(function(d) { return y(d); })
+      .visible(function() { return (this.index < ((offset / 2) * ( m / 12))); })
       .lineWidth(2);
 
    if ('{$area}'>0) {
@@ -1595,13 +1595,13 @@ JAVASCRIPT;
          .lineWidth(0)
          .bottom(1)
          .fillStyle(function() { return colors(this.parent.index).alpha(.15); })
-         .height(function(d) y(d));
+         .height(function(d) { return y(d); });
    }
 
    /* The dots*/
    var dots{$randname} = lines{$randname}.add(pv.Dot)
-      .left(function() x(this.index))
-      .bottom(function(d) y(d))
+      .left(function() { return x(this.index); })
+      .bottom(function(d) { return y(d); })
       .fillStyle(function () {
          return (i == this.index) ? colors(this.parent.index) : "white";
       })
@@ -1611,9 +1611,9 @@ JAVASCRIPT;
 
    /* The legend */
    var legend_dots{$randname} = lines{$randname}.add(pv.Dot)
-         .data(function(d) [d[i]])
+         .data(function(d) { return [d[i]]; })
          .left(5)
-         .top(function() this.parent.index * 13 + 10);
+         .top(function() { return this.parent.index * 13 + 10; });
 
    var legend_labels{$randname} = legend_dots{$randname}.anchor("right").add(pv.Label)
          .text(function(d) {

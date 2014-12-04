@@ -136,67 +136,46 @@ class PluginMreportingDashboard extends CommonDBTM {
          echo "</div>";
       }
 
+      $global_config = "
+      
+       global_config.show();";
+
       echo "<script type='text/javascript'>
-         /*Function to remove items on panel*/
-         function removeItemsType(panel,id){
+         removeWidget = function(id){
             Ext.Ajax.request({
                url: '{$root_ajax}',
                params: {
                   id: id,
                   action: 'removeReportFromDashboard'
-               },
-               failure: function(opt,success,respon){
-                  Ext.Msg.alert('Status', 'Ajax problem !');
-               },
+               }, 
                success: function(){
-                  Ext.getCmp('panel').remove(panel,true);
                   window.location.reload(true);
                }
             });
          }
 
-         Ext.onReady(function() {
-            window.onresize = function() {
-               Ext.getCmp('panel').doLayout(true);
-            }
+         global_config = new Ext.Window({
+            title: '".$LANG['plugin_mreporting']['dashboard'][2]."',
+            closeAction: 'hide',
+            html: '".substr(json_encode($this->getFormForColumn(),JSON_HEX_APOS),1,-1)."' ,
+          });
+      </script>";
 
-            var dash = new Ext.Panel({
-               itemId: 'panel',
-               id:'panel',
-               baseCls:' ',
-               autoHeight : true,
-               autoWidth:true,
-               style: 'margin:auto',
-               renderTo : 'dashboard',
-               layout: 'column',
-               tools: [{
-                     id:'gear',
-                     tooltip: '".$LANG['plugin_mreporting']['dashboard'][2]."',
-                     handler: function(event, toolEl,panel){
-                         win = new Ext.Window({
-                             title: '".$LANG['plugin_mreporting']['dashboard'][2]."',
-                             closeAction: 'hide',
-                             html: '".substr(json_encode($this->getFormForColumn(),JSON_HEX_APOS),1,-1)."' ,
-                         });
-                         win.show();
-
-                     }
-                 }],
-               items: [";
-
+      echo "<div class='mreportingwidget-panel'>";
+      echo "<div class='x-tool x-tool-gear' id='ext-gen6' onclick='global_config.show();'>&nbsp;</div>";
+      echo "<div class='clear'></div>";
       $i = 0;
-
-      $content = "";
-
       foreach($widgets as $data) {
          $i++;
+
+         $rand_widget =  mt_rand();
          $report = new PluginMreportingConfig();
          $report->getFromDB($data['reports_id']);
 
          $index = str_replace('PluginMreporting','',$report->fields['classname']);
          $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
-         $re = "Nothing to show" ;
+         $report_script = "Nothing to show" ;
          $config = "No configuration";
 
          $f_name = $report->fields["name"];
@@ -219,8 +198,8 @@ class PluginMreportingDashboard extends CommonDBTM {
                $opt = array('short_classname' => $short_classname, 
                             'f_name'          => $f_name, 
                             'gtype'           => $gtype);
-               $dash = new PluginMreportingDashboard();
-               $re   = $dash->showGraphOnDashboard($opt);
+               $dash = new self();
+               $report_script   = $dash->showGraphOnDashboard($opt);
             }
          }
 
@@ -232,58 +211,44 @@ class PluginMreportingDashboard extends CommonDBTM {
             $needConfig = false;
          }
 
-         $content .=  "{
-          xtype: 'panel',
-                  title: '".addslashes($href)."',
-                  id: '".$data['id']."',
-                  html: '".substr(json_encode($re,JSON_HEX_APOS),1,-1)."',
-                  baseCls:'mreportingwidget',
-                  tools: [";
+         $href = addslashes($href);
 
          if($needConfig){
-             $content .="{
-                     id:'gear',
-                     tooltip: 'Configure this report',
-                     handler: function(event, toolEl,panel){
-                         win = new Ext.Window({
-                             title: 'Configuration',
-                             closeAction: 'hide',
-                             autoLoad: {
-                                 url: '$root_ajax',
-                                 scripts: true,
-                                 method : 'POST',
-                                 params: {
-                                    action: 'getConfig', 
-                                    target: '$target',
-                                    f_name:'$f_name',
-                                    short_classname:'$short_classname',
-                                    gtype:'$gtype'
-                                 }
-                              },
-                         });
-                         win.show();
-                     }
-                 },";
+            echo "<script type='text/javascript'>
+               var win$rand_widget = new Ext.Window({
+                     title: 'Configuration',
+                     closeAction: 'hide',
+                     autoLoad: {
+                        url: '$root_ajax',
+                        scripts: true,
+                        method : 'POST',
+                        params: {
+                           action: 'getConfig', 
+                           target: '$target',
+                           f_name:'$f_name',
+                           short_classname:'$short_classname',
+                           gtype:'$gtype'
+                        }
+                     },
+                  });
+            </script>";
          }
 
+         echo "
+         <div class='mreportingwidget'>
+            <div class='mreportingwidget-header'>
+               <div class='x-tool x-tool-close' onclick='removeWidget(".$data['id'].")'>&nbsp;</div>
+               <div class='x-tool x-tool-gear' onclick='win$rand_widget.show();'>&nbsp;</div>
+               <span class='mreportingwidget-header-text'>$href</span>
+            </div>
+            <div class='mreportingwidget-body'>
+               $report_script
+            </div>
+         </div>";
+      }  
 
-         $content .= "{
-                     id:'close',
-                     tooltip: 'Remove this report',
-                     handler: function(event, toolEl,panel){ removeItemsType(panel,".$data['id']."); }
-                 }]
-                 }";
-
-         if($i != count($widgets)){
-            $content .=',';
-         }
-      }
-
-      $content .= "]  }); });";
-      $content .= "</script>";
-      $content .= "</div>";
-
-      echo $content;
+      echo "<div class='clear'></div>";
+      echo "</div>";
    }
 
    public static function CurrentUserHaveDashboard() {
