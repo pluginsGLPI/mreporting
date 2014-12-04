@@ -45,15 +45,7 @@ foreach ($reports as $classname => $report) {
                            'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname");
 }
 
-/*** DEBUG Tab ***/
-if (DEBUG_MREPORTING) {
-   $tabs['debug'] = array('title'=>"DEBUG",
-                           'url'=>$CFG_GLPI['root_doc']."/plugins/mreporting/ajax/debug.php");
-}
-
-
 if (count($tabs) > 0){
-
     //foreach tabs
     foreach($tabs as $tab){
         global $DB;
