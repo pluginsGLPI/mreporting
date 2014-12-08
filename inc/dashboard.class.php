@@ -129,6 +129,11 @@ class PluginMreportingDashboard extends CommonDBTM {
          $report = new PluginMreportingConfig();
          $report->getFromDB($data['reports_id']);
 
+         //Class may not exists: this case should only happen during development phase
+         if (!class_exists($report->fields["classname"]) 
+            || !PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'], $report->getID())) {
+            continue;
+         }
          $index = str_replace('PluginMreporting','',$report->fields['classname']);
          $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
