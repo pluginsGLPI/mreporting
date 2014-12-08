@@ -90,15 +90,29 @@
 
 .mreportingwidget-header {
    background-color: #e1d39e;
-   padding: 10px;
+   padding: 10px 0;
 }
 
 .mreportingwidget-body {
    overflow: hidden;
 }
 
+.left {
+   float: left;
+}
+
+.right {
+   float: right;
+}
+
 .clear {
    clear: both;
+}
+
+.mreportingwidget-panel button {
+   width: 20px;
+   height: 20px;
+   margin-top: -5px;
 }
 
 #mreporting_central_dashboard iframe {
