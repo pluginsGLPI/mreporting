@@ -62,7 +62,7 @@ if (isset($_POST["add"])) {
          $_GET["id"] = $config->fields['id'];
       }
    }
-	$config->showForm($_GET["id"]);
+   $config->display($_GET);
 
 	Html::footer();
 

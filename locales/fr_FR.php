@@ -66,6 +66,8 @@ $LANG['plugin_mreporting']["dashboard"][4] = "Sélectionnez un rapport à affich
 $LANG['plugin_mreporting']["dashboard"][5] = "Sélectionnez un rapport à ajouter";
 $LANG['plugin_mreporting']["dashboard"][6] = "Configurer le rapport";
 
+$LANG['plugin_mreporting']["dashboard_list"][1] = "Liste des rapports";
+
 $LANG['plugin_mreporting']['parser'][1] = "Utiliser ce modèle";
 $LANG['plugin_mreporting']['parser'][2] = "Merci de sélectionner un modèle dans vos préférences";
 $LANG['plugin_mreporting']['parser'][3] = "Aucun modèle n'existe";

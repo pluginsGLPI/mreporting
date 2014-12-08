@@ -51,37 +51,36 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $menu = parent::getMenuContent();
 
-      $image_dashboard = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/dashboard.png'
+      $img_db = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/dashboard.png'
                            title='".$LANG['plugin_mreporting']["dashboard"][1]."' 
                            alt='".$LANG['plugin_mreporting']["dashboard"][1]."'>";
-      $image_central   = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/list_dashboard.png'
-                           title='"."TODO LANG"."' 
-                           alt='"."TODO LANG"."'>";
+      $img_ct   = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/list_dashboard.png'
+                           title='".$LANG['plugin_mreporting']["dashboard_list"][1]."' 
+                           alt='".$LANG['plugin_mreporting']["dashboard_list"][1]."'>";
       $url_central   = "/plugins/mreporting/front/central.php";
       $url_dashboard = "/plugins/mreporting/front/dashboard.php";
 
-      $menu['page'] = $url_dashboard;
-      $menu['links'][$image_dashboard] = $url_dashboard;
-
+      $menu['page'] = $url_central;
       if(PluginMreportingDashboard::CurrentUserHaveDashboard()) {
-         $menu['options']['viewreports']['title']     = $LANG['plugin_mreporting']["dashboard"][1];
-         $menu['page'] 
-            = $menu['options']['viewreports']['page'] = $url_dashboard;
-      } else {
-         $menu['options']['viewreports']['title']     = "TODO LANG";
-         $menu['page'] 
-            = $menu['options']['viewreports']['page'] = $url_central;
+         $menu['page'] = $url_dashboard;
       }
-      $menu['options']['viewreports']['links'][$image_dashboard] = $url_dashboard;
-      $menu['options']['viewreports']['links'][$image_central]   = $url_central;
-      $menu['options']['viewreports']['links']['config'] = PluginMreportingConfig::getSearchURL(false);
 
-      $menu['options']['config']['title']            = PluginMreportingConfig::getTypeName(2);
-      $menu['options']['config']['page']             = PluginMreportingConfig::getSearchURL(false);
-      $menu['options']['config']['links']            = $menu['options']['viewreports']['links'];
-      $menu['options']['config']['links']['search']  = PluginMreportingConfig::getSearchURL(false);
+      $menu['options']['dashboard']['page']            = $url_dashboard;
+      $menu['options']['dashboard']['title']           = $LANG['plugin_mreporting']["dashboard"][1];
+      $menu['options']['dashboard']['links'][$img_db]  = $url_dashboard;
+      $menu['options']['dashboard']['links'][$img_ct]  = $url_central;
+      $menu['options']['dashboard']['links']['config'] = PluginMreportingConfig::getSearchURL(false);
+
+      $menu['options']['dashboard_list']               = $menu['options']['dashboard'];
+      $menu['options']['dashboard_list']['page']       = $url_central;
+      $menu['options']['dashboard_list']['title']      = $LANG['plugin_mreporting']["dashboard_list"][1];
+
+      $menu['options']['config']['title']              = PluginMreportingConfig::getTypeName(2);
+      $menu['options']['config']['page']               = PluginMreportingConfig::getSearchURL(false);
+      $menu['options']['config']['links']              = $menu['options']['dashboard']['links'];
+      $menu['options']['config']['links']['search']    = PluginMreportingConfig::getSearchURL(false);
       if (PluginMreportingConfig::canCreate()) {
-         $menu['options']['config']['links']['add']  = PluginMreportingConfig::getFormURL(false);
+         $menu['options']['config']['links']['add']    = PluginMreportingConfig::getFormURL(false);
       }
 
       return $menu;

@@ -40,35 +40,13 @@ class PluginMreportingConfig extends CommonDBTM {
       return $LANG['plugin_mreporting']["config"][0];
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-      global $LANG;
-
-      $ong = array();
-      $ong[1] = $LANG['plugin_mreporting']["name"]." - ".$LANG['plugin_mreporting']["config"][0];
-      $ong[2] = $LANG['plugin_mreporting']["right"]["manage"];
-      return $ong;
-   }
-
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-      switch ($tabnum) {
-         case 1 : // mon premier onglet
-             break;
-
-         case 2 : // mon second onglet
-             $reportProfile = new PluginMreportingProfile();
-             $reportProfile->showFormForManageProfile($item);
-             break;
-      }
-      return true;
-   }
-
-
    /**
     * Définition des onglets
    **/
    function defineTabs($options=array()) {
      $ong = array();
-     $this->addStandardTab('PluginMreportingConfig', $ong, $options);
+     $this->addDefaultFormTab($ong);
+     $this->addStandardTab('PluginMreportingProfile', $ong, $options);
      return $ong;
    }
 
@@ -525,8 +503,8 @@ class PluginMreportingConfig extends CommonDBTM {
 
    function prepareInputForUpdate($input) {
 
-      if (isset($input["classname"]) && method_exists(new $input["classname"](), 'checkConfig')) {
-         $object = new $input["classname"]();
+      if (isset($input["classname"]) && method_exists(new $input["classname"](array()), 'checkConfig')) {
+         $object = new $input["classname"](array());
          $checkConfig = $object->checkConfig($input);
          if(!$checkConfig['result']) {
             Session::addMessageAfterRedirect($checkConfig['message'],ERROR,true);
@@ -538,15 +516,10 @@ class PluginMreportingConfig extends CommonDBTM {
    }
 
    function showForm ($ID, $options=array()) {
-
       global $LANG;
 
-      if (!$this->canView()) return false;
-
-      if ($ID>0) {
-         $this->check($ID,'r');
-      } else {
-         $this->getEmpty();
+      $this->initForm($ID, $options);
+      if ($ID <= 0) {
          if (isset($_GET['name']) && isset($_GET['classname'])) {
             $this->preconfig($_GET['name'], $_GET['classname']);
             $_GET['preconfig']=1;
@@ -583,7 +556,6 @@ class PluginMreportingConfig extends CommonDBTM {
       }
       echo ">";
 
-      $this->showTabs($options);
       $this->showFormHeader($options);
 
       echo "<tr class='tab_bg_1'>";
@@ -735,9 +707,6 @@ class PluginMreportingConfig extends CommonDBTM {
       $this->showFormButtons($options);
 
       echo "</div>";
-
-      $this->addDivForTabs();
-
       return true;
    }
 

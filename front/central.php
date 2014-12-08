@@ -30,7 +30,7 @@
 include ("../../../inc/includes.php");
 
 Session::checkLoginUser();
-Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'viewreports');
+Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'dashboard_list');
 $common = new PluginMreportingCommon();
 
 /*** Regular Tab ***/

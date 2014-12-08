@@ -240,15 +240,14 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
          switch ($table.'.'.$field) {
             case "glpi_plugin_mreporting_configs.show_label":
                $out = ' ';
-               if (!empty($data["ITEM_$num"])) {
-                  $out=PluginMreportingConfig::getLabelTypeName($data["ITEM_$num"]);
+               if (!empty($data['raw']["ITEM_$num"])) {
+                  $out=PluginMreportingConfig::getLabelTypeName($data['raw']["ITEM_$num"]);
                }
                return $out;
                break;
             case "glpi_plugin_mreporting_configs.name":
                $out = ' ';
-               if (!empty($data["ITEM_$num"])) {
-
+               if (!empty($data['raw']["ITEM_$num"])) {
                   $title_func = '';
                   $short_classname = '';
                   $f_name = '';
@@ -269,7 +268,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
 
                         $gtype = strtolower($ex_func[1]);
 
-                        if ($data["ITEM_$num"] == $funct_name) {
+                        if ($data['raw']["ITEM_$num"] == $funct_name) {
                            if (!empty($classname) && !empty($funct_name)) {
                               $short_classname = str_replace('PluginMreporting', '', $classname);
                               if (isset($LANG['plugin_mreporting'][$short_classname][$funct_name]['title'])) {
@@ -280,7 +279,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
                      }
                   }
                   $out="<a href='config.form.php?id=".$data["id"]."'>".
-                        $data["ITEM_$num"]."</a> (".$title_func.")";
+                        $data['raw']["ITEM_$num"]."</a> (".$title_func.")";
                }
                return $out;
                break;

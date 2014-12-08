@@ -66,6 +66,8 @@ class PluginMreportingProfile extends CommonDBTM {
 
       if ($item->getType()=='Profile') {
          return $LANG['plugin_mreporting']["name"];
+      } else if ($item->getType()=='PluginMreportingConfig') {
+         return $LANG['plugin_mreporting']["right"]["manage"];
       }
       return '';
    }
@@ -83,6 +85,9 @@ class PluginMreportingProfile extends CommonDBTM {
          }
          $prof->showForm($item->getField('id'), array('target' =>
                      $CFG_GLPI["root_doc"]."/plugins/mreporting/front/profile.form.php"));
+      } else if ($item->getType()=='PluginMreportingConfig') {
+         $reportProfile = new self();
+         $reportProfile->showFormForManageProfile($item);
       }
       return true;
    }

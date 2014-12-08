@@ -30,7 +30,7 @@ if (isset($_POST['saveConfig'])) {
     Html::back();
 
 } else {
-    Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'viewreports');
+    Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'dashboard');
     $dashboard = new PluginMreportingDashboard();
     $dashboard->showDashBoard();
 
