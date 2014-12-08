@@ -55,8 +55,8 @@ if (count($tabs) > 0){
       $query = "SELECT *
             FROM `glpi_plugin_mreporting_configs`,`glpi_plugin_mreporting_profiles`
             WHERE `glpi_plugin_mreporting_configs`.`id` = `glpi_plugin_mreporting_profiles`.`reports`
-            AND `glpi_plugin_mreporting_configs`.`classname` = '".$classname."'
-            AND `glpi_plugin_mreporting_profiles`.`right` = 'r'
+            AND `glpi_plugin_mreporting_configs`.`classname` = '$classname'
+            AND `glpi_plugin_mreporting_profiles`.`right` = ".READ."
             AND `glpi_plugin_mreporting_profiles`.`profiles_id` = ".$_SESSION['glpiactiveprofile']['id'];
 
       //for this classname if current user have no right on any reports
