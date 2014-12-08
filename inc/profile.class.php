@@ -262,7 +262,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
       echo "<div class='center'>";
       echo "<input type='hidden' name='profile_id' value=".$ID.">";
-      echo "<input type='submit' name='add' value=\""._sx('button','Save')."\" class='submit'>";
+      echo "<input type='submit' name='update' value=\""._sx('button','Save')."\" class='submit'>";
       echo "</div>";
       
       echo "<div style='float:right;'>";
