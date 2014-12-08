@@ -1373,22 +1373,24 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorForMultipleGroups($field, $condition = '', $label = '') {
       global $DB;
 
-      $selected_groups_requester = array();
+      $values = array();
       if (isset($_SESSION['mreporting_values'][$field])) {
-         $selected_groups_requester = $_SESSION['mreporting_values'][$field];
+         $values = $_SESSION['mreporting_values'][$field];
       }
 
-
-      echo "<br /><b>".$label." : </b><br />";
-      echo "<select name='".$field."[]' multiple class='chzn-select' data-placeholder='-----'>";
+      $param = array();
       foreach (getAllDatasFromTable('glpi_groups', $condition) as $data) {
-         $selected = "";
-         if (in_array($data['id'], $selected_groups_requester)) {
-            $selected = "selected ";
-         }
-         echo "<option value='".$data['id']."' $selected>".$data['completename']."</option>";
+         $param[$data['id']] = $data['completename'];
       }
-      echo "</select>";
+
+      $param['multiple']= true;
+      $param['display'] = true;
+      $param['size']    = count($values);
+      
+      echo "<input type='hidden' name='".$field."[]' value='0'>";
+      echo "<br /><b>".$label." : </b><br />";
+      Dropdown::showFromArray($field, $values, $param);
+
    }
 
    static function selectorForSingleGroup($field, $conditon = '', $label = '') {
