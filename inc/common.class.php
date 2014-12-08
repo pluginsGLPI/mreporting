@@ -69,7 +69,9 @@ class PluginMreportingCommon extends CommonDBTM {
       $menu['options']['dashboard']['title']           = $LANG['plugin_mreporting']["dashboard"][1];
       $menu['options']['dashboard']['links'][$img_db]  = $url_dashboard;
       $menu['options']['dashboard']['links'][$img_ct]  = $url_central;
-      $menu['options']['dashboard']['links']['config'] = PluginMreportingConfig::getSearchURL(false);
+      if (PluginMreportingConfig::canCreate()) {
+         $menu['options']['dashboard']['links']['config'] = PluginMreportingConfig::getSearchURL(false);
+      }
 
       $menu['options']['dashboard_list']               = $menu['options']['dashboard'];
       $menu['options']['dashboard_list']['page']       = $url_central;
