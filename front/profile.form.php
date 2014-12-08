@@ -31,25 +31,22 @@ include ("../../../inc/includes.php");
 
 Session::checkRight("profile", READ);
 
+$config = new PluginMreportingConfig();
+$res = $config->find();
+$profil = new PluginMreportingProfile();
+
 //Save profile
 if (isset ($_REQUEST['update'])) {
-   $config = new PluginMreportingConfig();
-   $res = $config->find();
-
    foreach( $res as $report) {
       if (class_exists($report['classname'])) {
          $access = $_REQUEST[$report['id']];
-         $idReport = $report['id'];
-         $idProfil = $_REQUEST['profile_id'];
 
-         $profil = new PluginMreportingProfile();
-         $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+         $profil->getFromDBByQuery("where profiles_id = ".$_REQUEST['profile_id'].
+                                   " AND reports = ".$report['id']);
          $profil->fields['right'] = $access;
          $profil->update($profil->fields);
       }
    }
-
-	Html::back();
 
 } else if (isset ($_REQUEST['add'])) {
    $query = "SELECT `id`, `name`
@@ -58,47 +55,28 @@ if (isset ($_REQUEST['update'])) {
 
    foreach ($DB->request($query) as $profile) {
       $access = $_REQUEST[$profile['id']];
-      $idProfil = $profile['id'];
-      $idReport = $_REQUEST['report_id'];
 
-      $profil = new PluginMreportingProfile();
-      $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+      $profil->getFromDBByQuery("where profiles_id = ".$profile['id'].
+                                " AND reports = ".$_REQUEST['report_id']);
       $profil->fields['right'] = $access;
       $profil->update($profil->fields);
    }
 
-   Html::back();
-
 } else if (isset($_REQUEST['giveReadAccessForAllReport'])){
-   $config = new PluginMreportingConfig();
-   $res = $config->find();
-
    foreach( $res as $report) {
-      $idReport = $report['id'];
-      $idProfil = $_REQUEST['profile_id'];
-
-      $profil = new PluginMreportingProfile();
-      $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
-      $profil->fields['right'] = 'r';
+      $profil->getFromDBByQuery("where profiles_id = ".$_REQUEST['profile_id'].
+                                   " AND reports = ".$report['id']);
+      $profil->fields['right'] = READ;
       $profil->update($profil->fields);
    }
-  Html::back();
 
 } else if (isset($_REQUEST['giveNoneAccessForAllReport'])){
-   $config = new PluginMreportingConfig();
-   $res = $config->find();
-
    foreach( $res as $report) {
-      $idReport = $report['id'];
-      $idProfil = $_REQUEST['profile_id'];
-
-      $profil = new PluginMreportingProfile();
-      $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+      $profil->getFromDBByQuery("where profiles_id = ".$_REQUEST['profile_id'].
+                               " AND reports = ".$report['id']);
       $profil->fields['right'] = 'NULL';
       $profil->update($profil->fields);
    }
-
-   Html::back();
 
 } else if (isset($_REQUEST['giveNoneAccessForAllProfile'])){
    $query = "SELECT `id`, `name`
@@ -106,16 +84,11 @@ if (isset ($_REQUEST['update'])) {
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
-      $idProfil = $profile['id'];
-      $idReport = $_REQUEST['report_id'];
-
-      $profil = new PluginMreportingProfile();
-      $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
+      $profil->getFromDBByQuery("where profiles_id = ".$profile['id'].
+                                " AND reports = ".$_REQUEST['report_id']);
       $profil->fields['right'] = 'NULL';
       $profil->update($profil->fields);
    }
-
-   Html::back();
 
 } else if (isset($_REQUEST['giveReadAccessForAllProfile'])){
    $query = "SELECT `id`, `name`
@@ -123,15 +96,12 @@ if (isset ($_REQUEST['update'])) {
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
-      $idProfil = $profile['id'];
-      $idReport = $_REQUEST['report_id'];
-
-      $profil = new PluginMreportingProfile();
-      $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
-      $profil->fields['right'] = 'r';
+      $profil->getFromDBByQuery("where profiles_id = ".$profile['id'].
+                                " AND reports = ".$_REQUEST['report_id']);
+      $profil->fields['right'] = READ;
       $profil->update($profil->fields);
    }
 
-   Html::back();
 }
+Html::back();
 

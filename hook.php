@@ -126,9 +126,6 @@ function plugin_mreporting_install() {
    foreach($queries as $query) {
       $DB->query($query);
    }
-    
-   require_once "inc/profile.class.php";
-   PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
 
    // == Update to 2.1 ==
    $migration->addField('glpi_plugin_mreporting_configs', 'is_notified',
