@@ -30,6 +30,8 @@
 function plugin_mreporting_install() {
    global $DB;
 
+   include_once(GLPI_ROOT."/plugins/mreporting/inc/profile.class.php");
+
    //get version
    $plugin = new Plugin;
    $found  = $plugin->find("name = 'mreporting'");
