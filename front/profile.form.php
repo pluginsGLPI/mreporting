@@ -32,15 +32,15 @@ include ("../../../inc/includes.php");
 Session::checkRight("profile", READ);
 
 //Save profile
-if (isset ($_POST['update'])) {
+if (isset ($_REQUEST['update'])) {
    $config = new PluginMreportingConfig();
    $res = $config->find();
 
    foreach( $res as $report) {
       if (class_exists($report['classname'])) {
-         $access = $_POST[$report['id']];
+         $access = $_REQUEST[$report['id']];
          $idReport = $report['id'];
-         $idProfil = $_POST['profile_id'];
+         $idProfil = $_REQUEST['profile_id'];
 
          $profil = new PluginMreportingProfile();
          $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
@@ -51,15 +51,15 @@ if (isset ($_POST['update'])) {
 
 	Html::back();
 
-} else if (isset ($_POST['add'])) {
+} else if (isset ($_REQUEST['add'])) {
    $query = "SELECT `id`, `name`
    FROM `glpi_profiles` where `interface` = 'central'
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
-      $access = $_POST[$profile['id']];
+      $access = $_REQUEST[$profile['id']];
       $idProfil = $profile['id'];
-      $idReport = $_POST['report_id'];
+      $idReport = $_REQUEST['report_id'];
 
       $profil = new PluginMreportingProfile();
       $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
@@ -69,13 +69,13 @@ if (isset ($_POST['update'])) {
 
    Html::back();
 
-} else if (isset($_POST['giveReadAccessForAllReport'])){
+} else if (isset($_REQUEST['giveReadAccessForAllReport'])){
    $config = new PluginMreportingConfig();
    $res = $config->find();
 
    foreach( $res as $report) {
       $idReport = $report['id'];
-      $idProfil = $_POST['profile_id'];
+      $idProfil = $_REQUEST['profile_id'];
 
       $profil = new PluginMreportingProfile();
       $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
@@ -84,13 +84,13 @@ if (isset ($_POST['update'])) {
    }
   Html::back();
 
-} else if (isset($_POST['giveNoneAccessForAllReport'])){
+} else if (isset($_REQUEST['giveNoneAccessForAllReport'])){
    $config = new PluginMreportingConfig();
    $res = $config->find();
 
    foreach( $res as $report) {
       $idReport = $report['id'];
-      $idProfil = $_POST['profile_id'];
+      $idProfil = $_REQUEST['profile_id'];
 
       $profil = new PluginMreportingProfile();
       $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
@@ -100,14 +100,14 @@ if (isset ($_POST['update'])) {
 
    Html::back();
 
-} else if (isset($_POST['giveNoneAccessForAllProfile'])){
+} else if (isset($_REQUEST['giveNoneAccessForAllProfile'])){
    $query = "SELECT `id`, `name`
    FROM `glpi_profiles` where `interface` = 'central'
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
       $idProfil = $profile['id'];
-      $idReport = $_POST['report_id'];
+      $idReport = $_REQUEST['report_id'];
 
       $profil = new PluginMreportingProfile();
       $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
@@ -117,14 +117,14 @@ if (isset ($_POST['update'])) {
 
    Html::back();
 
-} else if (isset($_POST['giveReadAccessForAllProfile'])){
+} else if (isset($_REQUEST['giveReadAccessForAllProfile'])){
    $query = "SELECT `id`, `name`
    FROM `glpi_profiles` where `interface` = 'central'
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
       $idProfil = $profile['id'];
-      $idReport = $_POST['report_id'];
+      $idReport = $_REQUEST['report_id'];
 
       $profil = new PluginMreportingProfile();
       $profil->getFromDBByQuery("where profiles_id = ".$idProfil." and reports = ".$idReport);
