@@ -28,7 +28,7 @@
  */
 
 class PluginMreportingCommon extends CommonDBTM {
-   static $rightname = 'config';
+   static $rightname = 'statistic';
 
    /**
     * Returns the type name with consideration of plural
