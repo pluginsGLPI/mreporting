@@ -133,24 +133,31 @@ function plugin_mreporting_install() {
    $migration->migrationOneTable('glpi_plugin_mreporting_configs');
 
    // == Update to 2.3 ==
+   if (!fieldExists('glpi_plugin_mreporting_profiles', 'right')
+       && fieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
+      //save all profile with right READ
+      $right = PluginMreportingProfile::getRight();
 
-   //save all profile with right 'r'
-   $right = PluginMreportingProfile::getRight();
+      //truncate profile table
+      $query = "TRUNCATE TABLE `glpi_plugin_mreporting_profiles`";
+      $DB->query($query);
 
-   //truncate profile table
-   $query = "TRUNCATE TABLE `glpi_plugin_mreporting_profiles`";
+       //migration of field
+      $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
+      $migration->changeField('glpi_plugin_mreporting_profiles', 'reports', 
+                             'reports','integer');
+      $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id', 
+                             'profiles_id','integer');
+      $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
+
+      $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
+   }
+
+   // == UPDATE to 0.84+1.0 == 
+   $query = "UPDATE `glpi_plugin_mreporting_profiles` SET right = ".READ." WHERE right = 'r'";
    $DB->query($query);
 
-    //migration of field
-     $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
-     $migration->changeField('glpi_plugin_mreporting_profiles', 'reports', 
-                             'reports','integer');
-     $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id', 
-                             'profiles_id','integer');
-     $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
-
-     $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
-
+   //== Create directories
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
    if (!is_dir($rep_files_mreporting))
       mkdir($rep_files_mreporting);
@@ -158,6 +165,7 @@ function plugin_mreporting_install() {
    if (!is_dir($notifications_folder))
       mkdir($notifications_folder);
 
+   // == Install notifications
    require_once "inc/notification.class.php";
    PluginMreportingNotification::install();
    CronTask::Register('PluginMreportingNotification', 'SendNotifications', MONTH_TIMESTAMP);
@@ -165,6 +173,7 @@ function plugin_mreporting_install() {
    $migration->addField("glpi_plugin_mreporting_preferences", "selectors", "text");
    $migration->migrationOneTable('glpi_plugin_mreporting_preferences');
 
+   // == Init available reports
    require_once "inc/baseclass.class.php";
    require_once "inc/common.class.php";
    require_once "inc/config.class.php";

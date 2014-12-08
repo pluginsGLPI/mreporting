@@ -1525,7 +1525,7 @@ class PluginMreportingCommon extends CommonDBTM {
    
    static function canAccessAtLeastOneReport($profiles_id) {
       return countElementsInTable("glpi_plugin_mreporting_profiles", 
-                                  "`profiles_id`='$profiles_id' AND `right`='r'");
+                                  "`profiles_id`='$profiles_id' AND `right`= ".READ);
    }
 
    static function showNavigation() {
