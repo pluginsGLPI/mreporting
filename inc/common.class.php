@@ -309,12 +309,10 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "<table class='tab_cadre_fixe' id='mreporting_functions'>";
 
       foreach($reports as $classname => $report) {
-
          $i = 0;
          $nb_per_line = 2;
          $graphs = array();
          foreach($report['functions'] as $function) {
-
             if ($function['is_active']) {
                $graphs[$classname][$function['category_func']][] = $function;
             }
@@ -326,23 +324,21 @@ class PluginMreportingCommon extends CommonDBTM {
                if(self::haveSomeThingToShow($graph)){
                   echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
                   foreach($graph as $k => $v) {
-                     if($v['right']){
-                        if ($v['is_active']) {
-                           if ($i%$nb_per_line == 0) {
-                              if ($i != 0) {
-                                 echo "</tr>";
-                              }
-                              echo "<tr class='tab_bg_1' valign='top'>";
+                     if($v['right'] && $v['is_active']) {
+                        if ($i%$nb_per_line == 0) {
+                           if ($i != 0) {
+                              echo "</tr>";
                            }
-
-                           echo "<td>";
-                           echo "<a href='".$v['url_graph']."'>";
-                           echo "<img src='".$v['pic']."' />&nbsp;";
-                           echo $v['title'];
-                           echo "</a>";
-                           echo"</td>";
-                           $i++;
+                           echo "<tr class='tab_bg_1' valign='top'>";
                         }
+
+                        echo "<td>";
+                        echo "<a href='".$v['url_graph']."'>";
+                        echo "<img src='".$v['pic']."' />&nbsp;";
+                        echo $v['title'];
+                        echo "</a>";
+                        echo"</td>";
+                        $i++;
                      }
 
                      $count++;
@@ -361,7 +357,6 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</tr>";
 
          if (isset($graphs[$classname]) && $count>0) {
-
             $height = 200;
             $height += 30*$count;
             echo "<tr class='tab_bg_1'>";
@@ -374,6 +369,7 @@ class PluginMreportingCommon extends CommonDBTM {
             echo "</a></div>";
             echo "</th>";
             echo "</tr>";
+
          } else {
             echo "<tr class='tab_bg_1'>";
             echo "<th colspan='2'>";
@@ -385,7 +381,6 @@ class PluginMreportingCommon extends CommonDBTM {
 
 
       echo "</table>";
-
    }
 
     static function haveSomeThingToShow($graph){
@@ -432,9 +427,7 @@ class PluginMreportingCommon extends CommonDBTM {
             }
 
             foreach($graphs[$classname] as $cat => $graph) {
-
                echo "<tr class='tab_bg_1'><th colspan='4'>".$cat."</th></tr>";
-
                foreach($graph as $k => $v) {
 
                   if ($v['is_active']) {
@@ -545,7 +538,6 @@ class PluginMreportingCommon extends CommonDBTM {
    */
 
    static function initGraphParams($params) {
-
       $crit        = array();
 
       // Default values of parameters
@@ -671,7 +663,6 @@ class PluginMreportingCommon extends CommonDBTM {
    static function endGraph($options,$dashboard = false) {
       global $LANG, $CFG_GLPI;
 
-
       $opt        = array();
       $export     = false;
       $datas      = array();
@@ -690,7 +681,6 @@ class PluginMreportingCommon extends CommonDBTM {
          $_REQUEST['f_name'] = $opt['f_name'];
          $_REQUEST['gtype'] = $opt['gtype'];
          $_REQUEST['randname'] = $opt['randname'];
-
 
          //End Script for graph display
          //if $randname exists
@@ -720,49 +710,48 @@ class PluginMreportingCommon extends CommonDBTM {
 
                }
                if (!$export) {
+                  if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
+                     echo "<div class='graph_bottom'>";
+                     echo "<span style='float:left'>";
+                     echo "<br><br>";
+                     self::showNavigation();
+                     echo "</span>";
+                     echo "<span style='float:right'>";
+                     if (plugin_mreporting_haveRight('config', 'w')) {
+                        echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
+                        echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
+                        "&classname=".$opt['class']."' target='_blank'>";
+                        echo "<img src='../pics/config.png' class='title_pics'/></a>";
+                     }
+                     if ($randname !== false) {
 
-                   if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
-                       echo "<div class='graph_bottom'>";
-                       echo "<span style='float:left'>";
-                       echo "<br><br>";
-                       self::showNavigation();
-                       echo "</span>";
-                       echo "<span style='float:right'>";
-                       if (plugin_mreporting_haveRight('config', 'w')) {
-                           echo "<b>".$LANG['plugin_mreporting']["config"][0]."</b> : ";
-                           echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
-                               "&classname=".$opt['class']."' target='_blank'>";
-                           echo "<img src='../pics/config.png' class='title_pics'/></a>";
-                       }
-                       if ($randname !== false) {
+                        echo "<br><br>";
+                        echo "<form method='post' action='export.php?$request_string'
+                        style='margin: 0; padding: 0' target='_blank' id='export_form'>";
+                        echo "<b>".__("Export")."</b> : ";
+                        $params = array('myname'   => 'ext',
+                           'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",
+                           'class'                   => __CLASS__,
+                           'span'                    => 'show_ext',
+                           'gtype'                   => $_REQUEST['gtype'],
+                           'show_graph'              => $show_graph,
+                           'randname'                => $randname);
 
-                           echo "<br><br>";
-                           echo "<form method='post' action='export.php?$request_string'
-                           style='margin: 0; padding: 0' target='_blank' id='export_form'>";
-                           echo "<b>".__("Export")."</b> : ";
-                           $params = array('myname'   => 'ext',
-                               'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",
-                               'class'                   => __CLASS__,
-                               'span'                    => 'show_ext',
-                               'gtype'                   => $_REQUEST['gtype'],
-                               'show_graph'              => $show_graph,
-                               'randname'                => $randname);
+                        self::dropdownExt($params);
 
-                           self::dropdownExt($params);
+                        echo "<span id='show_ext'>";
+                        echo "</span>";
+                        Html::Closeform();
 
-                           echo "<span id='show_ext'>";
-                           echo "</span>";
-                           Html::Closeform();
+                     }
+                     echo "</span>";
+                  }
+                  echo "<div style='clear:both;'></div>";
+                  echo "</div>";
 
-                       }
-                       echo "</span>";
-                   }
-                   echo "<div style='clear:both;'></div>";
-                   echo "</div>";
-
-                   if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
-                       echo "</div></div>";
-                   }
+                  if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != "test") {
+                     echo "</div></div>";
+                  }
                }
 
                if ($randname == false) {
@@ -835,11 +824,8 @@ class PluginMreportingCommon extends CommonDBTM {
          }
 
          if (!$simpledatas) {
-
             $datas = array();
-
             foreach($calcul as $k => $v) {
-
                if (is_array($v)) {
                   foreach($v as $key => $val) {
                      $datas[$key][$k] = $val;
