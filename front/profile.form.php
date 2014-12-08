@@ -29,7 +29,7 @@
 
 include ("../../../inc/includes.php");
 
-//Session::checkRight("profile","r");
+Session::checkRight("profile", READ);
 
 //Save profile
 if (isset ($_POST['update'])) {

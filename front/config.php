@@ -29,7 +29,7 @@
 
 include ("../../../inc/includes.php");
 
-Session::checkRight("config","w");
+Session::checkRight("config", CREATE);
 
 $plugin = new Plugin();
 if ($plugin->isActivated("mreporting")) {
@@ -37,14 +37,13 @@ if ($plugin->isActivated("mreporting")) {
    //Create first config for graphs
    if (isset($_GET["new"])) {
 
-      Session::checkRight("config","w");
       $config= new PluginMreportingConfig();
       $config->createFirstConfig();
       Html::back();
 
    } else {
 
-      Html::header(__("Setup"),'',"plugins","mreporting","config");
+      Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'config');
 
       PluginMreportingConfig::addFirstconfigLink();
       Search::show("PluginMreportingConfig");

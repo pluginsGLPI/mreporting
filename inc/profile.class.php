@@ -32,6 +32,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginMreportingProfile extends CommonDBTM {
+   static $rightname = 'profile';
 
    static function getTypeName($nb = 0) {
       global $LANG;
@@ -39,34 +40,26 @@ class PluginMreportingProfile extends CommonDBTM {
       return $LANG['plugin_mreporting']["name"];
    }
 
-   static function canCreate() {
-      return Session::haveRight('profile', 'w');
+   //if profile deleted
+   static function purgeProfiles(Profile $prof) {
+      $plugprof = new self();
+      $plugprof->deleteByCriteria(array('profiles_id' => $prof->getField("id")));
    }
 
-   static function canView() {
-      return Session::haveRight('profile', 'r');
+
+   //if reports add
+   static function addReport(PluginMreportingConfig $config) {
+      $plugprof = new self();
+      $plugprof->addRightToReports($config->getField("id"));
    }
 
-    //if profile deleted
-    static function purgeProfiles(Profile $prof) {
-        $plugprof = new self();
-        $plugprof->deleteByCriteria(array('profiles_id' => $prof->getField("id")));
-    }
 
 
-    //if reports add
-    static function addReport(PluginMreportingConfig $config) {
-        $plugprof = new self();
-        $plugprof->addRightToReports($config->getField("id"));
-    }
-
-
-
-    //if reports  deleted
-    static function purgeProfilesByReports(PluginMreportingConfig $config) {
-        $plugprof = new self();
-        $plugprof->deleteByCriteria(array('reports' => $config->getField("id")));
-    }
+   //if reports  deleted
+   static function purgeProfilesByReports(PluginMreportingConfig $config) {
+      $plugprof = new self();
+      $plugprof->deleteByCriteria(array('reports' => $config->getField("id")));
+   }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       global $LANG;
@@ -246,11 +239,9 @@ class PluginMreportingProfile extends CommonDBTM {
      * @return bool
      */
     function showForm ($ID, $options=array()) {
-
-
-        if (!Session::haveRight("profile","r")) return false;
-
         global $LANG,$CFG_GLPI;
+
+        if (!Session::haveRight("profile", READ)) return false;
 
 
         $config = new PluginMreportingConfig();
@@ -310,7 +301,7 @@ class PluginMreportingProfile extends CommonDBTM {
     function showFormForManageProfile($items,$options=array()){
         global $DB, $LANG,$CFG_GLPI;
 
-        if (!Session::haveRight("config","r")) return false;
+        if (!Session::haveRight("config", READ)) return false;
 
 
         $target = $this->getFormURL();

@@ -32,55 +32,46 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginMreportingConfig extends CommonDBTM {
+   static $rightname = 'config';
 
    static function getTypeName($nb = 0) {
       global $LANG;
 
-      return $LANG['plugin_mreporting']["name"]." - ".$LANG['plugin_mreporting']["config"][0];
+      return $LANG['plugin_mreporting']["config"][0];
    }
 
-    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-        global $LANG;
+   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+      global $LANG;
 
-        $ong = array();
-        $ong[1] = $LANG['plugin_mreporting']["name"]." - ".$LANG['plugin_mreporting']["config"][0];
-        $ong[2] = $LANG['plugin_mreporting']["right"]["manage"];
-        return $ong;
-    }
-
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-        switch ($tabnum) {
-            case 1 : // mon premier onglet
-                break;
-
-            case 2 : // mon second onglet
-                $reportProfile = new PluginMreportingProfile();
-                $reportProfile->showFormForManageProfile($item);
-                break;
-        }
-        return true;
-    }
-
-
-    /**
-     * Définition des onglets
-     **/
-    function defineTabs($options=array()) {
-
-        $ong = array();
-        $this->addStandardTab('PluginMreportingConfig', $ong, $options);
-        return $ong;
-    }
-
-
-
-    static function canCreate() {
-      return Session::haveRight('config', 'w');
+      $ong = array();
+      $ong[1] = $LANG['plugin_mreporting']["name"]." - ".$LANG['plugin_mreporting']["config"][0];
+      $ong[2] = $LANG['plugin_mreporting']["right"]["manage"];
+      return $ong;
    }
 
-   static function canView() {
-       return Session::haveRight('config', 'r');
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+      switch ($tabnum) {
+         case 1 : // mon premier onglet
+             break;
+
+         case 2 : // mon second onglet
+             $reportProfile = new PluginMreportingProfile();
+             $reportProfile->showFormForManageProfile($item);
+             break;
+      }
+      return true;
    }
+
+
+   /**
+    * Définition des onglets
+   **/
+   function defineTabs($options=array()) {
+     $ong = array();
+     $this->addStandardTab('PluginMreportingConfig', $ong, $options);
+     return $ong;
+   }
+
 
    function getSearchOptions() {
       global $LANG;
@@ -190,14 +181,14 @@ class PluginMreportingConfig extends CommonDBTM {
       global $LANG, $CFG_GLPI;
 
       $buttons = array();
-      $title = _n("User", "Users", 2);
+      $title = "";
 
-      if (Session::haveRight('config', 'r')) {
+      if (Session::haveRight('config', READ)) {
          $buttons["config.php?new=1"] = $LANG['plugin_mreporting']["config"][10];
          $title = "";
       }
       Html::displayTitle($CFG_GLPI["root_doc"] . "/plugins/mreporting/pics/config2.png",
-                        _n("User", "Users", 2), $title,$buttons);
+                        $title, $title, $buttons);
 
    }
 

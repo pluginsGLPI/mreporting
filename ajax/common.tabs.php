@@ -33,7 +33,7 @@ Html::header_nocache();
 
 $common = new PluginMreportingCommon();
 
-switch ($_POST['classname']) {
+switch ($_REQUEST['classname']) {
 	default :
       $common->showCentral($_REQUEST);
 		break;

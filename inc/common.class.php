@@ -28,13 +28,71 @@
  */
 
 class PluginMreportingCommon extends CommonDBTM {
+   static $rightname = 'config';
+
+   /**
+    * Returns the type name with consideration of plural
+    *
+    * @param number $nb Number of item(s)
+    * @return string Itemtype name
+    */
+   public static function getTypeName($nb = 0) {
+      global $LANG;
+
+      return $LANG['plugin_mreporting']["name"];
+   }
+
+   public static function canCreate() {
+      return false;
+   }
+
+   static function getMenuContent() {
+      global $CFG_GLPI, $LANG;
+
+      $menu = parent::getMenuContent();
+
+      $image_dashboard = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/dashboard.png'
+                           title='".$LANG['plugin_mreporting']["dashboard"][1]."' 
+                           alt='".$LANG['plugin_mreporting']["dashboard"][1]."'>";
+      $image_central   = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/list_dashboard.png'
+                           title='"."TODO LANG"."' 
+                           alt='"."TODO LANG"."'>";
+      $url_central   = "/plugins/mreporting/front/central.php";
+      $url_dashboard = "/plugins/mreporting/front/dashboard.php";
+
+      $menu['page'] = $url_dashboard;
+      $menu['links'][$image_dashboard] = $url_dashboard;
+
+      if(PluginMreportingDashboard::CurrentUserHaveDashboard()) {
+         $menu['options']['viewreports']['title']     = $LANG['plugin_mreporting']["dashboard"][1];
+         $menu['page'] 
+            = $menu['options']['viewreports']['page'] = $url_dashboard;
+      } else {
+         $menu['options']['viewreports']['title']     = "TODO LANG";
+         $menu['page'] 
+            = $menu['options']['viewreports']['page'] = $url_central;
+      }
+      $menu['options']['viewreports']['links'][$image_dashboard] = $url_dashboard;
+      $menu['options']['viewreports']['links'][$image_central]   = $url_central;
+      $menu['options']['viewreports']['links']['config'] = PluginMreportingConfig::getSearchURL(false);
+
+      $menu['options']['config']['title']            = PluginMreportingConfig::getTypeName(2);
+      $menu['options']['config']['page']             = PluginMreportingConfig::getSearchURL(false);
+      $menu['options']['config']['links']            = $menu['options']['viewreports']['links'];
+      $menu['options']['config']['links']['search']  = PluginMreportingConfig::getSearchURL(false);
+      if (PluginMreportingConfig::canCreate()) {
+         $menu['options']['config']['links']['add']  = PluginMreportingConfig::getFormURL(false);
+      }
+
+      return $menu;
+   }
+
 
    /**
     * Parsing all classes
     * Search all class into inc folder
     * @params
    */
-
    static function parseAllClasses($inc_dir) {
 
       $classes = array();
