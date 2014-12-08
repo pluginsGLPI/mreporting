@@ -8,9 +8,7 @@ if (!defined('GLPI_ROOT')){
 class PluginMreportingNotificationTargetNotification extends NotificationTarget {
 
    function getEvents() {
-      global $LANG;
-
-      return array ('sendReporting' => $LANG['plugin_mreporting']['notification_event']);
+      return array ('sendReporting' => __("More Reporting", 'mreporting'));
    }
 
    function getDatasForTemplate($event, $options = array()) {

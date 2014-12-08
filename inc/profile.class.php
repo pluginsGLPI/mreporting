@@ -35,9 +35,7 @@ class PluginMreportingProfile extends CommonDBTM {
    static $rightname = 'profile';
 
    static function getTypeName($nb = 0) {
-      global $LANG;
-
-      return $LANG['plugin_mreporting']["name"];
+      return __("More Reporting", 'mreporting');
    }
 
    //if profile deleted
@@ -61,13 +59,11 @@ class PluginMreportingProfile extends CommonDBTM {
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-      global $LANG;
-
       if ($item->getType()=='Profile') {
-         return $LANG['plugin_mreporting']["name"];
+         return __("More Reporting", 'mreporting');
 
       } else if ($item->getType()=='PluginMreportingConfig') {
-         return $LANG['plugin_mreporting']["right"]["manage"];
+         return __("Rights management", 'mreporting');
 
       }
       return '';
@@ -239,7 +235,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
       $this->showFormHeader($options);
       echo "<table class='tab_cadre_fixe'>\n";
-      echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
+      echo "<tr><th colspan='3'>".__("Rights management", 'mreporting')."</th></tr>\n";
 
       foreach( $res as $report) {
          $mreportingConfig = new PluginMreportingConfig();
@@ -284,7 +280,7 @@ class PluginMreportingProfile extends CommonDBTM {
    * @param $items
    */
    function showFormForManageProfile($items,$options=array()){
-      global $DB, $LANG,$CFG_GLPI;
+      global $DB, $CFG_GLPI;
 
       if (!Session::haveRight("config", READ))  {
          return false;
@@ -296,7 +292,7 @@ class PluginMreportingProfile extends CommonDBTM {
       }
       echo'<form action="'.$target.'" method="post" name="form">';
       echo "<table class='tab_cadre_fixe'>\n";
-      echo "<tr><th colspan='3'>".$LANG['plugin_mreporting']["right"]["manage"]."</th></tr>\n";
+      echo "<tr><th colspan='3'>".__("Rights management", 'mreporting')."</th></tr>\n";
 
       $query = "SELECT `id`, `name`
          FROM `glpi_profiles`

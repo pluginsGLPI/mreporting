@@ -1,7 +1,7 @@
 <?php
 define('GLPI_ROOT', '../..');
 include (GLPI_ROOT."/inc/includes.php");
-commonHeader($LANG['plugin_hreporting']["name"], '' ,"plugins", "hreporting");
+commonHeader(__("More Reporting", 'mreporting'), '' ,"plugins", "hreporting");
 ?>
 
 <link href="lib/protovis/examples/ex.css" rel="stylesheet" type="text/css">

@@ -30,11 +30,9 @@
 class PluginMreportingDashboard extends CommonDBTM {
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-      global $LANG;
-
       if (get_class($item) == 'Central' 
          && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
-         return array(1 => $LANG['plugin_mreporting']["dashboard"][1]);
+         return array(1 => __("Dashboard", 'mreporting'));
       }
       return '';
    }
@@ -81,7 +79,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       if ($show_reports_dropdown) {
          echo "<div class='center'>";
-         echo "<b>".$LANG['plugin_mreporting']["dashboard"][4]."</b> : ";
+         echo "<b>".__("Select a report to display", 'mreporting')."</b> : ";
          echo PluginMreportingCommon::getSelectAllReports(true);
          echo "<br />";
          echo "<br />";
@@ -91,7 +89,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       if (empty($widgets)) {
          echo "<div style='float:right'>";
-         echo $LANG['plugin_mreporting']["dashboard"][3];
+         echo __("More", 'mreporting');
          echo "&nbsp;</div>";
          echo "<div style='clear:both'>";
          echo "</div>";
@@ -120,7 +118,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                width: 'auto',
                height: 'auto',
                resizable: false,
-               title: '".$LANG['plugin_mreporting']["dashboard"][5]."'
+               title: '".__("Select a report to add", 'mreporting')."'
             });
 
             $('#addReport_button').button({
@@ -210,7 +208,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                         width: 'auto',
                         height: 'auto',
                         resizable: false,
-                        title: '".$LANG['plugin_mreporting']["dashboard"][6]."'
+                        title: '".__("Configure report", 'mreporting')."'
                      });
                }   
             });
@@ -268,7 +266,7 @@ class PluginMreportingDashboard extends CommonDBTM {
    }
 
    function getFormForColumn(){
-      global $DB,$LANG,$CFG_GLPI;
+      global $DB, $CFG_GLPI;
 
       $nbColumn = 2;
       if(isset($_SESSION['mreporting_values']['column'])) {

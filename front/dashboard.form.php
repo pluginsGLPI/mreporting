@@ -5,7 +5,6 @@ $DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
 
 include ("../../../inc/includes.php");
 
-global $LANG;
 Session::checkLoginUser();
 
 if (isset($_POST['saveConfig'])) {
@@ -30,7 +29,7 @@ if (isset($_POST['saveConfig'])) {
     Html::back();
 
 } else {
-    Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'dashboard');
+    Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'dashboard');
     $dashboard = new PluginMreportingDashboard();
     $dashboard->showDashBoard();
 

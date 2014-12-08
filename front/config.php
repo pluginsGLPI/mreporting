@@ -43,7 +43,7 @@ if ($plugin->isActivated("mreporting")) {
 
    } else {
 
-      Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'config');
+      Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'config');
 
       PluginMreportingConfig::addFirstconfigLink();
       Search::show("PluginMreportingConfig");

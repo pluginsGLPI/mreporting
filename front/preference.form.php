@@ -41,7 +41,7 @@ if (isset($_POST["update"])) {
    Html::redirect($_SERVER['HTTP_REFERER']);
 
 } else {
-   Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'viewreports');
+   Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'viewreports');
    $pref->showForm("./preference.form.php",$_GET["id"]);
    Html::footer();
 

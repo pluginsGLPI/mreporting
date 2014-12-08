@@ -35,9 +35,7 @@ class PluginMreportingConfig extends CommonDBTM {
    static $rightname = 'config';
 
    static function getTypeName($nb = 0) {
-      global $LANG;
-
-      return $LANG['plugin_mreporting']["config"][0];
+      return __("Configuration", 'mreporting');
    }
 
    /**
@@ -52,11 +50,9 @@ class PluginMreportingConfig extends CommonDBTM {
 
 
    function getSearchOptions() {
-      global $LANG;
-
       $tab = array();
 
-      $tab['common'] = $LANG['plugin_mreporting']["config"][0];
+      $tab['common'] = __("Configuration", 'mreporting');
 
       $tab[1]['table']          = $this->getTable();
       $tab[1]['field']          ='name';
@@ -71,48 +67,48 @@ class PluginMreportingConfig extends CommonDBTM {
 
       $tab[3]['table']          = $this->getTable();
       $tab[3]['field']          = 'show_area';
-      $tab[3]['name']           = $LANG['plugin_mreporting']["config"][1];
+      $tab[3]['name']           = __("See area", 'mreporting');
       $tab[3]['datatype']       = 'bool';
       $tab[3]['massiveaction']  = false;
 
       $tab[4]['table']          = $this->getTable();
       $tab[4]['field']          = 'spline';
-      $tab[4]['name']           = $LANG['plugin_mreporting']["config"][2];
+      $tab[4]['name']           = __("Curves lines (SVG)", 'mreporting');
       $tab[4]['datatype']       = 'bool';
       $tab[4]['massiveaction']  = false;
 
       $tab[5]['table']          = $this->getTable();
       $tab[5]['field']          = 'show_label';
-      $tab[5]['name']           = $LANG['plugin_mreporting']["config"][3];
+      $tab[5]['name']           = __("See values", 'mreporting');
       $tab[5]['massiveaction']  = false;
 
       $tab[6]['table']          = $this->getTable();
       $tab[6]['field']          = 'flip_data';
-      $tab[6]['name']           = $LANG['plugin_mreporting']["config"][4];
+      $tab[6]['name']           = __("Reverse data array", 'mreporting');
       $tab[6]['datatype']       = 'bool';
       $tab[6]['massiveaction']  = false;
 
       $tab[7]['table']          = $this->getTable();
       $tab[7]['field']          = 'unit';
-      $tab[7]['name']           = $LANG['plugin_mreporting']["config"][8];
+      $tab[7]['name']           = __("Unit", 'mreporting');
 
       $tab[8]['table']          = $this->getTable();
       $tab[8]['field']          = 'default_delay';
-      $tab[8]['name']           = $LANG['plugin_mreporting']["config"][9];
+      $tab[8]['name']           = __("Default delay", 'mreporting');
 
       $tab[9]['table']          = $this->getTable();
       $tab[9]['field']          = 'condition';
-      $tab[9]['name']           = $LANG['plugin_mreporting']["config"][11];
+      $tab[9]['name']           = __("Additional condition for MySQL", 'mreporting');
 
       $tab[10]['table']         = $this->getTable();
       $tab[10]['field']         = 'show_graph';
-      $tab[10]['name']          = $LANG['plugin_mreporting']["config"][12];
+      $tab[10]['name']          = __("See graphic", 'mreporting');
       $tab[10]['datatype']      = 'bool';
       $tab[10]['massiveaction'] = false;
 
       $tab[11]['table']         = $this->getTable();
       $tab[11]['field']         = 'classname';
-      $tab[11]['name']          = $LANG['plugin_mreporting']["config"][13];
+      $tab[11]['name']          = __("Class", 'mreporting');
       $tab[11]['massiveaction'] = false;
 
       $tab[12]['table']         = $this->getTable();
@@ -124,7 +120,7 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[12]['table']         = $this->getTable();
       $tab[12]['field']         = 'is_notified';
       $tab[12]['datatype']      = 'bool';
-      $tab[12]['name']          = $LANG['plugin_mreporting']["config"][14];
+      $tab[12]['name']          = __("Send this report with the notification", 'mreporting');
       $tab[12]['massiveaction'] = true;
 
       return $tab;
@@ -156,13 +152,13 @@ class PluginMreportingConfig extends CommonDBTM {
     *@return nothing
     **/
    static function addFirstconfigLink() {
-      global $LANG, $CFG_GLPI;
+      global $CFG_GLPI;
 
       $buttons = array();
       $title = "";
 
       if (Session::haveRight('config', READ)) {
-         $buttons["config.php?new=1"] = $LANG['plugin_mreporting']["config"][10];
+         $buttons["config.php?new=1"] = __("Initialize graphics configuration", 'mreporting');
          $title = "";
       }
       Html::displayTitle($CFG_GLPI["root_doc"] . "/plugins/mreporting/pics/config2.png",
@@ -399,12 +395,10 @@ class PluginMreportingConfig extends CommonDBTM {
     * @return array of types
    **/
    static function getLabelTypes($notall = false) {
-      global $LANG;
-
-      $options['never']    = $LANG['plugin_mreporting']["config"][7];
-      $options['hover']    = $LANG['plugin_mreporting']["config"][5];
+      $options['never']     = __("Never", 'mreporting');
+      $options['hover']     = __("On mouse over", 'mreporting');
       if (!$notall) {
-         $options['always']   = $LANG['plugin_mreporting']["config"][6];
+         $options['always'] = __("Always", 'mreporting');
       }
       return $options;
    }
@@ -415,17 +409,15 @@ class PluginMreportingConfig extends CommonDBTM {
     * @param $value type ID
    **/
    static function getLabelTypeName($value) {
-      global $LANG;
-
       switch ($value) {
          case 'never' :
-            return $LANG['plugin_mreporting']["config"][7];
+            return __("Never", 'mreporting');
 
          case 'hover' :
-            return $LANG['plugin_mreporting']["config"][5];
+            return __("On mouse over", 'mreporting');
 
          case 'always' :
-            return $LANG['plugin_mreporting']["config"][6];
+            return __("Always", 'mreporting');
       }
    }
 
@@ -485,13 +477,11 @@ class PluginMreportingConfig extends CommonDBTM {
 
 
    function prepareInputForAdd($input) {
-      global $LANG;
-
       if (isset ($input["name"])) {
 
          if ($this->getFromDBByFunctionAndClassname($input["name"],$input["classname"])) {
             if (!isset ($input["firstconfig"])) {
-               Session::addMessageAfterRedirect($LANG['plugin_mreporting']["error"][4],
+               Session::addMessageAfterRedirect(__("Object already exists", 'mreporting'),
                   false, ERROR);
             }
             return array();
@@ -568,7 +558,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "<td colspan='2'>";
       $title_func = '';
       $gtype = '';
-      $link=$LANG['plugin_mreporting']["error"][0];
+      $link = __("No report is available !", 'mreporting');
 
       $f_name = $this->fields["name"];
 
@@ -594,7 +584,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>".$LANG['plugin_mreporting']["config"][12]."</td>";
+      echo "<td>".__("See graphic", 'mreporting')."</td>";
       echo "<td>";
       Dropdown::showYesNo("show_graph",$this->fields["show_graph"]);
       echo "</td>";
@@ -614,7 +604,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      echo $LANG['plugin_mreporting']["config"][1];
+      echo __("See area", 'mreporting');
       echo "</td>";
       echo "<td>";
       if ($gtype == 'area' || $gtype == 'garea') {
@@ -629,7 +619,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo $LANG['plugin_mreporting']["config"][2];
+      echo __("Curves lines (SVG)", 'mreporting');
       echo "</td>";
       echo "<td>";
       if ($gtype == 'area' || $gtype == 'garea' || $gtype == 'line' || $gtype == 'gline') {
@@ -642,7 +632,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      echo $LANG['plugin_mreporting']["config"][3];
+      echo __("Curves lines (SVG)", 'mreporting');
       echo "</td>";
       echo "<td>";
       $opt = array('value' => $this->fields["show_label"]);
@@ -656,7 +646,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo $LANG['plugin_mreporting']["config"][4];
+      echo __("Reverse data array", 'mreporting');
       echo "</td>";
       echo "<td>";
       if ($gtype != 'hbar' && $gtype != 'pie' && $gtype != 'area' && $gtype != 'line') {
@@ -668,7 +658,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      echo $LANG['plugin_mreporting']["config"][8];
+      echo __("Unit", 'mreporting');
       echo "</td>";
       echo "<td>";
       $opt = array('size' => 10);
@@ -678,7 +668,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo $LANG['plugin_mreporting']["config"][9];
+      echo __("Unit", 'mreporting');
       echo "</td>";
       echo "<td>";
       $opt = array('size' => 10);
@@ -686,7 +676,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      echo $LANG['plugin_mreporting']["config"][11];
+      echo __("Additional condition for MySQL", 'mreporting');
       echo "</td>";
       echo "<td>";
       Html::autocompletionTextField($this,'condition');
@@ -695,7 +685,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo $LANG['plugin_mreporting']["config"][14];
+      echo __("Send this report with the notification", 'mreporting');
       echo "</td>";
       echo "<td>";
       Dropdown::showYesNo("is_notified",$this->fields["is_notified"]);

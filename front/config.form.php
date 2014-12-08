@@ -50,7 +50,7 @@ if (isset($_POST["add"])) {
 	Html::redirect("./config.form.php");
 
 } else {
-	Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'config');
+	Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'config');
 
    //Link from graph
    if (isset($_GET["name"]) && isset($_GET["classname"])) {

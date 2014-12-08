@@ -30,7 +30,7 @@
 include ("../../../inc/includes.php");
 
 Session::checkLoginUser();
-Html::header($LANG['plugin_mreporting']["name"], '' ,'tools', 'PluginMreportingCommon', 'dashboard_list');
+Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'dashboard_list');
 $common = new PluginMreportingCommon();
 
 /*** Regular Tab ***/
@@ -70,14 +70,14 @@ if (count($tabs) > 0){
 
    //finally if tabs is empty
    if(empty($tabs)) {
-      echo "<div class='center'><br>".$LANG['plugin_mreporting']["error"][0]."</div>";
+      echo "<div class='center'><br>".__("No report is available !", 'mreporting')."</div>";
    } else {
       echo "<div id='tabspanel' class='center-h'></div>";
       Ajax::createTabs('tabspanel','tabcontent',$tabs,'PluginMreportingCommon');
    }
 
 } else {
-   echo "<div class='center'><br>".$LANG['plugin_mreporting']["error"][0]."</div>";
+   echo "<div class='center'><br>".__("No report is available !", 'mreporting')."</div>";
 }
 
 Html::footer();

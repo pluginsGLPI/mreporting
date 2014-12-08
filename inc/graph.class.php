@@ -137,8 +137,6 @@ class PluginMreportingGraph {
     */
    function showHbar($params, $dashboard = false ,$width = false) {
 
-      global $LANG;
-
       ob_start();
       if ($width !== false){
          $this->width = $width;
@@ -168,7 +166,7 @@ class PluginMreportingGraph {
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
-         echo $LANG['plugin_mreporting']["error"][1];
+         echo __("No data for this date range !", 'mreporting');
          $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
@@ -325,10 +323,6 @@ JAVASCRIPT;
     * @return nothing
     */
    function showPie($params, $dashboard = false ,$width = false) {
-
-      global $LANG;
-
-
       ob_start();
       if ($width !== false){
          $this->width = $width;
@@ -358,7 +352,7 @@ JAVASCRIPT;
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
-         echo $LANG['plugin_mreporting']["error"][1];
+         echo __("No data for this date range !", 'mreporting');
          $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
@@ -514,8 +508,6 @@ JAVASCRIPT;
     * @return nothing
     */
    function showSunburst($params, $dashboard = false ,$width = false) {
-      global $LANG;
-      
       ob_start();
       if ($width !== false){
          $this->width = $width;
@@ -547,7 +539,7 @@ JAVASCRIPT;
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
-         echo $LANG['plugin_mreporting']["error"][1];
+         echo __("No data for this date range !", 'mreporting');
          $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
@@ -770,8 +762,6 @@ JAVASCRIPT;
     * @return nothing
     */
    function showHgbar($params, $dashboard = false ,$width = false) {
-      global $LANG;
-
       $criterias = PluginMreportingCommon::initGraphParams($params);
       ob_start();
       if ($width !== false){
@@ -799,7 +789,7 @@ JAVASCRIPT;
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
-         echo $LANG['plugin_mreporting']["error"][1];
+         echo __("No data for this date range !", 'mreporting');
          $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
@@ -985,8 +975,6 @@ JAVASCRIPT;
     * @return nothing
     */
    function showVstackbar($params, $dashboard = false ,$width = false) {
-      global $LANG;
-
       ob_start();
       if ($width !== false){
          $this->width = $width;
@@ -1015,7 +1003,7 @@ JAVASCRIPT;
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
-         echo $LANG['plugin_mreporting']["error"][1];
+         echo __("No data for this date range !", 'mreporting');
          $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
@@ -1204,8 +1192,6 @@ JAVASCRIPT;
     * @return nothing
     */
    function showArea($params, $dashboard = false ,$width = false ) {
-      global $LANG;
-
       ob_start();
       if ($width !== false){
          $this->width = $width;
@@ -1238,7 +1224,7 @@ JAVASCRIPT;
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
-         echo $LANG['plugin_mreporting']["error"][1];
+         echo __("No data for this date range !", 'mreporting');
          $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
@@ -1448,7 +1434,6 @@ JAVASCRIPT;
     * @return nothing
     */
    function showGarea($params, $dashboard = false ,$width = false) {
-      global $LANG;
       ob_start();
       if ($width !== false){
          $this->width = $width;
@@ -1476,7 +1461,7 @@ JAVASCRIPT;
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
-         echo $LANG['plugin_mreporting']["error"][1];
+         echo __("No data for this date range !", 'mreporting');
          $end['opt']["export"] = false;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];

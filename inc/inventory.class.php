@@ -35,7 +35,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }  
 
   function reportHbarComputersByOS($config = array()) {
-      global $DB, $LANG;
+      global $DB;
       
       /*Ajout d'une condition englobant les entités*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
@@ -87,7 +87,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    } 
    
    function reportHbarComputersByFabricant($config = array()) {
-      global $DB, $LANG;
+      global $DB;
       
       /*Ajout d'une condition englobant les entités*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
@@ -129,7 +129,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }  
 
   function reportHbarComputersByType($config = array()) {
-      global $DB, $LANG;
+      global $DB;
       
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
@@ -162,7 +162,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }  
 
   function reportHbarComputersByAge($config = array()) {
-      global $DB, $LANG;
+      global $DB;
       
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
@@ -268,7 +268,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   }
 
   function reportHbarLinux($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%'") as $os) {
@@ -296,7 +296,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   }
 
   function reportHbarFusionInventory($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $plugin = new Plugin();
       if (!$plugin->isActivated('fusioninventory')) {
@@ -333,7 +333,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }  
 
   function reportHbarMonitors($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
 
