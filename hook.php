@@ -156,7 +156,7 @@ function plugin_mreporting_install() {
    }
 
    // == UPDATE to 0.84+1.0 == 
-   $query = "UPDATE `glpi_plugin_mreporting_profiles` SET right = ".READ." WHERE right = 'r'";
+   $query = "UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ".READ." WHERE pr.right = 'r'";
    $DB->query($query);
 
    //== Create directories
