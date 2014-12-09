@@ -46,8 +46,8 @@ function plugin_mreporting_install() {
       `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
       `profiles_id` VARCHAR(45) NOT NULL,
       `reports` CHAR(1),
-      `config` CHAR(1),
-      PRIMARY KEY (`id`)
+      PRIMARY KEY (`id`),
+      UNIQUE `profiles_id_reports` (`profiles_id`, `reports`)
       )
       ENGINE = MyISAM;";
 
@@ -158,6 +158,11 @@ function plugin_mreporting_install() {
    // == UPDATE to 0.84+1.0 == 
    $query = "UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ".READ." WHERE pr.right = 'r'";
    $DB->query($query);
+   if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
+      $query = "ALTER IGNORE TABLE glpi_plugin_mreporting_profiles 
+                ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)";
+      $DB->query($query);
+   }
 
    //== Create directories
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
