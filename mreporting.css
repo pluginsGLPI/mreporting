@@ -112,6 +112,8 @@
 .mreportingwidget-panel button {
    width: 20px;
    height: 20px;
+}
+.mreportingwidget-header  button {
    margin-top: -5px;
 }
 
