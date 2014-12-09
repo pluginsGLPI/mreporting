@@ -140,7 +140,7 @@ function plugin_version_mreporting() {
 function includeAdditionalLanguageFiles() {
    if (isset($_SESSION["glpilanguage"])) {
       $template = "*_".$_SESSION["glpilanguage"].".php";
-      foreach (glob(GLPI_ROOT.'/plugins/mreporting/locales/'.$template) as $path) {
+      foreach (glob(GLPI_ROOT.'/plugins/mreporting/locales/reports_locales/'.$template) as $path) {
          include_once($path);
       }
    }
