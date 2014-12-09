@@ -43,7 +43,7 @@ class PluginMreportingNotification extends CommonDBTM {
             'language'                 => '',
          	'subject'                  => __("GLPI statistics reports", 'mreporting'),
          	'content_text'             => __("Hello,\n\nGLPI reports are available.\nYou will find attached in this email.\n\n", 'mreporting'),
-         	'content_html'             => __("\n<p>Hello,</p>\n\n<p>GLPI reports are available.<br />\n   You will find attached in this email.</p>\n\n", 'mreporting'),
+         	'content_html'             => __("\n<p>Hello,</p>\n\n<p>GLPI reports are available.<br />\nYou will find attached in this email.</p>\n\n", 'mreporting'),
          ));
 
          // Création de la notification

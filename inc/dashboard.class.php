@@ -89,7 +89,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       if (empty($widgets)) {
          echo "<div style='float:right'>";
-         echo __("More", 'mreporting');
+         echo __("Dashboard is empty. Please add reports by clicking on the icon &#xf063;", 'mreporting');
          echo "&nbsp;</div>";
          echo "<div style='clear:both'>";
          echo "</div>";
