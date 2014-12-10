@@ -655,9 +655,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "export" => $export,
                         "datas"  => $datas,
                         "unit"   => $unit);
-      if (!$dashboard) {
-         PluginMreportingCommon::endGraph($options);
-      }
+      PluginMreportingCommon::endGraph($options,$dashboard);
    }
    
 
@@ -849,9 +847,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "datas"  => $datas,
                         "unit"   => $unit);
       
-      if (!$dashboard) {
-         PluginMreportingCommon::endGraph($options);
-      }
+      PluginMreportingCommon::endGraph($options,$dashboard);
    }
 
 
@@ -986,9 +982,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      if (!$dashboard) {
-         PluginMreportingCommon::endGraph($options);
-      }
+      PluginMreportingCommon::endGraph($options,$dashboard);
    }
 
    function drawSunburstLevel($image, $datas, $params=array()) {
@@ -1363,9 +1357,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      if (!$dashboard) {
-         PluginMreportingCommon::endGraph($options);
-      }
+      PluginMreportingCommon::endGraph($options,$dashboard);
    }
 
 
@@ -1663,9 +1655,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      if (!$dashboard) {
-         PluginMreportingCommon::endGraph($options);
-      }
+      PluginMreportingCommon::endGraph($options,$dashboard);
     }
 
    
@@ -1925,9 +1915,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "export"    => $export,
                         "datas"     => $datas,
                         "unit"      => $unit);
-      if (!$dashboard) {
-         PluginMreportingCommon::endGraph($options);
-      }
+      PluginMreportingCommon::endGraph($options,$dashboard);
    } // end Area
 
 
@@ -2224,9 +2212,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      if (!$dashboard) {
-         PluginMreportingCommon::endGraph($options);
-      }
+      PluginMreportingCommon::endGraph($options,$dashboard);
    }// End Garea
 
 }// End Class
