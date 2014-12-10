@@ -637,16 +637,15 @@ class PluginMreportingCommon extends CommonDBTM {
          //if $randname exists
 
          $config = PluginMreportingConfig::initConfigParams($opt['f_name'],
-            "PluginMreporting".$opt['short_classname']);
-
-         if (!$export
-               && ($config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'svg'
-                  || $config['graphtype'] == 'SVG')) {
-            echo "}
-               showGraph$randname();
-            </script>";
+                                                            "PluginMreporting".$opt['short_classname']);
+         if (!$export) {
+            if ($config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'svg'
+                || $config['graphtype'] == 'SVG') {
+               echo "}
+                  showGraph$randname();
+               </script>";
+            }
             echo "</div>";
-
          }
       }
 
