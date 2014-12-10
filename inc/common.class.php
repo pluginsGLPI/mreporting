@@ -1509,12 +1509,11 @@ class PluginMreportingCommon extends CommonDBTM {
       
       $date1    = $_SESSION['mreporting_values']["date1".$randname];
       $date2    = $_SESSION['mreporting_values']["date2".$randname];
-      echo "<b>".__("Start date")."</b>";
+      echo "<b>".__("Start date")."</b><br />";
       Html::showDateFormItem("date1".$randname, $date1, false);
       echo "</td><td>";
-      echo "<b>".__("End date")."</b>";
+      echo "<b>".__("End date")."</b><br />";
       Html::showDateFormItem("date2".$randname, $date2, false);   
-      echo "</td>";
    } 
    
    static function canAccessAtLeastOneReport($profiles_id) {
