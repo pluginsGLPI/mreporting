@@ -1369,7 +1369,6 @@ class PluginMreportingCommon extends CommonDBTM {
       $param['display'] = true;
       $param['size']    = count($values);
       
-      echo "<input type='hidden' name='".$field."[]' value='0'>";
       echo "<br /><b>".$label." : </b><br />";
       Dropdown::showFromArray($field, $values, $param);
 
