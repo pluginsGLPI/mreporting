@@ -135,3 +135,7 @@ select[name=graphmenu],
 select[name=graphmenu] option {
    font-family: FontAwesome, 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif' !important;
 }
+
+.select2-container[id*=s2id_dropdown_glpilist_limit] {
+   width: 80px !important;
+}
