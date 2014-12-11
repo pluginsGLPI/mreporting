@@ -1242,15 +1242,13 @@ JAVASCRIPT;
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
       $height = 350;
       $width = $this->width;
-      $bottom = 20;
+      $bottom = 80;
       $left = 20;
-      $right = 10;
+      $right = 50;
       if($dashboard){
          $height = 340;
          $width = 395;
-         $bottom = 50;
          $left = 30;
-         $right = 50;
       }
 
       $JS = <<<JAVASCRIPT
