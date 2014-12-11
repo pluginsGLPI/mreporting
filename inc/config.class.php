@@ -154,18 +154,18 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[12]['name']          = __("Default chart format");
       $tab[12]['massiveaction'] = true;
 
-      $tab[12]['table']         = $this->getTable();
-      $tab[12]['field']         = 'is_notified';
-      $tab[12]['datatype']      = 'bool';
-      $tab[12]['name']          = $LANG['plugin_mreporting']["config"][14];
-      $tab[12]['massiveaction'] = true;
+      $tab[13]['table']         = $this->getTable();
+      $tab[13]['field']         = 'is_notified';
+      $tab[13]['datatype']      = 'bool';
+      $tab[13]['name']          = $LANG['plugin_mreporting']["config"][14];
+      $tab[13]['massiveaction'] = true;
 
-      $tab[12]['table']         = $this->getTable();
-      $tab[12]['field']         = 'graphtype';
-      $tab[12]['datatype']      = 'specific';
-      $tab[12]['searchtype']    = 'equals';
-      $tab[12]['name']          = __("Default chart format");
-      $tab[12]['massiveaction'] = true;
+      $tab[14]['table']         = $this->getTable();
+      $tab[14]['field']         = 'graphtype';
+      $tab[14]['datatype']      = 'specific';
+      $tab[14]['searchtype']    = 'equals';
+      $tab[14]['name']          = __("Default chart format");
+      $tab[14]['massiveaction'] = true;
 
       return $tab;
    }
