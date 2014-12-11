@@ -180,7 +180,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       ksort($tab);
       
       foreach($tab as $period => $data) {
-         if($search_new) $datas['datas'][__("Opened")][] = (isset($data['open'])) ? $data['open'] : 0;
+         if($search_new) $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['opened']][] = (isset($data['open'])) ? $data['open'] : 0;
          if($search_solved) $datas['datas'][_x('status', 'Closed')][] = (isset($data['solved'])) ? $data['solved'] : 0;
          if($search_closed) $datas['datas'][_x('status', 'Closed')][] = (isset($data['closed'])) ? $data['closed'] : 0;
          if($search_backlogs) $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['backlogs']][] = (isset($data['backlog'])) ? $data['backlog'] : 0;
@@ -617,7 +617,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<input type="checkbox" name="show_new" value="1"';
       echo (!isset($_SESSION['mreporting_values']['show_new']) || ($_SESSION['mreporting_values']['show_new'] == '1')) ? ' checked="checked"' : '';
       echo ' /> ';
-      echo __("Opened");
+      echo $LANG['plugin_mreporting']['Helpdeskplus']['opened'];
       echo '</label>';
       
       // Solved
