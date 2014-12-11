@@ -181,8 +181,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       
       foreach($tab as $period => $data) {
          if($search_new) $datas['datas'][__("Opened")][] = (isset($data['open'])) ? $data['open'] : 0;
-         if($search_solved) $datas['datas'][__("Solved")][] = (isset($data['solved'])) ? $data['solved'] : 0;
-         if($search_closed) $datas['datas'][__("Closed")][] = (isset($data['closed'])) ? $data['closed'] : 0;
+         if($search_solved) $datas['datas'][_x('status', 'Closed')][] = (isset($data['solved'])) ? $data['solved'] : 0;
+         if($search_closed) $datas['datas'][_x('status', 'Closed')][] = (isset($data['closed'])) ? $data['closed'] : 0;
          if($search_backlogs) $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['backlogs']][] = (isset($data['backlog'])) ? $data['backlog'] : 0;
          $datas['labels2'][] = $data['period_name'];
       }
@@ -626,7 +626,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<input type="checkbox" name="show_solved" value="1"';
       echo (!isset($_SESSION['mreporting_values']['show_solved']) || ($_SESSION['mreporting_values']['show_solved'] == '1')) ? ' checked="checked"' : '';
       echo ' /> ';
-      echo __("Solved");
+      echo _x('status', 'Solved');
       echo '</label>';
 
       echo "<br />";
@@ -646,7 +646,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<input type="checkbox" name="show_closed" value="1"';
       echo (isset($_SESSION['mreporting_values']['show_closed']) && ($_SESSION['mreporting_values']['show_closed'] == '1')) ? ' checked="checked"' : '';
       echo ' /> ';
-      echo __("Closed");
+      echo _x('status', 'Closed');
       echo '</label>';
    }
   

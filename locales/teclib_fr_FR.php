@@ -118,7 +118,7 @@ Il est possible limiter le nombre de groupes affichés !';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['backlogs']        = 'Backlogs';
 $LANG['plugin_mreporting']['Helpdeskplus']['period']          = 'Période';
-$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']   = 'Status à afficher';
+$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']   = 'Statuts à afficher';
 
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['title'] = "Nombre de changement de groupe";
