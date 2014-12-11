@@ -45,17 +45,17 @@ class PluginMreportingBaseclass{
          'open' => array(
             'label' => __("Opened"),
             'status' => array(
-               CommonITILObject::INCOMING => _x('ticket', 'New'),
-               CommonITILObject::ASSIGNED => __('Processing (assigned)'),
-               CommonITILObject::PLANNED  => __('Processing (planned)'),
+               CommonITILObject::INCOMING => _x('status', 'New'),
+               CommonITILObject::ASSIGNED => _x('status', 'Processing (assigned)'),
+               CommonITILObject::PLANNED  => _x('status', 'Processing (planned)'),
                CommonITILObject::WAITING  => __('Pending')
             )
          ),
          'close' => array(
             'label' => __("Closed"),
             'status' => array(
-               CommonITILObject::SOLVED => __("Solved"),
-               CommonITILObject::CLOSED => __("Closed")
+               CommonITILObject::SOLVED => _x('status', 'Solved'),
+               CommonITILObject::CLOSED => _x('status', 'Closed')
             )
          )
       );
