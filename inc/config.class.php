@@ -125,13 +125,6 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[13]['name']          = __("Send this report with the notification", 'mreporting');
       $tab[13]['massiveaction'] = true;
 
-      $tab[14]['table']         = $this->getTable();
-      $tab[14]['field']         = 'graphtype';
-      $tab[14]['datatype']      = 'specific';
-      $tab[14]['searchtype']    = 'equals';
-      $tab[14]['name']          = __("Default chart format");
-      $tab[14]['massiveaction'] = true;
-
       return $tab;
    }
 
