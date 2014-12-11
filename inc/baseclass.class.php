@@ -36,7 +36,7 @@ class PluginMreportingBaseclass{
              $where_entities;
 
    function __construct($config = array()) {
-      global $DB;
+      global $DB, $LANG;
 
       //force MySQL DATE_FORMAT in user locale
       $query = "SET lc_time_names = '".$_SESSION['glpilanguage']."'";
@@ -48,7 +48,7 @@ class PluginMreportingBaseclass{
 
       $this->filters = array(
          'open' => array(
-            'label' => __("Opened"),
+            'label' => $LANG['plugin_mreporting']['Helpdeskplus']['opened'],
             'status' => array(
                CommonITILObject::INCOMING => _x('status', 'New'),
                CommonITILObject::ASSIGNED => _x('status', 'Processing (assigned)'),
@@ -57,7 +57,7 @@ class PluginMreportingBaseclass{
             )
          ),
          'close' => array(
-            'label' => __("Closed"),
+            'label' => _x('status', 'Closed'),
             'status' => array(
                CommonITILObject::SOLVED => _x('status', 'Solved'),
                CommonITILObject::CLOSED => _x('status', 'Closed')
