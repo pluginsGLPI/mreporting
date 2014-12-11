@@ -123,7 +123,52 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[12]['name']          = __("Send this report with the notification", 'mreporting');
       $tab[12]['massiveaction'] = true;
 
+      $tab[12]['table']         = $this->getTable();
+      $tab[12]['field']         = 'graphtype';
+      $tab[12]['datatype']      = 'specific';
+      $tab[12]['name']          = __("Default chart format");
+      $tab[12]['massiveaction'] = true;
+
       return $tab;
+   }
+
+   static function getSpecificValueToDisplay($field, $values, array $options=array()) {
+
+      if (!is_array($values)) {
+         $values = array($field => $values);
+      }
+      switch ($field) {
+         case 'graphtype':
+            return $values[$field];
+            break;
+      }
+      return parent::getSpecificValueToDisplay($field, $values, $options);
+   }
+
+
+   /**
+    * @since version 0.84
+    *
+    * @param $field
+    * @param $name            (default '')
+    * @param $values          (default '')
+    * @param $options   array
+    **/
+   static function getSpecificValueToSelect($field, $name='', $values='', array $options=array()) {
+
+      if (!is_array($values)) {
+         $values = array($field => $values);
+      }
+      $options['display'] = false;
+      $options['value']   = $values[$field];
+      switch ($field) {
+         case 'graphtype' :
+            return  Dropdown::showFromArray($name,
+                                            array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'),
+                                            $options);
+            break;
+      }
+      return parent::getSpecificValueToSelect($field, $name, $values, $options);
    }
 
 
