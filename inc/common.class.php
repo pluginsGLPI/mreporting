@@ -1472,9 +1472,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
    
    static function selectorAllstates() {
-      global $LANG;
-
-      echo "<br><b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
+      echo "<br><b>"._n('Status', 'Statuses', 2)." : </b><br />";
       $default = array(CommonITILObject::INCOMING,
                        CommonITILObject::ASSIGNED,
                        CommonITILObject::PLANNED,
