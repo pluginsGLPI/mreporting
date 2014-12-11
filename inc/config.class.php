@@ -80,6 +80,8 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[5]['table']          = $this->getTable();
       $tab[5]['field']          = 'show_label';
       $tab[5]['name']           = __("See values", 'mreporting');
+      $tab[5]['datatype']      = 'specific';
+      $tab[5]['searchtype']    = 'equals';
       $tab[5]['massiveaction']  = false;
 
       $tab[6]['table']          = $this->getTable();
@@ -126,6 +128,7 @@ class PluginMreportingConfig extends CommonDBTM {
       $tab[12]['table']         = $this->getTable();
       $tab[12]['field']         = 'graphtype';
       $tab[12]['datatype']      = 'specific';
+      $tab[12]['searchtype']    = 'equals';
       $tab[12]['name']          = __("Default chart format");
       $tab[12]['massiveaction'] = true;
 
@@ -140,6 +143,12 @@ class PluginMreportingConfig extends CommonDBTM {
       switch ($field) {
          case 'graphtype':
             return $values[$field];
+            break;
+      }
+      switch ($field) {
+         case 'show_label':
+            $labels = self::getLabelTypes();
+            return $labels[$values[$field]];
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);
@@ -163,9 +172,12 @@ class PluginMreportingConfig extends CommonDBTM {
       $options['value']   = $values[$field];
       switch ($field) {
          case 'graphtype' :
-            return  Dropdown::showFromArray($name,
+            return Dropdown::showFromArray($name,
                                             array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'),
                                             $options);
+            break;
+         case 'show_label' :
+            return self::dropdownLabel($name, $options);
             break;
       }
       return parent::getSpecificValueToSelect($field, $name, $values, $options);
