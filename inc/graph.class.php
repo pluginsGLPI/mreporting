@@ -55,9 +55,9 @@ class PluginMreportingGraph {
          //Show graph title
          echo "<div class='graph_title'>";
          $backtrace = debug_backtrace();
-         $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
+         $gtype = $_REQUEST['gtype'];
 
-         echo "<img src='".$CFG_GLPI['root_doc']."/plugins/mreporting/pics/chart-$prev_function.png' class='title_pics' />";
+         echo "<img src='".$CFG_GLPI['root_doc']."/plugins/mreporting/pics/chart-$gtype.png' class='title_pics' />";
          echo $options['title'];
          echo "</div>";
 
@@ -1222,8 +1222,10 @@ JAVASCRIPT;
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
-      if (DEBUG_MREPORTING == true) {
-         $area = true;
+
+      $area = true;
+      if (isset($params['area'])) {
+         $area = $params['area'];
       }
 
       $options = array("title" => $title,
@@ -1424,6 +1426,7 @@ JAVASCRIPT;
     * @return nothing
     */
    function showLine($params, $dashboard = false ,$width = false) {
+      $params['area'] = false;
       if ($dashboard) {
          return  $this->showArea($params, $dashboard  , $width);
       } else {
@@ -1481,6 +1484,11 @@ JAVASCRIPT;
          $end['opt']["class"] = $opt['class'];
          PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
+      }
+
+      $area = true;
+      if (isset($params['area'])) {
+         $area = $params['area'];
       }
 
       $datas = $raw_datas['datas'];
@@ -1676,6 +1684,7 @@ JAVASCRIPT;
     * @return nothing
     */
    function showGline($params, $dashboard = false ,$width = false) {
+      $params['area'] = false;
       if ($dashboard) {
          return $this->showGarea($params, $dashboard, $width);
       } else {
