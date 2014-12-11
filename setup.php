@@ -45,7 +45,7 @@ if(isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::D
 
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
-   global $PLUGIN_HOOKS,$CFG_GLPI;
+   global $PLUGIN_HOOKS,$CFG_GLPI, $LANG;
 
    $plugin = new Plugin();
 
@@ -82,11 +82,15 @@ function plugin_init_mreporting() {
          }
 
          if(strpos($_SERVER['REQUEST_URI'],'front/dashboard.form.php') !== false) {
-            $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"].
-               '/plugins/mreporting/pics/list_dashboard.png">'] = 'front/central.php';
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']["<img src='".$CFG_GLPI["root_doc"].
+               "/plugins/mreporting/pics/list_dashboard.png'
+                           title='".$LANG['plugin_mreporting']["dashboard"][5]."' 
+                           alt='".$LANG['plugin_mreporting']["dashboard"][5]."'>"] = 'front/central.php';
          } else {
-            $PLUGIN_HOOKS['submenu_entry']['mreporting']['<img src="'.$CFG_GLPI["root_doc"].
-               '/plugins/mreporting/pics/dashboard.png">'] = 'front/dashboard.form.php';
+            $PLUGIN_HOOKS['submenu_entry']['mreporting']["<img src='".$CFG_GLPI["root_doc"].
+               "/plugins/mreporting/pics/dashboard.png'
+                           title='".$LANG['plugin_mreporting']["dashboard"][1]."' 
+                           alt='".$LANG['plugin_mreporting']["dashboard"][1]."'>"] = 'front/dashboard.form.php';
          }
 
 
