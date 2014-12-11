@@ -35,7 +35,7 @@ class PluginMreportingBaseclass{
              $filters, 
              $where_entities;
 
-   function __construct($config) {
+   function __construct($config = array()) {
       global $DB;
 
       //force MySQL DATE_FORMAT in user locale
