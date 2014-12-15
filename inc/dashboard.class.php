@@ -176,6 +176,7 @@ class PluginMreportingDashboard extends CommonDBTM {
             var configWidget$rand_widget = new Ext.Window({
                   title: 'Configuration',
                   closeAction: 'hide',
+                  width: 950,
                   autoLoad: {
                      url: '$root_ajax',
                      scripts: true,
