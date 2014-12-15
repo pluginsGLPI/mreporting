@@ -120,6 +120,16 @@ class PluginMreportingNotification extends CommonDBTM {
       }
       return array();
    }
+   
+   /**
+    * @param $mailing_options
+   **/
+   static function send($mailing_options, $additional_options) {
+
+      $mail = new PluginMreportingNotificationMail();
+      $mail->sendNotification(array_merge($mailing_options, $additional_options));
+      $mail->ClearAddresses();
+   }
 
    /**
     * Execute 1 task manage by the plugin
