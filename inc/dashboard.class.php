@@ -237,7 +237,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       $content = "<form method='post' action='".$target."' method='post'>";
       $content .= "<table class='tab_cadre_fixe'>";
-      $content .= "<tr><th colspan='2'>".__("Select statistics to be added to dashboard")."&nbsp;:</th></tr>";
+      $content .= "<tr><th colspan='2'>".$LANG['plugin_mreporting']["dashboard"][6]."&nbsp;:</th></tr>";
       $content .= "<tr class='tab_bg_1'><td class='center'>";
       $content .= PluginMreportingCommon::getSelectAllReports(false, true);
       $content .= "</td>";
