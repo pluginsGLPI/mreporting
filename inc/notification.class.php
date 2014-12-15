@@ -124,6 +124,16 @@ class PluginMreportingNotification extends CommonDBTM {
       }
       return array();
    }
+   
+   /**
+    * @param $mailing_options
+   **/
+   static function send($mailing_options, $additional_options) {
+
+      $mail = new PluginMreportingNotificationMail();
+      $mail->sendNotification(array_merge($mailing_options, $additional_options));
+      $mail->ClearAddresses();
+   }
 
    /**
     * Execute 1 task manage by the plugin
@@ -139,7 +149,7 @@ class PluginMreportingNotification extends CommonDBTM {
       global $LANG;
 
       $task->log($LANG['plugin_mreporting']['notification_log']);
-      NotificationEvent::raiseEvent('sendReporting', new self(), $task->fields);
+      PluginMreportingNotificationEvent::raiseEvent('sendReporting', new self(), $task->fields);
       return 1;
    }
 }
