@@ -7,7 +7,7 @@ $profil = new PluginMreportingProfile();
 
 //Save profile
 if (isset ($_REQUEST['update'])) {
-   foreach( $res as $report) {
+   foreach($res as $report) {
       if (class_exists($report['classname'])) {
          $access = $_REQUEST[$report['id']];
 
@@ -33,7 +33,7 @@ if (isset ($_REQUEST['update'])) {
    }
 
 } else if (isset($_REQUEST['giveReadAccessForAllReport'])){
-   foreach( $res as $report) {
+   foreach($res as $report) {
       $profil->getFromDBByQuery("where profiles_id = ".$_REQUEST['profile_id'].
                                    " AND reports = ".$report['id']);
       $profil->fields['right'] = 'r';
@@ -41,7 +41,7 @@ if (isset ($_REQUEST['update'])) {
    }
 
 } else if (isset($_REQUEST['giveNoneAccessForAllReport'])){
-   foreach( $res as $report) {
+   foreach($res as $report) {
       $profil->getFromDBByQuery("where profiles_id = ".$_REQUEST['profile_id'].
                                " AND reports = ".$report['id']);
       $profil->fields['right'] = 'NULL';
