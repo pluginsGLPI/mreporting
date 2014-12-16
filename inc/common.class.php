@@ -1392,7 +1392,7 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    static function selectorType() {
-      echo "<br /><b>"._n("Type of ticket", "Types of ticket", 2) ." : </b><br />";
+      echo "<br /><b>"._n("Type", "Types", 1) ." : </b><br />";
       Ticket::dropdownType('type', 
                            array('value' => isset($_SESSION['mreporting_values']['type']) 
                               ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
