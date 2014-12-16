@@ -860,7 +860,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $simpledatas = true;
       }
 
-      if ($_REQUEST['gtype'] == "sunburst") {
+      if (strtolower($_REQUEST['gtype']) == "sunburst") {
          $treedatas = true;
       }
 
