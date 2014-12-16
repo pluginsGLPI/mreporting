@@ -13,7 +13,7 @@ if (isset ($_REQUEST['update'])) {
       if (class_exists($report['classname'])) {
          $access = $_REQUEST[$report['id']];
 
-         $profil->getFromDBByQuery("where profiles_id = ".$_REQUEST['profile_id'].
+         $profil->getFromDBByQuery("WHERE profiles_id = ".$_REQUEST['profile_id'].
                                    " AND reports = ".$report['id']);
          $profil->fields['right'] = $access;
          $profil->update($profil->fields);
@@ -22,13 +22,13 @@ if (isset ($_REQUEST['update'])) {
 
 } else if (isset ($_REQUEST['add'])) {
    $query = "SELECT `id`, `name`
-   FROM `glpi_profiles` where `interface` = 'central'
+   FROM `glpi_profiles` WHERE `interface` = 'central'
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
       $access = $_REQUEST[$profile['id']];
 
-      $profil->getFromDBByQuery("where profiles_id = ".$profile['id'].
+      $profil->getFromDBByQuery("WHERE profiles_id = ".$profile['id'].
                                 " AND reports = ".$_REQUEST['report_id']);
       $profil->fields['right'] = $access;
       $profil->update($profil->fields);
@@ -36,7 +36,7 @@ if (isset ($_REQUEST['update'])) {
 
 } else if (isset($_REQUEST['giveReadAccessForAllReport'])){
    foreach($res as $report) {
-      $profil->getFromDBByQuery("where profiles_id = ".$_REQUEST['profile_id'].
+      $profil->getFromDBByQuery("WHERE profiles_id = ".$_REQUEST['profile_id'].
                                    " AND reports = ".$report['id']);
       $profil->fields['right'] = READ;
       $profil->update($profil->fields);
@@ -44,7 +44,7 @@ if (isset ($_REQUEST['update'])) {
 
 } else if (isset($_REQUEST['giveNoneAccessForAllReport'])){
    foreach($res as $report) {
-      $profil->getFromDBByQuery("where profiles_id = ".$_REQUEST['profile_id'].
+      $profil->getFromDBByQuery("WHERE profiles_id = ".$_REQUEST['profile_id'].
                                " AND reports = ".$report['id']);
       $profil->fields['right'] = 'NULL';
       $profil->update($profil->fields);
@@ -56,7 +56,7 @@ if (isset ($_REQUEST['update'])) {
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
-      $profil->getFromDBByQuery("where profiles_id = ".$profile['id'].
+      $profil->getFromDBByQuery("WHERE profiles_id = ".$profile['id'].
                                 " AND reports = ".$_REQUEST['report_id']);
       $profil->fields['right'] = 'NULL';
       $profil->update($profil->fields);
@@ -68,7 +68,7 @@ if (isset ($_REQUEST['update'])) {
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
-      $profil->getFromDBByQuery("where profiles_id = ".$profile['id'].
+      $profil->getFromDBByQuery("WHERE profiles_id = ".$profile['id'].
                                 " AND reports = ".$_REQUEST['report_id']);
       $profil->fields['right'] = READ;
       $profil->update($profil->fields);
