@@ -110,6 +110,7 @@ $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['title']   
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['desc']          = '';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['backlogs']        = 'Backlogs';
+$LANG['plugin_mreporting']['Helpdeskplus']['opened']          = 'Opened';
 $LANG['plugin_mreporting']['Helpdeskplus']['period']          = 'Period';
 $LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']   = 'Status to display';
 
