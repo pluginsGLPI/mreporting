@@ -50,7 +50,7 @@ if (isset ($_REQUEST['update'])) {
 
 } else if (isset($_REQUEST['giveNoneAccessForAllProfile'])){
    $query = "SELECT `id`, `name`
-   FROM `glpi_profiles` where `interface` = 'central'
+   FROM `glpi_profiles`
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
@@ -62,7 +62,7 @@ if (isset ($_REQUEST['update'])) {
 
 } else if (isset($_REQUEST['giveReadAccessForAllProfile'])){
    $query = "SELECT `id`, `name`
-   FROM `glpi_profiles` where `interface` = 'central'
+   FROM `glpi_profiles`
    ORDER BY `name`";
 
    foreach ($DB->request($query) as $profile) {
