@@ -101,10 +101,20 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
 
          preg_match_all('/<img .*?(?=src)src=\'([^\']+)\'/si', $content, $matches);
 
-         if (empty($matches[1][3])) continue;
-         if (strpos($matches[1][3], 'data:image/png;base64,') === false) continue;
+         // find image content
+         if (!isset($matches[1][2])) {
+            continue;
+         }
+         $image_base64 = $matches[1][2];
+         if (strpos($image_base64, 'data:image/png;base64,') === false) {
+            $image_base64 = $matches[1][3];
+         }
+         if (strpos($image_base64, 'data:image/png;base64,') === false) {
+            continue;
+         }
 
-         $image_base64  = str_replace('data:image/png;base64,', '', $matches[1][3]);
+         // clean image
+         $image_base64  = str_replace('data:image/png;base64,', '', $image_base64);
          $image         = imagecreatefromstring(base64_decode($image_base64));
          $image_width   = imagesx($image);
          $image_height  = imagesy($image);
