@@ -198,10 +198,10 @@ class PluginMreportingCommon extends CommonDBTM {
             }
 
             if (count($graphs) > 0) {
-               $select.= "<optgroup label='".$report['title']."'>";
+               $select.= "<optgroup label=\"".$report['title']."\">";
                foreach($graphs as $cat => $graph) {
                   if (count($graph) > 0) {
-                     $select.= "<optgroup label='&nbsp;&nbsp;&nbsp;$cat'>";
+                     $select.= "<optgroup label=\"&nbsp;&nbsp;&nbsp;$cat\">";
                      foreach($graph as $key => $value) {
                         if ($value['right']) {
                             if ($value['is_active']) {
