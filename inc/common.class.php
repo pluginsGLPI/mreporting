@@ -1421,9 +1421,9 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorPeriod($period = "day") {
       global $LANG;
       $elements = array(
-         'day'    => _n("Day", "Days", 2),
+         'day'    => _n("Day", "Days", 1),
          'week'   => __("Week"),
-         'month'  => _n("Month", "Months", 2),
+         'month'  => _n("Month", "Months", 1),
          'year'   => __("By year"),
       );
    
