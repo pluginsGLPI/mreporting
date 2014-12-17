@@ -537,6 +537,23 @@ class PluginMreportingCommon extends CommonDBTM {
          $graph = new PluginMreportingGraph();
       }
 
+      //generate default date
+      if (!isset($_SESSION['mreporting_values']['date1'.$config['randname']])) {
+         $_SESSION['mreporting_values']['date1'.$config['randname']] = strftime("%Y-%m-%d",
+            time() - ($config['delay'] * 24 * 60 * 60));
+      }
+      if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']])) {
+         $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
+      }
+
+      // save/clear selectors
+      if (isset($opt['submit'])) {
+         PluginMreportingCommon::saveSelectors($opt['f_name'], $config);
+      } elseif (isset($opt['reset'])) {
+         PluginMreportingCommon::resetSelectorsForReport($opt['f_name']);
+      }
+      PluginMreportingCommon::getSelectorValuesByUser();
+
       //dynamic instanciation of class passed by 'short_classname' GET parameter
       $classname = 'PluginMreporting'.$opt['short_classname'];
       $obj = new $classname($config);
@@ -1596,16 +1613,29 @@ class PluginMreportingCommon extends CommonDBTM {
        else echo $res;
    }
 
-   static function saveSelectors($graphname) {
+   static function saveSelectors($graphname, $config = array()) {
       $remove = array('short_classname', 'f_name', 'gtype', 'submit');
       $values = array();
       $pref   = new PluginMreportingPreference();
+
 
       foreach ($_REQUEST as $key => $value) {
          if (!preg_match("/^_/", $key) && !in_array($key, $remove) ) {
             $values[$key] = $value;
          }
+         if (empty($value)) {
+            unset($_REQUEST[$key]);
+         }
       }
+
+      //clean unmodified date 
+      if ($_REQUEST['date1'.$config['randname']] == $_SESSION['mreporting_values']['date1'.$config['randname']]) {
+         unset($_REQUEST['date1'.$config['randname']]);
+      }
+      if ($_REQUEST['date2'.$config['randname']] == $_SESSION['mreporting_values']['date2'.$config['randname']]) {
+         unset($_REQUEST['date2'.$config['randname']]);
+      }
+
       if (!empty($values)) {
           $id               = $pref->addDefaultPreference(Session::getLoginUserID());
           $tmp['id']        = $id;

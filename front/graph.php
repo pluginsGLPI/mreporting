@@ -36,14 +36,6 @@ Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
 
 $common = new PluginMreportingCommon;
 
-if (isset($_POST['submit'])) {
-   PluginMreportingCommon::saveSelectors($_GET['f_name']);
-} elseif (isset($_GET['reset'])) {
-   PluginMreportingCommon::resetSelectorsForReport($_GET['f_name']);
-}
-
-PluginMreportingCommon::getSelectorValuesByUser();
-
 $common->showGraph($_REQUEST);
 Html::footer();
 

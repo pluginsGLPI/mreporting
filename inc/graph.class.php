@@ -78,16 +78,6 @@ class PluginMreportingGraph {
          echo "<div class='graph_desc'>".$desc."</div>";
 
          //Show date selector
-         //using rand for display x graphs on same page
-
-         if (!isset($_SESSION['mreporting_values']['date1'.$randname])) {
-               $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d",
-                  time() - ($options['delay'] * 24 * 60 * 60));
-         }
-         if (!isset($_SESSION['mreporting_values']['date2'.$randname])) {
-            $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
-         }
-
          echo "<div class='graph_navigation'>";
          PluginMreportingCommon::showSelector(
             $_SESSION['mreporting_values']['date1'.$randname], 
