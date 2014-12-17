@@ -145,13 +145,11 @@ class PluginMreportingGraph {
       }
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
-
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-
       foreach ($configs as $k => $v) {
          $$k=$v;
       }
@@ -175,6 +173,10 @@ class PluginMreportingGraph {
          $end['opt']["class"] = $opt['class'];
          PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
+      }
+
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
       }
 
       $datas = $raw_datas['datas'];
@@ -365,6 +367,10 @@ JAVASCRIPT;
          $end['opt']["class"] = $opt['class'];
          PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
+      }
+
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
       }
 
       $datas = $raw_datas['datas'];
@@ -562,6 +568,11 @@ JAVASCRIPT;
       if (isset($raw_datas['labels2'])) {
          $labels2 = $raw_datas['labels2'];
       }
+
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
+
       $datas = $this->initDatasTree($datas, $unit);
 
       $always = '';
@@ -808,6 +819,10 @@ JAVASCRIPT;
          return false;
       }
 
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
+
       $datas = $raw_datas['datas'];
       $labels2 = $raw_datas['labels2'];
       $datas = $this->initDatasMultiple($datas, $labels2, $unit);
@@ -1022,6 +1037,10 @@ JAVASCRIPT;
          $end['opt']["class"] = $opt['class'];
          PluginMreportingCommon::endGraph($end,$dashboard);
          return false;
+      }
+
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
       }
 
       $datas = $raw_datas['datas'];
@@ -1249,8 +1268,11 @@ JAVASCRIPT;
          return false;
       }
 
-      $datas = $raw_datas['datas'];
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
 
+      $datas = $raw_datas['datas'];
       $datas = $this->initDatasSimple($datas, $unit);
 
       $always = '';
@@ -1489,6 +1511,10 @@ JAVASCRIPT;
       $area = true;
       if (isset($params['area'])) {
          $area = $params['area'];
+      }
+
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
       }
 
       $datas = $raw_datas['datas'];

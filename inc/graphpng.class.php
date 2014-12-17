@@ -541,6 +541,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return false;
       }
       
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
+
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       $raw_datas['datas'] = $datas;
       
@@ -725,6 +729,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return false;
       }
       
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
+
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       $raw_datas['datas'] = $datas;
       
@@ -919,6 +927,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $labels2 = array();
       
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
+
       if ($unit == '%') {
          $raw_datas['datas'] = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       }
@@ -1212,6 +1224,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       
       $labels2 = $raw_datas['labels2'];
       
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
+
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       $raw_datas['datas'] = $datas;
       
@@ -1440,6 +1456,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
 
       $labels2 = $raw_datas['labels2'];
+
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
 
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       $raw_datas['datas'] = $datas;
@@ -1740,6 +1760,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return false;
       }
       
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
+
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       $raw_datas['datas'] = $datas;
       
@@ -2002,6 +2026,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       }
       
       $labels2 = $raw_datas['labels2'];
+
+      if (empty($unit) && !empty($raw_datas['unit'])) {
+         $unit = $raw_datas['unit'];
+      }
 
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       $raw_datas['datas'] = $datas;
