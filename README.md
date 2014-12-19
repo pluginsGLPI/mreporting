@@ -7,3 +7,4 @@ GLPI Plugin
 
 * Download : https://github.com/TECLIB/mreporting/releases
 * WIKI : https://github.com/TECLIB/mreporting/wiki
+* Vanilla versions : https://forge.indepnet.net/projects/mreporting/files
