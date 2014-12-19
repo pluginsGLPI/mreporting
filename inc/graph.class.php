@@ -1114,7 +1114,7 @@ JAVASCRIPT;
             && ({$hover} && (d!=0)) || ({$always}  && (d!=0)) ) ? true : false ;
       })
       .textBaseline("center")
-      .text(function(d) { return d; })
+      .text(function(d) { return d+" {$unit}"; })
       .textStyle(function() { return colors(this.parent.index).darker(); });
 
 
