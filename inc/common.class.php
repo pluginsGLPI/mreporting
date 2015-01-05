@@ -359,7 +359,7 @@ class PluginMreportingCommon extends CommonDBTM {
             $height += 30*$count;
             echo "<tr class='tab_bg_1'>";
             echo "<th colspan='2'>";
-            echo "<div class='right'>";
+            echo "<div class='f_right'>";
             echo __("Export")." : ";
             echo "<a href='#' onClick=\"var w = window.open('popup.php?classname=$classname' ,'glpipopup', ".
                   "'height=$height, width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";

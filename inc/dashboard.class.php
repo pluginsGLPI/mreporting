@@ -134,7 +134,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       echo "<div class='mreportingwidget-panel'>";
       echo "<button id='addReport_button' class='right'></button>";
-      echo "<div class='clear'></div>";
+      echo "<div class='f_clear'></div>";
       $i = 0;
       foreach($widgets as $data) {
          $i++;
@@ -250,7 +250,7 @@ class PluginMreportingDashboard extends CommonDBTM {
          </div>";
       }  
 
-      echo "<div class='clear'></div>";
+      echo "<div class='f_clear'></div>";
       echo "</div>";
    }
 
