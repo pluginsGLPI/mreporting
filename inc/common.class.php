@@ -1421,11 +1421,17 @@ class PluginMreportingCommon extends CommonDBTM {
 
       echo "<br /><b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
       if ($type) {
-         $rand = Ticket::dropdownType('type', array('value' => isset($_SESSION['mreporting_values']['type']) ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
+         $rand = Ticket::dropdownType('type', 
+                                      array('value' => isset($_SESSION['mreporting_values']['type']) 
+                                                       ? $_SESSION['mreporting_values']['type'] 
+                                                       : Ticket::INCIDENT_TYPE, 
+                                             'toadd' => array(-1 => __('All'))));
          $params = array('type'            => '__VALUE__',
                          'currenttype'     => Ticket::INCIDENT_TYPE,
-                         'entity_restrict' => $_SESSION['glpiactive_entity'],
-                         'value'           => isset($_SESSION['mreporting_values']['itilcategories_id']) ? $_SESSION['mreporting_values']['itilcategories_id'] : 0);
+                         'entity_restrict' => -1,
+                         'value'           => isset($_SESSION['mreporting_values']['itilcategories_id']) 
+                                              ? $_SESSION['mreporting_values']['itilcategories_id'] 
+                                              : 0);
          echo "<span id='show_category_by_type'>";
          $params['condition'] = "`is_incident`='1'";
       }
