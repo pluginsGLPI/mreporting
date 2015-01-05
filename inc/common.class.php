@@ -1711,9 +1711,9 @@ class PluginMreportingCommon extends CommonDBTM {
     */
    static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname) {
 
-      if (!isset($_SESSION['mreporting_values']['date1'.$randname]))
+      if (!empty($_SESSION['mreporting_values']['date1'.$randname]))
          $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
-      if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
+      if (!empty($_SESSION['mreporting_values']['date2'.$randname]))
          $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
 
       $date_array1=explode("-",$_SESSION['mreporting_values']['date1'.$randname]);
