@@ -133,8 +133,8 @@ class PluginMreportingDashboard extends CommonDBTM {
       </script>";
 
       echo "<div class='mreportingwidget-panel'>";
-      echo "<button id='addReport_button' class='right'></button>";
-      echo "<div class='f_clear'></div>";
+      echo "<button id='addReport_button' class='m_right'></button>";
+      echo "<div class='m_clear'></div>";
       $i = 0;
       foreach($widgets as $data) {
          $i++;
@@ -235,8 +235,8 @@ class PluginMreportingDashboard extends CommonDBTM {
          </script>
          <div class='mreportingwidget' id='mreportingwidget".$data['id']."'>
             <div class='mreportingwidget-header'>
-               <button id='closeWidget_button$rand_widget' class='right'></button>
-               <button id='configWidget_button$rand_widget' class='right'></button>
+               <button id='closeWidget_button$rand_widget' class='m_right'></button>
+               <button id='configWidget_button$rand_widget' class='m_right'></button>
                <span class='mreportingwidget-header-text'>
                   <a href='".$CFG_GLPI['root_doc']."/plugins/mreporting/front/graph.php?short_classname=".
                   $short_classname."&amp;f_name=".$f_name."&amp;gtype=".$gtype."''>
@@ -250,7 +250,7 @@ class PluginMreportingDashboard extends CommonDBTM {
          </div>";
       }  
 
-      echo "<div class='f_clear'></div>";
+      echo "<div class='m_clear'></div>";
       echo "</div>";
    }
 

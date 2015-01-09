@@ -97,15 +97,15 @@
    overflow: hidden;
 }
 
-.f_left {
+.m_left {
    float: left;
 }
 
-.f_right {
+.m_right {
    float: right;
 }
 
-.f_clear {
+.m_clear {
    clear: both;
 }
 
