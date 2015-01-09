@@ -109,6 +109,9 @@ class PluginMreportingDashboard extends CommonDBTM {
                }, 
                success: function(){
                   Ext.get('mreportingwidget'+id).remove();
+                  if (Ext.select('.mreportingwidget').elements.length <= 0) {
+                     window.location.reload();
+                  }
                }
             });
          }
