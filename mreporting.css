@@ -160,3 +160,7 @@ select[name=graphmenu] option {
 .empty_dashboard .m_right {
    float: none;
 }
+
+.empty_dashboard #addReport_button {
+   zoom: 1.5;
+}
