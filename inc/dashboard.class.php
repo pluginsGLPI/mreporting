@@ -128,7 +128,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
             $('#addReport_button').button({
                icons: {
-                 primary: 'ui-icon-gear'
+                 primary: 'ui-icon-plusthick'
                },
                text: false
             }).click(function( event ) {
