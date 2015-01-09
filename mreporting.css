@@ -109,7 +109,7 @@
    clear: both;
 }
 
-.mreportingwidget-panel button {
+#dashboard button {
    width: 20px;
    height: 20px;
 }
@@ -138,4 +138,25 @@ select[name=graphmenu] option {
 
 .select2-container[id*=s2id_dropdown_glpilist_limit] {
    width: 80px !important;
+}
+
+.empty_dashboard {
+   width: 90%;
+   margin: 15px auto;
+   height: 150px;
+   border: 3px dashed #CCC;
+   color: #999;
+   font-size: 1.4em;
+   text-transform: uppercase;
+   font-weight: bold;
+}
+
+.empty_dashboard_text {
+   width: 300px;
+   text-align: center;
+   margin: 20px auto;
+}
+
+.empty_dashboard .m_right {
+   float: none;
 }

@@ -143,8 +143,8 @@ msgid "Select a report to display"
 msgstr "Sélectionnez un rapport à afficher"
 
 #: inc/dashboard.class.php:92
-msgid "Dashboard is empty. Please add reports by clicking on the icon &#xf063;"
-msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur cette icône &#xf063;"
+msgid "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur cette icône"
 
 #: inc/dashboard.class.php:121
 msgid "Select a report to add"

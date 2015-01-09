@@ -88,13 +88,15 @@ class PluginMreportingDashboard extends CommonDBTM {
       }
 
       if (empty($widgets)) {
-         echo "<div style='float:right'>";
-         echo __("Dashboard is empty. Please add reports by clicking on the icon &#xf063;", 'mreporting');
-         echo "&nbsp;</div>";
-         echo "<div style='clear:both'>";
-         echo "</div>";
+         echo "<div class='empty_dashboard'>";
+         echo "<div class='empty_dashboard_text'>";
+         echo __("Dashboard is empty. Please add reports by clicking on the icon", 'mreporting');
+         echo "<br />";
+         echo "&#xf063;";
+         echo "<br />";
       }
 
+      echo "<button id='addReport_button' class='m_right'></button>";
       echo "
       <div id='addReport_dialog'>".$this->getFormForColumn()."</div>
       <script type='text/javascript'>
@@ -132,8 +134,12 @@ class PluginMreportingDashboard extends CommonDBTM {
          });
       </script>";
 
+      if (empty($widgets)) {
+         echo "</div>";
+         echo "</div>";
+      }
+
       echo "<div class='mreportingwidget-panel'>";
-      echo "<button id='addReport_button' class='m_right'></button>";
       echo "<div class='m_clear'></div>";
       $i = 0;
       foreach($widgets as $data) {
