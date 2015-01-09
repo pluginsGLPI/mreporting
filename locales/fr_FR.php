@@ -61,7 +61,7 @@ $LANG['plugin_mreporting']["config"][14] = "Envoyer ce rapport avec les notifica
 
 $LANG['plugin_mreporting']["dashboard"][1] = "Tableau de bord";
 $LANG['plugin_mreporting']["dashboard"][2] = "Configurer le tableau de bord";
-$LANG['plugin_mreporting']["dashboard"][3] = "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur cette icône &#xf063;";
+$LANG['plugin_mreporting']["dashboard"][3] = "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur cette icône";
 $LANG['plugin_mreporting']["dashboard"][4] = "Sélectionnez un rapport à afficher";
 $LANG['plugin_mreporting']["dashboard"][5] = "Liste des rapports";
 $LANG['plugin_mreporting']["dashboard"][6] = "Sélectionnez un rapport à ajouter";

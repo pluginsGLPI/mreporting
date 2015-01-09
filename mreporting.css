@@ -119,3 +119,25 @@ select[name=graphmenu],
 select[name=graphmenu] option {
    font-family: FontAwesome, 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif' !important;
 }
+
+.empty_dashboard {
+   width: 90%;
+   margin: 15px auto;
+   height: 150px;
+   border: 3px dashed #CCC;
+   color: #999;
+   font-size: 1.4em;
+   text-transform: uppercase;
+   font-weight: bold;
+}
+
+.empty_dashboard_text {
+   width: 300px;
+   text-align: center;
+   margin: 20px auto;
+}
+
+.empty_dashboard .x-tool {
+   float: center;
+   margin: 0 auto;
+}

@@ -60,7 +60,7 @@ $LANG['plugin_mreporting']["config"][14] = "Send this report with the notificati
 
 $LANG['plugin_mreporting']["dashboard"][1] = "Dashboard";
 $LANG['plugin_mreporting']["dashboard"][2] = "Configure the dashboard";
-$LANG['plugin_mreporting']["dashboard"][3] = "Dashboard is empty. Please add reports by clicking on the icon &#xf063;";
+$LANG['plugin_mreporting']["dashboard"][3] = "Dashboard is empty. Please add reports by clicking on the icon";
 $LANG['plugin_mreporting']["dashboard"][4] = "Select a report to display";
 $LANG['plugin_mreporting']["dashboard"][5] = "Report list";
 $LANG['plugin_mreporting']["dashboard"][6] = "Select a report to add";
