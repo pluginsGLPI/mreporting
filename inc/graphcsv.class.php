@@ -38,7 +38,6 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
    }
 
    function showHbar($params, $dashboard = false , $width = false) {
-      global $CFG_GLPI;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -79,13 +78,13 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       //titles
       $out = $title." - ".$desc."\r\n";
       foreach($labels as $label) {
-         $out.= $label.$CFG_GLPI['csv_delimiter'];
+         $out.= $label.";";
       }
       $out = substr($out, 0, -1)."\r\n";
 
       //values
       foreach($values as $value) {
-         $out.= $value." ".$unit.$CFG_GLPI['csv_delimiter'];
+         $out.= $value." ".$unit.";";
       }
       $out = substr($out, 0, -1)."\r\n";
 
@@ -145,7 +144,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          foreach($cols as $value) {
             $label = "";
             if (isset($labels2[$i])) $label = str_replace(",", "-", $labels2[$i]);
-            $out.= $label.$CFG_GLPI['csv_delimiter'];
+            $out.= $label.";";
             $i++;
          }
          $out = substr($out, 0, -1)."\r\n";
@@ -218,15 +217,15 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $i = 0;
       foreach($datas as $label => $value) {
          for ($j=0; $j < $level; $j++) {
-           if ($i > 0) $out.= $CFG_GLPI['csv_delimiter'];
+           if ($i > 0) $out.= ";";
          }
 
          if (is_array($value)) {
             arsort($value);
-            $out.= $label.$CFG_GLPI['csv_delimiter'];
+            $out.= $label.";";
             $out.= $this->sunburstLevel($value, $level+1)."\r\n";
          } else {
-            $out.= $label.$CFG_GLPI['csv_delimiter'].$value."\r\n";
+            $out.= $label.";".$value."\r\n";
          }
          $i++;
       }
