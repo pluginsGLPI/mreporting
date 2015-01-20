@@ -34,3 +34,33 @@ $LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']   = 'Status to displ
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['title'] = "Number of group changes";
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['desc'] = "";
+
+$LANG['plugin_mreporting']['selector']["slas"] = "SLAS";
+
+$LANG['plugin_mreporting']['selector']["categories"] = "Categories";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'] = "SLA observed";
+$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved'] = "SLA not observed";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['observed'] = "observed";
+$LANG['plugin_mreporting']['Helpdeskplus']['notobserved'] = "not observed";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['title'] = "Number of tickets per SLA";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['desc'] = "";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['category'] = "Per SLA";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['title'] = "Tickets evolution per SLA";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['desc'] = "";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['category'] = "Per SLA";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['title'] = "Tickets per SLA ordered by categories";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['desc'] = "";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['category'] = "Per SLA";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['title'] = "Tickets per SLA per sorted by techicians";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['desc'] = "";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['category'] = "Per SLA";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['title'] = "Tickets per SLA sorted by groups";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['desc'] = "";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['category'] = "Per SLA";
