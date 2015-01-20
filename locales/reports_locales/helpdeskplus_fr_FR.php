@@ -41,3 +41,33 @@ $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['title'
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['desc'] = "Le graphique suivant affiche les nombres de tickets classé par nombre de changements.<br>
 En ordonnée est affiché le nombre de ticket.<br>
 En abscisse, le nombre de changements.";
+
+$LANG['plugin_mreporting']['selector']["slas"] = "SLAS";
+
+$LANG['plugin_mreporting']['selector']["categories"] = "Catégories";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'] = "SLA respecté(s)";
+$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved'] = "SLA non respecté(s)";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['observed'] = "respecté";
+$LANG['plugin_mreporting']['Helpdeskplus']['notobserved'] = "non respecté";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['title'] = "Nombre de tickets par SLA (respectés / non respectés)";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['desc'] = "Barres empilées";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['category'] = "Par SLA";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['title'] = "Evolution du nombre de tickets par SLA (respectés / non respectés)";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['desc'] = "Lignes";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['category'] = "Par SLA";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['title'] = "Nombre de tickets par SLA ordonnés par catégories";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['desc'] = "Barres groupées";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['category'] = "Par SLA";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['title'] = "Nombre de tickets par SLA ordonnées par techniciens";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['desc'] = "Barres groupées";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['category'] = "Par SLA";
+
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['title'] = "Nombre de tickets par SLA ordonnés par groupes";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['desc'] = "Barres groupées";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['category'] = "Par SLA";

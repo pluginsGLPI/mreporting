@@ -1392,7 +1392,43 @@ class PluginMreportingCommon extends CommonDBTM {
                        'comments'    => false);
       User::dropdown($options);
    }
-   
+   /**
+    * Show the selector for tickets status (new, open, solved, closed...)
+    */
+   static function selectorAllSlasWithTicket()
+   {
+      global $LANG, $DB;
+
+      $query = "SELECT DISTINCT
+         s.id,
+         s.name
+      FROM glpi_slas s
+      INNER JOIN glpi_tickets t ON s.id = t.slas_id
+      WHERE t.status IN (" . implode(
+            ',',
+            array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
+         ) . ")
+      AND t.is_deleted = '0'
+      ORDER BY s.name ASC";
+
+      echo "<b>" . $LANG['plugin_mreporting']['selector']["slas"] . " : </b><br />";
+
+
+      $result = $DB->query($query);
+      while ($data = $DB->fetch_assoc($result)) {
+         echo '<label>';
+         echo '<input type="hidden" name="slas_' . $data['id'] . '" value="0" />';
+         echo '<input type="checkbox" name="slas_' . $data['id'] . '" value="1"';
+         if (isset($_REQUEST['slas_' . $data['id']]) && $_REQUEST['slas_' . $data['id']] == '1') {
+            echo ' checked="checked"';
+         }
+         echo ' />';
+         echo $data['name'];
+         echo '</label>';
+
+      }
+   }
+
    static function selectorPeriod($period = "day") {
       global $LANG;
       $elements = array(
