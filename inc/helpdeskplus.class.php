@@ -735,8 +735,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    return $datas;
    }
 
-   function reportVstackbarNbTicketBySla($config = array())
-   {
+   function reportVstackbarNbTicketBySla($config = array()) {
       global $DB, $LANG;
       $area = false;
 
@@ -790,8 +789,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   function reportGlineNbTicketBySla($config = array())
-   {
+   function reportGlineNbTicketBySla($config = array()) {
       global $DB, $LANG;
       $area = false;
       $datas = array();
@@ -877,8 +875,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   private function _getPeriod()
-   {
+   private function _getPeriod() {
       if (isset($_REQUEST['period']) && !empty($_REQUEST['period'])) {
          switch ($_REQUEST['period']) {
             case 'day':
