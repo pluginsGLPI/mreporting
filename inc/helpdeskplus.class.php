@@ -765,20 +765,21 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       if (isset($_SESSION['mreporting_values']['slas']) 
           && !empty($_SESSION['mreporting_values']['slas'])) {
          $query = "SELECT
-        count(t.id) AS nb,
-        s.name,
-        CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-      FROM `glpi_tickets` t
-      INNER JOIN `glpi_slas` s ON t.slas_id = s.id
-      WHERE {$this->sql_date_create}
-      AND t.status IN (" . implode(
-               ',',
-               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
-      AND t.entities_id IN ({$this->where_entities})
-      AND t.is_deleted = '0'
-      $sql_slas
-      GROUP BY s.name, respected_sla;";
+              count(t.id) AS nb,
+              s.name,
+              CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
+            FROM `glpi_tickets` t
+            INNER JOIN `glpi_slas` s 
+               ON t.slas_id = s.id
+            WHERE {$this->sql_date_create}
+            AND t.status IN (" . implode(
+                     ',',
+                     array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
+                  ) . ")
+            AND t.entities_id IN ({$this->where_entities})
+            AND t.is_deleted = '0'
+            $sql_slas
+            GROUP BY s.name, respected_sla;";
 
          $result = $DB->query($query);
          while ($data = $DB->fetch_assoc($result)) {
@@ -822,7 +823,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             DATE_FORMAT(t.`date`, '{$this->_period_sort}') AS period,
             DATE_FORMAT(t.`date`, '{$this->_period_label}') AS period_name
          FROM `glpi_tickets` t
-         INNER JOIN `glpi_slas` s ON t.slas_id = s.id
+         INNER JOIN `glpi_slas` s 
+            ON t.slas_id = s.id
          WHERE {$this->sql_date_create}
          AND t.status IN (" . implode(
                ',',
@@ -850,7 +852,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             s.name,
             CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
          FROM `glpi_tickets` t
-         INNER JOIN `glpi_slas` s ON t.slas_id = s.id
+         INNER JOIN `glpi_slas` s 
+            ON t.slas_id = s.id
          WHERE " . $this->sql_date_create . "
          AND t.status IN (" . implode(
                ',',
@@ -945,8 +948,10 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             count(t.id) as nb,
             c.id
          FROM glpi_tickets t
-         INNER JOIN glpi_slas s ON t.slas_id = s.id
-         INNER JOIN glpi_itilcategories c ON t.itilcategories_id = c.id
+         INNER JOIN glpi_slas s 
+            ON t.slas_id = s.id
+         INNER JOIN glpi_itilcategories c 
+            ON t.itilcategories_id = c.id
          WHERE " . $this->sql_date_create . "
          AND t.entities_id IN (" . $this->where_entities . ")
          AND t.is_deleted = '0'
@@ -966,8 +971,10 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
         c.id,
         c.name
       FROM glpi_tickets t
-      INNER JOIN glpi_slas s ON t.slas_id = s.id
-      INNER JOIN glpi_itilcategories c ON t.itilcategories_id = c.id
+      INNER JOIN glpi_slas s 
+         ON t.slas_id = s.id
+      INNER JOIN glpi_itilcategories c 
+         ON t.itilcategories_id = c.id
       WHERE " . $this->sql_date_create . "
       AND t.entities_id IN (" . $this->where_entities . ")
       AND t.is_deleted = '0'";
@@ -1027,9 +1034,13 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
            count(t.id) as nb,
            CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
          FROM glpi_tickets t
-         INNER JOIN glpi_slas s ON t.slas_id = s.id
-         INNER JOIN glpi_tickets_users tu ON tu.tickets_id = t.id AND tu.type = " . Ticket_User::ASSIGN . "
-         INNER JOIN glpi_users u ON u.id = tu.users_id
+         INNER JOIN glpi_slas s 
+            ON t.slas_id = s.id
+         INNER JOIN glpi_tickets_users tu 
+            ON tu.tickets_id = t.id 
+            AND tu.type = " . Ticket_User::ASSIGN . "
+         INNER JOIN glpi_users u 
+            ON u.id = tu.users_id
          WHERE " . $this->sql_date_create . "
          AND t.entities_id IN ({$this->where_entities})
          AND t.is_deleted = '0'
