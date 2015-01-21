@@ -804,7 +804,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       
       $_SESSION['mreporting_selector']['reportGlineNbTicketBySla'] 
          = array('dateinterval', 'period', 'allSlasWithTicket');
-      $this->_getPeriod();
 
       $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
                                                                   $config['delay'],
@@ -820,8 +819,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          //get dates used in this period
          $query_date = "SELECT
             DISTINCT
-            DATE_FORMAT(t.`date`, '{$this->_period_sort}') AS period,
-            DATE_FORMAT(t.`date`, '{$this->_period_label}') AS period_name
+            DATE_FORMAT(t.`date`, '{$this->period_sort}') AS period,
+            DATE_FORMAT(t.`date`, '{$this->period_label}') AS period_name
          FROM `glpi_tickets` t
          INNER JOIN `glpi_slas` s 
             ON t.slas_id = s.id
@@ -846,8 +845,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          }
 
          $query = "SELECT DISTINCT
-            DATE_FORMAT(t.`date`, '{$this->_period_sort}') AS period,
-            DATE_FORMAT(t.`date`, '{$this->_period_label}') AS period_name,
+            DATE_FORMAT(t.`date`, '{$this->period_sort}') AS period,
+            DATE_FORMAT(t.`date`, '{$this->period_label}') AS period_name,
             count(t.id) AS nb,
             s.name,
             CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
@@ -885,35 +884,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   private function _getPeriod() {
-      if (isset($_REQUEST['period']) && !empty($_REQUEST['period'])) {
-         switch ($_REQUEST['period']) {
-            case 'day':
-               $this->_period_sort = '%y%m%d';
-               $this->_period_label = '%d %b %Y';
-               break;
-            case 'week':
-               $this->_period_sort = '%y%u';
-               $this->_period_label = 'S-%u %Y';
-               break;
-            case 'month':
-               $this->_period_sort = '%y%m';
-               $this->_period_label = '%b %Y';
-               break;
-            case 'year':
-               $this->_period_sort = '%Y';
-               $this->_period_label = '%Y';
-               break;
-            default :
-               $this->_period_sort = '%y%m';
-               $this->_period_label = '%b %Y';
-               break;
-         }
-      } else {
-         $this->_period_sort = '%y%m';
-         $this->_period_label = '%b %Y';
-      }
-   }
 
    public function reportHgbarRespectedSlasByTopCategory($config = array()) {
       global $DB;
