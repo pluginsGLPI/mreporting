@@ -588,73 +588,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    }
 
 
-   function fillStatusMissingValues($tab, $labels2 = array()) {
-      $datas = array();
-      foreach($tab as $name => $data) {
-         foreach ($this->status as $current_status) {
-            if(!isset($_SESSION['mreporting_values']['status_'.$current_status]) 
-               || ($_SESSION['mreporting_values']['status_'.$current_status] == '1')) {
-               
-               $status_name = Ticket::getStatus($current_status);
-               if (isset($data[$status_name])) {
-                  $datas['datas'][$status_name][] = $data[$status_name];
-               } else {
-                  $datas['datas'][$status_name][] = 0;
-               }
-            }
-         }
-         if (empty($labels2)) {
-            $datas['labels2'][] = $name;
-         } else {
-            $datas['labels2'][] = $labels2[$name];
-         }
-      }
-      return $datas;
-   }
-   
-   static function selectorBacklogstates() {
-      global $LANG;
-      echo "<br /><b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
-      
-      // Opened
-      echo '<label>';
-      echo '<input type="hidden" name="show_new" value="0" /> ';
-      echo '<input type="checkbox" name="show_new" value="1"';
-      echo (!isset($_SESSION['mreporting_values']['show_new']) || ($_SESSION['mreporting_values']['show_new'] == '1')) ? ' checked="checked"' : '';
-      echo ' /> ';
-      echo $LANG['plugin_mreporting']['Helpdeskplus']['opened'];
-      echo '</label>';
-      
-      // Solved
-      echo '<label>';
-      echo '<input type="hidden" name="show_solved" value="0" /> ';
-      echo '<input type="checkbox" name="show_solved" value="1"';
-      echo (!isset($_SESSION['mreporting_values']['show_solved']) || ($_SESSION['mreporting_values']['show_solved'] == '1')) ? ' checked="checked"' : '';
-      echo ' /> ';
-      echo _x('status', 'Solved');
-      echo '</label>';
-
-      echo "<br />";
-      
-      // Backlog
-      echo '<label>';
-      echo '<input type="hidden" name="show_backlog" value="0" /> ';
-      echo '<input type="checkbox" name="show_backlog" value="1"';
-      echo (!isset($_SESSION['mreporting_values']['show_backlog']) || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? ' checked="checked"' : '';
-      echo ' /> ';
-      echo $LANG['plugin_mreporting']['Helpdeskplus']['backlogs'];
-      echo '</label>';
-      
-      // Closed
-      echo '<label>';
-      echo '<input type="hidden" name="show_closed" value="0" /> ';
-      echo '<input type="checkbox" name="show_closed" value="1"';
-      echo (isset($_SESSION['mreporting_values']['show_closed']) && ($_SESSION['mreporting_values']['show_closed'] == '1')) ? ' checked="checked"' : '';
-      echo ' /> ';
-      echo _x('status', 'Closed');
-      echo '</label>';
-   }
-  
    function reportVstackbarRespectedSlasByGroup($config = array()) {
       global $DB;
       $datas = array();
@@ -1031,5 +964,71 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       return $datas;
    }
 
+   function fillStatusMissingValues($tab, $labels2 = array()) {
+      $datas = array();
+      foreach($tab as $name => $data) {
+         foreach ($this->status as $current_status) {
+            if(!isset($_SESSION['mreporting_values']['status_'.$current_status]) 
+               || ($_SESSION['mreporting_values']['status_'.$current_status] == '1')) {
+               
+               $status_name = Ticket::getStatus($current_status);
+               if (isset($data[$status_name])) {
+                  $datas['datas'][$status_name][] = $data[$status_name];
+               } else {
+                  $datas['datas'][$status_name][] = 0;
+               }
+            }
+         }
+         if (empty($labels2)) {
+            $datas['labels2'][] = $name;
+         } else {
+            $datas['labels2'][] = $labels2[$name];
+         }
+      }
+      return $datas;
+   }
+   
+   static function selectorBacklogstates() {
+      global $LANG;
+      echo "<br /><b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
+      
+      // Opened
+      echo '<label>';
+      echo '<input type="hidden" name="show_new" value="0" /> ';
+      echo '<input type="checkbox" name="show_new" value="1"';
+      echo (!isset($_SESSION['mreporting_values']['show_new']) || ($_SESSION['mreporting_values']['show_new'] == '1')) ? ' checked="checked"' : '';
+      echo ' /> ';
+      echo $LANG['plugin_mreporting']['Helpdeskplus']['opened'];
+      echo '</label>';
+      
+      // Solved
+      echo '<label>';
+      echo '<input type="hidden" name="show_solved" value="0" /> ';
+      echo '<input type="checkbox" name="show_solved" value="1"';
+      echo (!isset($_SESSION['mreporting_values']['show_solved']) || ($_SESSION['mreporting_values']['show_solved'] == '1')) ? ' checked="checked"' : '';
+      echo ' /> ';
+      echo _x('status', 'Solved');
+      echo '</label>';
+
+      echo "<br />";
+      
+      // Backlog
+      echo '<label>';
+      echo '<input type="hidden" name="show_backlog" value="0" /> ';
+      echo '<input type="checkbox" name="show_backlog" value="1"';
+      echo (!isset($_SESSION['mreporting_values']['show_backlog']) || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? ' checked="checked"' : '';
+      echo ' /> ';
+      echo $LANG['plugin_mreporting']['Helpdeskplus']['backlogs'];
+      echo '</label>';
+      
+      // Closed
+      echo '<label>';
+      echo '<input type="hidden" name="show_closed" value="0" /> ';
+      echo '<input type="checkbox" name="show_closed" value="1"';
+      echo (isset($_SESSION['mreporting_values']['show_closed']) && ($_SESSION['mreporting_values']['show_closed'] == '1')) ? ' checked="checked"' : '';
+      echo ' /> ';
+      echo _x('status', 'Closed');
+      echo '</label>';
+   }
 }
 ?>
