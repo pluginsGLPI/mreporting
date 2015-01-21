@@ -5,6 +5,14 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
+   function __construct($config = array()) {
+      global $LANG;
+
+      parent::__construct($config);
+      $this->lcl_slaok = $LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'];
+      $this->lcl_slako = $LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved'];
+   }
+
    function reportGlineBacklogs($config = array()) {
       global $DB, $LANG;
 
@@ -651,7 +659,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    }
   
    function reportVstackbarRespectedSlasByGroup($config = array()) {
-      global $DB, $LANG;
+      global $DB;
       $datas = array();
       
       $_SESSION['mreporting_selector']['reportVstackbarRespectedSlasByGroup'] 
@@ -696,9 +704,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             $datas['labels2'][$gp->fields['name']] = $gp->fields['name'];
             
             if ($data['respected_sla'] == 'ok'){
-               $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$gp->fields['name']] = $data['nb'];
+               $datas['datas'][$this->lcl_slaok][$gp->fields['name']] = $data['nb'];
             } else {
-               $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$gp->fields['name']] = $data['nb'];
+               $datas['datas'][$this->lcl_slako][$gp->fields['name']] = $data['nb'];
             }
             
          }
@@ -709,12 +717,12 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          
          foreach($gp_found as $group){
          	$group_name = $group['name'];
-           if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name])){
+           if(!isset($datas['datas'][$this->lcl_slaok][$group_name])){
               $datas['labels2'][$group_name] = $group_name;
-              $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name] = 0;
+              $datas['datas'][$this->lcl_slaok][$group_name] = 0;
            }
-           if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name])){
-              $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name] = 0;
+           if(!isset($datas['datas'][$this->lcl_slako][$group_name])){
+              $datas['datas'][$this->lcl_slako][$group_name] = 0;
            }
          }
          
@@ -723,8 +731,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
          //Array alphabetic sort
          //For PNG mode, it is important to sort by date on each item
-         ksort($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']]);
-         ksort($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']]);
+         ksort($datas['datas'][$this->lcl_slaok]);
+         ksort($datas['datas'][$this->lcl_slako]);
 
          //For SVG mode, labels2 sort is ok
          asort($datas['labels2']);
@@ -732,11 +740,11 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $datas['unit'] = '%';
       }
     
-   return $datas;
+      return $datas;
    }
 
    function reportVstackbarNbTicketBySla($config = array()) {
-      global $DB, $LANG;
+      global $DB;
       $area = false;
 
       $_SESSION['mreporting_selector']['reportVstackbarNbTicketBySla'] 
@@ -779,10 +787,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
          foreach ($tmp_datas as $key => $value) {
             $datas['labels2'][$key] = $key;
-            $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$key] 
-               = !empty($value['ok']) ? $value['ok'] : 0;
-            $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$key] 
-               = !empty($value['nok']) ? $value['nok'] : 0;
+            $datas['datas'][$this->lcl_slaok][$key] = !empty($value['ok']) ? $value['ok'] : 0;
+            $datas['datas'][$this->lcl_slaok][$key] = !empty($value['nok']) ? $value['nok'] : 0;
          }
       }
 
@@ -790,7 +796,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    }
 
    function reportGlineNbTicketBySla($config = array()) {
-      global $DB, $LANG;
+      global $DB;
+
       $area = false;
       $datas = array();
       
@@ -858,9 +865,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          while ($data = $DB->fetch_assoc($result)) {
             $datas['labels2'][$data['period']] = $data['period_name'];
             if ($data['respected_sla'] == 'ok') {
-               $value = $LANG['plugin_mreporting']['Helpdeskplus']['observed'];
+               $value = $this->lcl_slaok;
             } else {
-               $value = $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'];
+               $value = $this->lcl_slako;
             }
             $datas['datas'][$data['name'] . ' ' . $value][$data['period']] = $data['nb'];
          }
@@ -906,7 +913,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    }
 
    public function reportHgbarRespectedSlasByTopCategory($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $area = false;
 
@@ -975,16 +982,14 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $result = $DB->query($query);
       while ($data = $DB->fetch_assoc($result)) {
          if ($data['respected_sla'] == 'ok') {
-            $value = $LANG['plugin_mreporting']['Helpdeskplus']['observed'];
+            $value = $this->lcl_slaok;
          } else {
-            $value = $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'];
+            $value = $this->lcl_slako;
          }
          $datas['datas'][$data['name']][$value] = $data['nb'];
       }
-      $datas['labels2'] = array($LANG['plugin_mreporting']['Helpdeskplus']['observed'] 
-                                   => $LANG['plugin_mreporting']['Helpdeskplus']['observed'], 
-                                $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'] 
-                                   => $LANG['plugin_mreporting']['Helpdeskplus']['notobserved']);
+      $datas['labels2'] = array($this->lcl_slaok => $this->lcl_slaok, 
+                                $this->lcl_slako => $this->lcl_slako);
 
       if (isset($datas['datas'])) {
          foreach ($datas['datas'] as &$data) {
@@ -996,7 +1001,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    }
 
    public function reportHgbarRespectedSlasByTechnician($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $area = false;
 
@@ -1035,16 +1040,14 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $i = 0;
       while ($data = $DB->fetch_assoc($result)) {
          if ($data['respected_sla'] == 'ok') {
-            $value = $LANG['plugin_mreporting']['Helpdeskplus']['observed'];
+            $value = $this->lcl_slaok;
          } else {
-            $value = $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'];
+            $value = $this->lcl_slako;
          }
          $datas['datas'][$data['fullname']][$value] = $data['nb'];
       }
-      $datas['labels2'] = array($LANG['plugin_mreporting']['Helpdeskplus']['observed'] 
-                                   => $LANG['plugin_mreporting']['Helpdeskplus']['observed'], 
-                                $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'] 
-                                   => $LANG['plugin_mreporting']['Helpdeskplus']['notobserved']);
+      $datas['labels2'] = array($this->lcl_slaok => $this->lcl_slaok, 
+                                $this->lcl_slako => $this->lcl_slako);
 
 
       if (isset($datas['datas'])) {
