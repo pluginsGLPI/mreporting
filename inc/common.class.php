@@ -1453,22 +1453,22 @@ class PluginMreportingCommon extends CommonDBTM {
       AND t.is_deleted = '0'
       ORDER BY s.name ASC";
 
+      $selected_values = array();
+      if (isset($_SESSION['mreporting_values']['slas'])) {
+         $selected_values = $_SESSION['mreporting_values']['slas'];
+      }
+
       echo "<b>" . $LANG['plugin_mreporting']['selector']["slas"] . " : </b><br />";
-
-
+      echo "<select name='slas[]' multiple class='chzn-select' data-placeholder='-----                 '>";
       $result = $DB->query($query);
       while ($data = $DB->fetch_assoc($result)) {
-         echo '<label>';
-         echo '<input type="hidden" name="slas_' . $data['id'] . '" value="0" />';
-         echo '<input type="checkbox" name="slas_' . $data['id'] . '" value="1"';
-         if (isset($_REQUEST['slas_' . $data['id']]) && $_REQUEST['slas_' . $data['id']] == '1') {
-            echo ' checked="checked"';
+         $selected = "";
+         if (in_array($data['id'], $selected_values)) {
+            $selected = "selected ";
          }
-         echo ' />';
-         echo $data['name'];
-         echo '</label>';
-
+         echo "<option value='".$data['id']."' $selected>".$data['name']."</option>";
       }
+
    }
 
    static function selectorPeriod($period = "day") {
