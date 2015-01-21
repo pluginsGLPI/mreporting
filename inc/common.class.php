@@ -29,6 +29,13 @@
 
 class PluginMreportingCommon extends CommonDBTM {
 
+   const MNBSP = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
    /**
     * Parsing all classes
     * Search all class into inc folder
@@ -1338,7 +1345,8 @@ class PluginMreportingCommon extends CommonDBTM {
 
 
       echo "<br /><b>".$label." : </b><br />";
-      echo "<select name='".$field."[]' multiple class='chzn-select' data-placeholder='-----'>";
+      echo "<select name='".$field."[]' multiple class='chzn-select' 
+                    data-placeholder='-----".self::MNBSP."'>";
       foreach (getAllDatasFromTable('glpi_groups', $condition) as $data) {
          $selected = "";
          if (in_array($data['id'], $selected_groups_requester)) {
@@ -1417,7 +1425,8 @@ class PluginMreportingCommon extends CommonDBTM {
       }
 
       echo "<b>" . $LANG['plugin_mreporting']['selector']["slas"] . " : </b><br />";
-      echo "<select name='slas[]' multiple class='chzn-select' data-placeholder='-----                 '>";
+      echo "<select name='slas[]' multiple class='chzn-select' 
+                    data-placeholder='-----".self::MNBSP."'>";
       $result = $DB->query($query);
       while ($data = $DB->fetch_assoc($result)) {
          $selected = "";
