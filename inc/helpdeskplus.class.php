@@ -342,6 +342,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportVstackbarTicketstech($config = array()) {
       global $DB;
+      
       $_SESSION['mreporting_selector']['reportVstackbarTicketstech'] 
          = array('dateinterval', 'multiplegroupassign', 'allstates', 'category');
       $tab = array();
@@ -520,6 +521,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportVstackbarGroupChange($config = array()) {
       global $DB;
+
       $_SESSION['mreporting_selector']['reportVstackbarGroupChange'] 
          = array('dateinterval', 'userassign', 'category', 'multiplegrouprequest', 'multiplegroupassign');
       
@@ -590,8 +592,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportVstackbarRespectedSlasByGroup($config = array()) {
       global $DB;
+
       $datas = array();
-      
       $_SESSION['mreporting_selector']['reportVstackbarRespectedSlasByGroup'] 
          = array('dateinterval', 'allSlasWithTicket');
       
@@ -676,8 +678,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportVstackbarNbTicketBySla($config = array()) {
       global $DB;
-      $area = false;
 
+      $area = false;
       $_SESSION['mreporting_selector']['reportVstackbarNbTicketBySla'] 
          = array('dateinterval', 'allSlasWithTicket');
 
@@ -734,7 +736,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       
       $_SESSION['mreporting_selector']['reportGlineNbTicketBySla'] 
          = array('dateinterval', 'period', 'allSlasWithTicket');
-
 
       $sql_slas = "";
       if (isset($_SESSION['mreporting_values']['slas'])) {
@@ -823,7 +824,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $datas = array();
       $categories = array();
 
-
       $category_limit = 10;
       $category = null;
       if (isset($_POST['glpilist_limit'])) {
@@ -907,17 +907,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       global $DB;
 
       $area = false;
-
       $datas = array();
       $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTechnician'] 
          = array('dateinterval');
-/*
-      $category_limit = 10;
-      $category = null;
-      if (isset($_POST['glpilist_limit'])) {
-         $category_limit = $_POST['glpilist_limit'];
-      }
-*/
 
       $query = "SELECT
             CONCAT(u.firstname, ' ', u.realname) as fullname,
@@ -942,7 +934,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          ORDER BY nb DESC";
 
       $result = $DB->query($query);
-      $i = 0;
       while ($data = $DB->fetch_assoc($result)) {
          if ($data['respected_sla'] == 'ok') {
             $value = $this->lcl_slaok;
