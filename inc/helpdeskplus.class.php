@@ -541,9 +541,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
          }
       }
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
       $sql_user_assign = isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0 ? " AND tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'] : "";
       $sql_type        = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
       $sql_itilcat     = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
@@ -665,9 +662,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportVstackbarRespectedSlasByGroup'] 
          = array('dateinterval', 'allSlasWithTicket');
       
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
       $sql_slas = "";
       if (isset($_SESSION['mreporting_values']['slas'])) {
          $sql_slas = " AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")";
@@ -677,22 +671,26 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
           && !empty($_SESSION['mreporting_values']['slas'])) {
 
          $query = "SELECT 
-               COUNT(t.id) AS nb, 
+               COUNT(glpi_tickets.id) AS nb, 
                gt.groups_id as groups_id, 
                s.name, 
-               CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-            FROM `glpi_tickets` t
+               CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time 
+                  THEN 'ok'  
+                  ELSE 'nok' 
+               END AS respected_sla
+            FROM `glpi_tickets`
             INNER JOIN `glpi_groups_tickets` gt 
-               ON gt.tickets_id = t.id 
+               ON gt.tickets_id = glpi_tickets.id 
                AND gt.type = ".CommonITILActor::ASSIGN."
-            INNER JOIN `glpi_slas` s ON t.slas_id = s.id
+            INNER JOIN `glpi_slas` s 
+               ON glpi_tickets.slas_id = s.id
             WHERE {$this->sql_date_create}
-            AND t.status IN (" . implode(
+            AND glpi_tickets.status IN (" . implode(
                         ',',
                         array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
                   ) . ")
-            AND t.entities_id IN ({$this->where_entities})
-            AND t.is_deleted = '0'
+            AND glpi_tickets.entities_id IN ({$this->where_entities})
+            AND glpi_tickets.is_deleted = '0'
             $sql_slas
             GROUP BY gt.groups_id, respected_sla;";
          $result = $DB->query($query);
@@ -753,10 +751,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $datas = array();
       $tmp_datas = array();
 
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
-
       $sql_slas = "";
       if (isset($_SESSION['mreporting_values']['slas'])) {
          $sql_slas = " AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")";
@@ -765,19 +759,22 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       if (isset($_SESSION['mreporting_values']['slas']) 
           && !empty($_SESSION['mreporting_values']['slas'])) {
          $query = "SELECT
-              count(t.id) AS nb,
-              s.name,
-              CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-            FROM `glpi_tickets` t
+               count(glpi_tickets.id) AS nb,
+               s.name,
+               CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time 
+                  THEN 'ok' 
+                  ELSE 'nok' 
+               END AS respected_sla
+            FROM `glpi_tickets`
             INNER JOIN `glpi_slas` s 
-               ON t.slas_id = s.id
+               ON glpi_tickets.slas_id = s.id
             WHERE {$this->sql_date_create}
-            AND t.status IN (" . implode(
+            AND glpi_tickets.status IN (" . implode(
                      ',',
                      array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
                   ) . ")
-            AND t.entities_id IN ({$this->where_entities})
-            AND t.is_deleted = '0'
+            AND glpi_tickets.entities_id IN ({$this->where_entities})
+            AND glpi_tickets.is_deleted = '0'
             $sql_slas
             GROUP BY s.name, respected_sla;";
 
@@ -805,9 +802,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportGlineNbTicketBySla'] 
          = array('dateinterval', 'period', 'allSlasWithTicket');
 
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
 
       $sql_slas = "";
       if (isset($_SESSION['mreporting_values']['slas'])) {
@@ -819,18 +813,18 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          //get dates used in this period
          $query_date = "SELECT
             DISTINCT
-            DATE_FORMAT(t.`date`, '{$this->period_sort}') AS period,
-            DATE_FORMAT(t.`date`, '{$this->period_label}') AS period_name
-         FROM `glpi_tickets` t
+            DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
+            DATE_FORMAT(`date`, '{$this->period_label}') AS period_name
+         FROM `glpi_tickets`
          INNER JOIN `glpi_slas` s 
-            ON t.slas_id = s.id
+            ON slas_id = s.id
          WHERE {$this->sql_date_create}
-         AND t.status IN (" . implode(
+         AND status IN (" . implode(
                ',',
                array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
             ) . ")
-         AND t.`entities_id` IN (" . $this->where_entities . ")
-         AND t.`is_deleted` = '0'
+         AND glpi_tickets.`entities_id` IN (" . $this->where_entities . ")
+         AND glpi_tickets.`is_deleted` = '0'
          $sql_slas
          ORDER BY `date` ASC";
          $res_date = $DB->query($query_date);
@@ -845,21 +839,21 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          }
 
          $query = "SELECT DISTINCT
-            DATE_FORMAT(t.`date`, '{$this->period_sort}') AS period,
-            DATE_FORMAT(t.`date`, '{$this->period_label}') AS period_name,
-            count(t.id) AS nb,
+            DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
+            DATE_FORMAT(`date`, '{$this->period_label}') AS period_name,
+            count(glpi_tickets.id) AS nb,
             s.name,
-            CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-         FROM `glpi_tickets` t
+            CASE WHEN solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
+         FROM `glpi_tickets`
          INNER JOIN `glpi_slas` s 
-            ON t.slas_id = s.id
-         WHERE " . $this->sql_date_create . "
-         AND t.status IN (" . implode(
+            ON slas_id = s.id
+         WHERE {$this->sql_date_create}
+         AND status IN (" . implode(
                ',',
                array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
             ) . ")
-         AND t.entities_id IN (" . $this->where_entities . ")
-         AND t.is_deleted = '0'
+         AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
+         AND glpi_tickets.is_deleted = '0'
          $sql_slas
          GROUP BY s.name, period, respected_sla;";
 
@@ -896,10 +890,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $datas = array();
       $categories = array();
 
-      //Init delay value
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
 
       $category_limit = 10;
       $category = null;
@@ -915,16 +905,16 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       if (!$category) {
          $query_categories = "SELECT
-            count(t.id) as nb,
+            count(glpi_tickets.id) as nb,
             c.id
-         FROM glpi_tickets t
+         FROM glpi_tickets
          INNER JOIN glpi_slas s 
-            ON t.slas_id = s.id
+            ON glpi_tickets.slas_id = s.id
          INNER JOIN glpi_itilcategories c 
-            ON t.itilcategories_id = c.id
+            ON glpi_tickets.itilcategories_id = c.id
          WHERE " . $this->sql_date_create . "
-         AND t.entities_id IN (" . $this->where_entities . ")
-         AND t.is_deleted = '0'
+         AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
+         AND glpi_tickets.is_deleted = '0'
          GROUP BY c.id
          ORDER BY nb DESC
          LIMIT " . $category_limit . ";";
@@ -936,25 +926,28 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       }
 
       $query = "SELECT
-        count(t.id) as nb,
-        CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla,
-        c.id,
-        c.name
-      FROM glpi_tickets t
-      INNER JOIN glpi_slas s 
-         ON t.slas_id = s.id
-      INNER JOIN glpi_itilcategories c 
-         ON t.itilcategories_id = c.id
-      WHERE " . $this->sql_date_create . "
-      AND t.entities_id IN (" . $this->where_entities . ")
-      AND t.is_deleted = '0'";
-      if ($category) {
-         $query .= " AND c.id = " . $category;
-      } else {
-         $query .= " AND c.id IN (" . implode(',', $categories) . ")";
-      }
-      $query .= " GROUP BY respected_sla, c.id
-      ORDER BY nb desc;";
+            count(glpi_tickets.id) as nb,
+            CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time 
+               THEN 'ok' 
+               ELSE 'nok' 
+            END AS respected_sla,
+            c.id,
+            c.name
+         FROM glpi_tickets
+         INNER JOIN glpi_slas s 
+            ON glpi_tickets.slas_id = s.id
+         INNER JOIN glpi_itilcategories c 
+            ON glpi_tickets.itilcategories_id = c.id
+         WHERE " . $this->sql_date_create . "
+         AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
+         AND glpi_tickets.is_deleted = '0'";
+         if ($category) {
+            $query .= " AND c.id = " . $category;
+         } else {
+            $query .= " AND c.id IN (" . implode(',', $categories) . ")";
+         }
+         $query .= " GROUP BY respected_sla, c.id
+         ORDER BY nb desc;";
 
       $result = $DB->query($query);
       while ($data = $DB->fetch_assoc($result)) {
@@ -985,11 +978,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $datas = array();
       $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTechnician'] 
          = array('dateinterval');
-
-      //Init delay value
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
 /*
       $category_limit = 10;
       $category = null;
@@ -999,21 +987,24 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 */
 
       $query = "SELECT
-           CONCAT(u.firstname, ' ', u.realname) as fullname,
-           u.id,
-           count(t.id) as nb,
-           CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-         FROM glpi_tickets t
+            CONCAT(u.firstname, ' ', u.realname) as fullname,
+            u.id,
+            count(glpi_tickets.id) as nb,
+            CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time 
+               THEN 'ok' 
+               ELSE 'nok' 
+            END AS respected_sla
+         FROM glpi_tickets
          INNER JOIN glpi_slas s 
-            ON t.slas_id = s.id
+            ON glpi_tickets.slas_id = s.id
          INNER JOIN glpi_tickets_users tu 
-            ON tu.tickets_id = t.id 
+            ON tu.tickets_id = glpi_tickets.id 
             AND tu.type = " . Ticket_User::ASSIGN . "
          INNER JOIN glpi_users u 
             ON u.id = tu.users_id
          WHERE " . $this->sql_date_create . "
-         AND t.entities_id IN ({$this->where_entities})
-         AND t.is_deleted = '0'
+         AND glpi_tickets.entities_id IN ({$this->where_entities})
+         AND glpi_tickets.is_deleted = '0'
          GROUP BY respected_sla, u.id
          ORDER BY nb DESC";
 
