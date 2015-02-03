@@ -93,12 +93,18 @@ class PluginMreportingDashboard extends CommonDBTM {
          echo "<div class='empty_dashboard'>";
          echo "<div class='empty_dashboard_text'>";
          echo $LANG['plugin_mreporting']["dashboard"][3];
-         echo "<br />";
-         echo "&#xf063;";
-         echo "<br />";
+         echo "</div>";
+         echo "</div>";
       }
 
-      echo "<div class='x-tool x-tool-plus' onclick='addReport.show();'>&nbsp;</div>";
+      echo "<div class='m_dashboard_controls'>";
+      echo "<div class='add_report' onclick='addReport.show();'><span>&nbsp;</span></div>";
+      if (!empty($widgets)) {
+         echo "<span class='add_report_helptext'>".$LANG['plugin_mreporting']["dashboard"][7].
+              " &#xf061;</span>";
+      }
+      echo "</div>";
+
       echo "<script type='text/javascript'>
          removeWidget = function(id){
             Ext.Ajax.request({
@@ -125,11 +131,6 @@ class PluginMreportingDashboard extends CommonDBTM {
             html: '".substr(json_encode($this->getFormForColumn(),JSON_HEX_APOS),1,-1)."' ,
           });
       </script>";
-
-      if (empty($widgets)) {
-         echo "</div>";
-         echo "</div>";
-      }
 
       echo "<div class='mreportingwidget-panel'>";
       echo "<div class='clear'></div>";

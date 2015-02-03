@@ -64,6 +64,7 @@ $LANG['plugin_mreporting']["dashboard"][3] = "Dashboard is empty. Please add rep
 $LANG['plugin_mreporting']["dashboard"][4] = "Select a report to display";
 $LANG['plugin_mreporting']["dashboard"][5] = "Report list";
 $LANG['plugin_mreporting']["dashboard"][6] = "Select a report to add";
+$LANG['plugin_mreporting']["dashboard"][7] = "Add a report";
  
 $LANG['plugin_mreporting']['parser'][1] = "Use this model";
 $LANG['plugin_mreporting']['parser'][2] = "Please, select a model in your preferences";
