@@ -146,6 +146,10 @@ msgstr ""
 msgid "More"
 msgstr ""
 
+#: inc/dashboard.class.php:102
+msgid "Add a report"
+msgstr ""
+
 #: inc/dashboard.class.php:121
 msgid "Select a report to add"
 msgstr ""

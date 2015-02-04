@@ -91,12 +91,18 @@ class PluginMreportingDashboard extends CommonDBTM {
          echo "<div class='empty_dashboard'>";
          echo "<div class='empty_dashboard_text'>";
          echo __("Dashboard is empty. Please add reports by clicking on the icon", 'mreporting');
-         echo "<br />";
-         echo "&#xf063;";
-         echo "<br />";
+         echo "</div>";
+         echo "</div>";
       }
 
-      echo "<button id='addReport_button' class='m_right'></button>";
+      //echo "<button id='addReport_button' class='m_right'></button>";
+      echo "<div class='m_dashboard_controls'>";
+      echo "<div class='add_report' id='addReport_button'><span>&nbsp;</span></div>";
+      if (!empty($widgets)) {
+         echo "<span class='add_report_helptext'>".__("Add a report", 'mreporting').
+              " &#xf061;</span>";
+      }
+      echo "</div>";
       echo "
       <div id='addReport_dialog'>".$this->getFormForColumn()."</div>
       <script type='text/javascript'>
@@ -126,12 +132,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                title: '".__("Select a report to add", 'mreporting')."'
             });
 
-            $('#addReport_button').button({
-               icons: {
-                 primary: 'ui-icon-plusthick'
-               },
-               text: false
-            }).click(function( event ) {
+            $('#addReport_button').click(function( event ) {
                addReport.dialog('open');
             });
          });
