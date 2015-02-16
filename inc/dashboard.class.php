@@ -74,7 +74,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       //retrieve dashboard widgets;
       $dashboard= new PluginMreportingDashboard();
-      $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID']);
+      $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID'], 'id');
 
       //show dashboard
       echo "<div  id='dashboard'>";
