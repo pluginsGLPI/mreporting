@@ -97,6 +97,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
    }
 
    function showHgbar($params, $dashboard = false , $width = false) {
+      global $CFG_GLPI;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
