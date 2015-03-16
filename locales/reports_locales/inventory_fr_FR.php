@@ -39,6 +39,10 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['title'] = "Répartit
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['desc'] = "Barres";
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['category'] = "Inventaire";
 
+$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['title'] = "Répartition des versions de Mac OS X dans le parc";
+$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['desc'] = "Barres";
+$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['category'] = "Inventaire";
+
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['title'] = "Ordinateurs par &acirc;ge";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['desc'] = "Barres";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['category'] = "Inventaire";
