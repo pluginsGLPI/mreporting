@@ -295,6 +295,23 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $data;
   }
 
+  function reportHbarLinuxDistro($config = array()) {
+      global $DB;
+
+      $data = array();
+      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%'") as $os) {
+         $number = countElementsInTable('glpi_computers',
+                                          "`operatingsystems_id`='".$os['id']."'
+                                             AND `is_deleted`='0'
+                                             AND `is_template`='0'
+                                             AND `entities_id` IN (".$this->where_entities.")");
+         if ($number) {
+            $data['datas'][$os['name']] = $number;
+         }
+      }
+      return $data;
+  }
+
   function reportHbarMac($config = array()) {
       global $DB;
 
@@ -319,6 +336,39 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                }
             }
          }
+      }
+      return $data;
+  }
+
+  function reportHbarMacFamily($config = array()) {
+      global $DB;
+
+      $data = array();
+      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Mac OS%'") as $os) {
+         $number = countElementsInTable('glpi_computers',
+                                          "`operatingsystems_id`='".$os['id']."'
+                                             AND `is_deleted`='0'
+                                             AND `is_template`='0'
+                                             AND `entities_id` IN (".$this->where_entities.")");
+         if ($number) {
+            $query_details = "SELECT count(*) as cpt, s.name as name
+                              FROM `glpi_computers` as c
+                              LEFT JOIN `glpi_operatingsystemversions` as s
+                                 ON s.id=c.operatingsystemversions_id
+                              WHERE c.`operatingsystems_id`='".$os['id']."'
+                              AND `c`.`entities_id` IN (".$this->where_entities.")
+                              GROUP BY c.operatingsystemversions_id ORDER BY s.name ASC";
+            foreach ($DB->request($query_details) as $version) {
+               if ($version['name'] != '' && $version['cpt']) {
+                  if (preg_match("/(10.[0-9]+)/", $version['name'], $results)) {
+                     $data['datas'][$os['name']. " ".$results[1]] = $version['cpt'];
+                  }
+               }
+            }
+         }
+      }
+      if (isset($data['datas']) && count($data['datas'])) {
+         arsort($data['datas']);
       }
       return $data;
   }
