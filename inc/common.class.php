@@ -1680,10 +1680,14 @@ class PluginMreportingCommon extends CommonDBTM {
       }
 
       //clean unmodified date 
-      if ($_REQUEST['date1'.$config['randname']] == $_SESSION['mreporting_values']['date1'.$config['randname']]) {
+      if (isset($_REQUEST['date1'.$config['randname']]) 
+         && $_REQUEST['date1'.$config['randname']] 
+            == $_SESSION['mreporting_values']['date1'.$config['randname']]) {
          unset($_REQUEST['date1'.$config['randname']]);
       }
-      if ($_REQUEST['date2'.$config['randname']] == $_SESSION['mreporting_values']['date2'.$config['randname']]) {
+      if (isset($_REQUEST['date2'.$config['randname']]) 
+         && $_REQUEST['date2'.$config['randname']] 
+            == $_SESSION['mreporting_values']['date2'.$config['randname']]) {
          unset($_REQUEST['date2'.$config['randname']]);
       }
 
