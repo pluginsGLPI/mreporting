@@ -65,6 +65,7 @@ $LANG['plugin_mreporting']["dashboard"][3] = "Le tableau de bord est vide. Merci
 $LANG['plugin_mreporting']["dashboard"][4] = "Sélectionnez un rapport à afficher";
 $LANG['plugin_mreporting']["dashboard"][5] = "Liste des rapports";
 $LANG['plugin_mreporting']["dashboard"][6] = "Sélectionnez un rapport à ajouter";
+$LANG['plugin_mreporting']["dashboard"][7] = "Ajouter un rapport";
 
 $LANG['plugin_mreporting']['parser'][1] = "Utiliser ce modèle";
 $LANG['plugin_mreporting']['parser'][2] = "Merci de sélectionner un modèle dans vos préférences";

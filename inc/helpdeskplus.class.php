@@ -5,6 +5,14 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
+   function __construct($config = array()) {
+      global $LANG;
+
+      parent::__construct($config);
+      $this->lcl_slaok = $LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'];
+      $this->lcl_slako = $LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved'];
+   }
+
    function reportGlineBacklogs($config = array()) {
       global $DB, $LANG;
 
@@ -334,6 +342,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportVstackbarTicketstech($config = array()) {
       global $DB;
+      
       $_SESSION['mreporting_selector']['reportVstackbarTicketstech'] 
          = array('dateinterval', 'multiplegroupassign', 'allstates', 'category');
       $tab = array();
@@ -512,6 +521,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function reportVstackbarGroupChange($config = array()) {
       global $DB;
+
       $_SESSION['mreporting_selector']['reportVstackbarGroupChange'] 
          = array('dateinterval', 'userassign', 'category', 'multiplegrouprequest', 'multiplegroupassign');
       
@@ -533,9 +543,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
          }
       }
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
       $sql_user_assign = isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0 ? " AND tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'] : "";
       $sql_type        = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
       $sql_itilcat     = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
@@ -582,6 +589,371 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       return $datas;      
    }
 
+
+   function reportVstackbarRespectedSlasByGroup($config = array()) {
+      global $DB;
+
+      $datas = array();
+      $_SESSION['mreporting_selector']['reportVstackbarRespectedSlasByGroup'] 
+         = array('dateinterval', 'allSlasWithTicket');
+      
+      $sql_slas = "";
+      if (isset($_SESSION['mreporting_values']['slas'])) {
+         $sql_slas = " AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")";
+      }
+
+      if (isset($_SESSION['mreporting_values']['slas']) 
+          && !empty($_SESSION['mreporting_values']['slas'])) {
+
+         $query = "SELECT 
+               COUNT(glpi_tickets.id) AS nb, 
+               gt.groups_id as groups_id, 
+               s.name, 
+               CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time 
+                  THEN 'ok'  
+                  ELSE 'nok' 
+               END AS respected_sla
+            FROM `glpi_tickets`
+            INNER JOIN `glpi_groups_tickets` gt 
+               ON gt.tickets_id = glpi_tickets.id 
+               AND gt.type = ".CommonITILActor::ASSIGN."
+            INNER JOIN `glpi_slas` s 
+               ON glpi_tickets.slas_id = s.id
+            WHERE {$this->sql_date_create}
+            AND glpi_tickets.status IN (" . implode(
+                        ',',
+                        array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
+                  ) . ")
+            AND glpi_tickets.entities_id IN ({$this->where_entities})
+            AND glpi_tickets.is_deleted = '0'
+            $sql_slas
+            GROUP BY gt.groups_id, respected_sla;";
+         $result = $DB->query($query);
+         
+         while ($data = $DB->fetch_assoc($result)) {
+            $gp = new Group();
+            $gp->getFromDB($data['groups_id']);
+      
+            $datas['labels2'][$gp->fields['name']] = $gp->fields['name'];
+            
+            if ($data['respected_sla'] == 'ok'){
+               $datas['datas'][$this->lcl_slaok][$gp->fields['name']] = $data['nb'];
+            } else {
+               $datas['datas'][$this->lcl_slako][$gp->fields['name']] = $data['nb'];
+            }
+            
+         }
+         
+         // Ajout des '0' manquants :
+         $gp = new Group();
+         $gp_found = $gp->find("", "name"); //Tri précose qui n'est pas utile
+         
+         foreach($gp_found as $group){
+         	$group_name = $group['name'];
+           if(!isset($datas['datas'][$this->lcl_slaok][$group_name])){
+              $datas['labels2'][$group_name] = $group_name;
+              $datas['datas'][$this->lcl_slaok][$group_name] = 0;
+           }
+           if(!isset($datas['datas'][$this->lcl_slako][$group_name])){
+              $datas['datas'][$this->lcl_slako][$group_name] = 0;
+           }
+         }
+         
+         //Flip array to have observed SLA first
+         arsort($datas['datas']);
+
+         //Array alphabetic sort
+         //For PNG mode, it is important to sort by date on each item
+         ksort($datas['datas'][$this->lcl_slaok]);
+         ksort($datas['datas'][$this->lcl_slako]);
+
+         //For SVG mode, labels2 sort is ok
+         asort($datas['labels2']);
+         
+         $datas['unit'] = '%';
+      }
+    
+      return $datas;
+   }
+
+   function reportVstackbarNbTicketBySla($config = array()) {
+      global $DB;
+
+      $area = false;
+      $_SESSION['mreporting_selector']['reportVstackbarNbTicketBySla'] 
+         = array('dateinterval', 'allSlasWithTicket');
+
+      $datas = array();
+      $tmp_datas = array();
+
+      $sql_slas = "";
+      if (isset($_SESSION['mreporting_values']['slas'])) {
+         $sql_slas = " AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")";
+      }
+
+      if (isset($_SESSION['mreporting_values']['slas']) 
+          && !empty($_SESSION['mreporting_values']['slas'])) {
+         $query = "SELECT
+               count(glpi_tickets.id) AS nb,
+               s.name,
+               CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time 
+                  THEN 'ok' 
+                  ELSE 'nok' 
+               END AS respected_sla
+            FROM `glpi_tickets`
+            INNER JOIN `glpi_slas` s 
+               ON glpi_tickets.slas_id = s.id
+            WHERE {$this->sql_date_create}
+            AND glpi_tickets.status IN (" . implode(
+                     ',',
+                     array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
+                  ) . ")
+            AND glpi_tickets.entities_id IN ({$this->where_entities})
+            AND glpi_tickets.is_deleted = '0'
+            $sql_slas
+            GROUP BY s.name, respected_sla;";
+
+         $result = $DB->query($query);
+         while ($data = $DB->fetch_assoc($result)) {
+            $tmp_datas[$data['name']][$data['respected_sla']] = $data['nb'];
+         }
+
+         foreach ($tmp_datas as $key => $value) {
+            $datas['labels2'][$key] = $key;
+            $datas['datas'][$this->lcl_slaok][$key] = !empty($value['ok']) ? $value['ok'] : 0;
+            $datas['datas'][$this->lcl_slaok][$key] = !empty($value['nok']) ? $value['nok'] : 0;
+         }
+      }
+
+      return $datas;
+   }
+
+   function reportGlineNbTicketBySla($config = array()) {
+      global $DB;
+
+      $area = false;
+      $datas = array();
+      
+      $_SESSION['mreporting_selector']['reportGlineNbTicketBySla'] 
+         = array('dateinterval', 'period', 'allSlasWithTicket');
+
+      $sql_slas = "";
+      if (isset($_SESSION['mreporting_values']['slas'])) {
+         $sql_slas = " AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")";
+      }
+
+      if (isset($_SESSION['mreporting_values']['slas']) 
+          && !empty($_SESSION['mreporting_values']['slas'])) {
+         //get dates used in this period
+         $query_date = "SELECT
+            DISTINCT
+            DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
+            DATE_FORMAT(`date`, '{$this->period_label}') AS period_name
+         FROM `glpi_tickets`
+         INNER JOIN `glpi_slas` s 
+            ON slas_id = s.id
+         WHERE {$this->sql_date_create}
+         AND status IN (" . implode(
+               ',',
+               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
+            ) . ")
+         AND glpi_tickets.`entities_id` IN (" . $this->where_entities . ")
+         AND glpi_tickets.`is_deleted` = '0'
+         $sql_slas
+         ORDER BY `date` ASC";
+         $res_date = $DB->query($query_date);
+         $dates = array();
+         while ($data = $DB->fetch_assoc($res_date)) {
+            $dates[$data['period']] = $data['period'];
+         }
+
+         $tmp_date = array();
+         foreach (array_values($dates) as $id) {
+            $tmp_date[] = $id;
+         }
+
+         $query = "SELECT DISTINCT
+            DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
+            DATE_FORMAT(`date`, '{$this->period_label}') AS period_name,
+            count(glpi_tickets.id) AS nb,
+            s.name,
+            CASE WHEN solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
+         FROM `glpi_tickets`
+         INNER JOIN `glpi_slas` s 
+            ON slas_id = s.id
+         WHERE {$this->sql_date_create}
+         AND status IN (" . implode(
+               ',',
+               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
+            ) . ")
+         AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
+         AND glpi_tickets.is_deleted = '0'
+         $sql_slas
+         GROUP BY s.name, period, respected_sla;";
+
+         $result = $DB->query($query);
+         while ($data = $DB->fetch_assoc($result)) {
+            $datas['labels2'][$data['period']] = $data['period_name'];
+            if ($data['respected_sla'] == 'ok') {
+               $value = $this->lcl_slaok;
+            } else {
+               $value = $this->lcl_slako;
+            }
+            $datas['datas'][$data['name'] . ' ' . $value][$data['period']] = $data['nb'];
+         }
+
+         if (isset($datas['datas'])) {
+            foreach ($datas['datas'] as &$data) {
+               $data = $data + array_fill_keys($tmp_date, 0);
+            }
+         }
+      }
+
+      return $datas;
+   }
+
+
+   public function reportHgbarRespectedSlasByTopCategory($config = array()) {
+      global $DB;
+
+      $area = false;
+
+      $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTopCategory'] 
+         = array('dateinterval', 'limit', 'categories');
+
+      $datas = array();
+      $categories = array();
+
+      $category_limit = 10;
+      $category = null;
+      if (isset($_POST['glpilist_limit'])) {
+         $category_limit = $_POST['glpilist_limit'];
+      }
+
+      if (isset($_POST['categories']) && $_POST['categories'] > 0) {
+         $category = $_POST['categories'];
+      }
+
+      $_SESSION['glpilist_limit'] = $category_limit;
+
+      if (!$category) {
+         $query_categories = "SELECT
+            count(glpi_tickets.id) as nb,
+            c.id
+         FROM glpi_tickets
+         INNER JOIN glpi_slas s 
+            ON glpi_tickets.slas_id = s.id
+         INNER JOIN glpi_itilcategories c 
+            ON glpi_tickets.itilcategories_id = c.id
+         WHERE " . $this->sql_date_create . "
+         AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
+         AND glpi_tickets.is_deleted = '0'
+         GROUP BY c.id
+         ORDER BY nb DESC
+         LIMIT " . $category_limit . ";";
+
+         $result_categories = $DB->query($query_categories);
+         while ($data = $DB->fetch_assoc($result_categories)) {
+            $categories[] = $data['id'];
+         }
+      }
+
+      $query = "SELECT
+            count(glpi_tickets.id) as nb,
+            CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time 
+               THEN 'ok' 
+               ELSE 'nok' 
+            END AS respected_sla,
+            c.id,
+            c.name
+         FROM glpi_tickets
+         INNER JOIN glpi_slas s 
+            ON glpi_tickets.slas_id = s.id
+         INNER JOIN glpi_itilcategories c 
+            ON glpi_tickets.itilcategories_id = c.id
+         WHERE " . $this->sql_date_create . "
+         AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
+         AND glpi_tickets.is_deleted = '0'";
+         if ($category) {
+            $query .= " AND c.id = " . $category;
+         } else {
+            $query .= " AND c.id IN (" . implode(',', $categories) . ")";
+         }
+         $query .= " GROUP BY respected_sla, c.id
+         ORDER BY nb desc;";
+
+      $result = $DB->query($query);
+      while ($data = $DB->fetch_assoc($result)) {
+         if ($data['respected_sla'] == 'ok') {
+            $value = $this->lcl_slaok;
+         } else {
+            $value = $this->lcl_slako;
+         }
+         $datas['datas'][$data['name']][$value] = $data['nb'];
+      }
+      $datas['labels2'] = array($this->lcl_slaok => $this->lcl_slaok, 
+                                $this->lcl_slako => $this->lcl_slako);
+
+      if (isset($datas['datas'])) {
+         foreach ($datas['datas'] as &$data) {
+            $data = $data + array_fill_keys($datas['labels2'], 0);
+         }
+      }
+
+      return $datas;
+   }
+
+   public function reportHgbarRespectedSlasByTechnician($config = array()) {
+      global $DB;
+
+      $area = false;
+      $datas = array();
+      $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTechnician'] 
+         = array('dateinterval');
+
+      $query = "SELECT
+            CONCAT(u.firstname, ' ', u.realname) as fullname,
+            u.id,
+            count(glpi_tickets.id) as nb,
+            CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time 
+               THEN 'ok' 
+               ELSE 'nok' 
+            END AS respected_sla
+         FROM glpi_tickets
+         INNER JOIN glpi_slas s 
+            ON glpi_tickets.slas_id = s.id
+         INNER JOIN glpi_tickets_users tu 
+            ON tu.tickets_id = glpi_tickets.id 
+            AND tu.type = " . Ticket_User::ASSIGN . "
+         INNER JOIN glpi_users u 
+            ON u.id = tu.users_id
+         WHERE " . $this->sql_date_create . "
+         AND glpi_tickets.entities_id IN ({$this->where_entities})
+         AND glpi_tickets.is_deleted = '0'
+         GROUP BY respected_sla, u.id
+         ORDER BY nb DESC";
+
+      $result = $DB->query($query);
+      while ($data = $DB->fetch_assoc($result)) {
+         if ($data['respected_sla'] == 'ok') {
+            $value = $this->lcl_slaok;
+         } else {
+            $value = $this->lcl_slako;
+         }
+         $datas['datas'][$data['fullname']][$value] = $data['nb'];
+      }
+      $datas['labels2'] = array($this->lcl_slaok => $this->lcl_slaok, 
+                                $this->lcl_slako => $this->lcl_slako);
+
+
+      if (isset($datas['datas'])) {
+         foreach ($datas['datas'] as &$data) {
+            $data = $data + array_fill_keys($datas['labels2'], 0);
+         }
+      }
+
+      return $datas;
+   }
 
    function fillStatusMissingValues($tab, $labels2 = array()) {
       $datas = array();
@@ -649,444 +1021,5 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo _x('status', 'Closed');
       echo '</label>';
    }
-  
-   function reportVstackbarRespectedSlasByGroup($config = array()) {
-      global $DB, $LANG;
-      $datas = array();
-      
-      $_SESSION['mreporting_selector']['reportVstackbarRespectedSlasByGroup'] 
-         = array('dateinterval', 'allSlasWithTicket');
-      
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
-      // Get status to show
-      $slas_to_show = array();
-      foreach ($_POST as $key => $value) {
-         if ((substr($key, 0, 5) == 'slas_') && ($value == 1)) {
-            $slas_to_show[] = substr($key, 5, 1);
-         }
-      }
-      
-      if (empty($slas_to_show)) {
-         foreach ($_GET as $key => $value) {
-            if ((substr($key, 0, 5) == 'slas_') && ($value == 1)) {
-               $slas_to_show[] = substr($key, 5, 1);
-            }
-         }
-      }
-      
-      //If one or more SLA selected
-      if (!empty($slas_to_show)) {
-         $query = "SELECT COUNT(t.id) AS nb, gt.groups_id as groups_id, s.name, 
-      CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-      FROM `glpi_tickets` t
-      INNER JOIN `glpi_groups_tickets` gt ON gt.tickets_id = t.id AND gt.type = ".CommonITILActor::ASSIGN."
-      INNER JOIN `glpi_slas` s ON t.slas_id = s.id
-      WHERE " . $this->sql_date_create . "
-      AND t.status IN (" . implode(
-                  ',',
-                  array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
-      AND t.entities_id IN (" . $this->where_entities . ")
-      AND t.is_deleted = '0'
-      AND s.id IN (" . implode(',', $slas_to_show) . ")
-      GROUP BY gt.groups_id, respected_sla;";
-         $result = $DB->query($query);
-         
-         //$tmp_datas = array();
-         
-         while ($data = $DB->fetch_assoc($result)) {
-            $gp = new Group();
-            $gp->getFromDB($data['groups_id']);
-      
-            //$tmp_datas[$data['respected_sla'] ] = array($gp->fields['name'] => $data['nb']);
-            
-            $datas['labels2'][$gp->fields['name']] = $gp->fields['name'];
-            
-            if ($data['respected_sla'] == 'ok'){
-               $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$gp->fields['name']] = $data['nb'];
-            } else {
-               $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$gp->fields['name']] = $data['nb'];
-            }
-            
-         }
-         
-         // Ajout des '0' manquants :
-         $gp = new Group();
-         $gp_found = $gp->find("", "name"); //Tri précose qui n'est pas utile
-         
-         foreach($gp_found as $group){
-         	$group_name = $group['name'];
-           if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name])){
-              $datas['labels2'][$group_name] = $group_name;
-              $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name] = 0;
-           }
-           if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name])){
-              $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name] = 0;
-           }
-         }
-         
-         //Flip array to have observed SLA first
-         arsort($datas['datas']);
-
-         //Array alphabetic sort
-         //For PNG mode, it is important to sort by date on each item
-         ksort($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']]);
-         ksort($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']]);
-
-         //For SVG mode, labels2 sort is ok
-         asort($datas['labels2']);
-         
-         $datas['unit'] = '%';
-      }
-    
-   return $datas;
-   }
-
-   function reportVstackbarNbTicketBySla($config = array())
-   {
-      global $DB, $LANG;
-      $area = false;
-
-      $_SESSION['mreporting_selector']['reportVstackbarNbTicketBySla'] 
-         = array('dateinterval', 'allSlasWithTicket');
-
-      $datas = array();
-      $tmp_datas = array();
-
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
-
-      // Get status to show
-      $slas_to_show = array();
-      foreach ($_POST as $key => $value) {
-         if ((substr($key, 0, 5) == 'slas_') && ($value == 1)) {
-            $slas_to_show[] = substr($key, 5, 1);
-         }
-      }
-
-      if (empty($slas_to_show)) {
-         foreach ($_GET as $key => $value) {
-            if ((substr($key, 0, 5) == 'slas_') && ($value == 1)) {
-               $slas_to_show[] = substr($key, 5, 1);
-            }
-         }
-      }
-
-      if (!empty($slas_to_show)) {
-         $query = "SELECT
-        count(t.id) AS nb,
-        s.name,
-        CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-      FROM `glpi_tickets` t
-      INNER JOIN `glpi_slas` s ON t.slas_id = s.id
-      WHERE " . $this->sql_date_create . "
-      AND t.status IN (" . implode(
-               ',',
-               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
-      AND t.entities_id IN (" . $this->where_entities . ")
-      AND t.is_deleted = '0'
-      AND s.id IN (" . implode(',', $slas_to_show) . ")
-      GROUP BY s.name, respected_sla;";
-
-         $result = $DB->query($query);
-         while ($data = $DB->fetch_assoc($result)) {
-            $tmp_datas[$data['name']][$data['respected_sla']] = $data['nb'];
-         }
-
-         foreach ($tmp_datas as $key => $value) {
-            $datas['labels2'][$key] = $key;
-            $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$key] 
-               = !empty($value['ok']) ? $value['ok'] : 0;
-            $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$key] 
-               = !empty($value['nok']) ? $value['nok'] : 0;
-         }
-      }
-
-      return $datas;
-   }
-
-   function reportGlineNbTicketBySla($config = array())
-   {
-      global $DB, $LANG;
-      $area = false;
-      $datas = array();
-      
-      $_SESSION['mreporting_selector']['reportGlineNbTicketBySla'] 
-         = array('dateinterval', 'period', 'allSlasWithTicket');
-      $this->_getPeriod();
-
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
-
-      // Get status to show
-      $slas_to_show = array();
-      foreach ($_POST as $key => $value) {
-         if ((substr($key, 0, 5) == 'slas_') && ($value == 1)) {
-            $slas_to_show[] = substr($key, 5, 1);
-         }
-      }
-
-      if (empty($slas_to_show)) {
-         foreach ($_GET as $key => $value) {
-            if ((substr($key, 0, 5) == 'slas_') && ($value == 1)) {
-               $slas_to_show[] = substr($key, 5, 1);
-            }
-         }
-      }
-
-      if (!empty($slas_to_show)) {
-         //get dates used in this period
-         $query_date = "SELECT
-            DISTINCT
-            DATE_FORMAT(t.`date`, '" . $this->_period_sort . "') AS period,
-            DATE_FORMAT(t.`date`, '" . $this->_period_label . "') AS period_name
-         FROM `glpi_tickets` t
-         INNER JOIN `glpi_slas` s ON t.slas_id = s.id
-         WHERE " . $this->sql_date_create . "
-         AND t.status IN (" . implode(
-               ',',
-               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
-         AND t.`entities_id` IN (" . $this->where_entities . ")
-         AND t.`is_deleted` = '0'
-         AND s.id IN(" . implode(',', $slas_to_show) . ")
-         ORDER BY `date` ASC";
-         $res_date = $DB->query($query_date);
-         $dates = array();
-         while ($data = $DB->fetch_assoc($res_date)) {
-            $dates[$data['period']] = $data['period'];
-         }
-
-         $tmp_date = array();
-         foreach (array_values($dates) as $id) {
-            $tmp_date[] = $id;
-         }
-
-         $query = "SELECT DISTINCT
-            DATE_FORMAT(date, '" . $this->_period_sort . "') as period,
-            DATE_FORMAT(date, '" . $this->_period_label . "') as period_name,
-            count(t.id) AS nb,
-            s.name,
-            CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-         FROM `glpi_tickets` t
-         INNER JOIN `glpi_slas` s ON t.slas_id = s.id
-         WHERE " . $this->sql_date_create . "
-         AND t.status IN (" . implode(
-               ',',
-               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
-         AND t.entities_id IN (" . $this->where_entities . ")
-         AND t.is_deleted = '0'
-         AND s.id IN (" . implode(',', $slas_to_show) . ")
-         GROUP BY s.name, period, respected_sla;";
-
-         $result = $DB->query($query);
-         while ($data = $DB->fetch_assoc($result)) {
-            $datas['labels2'][$data['period']] = $data['period_name'];
-            if ($data['respected_sla'] == 'ok') {
-               $value = $LANG['plugin_mreporting']['Helpdeskplus']['observed'];
-            } else {
-               $value = $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'];
-            }
-            $datas['datas'][$data['name'] . ' ' . $value][$data['period']] = $data['nb'];
-         }
-
-         if (isset($datas['datas'])) {
-            foreach ($datas['datas'] as &$data) {
-               $data = $data + array_fill_keys($tmp_date, 0);
-            }
-         }
-      }
-
-      return $datas;
-   }
-
-   private function _getPeriod()
-   {
-      if (isset($_REQUEST['period']) && !empty($_REQUEST['period'])) {
-         switch ($_REQUEST['period']) {
-            case 'day':
-               $this->_period_sort = '%y%m%d';
-               $this->_period_label = '%d %b %Y';
-               break;
-            case 'week':
-               $this->_period_sort = '%y%u';
-               $this->_period_label = 'S-%u %Y';
-               break;
-            case 'month':
-               $this->_period_sort = '%y%m';
-               $this->_period_label = '%b %Y';
-               break;
-            case 'year':
-               $this->_period_sort = '%Y';
-               $this->_period_label = '%Y';
-               break;
-            default :
-               $this->_period_sort = '%y%m';
-               $this->_period_label = '%b %Y';
-               break;
-         }
-      } else {
-         $this->_period_sort = '%y%m';
-         $this->_period_label = '%b %Y';
-      }
-   }
-
-   public function reportHgbarRespectedSlasByTopCategory($config = array()) {
-      global $DB, $LANG;
-
-      $area = false;
-
-      $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTopCategory'] 
-         = array('dateinterval', 'limit', 'categories');
-
-      $datas = array();
-      $categories = array();
-
-      //Init delay value
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
-
-      $category_limit = 10;
-      $category = null;
-      if (isset($_POST['glpilist_limit'])) {
-         $category_limit = $_POST['glpilist_limit'];
-      }
-
-      if (isset($_POST['categories']) && $_POST['categories'] > 0) {
-         $category = $_POST['categories'];
-      }
-
-      $_SESSION['glpilist_limit'] = $category_limit;
-
-      if (!$category) {
-         $query_categories = "SELECT
-            count(t.id) as nb,
-            c.id
-         FROM glpi_tickets t
-         INNER JOIN glpi_slas s ON t.slas_id = s.id
-         INNER JOIN glpi_itilcategories c ON t.itilcategories_id = c.id
-         WHERE " . $this->sql_date_create . "
-         AND t.entities_id IN (" . $this->where_entities . ")
-         AND t.is_deleted = '0'
-         GROUP BY c.id
-         ORDER BY nb DESC
-         LIMIT " . $category_limit . ";";
-
-         $result_categories = $DB->query($query_categories);
-         while ($data = $DB->fetch_assoc($result_categories)) {
-            $categories[] = $data['id'];
-         }
-      }
-
-      $query = "SELECT
-        count(t.id) as nb,
-        CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla,
-        c.id,
-        c.name
-      FROM glpi_tickets t
-      INNER JOIN glpi_slas s ON t.slas_id = s.id
-      INNER JOIN glpi_itilcategories c ON t.itilcategories_id = c.id
-      WHERE " . $this->sql_date_create . "
-      AND t.entities_id IN (" . $this->where_entities . ")
-      AND t.is_deleted = '0'";
-      if ($category) {
-         $query .= " AND c.id = " . $category;
-      } else {
-         $query .= " AND c.id IN (" . implode(',', $categories) . ")";
-      }
-      $query .= " GROUP BY respected_sla, c.id
-      ORDER BY nb desc;";
-
-      $result = $DB->query($query);
-      while ($data = $DB->fetch_assoc($result)) {
-         if ($data['respected_sla'] == 'ok') {
-            $value = $LANG['plugin_mreporting']['Helpdeskplus']['observed'];
-         } else {
-            $value = $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'];
-         }
-         $datas['datas'][$data['name']][$value] = $data['nb'];
-      }
-      $datas['labels2'] = array($LANG['plugin_mreporting']['Helpdeskplus']['observed'] 
-                                   => $LANG['plugin_mreporting']['Helpdeskplus']['observed'], 
-                                $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'] 
-                                   => $LANG['plugin_mreporting']['Helpdeskplus']['notobserved']);
-
-      if (isset($datas['datas'])) {
-         foreach ($datas['datas'] as &$data) {
-            $data = $data + array_fill_keys($datas['labels2'], 0);
-         }
-      }
-
-      return $datas;
-   }
-
-   public function reportHgbarRespectedSlasByTechnician($config = array()) {
-      global $DB, $LANG;
-
-      $area = false;
-
-      $datas = array();
-      $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTechnician'] 
-         = array('dateinterval');
-
-      //Init delay value
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("t.date",
-                                                                  $config['delay'],
-                                                                  $config['randname']);
-/*
-      $category_limit = 10;
-      $category = null;
-      if (isset($_POST['glpilist_limit'])) {
-         $category_limit = $_POST['glpilist_limit'];
-      }
-*/
-
-      $query = "SELECT
-        CONCAT(u.firstname, ' ', u.realname) as fullname,
-        u.id,
-        count(t.id) as nb,
-        CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-      FROM glpi_tickets t
-      INNER JOIN glpi_slas s ON t.slas_id = s.id
-      INNER JOIN glpi_tickets_users tu ON tu.tickets_id = t.id AND tu.type = " . Ticket_User::ASSIGN . "
-      INNER JOIN glpi_users u ON u.id = tu.users_id
-      WHERE " . $this->sql_date_create . "
-      AND t.entities_id IN (" . $this->where_entities . ")
-      AND t.is_deleted = '0'
-      GROUP BY respected_sla, u.id
-      ORDER BY nb DESC";
-
-      $result = $DB->query($query);
-      $i = 0;
-      while ($data = $DB->fetch_assoc($result)) {
-         if ($data['respected_sla'] == 'ok') {
-            $value = $LANG['plugin_mreporting']['Helpdeskplus']['observed'];
-         } else {
-            $value = $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'];
-         }
-         $datas['datas'][$data['fullname']][$value] = $data['nb'];
-      }
-      $datas['labels2'] = array($LANG['plugin_mreporting']['Helpdeskplus']['observed'] 
-                                   => $LANG['plugin_mreporting']['Helpdeskplus']['observed'], 
-                                $LANG['plugin_mreporting']['Helpdeskplus']['notobserved'] 
-                                   => $LANG['plugin_mreporting']['Helpdeskplus']['notobserved']);
-
-
-      if (isset($datas['datas'])) {
-         foreach ($datas['datas'] as &$data) {
-            $data = $data + array_fill_keys($datas['labels2'], 0);
-         }
-      }
-
-      return $datas;
-   }
-
 }
 ?>

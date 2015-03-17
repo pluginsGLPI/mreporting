@@ -2111,7 +2111,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height_tot - 1, $this->black);
+            imagerectangle($image, 0, 0, $width - 1, $height - 1, $this->black);
          }
 
          //on png graph, no way to draw curved polygons, force area reports to be linear

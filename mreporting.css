@@ -120,24 +120,70 @@ select[name=graphmenu] option {
    font-family: FontAwesome, 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif' !important;
 }
 
+.m_dashboard_controls {
+   float: right;   
+   color: #999; 
+}
+
+.add_report {
+   border: 3px solid #999;
+   float: right;   
+   border-radius: 6px;
+   cursor: pointer;
+   height: 30px;
+   width: 30px;
+   background: #eeeeee; /* Old browsers */
+   background: -moz-linear-gradient(top,  #eeeeee 0%, #cccccc 100%); /* FF3.6+ */
+   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
+   background: -webkit-linear-gradient(top,  #eeeeee 0%,#cccccc 100%); /* Chrome10+,Safari5.1+ */
+   background: -o-linear-gradient(top,  #eeeeee 0%,#cccccc 100%); /* Opera 11.10+ */
+   background: -ms-linear-gradient(top,  #eeeeee 0%,#cccccc 100%); /* IE10+ */
+   background: linear-gradient(to bottom,  #eeeeee 0%,#cccccc 100%); /* W3C */
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+}
+
+.add_report:hover {
+   background: #999;
+}
+
+.add_report_helptext {
+   line-height: 30px;
+   margin-right: 5px;
+   display: none;
+}
+
+.m_dashboard_controls:hover .add_report_helptext {
+   display: inline-block;
+}
+
+.add_report span:before {
+   text-align: center;
+   font-size: 2em;
+   content: "\f067";
+   padding-top: 4px;
+   width: 100%;
+   display: block;
+}
+
+.add_report:hover span:before {
+   color: white; 
+}
+
 .empty_dashboard {
-   width: 90%;
-   margin: 15px auto;
-   height: 150px;
-   border: 3px dashed #CCC;
-   color: #999;
-   font-size: 1.4em;
-   text-transform: uppercase;
-   font-weight: bold;
+   position: absolute;
+   right: 40px;   
+   background: url(pics/howto_arrow.png) no-repeat right top;
 }
 
 .empty_dashboard_text {
    width: 300px;
    text-align: center;
-   margin: 20px auto;
+   margin-top: 120px;
+   margin-right: 150px;
+   color: #999;
+   font-size: 1.4em;
+   text-transform: uppercase;
+   font-weight: bold;
+
 }
 
-.empty_dashboard .x-tool {
-   float: center;
-   margin: 0 auto;
-}

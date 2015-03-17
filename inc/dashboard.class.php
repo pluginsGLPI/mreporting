@@ -74,7 +74,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       //retrieve dashboard widgets;
       $dashboard= new PluginMreportingDashboard();
-      $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID']);
+      $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID'], 'id');
 
       //show dashboard
       echo "<div  id='dashboard'>";
@@ -93,12 +93,18 @@ class PluginMreportingDashboard extends CommonDBTM {
          echo "<div class='empty_dashboard'>";
          echo "<div class='empty_dashboard_text'>";
          echo $LANG['plugin_mreporting']["dashboard"][3];
-         echo "<br />";
-         echo "&#xf063;";
-         echo "<br />";
+         echo "</div>";
+         echo "</div>";
       }
 
-      echo "<div class='x-tool x-tool-plus' onclick='addReport.show();'>&nbsp;</div>";
+      echo "<div class='m_dashboard_controls'>";
+      echo "<div class='add_report' onclick='addReport.show();'><span>&nbsp;</span></div>";
+      if (!empty($widgets)) {
+         echo "<span class='add_report_helptext'>".$LANG['plugin_mreporting']["dashboard"][7].
+              " &#xf061;</span>";
+      }
+      echo "</div>";
+
       echo "<script type='text/javascript'>
          removeWidget = function(id){
             Ext.Ajax.request({
@@ -117,16 +123,14 @@ class PluginMreportingDashboard extends CommonDBTM {
          }
 
          addReport = new Ext.Window({
+            width: 550,
+            height: 100,
+            constrain: true,
             title: '".$LANG['plugin_mreporting']['dashboard'][2]."',
             closeAction: 'hide',
             html: '".substr(json_encode($this->getFormForColumn(),JSON_HEX_APOS),1,-1)."' ,
           });
       </script>";
-
-      if (empty($widgets)) {
-         echo "</div>";
-         echo "</div>";
-      }
 
       echo "<div class='mreportingwidget-panel'>";
       echo "<div class='clear'></div>";
@@ -186,6 +190,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                   title: 'Configuration',
                   closeAction: 'hide',
                   width: 950,
+                  constrain: true,
                   autoLoad: {
                      url: '$root_ajax',
                      scripts: true,
@@ -245,18 +250,14 @@ class PluginMreportingDashboard extends CommonDBTM {
          $target = $options['target'];
       }
 
-      $content = "<form method='post' action='".$target."' method='post'>";
-      $content .= "<table class='tab_cadre_fixe'>";
-      $content .= "<tr><th colspan='2'>".$LANG['plugin_mreporting']["dashboard"][6]."&nbsp;:</th></tr>";
-      $content .= "<tr class='tab_bg_1'><td class='center'>";
+      $content = "<div class='center'>";
+      $content .= "<form method='post' action='".$target."' method='post'>";
+      $content .= $LANG['plugin_mreporting']["dashboard"][6]."&nbsp;:&nbsp;";
       $content .= PluginMreportingCommon::getSelectAllReports(false, true);
-      $content .= "</td>";
-      $content .= "<td>";
+      $content .= "<br /><br />";
       $content .= "<input type='submit' name='addReports' value='".__('Add')."' class='submit' >";
-      $content .= "</td>";
-      $content .= "</tr>";
-      $content .= "</table>";
       $content .= Html::closeForm(false);
+      $content .= "</div>";
 
       return $content;
 
