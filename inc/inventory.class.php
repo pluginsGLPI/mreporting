@@ -37,7 +37,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   function reportHbarComputersByOS($config = array()) {
       global $DB, $LANG;
       
-      /*Ajout d'une condition englobant les entités*/
+      /*Ajout d'une condition englobant les entitÃ©s*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -89,7 +89,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    function reportHbarComputersByFabricant($config = array()) {
       global $DB, $LANG;
       
-      /*Ajout d'une condition englobant les entités*/
+      /*Ajout d'une condition englobant les entitÃ©s*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -155,7 +155,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
    }
    
-   /*************************************Fonctions pour les indicateurs par âge*************************************/
+   /*************************************Fonctions pour les indicateurs par Ã¢ge*************************************/
   function reportPieComputersByAge($config = array()) {
       $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportHbarComputersByAge($config);
