@@ -67,6 +67,8 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          FROM glpi_computers c, glpi_operatingsystems os
          WHERE c.operatingsystems_id = os.id
          AND c.`is_deleted`=0 AND c.`is_template`=0 $notlike $condition";
+
+      $query.=" ORDER BY Total DESC";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
@@ -110,6 +112,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                     AND m.name LIKE '%$manufacturer%' $condition";
          $first = false;
       }
+      $query.=" ORDER BY Total DESC";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
@@ -142,7 +145,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          FROM glpi_computers c, glpi_computertypes t
          WHERE c.computertypes_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
          GROUP BY t.name 
-         ORDER BY 1 DESC
+         ORDER BY Total DESC
          ";
       $result = $DB->query($query);
 
@@ -222,8 +225,8 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          WHERE c.id = i.items_id 
          AND c.`is_deleted`=0 AND c.`is_template`=0
          AND itemtype = 'Computer'
-         AND i.warranty_date IS NULL $condition;
-         ";
+         AND i.warranty_date IS NULL $condition";
+      $query.=" ORDER BY Total DESC";
       $result = $DB->query($query);
       
       while ($computer = $DB->fetch_assoc($result)) {
@@ -264,6 +267,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             }
          } 
       }
+      arsort($data['datas']);
       return $data;
   }
 
@@ -292,6 +296,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             }
          }
       }
+      arsort($data['datas']);
       return $data;
   }
 
@@ -309,6 +314,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             $data['datas'][$os['name']] = $number;
          }
       }
+      arsort($data['datas']);
       return $data;
   }
 
