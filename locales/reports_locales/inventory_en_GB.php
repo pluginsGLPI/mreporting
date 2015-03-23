@@ -43,12 +43,12 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['title'] = "Lin
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['desc'] = "Barres";
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['category'] = "OS";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['title'] = "Mac OS X versions distribution";
+$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['title'] = "Mac OS X versions details";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMac']['desc'] = "Bars";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMac']['category'] = "OS";
 
 $LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['title'] = "MAC OS X version overview";
-$LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['desc'] = "Barres";
+$LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['desc'] = "Bars";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['category'] = "OS";
 
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['title'] = "Computer per age";
