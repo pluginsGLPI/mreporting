@@ -361,7 +361,11 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             foreach ($DB->request($query_details) as $version) {
                if ($version['name'] != '' && $version['cpt']) {
                   if (preg_match("/(10.[0-9]+)/", $version['name'], $results)) {
-                     $data['datas'][$os['name']. " ".$results[1]] = $version['cpt'];
+                     if (!isset($data['datas'][$os['name']. " ".$results[1]])) {
+                        $data['datas'][$os['name']. " ".$results[1]] = $version['cpt'];
+                      } else {
+                        $data['datas'][$os['name']. " ".$results[1]] += $version['cpt'];
+                     }
                   }
                }
             }
