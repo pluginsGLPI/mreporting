@@ -442,6 +442,31 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $data;
   }
 
+  function reportHbarComputersByStatus($config = array()) {
+      global $DB, $LANG;
+
+      $condition = " AND c.entities_id IN (".$this->where_entities.")";
+      $datas = array();
+
+      $query = "SELECT t.name status, count(*) Total, count(*)*100/(SELECT count(*)
+                           FROM glpi_computers c, glpi_states t
+                           WHERE c.`is_deleted`=0 AND c.`is_template`=0 
+                           AND c.computertypes_id = t.id $condition) Pourcentage 
+                           
+         FROM glpi_computers c, glpi_states t
+         WHERE c.states_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
+         GROUP BY t.name";
+      $result = $DB->query($query);
+
+      while ($computer = $DB->fetch_assoc($result)) {
+         $pourcentage = round($computer['Pourcentage'], 2);
+         $datas['datas'][$computer['status']." ($pourcentage %)"] = $computer['Total'];
+      }
+
+      return $datas;
+
+   }
+
 }
 
 ?>
