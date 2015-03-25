@@ -67,6 +67,8 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          FROM glpi_computers c, glpi_operatingsystems os
          WHERE c.operatingsystems_id = os.id
          AND c.`is_deleted`=0 AND c.`is_template`=0 $notlike $condition";
+
+      $query.=" ORDER BY Total DESC";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
@@ -110,6 +112,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                     AND m.name LIKE '%$manufacturer%' $condition";
          $first = false;
       }
+      $query.=" ORDER BY Total DESC";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
@@ -142,7 +145,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          FROM glpi_computers c, glpi_computertypes t
          WHERE c.computertypes_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
          GROUP BY t.name 
-         ORDER BY 1 DESC
+         ORDER BY Total DESC
          ";
       $result = $DB->query($query);
 
@@ -222,8 +225,8 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          WHERE c.id = i.items_id 
          AND c.`is_deleted`=0 AND c.`is_template`=0
          AND itemtype = 'Computer'
-         AND i.warranty_date IS NULL $condition;
-         ";
+         AND i.warranty_date IS NULL $condition";
+      $query.=" ORDER BY Total DESC";
       $result = $DB->query($query);
       
       while ($computer = $DB->fetch_assoc($result)) {
@@ -264,6 +267,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             }
          } 
       }
+      arsort($data['datas']);
       return $data;
   }
 
@@ -292,6 +296,25 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             }
          }
       }
+      arsort($data['datas']);
+      return $data;
+  }
+
+  function reportHbarLinuxDistro($config = array()) {
+      global $DB;
+
+      $data = array();
+      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%'") as $os) {
+         $number = countElementsInTable('glpi_computers',
+                                          "`operatingsystems_id`='".$os['id']."'
+                                             AND `is_deleted`='0'
+                                             AND `is_template`='0'
+                                             AND `entities_id` IN (".$this->where_entities.")");
+         if ($number) {
+            $data['datas'][$os['name']] = $number;
+         }
+      }
+      arsort($data['datas']);
       return $data;
   }
 
@@ -319,6 +342,43 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                }
             }
          }
+      }
+      return $data;
+  }
+
+  function reportHbarMacFamily($config = array()) {
+      global $DB;
+
+      $data = array();
+      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Mac OS%'") as $os) {
+         $number = countElementsInTable('glpi_computers',
+                                          "`operatingsystems_id`='".$os['id']."'
+                                             AND `is_deleted`='0'
+                                             AND `is_template`='0'
+                                             AND `entities_id` IN (".$this->where_entities.")");
+         if ($number) {
+            $query_details = "SELECT count(*) as cpt, s.name as name
+                              FROM `glpi_computers` as c
+                              LEFT JOIN `glpi_operatingsystemversions` as s
+                                 ON s.id=c.operatingsystemversions_id
+                              WHERE c.`operatingsystems_id`='".$os['id']."'
+                              AND `c`.`entities_id` IN (".$this->where_entities.")
+                              GROUP BY c.operatingsystemversions_id ORDER BY s.name ASC";
+            foreach ($DB->request($query_details) as $version) {
+               if ($version['name'] != '' && $version['cpt']) {
+                  if (preg_match("/(10.[0-9]+)/", $version['name'], $results)) {
+                     if (!isset($data['datas'][$os['name']. " ".$results[1]])) {
+                        $data['datas'][$os['name']. " ".$results[1]] = $version['cpt'];
+                      } else {
+                        $data['datas'][$os['name']. " ".$results[1]] += $version['cpt'];
+                     }
+                  }
+               }
+            }
+         }
+      }
+      if (isset($data['datas']) && count($data['datas'])) {
+         arsort($data['datas']);
       }
       return $data;
   }
@@ -387,6 +447,31 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
       return $data;
   }
+
+  function reportHbarComputersByStatus($config = array()) {
+      global $DB, $LANG;
+
+      $condition = " AND c.entities_id IN (".$this->where_entities.")";
+      $datas = array();
+
+      $query = "SELECT t.name status, count(*) Total, count(*)*100/(SELECT count(*)
+                           FROM glpi_computers c, glpi_states t
+                           WHERE c.`is_deleted`=0 AND c.`is_template`=0 
+                           AND c.computertypes_id = t.id $condition) Pourcentage 
+                           
+         FROM glpi_computers c, glpi_states t
+         WHERE c.states_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
+         GROUP BY t.name";
+      $result = $DB->query($query);
+
+      while ($computer = $DB->fetch_assoc($result)) {
+         $pourcentage = round($computer['Pourcentage'], 2);
+         $datas['datas'][$computer['status']." ($pourcentage %)"] = $computer['Total'];
+      }
+
+      return $datas;
+
+   }
 
 }
 
