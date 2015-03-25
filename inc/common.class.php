@@ -1070,7 +1070,8 @@ class PluginMreportingCommon extends CommonDBTM {
 
                         //dynamic call of method passed by 'f_name'
                         //GET parameter with previously instancied class
-                        $datas = $obj->$func['function']();
+                        $config = PluginMreportingConfig::initConfigParams($func['function'], $classname);
+                        $datas = $obj->$func['function']($config);
 
                         //show graph (pgrah type determined by
                         //first entry of explode of camelcase of function name
