@@ -101,7 +101,7 @@ class PluginMreportingCommon extends CommonDBTM {
          while (false !== ($entry = readdir($handle))) {
             if ($entry != "." && $entry != "..") {
                $fcontent = file_get_contents($inc_dir."/".$entry);
-               if (preg_match("/class\s(.+)Extends PluginMreportingBaseclass/i",
+               if (preg_match("/class\s(.+)Extends PluginMreporting.*Baseclass/i",
                      $fcontent, $matches)) {
                   $classes[] = trim($matches[1]);
                }
