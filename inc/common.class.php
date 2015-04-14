@@ -1146,6 +1146,9 @@ class PluginMreportingCommon extends CommonDBTM {
          $config = PluginMreportingConfig::initConfigParams($opt['f_name'],
          "PluginMreporting".$opt['short_classname']);
 
+         // get periods selected
+         PluginMreportingCommon::getSelectorValuesByUser();
+
          //dynamic instanciation of class passed by 'short_classname' GET parameter
          $classname = 'PluginMreporting'.$opt['short_classname'];
          $obj = new $classname($config);
