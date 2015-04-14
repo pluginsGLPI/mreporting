@@ -103,7 +103,7 @@ class PluginMreportingBaseclass {
                 $this->period_datetime = "%Y-%m-%d 23:59:59";
                 $this->period_label = 'S%u %Y';
                 $this->period_interval = 'WEEK';
-                $this->sql_list_date = "DISTINCT CONCAT(STR_TO_DATE(CONCAT(DATE_FORMAT(`date` , '{$this->period_datetime}'), ' Monday'), '%X%V %W'), ' 23:59:59') as period_l";
+                $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l";
                 break;
             case 'month':
                $this->period_sort = '%y%m';
