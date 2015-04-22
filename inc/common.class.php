@@ -1633,7 +1633,7 @@ class PluginMreportingCommon extends CommonDBTM {
       }
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
       $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
-      Bookmark::showSaveButton(Bookmark::URI);
+      Bookmark::showSaveButton(Bookmark::URI, self::getType());
       
       //If there's no selector for the report, there's no need for a reset button !              
       if ($has_selector) {

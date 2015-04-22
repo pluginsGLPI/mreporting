@@ -137,8 +137,6 @@ function plugin_mreporting_install() {
    // == Update to 2.3 ==
    if (!fieldExists('glpi_plugin_mreporting_profiles', 'right')
        && fieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
-      //save all profile with right READ
-      $right = PluginMreportingProfile::getRight();
 
       //truncate profile table
       $query = "TRUNCATE TABLE `glpi_plugin_mreporting_profiles`";
@@ -186,8 +184,11 @@ function plugin_mreporting_install() {
    require_once "inc/config.class.php";
    $config = new PluginMreportingConfig();
    $config->createFirstConfig();
-
+   
+   //save all profile with right READ
+   $right = PluginMreportingProfile::getRight();
    PluginMreportingProfile::addRightToProfiles($right);
+
    return true;
 }
 

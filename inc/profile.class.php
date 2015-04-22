@@ -31,8 +31,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-class PluginMreportingProfile extends CommonDBTM {
-   static $rightname = 'profile';
+class PluginMreportingProfile extends Profile {
 
    static function getTypeName($nb = 0) {
       return __("More Reporting", 'mreporting');
@@ -152,8 +151,8 @@ class PluginMreportingProfile extends CommonDBTM {
 
       global $DB;
       $query = "SELECT `profiles_id` 
-      FROM `glpi_plugin_mreporting_profiles` 
-      WHERE `reports` = READ ";
+                FROM `glpi_plugin_mreporting_profiles` 
+                WHERE `reports` = '".READ."'";
 
       $right = array();
       foreach ($DB->request($query) as $profile) {
@@ -178,8 +177,8 @@ class PluginMreportingProfile extends CommonDBTM {
          $reportProfile1 = new PluginMreportingProfile();
          $reportProfile1->add(array(
             'profiles_id' => $idProfile,
-            'reports'   => $report['id'],
-            'right' => READ
+            'reports'     => $report['id'],
+            'right'       => READ
          ));
       }
 
@@ -198,8 +197,8 @@ class PluginMreportingProfile extends CommonDBTM {
          $reportProfile1 = new PluginMreportingProfile();
          $reportProfile1->add(array(
             'profiles_id' => $prof['id'],
-            'reports'   => $report_id,
-            'right' => READ
+            'reports'     => $report_id,
+            'right'       => READ
          ));
       }
    }
@@ -232,6 +231,13 @@ class PluginMreportingProfile extends CommonDBTM {
 
       $config = new PluginMreportingConfig();
       $res = $config->find();
+      
+      if ($ID > 0) {
+         $this->check($ID, READ);
+      } else {
+         // Create item
+         $this->check(-1, CREATE);
+      }
 
       $this->showFormHeader($options);
       echo "<table class='tab_cadre_fixe'>\n";
@@ -299,8 +305,8 @@ class PluginMreportingProfile extends CommonDBTM {
          ORDER BY `name`";
 
       foreach ($DB->request($query) as $profile) {
-         $reportProfiles=new self();
-         $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'],$items->fields['id']);
+         $reportProfiles = new self();
+         $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'], $items->fields['id']);
 
          $prof = new Profile();
          $prof->getFromDB($profile['id']);
