@@ -31,8 +31,10 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-class PluginMreportingProfile extends Profile {
+class PluginMreportingProfile extends CommonDBTM {
 
+   static $rightname = 'profile';
+   
    static function getTypeName($nb = 0) {
       return __("More Reporting", 'mreporting');
    }
@@ -110,49 +112,35 @@ class PluginMreportingProfile extends Profile {
 
    /**
    * @param $right array
-   */
-   static function addRightToProfiles($right){
+    */
+   static function addRightToProfiles($right) {
 
       global $DB;
 
-      $profiles = "SELECT `id` FROM `glpi_profiles`";
-      $reports  = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
+//      $profiles = "SELECT `id` FROM `glpi_profiles`";
+      $reports = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
 
       //TODO : We need to reload cache before else glpi don't show migration table
       $myreport = new PluginMreportingProfile();
-      $table_fields = $DB->list_fields($myreport->getTable(),false);
 
+      foreach ($right as $prof) {
+         foreach ($DB->request($reports) as $report) {
 
-      foreach ($DB->request($profiles) as $prof) {
-         foreach($DB->request($reports) as $report){
-
-            //If profiles have right
-            if(in_array($prof['id'],$right)){
-               $tmp = array(
-                  'profiles_id' => $prof['id'],
-                  'reports'   => $report['id'],
-                  'right' => READ);
-               $myreport->add($tmp);
-            }else{
-               $tmp = array(
-                  'profiles_id' => $prof['id'],
-                  'reports'   => $report['id']
-                  );
-               $myreport->add($tmp);
-            }
+            $tmp = array(
+               'profiles_id' => $prof,
+               'reports'     => $report['id'],
+               'right'       => READ);
+            $myreport->add($tmp);
          }
       }
-
-
    }
-
 
    static function getRight(){
 
       global $DB;
       $query = "SELECT `profiles_id` 
                 FROM `glpi_plugin_mreporting_profiles` 
-                WHERE `reports` = '".READ."'";
+                WHERE `reports` = 'r'";
 
       $right = array();
       foreach ($DB->request($query) as $profile) {
@@ -345,13 +333,6 @@ class PluginMreportingProfile extends Profile {
       $prof->getFromDBByQuery(" WHERE `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
       return $prof;
    }
-
-   function findReportByProfiles($profil_id){
-      $prof = new self();
-      $prof->getFromDBByQuery(" WHERE `profiles_id` = ".$profil_id);
-      return $prof;
-   }
-
 
    static function canViewReports($profil_id, $report_id){
       $prof = new self();
