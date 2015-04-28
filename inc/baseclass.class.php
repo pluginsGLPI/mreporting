@@ -98,13 +98,13 @@ class PluginMreportingBaseclass {
                $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` , '{$this->period_datetime}') as period_l";
                break;
             case 'week':
-                $this->period_sort = '%y%u';
-                $this->period_sort_php = '%y%U';
-                $this->period_datetime = "%Y-%m-%d 23:59:59";
-                $this->period_label = 'S%u %Y';
-                $this->period_interval = 'WEEK';
-                $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l";
-                break;
+               $this->period_sort = '%x%v';
+               $this->period_sort_php = '%Y%V';
+               $this->period_datetime = "%Y-%m-%d 23:59:59";
+               $this->period_label = 'S%v %x';
+               $this->period_interval = 'WEEK';
+               $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l";
+               break;
             case 'month':
                $this->period_sort = '%y%m';
                $this->period_sort_php = $this->period_sort = '%y%m';
