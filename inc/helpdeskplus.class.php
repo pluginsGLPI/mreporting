@@ -956,6 +956,10 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          }
       }
 
+      if (!$category && empty($categories)) {
+         return array();
+      }
+
       $query = "SELECT
         count(t.id) as nb,
         CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla,
@@ -973,7 +977,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $query .= " AND c.id IN (" . implode(',', $categories) . ")";
       }
       $query .= " GROUP BY respected_sla, c.id
-      ORDER BY nb desc;";
+      ORDER BY nb DESC;";
 
       $result = $DB->query($query);
       while ($data = $DB->fetch_assoc($result)) {
