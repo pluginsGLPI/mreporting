@@ -219,15 +219,8 @@ class PluginMreportingProfile extends CommonDBTM {
 
       $config = new PluginMreportingConfig();
       $res = $config->find();
-      
-      if ($ID > 0) {
-         $this->check($ID, READ);
-      } else {
-         // Create item
-         $this->check(-1, CREATE);
-      }
 
-      $this->showFormHeader($options);
+      echo "<form name='form' method='post' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<table class='tab_cadre_fixe'>\n";
       echo "<tr><th colspan='3'>".__("Rights management", 'mreporting')."</th></tr>\n";
 
@@ -330,6 +323,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
    function findByProfileAndReport($profil_id, $report_id){
       $prof = new self();
+      $prof->getEmpty();
       $prof->getFromDBByQuery(" WHERE `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
       return $prof;
    }
