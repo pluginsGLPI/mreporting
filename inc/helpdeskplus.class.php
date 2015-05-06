@@ -969,7 +969,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       AND t.is_deleted = '0'";
       if ($category) {
          $query .= " AND c.id = " . $category;
-      } else {
+      } elseif (!empty($categories)) {
          $query .= " AND c.id IN (" . implode(',', $categories) . ")";
       }
       $query .= " GROUP BY respected_sla, c.id
