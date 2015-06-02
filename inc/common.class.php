@@ -496,13 +496,15 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</div>";
 
          echo "<script type='text/javascript'>
-            Ext.get('export_submit').on('click', function () {
+            $('#export_submit').on('click', function () {
                //get new crsf
-               Ext.Ajax.request({
+               $.ajax({
                   url: '../ajax/get_new_crsf_token.php',
+                  type: 'POST',
+                  dataType: 'html',
                   success: function(response, opts) {
-                     var token = response.responseText;
-                     Ext.select('#exportform input[name=_glpi_csrf_token]').set({'value': token});
+                     var token = response;
+                     $('#exportform input[name=_glpi_csrf_token]').val(token);
                      document.getElementById('exportform').submit();
                   }
                });
