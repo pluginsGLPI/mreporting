@@ -8,5 +8,5 @@ header('Cache-control: private, must-revalidate'); /// IE BUG + SSL
 header("Content-disposition: attachment; filename=export.svg");
 header("Content-type: image/svg+xml");
 
-echo $_REQUEST['svg_content'];
+echo stripslashes(htmlspecialchars_decode($_REQUEST['svg_content']));
 
