@@ -52,8 +52,8 @@ function plugin_init_mreporting() {
    /* CRSF */
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
-   if ($plugin->isInstalled("mreporting") 
-       && $plugin->isActivated("mreporting") 
+   if ($plugin->isInstalled("mreporting")
+       && $plugin->isActivated("mreporting")
        && Session::getLoginUserID()) {
       /* Profile */
       $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
@@ -86,12 +86,12 @@ function plugin_init_mreporting() {
          if(strpos($_SERVER['REQUEST_URI'],'front/dashboard.form.php') !== false) {
             $PLUGIN_HOOKS['submenu_entry']['mreporting']["<img src='".$CFG_GLPI["root_doc"].
                "/plugins/mreporting/pics/list_dashboard.png'
-                           title='".$LANG['plugin_mreporting']["dashboard"][5]."' 
+                           title='".$LANG['plugin_mreporting']["dashboard"][5]."'
                            alt='".$LANG['plugin_mreporting']["dashboard"][5]."'>"] = 'front/central.php';
          } else {
             $PLUGIN_HOOKS['submenu_entry']['mreporting']["<img src='".$CFG_GLPI["root_doc"].
                "/plugins/mreporting/pics/dashboard.png'
-                           title='".$LANG['plugin_mreporting']["dashboard"][1]."' 
+                           title='".$LANG['plugin_mreporting']["dashboard"][1]."'
                            alt='".$LANG['plugin_mreporting']["dashboard"][1]."'>"] = 'front/dashboard.form.php';
          }
 
@@ -117,17 +117,17 @@ function plugin_init_mreporting() {
                }
             }
          }
-         
+
          $PLUGIN_HOOKS['pre_item_purge']['mreporting']
             = array('Profile'                => array('PluginMreportingProfile', 'purgeProfiles'),
-                    'PluginMreportingConfig' => array('PluginMreportingProfile', 
+                    'PluginMreportingConfig' => array('PluginMreportingProfile',
                                                       'purgeProfilesByReports'));
          $PLUGIN_HOOKS['item_add']['mreporting']
             = array('Profile'                => array('PluginMreportingProfile', 'addProfiles'),
                     'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
 
       }
-      
+
 
       // Add specific files to add to the header : javascript
       $PLUGIN_HOOKS['add_javascript']['mreporting'] = array();
@@ -151,7 +151,7 @@ function plugin_init_mreporting() {
       $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
       $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
       $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/font-awesome-4.2.0/css/font-awesome.min.css";
-      
+
       //Load additionnal language files in needed
       includeAdditionalLanguageFiles();
    }
@@ -163,7 +163,7 @@ function plugin_version_mreporting() {
    global $LANG;
 
    return array('name'         => $LANG['plugin_mreporting']["name"],
-                'version'        => "2.3.1",
+                'version'        => "0.84+2.3.3",
                 'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
                                        & <a href='http://www.infotel.com'>Infotel</a>",
                 'homepage'       => "https://forge.indepnet.net/projects/mreporting",
