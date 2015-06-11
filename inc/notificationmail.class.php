@@ -63,4 +63,3 @@ class PluginMreportingNotificationMail extends NotificationMail {
    }
 
 }
-?>

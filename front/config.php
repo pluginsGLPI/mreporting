@@ -60,4 +60,3 @@ if ($plugin->isActivated("mreporting")) {
 }
 
 Html::footer();
-

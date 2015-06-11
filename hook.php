@@ -126,7 +126,7 @@ function plugin_mreporting_install() {
    foreach($queries as $query) {
       $DB->query($query);
    }
-    
+
    require_once "inc/profile.class.php";
    PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
 
@@ -146,9 +146,9 @@ function plugin_mreporting_install() {
 
     //migration of field
      $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
-     $migration->changeField('glpi_plugin_mreporting_profiles', 'reports', 
+     $migration->changeField('glpi_plugin_mreporting_profiles', 'reports',
                              'reports','integer');
-     $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id', 
+     $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id',
                              'profiles_id','integer');
      $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
 
@@ -192,7 +192,7 @@ function plugin_mreporting_uninstall() {
    );
 
    foreach($tables as $table) {
-      $migration->dropTable($table);  
+      $migration->dropTable($table);
    }
 
    Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR."/mreporting/notifications");
@@ -333,4 +333,3 @@ function plugin_mreporting_searchOptionsValues($options = array()) {
    }
    return false;
 }
-

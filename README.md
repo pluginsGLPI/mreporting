@@ -1,4 +1,4 @@
-More reporting 
+More reporting
 ==============
 
 GLPI Plugin

@@ -28,11 +28,11 @@
  */
 
 class PluginMreportingBaseclass {
-   protected $sql_date, 
-             $sql_date_create, 
-             $sql_date_solve, 
-             $sql_date_closed, 
-             $filters, 
+   protected $sql_date,
+             $sql_date_create,
+             $sql_date_solve,
+             $sql_date_closed,
+             $filters,
              $where_entities;
 
    function __construct($config = array()) {
@@ -75,18 +75,18 @@ class PluginMreportingBaseclass {
 
       // init default value for status selector
       if (!isset($_SESSION['mreporting_values']['status_1'])) {
-         $_SESSION['mreporting_values']['status_1'] 
-            = $_SESSION['mreporting_values']['status_2'] 
-            = $_SESSION['mreporting_values']['status_3'] 
+         $_SESSION['mreporting_values']['status_1']
+            = $_SESSION['mreporting_values']['status_2']
+            = $_SESSION['mreporting_values']['status_3']
             = $_SESSION['mreporting_values']['status_4'] = 1;
-         $_SESSION['mreporting_values']['status_5'] 
+         $_SESSION['mreporting_values']['status_5']
             = $_SESSION['mreporting_values']['status_6'] = 0;
       }
 
       if (!isset($_SESSION['mreporting_values']['period']))  {
          $_SESSION['mreporting_values']['period'] = 'month';
       }
-      if (isset($_SESSION['mreporting_values']['period']) 
+      if (isset($_SESSION['mreporting_values']['period'])
           && !empty($_SESSION['mreporting_values']['period'])) {
          switch($_SESSION['mreporting_values']['period']) {
             case 'day':
@@ -131,16 +131,15 @@ class PluginMreportingBaseclass {
          $this->period_label = '%b %Y';
       }
 
-      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date", 
-                                                                  $config['delay'], 
+      $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
+                                                                  $config['delay'],
                                                                   $config['randname']);
-      $this->sql_date_solve =  PluginMreportingCommon::getSQLDate("glpi_tickets.solvedate", 
-                                                                  $config['delay'], 
+      $this->sql_date_solve =  PluginMreportingCommon::getSQLDate("glpi_tickets.solvedate",
+                                                                  $config['delay'],
                                                                   $config['randname']);
-      $this->sql_date_closed = PluginMreportingCommon::getSQLDate("glpi_tickets.closedate", 
-                                                                  $config['delay'], 
-                                                                  $config['randname']);  
+      $this->sql_date_closed = PluginMreportingCommon::getSQLDate("glpi_tickets.closedate",
+                                                                  $config['delay'],
+                                                                  $config['randname']);
 
    }
 }
-

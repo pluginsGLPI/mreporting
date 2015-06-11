@@ -1,4 +1,4 @@
-<?php 
+<?php
 global $LANG;
 
 $LANG['plugin_mreporting']['Inventory']['title'] = "Inventory reports";

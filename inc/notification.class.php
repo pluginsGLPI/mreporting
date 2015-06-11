@@ -124,7 +124,7 @@ class PluginMreportingNotification extends CommonDBTM {
       }
       return array();
    }
-   
+
    /**
     * @param $mailing_options
    **/
@@ -153,4 +153,3 @@ class PluginMreportingNotification extends CommonDBTM {
       return 1;
    }
 }
-

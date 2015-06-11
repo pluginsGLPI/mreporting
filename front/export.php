@@ -52,4 +52,3 @@ if (PluginMreportingPreference::atLeastOneTemplateExists()) {
    Session::addMessageAfterRedirect($LANG['plugin_mreporting']["parser"][3], false, ERROR);
    Html::back();
 }
-

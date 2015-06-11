@@ -74,4 +74,3 @@ if (isset ($_REQUEST['update'])) {
 
 }
 Html::back();
-

@@ -217,4 +217,3 @@ function plugin_mreporting_haveRight($module,$right) {
       return true;
    else return false;
 }
-

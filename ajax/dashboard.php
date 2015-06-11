@@ -9,11 +9,11 @@ if (isset($_REQUEST['action'])) {
          break;
 
       case 'updateWidget':
-         PluginMreportingDashboard::updateWidget($_POST['id']);         
+         PluginMreportingDashboard::updateWidget($_POST['id']);
          break;
 
       case 'getConfig':
-         PluginMreportingDashboard::getConfig();            
+         PluginMreportingDashboard::getConfig();
          break;
 
       case 'centralDashboard' :
@@ -22,7 +22,7 @@ if (isset($_REQUEST['action'])) {
          $dashboard = new PluginMreportingDashboard();
          $dashboard->showDashboard(false);
          echo "</body>";
-         echo "</html>";         
+         echo "</html>";
          break;
 
       default:

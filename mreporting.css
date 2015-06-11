@@ -70,7 +70,7 @@
 
 .mreportingwidget-panel {
    text-align:center;
-   margin: auto; 
+   margin: auto;
    width: auto;
    height: auto;
    min-height: 500px;
@@ -121,13 +121,13 @@ select[name=graphmenu] option {
 }
 
 .m_dashboard_controls {
-   float: right;   
-   color: #999; 
+   float: right;
+   color: #999;
 }
 
 .add_report {
    border: 3px solid #999;
-   float: right;   
+   float: right;
    border-radius: 6px;
    cursor: pointer;
    height: 30px;
@@ -166,12 +166,12 @@ select[name=graphmenu] option {
 }
 
 .add_report:hover span:before {
-   color: white; 
+   color: white;
 }
 
 .empty_dashboard {
    position: absolute;
-   right: 40px;   
+   right: 40px;
    background: url(pics/howto_arrow.png) no-repeat right top;
 }
 
@@ -186,4 +186,3 @@ select[name=graphmenu] option {
    font-weight: bold;
 
 }
-

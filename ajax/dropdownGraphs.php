@@ -46,4 +46,3 @@ if ($_POST['graphname'] != -1) {
             "?name=".$_POST['name']."&classname=".$_POST['classname']."'>".__('Send')."</a>";
       }
 }
-

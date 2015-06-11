@@ -7,12 +7,12 @@ if (!defined('GLPI_ROOT')){
 // Class NotificationTarget
 class PluginMreportingNotificationTargetNotification extends NotificationTarget {
    var $additionalData;
-   
+
    function getEvents() {
       global $LANG;
       return array ('sendReporting' => $LANG['plugin_mreporting']['notification_event']);
    }
-   
+
    function getTags() {
       $tags = array('mreporting.file_url' => __('Link'));
 
@@ -32,7 +32,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
 
       $file_name  = $this->_buildPDF($user_name);
       $path       = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications/$file_name";
-      
+
       $this->additionalData['attachment']['path'] = $path;
       $this->additionalData['attachment']['name'] = $file_name;
 
@@ -147,4 +147,3 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       return $file_name;
    }
 }
-

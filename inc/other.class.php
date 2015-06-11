@@ -26,22 +26,22 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 class PluginMreportingOther Extends PluginMreportingBaseclass {
    function reportHbarLogs($configs = array()) {
       global $DB;
-      
+
       //Init delay value
-      $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`", 
+      $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
          $configs['delay'], $configs['randname']);
-      
+
       $prefix = "SELECT count(*) as cpt FROM `glpi_logs` WHERE ";
       //Add/remove a software on a computer
       $query_software = "$prefix `linked_action` IN (4,5)";
-      
+
       //Add/remove a software on a computer
       $query_computer_software = "$prefix `linked_action` IN (4,5)";
-      
+
       $query_software_version  = "$prefix `itemtype`='Software'
                                   AND `itemtype_link`='SoftwareVersion'
                                     AND `linked_action` IN (17, 18, 19)";
@@ -67,13 +67,13 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       $query_genericobject   = "$prefix `itemtype` LIKE '%PluginGenericobject%'";
 
       $datas = array();
-      
+
       $result = $DB->query($query_computer_software);
       $datas['datas'][__('Add/remove software on a computer')] = $DB->result($result, 0, 'cpt');
-      
+
       $result = $DB->query($query_software_version);
       $datas['datas'][__('Add/remove version on a software')] = $DB->result($result, 0, 'cpt');
-      
+
       $result = $DB->query($query_add_infocom);
       $datas['datas'][__('Add infocom')] = $DB->result($result, 0, 'cpt');
 
@@ -94,10 +94,10 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
 
       $result = $DB->query($query_device);
       $datas['datas'][__('Add/update/remove device')] = $DB->result($result, 0, 'cpt');
-      
+
       $result = $DB->query($query_relation);
       $datas['datas'][__('Add/remove relation')] = $DB->result($result, 0, 'cpt');
-      
+
       $result = $DB->query($query_item);
       $datas['datas'][__('Add/remove item')] = $DB->result($result, 0, 'cpt');
 
@@ -113,20 +113,20 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
 
    /**
    * Preconfig datas with your values when init config is done
-   * 
+   *
    * @param type $funct_name
    * @param type $classname
    * @param PluginMreportingConfig $config
    * @return $config
    */
     function preconfig($funct_name, $classname, PluginMreportingConfig $config) {
-     
+
       if ($funct_name != -1 && $classname) {
-         
+
          $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);
          if ($ex_func[0] != 'report') return false;
          $gtype = strtolower($ex_func[1]);
-         
+
          switch($gtype) {
             case 'pie':
                $config->fields["name"]=$funct_name;
@@ -144,9 +144,9 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
                break;
 
          }
-         
+
       }
       return $config->fields;
    }
-   
+
 }

@@ -235,4 +235,3 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       return $out;
    }
 }
-

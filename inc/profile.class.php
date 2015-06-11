@@ -170,8 +170,8 @@ class PluginMreportingProfile extends CommonDBTM {
     static function getRight(){
 
         global $DB;
-        $query = "SELECT `profiles_id` 
-                  FROM `glpi_plugin_mreporting_profiles` 
+        $query = "SELECT `profiles_id`
+                  FROM `glpi_plugin_mreporting_profiles`
                   WHERE `reports` = 'r' ";
 
         $right = array();
@@ -411,4 +411,3 @@ class PluginMreportingProfile extends CommonDBTM {
         return true;
     }
 }
-

@@ -38,4 +38,3 @@ $common = new PluginMreportingCommon;
 
 $common->showGraph($_REQUEST);
 Html::footer();
-

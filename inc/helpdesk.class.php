@@ -35,12 +35,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportHbarTicketNumberByEntity($config = array()) {
       global $DB;
-      $_SESSION['mreporting_selector']['reportHbarTicketNumberByEntity'] = array('dateinterval', 
+      $_SESSION['mreporting_selector']['reportHbarTicketNumberByEntity'] = array('dateinterval',
                                                                                  'limit');
 
       //Init delay value
-      $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`", 
-                                                           $config['delay'], 
+      $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
+                                                           $config['delay'],
                                                            $config['randname']);
       $nb_ligne = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 
@@ -79,7 +79,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHgbarTicketNumberByCatAndEntity($config = array()) {
       global $DB;
 
-      $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCatAndEntity'] 
+      $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCatAndEntity']
          = array('dateinterval');
 
       $datas = array();
@@ -87,7 +87,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       //get categories used in this period
@@ -173,12 +173,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportPieTicketOpenedAndClosed($config = array()) {
       global $DB;
 
-      $_SESSION['mreporting_selector']['reportPieTicketOpenedAndClosed'] 
+      $_SESSION['mreporting_selector']['reportPieTicketOpenedAndClosed']
          = array('dateinterval');
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       $datas = array();
@@ -205,12 +205,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportPieTicketOpenedbyStatus($config = array()) {
       global $DB;
-      $_SESSION['mreporting_selector']['reportPieTicketOpenedbyStatus'] 
+      $_SESSION['mreporting_selector']['reportPieTicketOpenedbyStatus']
          = array('dateinterval', 'allstates');
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       // Get status to show
@@ -248,15 +248,15 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportPieTopTenAuthor($config = array()) {
       global $DB, $LANG;
 
-      $_SESSION['mreporting_selector']['reportPieTopTenAuthor'] 
+      $_SESSION['mreporting_selector']['reportPieTopTenAuthor']
          = array('dateinterval');
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
       $this->sql_closedate = PluginMreportingCommon::getSQLDate("glpi_tickets.closedate",
-                                                                $config['delay'], 
+                                                                $config['delay'],
                                                                 $config['randname']);
 
       $datas = array();
@@ -289,13 +289,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
 
    function reportHgbarOpenTicketNumberByCategoryAndByType($config = array()) {
-      $_SESSION['mreporting_selector']['reportHgbarOpenTicketNumberByCategoryAndByType'] 
+      $_SESSION['mreporting_selector']['reportHgbarOpenTicketNumberByCategoryAndByType']
          = array('dateinterval');
       return $this->reportHgbarTicketNumberByCategoryAndByType($config, 'open');
    }
 
    function reportHgbarCloseTicketNumberByCategoryAndByType($config = array()) {
-      $_SESSION['mreporting_selector']['reportHgbarCloseTicketNumberByCategoryAndByType'] 
+      $_SESSION['mreporting_selector']['reportHgbarCloseTicketNumberByCategoryAndByType']
          = array('dateinterval');
       return $this->reportHgbarTicketNumberByCategoryAndByType($config, 'close');
    }
@@ -303,14 +303,14 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    private function reportHgbarTicketNumberByCategoryAndByType($config=array(), $filter) {
       global $DB, $LANG;
 
-      $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCategoryAndByType'] 
+      $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCategoryAndByType']
          = array('dateinterval');
 
       $datas = array();
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       $query = "
@@ -353,14 +353,14 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHgbarTicketNumberByService($config = array()) {
       global $DB;
 
-      $_SESSION['mreporting_selector']['reportHgbarTicketNumberByService'] 
+      $_SESSION['mreporting_selector']['reportHgbarTicketNumberByService']
          = array('dateinterval');
 
       $datas = array();
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       foreach($this->filters as $class => $filter) {
@@ -412,14 +412,14 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHgbarOpenedTicketNumberByCategory($config = array()) {
       global $DB;
 
-      $_SESSION['mreporting_selector']['reportHgbarOpenedTicketNumberByCategory'] 
+      $_SESSION['mreporting_selector']['reportHgbarOpenedTicketNumberByCategory']
          = array('dateinterval', 'allstates');
 
       $datas = array();
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       // Get status to show
@@ -491,7 +491,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       $query = "SELECT
@@ -525,7 +525,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportGlineNbTicket($config = array(), $area = false) {
       global $DB;
 
-      $_SESSION['mreporting_selector']['reportGlineNbTicket'] 
+      $_SESSION['mreporting_selector']['reportGlineNbTicket']
          = array('dateinterval', 'period', 'allstates');
 
       $datas = array();
@@ -533,7 +533,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       // Get status to show
@@ -603,12 +603,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportSunburstTicketByCategories($config = array()) {
       global $DB;
-      
+
       $_SESSION['mreporting_selector']['reportSunburstTicketByCategories'] = array('dateinterval');
-      
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       $flat_datas = array();
@@ -661,11 +661,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportVstackbarTicketStatusByTechnician'] = array('dateinterval');
-      
+
       $datas = array();
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
-                                                           $config['delay'], 
+                                                           $config['delay'],
                                                            $config['randname']);
 
       $status = $this->filters['open']['status'] + $this->filters['close']['status'];
@@ -743,12 +743,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    function reportHbarTicketNumberByLocation($config = array()) {
       global $DB;
 
-      $_SESSION['mreporting_selector']['reportHbarTicketNumberByLocation'] 
+      $_SESSION['mreporting_selector']['reportHbarTicketNumberByLocation']
          = array('dateinterval', 'limit');
 
       //Init delay value
-      $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`", 
-                                                           $config['delay'], 
+      $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
+                                                           $config['delay'],
                                                            $config['randname']);
       $nb_ligne = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 
@@ -840,4 +840,3 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $config->fields;
    }
 }
-

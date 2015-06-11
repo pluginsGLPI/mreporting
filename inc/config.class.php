@@ -864,4 +864,3 @@ class PluginMreportingConfig extends CommonDBTM {
       return $crit;
    }
 }
-

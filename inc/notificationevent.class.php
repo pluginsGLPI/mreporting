@@ -56,7 +56,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
                // Not cron see my pref
                $notify_me = $_SESSION['glpinotification_to_myself'];
             }
-            
+
             //Foreach notification targets
             foreach ($targets as $target) {
                //Get all users affected by this notification
@@ -108,4 +108,3 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
    }
 
 }
-?>

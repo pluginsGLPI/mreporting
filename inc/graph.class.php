@@ -80,7 +80,7 @@ class PluginMreportingGraph {
          //Show date selector
          echo "<div class='graph_navigation'>";
          PluginMreportingCommon::showSelector(
-            $_SESSION['mreporting_values']['date1'.$randname], 
+            $_SESSION['mreporting_values']['date1'.$randname],
             $_SESSION['mreporting_values']['date2'.$randname],
             $randname);
          echo "</div>";
@@ -92,7 +92,7 @@ class PluginMreportingGraph {
             $functionname = $ex_func[1];
 
             $config = PluginMreportingConfig::initConfigParams($functionname, $classname);
-            
+
             // We check if a configuration is needed for the graph
             if (method_exists(new $classname($config), 'needConfig')) {
                $object = new $classname();
@@ -221,38 +221,38 @@ class PluginMreportingGraph {
             return len;
          })
          .height(y.range().band)
-         .event("mouseover", function() { 
+         .event("mouseover", function() {
             return this.parent.active(true);
          })
-         .event("mouseout", function()  { 
+         .event("mouseout", function()  {
             return this.parent.active(false);
          })
          .fillStyle(function() {
             if (this.parent.active()) return colors(this.parent.parent.index).alpha(.5);
             else return colors(this.parent.parent.index);
          })
-         .strokeStyle(function() { 
-            return colors(this.parent.parent.index).darker(); 
+         .strokeStyle(function() {
+            return colors(this.parent.parent.index).darker();
          })
          .lineWidth(2)
          .top(2)
          .bottom(2)
       .anchor("right").add(pv.Label) // bar value with unit (on right)
          .textAlign("left")
-         .text(function(d) { 
-            return  d+" {$unit}"; 
+         .text(function(d) {
+            return  d+" {$unit}";
          })
          .textMargin(5)
          .textBaseline("middle")
-         .textStyle(function() { 
-            return colors(this.parent.parent.index).darker(); 
+         .textStyle(function() {
+            return colors(this.parent.parent.index).darker();
          })
          .textShadow("0.1em 0.1em 0.1em rgba(4,4,4,.5)")
       .parent.anchor("left").add(pv.Label) // bar label (on left )
          .textMargin(5)
          .textAlign("right")
-         .text(function() { 
-            return labels[this.parent.parent.index]; 
+         .text(function() {
+            return labels[this.parent.parent.index];
          })
          .font(function() {
             return (this.parent.active()) ? "bold 11px sans-serif" : "";
@@ -260,11 +260,11 @@ class PluginMreportingGraph {
       .root.add(pv.Rule) // axis
          .data(x.ticks(5))
          .left(x)
-         .strokeStyle(function(d) { 
-            return d ? "rgba(255,255,255,.3)" : "black"; 
+         .strokeStyle(function(d) {
+            return d ? "rgba(255,255,255,.3)" : "black";
          })
-         .lineWidth(function() { 
-            return (this.index == 0) ? 2 : 1; 
+         .lineWidth(function() {
+            return (this.index == 0) ? 2 : 1;
          })
       .add(pv.Rule)
          .bottom(0)
@@ -511,7 +511,7 @@ JAVASCRIPT;
     */
    function showSunburst($params, $dashboard = false ,$width = false) {
       global $LANG;
-      
+
       ob_start();
       if ($width !== false){
          $this->width = $width;
@@ -830,7 +830,7 @@ JAVASCRIPT;
          $left = 100;
          if ($height > 300) {
             $height = 300;
-         }            
+         }
          $bottomAxis = -15;
       }
 
@@ -1569,7 +1569,7 @@ JAVASCRIPT;
       .text(function(d){ return  labels2[this.index]; })
       .font(function() {
          return (i == this.index) ? "bold 11px sans-serif" : "";
-      }) 
+      })
       .visible(function() {
          if ((this.index / step) == Math.round(this.index / step)) return true;
          else return false;
@@ -1862,4 +1862,3 @@ JAVASCRIPT;
 
    }
 }
-
