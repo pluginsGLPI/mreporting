@@ -299,7 +299,13 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             $sql_group_assign = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
          }
       }
-      $sql_type    = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
+      if (isset($_SESSION['mreporting_values']['type'])) {
+         $sql_type = ($_SESSION['mreporting_values']['type'] >= 0)
+                     ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type']
+                     : "";
+      } else {
+         $sql_type = " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
+      }
       $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
 
       foreach ($this->status as $current_status) {
