@@ -1381,17 +1381,19 @@ class PluginMreportingCommon extends CommonDBTM {
          $values = $_SESSION['mreporting_values'][$field];
       }
 
-      $param = array();
+      $datas = array();
       foreach (getAllDatasFromTable('glpi_groups', $condition) as $data) {
-         $param[$data['id']] = $data['completename'];
+         $datas[$data['id']] = $data['completename'];
       }
 
+      $param = array();
       $param['multiple']= true;
       $param['display'] = true;
       $param['size']    = count($values);
+      $param['values']  = $values;
       
       echo "<br /><b>".$label." : </b><br />";
-      Dropdown::showFromArray($field, $values, $param);
+      Dropdown::showFromArray($field, $datas, $param);
 
    }
 
