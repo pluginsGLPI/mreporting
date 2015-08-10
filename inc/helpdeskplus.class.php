@@ -189,7 +189,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       foreach($tab as $period => $data) {
          if($search_new) $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['opened']][] = (isset($data['open'])) ? $data['open'] : 0;
-         if($search_solved) $datas['datas'][_x('status', 'Closed')][] = (isset($data['solved'])) ? $data['solved'] : 0;
+         if($search_solved) $datas['datas'][_x('status', 'Solved')][] = (isset($data['solved'])) ? $data['solved'] : 0;
          if($search_closed) $datas['datas'][_x('status', 'Closed')][] = (isset($data['closed'])) ? $data['closed'] : 0;
          if($search_backlogs) $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['backlogs']][] = (isset($data['backlog'])) ? $data['backlog'] : 0;
          $datas['labels2'][] = $data['period_name'];
