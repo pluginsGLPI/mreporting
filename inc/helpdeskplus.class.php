@@ -770,20 +770,20 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       if (isset($_SESSION['mreporting_values']['slas'])
           && !empty($_SESSION['mreporting_values']['slas'])) {
          $query = "SELECT
-        count(t.id) AS nb,
-        s.name,
-        CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-      FROM `glpi_tickets` t
-      INNER JOIN `glpi_slas` s ON t.slas_id = s.id
-      WHERE {$this->sql_date_create}
-      AND t.status IN (" . implode(
-               ',',
-               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
-      AND t.entities_id IN ({$this->where_entities})
-      AND t.is_deleted = '0'
-      $sql_slas
-      GROUP BY s.name, respected_sla;";
+                       count(t.id) AS nb,
+                       s.name,
+                       CASE WHEN t.solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
+                     FROM `glpi_tickets` t
+                     INNER JOIN `glpi_slas` s ON t.slas_id = s.id
+                     WHERE {$this->sql_date_create}
+                     AND t.status IN (" . implode(
+                              ',',
+                              array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
+                           ) . ")
+                     AND t.entities_id IN ({$this->where_entities})
+                     AND t.is_deleted = '0'
+                     $sql_slas
+                     GROUP BY s.name, respected_sla;";
 
          $result = $DB->query($query);
          while ($data = $DB->fetch_assoc($result)) {
@@ -794,7 +794,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             $datas['labels2'][$key] = $key;
             $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$key]
                = !empty($value['ok']) ? $value['ok'] : 0;
-            $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$key]
+            $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$key]
                = !empty($value['nok']) ? $value['nok'] : 0;
          }
       }
