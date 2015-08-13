@@ -135,17 +135,16 @@ function plugin_mreporting_install() {
    $migration->migrationOneTable('glpi_plugin_mreporting_configs');
 
    // == Update to 2.3 ==
+   $right = array();
    if (!fieldExists('glpi_plugin_mreporting_profiles', 'right')
        && fieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
-      //save all profile with right READ
       $right = PluginMreportingProfile::getRight();
-
-      //truncate profile table
+      // truncate profile table
       $query = "TRUNCATE TABLE `glpi_plugin_mreporting_profiles`";
       $DB->query($query);
 
        //migration of field
-      $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
+      $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'integer');
       $migration->changeField('glpi_plugin_mreporting_profiles', 'reports', 
                              'reports','integer');
       $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id', 
@@ -156,7 +155,7 @@ function plugin_mreporting_install() {
    }
 
    // == UPDATE to 0.84+1.0 == 
-   $query = "UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ".READ." WHERE pr.right = 'r'";
+   $query = "UPDATE `glpi_plugin_mreporting_profiles` SET `right` = '".READ."' WHERE `right` = 'r'";
    $DB->query($query);
    if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
       $query = "ALTER IGNORE TABLE glpi_plugin_mreporting_profiles 
@@ -179,15 +178,22 @@ function plugin_mreporting_install() {
 
    $migration->addField("glpi_plugin_mreporting_preferences", "selectors", "text");
    $migration->migrationOneTable('glpi_plugin_mreporting_preferences');
-
+   
    // == Init available reports
    require_once "inc/baseclass.class.php";
    require_once "inc/common.class.php";
    require_once "inc/config.class.php";
    $config = new PluginMreportingConfig();
-   $config->createFirstConfig();
+   if (!countElementsInTable("glpi_plugin_mreporting_configs")) {
+      $config->createFirstConfig();
+   }
 
-   PluginMreportingProfile::addRightToProfiles($right);
+   if (!empty($right)) {
+      PluginMreportingProfile::addRightToProfiles($right);
+      $query = "UPDATE `glpi_plugin_mreporting_profiles` SET `right` = '".READ."'";
+      $DB->query($query);
+   }
+
    return true;
 }
 
@@ -220,6 +226,8 @@ function plugin_mreporting_uninstall() {
 
    require_once "inc/notification.class.php";
    PluginMreportingNotification::uninstall();
+   
+   CronTask::Unregister('MreportingNotification');
 
    return true;
 }

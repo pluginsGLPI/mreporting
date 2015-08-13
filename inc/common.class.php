@@ -496,13 +496,15 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</div>";
 
          echo "<script type='text/javascript'>
-            Ext.get('export_submit').on('click', function () {
+            $('#export_submit').on('click', function () {
                //get new crsf
-               Ext.Ajax.request({
+               $.ajax({
                   url: '../ajax/get_new_crsf_token.php',
+                  type: 'POST',
+                  dataType: 'html',
                   success: function(response, opts) {
-                     var token = response.responseText;
-                     Ext.select('#exportform input[name=_glpi_csrf_token]').set({'value': token});
+                     var token = response;
+                     $('#exportform input[name=_glpi_csrf_token]').val(token);
                      document.getElementById('exportform').submit();
                   }
                });
@@ -1635,7 +1637,7 @@ class PluginMreportingCommon extends CommonDBTM {
       }
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
       $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
-      Bookmark::showSaveButton(Bookmark::URI);
+      Bookmark::showSaveButton(Bookmark::URI, self::getType());
       
       //If there's no selector for the report, there's no need for a reset button !              
       if ($has_selector) {

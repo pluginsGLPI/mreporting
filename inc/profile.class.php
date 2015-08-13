@@ -32,8 +32,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginMreportingProfile extends CommonDBTM {
-   static $rightname = 'profile';
 
+   static $rightname = 'profile';
+   
    static function getTypeName($nb = 0) {
       return __("More Reporting", 'mreporting');
    }
@@ -111,49 +112,35 @@ class PluginMreportingProfile extends CommonDBTM {
 
    /**
    * @param $right array
-   */
-   static function addRightToProfiles($right){
+    */
+   static function addRightToProfiles($right) {
 
       global $DB;
 
-      $profiles = "SELECT `id` FROM `glpi_profiles`";
-      $reports  = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
+//      $profiles = "SELECT `id` FROM `glpi_profiles`";
+      $reports = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
 
       //TODO : We need to reload cache before else glpi don't show migration table
       $myreport = new PluginMreportingProfile();
-      $table_fields = $DB->list_fields($myreport->getTable(),false);
 
+      foreach ($right as $prof) {
+         foreach ($DB->request($reports) as $report) {
 
-      foreach ($DB->request($profiles) as $prof) {
-         foreach($DB->request($reports) as $report){
-
-            //If profiles have right
-            if(in_array($prof['id'],$right)){
-               $tmp = array(
-                  'profiles_id' => $prof['id'],
-                  'reports'   => $report['id'],
-                  'right' => READ);
-               $myreport->add($tmp);
-            }else{
-               $tmp = array(
-                  'profiles_id' => $prof['id'],
-                  'reports'   => $report['id']
-                  );
-               $myreport->add($tmp);
-            }
+            $tmp = array(
+               'profiles_id' => $prof,
+               'reports'     => $report['id'],
+               'right'       => READ);
+            $myreport->add($tmp);
          }
       }
-
-
    }
-
 
    static function getRight(){
 
       global $DB;
       $query = "SELECT `profiles_id` 
-      FROM `glpi_plugin_mreporting_profiles` 
-      WHERE `reports` = READ ";
+                FROM `glpi_plugin_mreporting_profiles` 
+                WHERE `reports` = 'r'";
 
       $right = array();
       foreach ($DB->request($query) as $profile) {
@@ -178,8 +165,8 @@ class PluginMreportingProfile extends CommonDBTM {
          $reportProfile1 = new PluginMreportingProfile();
          $reportProfile1->add(array(
             'profiles_id' => $idProfile,
-            'reports'   => $report['id'],
-            'right' => READ
+            'reports'     => $report['id'],
+            'right'       => READ
          ));
       }
 
@@ -198,8 +185,8 @@ class PluginMreportingProfile extends CommonDBTM {
          $reportProfile1 = new PluginMreportingProfile();
          $reportProfile1->add(array(
             'profiles_id' => $prof['id'],
-            'reports'   => $report_id,
-            'right' => READ
+            'reports'     => $report_id,
+            'right'       => READ
          ));
       }
    }
@@ -233,7 +220,7 @@ class PluginMreportingProfile extends CommonDBTM {
       $config = new PluginMreportingConfig();
       $res = $config->find();
 
-      $this->showFormHeader($options);
+      echo "<form name='form' method='post' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<table class='tab_cadre_fixe'>\n";
       echo "<tr><th colspan='3'>".__("Rights management", 'mreporting')."</th></tr>\n";
 
@@ -299,8 +286,8 @@ class PluginMreportingProfile extends CommonDBTM {
          ORDER BY `name`";
 
       foreach ($DB->request($query) as $profile) {
-         $reportProfiles=new self();
-         $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'],$items->fields['id']);
+         $reportProfiles = new self();
+         $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'], $items->fields['id']);
 
          $prof = new Profile();
          $prof->getFromDB($profile['id']);
@@ -336,16 +323,10 @@ class PluginMreportingProfile extends CommonDBTM {
 
    function findByProfileAndReport($profil_id, $report_id){
       $prof = new self();
+      $prof->getEmpty();
       $prof->getFromDBByQuery(" WHERE `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
       return $prof;
    }
-
-   function findReportByProfiles($profil_id){
-      $prof = new self();
-      $prof->getFromDBByQuery(" WHERE `profiles_id` = ".$profil_id);
-      return $prof;
-   }
-
 
    static function canViewReports($profil_id, $report_id){
       $prof = new self();

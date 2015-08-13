@@ -47,8 +47,8 @@ class PluginMreportingNotification extends CommonDBTM {
          ));
 
          // Création de la notification
-         $notification = new Notification();
-         $notification_id = $notification->add(array(
+         $notification    = new Notification();
+         if ($notification_id = $notification->add(array(
             'name'                     => __("Notification for \"More Reporting\"", 'mreporting'),
             'comment'                  => "",
             'entities_id'              => 0,
@@ -57,12 +57,14 @@ class PluginMreportingNotification extends CommonDBTM {
             'itemtype'                 => 'PluginMreportingNotification',
             'notificationtemplates_id' => $template_id,
             'event'                    => 'sendReporting',
-            'mode'                     => 'mail',
-         ));
+            'mode'                     => 'mail'))) {
+
+            $DB->query('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
+                     VALUES (1, 1, '.$notification_id.');');
+         }
       }
 
-      $DB->query('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
-               VALUES (1, 1, ' . $notification_id . ');');
+
 
        return array('success' => true);
    }

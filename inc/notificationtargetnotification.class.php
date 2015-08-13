@@ -27,7 +27,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
    function getDatasForTemplate($event, $options = array()) {
       global $CFG_GLPI;
 
-      $user_name  = mt_rand().'_';
+      $user_name  = mt_rand();
 
       $file_name  = $this->_buildPDF($user_name);
       $path       = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications/$file_name";
@@ -35,12 +35,19 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       $this->additionalData['attachment']['path'] = $path;
       $this->additionalData['attachment']['name'] = $file_name;
 
-      $link = $CFG_GLPI['url_base']."/index.php?redirect=plugin_mreporting_$file_name";
+      $link = $CFG_GLPI['url_base']."/index.php?redirect=PluginMreportingDownload_$user_name";
 
       $this->datas['##lang.mreporting.file_url##'] = __('Link');
       $this->datas['##mreporting.file_url##']      = $link;
    }
-
+   
+   public function getFileName($user_name){
+      return 'glpi_report_'.$user_name."_".date('d-m-Y').'.pdf';
+   }
+   
+   public function getFileDir(){
+      return GLPI_PLUGIN_DOC_DIR.'/mreporting/notifications';
+   }
 
    /**
     * Generate a PDF file with mreporting reports to be send in the notifications
@@ -50,8 +57,8 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
    private function _buildPDF($user_name = '') {
       global $CFG_GLPI, $DB, $LANG;
 
-      $dir           = GLPI_PLUGIN_DOC_DIR.'/mreporting/notifications';
-      $file_name     = 'glpi_report_'.$user_name.date('d-m-Y').'.pdf';
+      $dir       = $this->getFileDir();
+      $file_name = $this->getFileName($user_name);
 
       if(!is_dir($dir)) return false;
 
@@ -106,7 +113,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
             continue;
          }
          $image_base64 = $matches[1][2];
-         if (strpos($image_base64, 'data:image/png;base64,') === false) {
+         if (strpos($image_base64, 'data:image/png;base64,') === false && isset($matches[1][3])) {
             $image_base64 = $matches[1][3];
          }
          if (strpos($image_base64, 'data:image/png;base64,') === false) {

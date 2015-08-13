@@ -127,7 +127,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   $show_inline = false;
                   $rand=mt_rand();
                   $filename = "mreporting_img_$rand.png";
-                  $filedir = GLPI_ROOT."/files/_plugins/mreporting/$filename";
+                  $filedir = GLPI_PLUGIN_DOC_DIR."/mreporting/$filename";
                   file_put_contents($filedir, $contents);
    
                   echo "<img src='".$CFG_GLPI['root_doc'].

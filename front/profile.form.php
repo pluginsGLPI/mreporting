@@ -36,18 +36,28 @@ if (isset ($_REQUEST['update'])) {
 
 } else if (isset($_REQUEST['giveReadAccessForAllReport'])){
    foreach($res as $report) {
-      $profil->getFromDBByQuery("WHERE profiles_id = ".$_REQUEST['profile_id'].
-                                   " AND reports = ".$report['id']);
-      $profil->fields['right'] = READ;
-      $profil->update($profil->fields);
+      if ($profil->getFromDBByQuery(" WHERE profiles_id = ".$_REQUEST['profile_id'].
+                                    " AND reports = ".$report['id'])) {
+         $profil->fields['right'] = READ;
+         $profil->update($profil->fields);
+      } else {
+         $profil->add(array('profiles_id' => $_REQUEST['profile_id'],
+                            'reports'     => $report['id'],
+                            'right'       => READ));
+      }
    }
 
 } else if (isset($_REQUEST['giveNoneAccessForAllReport'])){
    foreach($res as $report) {
-      $profil->getFromDBByQuery("WHERE profiles_id = ".$_REQUEST['profile_id'].
-                               " AND reports = ".$report['id']);
-      $profil->fields['right'] = 'NULL';
-      $profil->update($profil->fields);
+      if ($profil->getFromDBByQuery(" WHERE profiles_id = ".$_REQUEST['profile_id'].
+                                    " AND reports = ".$report['id'])) {
+         $profil->fields['right'] = 'NULL';
+         $profil->update($profil->fields);
+      } else {
+         $profil->add(array('profiles_id' => $_REQUEST['profile_id'],
+                            'reports'     => $report['id'],
+                            'right'       => 'NULL'));
+      }
    }
 
 } else if (isset($_REQUEST['giveNoneAccessForAllProfile'])){
