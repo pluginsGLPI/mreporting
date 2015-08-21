@@ -75,6 +75,11 @@ Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
          <compatibility>0.85</compatibility>
       </version>
       <version>
+         <num>0.90+1.0</num>
+         <compatibility>0.85</compatibility>
+         <compatibility>0.90</compatibility>
+      </version>
+      <version>
          <num>0.84+2.3.3</num>
          <compatibility>0.84</compatibility>
       </version>
