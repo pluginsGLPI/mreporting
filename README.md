@@ -8,5 +8,5 @@ GLPI Plugin
 ![Dashboard](https://raw.githubusercontent.com/PluginsGLPI/mreporting/master/screenshots/dashboard.png)
 
 * Download : https://github.com/PluginsGLPI/mreporting/releases
-* WIKI : https://github.com/PluginsGLPI/mreporting/wiki
+* WIKI (Develop new reports) : https://github.com/PluginsGLPI/mreporting/wiki
 * Vanilla versions : https://forge.indepnet.net/projects/mreporting/files
