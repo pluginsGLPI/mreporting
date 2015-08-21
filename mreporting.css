@@ -1,14 +1,13 @@
 #fig {
    border:1px solid #E0E0E0;
-   border-radius:8px;
    position:relative;
    margin:10px auto;
 }
 .graph {
-   margin:2px
+   margin:2px;
 }
 .graph_title {
-   background:url("../../pics/fond_th.png") repeat-x;
+   background-color: #EEE;
    font-size:1.1em;
    padding:7px 0 7px 0;
    text-transform:uppercase;
@@ -66,7 +65,7 @@
    width: 200px !important;
 }
 
-.chzn-container .chzn-drop li:nth-child(even) {background: #EEE}
+.chzn-container .chzn-drop li:nth-child(even) {background: #EEE;}
 
 .mreportingwidget-panel {
    text-align:center;
@@ -80,7 +79,7 @@
 .mreportingwidget {
    height: 441px;
    width:461px;
-   border-color: #e1d39e;
+   border-color: #DDD;
    border-style: solid;
    border-width: 1px;
    display:inline-block;
@@ -89,16 +88,32 @@
 }
 
 .mreportingwidget-header {
-   background-color: #e1d39e;
-   padding: 10px;
+   background-color: #EEE;
+   padding: 10px 0;
 }
 
 .mreportingwidget-body {
    overflow: hidden;
 }
 
-.clear {
+.m_left {
+   float: left;
+}
+
+.m_right {
+   float: right;
+}
+
+.m_clear {
    clear: both;
+}
+
+#dashboard button {
+   width: 20px;
+   height: 20px;
+}
+.mreportingwidget-header  button {
+   margin-top: -5px;
 }
 
 #mreporting_central_dashboard iframe {
@@ -120,14 +135,20 @@ select[name=graphmenu] option {
    font-family: FontAwesome, 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif' !important;
 }
 
+.select2-container[id*=s2id_dropdown_glpilist_limit] {
+   width: 80px !important;
+}
+
 .m_dashboard_controls {
-   float: right;
-   color: #999;
+   position: absolute;
+   right: 20px;   
+   color: #999; 
+   z-index: 100;
 }
 
 .add_report {
    border: 3px solid #999;
-   float: right;
+   float: right;   
    border-radius: 6px;
    cursor: pointer;
    height: 30px;
@@ -171,8 +192,9 @@ select[name=graphmenu] option {
 
 .empty_dashboard {
    position: absolute;
-   right: 40px;
+   right: 40px;   
    background: url(pics/howto_arrow.png) no-repeat right top;
+   z-index: 50;
 }
 
 .empty_dashboard_text {
@@ -184,5 +206,4 @@ select[name=graphmenu] option {
    font-size: 1.4em;
    text-transform: uppercase;
    font-weight: bold;
-
 }

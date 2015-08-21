@@ -108,3 +108,4 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
    }
 
 }
+

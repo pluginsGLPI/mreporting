@@ -246,7 +246,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    function reportPieTopTenAuthor($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $_SESSION['mreporting_selector']['reportPieTopTenAuthor']
          = array('dateinterval');
@@ -277,7 +277,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $result = $DB->query($query);
       while ($ticket = $DB->fetch_assoc($result)) {
          if($ticket['users_id']==0) {
-            $label = $LANG['plugin_mreporting']["error"][2];
+            $label = __("Undefined", 'mreporting');
          } else {
             $label = getUserName($ticket['users_id']);
          }
@@ -301,7 +301,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    }
 
    private function reportHgbarTicketNumberByCategoryAndByType($config=array(), $filter) {
-      global $DB, $LANG;
+      global $DB;
 
       $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCategoryAndByType']
          = array('dateinterval');
@@ -339,7 +339,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             $ticket['category_name'] = __("None");
          }
          if($ticket['type']==0) {
-            $type = $LANG['plugin_mreporting']["error"][2];
+            $type = __("Undefined", 'mreporting');
          } else {
             $type = Ticket::getTicketTypeName($ticket['type']);
          }

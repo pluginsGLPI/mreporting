@@ -112,7 +112,7 @@ class PluginMreportingPreference extends CommonDBTM {
    }
 
    function showForm($ID){
-      global $LANG,$CFG_GLPI;
+      global $CFG_GLPI;
 
       $version = plugin_version_mreporting();
       $this->getFromDB($ID);
@@ -120,7 +120,7 @@ class PluginMreportingPreference extends CommonDBTM {
       echo "<form method='post' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'><div align='center'>";
       echo "<table class='tab_cadre_fixe' cellpadding='5'>";
       echo "<tr><th colspan='2'>" . $version['name'] . " - ". $version['version'] . "</th></tr>";
-      echo "<tr class='tab_bg_2'><td align='center'>".$LANG['plugin_mreporting']['parser'][1]."</td>";
+      echo "<tr class='tab_bg_2'><td align='center'>".__("Please, select a model in your preferences", 'mreporting')."</td>";
       echo "<td align='center'>";
       self::dropdownFileTemplates($this->fields["template"]);
       echo "</td></tr>";
@@ -172,10 +172,8 @@ class PluginMreportingPreference extends CommonDBTM {
 
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-      global $LANG;
-
       if (get_class($item) == 'Preference') {
-         return array(1 => $LANG['plugin_mreporting']["name"]);
+         return array(1 => __("More Reporting", 'mreporting'));
       }
       return '';
    }

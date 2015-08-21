@@ -35,9 +35,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
 
   function reportHbarComputersByOS($config = array()) {
-      global $DB, $LANG;
-
-      /*Ajout d'une condition englobant les entitÃ©s*/
+      global $DB;
+      
+      /*Ajout d'une condition englobant les entités*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -89,9 +89,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
 
    function reportHbarComputersByFabricant($config = array()) {
-      global $DB, $LANG;
-
-      /*Ajout d'une condition englobant les entitÃ©s*/
+      global $DB;
+      
+      /*Ajout d'une condition englobant les entités*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -132,8 +132,8 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
 
   function reportHbarComputersByType($config = array()) {
-      global $DB, $LANG;
-
+      global $DB;
+      
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -165,8 +165,8 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
 
   function reportHbarComputersByAge($config = array()) {
-      global $DB, $LANG;
-
+      global $DB;
+      
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -272,7 +272,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   }
 
   function reportHbarLinux($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%'") as $os) {
@@ -324,9 +324,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Mac OS%'") as $os) {
          $number = countElementsInTable('glpi_computers',
-                                          "`operatingsystems_id`='".$os['id']."'
-                                             AND `is_deleted`='0'
-                                             AND `is_template`='0'
+                                          "`operatingsystems_id`='".$os['id']."' 
+                                             AND `is_deleted`='0' 
+                                             AND `is_template`='0' 
                                              AND `entities_id` IN (".$this->where_entities.")");
          if ($number) {
             $query_details = "SELECT count(*) as cpt, s.name as name
@@ -384,7 +384,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   }
 
   function reportHbarFusionInventory($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $plugin = new Plugin();
       if (!$plugin->isActivated('fusioninventory')) {
@@ -421,7 +421,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
 
   function reportHbarMonitors($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
 
@@ -448,7 +448,6 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $data;
   }
 
-
   function reportHbarComputersByStatus($config = array()) {
       global $DB, $LANG;
 
@@ -457,12 +456,12 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
       $query = "SELECT t.name status, count(*) Total, count(*)*100/(SELECT count(*)
                            FROM glpi_computers c, glpi_states t
-                           WHERE c.`is_deleted`=0 AND c.`is_template`=0
-                           AND c.states_id = t.id $condition) Pourcentage
-
+                           WHERE c.`is_deleted`=0 AND c.`is_template`=0 
+                           AND c.computertypes_id = t.id $condition) Pourcentage 
+                           
          FROM glpi_computers c, glpi_states t
          WHERE c.states_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
-         GROUP BY t.name ORDER BY Total DESC";
+         GROUP BY t.name";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
@@ -473,5 +472,4 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $datas;
 
    }
-
 }

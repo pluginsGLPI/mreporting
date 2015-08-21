@@ -30,6 +30,8 @@
 function plugin_mreporting_install() {
    global $DB;
 
+   include_once(GLPI_ROOT."/plugins/mreporting/inc/profile.class.php");
+
    //get version
    $plugin = new Plugin;
    $found  = $plugin->find("name = 'mreporting'");
@@ -44,8 +46,8 @@ function plugin_mreporting_install() {
       `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
       `profiles_id` VARCHAR(45) NOT NULL,
       `reports` CHAR(1),
-      `config` CHAR(1),
-      PRIMARY KEY (`id`)
+      PRIMARY KEY (`id`),
+      UNIQUE `profiles_id_reports` (`profiles_id`, `reports`)
       )
       ENGINE = MyISAM;";
 
@@ -127,33 +129,42 @@ function plugin_mreporting_install() {
       $DB->query($query);
    }
 
-   require_once "inc/profile.class.php";
-   PluginMreportingProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
-
    // == Update to 2.1 ==
    $migration->addField('glpi_plugin_mreporting_configs', 'is_notified',
                         'tinyint(1) NOT NULL default "1"', array('after' => 'is_active'));
    $migration->migrationOneTable('glpi_plugin_mreporting_configs');
 
    // == Update to 2.3 ==
+   if (!fieldExists('glpi_plugin_mreporting_profiles', 'right')
+       && fieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
+      //save all profile with right READ
+      $right = PluginMreportingProfile::getRight();
 
-   //save all profile with right 'r'
-   $right = PluginMreportingProfile::getRight();
+      //truncate profile table
+      $query = "TRUNCATE TABLE `glpi_plugin_mreporting_profiles`";
+      $DB->query($query);
 
-   //truncate profile table
-   $query = "TRUNCATE TABLE `glpi_plugin_mreporting_profiles`";
-   $DB->query($query);
-
-    //migration of field
-     $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
-     $migration->changeField('glpi_plugin_mreporting_profiles', 'reports',
+       //migration of field
+      $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
+      $migration->changeField('glpi_plugin_mreporting_profiles', 'reports', 
                              'reports','integer');
-     $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id',
+      $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id', 
                              'profiles_id','integer');
-     $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
+      $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
 
-     $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
+      $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
+   }
 
+   // == UPDATE to 0.84+1.0 == 
+   $query = "UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ".READ." WHERE pr.right = 'r'";
+   $DB->query($query);
+   if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
+      $query = "ALTER IGNORE TABLE glpi_plugin_mreporting_profiles 
+                ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)";
+      $DB->query($query);
+   }
+
+   //== Create directories
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
    if (!is_dir($rep_files_mreporting))
       mkdir($rep_files_mreporting);
@@ -161,6 +172,7 @@ function plugin_mreporting_install() {
    if (!is_dir($notifications_folder))
       mkdir($notifications_folder);
 
+   // == Install notifications
    require_once "inc/notification.class.php";
    PluginMreportingNotification::install();
    CronTask::Register('PluginMreportingNotification', 'SendNotifications', MONTH_TIMESTAMP);
@@ -168,6 +180,7 @@ function plugin_mreporting_install() {
    $migration->addField("glpi_plugin_mreporting_preferences", "selectors", "text");
    $migration->migrationOneTable('glpi_plugin_mreporting_preferences');
 
+   // == Init available reports
    require_once "inc/baseclass.class.php";
    require_once "inc/common.class.php";
    require_once "inc/config.class.php";
@@ -240,15 +253,14 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
          switch ($table.'.'.$field) {
             case "glpi_plugin_mreporting_configs.show_label":
                $out = ' ';
-               if (!empty($data["ITEM_$num"])) {
-                  $out=PluginMreportingConfig::getLabelTypeName($data["ITEM_$num"]);
+               if (!empty($data['raw']["ITEM_$num"])) {
+                  $out=PluginMreportingConfig::getLabelTypeName($data['raw']["ITEM_$num"]);
                }
                return $out;
                break;
             case "glpi_plugin_mreporting_configs.name":
                $out = ' ';
-               if (!empty($data["ITEM_$num"])) {
-
+               if (!empty($data['raw']["ITEM_$num"])) {
                   $title_func = '';
                   $short_classname = '';
                   $f_name = '';
@@ -269,7 +281,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
 
                         $gtype = strtolower($ex_func[1]);
 
-                        if ($data["ITEM_$num"] == $funct_name) {
+                        if ($data['raw']["ITEM_$num"] == $funct_name) {
                            if (!empty($classname) && !empty($funct_name)) {
                               $short_classname = str_replace('PluginMreporting', '', $classname);
                               if (isset($LANG['plugin_mreporting'][$short_classname][$funct_name]['title'])) {
@@ -280,7 +292,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
                      }
                   }
                   $out="<a href='config.form.php?id=".$data["id"]."'>".
-                        $data["ITEM_$num"]."</a> (".$title_func.")";
+                        $data['raw']["ITEM_$num"]."</a> (".$title_func.")";
                }
                return $out;
                break;

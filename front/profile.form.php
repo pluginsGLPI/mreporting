@@ -1,6 +1,8 @@
 <?php
 include ("../../../inc/includes.php");
 
+Session::checkRight("profile", READ);
+
 $config = new PluginMreportingConfig();
 $res = $config->find();
 $profil = new PluginMreportingProfile();
@@ -36,7 +38,7 @@ if (isset ($_REQUEST['update'])) {
    foreach($res as $report) {
       $profil->getFromDBByQuery("WHERE profiles_id = ".$_REQUEST['profile_id'].
                                    " AND reports = ".$report['id']);
-      $profil->fields['right'] = 'r';
+      $profil->fields['right'] = READ;
       $profil->update($profil->fields);
    }
 
@@ -68,7 +70,7 @@ if (isset ($_REQUEST['update'])) {
    foreach ($DB->request($query) as $profile) {
       $profil->getFromDBByQuery("WHERE profiles_id = ".$profile['id'].
                                 " AND reports = ".$_REQUEST['report_id']);
-      $profil->fields['right'] = 'r';
+      $profil->fields['right'] = READ;
       $profil->update($profil->fields);
    }
 

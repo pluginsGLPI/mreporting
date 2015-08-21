@@ -490,8 +490,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showHbar($params, $dashboard = false , $width = false) {
-      global $LANG;
-
       if ($width !== false){
          $this->width = $width + 50;
       }
@@ -531,7 +529,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) {
 
          if ($export!="odtall") {
-            echo $LANG['plugin_mreporting']["error"][1];
+            echo __("No data for this date range !", 'mreporting');
             $end['opt']["export"] = false;
             $end['opt']["randname"] = false;
             $end['opt']["f_name"] = $opt['f_name'];
@@ -680,7 +678,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showPie($params, $dashboard = false , $width = false) {
-      global $LANG;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -719,7 +716,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) {
 
          if ($export!="odtall") {
-            echo $LANG['plugin_mreporting']["error"][1];
+            echo __("No data for this date range !", 'mreporting');
             $end['opt']["export"] = false;
             $end['opt']["randname"] = false;
             $end['opt']["f_name"] = $opt['f_name'];
@@ -883,8 +880,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showSunburst($params, $dashboard = false , $width = false) {
-      global $LANG;
-
       $criterias = PluginMreportingCommon::initGraphParams($params);
       foreach ($criterias as $key => $val) {
          $$key=$val;
@@ -915,7 +910,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) {
 
          if ($export!="odtall") {
-            echo $LANG['plugin_mreporting']["error"][1];
+            echo __("No data for this date range !", 'mreporting');
             $end['opt']["export"] = false;
             $end['opt']["randname"] = false;
             $end['opt']["f_name"] = $opt['f_name'];
@@ -1004,8 +999,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
    function drawSunburstLevel($image, $datas, $params=array()) {
-      global $LANG;
-
       $width  = $params['width'] - 70;
       $height = $params['height'] - 120;
 
@@ -1169,13 +1162,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showHgbar($params, $dashboard = false , $width = false) {
-      global $LANG;
-
-       if ($width !== false){
+      if ($width !== false){
          $this->width = $width;
       }
-
-
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -1212,7 +1201,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) {
 
          if ($export!="odtall") {
-            echo $LANG['plugin_mreporting']["error"][1];
+            echo __("No data for this date range !", 'mreporting');
             $end['opt']["export"] = false;
             $end['opt']["randname"] = false;
             $end['opt']["f_name"] = $opt['f_name'];
@@ -1404,8 +1393,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showVstackbar($params, $dashboard = false , $width = false) {
-      global $LANG;
-
       if ($width !== false){
          $this->width = $width;
       }
@@ -1445,7 +1432,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) {
 
          if ($export!="odtall") {
-            echo $LANG['plugin_mreporting']["error"][1];
+            echo __("No data for this date range !", 'mreporting');
             $end['opt']["export"] = false;
             $end['opt']["randname"] = false;
             $end['opt']["f_name"] = $opt['f_name'];
@@ -1709,8 +1696,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showArea($params, $dashboard = false , $width = false) {
-      global $LANG;
-
       if ($width !== false){
          $this->width = $width;
       }
@@ -1750,7 +1735,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) {
 
          if ($export!="odtall") {
-            echo $LANG['plugin_mreporting']["error"][1];
+            echo __("No data for this date range !", 'mreporting');
             $end['opt']["export"] = false;
             $end['opt']["randname"] = false;
             $end['opt']["f_name"] = $opt['f_name'];
@@ -1974,8 +1959,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showGArea($params, $dashboard = false , $width = false) {
-      global $LANG;
-
       if ($width !== false){
          $this->width = $width;
       }
@@ -2015,7 +1998,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       if (count($datas) <= 0) {
 
          if ($export!="odtall") {
-            echo $LANG['plugin_mreporting']["error"][1];
+            echo __("No data for this date range !", 'mreporting');
             $end['opt']["export"] = false;
             $end['opt']["randname"] = false;
             $end['opt']["f_name"] = $opt['f_name'];

@@ -1,0 +1,224 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Mreporting Development Team
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: GLPI - Mreporting plugin 1.4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-08 17:58+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: setup.php:131 test.php:4 front/central.php:33 front/config.form.php:53
+#: front/config.php:46 front/dashboard.form.php:32 front/graph.php:35
+#: front/preference.form.php:44 inc/common.class.php:40
+#: inc/notification.class.php:18
+#: inc/notificationtargetnotification.class.php:11
+#: inc/preference.class.php:176 inc/profile.class.php:38
+#: inc/profile.class.php:63
+msgid "More Reporting"
+msgstr "Plus de rapports"
+
+#: ajax/dropdownExport.php:44 inc/common.class.php:489
+msgid "With data"
+msgstr "Avec les données"
+
+#: ajax/dropdownExport.php:45 inc/common.class.php:488
+msgid "Without data"
+msgstr "Sans les données"
+
+#: ajax/homepage_link.php:6 inc/common.class.php:53 inc/common.class.php:54
+#: inc/common.class.php:67 inc/dashboard.class.php:35
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: front/central.php:73 front/central.php:80 inc/common.class.php:303
+#: inc/common.class.php:374 inc/common.class.php:409 inc/config.class.php:561
+msgid "No report is available !"
+msgstr "Aucun rapport disponible !"
+
+#: front/export.php:48 inc/common.class.php:1107 inc/preference.class.php:123
+msgid "Please, select a model in your preferences"
+msgstr "Merci de sélectionner un modèle dans vos préférences"
+
+#: front/export.php:52 inc/common.class.php:1114
+msgid "No model available"
+msgstr "Aucun modèle n'existe"
+
+#: front/popup.php:38 inc/common.class.php:1106 inc/common.class.php:1113
+#: inc/common.class.php:1121
+msgid "General Report - ODT"
+msgstr "Rapport général - ODT"
+
+#: inc/common.class.php:56 inc/common.class.php:57 inc/common.class.php:76
+msgid "Reports list"
+msgstr "Liste des rapports"
+
+#: inc/common.class.php:717 inc/config.class.php:38 inc/config.class.php:55
+msgid "Configuration"
+msgstr "Configuration"
+
+#: inc/common.class.php:890 inc/common.class.php:1269
+msgid "Number"
+msgstr "Nombre"
+
+#: inc/common.class.php:909
+msgid "data"
+msgstr "Données"
+
+#: inc/common.class.php:1122
+msgid "No graphic selected"
+msgstr "aucun graphique sélectionné"
+
+#: inc/config.class.php:70 inc/config.class.php:607
+msgid "See area"
+msgstr "Voir l'aire"
+
+#: inc/config.class.php:76 inc/config.class.php:622 inc/config.class.php:635
+msgid "Curves lines (SVG)"
+msgstr "Incurver les lignes (SVG)"
+
+#: inc/config.class.php:82
+msgid "See values"
+msgstr "Voir les valeurs"
+
+#: inc/config.class.php:87 inc/config.class.php:649
+msgid "Reverse data array"
+msgstr "Inverser le tableau de données"
+
+#: inc/config.class.php:93 inc/config.class.php:661 inc/config.class.php:671
+msgid "Unit"
+msgstr "Unité"
+
+#: inc/config.class.php:97
+msgid "Default delay"
+msgstr "Délai par défaut"
+
+#: inc/config.class.php:101 inc/config.class.php:679
+msgid "Additional condition for MySQL"
+msgstr "Condition supplémentaire Mysql"
+
+#: inc/config.class.php:105 inc/config.class.php:587
+msgid "See graphic"
+msgstr "Voir le graphique"
+
+#: inc/config.class.php:111
+msgid "Class"
+msgstr "Classe"
+
+#: inc/config.class.php:123 inc/config.class.php:688
+msgid "Send this report with the notification"
+msgstr "Envoyer ce rapport avec les notifications"
+
+#: inc/config.class.php:161
+msgid "Initialize graphics configuration"
+msgstr "Initialiser la configuration des graphiques"
+
+#: inc/config.class.php:398 inc/config.class.php:414
+msgid "Never"
+msgstr "Jamais"
+
+#: inc/config.class.php:399 inc/config.class.php:417
+msgid "On mouse over"
+msgstr "Au passage de la souris"
+
+#: inc/config.class.php:401 inc/config.class.php:420
+msgid "Always"
+msgstr "Toujours"
+
+#: inc/config.class.php:484
+msgid "Object already exists"
+msgstr "L'objet existe déjà"
+
+#: inc/dashboard.class.php:82
+msgid "Select a report to display"
+msgstr "Sélectionnez un rapport à afficher"
+
+#: inc/dashboard.class.php:92
+msgid "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur cette icône"
+
+#: inc/dashboard.class.php:102
+msgid "Add a report"
+msgstr "Ajouter un rapport"
+
+#: inc/dashboard.class.php:121
+msgid "Select a report to add"
+msgstr "Sélectionnez un rapport à ajouter"
+
+#: inc/dashboard.class.php:211
+msgid "Configure report"
+msgstr "Configurer le rapport"
+
+#: inc/graph.class.php:169 inc/graph.class.php:355 inc/graph.class.php:542
+#: inc/graph.class.php:792 inc/graph.class.php:1006 inc/graph.class.php:1227
+#: inc/graph.class.php:1464 inc/graphpng.class.php:532
+#: inc/graphpng.class.php:716 inc/graphpng.class.php:908
+#: inc/graphpng.class.php:1197 inc/graphpng.class.php:1426
+#: inc/graphpng.class.php:1727 inc/graphpng.class.php:1988
+msgid "No data for this date range !"
+msgstr "Aucune données pour cette plage de date !"
+
+#: inc/helpdesk.class.php:280 inc/helpdesk.class.php:342
+msgid "Undefined"
+msgstr "Non défini"
+
+#: inc/notification.class.php:34 inc/notification.class.php:52
+#: inc/notification.class.php:119
+msgid "Notification for \"More Reporting\""
+msgstr "Notification \"plus de rapports\""
+
+#: inc/notification.class.php:44 inc/pdf.class.php:14
+msgid "GLPI statistics reports"
+msgstr "Rapports statistiques de GLPI"
+
+#: inc/notification.class.php:45
+msgid ""
+"Hello,\n"
+"\n"
+"GLPI reports are available.\n"
+"You will find attached in this email.\n"
+"\n"
+msgstr ""
+"Bonjour,\n"
+"\n"
+"Les rapports de GLPI sont disponibles.\n"
+"Vous les trouverez en pièce jointe dans cet e-mail.\n"
+"\n"
+
+#: inc/notification.class.php:46
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"\n"
+"<p>GLPI reports are available.<br />\n"
+"You will find attached in this email.</p>\n"
+"\n"
+msgstr "\n"
+"\n"
+"<p>Bonjour,</p>\n"
+"\n"
+"<p>Les rapports de GLPI sont disponibles.<br />\n"
+"Vous les trouverez en pièce jointe dans cet e-mail.</p>\n"
+"\n"
+
+#: inc/notification.class.php:135
+msgid "Notification(s) sent !"
+msgstr "Notification(s) envoyée(s) !"
+
+#: inc/pdf.class.php:15
+msgid "Automaticaly generated by GLPI"
+msgstr "Généré automatiquement par GLPI"
+
+#: inc/profile.class.php:66 inc/profile.class.php:238
+#: inc/profile.class.php:295
+msgid "Rights management"
+msgstr "Gestion des droits"

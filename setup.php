@@ -52,8 +52,8 @@ function plugin_init_mreporting() {
    /* CRSF */
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
-   if ($plugin->isInstalled("mreporting")
-       && $plugin->isActivated("mreporting")
+   if ($plugin->isInstalled("mreporting") 
+       && $plugin->isActivated("mreporting") 
        && Session::getLoginUserID()) {
       /* Profile */
       $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
@@ -72,40 +72,8 @@ function plugin_init_mreporting() {
          Plugin::registerClass('PluginMreportingPreference',
                                array('addtabon' => array('Preference')));
 
-
-         /* Reports Link */
-         $menu_entry = "front/central.php";
-
-         $PLUGIN_HOOKS['submenu_entry']['mreporting']['search'] = $menu_entry;
-         if(PluginMreportingDashboard::CurrentUserHaveDashboard()) {
-            $PLUGIN_HOOKS['menu_entry']['mreporting'] = 'front/dashboard.form.php';
-         } else {
-            $PLUGIN_HOOKS['menu_entry']['mreporting'] = $menu_entry;
-         }
-
-         if(strpos($_SERVER['REQUEST_URI'],'front/dashboard.form.php') !== false) {
-            $PLUGIN_HOOKS['submenu_entry']['mreporting']["<img src='".$CFG_GLPI["root_doc"].
-               "/plugins/mreporting/pics/list_dashboard.png'
-                           title='".$LANG['plugin_mreporting']["dashboard"][5]."'
-                           alt='".$LANG['plugin_mreporting']["dashboard"][5]."'>"] = 'front/central.php';
-         } else {
-            $PLUGIN_HOOKS['submenu_entry']['mreporting']["<img src='".$CFG_GLPI["root_doc"].
-               "/plugins/mreporting/pics/dashboard.png'
-                           title='".$LANG['plugin_mreporting']["dashboard"][1]."'
-                           alt='".$LANG['plugin_mreporting']["dashboard"][1]."'>"] = 'front/dashboard.form.php';
-         }
-
-
-          /* Configuration Link */
-         if (Session::haveRight('config', 'w')) {
-            $config_entry = 'front/config.php';
-            $PLUGIN_HOOKS['config_page']['mreporting'] = $config_entry;
-            $PLUGIN_HOOKS['submenu_entry']['mreporting']['config'] = $config_entry;
-            $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['config']
-                     = '/plugins/mreporting/'.$config_entry;
-            $PLUGIN_HOOKS['submenu_entry']['mreporting']['options']['config']['links']['add']
-                     = '/plugins/mreporting/front/config.form.php';
-         }
+         /* Menu */
+         $PLUGIN_HOOKS['menu_toadd']['mreporting'] = array('tools' => 'PluginMreportingCommon');
 
          /* Show Reports in standart stats page */
          $mreporting_common = new PluginMreportingCommon();
@@ -135,7 +103,6 @@ function plugin_init_mreporting() {
       $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
       $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
       $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-extjs-tooltips.js";
-      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
       if (isset($_SESSION['glpiactiveprofile']['id'])
          && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
             if (PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
@@ -149,26 +116,27 @@ function plugin_init_mreporting() {
       //Add specific files to add to the header : css
       $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
       $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
-      $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/chosen/chosen.css";
       $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/font-awesome-4.2.0/css/font-awesome.min.css";
 
       //Load additionnal language files in needed
       includeAdditionalLanguageFiles();
+
+      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE && isset($_SESSION['glpimenu'])) {
+         unset($_SESSION['glpimenu']);
+      }
    }
 
 }
 
 // Get the name and the version of the plugin - Needed
 function plugin_version_mreporting() {
-   global $LANG;
-
-   return array('name'         => $LANG['plugin_mreporting']["name"],
-                'version'        => "0.84+2.3.3",
+   return array('name'           => __("More Reporting", 'mreporting'),
+                'version'        => "0.85+1.0",
                 'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
                                        & <a href='http://www.infotel.com'>Infotel</a>",
                 'homepage'       => "https://forge.indepnet.net/projects/mreporting",
                 'license'        => 'GPLv2+',
-                'minGlpiVersion' => "0.84");
+                'minGlpiVersion' => "0.85");
 }
 
 function includeAdditionalLanguageFiles() {
@@ -183,8 +151,8 @@ function includeAdditionalLanguageFiles() {
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_mreporting_check_prerequisites() {
 
-   if (version_compare(GLPI_VERSION,'0.84','lt') || version_compare(GLPI_VERSION,'0.85','ge')) {
-      echo "This plugin requires GLPI >= 0.84 and GLPI < 0.85";
+   if (version_compare(GLPI_VERSION,'0.85','lt')) {
+      echo "This plugin requires GLPI >= 0.85";
    } else {
       return true;
    }

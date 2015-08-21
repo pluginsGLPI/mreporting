@@ -5,7 +5,6 @@ $DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
 
 include ("../../../inc/includes.php");
 
-global $LANG;
 Session::checkLoginUser();
 
 if (isset($_POST['saveConfig'])) {
@@ -20,7 +19,7 @@ if (isset($_POST['saveConfig'])) {
     Html::back();
 
 
-}else if (isset($_POST['addReports'])) {
+} else if (isset($_POST['addReports'])) {
 
     $dashboard = new PluginMreportingDashboard();
     $post = array('users_id' => $_SESSION['glpiID'], 'reports_id' => $_POST['report']);
@@ -29,8 +28,8 @@ if (isset($_POST['saveConfig'])) {
 
     Html::back();
 
-}else {
-    Html::header($LANG['plugin_mreporting']["name"], '' ,"plugins", "mreporting");
+} else {
+    Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'dashboard');
     $dashboard = new PluginMreportingDashboard();
     $dashboard->showDashBoard();
 

@@ -35,26 +35,22 @@ if (!isset($_GET["preconfig"])) $_GET["preconfig"] = -1;
 $config= new PluginMreportingConfig();
 
 if (isset($_POST["add"])) {
-
-	Session::checkRight("config","w");
+	Session::checkRight("config", CREATE);
 	$newID=$config->add($_POST);
 	Html::back();
 
 } else if (isset($_POST["update"])) {
-
-	Session::checkRight("config","w");
+	Session::checkRight("config", UPDATE);
 	$config->update($_POST);
 	Html::back();
 
 } else if (isset($_POST["delete"])) {
-
-	Session::checkRight("config","w");
+	Session::checkRight("config", DELETE);
 	$config->delete($_POST,1);
 	Html::redirect("./config.form.php");
 
 } else {
-
-	Html::header(__("Setup"),'',"plugins","mreporting","config");
+	Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'config');
 
    //Link from graph
    if (isset($_GET["name"]) && isset($_GET["classname"])) {
@@ -62,7 +58,7 @@ if (isset($_POST["add"])) {
          $_GET["id"] = $config->fields['id'];
       }
    }
-	$config->showForm($_GET["id"]);
+   $config->display($_GET);
 
 	Html::footer();
 

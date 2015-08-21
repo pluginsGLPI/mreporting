@@ -35,3 +35,21 @@ GLPI Mreporting 0.84+2.3.0
 * Profiles publication.
 * Notifications fixed
 * New reports
+
+
+Changelogs for MReporting 0.85
+==============================
+
+Mreporting 0.85+1.0-RC4
+-----------------------
+
+* Migration to Jquery
+* Plugins locales are now in gettext
+
+
+
+Mreporting 0.85+1.0-RC3
+-----------------------
+
+* Migration to Jquery
+* Plugins locales are now in gettext
