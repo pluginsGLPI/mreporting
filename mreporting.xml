@@ -9,8 +9,56 @@
          <fr>Ajouter (et développer) de nouveaux rapports grahiques pour glpi</fr>
       </short>
       <long>
-         <en>Add (and develop) new graphical reports for glpi</en>
-         <fr>Ajouter (et développer) de nouveaux rapports grahiques pour glpi</fr>
+         <en>Add (and develop) new graphical reports for glpi.   
+
+This plugins embed a set of new statistics reports : 
+
+* Helpdesk
+  * Backlog
+  * Ticket age
+  * Tickets per group or technician
+  * Top categories or requester groups
+  * Number of group changes
+  * 5 SLA reports
+
+* Inventory
+  * Os versions and distributions
+  * Top manufacturers
+  * Top types (server, laptop, ...)
+  * Top status
+  * Age of computers
+  * FusionInventory agents
+
+* Logs distribution
+
+You can also develop new report with the framework of plugin.  
+See documentation : https://github.com/PluginsGLPI/mreporting/wiki
+         </en>
+         <fr>Ajouter (et développer) de nouveaux rapports grahiques pour glpi.   
+
+Ce plugin contient un ensemble de nouveaux rapports statistiques.
+
+* Assistance
+  * Backlog
+  * Ancienneté des tickets
+  * Tickets par groupes ou techniciens
+  * Top catégories ou groupes demandeurs
+  * Nombre de changement de groupes
+  * 5 rapports SLA
+
+* Inventaire
+  * Versions et distributions des OS
+  * Top fabricants
+  * top types (serveurs, portables, ...)
+  * Top statuts
+  * Age des ordinateurs
+  * Agents FusionInventory
+
+* Répartition des logs
+
+Vous pouvez aussi ajouter vos propre rapports en utilisant le "framework" fourni par le plugin
+Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
+         </fr>
       </long>
    </description>
    <homepage>https://github.com/pluginsGLPI/mreporting/</homepage>
