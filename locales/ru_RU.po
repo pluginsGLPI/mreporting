@@ -1,0 +1,213 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Mreporting Development Team
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: GLPI - Mreporting plugin 1.4.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-08 17:58+0100\n"
+"PO-Revision-Date: 2015-09-08 11:32+,5\n"
+"Last-Translator: Aleksey Petukhov <lexx015@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: setup.php:131 test.php:4 front/central.php:33 front/config.form.php:53
+#: front/config.php:46 front/dashboard.form.php:32 front/graph.php:35
+#: front/preference.form.php:44 inc/common.class.php:40
+#: inc/notification.class.php:18
+#: inc/notificationtargetnotification.class.php:11
+#: inc/preference.class.php:176 inc/profile.class.php:38
+#: inc/profile.class.php:63
+msgid "More Reporting"
+msgstr ""
+
+#: ajax/dropdownExport.php:44 inc/common.class.php:489
+msgid "With data"
+msgstr "С информацией"
+
+#: ajax/dropdownExport.php:45 inc/common.class.php:488
+msgid "Without data"
+msgstr "Без информации"
+
+#: ajax/homepage_link.php:6 inc/common.class.php:53 inc/common.class.php:54
+#: inc/common.class.php:67 inc/dashboard.class.php:35
+msgid "Dashboard"
+msgstr "Панель состояния"
+
+#: front/central.php:73 front/central.php:80 inc/common.class.php:303
+#: inc/common.class.php:374 inc/common.class.php:409 inc/config.class.php:561
+msgid "No report is available !"
+msgstr "Нет доступных отчетов!"
+
+#: front/export.php:48 inc/common.class.php:1107 inc/preference.class.php:123
+msgid "Please, select a model in your preferences"
+msgstr "Выберите, пожалуйста, модель в свойствах"
+
+#: front/export.php:52 inc/common.class.php:1114
+msgid "No model available"
+msgstr "Нет доступных моделей"
+
+#: front/popup.php:38 inc/common.class.php:1106 inc/common.class.php:1113
+#: inc/common.class.php:1121
+msgid "General Report - ODT"
+msgstr "Общий отчет - ODT"
+
+#: inc/common.class.php:56 inc/common.class.php:57 inc/common.class.php:76
+msgid "Reports list"
+msgstr "Список отчетов"
+
+#: inc/common.class.php:717 inc/config.class.php:38 inc/config.class.php:55
+msgid "Configuration"
+msgstr "Настройки"
+
+#: inc/common.class.php:890 inc/common.class.php:1269
+msgid "Number"
+msgstr "Номер"
+
+#: inc/common.class.php:909
+msgid "data"
+msgstr "Информация"
+
+#: inc/common.class.php:1122
+msgid "No graphic selected"
+msgstr "График не выбран"
+
+#: inc/config.class.php:70 inc/config.class.php:607
+msgid "See area"
+msgstr "Смотреть область"
+
+#: inc/config.class.php:76 inc/config.class.php:622 inc/config.class.php:635
+msgid "Curves lines (SVG)"
+msgstr "Векторные линии (SVG)"
+
+#: inc/config.class.php:82
+msgid "See values"
+msgstr "Смотреть значения"
+
+#: inc/config.class.php:87 inc/config.class.php:649
+msgid "Reverse data array"
+msgstr "Обратная сортировка"
+
+#: inc/config.class.php:93 inc/config.class.php:661 inc/config.class.php:671
+msgid "Unit"
+msgstr "Единица"
+
+#: inc/config.class.php:97
+msgid "Default delay"
+msgstr "Задержка по умолчанию"
+
+#: inc/config.class.php:101 inc/config.class.php:679
+msgid "Additional condition for MySQL"
+msgstr "Дополнительные условия для MySQL"
+
+#: inc/config.class.php:105 inc/config.class.php:587
+msgid "See graphic"
+msgstr "Смотреть график"
+
+#: inc/config.class.php:111
+msgid "Class"
+msgstr "Класс"
+
+#: inc/config.class.php:123 inc/config.class.php:688
+msgid "Send this report with the notification"
+msgstr "Отправить отчет с уведомлением"
+
+#: inc/config.class.php:161
+msgid "Initialize graphics configuration"
+msgstr "Инициализировать графическую настройку"
+
+#: inc/config.class.php:398 inc/config.class.php:414
+msgid "Never"
+msgstr "Никогда"
+
+#: inc/config.class.php:399 inc/config.class.php:417
+msgid "On mouse over"
+msgstr "При наведении курсора"
+
+#: inc/config.class.php:401 inc/config.class.php:420
+msgid "Always"
+msgstr "Всегда"
+
+#: inc/config.class.php:484
+msgid "Object already exists"
+msgstr "Объект уже существует"
+
+#: inc/dashboard.class.php:82
+msgid "Select a report to display"
+msgstr "Выбрать отчет для отображения"
+
+#: inc/dashboard.class.php:92
+msgid "More"
+msgstr "Больше"
+
+#: inc/dashboard.class.php:102
+msgid "Add a report"
+msgstr "Добавить отчет"
+
+#: inc/dashboard.class.php:121
+msgid "Select a report to add"
+msgstr "Выбрать отчет для добавления"
+
+#: inc/dashboard.class.php:211
+msgid "Configure report"
+msgstr "Настроить отчет"
+
+#: inc/graph.class.php:169 inc/graph.class.php:355 inc/graph.class.php:542
+#: inc/graph.class.php:792 inc/graph.class.php:1006 inc/graph.class.php:1227
+#: inc/graph.class.php:1464 inc/graphpng.class.php:532
+#: inc/graphpng.class.php:716 inc/graphpng.class.php:908
+#: inc/graphpng.class.php:1197 inc/graphpng.class.php:1426
+#: inc/graphpng.class.php:1727 inc/graphpng.class.php:1988
+msgid "No data for this date range !"
+msgstr "Нет данных за этот период!"
+
+#: inc/helpdesk.class.php:280 inc/helpdesk.class.php:342
+msgid "Undefined"
+msgstr "Неопределено"
+
+#: inc/notification.class.php:34 inc/notification.class.php:52
+#: inc/notification.class.php:119
+msgid "Notification for \"More Reporting\""
+msgstr "Уведомления для \"More Reporting\""
+
+#: inc/notification.class.php:44 inc/pdf.class.php:14
+msgid "GLPI statistics reports"
+msgstr ""
+
+#: inc/notification.class.php:45
+msgid ""
+"Hello,\n"
+"\n"
+"GLPI reports are available.\n"
+"You will find attached in this email.\n"
+"\n"
+msgstr ""
+
+#: inc/notification.class.php:46
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"\n"
+"<p>GLPI reports are available.<br />\n"
+"You will find attached in this email.</p>\n"
+"\n"
+msgstr ""
+
+#: inc/notification.class.php:135
+msgid "Notification(s) sent !"
+msgstr "Уведомление(я) отправлено(ы)!"
+
+#: inc/pdf.class.php:15
+msgid "Automaticaly generated by GLPI"
+msgstr "Автоматически создано GLPI"
+
+#: inc/profile.class.php:66 inc/profile.class.php:238
+#: inc/profile.class.php:295
+msgid "Rights management"
+msgstr "Управление правами"
