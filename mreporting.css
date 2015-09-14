@@ -127,12 +127,11 @@
 }
 
 
-body,
 select[name=report],
 select[name=report] option,
 select[name=graphmenu],
 select[name=graphmenu] option {
-   font-family: FontAwesome, 'Bitstream Vera Sans', arial, Tahoma, 'Sans serif' !important;
+   font-family: FontAwesome, 'Bitstream Vera Sans', Verdana, Tahoma, 'Sans serif' !important;
 }
 
 .select2-container[id*=s2id_dropdown_glpilist_limit] {
