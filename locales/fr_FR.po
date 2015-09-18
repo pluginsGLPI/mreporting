@@ -1,21 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Mreporting Development Team
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
+# Translators:
+# Jérémy MOREAU <jmoreau.dev@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI - Mreporting plugin 1.4.0\n"
+"Project-Id-Version: GLPI Project - Plugin MReporting\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-12-08 17:58+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2015-09-18 08:56+0000\n"
+"Last-Translator: Jérémy MOREAU <jmoreau.dev@gmail.com>\n"
+"Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: setup.php:131 test.php:4 front/central.php:33 front/config.form.php:53
 #: front/config.php:46 front/dashboard.form.php:32 front/graph.php:35
@@ -143,8 +144,8 @@ msgid "Select a report to display"
 msgstr "Sélectionnez un rapport à afficher"
 
 #: inc/dashboard.class.php:92
-msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur cette icône"
+msgid "More"
+msgstr "Plus"
 
 #: inc/dashboard.class.php:102
 msgid "Add a report"
@@ -187,12 +188,7 @@ msgid ""
 "GLPI reports are available.\n"
 "You will find attached in this email.\n"
 "\n"
-msgstr ""
-"Bonjour,\n"
-"\n"
-"Les rapports de GLPI sont disponibles.\n"
-"Vous les trouverez en pièce jointe dans cet e-mail.\n"
-"\n"
+msgstr "Bonjour,\n\nLes rapports de GLPI sont disponibles.\nVous les trouverez en pièce jointe dans cet e-mail.\n\n"
 
 #: inc/notification.class.php:46
 msgid ""
@@ -202,13 +198,7 @@ msgid ""
 "<p>GLPI reports are available.<br />\n"
 "You will find attached in this email.</p>\n"
 "\n"
-msgstr "\n"
-"\n"
-"<p>Bonjour,</p>\n"
-"\n"
-"<p>Les rapports de GLPI sont disponibles.<br />\n"
-"Vous les trouverez en pièce jointe dans cet e-mail.</p>\n"
-"\n"
+msgstr "\n\n<p>Bonjour,</p>\n\n<p>Les rapports de GLPI sont disponibles.<br />\nVous les trouverez en pièce jointe dans cet e-mail.</p>\n\n"
 
 #: inc/notification.class.php:135
 msgid "Notification(s) sent !"
