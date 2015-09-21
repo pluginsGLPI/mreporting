@@ -40,7 +40,7 @@ $LANG['plugin_mreporting']["export"][0] = "General Report - ODT";
 $LANG['plugin_mreporting']["export"][1] = "Number";
 $LANG['plugin_mreporting']["export"][2] = "data";
 $LANG['plugin_mreporting']["export"][3] = "Without data";
-$LANG['plugin_mreporting']["export"][4] = "Without data";
+$LANG['plugin_mreporting']["export"][4] = "With data";
 
 $LANG['plugin_mreporting']["config"][0] = "Configuration";
 $LANG['plugin_mreporting']["config"][1] = "See area";
