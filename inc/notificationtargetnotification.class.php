@@ -108,7 +108,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
          }
          $image_base64 = $matches[1][0];
          if (strpos($image_base64, 'data:image/png;base64,') === false) {
-            $image_base64 = $matches[1][3];
+            $image_base64 = $matches[1][1];
          }
          if (strpos($image_base64, 'data:image/png;base64,') === false) {
             continue;
