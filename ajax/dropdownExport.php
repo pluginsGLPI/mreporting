@@ -59,30 +59,24 @@ if (isset($_POST['ext'])
                         "onClick='return false;' value='"._sx('button', 'Post')."' />";
       Html::Closeform();
       echo "<script type='text/javascript'>
-            Ext.get('export_svg_link').on('click', function () {
+            $('#export_svg_link').on('click', function () {
                var svg_content = vis{$randname}.scene[0].canvas.innerHTML;
                var form = document.getElementById('export_svg_form');
                form.svg_content.value = svg_content;
                form.submit();
 
                //set new crsf token for svg export
-               Ext.Ajax.request({
-                  url: '../ajax/get_new_crsf_token.php',
-                  success: function(response, opts) {
-                     var token = response.responseText;
-                     Ext.select('#export_svg_form input[name=_glpi_csrf_token]')
-                        .set({'value': token});
-                  }
+               $.ajax({
+                  url: '../ajax/get_new_crsf_token.php'
+               }).done(function(token) {
+                  $('#export_svg_form input[name=_glpi_csrf_token]').val(token);
                });
 
-               //set new crsf token for main form
-               Ext.Ajax.request({
-                  url: '../ajax/get_new_crsf_token.php',
-                  success: function(response, opts) {
-                     var token = response.responseText;
-                     Ext.select('#mreporting_date_selector input[name=_glpi_csrf_token]')
-                        .set({'value': token});
-                  }
+               // //set new crsf token for main form
+               $.ajax({
+                  url: '../ajax/get_new_crsf_token.php'
+               }).done(function(token) {
+                  $('#mreporting_date_selector input[name=_glpi_csrf_token]').val(token);
                });
 
             });
@@ -93,16 +87,11 @@ if (isset($_POST['ext'])
       _sx('button', 'Post')."\" class='submit'>";
 
       echo "<script type='text/javascript'>
-         Ext.get('export_submit').on('click', function () {
-            //get new crsf
-            Ext.Ajax.request({
-               url: '../ajax/get_new_crsf_token.php',
-               success: function(response, opts) {
-                  var token = response.responseText;
-                  Ext.select('#export_form input[name=_glpi_csrf_token]')
-                     .set({'value': token});
-
-               }
+         $('#export_submit').on('click', function () {
+            $.ajax({
+               url: '../ajax/get_new_crsf_token.php'
+            }).done(function(token) {
+               $('#export_form input[name=_glpi_csrf_token]').val(token);
             });
          });
 
