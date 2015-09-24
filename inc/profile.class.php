@@ -228,6 +228,8 @@ class PluginMreportingProfile extends CommonDBTM {
          return false;
       }
 
+      $this->getFromDB($ID);
+
       $config = new PluginMreportingConfig();
       $res = $config->find();
 
