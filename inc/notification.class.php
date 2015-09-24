@@ -142,6 +142,7 @@ class PluginMreportingNotification extends CommonDBTM {
     *     0 : nothing to do
     */
    static function cronSendNotifications($task) {
+      $task->fields['entities_id'] = 0;
       $task->log(__("Notification(s) sent !", 'mreporting'));
       NotificationEvent::raiseEvent('sendReporting', new self(), $task->fields);
       return 1;

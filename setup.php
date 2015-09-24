@@ -53,47 +53,52 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
    if ($plugin->isInstalled("mreporting") 
-       && $plugin->isActivated("mreporting") 
-       && Session::getLoginUserID()) {
-      /* Profile */
-      $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
-                                                            'changeProfile');
-      $PLUGIN_HOOKS['redirect_page']['mreporting']  = 'front/download.php';
+       && $plugin->isActivated("mreporting")) {
 
-      Plugin::registerClass('PluginMreportingNotification',
-         array('notificationtemplates_types' => true));
-      Plugin::registerClass('PluginMreportingDashboard', array ('addtabon' => array('Central')));
+      //Load additionnal language files in needed
+      includeAdditionalLanguageFiles();
+   
+      if(Session::getLoginUserID()) {
+         /* Profile */
+         $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
+                                                               'changeProfile');
+         $PLUGIN_HOOKS['redirect_page']['mreporting']  = 'front/download.php';
 
-      if (Session::getLoginUserID()) {
+         Plugin::registerClass('PluginMreportingNotification',
+            array('notificationtemplates_types' => true));
+         Plugin::registerClass('PluginMreportingDashboard', array ('addtabon' => array('Central')));
 
-         Plugin::registerClass('PluginMreportingProfile',
-                         array('addtabon' => 'Profile'));
+         if (Session::getLoginUserID()) {
 
-         Plugin::registerClass('PluginMreportingPreference',
-                               array('addtabon' => array('Preference')));
+            Plugin::registerClass('PluginMreportingProfile',
+                            array('addtabon' => 'Profile'));
 
-         /* Menu */
-         $PLUGIN_HOOKS['menu_toadd']['mreporting'] = array('tools' => 'PluginMreportingCommon');
+            Plugin::registerClass('PluginMreportingPreference',
+                                  array('addtabon' => array('Preference')));
 
-         /* Show Reports in standart stats page */
-         $mreporting_common = new PluginMreportingCommon();
-         $reports = $mreporting_common->getAllReports();
-         if ($reports !== false) {
-            foreach($reports as $report) {
-               foreach($report['functions'] as $func) {
-                  $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
+            /* Menu */
+            $PLUGIN_HOOKS['menu_toadd']['mreporting'] = array('tools' => 'PluginMreportingCommon');
+
+            /* Show Reports in standart stats page */
+            $mreporting_common = new PluginMreportingCommon();
+            $reports = $mreporting_common->getAllReports();
+            if ($reports !== false) {
+               foreach($reports as $report) {
+                  foreach($report['functions'] as $func) {
+                     $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
+                  }
                }
             }
+
+            $PLUGIN_HOOKS['pre_item_purge']['mreporting']
+               = array('Profile'                => array('PluginMreportingProfile', 'purgeProfiles'),
+                       'PluginMreportingConfig' => array('PluginMreportingProfile',
+                                                         'purgeProfilesByReports'));
+            $PLUGIN_HOOKS['item_add']['mreporting']
+               = array('Profile'                => array('PluginMreportingProfile', 'addProfiles'),
+                       'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
+
          }
-
-         $PLUGIN_HOOKS['pre_item_purge']['mreporting']
-            = array('Profile'                => array('PluginMreportingProfile', 'purgeProfiles'),
-                    'PluginMreportingConfig' => array('PluginMreportingProfile',
-                                                      'purgeProfilesByReports'));
-         $PLUGIN_HOOKS['item_add']['mreporting']
-            = array('Profile'                => array('PluginMreportingProfile', 'addProfiles'),
-                    'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
-
       }
 
 
@@ -116,9 +121,6 @@ function plugin_init_mreporting() {
       $PLUGIN_HOOKS['add_css']['mreporting']   = array ();
       $PLUGIN_HOOKS['add_css']['mreporting'][] = "mreporting.css";
       $PLUGIN_HOOKS['add_css']['mreporting'][] = "lib/font-awesome-4.2.0/css/font-awesome.min.css";
-
-      //Load additionnal language files in needed
-      includeAdditionalLanguageFiles();
 
       if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE && isset($_SESSION['glpimenu'])) {
          unset($_SESSION['glpimenu']);

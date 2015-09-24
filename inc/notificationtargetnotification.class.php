@@ -97,7 +97,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
          );
          ob_start();
          $common = new PluginMreportingCommon();
-         $common->showGraph($_REQUEST);
+         $common->showGraph($_REQUEST, "png");
          $content = ob_get_clean();
 
          preg_match_all('/<img .*?(?=src)src=\'([^\']+)\'/si', $content, $matches);

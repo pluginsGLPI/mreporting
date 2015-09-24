@@ -702,7 +702,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $categories = array();
 
       $category_limit = 10;
-      $category = null;
+      $category = false;
       if (isset($_POST['glpilist_limit'])) {
          $category_limit = $_POST['glpilist_limit'];
       }

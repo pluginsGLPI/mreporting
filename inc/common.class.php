@@ -195,7 +195,10 @@ class PluginMreportingCommon extends CommonDBTM {
                         $reports[$classname]['functions'][$i]['is_active'] = true;
                         $reports[$classname]['functions'][$i]['id'] = $config->fields['id'];
                      }
-                      $reports[$classname]['functions'][$i]['right'] = PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'],$config->fields['id']);
+                     $reports[$classname]['functions'][$i]['right'] = READ;
+                     if (isset($_SESSION['glpiactiveprofile'])) {
+                        $reports[$classname]['functions'][$i]['right'] = PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'],$config->fields['id']);
+                     }
                   }
 
                   if ($with_url) {
@@ -1656,7 +1659,8 @@ class PluginMreportingCommon extends CommonDBTM {
       Html::closeForm();
       echo "</div>\n";
 
-      if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
+      if(isset($_SERVER['HTTP_USER_AGENT']) 
+         && !preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
          echo "<script type='text/javascript'>
          var elements = document.querySelectorAll('.chzn-select');
          for (var i = 0; i < elements.length; i++) {

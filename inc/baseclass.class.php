@@ -71,7 +71,17 @@ class PluginMreportingBaseclass {
                             CommonITILObject::SOLVED,
                             CommonITILObject::CLOSED);
 
-      $this->where_entities = "'".implode("', '", $_SESSION['glpiactiveentities'])."'";
+      if (isset( $_SESSION['glpiactiveentities'])) {
+         $this->where_entities = "'".implode("', '", $_SESSION['glpiactiveentities'])."'";
+      } else { // maybe cron mode
+         $entities = array();
+         $entity = new Entity;
+         $found_entities = $entity->find();
+         foreach($found_entities as $entities_id => $current_entity) {
+            $entities[] = $entities_id;
+         }
+         $this->where_entities = "'".implode("', '", $entities)."'";
+      }
 
       // init default value for status selector
       if (!isset($_SESSION['mreporting_values']['status_1'])) {
