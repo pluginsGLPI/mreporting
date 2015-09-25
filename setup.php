@@ -1,6 +1,4 @@
 <?php
-
-
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -104,7 +102,6 @@ function plugin_init_mreporting() {
 
       // Add specific files to add to the header : javascript
       $PLUGIN_HOOKS['add_javascript']['mreporting'] = array();
-      $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/chosen/chosen.native.js";
       $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis/protovis.min.js";
       $PLUGIN_HOOKS['add_javascript']['mreporting'][] = "lib/protovis-msie/protovis-msie.min.js";
       if (isset($_SESSION['glpiactiveprofile']['id'])
