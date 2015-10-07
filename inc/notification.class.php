@@ -59,10 +59,10 @@ class PluginMreportingNotification extends CommonDBTM {
             'event'                    => 'sendReporting',
             'mode'                     => 'mail',
          ));
-      }
-
-      $DB->query('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
+         
+         $DB->query('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
                VALUES (1, 1, ' . $notification_id . ');');
+      }
 
        return array('success' => true);
    }
