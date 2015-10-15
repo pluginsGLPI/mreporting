@@ -240,7 +240,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
 
   function reportHbarWindows($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $condition = " AND entities_id IN (".$this->where_entities.")";
 
@@ -449,7 +449,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   }
 
   function reportHbarComputersByStatus($config = array()) {
-      global $DB, $LANG;
+      global $DB;
 
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();

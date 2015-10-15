@@ -32,7 +32,6 @@ class PluginMreportingGraph {
    const DEBUG_GRAPH = false;
    protected $width  = 850;
 
-
    /**
     * init Graph : Show Titles / Date selector
     *

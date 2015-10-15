@@ -117,7 +117,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          $show_inline = true;
 
-         //test browser (if ie < 9, show img from temp dir instead base64 inline)
+         //test browser (if IE < 9, show img from temp dir instead base64 inline)
          if (isset($_SERVER["HTTP_USER_AGENT"])) {
             $ua = trim(strtolower($_SERVER["HTTP_USER_AGENT"]));
             $pattern = "/msie\s(\d+)\.0/";
@@ -198,7 +198,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          return true;
 
       } else {
-
          imagepng($image);
          $contents =  ob_get_contents();
          ob_end_clean();

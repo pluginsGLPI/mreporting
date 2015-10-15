@@ -807,7 +807,7 @@ class PluginMreportingConfig extends CommonDBTM {
          $crit  = $self->fields['show_graph'];
       }
 
-      if (DEBUG_MREPORTING == true) {
+      if (DEBUG_MREPORTING) {
          $crit  = true;
       }
 
