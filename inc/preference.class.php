@@ -33,7 +33,6 @@ if (!defined('GLPI_ROOT')){
 
 class PluginMreportingPreference extends CommonDBTM {
 
-
    static function checkIfPreferenceExists($users_id) {
       return self::checkPreferenceValue('id', $users_id);
    }
@@ -111,13 +110,14 @@ class PluginMreportingPreference extends CommonDBTM {
       return (!empty($files));
    }
 
-   function showForm($ID){
-      global $CFG_GLPI;
-
-      $version = plugin_version_mreporting();
+   function showForm($ID) {
       $this->getFromDB($ID);
 
-      echo "<form method='post' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'><div align='center'>";
+      $version = plugin_version_mreporting();
+
+      echo "<form method='post' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
+      echo "<div align='center'>";
+      
       echo "<table class='tab_cadre_fixe' cellpadding='5'>";
       echo "<tr><th colspan='2'>" . $version['name'] . " - ". $version['version'] . "</th></tr>";
       echo "<tr class='tab_bg_2'><td align='center'>".__("Please, select a model in your preferences", 'mreporting')."</td>";

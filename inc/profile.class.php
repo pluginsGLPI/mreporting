@@ -270,7 +270,7 @@ class PluginMreportingProfile extends CommonDBTM {
       echo "</div>";
 
       echo "</td></tr>";
-      echo "</table>\n";
+      echo "</table>";
       Html::closeForm();
    }
 
