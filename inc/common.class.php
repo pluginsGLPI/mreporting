@@ -1674,7 +1674,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * Parse and include selectors functions
     */
    static function getReportSelectors($export = false) {
-       ob_start();
+      ob_start();
       self::addToSelector();
       $graphname = $_REQUEST['f_name'];
       if(!isset($_SESSION['mreporting_selector'][$graphname])
@@ -1705,17 +1705,18 @@ class PluginMreportingCommon extends CommonDBTM {
          echo '<td>&nbsp;</td>';
       }
 
-       $res = ob_get_clean();
+      $content = ob_get_clean();
 
-       if($export)return $res;
-       else echo $res;
+      if ($export) {
+         return $content;
+      }
+      echo $content;
    }
 
    static function saveSelectors($graphname, $config = array()) {
       $remove = array('short_classname', 'f_name', 'gtype', 'submit');
       $values = array();
       $pref   = new PluginMreportingPreference();
-
 
       foreach ($_REQUEST as $key => $value) {
          if (!preg_match("/^_/", $key) && !in_array($key, $remove) ) {
@@ -1739,18 +1740,19 @@ class PluginMreportingCommon extends CommonDBTM {
       }
 
       if (!empty($values)) {
-          $id               = $pref->addDefaultPreference(Session::getLoginUserID());
-          $tmp['id']        = $id;
-          $pref->getFromDB($id);
-          if (!is_null($pref->fields['selectors'])) {
+         $id = $pref->addDefaultPreference(Session::getLoginUserID());
+         $tmp['id'] = $id;
+         $pref->getFromDB($id);
+
+         if (!is_null($pref->fields['selectors'])) {
             $selectors = $pref->fields['selectors'];
             $sel = json_decode(stripslashes($selectors), true);
             $sel[$graphname] = $values;
-          } else {
-             $sel = $values;
-          }
-          $tmp['selectors'] = addslashes(json_encode($sel));
-          $pref->update($tmp);
+         } else {
+            $sel = $values;
+         }
+         $tmp['selectors'] = addslashes(json_encode($sel));
+         $pref->update($tmp);
       }
       $_SESSION['mreporting_values'] = $values;
    }
@@ -1831,7 +1833,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $begin=date("Y-m-d H:i:s",$time1);
       $end=date("Y-m-d H:i:s",$time2);
 
-      return "($field >= '$begin' AND $field <= ADDDATE('$end' , INTERVAL 1 DAY) )";
+      return "($field >= '$begin' AND $field <= ADDDATE('$end', INTERVAL 1 DAY) )";
    }
 
 
@@ -1863,10 +1865,11 @@ class PluginMreportingCommon extends CommonDBTM {
     * @param  array() $array the array where to seek
     * @return number the sum
     */
-   static function getArraySum($array ) {
+   static function getArraySum($array) {
       $sum = 0;
 
       if (!is_array($array)) return $array;
+
       foreach ($array as $value) {
          if (is_array($value)) {
             $sum+= self::getArraySum($value);
@@ -1925,7 +1928,7 @@ class PluginMreportingCommon extends CommonDBTM {
          if (isset($element['parent']) && $element['parent'] == $parentId) {
             $children = self::mapTree($elements, $element['id']);
             if ($children) {
-                $element['children'] = $children;
+               $element['children'] = $children;
             }
             $branch[$element['id']] = $element;
          }
@@ -1963,9 +1966,6 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    static function getIcon($report_name) {
-      $extract    = preg_split('/(?<=\\w)(?=[A-Z])/', $report_name);
-      $chart_type = strtolower($extract[1]);
-
       //see font-awesome : http://fortawesome.github.io/Font-Awesome/cheatsheet/
       $icons = array(
          'pie'       => "&#xf200",
@@ -1979,6 +1979,9 @@ class PluginMreportingCommon extends CommonDBTM {
          'sunburst'  => "&#xf185;",
       );
 
-      return $icons[strtolower($chart_type)];
+      $extract    = preg_split('/(?<=\\w)(?=[A-Z])/', $report_name);
+      $chart_type = strtolower($extract[1]);
+
+      return $icons[$chart_type];
    }
 }
