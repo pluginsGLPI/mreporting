@@ -26,7 +26,6 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-
 require_once GLPI_ROOT . '/plugins/mreporting/lib/imagesmootharc/imageSmoothArc.php';
 require_once GLPI_ROOT . '/plugins/mreporting/lib/cubic_splines/classes/CubicSplines.php';
 

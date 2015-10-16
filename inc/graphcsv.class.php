@@ -41,20 +41,20 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       global $CFG_GLPI;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
-
       foreach ($criterias as $key => $val) {
          $$key=$val;
       }
 
-      if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-
-      if (isset($raw_datas['datas'])) {
-         $datas = $raw_datas['datas'];
-      } else {
-         $datas = array();
+      // Write in Log
+      if (self::DEBUG_CSV && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
       }
 
-      if (count($datas) <= 0) return false;
+      $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : array();
+
+      if (count($datas) <= 0) {
+         return false;
+      }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
@@ -105,16 +105,16 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          $$key=$val;
       }
 
-      if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-
-
-      if (isset($raw_datas['datas'])) {
-         $datas = $raw_datas['datas'];
-      } else {
-         $datas = array();
+      // Write in log
+      if (self::DEBUG_CSV && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
       }
 
-      if (count($datas) <= 0) return false;
+      $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : array();
+
+      if (count($datas) <= 0) {
+         return false;
+      }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
@@ -179,8 +179,9 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          $$key=$val;
       }
 
-      if (self::DEBUG_CSV && isset($raw_datas)) Toolbox::logdebug($raw_datas);
-
+      if (self::DEBUG_CSV && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
+      }
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];

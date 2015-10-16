@@ -27,10 +27,6 @@
  --------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')){
-   die("Sorry. You can't access directly to this file");
-}
-
 class PluginMreportingPreference extends CommonDBTM {
 
    static function checkIfPreferenceExists($users_id) {
@@ -43,6 +39,7 @@ class PluginMreportingPreference extends CommonDBTM {
          $input["users_id"]  = $users_id;
          $input["template"]  = "";
          $input["selectors"] = NULL;
+
          $id = $this->add($input);
       }
       return $id;
@@ -119,16 +116,21 @@ class PluginMreportingPreference extends CommonDBTM {
       echo "<div align='center'>";
       
       echo "<table class='tab_cadre_fixe' cellpadding='5'>";
+
       echo "<tr><th colspan='2'>" . $version['name'] . " - ". $version['version'] . "</th></tr>";
-      echo "<tr class='tab_bg_2'><td align='center'>".__("Please, select a model in your preferences", 'mreporting')."</td>";
+
+      echo "<tr class='tab_bg_2'>";
+      echo "<td align='center'>";__("Please, select a model in your preferences", 'mreporting')."</td>";
       echo "<td align='center'>";
       self::dropdownFileTemplates($this->fields["template"]);
       echo "</td></tr>";
 
-      echo "<tr class='tab_bg_2'><td align='center' colspan='2'>";
+      echo "<tr class='tab_bg_2'>";
+      echo "<td align='center' colspan='2'>";
       echo "<input type='hidden' name='id' value='".$ID."'>";
       echo "<input type='hidden' name='users_id' value='".$this->fields['users_id']."'>";
-      echo "<input type='submit' name='update' value='"._sx('button', 'Post')."' class='submit' ></td>";
+      echo "<input type='submit' name='update' value='"._sx('button', 'Post')."' class='submit'>";
+      echo "</td>";
       echo "</tr>";
 
       echo "</table>";
@@ -136,7 +138,7 @@ class PluginMreportingPreference extends CommonDBTM {
       Html::closeForm();
    }
 
-   static function getFiles($directory , $ext) {
+   static function getFiles($directory, $ext) {
 
       $array_dir  = array();
       $array_file = array();
@@ -149,17 +151,20 @@ class PluginMreportingPreference extends CommonDBTM {
                $filedate  = Html::convDate(date ("Y-m-d", filemtime($directory . $file)));
                $basename  = explode('.', basename($filename));
                $extension = array_pop($basename);
-               if ($filename == ".." OR $filename == ".") {
-                  echo "";
-               } else {
-                  if ($filetype == 'file' && $extension ==$ext) {
+               switch ($filename) {
+                  case '..':
+                  case '.':
+                     echo "";
+                  break;
 
+                  default:
+                     if ($filetype == 'file' && $extension ==$ext) {
                         $array_file[] = array($filename, $filedate, $extension);
-
-                  } elseif ($filetype == "dir") {
-                     $array_dir[] = $filename;
+                     } elseif ($filetype == "dir") {
+                        $array_dir[] = $filename;
                      }
-                  }
+                  break;
+               }
             }
             closedir($dh);
          }
@@ -172,18 +177,22 @@ class PluginMreportingPreference extends CommonDBTM {
 
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-      if (get_class($item) == 'Preference') {
-         return array(1 => __("More Reporting", 'mreporting'));
+      switch (get_class($item)) {
+         case 'Preference':
+            return array(1 => __("More Reporting", 'mreporting'));
+         default:
+            return '';
       }
-      return '';
    }
 
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-      if (get_class($item) == 'Preference') {
-         $pref = new self();
-         $id = $pref->addDefaultPreference(Session::getLoginUserID());
-         $pref->showForm($id);
+      switch (get_class($item)) {
+         case 'Preference':
+            $pref = new self();
+            $id = $pref->addDefaultPreference(Session::getLoginUserID());
+            $pref->showForm($id);
+            break;
       }
       return true;
    }

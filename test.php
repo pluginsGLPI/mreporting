@@ -1,19 +1,19 @@
 <?php
-define('GLPI_ROOT', '../..');
-include (GLPI_ROOT."/inc/includes.php");
-commonHeader(__("More Reporting", 'mreporting'), '' ,"plugins", "hreporting");
-?>
+include ("../../inc/includes.php");
 
+Html::header(__("More Reporting", 'mreporting'), '' ,"plugins", "hreporting");
+?>
 <link href="lib/protovis/examples/ex.css" rel="stylesheet" type="text/css">
 <script src="lib/protovis/protovis.min.js" type="text/javascript"></script>
 <script src="lib/protovis/examples/crimea/crimea.js" type="text/javascript"></script>
 <style type="text/css">
 #fig {
-width: 600px;
-height: 300px;
+    width: 600px;
+    height: 300px;
 }
 </style>
-<div class="center"><div id="fig">
+<div class="center">
+    <div id="fig">
     <script type="text/javascript+protovis">
 
 var w = 545,
@@ -61,7 +61,8 @@ vis.add(pv.Rule)
 vis.render();
 
     </script>
-  </div></div>
+  </div>
+</div>
 
 <?php
-commonFooter();
+Html::footer();
