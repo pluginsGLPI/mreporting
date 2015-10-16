@@ -124,7 +124,7 @@ class PluginMreportingNotification extends CommonDBTM {
    /**
     * @param $mailing_options
    **/
-   static function send($mailing_options, $additional_options) {
+   static function send($mailing_options, $additional_options) { //Not called : we bypass GLPI queue mailing
       $mail = new PluginMreportingNotificationMail();
       $mail->sendNotification(array_merge($mailing_options, $additional_options));
       $mail->ClearAddresses();

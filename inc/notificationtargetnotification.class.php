@@ -1,26 +1,17 @@
 <?php
 
-if (!defined('GLPI_ROOT')){
-   die("Sorry. You can't access directly to this file");
-}
-
-// Class NotificationTarget
 class PluginMreportingNotificationTargetNotification extends NotificationTarget {
+
    var $additionalData;
 
-   
    function getEvents() {
-      return array ('sendReporting' => __("More Reporting", 'mreporting'));
+      return array('sendReporting' => __('More Reporting', 'mreporting'));
    }
    
    function getTags() {
-      $tags = array('mreporting.file_url' => __('Link'));
-
-      foreach ($tags as $tag => $label) {
-         $this->addTagToList(array('tag'   => $tag,
-                                   'label' => $label,
-                                   'value' => true));
-      }
+      $this->addTagToList(array('tag'   => 'mreporting.file_url',
+                                'label' => __('Link'),
+                                'value' => true));
 
       asort($this->tag_descriptions);
    }
@@ -28,52 +19,51 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
    function getDatasForTemplate($event, $options = array()) {
       global $CFG_GLPI;
 
-      $user_name  = mt_rand().'_';
-
-      $file_name  = $this->_buildPDF($user_name);
-      $path       = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications/$file_name";
-      
-      $this->additionalData['attachment']['path'] = $path;
-      $this->additionalData['attachment']['name'] = $file_name;
-
-      $link = $CFG_GLPI['url_base']."/index.php?redirect=plugin_mreporting_$file_name";
-
       $this->datas['##lang.mreporting.file_url##'] = __('Link');
-      $this->datas['##mreporting.file_url##']      = $link;
+      $this->datas['##mreporting.file_url##']      = $CFG_GLPI['url_base'].
+                                                      "/index.php?redirect=plugin_mreporting_$file_name";
+
+      $user_name  = mt_rand().'_';
+      $file_name  = $this->_buildPDF($user_name);
+      
+      $this->additionalData['attachment']['path'] = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications/".$file_name;
+      $this->additionalData['attachment']['name'] = $file_name;
    }
 
 
    /**
-    * Generate a PDF file with mreporting reports to be send in the notifications
+    * Generate a PDF file (with mreporting reports) to be send in the notifications
     *
     * @return string hash Name of the created file
     */
    private function _buildPDF($user_name = '') {
       global $CFG_GLPI, $DB, $LANG;
 
-      $dir           = GLPI_PLUGIN_DOC_DIR.'/mreporting/notifications';
-      $file_name     = 'glpi_report_'.$user_name.date('d-m-Y').'.pdf';
+      $dir = GLPI_PLUGIN_DOC_DIR.'/mreporting/notifications';
 
-      if(!is_dir($dir)) return false;
+      if (!is_dir($dir)) {
+         return false;
+      }
 
       require_once GLPI_ROOT.'/plugins/mreporting/lib/tcpdf/tcpdf.php';
 
-      $CFG_GLPI['default_graphtype'] = "png";
-      setlocale (LC_TIME, 'fr_FR.utf8', 'fra');
+      setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
       ini_set('memory_limit', '256M');
       set_time_limit(300);
 
-      $graphs = array();
+      $CFG_GLPI['default_graphtype'] = "png";
+
       $images = array();
 
-      $query = 'SELECT id, name, classname, default_delay
-         FROM glpi_plugin_mreporting_configs
-         WHERE is_notified = 1
-         AND is_active = 1';
-      $result = $DB->query($query);
+      $result = $DB->query('SELECT id, name, classname, default_delay
+                           FROM glpi_plugin_mreporting_configs
+                           WHERE is_notified = 1
+                              AND is_active = 1');
 
-      while($graph = $result->fetch_array()) {
+      $graphs = array();
+      while ($graph = $result->fetch_array()) {
          $type = preg_split('/(?<=\\w)(?=[A-Z])/', $graph['name']);
+         
          $graphs[] = array(
             'class'     => substr($graph['classname'], 16),
             'classname' => $graph['classname'],
@@ -85,16 +75,15 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
          );
       }
 
-      foreach($graphs as $graph) {
-         $_REQUEST = array(
-            'switchto'        => 'png',
-            'short_classname' => $graph['class'],
-            'f_name'          => $graph['method'],
-            'gtype'           => $graph['type'],
-            'date1PluginMreporting'.$graph['class'].$graph['method'] => $graph['start'],
-            'date2PluginMreporting'.$graph['class'].$graph['method'] => $graph['end'],
-            'randname'        => 'PluginMreporting'.$graph['class'].$graph['method']
-         );
+      foreach ($graphs as $graph) {
+         $_REQUEST = array('switchto'        => 'png',
+                           'short_classname' => $graph['class'],
+                           'f_name'          => $graph['method'],
+                           'gtype'           => $graph['type'],
+                           'randname'        => 'PluginMreporting'.$graph['class'].$graph['method'],
+                           'date1PluginMreporting'.$graph['class'].$graph['method'] => $graph['start'],
+                           'date2PluginMreporting'.$graph['class'].$graph['method'] => $graph['end']);
+
          ob_start();
          $common = new PluginMreportingCommon();
          $common->showGraph($_REQUEST, "png");
@@ -116,27 +105,29 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
 
          // clean image
          $image_base64  = str_replace('data:image/png;base64,', '', $image_base64);
+
          $image         = imagecreatefromstring(base64_decode($image_base64));
          $image_width   = imagesx($image);
          $image_height  = imagesy($image);
-         $image_title   = $LANG['plugin_mreporting'][$graph['class']][$graph['method']]['title'];
 
          $format = '%e';
-
-         if(strftime('%Y', strtotime($graph['start'])) != strftime('%Y', strtotime($graph['end']))) {
+         if (strftime('%Y', strtotime($graph['start'])) != strftime('%Y', strtotime($graph['end']))) {
             $format .= ' %B %Y';
-         }elseif(strftime('%B', strtotime($graph['start'])) != strftime('%B', strtotime($graph['end']))) {
+         } elseif(strftime('%B', strtotime($graph['start'])) != strftime('%B', strtotime($graph['end']))) {
             $format .= ' %B';
          }
 
-         $image_title.= " du ".strftime($format, strtotime($graph['start']));
-         $image_title.= " au ".strftime('%e %B %Y', strtotime($graph['end']));
+         $image_title  = $LANG['plugin_mreporting'][$graph['class']][$graph['method']]['title'];
+         $image_title .= " du ".strftime($format, strtotime($graph['start']));
+         $image_title .= " au ".strftime('%e %B %Y', strtotime($graph['end']));
 
-         array_push($images, array('title' => $image_title,
+         array_push($images, array('title'  => $image_title,
                                    'base64' => $image_base64,
-                                   'width' => $image_width,
+                                   'width'  => $image_width,
                                    'height' => $image_height));
       }
+
+      $file_name = 'glpi_report_'.$user_name.date('d-m-Y').'.pdf';
 
       $pdf = new PluginMreportingPdf();
       $pdf->Init();
