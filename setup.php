@@ -131,11 +131,9 @@ function plugin_version_mreporting() {
 }
 
 function includeAdditionalLanguageFiles() {
-   if (isset($_SESSION["glpilanguage"])) {
-      $template = "*_".$_SESSION["glpilanguage"].".php";
-      foreach (glob(GLPI_ROOT.'/plugins/mreporting/locales/reports_locales/'.$template) as $path) {
-         include_once($path);
-      }
+   $language = isset($_SESSION["glpilanguage"]) ? $_SESSION["glpilanguage"] : 'fr_FR'; //Note : quick hack
+   foreach (glob(GLPI_ROOT."/plugins/mreporting/locales/reports_locales/*_$language.php") as $path) {
+      include_once($path);
    }
 }
 
