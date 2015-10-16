@@ -125,7 +125,7 @@ function plugin_version_mreporting() {
                 'version'        => "0.90+1.0",
                 'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
                                        & <a href='http://www.infotel.com'>Infotel</a>",
-                'homepage'       => "https://forge.indepnet.net/projects/mreporting",
+                'homepage'       => "https://github.com/pluginsGLPI/mreporting",
                 'license'        => 'GPLv2+',
                 'minGlpiVersion' => "0.85");
 }
