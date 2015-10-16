@@ -59,14 +59,14 @@ class PluginMreportingProfile extends CommonDBTM {
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-      if ($item->getType()=='Profile') {
-         return __("More Reporting", 'mreporting');
-
-      } else if ($item->getType()=='PluginMreportingConfig') {
-         return __("Rights management", 'mreporting');
-
+      switch ($item->getType()) {
+         case 'Profile':
+            return __("More Reporting", 'mreporting');
+         case 'PluginMreportingConfig':
+            return __("Rights management", 'mreporting');
+         default:
+            return '';
       }
-      return '';
    }
 
 
@@ -99,11 +99,7 @@ class PluginMreportingProfile extends CommonDBTM {
             return false;
          }
          $this->fields = $DB->fetch_assoc($result);
-         if (is_array($this->fields) && count($this->fields)) {
-            return true;
-         } else {
-            return false;
-         }
+         return (is_array($this->fields) && count($this->fields));
       }
       return false;
    }
@@ -113,45 +109,34 @@ class PluginMreportingProfile extends CommonDBTM {
    * @param $right array
    */
    static function addRightToProfiles($right){
-
       global $DB;
 
-      $profiles = "SELECT `id` FROM `glpi_profiles`";
-      $reports  = "SELECT `id` FROM `glpi_plugin_mreporting_configs`";
-
-      //TODO : We need to reload cache before else glpi don't show migration table
-      $myreport = new PluginMreportingProfile();
+      //TODO : We need to reload cache before else GLPI don't show migration table
+      $myreport = new self();
       $table_fields = $DB->list_fields($myreport->getTable(),false);
 
+      foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
+         foreach($DB->request("SELECT `id` FROM `glpi_plugin_mreporting_configs`") as $report){
 
-      foreach ($DB->request($profiles) as $prof) {
-         foreach($DB->request($reports) as $report){
+            $tmp = array('profiles_id' => $prof['id'],
+                        'reports'   => $report['id']);
 
             //If profiles have right
             if(in_array($prof['id'],$right)){
-               $tmp = array(
-                  'profiles_id' => $prof['id'],
-                  'reports'   => $report['id'],
-                  'right' => READ);
-               $myreport->add($tmp);
-            }else{
-               $tmp = array(
-                  'profiles_id' => $prof['id'],
-                  'reports'   => $report['id']
-                  );
-               $myreport->add($tmp);
+               $tmp['right'] = READ);
             }
+            $myreport->add($tmp);
          }
       }
    }
 
 
    static function getRight(){
-
       global $DB;
+
       $query = "SELECT `profiles_id` 
-      FROM `glpi_plugin_mreporting_profiles` 
-      WHERE `reports` = READ ";
+               FROM `glpi_plugin_mreporting_profiles` 
+               WHERE `reports` = ".READ;
 
       $right = array();
       foreach ($DB->request($query) as $profile) {
@@ -169,16 +154,14 @@ class PluginMreportingProfile extends CommonDBTM {
 
       //get all reports
       $config = new PluginMreportingConfig();
-      $res = $config->find();
 
-      foreach( $res as $report) {
+      $reportProfile = new self();
+
+      foreach ($config->find() as $report) {
          //add right for any reports for profile
-         $reportProfile1 = new PluginMreportingProfile();
-         $reportProfile1->add(array(
-            'profiles_id' => $idProfile,
-            'reports'   => $report['id'],
-            'right' => READ
-         ));
+         $reportProfile->add(array('profiles_id' => $idProfile,
+                                 'reports'   => $report['id'],
+                                 'right' => READ));
       }
 
    }
@@ -190,21 +173,18 @@ class PluginMreportingProfile extends CommonDBTM {
    */
    function addRightToReports($report_id){
       global $DB;
-      $profiles = "SELECT `id` FROM `glpi_profiles`";
 
-      foreach ($DB->request($profiles) as $prof) {
-         $reportProfile1 = new PluginMreportingProfile();
-         $reportProfile1->add(array(
-            'profiles_id' => $prof['id'],
-            'reports'   => $report_id,
-            'right' => READ
-         ));
+      $reportProfile = new self();
+
+      foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
+         $reportProfile->add(array('profiles_id' => $prof['id'],
+                                 'reports'   => $report_id,
+                                 'right' => READ));
       }
    }
 
    function createAccess($ID) {
-      $this->add(array(
-         'profiles_id' => $ID));
+      $this->add(array('profiles_id' => $ID));
    }
 
    static function changeProfile() {
@@ -212,7 +192,9 @@ class PluginMreportingProfile extends CommonDBTM {
       if ($prof->getFromDBByProfile($_SESSION['glpiactiveprofile']['id'])) {
          $_SESSION["glpi_plugin_mreporting_profile"] = $prof->fields;
       }
-      else unset($_SESSION["glpi_plugin_mreporting_profile"]);
+      else {
+         unset($_SESSION["glpi_plugin_mreporting_profile"]);
+      }
    }
 
    /**
@@ -221,23 +203,21 @@ class PluginMreportingProfile extends CommonDBTM {
    * @param array $options
    * @return bool
    */
-   function showForm ($ID, $options=array()) {
-      global $LANG,$CFG_GLPI;
+   function showForm($ID, $options=array()) {
+      global $LANG, $CFG_GLPI;
 
       if (!Session::haveRight("profile", READ)) {
          return false;
       }
 
       $this->getFromDB($ID);
-
-      $config = new PluginMreportingConfig();
-      $res = $config->find();
-
       $this->showFormHeader($options);
+
       echo "<table class='tab_cadre_fixe'>\n";
       echo "<tr><th colspan='3'>".__("Rights management", 'mreporting')."</th></tr>\n";
 
-      foreach( $res as $report) {
+      $config = new PluginMreportingConfig();
+      foreach ($config->find() as $report) {
          $mreportingConfig = new PluginMreportingConfig();
          $mreportingConfig->getFromDB($report['id']);
 
@@ -247,26 +227,36 @@ class PluginMreportingProfile extends CommonDBTM {
             $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
             $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
 
-            echo "<tr class='tab_bg_1'><td>".$mreportingConfig->getLink()."&nbsp(".$title."): </td><td>";
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>".$mreportingConfig->getLink()."&nbsp(".$title."): </td>";
+            echo "<td>";
             Profile::dropdownNoneReadWrite($report['id'], 
                                            $profile->fields['right'], 1, 1, 0);
-            echo "</td></tr>\n";
+            echo "</td>";
+            echo "</tr>\n";
          }
       }
 
-      echo "<tr class='tab_bg_4'><td colspan='2'>";
+      echo "<tr class='tab_bg_4'>";
+      echo "<td colspan='2'>";
 
       echo "<div class='center'>";
-      echo "<input type='hidden' name='profile_id' value=".$ID.">";
       echo "<input type='submit' name='update' value=\""._sx('button','Save')."\" class='submit'>";
       echo "</div>";
+
+      echo "<input type='hidden' name='profile_id' value=".$ID.">";
       
       echo "<div style='float:right;'>";
-      echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
-      name='giveReadAccessForAllReport' value='' title='".__('Select all')."'>";
+      echo "<input type='submit' 
+               style='background-image: url(".$CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat;width:14px;border:none;cursor:pointer;'
+               name='giveReadAccessForAllReport' value='' title='".__('Select all')."'>";
 
-      echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;'
-      name='giveNoneAccessForAllReport' value='' title='".__('Deselect all')."'><br><br>";
+      echo "<input type='submit' 
+               style='background-image: url(".$CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat;width:14px;border:none;cursor:pointer;'
+               name='giveNoneAccessForAllReport' value='' title='".__('Deselect all')."'>";
+
+      echo "<br><br>";
+
       echo "</div>";
 
       echo "</td></tr>";
@@ -282,37 +272,37 @@ class PluginMreportingProfile extends CommonDBTM {
    function showFormForManageProfile($items,$options=array()){
       global $DB, $CFG_GLPI;
 
-      if (!Session::haveRight("config", READ))  {
+      if (!Session::haveRight("config", READ)) {
          return false;
       }
 
-      $target = $this->getFormURL();
-      if (isset($options['target'])) {
-         $target = $options['target'];
-      }
+      $target = isset($options['target']) ? $options['target'] : $this->getFormURL();
+      
       echo'<form action="'.$target.'" method="post" name="form">';
       echo "<table class='tab_cadre_fixe'>\n";
       echo "<tr><th colspan='3'>".__("Rights management", 'mreporting')."</th></tr>\n";
 
       $query = "SELECT `id`, `name`
-         FROM `glpi_profiles`
-         ORDER BY `name`";
+               FROM `glpi_profiles`
+               ORDER BY `name`";
 
       foreach ($DB->request($query) as $profile) {
-         $reportProfiles=new self();
+         $reportProfiles = new self();
          $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'],$items->fields['id']);
 
          $prof = new Profile();
          $prof->getFromDB($profile['id']);
 
-
-         echo "<tr class='tab_bg_1'><td>".$prof->getLink()."</td><td>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>".$prof->getLink()."</td>";
+         echo "<td>";
          Profile::dropdownNoneReadWrite($profile['id'], 
                                         $reportProfiles->fields['right'], 1, 1, 0);
          echo "</td></tr>\n";
       }
 
-      echo "<tr class='tab_bg_4'><td colspan='2'>";
+      echo "<tr class='tab_bg_4'>";
+      echo "<td colspan='2'>";
       echo "<div style='float:right;'>";
       echo "<input type='submit' style='background-image: url(".$CFG_GLPI['root_doc'].
            "/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;' ".
@@ -360,7 +350,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
    // Hook done on add item case
    static function addProfiles(Profile $item) {
-      if($item->getType()=='Profile' && $item->getField('interface')!='helpdesk'){
+      if ($item->getType()=='Profile' && $item->getField('interface') != 'helpdesk') {
          $profile = new PluginMreportingProfile();
          $profile->addRightToProfile($item->getID());
       }
