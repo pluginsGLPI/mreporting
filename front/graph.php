@@ -34,7 +34,7 @@ include ("../../../inc/includes.php");
 
 Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'viewreports');
 
-$common = new PluginMreportingCommon;
-
+$common = new PluginMreportingCommon();
 $common->showGraph($_REQUEST);
+
 Html::footer();

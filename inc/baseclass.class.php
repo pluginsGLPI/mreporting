@@ -28,6 +28,7 @@
  */
 
 class PluginMreportingBaseclass {
+   
    protected $sql_date, 
              $sql_date_create, 
              $sql_date_solve, 

@@ -33,7 +33,7 @@ function plugin_mreporting_install() {
    include_once(GLPI_ROOT."/plugins/mreporting/inc/profile.class.php");
 
    //get version
-   $plugin = new Plugin;
+   $plugin = new Plugin();
    $found  = $plugin->find("name = 'mreporting'");
    $plugin_mreporting = array_shift($found);
 

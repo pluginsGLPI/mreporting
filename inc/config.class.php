@@ -137,8 +137,6 @@ class PluginMreportingConfig extends CommonDBTM {
          case 'graphtype':
             return $values[$field];
             break;
-      }
-      switch ($field) {
          case 'show_label':
             $labels = self::getLabelTypes();
             return $labels[$values[$field]];
@@ -164,12 +162,12 @@ class PluginMreportingConfig extends CommonDBTM {
       $options['display'] = false;
       $options['value']   = $values[$field];
       switch ($field) {
-         case 'graphtype' :
+         case 'graphtype':
             return Dropdown::showFromArray($name,
                                             array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'),
                                             $options);
             break;
-         case 'show_label' :
+         case 'show_label':
             return self::dropdownLabel($name, $options);
             break;
       }
@@ -209,7 +207,6 @@ class PluginMreportingConfig extends CommonDBTM {
 
       if (Session::haveRight('config', READ)) {
          $buttons["config.php?new=1"] = __("Initialize graphics configuration", 'mreporting');
-         $title = "";
       }
       Html::displayTitle($CFG_GLPI["root_doc"] . "/plugins/mreporting/pics/config2.png",
                         $title, $title, $buttons);
@@ -221,7 +218,7 @@ class PluginMreportingConfig extends CommonDBTM {
     *@return nothing
     **/
    function createFirstConfig() {
-      $reports = array();
+      //$reports = array();
       $classConfig = false;
 
       $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
@@ -285,7 +282,6 @@ class PluginMreportingConfig extends CommonDBTM {
          $gtype = strtolower($ex_func[1]);
 
          switch($gtype) {
-
             case 'area':
             case 'garea':
                $this->fields["name"]=$funct_name;
@@ -354,8 +350,9 @@ class PluginMreportingConfig extends CommonDBTM {
       $self = new self();
       $common = new PluginMreportingCommon();
       $rand = mt_rand();
-      $select = "<select name='$name' id='dropdown_".$name.$rand."'>";
-      $select.= "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
+
+      $select  = "<select name='$name' id='dropdown_".$name.$rand."'>";
+      $select .= "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
 
       $i = 0;
       $reports = $common->getAllReports();
@@ -460,12 +457,10 @@ class PluginMreportingConfig extends CommonDBTM {
    **/
    static function getLabelTypeName($value) {
       switch ($value) {
-         case 'never' :
-            return __("Never", 'mreporting');
-
          case 'hover' :
             return __("On mouse over", 'mreporting');
-
+         case 'never' :
+            return __("Never", 'mreporting');
          case 'always' :
             return __("Always", 'mreporting');
       }
@@ -574,15 +569,15 @@ class PluginMreportingConfig extends CommonDBTM {
 
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr>";
-      echo "<td class='tab_bg_2 center' colspan='2'>".__("Preconfiguration")."&nbsp;";
+      echo "<td class='tab_bg_2 center' colspan='2'>";
+      echo __("Preconfiguration")."&nbsp;";
       $opt = array('value' => $_GET['preconfig']);
       $rand = self::dropdownGraph('graphname', $opt);
       $params = array('graphname' => '__VALUE__');
       Ajax::updateItemOnSelectEvent("dropdown_graphname$rand", "show_preconfig",
                                           "../ajax/dropdownGraphs.php",
                                           $params);
-      echo "<span id='show_preconfig'>";
-      echo "</span>";
+      echo "<span id='show_preconfig'></span>";
       echo "</td>";
       echo "</tr>";
       echo "</table>";
@@ -618,7 +613,6 @@ class PluginMreportingConfig extends CommonDBTM {
       }
 
       $short_classname = str_replace('PluginMreporting', '', $this->fields["classname"]);
-
 
       if (!empty($short_classname) && !empty($f_name)) {
          if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
@@ -684,6 +678,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "<td>";
       echo __("Curves lines (SVG)", 'mreporting');
       echo "</td>";
+
       echo "<td>";
       $opt = array('value' => $this->fields["show_label"]);
       if ($gtype != 'area' && $gtype != 'garea' && $gtype != 'line' && $gtype != 'gline') {
@@ -747,6 +742,7 @@ class PluginMreportingConfig extends CommonDBTM {
       $this->showFormButtons($options);
 
       echo "</div>";
+
       return true;
    }
 
@@ -756,7 +752,6 @@ class PluginMreportingConfig extends CommonDBTM {
     * @param $name of graph
     * @param $classname of graph
    **/
-
    static function initConfigParams($name, $classname) {
 
       $crit = array('area'          => false,
@@ -799,16 +794,15 @@ class PluginMreportingConfig extends CommonDBTM {
    **/
 
    static function showGraphConfigValue($name, $classname) {
-
       $crit = false;
 
       $self = new self();
       if ($self->getFromDBByFunctionAndClassname($name,$classname)) {
-         $crit  = $self->fields['show_graph'];
+         $crit = $self->fields['show_graph'];
       }
 
       if (DEBUG_MREPORTING) {
-         $crit  = true;
+         $crit = true;
       }
 
       return $crit;

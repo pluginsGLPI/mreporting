@@ -58,20 +58,21 @@ class PluginMreportingDashboard extends CommonDBTM {
    }
 
    function showDashBoard($show_reports_dropdown = true){
-      global $LANG,$CFG_GLPI;
+      global $LANG, $CFG_GLPI;
 
       $root_ajax = $CFG_GLPI['root_doc']."/plugins/mreporting/ajax/dashboard.php";
 
-      $target = $this->getFormURL();
       if (isset($options['target'])) {
          $target = $options['target'];
+      } else {
+         $target = $this->getFormURL();
       }
 
       $_REQUEST['f_name'] = 'option';
       PluginMreportingCommon::getSelectorValuesByUser();
 
       //retrieve dashboard widgets;
-      $dashboard= new PluginMreportingDashboard();
+      $dashboard = new PluginMreportingDashboard();
       $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID'], 'id');
 
       //show dashboard
@@ -149,7 +150,8 @@ class PluginMreportingDashboard extends CommonDBTM {
       foreach($widgets as $data) {
          $i++;
 
-         $rand_widget =  mt_rand();
+         $rand_widget = mt_rand();
+
          $report = new PluginMreportingConfig();
          $report->getFromDB($data['reports_id']);
 
@@ -266,35 +268,31 @@ class PluginMreportingDashboard extends CommonDBTM {
 
    public static function CurrentUserHaveDashboard() {
       $dashboard = new PluginMreportingDashboard();
-      $res = $dashboard->find("users_id = ".$_SESSION['glpiID']);
-
-      if(count($res) > 0) {
-         return true;
-      } else {
-         return false;
-      }
+      return (count($dashboard->find("users_id = ".$_SESSION['glpiID'])) > 0);
    }
 
    function getFormForColumn(){
       global $DB, $CFG_GLPI;
 
-      $nbColumn = 2;
       if(isset($_SESSION['mreporting_values']['column'])) {
          $nbColumn = $_SESSION['mreporting_values']['column'];
+      } else {
+         $nbColumn = 2;
       }
 
-      $target = $this->getFormURL();
       if (isset($options['target'])) {
          $target = $options['target'];
+      } else {
+         $target = $this->getFormURL();
       }
 
-      $content = "<form method='post' action='".$target."' method='post'>";
-      $content .= PluginMreportingCommon::getSelectAllReports(false, true);
-      $content .= "&nbsp;<input type='submit' name='addReports' value='".__('Add')."' class='submit' >";
-      $content .= Html::closeForm(false);
-      $content .= "</div>";
+      $out  = "<form method='post' action='".$target."' method='post'>";
+      $out .= PluginMreportingCommon::getSelectAllReports(false, true);
+      $out .= "&nbsp;<input type='submit' name='addReports' value='".__('Add')."' class='submit'>";
+      $out .= Html::closeForm(false);
+      $out .= "</div>";
 
-      return $content;
+      return $out;
 
    }
 
@@ -306,7 +304,7 @@ class PluginMreportingDashboard extends CommonDBTM {
    static function updateWidget($idreport) {
       global $LANG;
 
-      $dashboard= new self();
+      $dashboard = new self();
       $dashboard->getFromDB($idreport);
 
       $report = new PluginMreportingConfig();
@@ -342,16 +340,20 @@ class PluginMreportingDashboard extends CommonDBTM {
    static function getConfig() {
       PluginMreportingCommon::getSelectorValuesByUser();
 
-      $content =  "";
-      $content .= "<form method='POST'  action='" . $_REQUEST['target'] . "' name='form' id='mreporting_date_selector'>";
-      $content .= "<table class='tab_cadre_fixe'><tr class='tab_bg_1'>";
+      $content  = "<form method='POST' action='" . $_REQUEST['target'] . "' name='form' id='mreporting_date_selector'>";
+
+      $content .= "<table class='tab_cadre_fixe'>";
+      $content .= "<tr class='tab_bg_1'>";
       $content .= PluginMreportingCommon::getReportSelectors(true);
       $content .= "</table>";
+
       $content .= "<input type='hidden' name='short_classname' value='".$_REQUEST['short_classname']."' class='submit'>";
       $content .= "<input type='hidden' name='f_name' value='".$_REQUEST['f_name']."' class='submit'>";
       $content .= "<input type='hidden' name='gtype' value='".$_REQUEST['gtype']."' class='submit'>";
       $content .= "<br><br><input type='submit' class='submit' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
+
       $content .= Html::closeForm(false);
+
       if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
          $content .= "<script type='text/javascript'>
          var elements = document.querySelectorAll('.chzn-select');

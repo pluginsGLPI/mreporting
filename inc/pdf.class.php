@@ -20,10 +20,13 @@ class PluginMreportingPdf extends TCPDF {
       $this->SetCreator($creator);
       $this->SetAuthor($author);
       $this->SetTitle($title);
+
       $this->SetFontSize(10);
       $this->SetMargins(20, 25);
+
       $this->SetAutoPageBreak(true);
-      $this->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+
+      $this->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
       $this->SetHeaderMargin(PDF_MARGIN_HEADER);
       $this->AddPage();
    }
