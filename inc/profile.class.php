@@ -123,7 +123,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
             //If profiles have right
             if(in_array($prof['id'],$right)){
-               $tmp['right'] = READ);
+               $tmp['right'] = READ;
             }
             $myreport->add($tmp);
          }
