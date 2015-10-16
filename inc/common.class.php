@@ -1441,7 +1441,7 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorUserassign() {
       echo "<br /><b>".__("Technician in charge of the ticket")." : </b><br />";
       $options = array('name'        => 'users_assign_id',
-                       'entity'      => $_SESSION['glpiactive_entity'],
+                       'entity'      => isset($_SESSION['glpiactive_entity']) ? $_SESSION['glpiactive_entity'] : 0,
                        'right'       => 'own_ticket',
                        'value'       => isset($_SESSION['mreporting_values']['users_assign_id']) ? $_SESSION['mreporting_values']['users_assign_id'] : 0,
                        'ldap_import' => false,
