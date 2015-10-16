@@ -16,7 +16,7 @@ class PluginMreportingNotificationMail extends NotificationMail {
    **/
    function sendNotification($options=array()) {
 
-      $mmail = new self();
+      $mmail = new GLPIMailer();
       $mmail->AddCustomHeader("Auto-Submitted: auto-generated");
       // For exchange
       $mmail->AddCustomHeader("X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN");

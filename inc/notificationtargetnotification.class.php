@@ -79,24 +79,27 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
                            'short_classname' => $graph['class'],
                            'f_name'          => $graph['method'],
                            'gtype'           => $graph['type'],
-                           'randname'        => 'PluginMreporting'.$graph['class'].$graph['method'],
                            'date1PluginMreporting'.$graph['class'].$graph['method'] => $graph['start'],
-                           'date2PluginMreporting'.$graph['class'].$graph['method'] => $graph['end']);
-
+                           'date2PluginMreporting'.$graph['class'].$graph['method'] => $graph['end'],
+                           'randname'        => 'PluginMreporting'.$graph['class'].$graph['method'],
+                           'hide_title'      => false); //New code
+         
          ob_start();
          $common = new PluginMreportingCommon();
-         $common->showGraph($_REQUEST, "png");
+         $common->showGraph($_REQUEST);
          $content = ob_get_clean();
 
          preg_match_all('/<img .*?(?=src)src=\'([^\']+)\'/si', $content, $matches);
 
          // find image content
-         if (!isset($matches[1][0])) {
+         if (!isset($matches[1][2])) {
             continue;
          }
-         $image_base64 = $matches[1][0];
+         $image_base64 = $matches[1][2];
          if (strpos($image_base64, 'data:image/png;base64,') === false) {
-            $image_base64 = $matches[1][1];
+            if (isset($matches[1][3])) {
+               $image_base64 = $matches[1][3];
+            }
          }
          if (strpos($image_base64, 'data:image/png;base64,') === false) {
             continue;
