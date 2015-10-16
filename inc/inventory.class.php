@@ -29,7 +29,7 @@
 
 class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
-   /*************************************Fonctions pour les indicateurs par OS*************************************/
+   /********* Fonctions pour les indicateurs par OS ***************************/
    function reportPieComputersByOS($config = array()) {
       return $this->reportHbarComputersByOS($config);
    }
@@ -37,7 +37,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   function reportHbarComputersByOS($config = array()) {
       global $DB;
       
-      /*Ajout d'une condition englobant les entit�s*/
+      /*Ajout d'une condition englobant les entités*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -83,7 +83,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
 
 
-   /*************************************Fonctions pour les indicateurs par fabricant*************************************/
+   /********************** Fonctions pour les indicateurs par fabricant ************************/
    function reportPieComputersByFabricant($config = array()) {
       return $this->reportHbarComputersByFabricant($config);
    }
@@ -91,7 +91,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    function reportHbarComputersByFabricant($config = array()) {
       global $DB;
       
-      /*Ajout d'une condition englobant les entit�s*/
+      // Ajout d'une condition englobant les entités
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -143,7 +143,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                            AND c.computertypes_id = t.id $condition) Pourcentage
 
          FROM glpi_computers c, glpi_computertypes t
-         WHERE c.computertypes_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
+         WHERE c.computertypes_id = t.id $condition 
+            AND c.`is_deleted` = 0 
+            AND c.`is_template` = 0 
          GROUP BY t.name
          ORDER BY Total DESC
          ";
@@ -158,7 +160,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
    }
 
-   /*************************************Fonctions pour les indicateurs par âge*************************************/
+   /*************************************Fonctions pour les indicateurs par Ã¢ge*************************************/
   function reportPieComputersByAge($config = array()) {
       $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
       return $this->reportHbarComputersByAge($config);
@@ -242,9 +244,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   function reportHbarWindows($config = array()) {
       global $DB;
 
-      $condition = " AND entities_id IN (".$this->where_entities.")";
-
       $data = array();
+
+      $condition = " AND entities_id IN (".$this->where_entities.")";
       $total_computers = countElementsInTable('glpi_computers',
                                               "`is_deleted`=0 AND `is_template`=0 $condition");
 
@@ -397,7 +399,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $total_computers = countElementsInTable('glpi_computers',
                                               "`is_deleted`=0 AND `is_template`=0 $condition");
 
-      $query = "SELECT count( * ) AS cpt, useragent
+      $query = "SELECT count(*) AS cpt, useragent
                 FROM `glpi_plugin_fusioninventory_agents`
                 WHERE computers_id >0
                 GROUP BY useragent
@@ -451,8 +453,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   function reportHbarComputersByStatus($config = array()) {
       global $DB;
 
-      $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
+
+      $condition = " AND c.entities_id IN (".$this->where_entities.")";
 
       $query = "SELECT t.name status, count(*) Total, count(*)*100/(SELECT count(*)
                            FROM glpi_computers c, glpi_states t
