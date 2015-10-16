@@ -19,12 +19,11 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
    function getDatasForTemplate($event, $options = array()) {
       global $CFG_GLPI;
 
+      $file_name = $this->_buildPDF(mt_rand().'_');
+
       $this->datas['##lang.mreporting.file_url##'] = __('Link');
       $this->datas['##mreporting.file_url##']      = $CFG_GLPI['url_base'].
                                                       "/index.php?redirect=plugin_mreporting_$file_name";
-
-      $user_name  = mt_rand().'_';
-      $file_name  = $this->_buildPDF($user_name);
       
       $this->additionalData['attachment']['path'] = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications/".$file_name;
       $this->additionalData['attachment']['name'] = $file_name;
