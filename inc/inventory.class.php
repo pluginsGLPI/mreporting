@@ -269,7 +269,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             }
          }
       }
-      arsort($data['datas']);
+      if (isset($data['datas']) && !empty($data['datas'])) {
+         arsort($data['datas']);
+      }
       return $data;
   }
 
@@ -298,7 +300,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             }
          }
       }
-      arsort($data['datas']);
+      if (isset($data['datas']) && !empty($data['datas'])) {
+         arsort($data['datas']);
+      }
       return $data;
   }
 
@@ -316,7 +320,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             $data['datas'][$os['name']] = $number;
          }
       }
-      arsort($data['datas']);
+      if (isset($data['datas']) && !empty($data['datas'])) {
+         arsort($data['datas']);
+      }
       return $data;
   }
 
