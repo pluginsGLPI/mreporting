@@ -42,13 +42,19 @@ if (isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::
 
 // Init the hooks of the plugins -Needed
 function plugin_init_mreporting() {
-   global $PLUGIN_HOOKS;
+   global $PLUGIN_HOOKS, $CFG_GLPI;
 
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
    $plugin = new Plugin();
    if ($plugin->isInstalled("mreporting") 
        && $plugin->isActivated("mreporting")) {
+
+      // *Direct* access to rapport file (from e-mail) :
+      if (isset($_GET['redirect']) && strpos($_GET['redirect'], 'plugin_mreporting') !== false) {
+         $filename = str_replace('plugin_mreporting_', '', $_GET['redirect']);
+         Html::redirect($CFG_GLPI["root_doc"]."/files/_plugins/mreporting/notifications/".$filename);
+      }
 
       //Load additionnal language files in needed
       includeAdditionalLanguageFiles();
