@@ -1511,7 +1511,7 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorCategory($type = true) {
       global $CFG_GLPI;
 
-      echo "<br /><b>"._n("Category of ticket", "Categories of tickets", 2) ." : </b><br />";
+      echo "<br /><b>"._n('Ticket category', 'Ticket categories', 2) ." : </b><br />";
       if ($type) {
          $rand = Ticket::dropdownType('type', 
                                       array('value' => isset($_SESSION['mreporting_values']['type']) 
