@@ -164,7 +164,7 @@ class PluginMreportingDashboard extends CommonDBTM {
          $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
          $report_script = "Nothing to show" ;
-         $config = "No configuration";
+         //$config = "No configuration";
 
          $f_name = $report->fields["name"];
 
@@ -340,33 +340,35 @@ class PluginMreportingDashboard extends CommonDBTM {
    static function getConfig() {
       PluginMreportingCommon::getSelectorValuesByUser();
 
-      $content  = "<form method='POST' action='" . $_REQUEST['target'] . "' name='form' id='mreporting_date_selector'>";
+      $reportSelectors = PluginMreportingCommon::getReportSelectors(true);
 
-      $content .= "<table class='tab_cadre_fixe'>";
-      $content .= "<tr class='tab_bg_1'>";
-      $content .= PluginMreportingCommon::getReportSelectors(true);
-      $content .= "</table>";
+      if ($reportSelectors == "") {
+         echo "No configuration for this report";
+         return;
+      }
 
-      $content .= "<input type='hidden' name='short_classname' value='".$_REQUEST['short_classname']."' class='submit'>";
-      $content .= "<input type='hidden' name='f_name' value='".$_REQUEST['f_name']."' class='submit'>";
-      $content .= "<input type='hidden' name='gtype' value='".$_REQUEST['gtype']."' class='submit'>";
-      $content .= "<br><br><input type='submit' class='submit' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
+      echo "<form method='POST' action='" . $_REQUEST['target'] . "' name='form' id='mreporting_date_selector'>";
 
-      $content .= Html::closeForm(false);
+      echo "<table class='tab_cadre_fixe'>";
+      echo "<tr class='tab_bg_1'>";
+      echo $reportSelectors;
+      echo "</table>";
+
+      echo "<input type='hidden' name='short_classname' value='".$_REQUEST['short_classname']."' class='submit'>";
+      echo "<input type='hidden' name='f_name' value='".$_REQUEST['f_name']."' class='submit'>";
+      echo "<input type='hidden' name='gtype' value='".$_REQUEST['gtype']."' class='submit'>";
+      echo "<br><br>";
+      echo "<input type='submit' class='submit' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
+
+      Html::closeForm();
 
       if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
-         $content .= "<script type='text/javascript'>
+         echo "<script type='text/javascript'>
          var elements = document.querySelectorAll('.chzn-select');
          for (var i = 0; i < elements.length; i++) {
             new Chosen(elements[i], {});
          }
          </script>";
-      }
-
-      if(PluginMreportingCommon::getReportSelectors(true) == "") {
-         echo "No configuration for this report";
-      } else {
-         echo $content;
       }
    }
 
