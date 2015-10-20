@@ -565,8 +565,6 @@ class PluginMreportingConfig extends CommonDBTM {
          }
       }
 
-      $input=array("name"=>$this->fields["name"]);
-
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr>";
       echo "<td class='tab_bg_2 center' colspan='2'>";
