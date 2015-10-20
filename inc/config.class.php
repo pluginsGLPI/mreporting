@@ -713,7 +713,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __("Unit", 'mreporting');
+      echo __("Default delay", 'mreporting');
       echo "</td>";
       echo "<td>";
       $opt = array('size' => 10);
