@@ -915,8 +915,10 @@ class PluginMreportingCommon extends CommonDBTM {
       }
 
       $rand = mt_rand();
-      echo "<br><table class='tab_cadre' width='90%'>";
-      echo "<tr class='tab_bg_1'><th>";
+      echo "<br>";
+      echo "<table class='tab_cadre' width='90%'>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<th>";
 
       echo "<a href=\"javascript:showHideDiv('view_datas$rand','viewimg','".
          $CFG_GLPI["root_doc"]."/pics/deplier_down.png','".
@@ -930,17 +932,12 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "<img alt='' name='viewimg' src=\"".
          $CFG_GLPI["root_doc"]."/pics/$img\">&nbsp;";
 
-      echo __("data", 'mreporting');
-      echo "</a>";
+      echo __("data", 'mreporting')."</a>";
       echo "</th>";
       echo "</tr>";
       echo "</table>";
 
-      if ($show_graph) {
-         $visibility = "display:none;";
-      } else {
-         $visibility = "display:inline;";
-      }
+      $visibility = $show_graph ? "display:none;" : "display:inline;";
       echo "<div align='center' style='".$visibility."' id='view_datas$rand'>";
       echo "<table class='tab_cadre' width='90%'>";
 
@@ -1002,7 +999,6 @@ class PluginMreportingCommon extends CommonDBTM {
             echo "<th class='center'>$label</th>";
             echo "<td class='center'>";
             if (is_array($value)) {
-
                echo "<table class='tab_cadre' width='90%'>";
                self::showGraphTreeDatas($value, true);
                echo "</table>";
@@ -1384,6 +1380,8 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorForMultipleGroups($field, $condition = '', $label = '') {
       global $DB;
 
+      echo "<br /><b>".$label." : </b><br />";
+
       $values = array();
       if (isset($_SESSION['mreporting_values'][$field])) {
          $values = $_SESSION['mreporting_values'][$field];
@@ -1394,19 +1392,17 @@ class PluginMreportingCommon extends CommonDBTM {
          $datas[$data['id']] = $data['completename'];
       }
 
-      $param = array();
-      $param['multiple']= true;
-      $param['display'] = true;
-      $param['size']    = count($values);
-      $param['values']  = $values;
+      $param = array('multiple' => true,
+                     'display'  => true,
+                     'size'     => count($values),
+                     'values'   => $values);
       
-      echo "<br /><b>".$label." : </b><br />";
       Dropdown::showFromArray($field, $datas, $param);
-
    }
 
    static function selectorForSingleGroup($field, $conditon = '', $label = '') {
       echo "<br /><b>".$label." : </b><br />";
+
       if (isset($_SESSION['mreporting_values'][$field])) {
          $value = isset($_SESSION['mreporting_values'][$field]);
       } else {
@@ -1415,8 +1411,7 @@ class PluginMreportingCommon extends CommonDBTM {
       Dropdown::show("Group",array('comments'  => false,
                                    'name'      => $field,
                                    'value'     => $value,
-                                   'condition' => $condition)
-                    );
+                                   'condition' => $condition));
    }
 
 
@@ -1451,12 +1446,10 @@ class PluginMreportingCommon extends CommonDBTM {
    /**
     * Show the selector for tickets status (new, open, solved, closed...)
     */
-   static function selectorAllSlasWithTicket()
-   {
+   static function selectorAllSlasWithTicket() {
       global $LANG, $DB;
 
-      $query = "SELECT DISTINCT
-         s.id,
+      $query = "SELECT DISTINCT s.id,
          s.name
       FROM glpi_slas s
       INNER JOIN glpi_tickets t ON s.id = t.slas_id
@@ -1578,11 +1571,13 @@ class PluginMreportingCommon extends CommonDBTM {
       if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
          $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
 
-      $date1    = $_SESSION['mreporting_values']["date1".$randname];
-      $date2    = $_SESSION['mreporting_values']["date2".$randname];
+      $date1 = $_SESSION['mreporting_values']["date1".$randname];
       echo "<b>".__("Start date")."</b><br />";
       Html::showDateFormItem("date1".$randname, $date1, false);
-      echo "</td><td>";
+      echo "</td>";
+
+      $date2 = $_SESSION['mreporting_values']["date2".$randname];
+      echo "<td>";
       echo "<b>".__("End date")."</b><br />";
       Html::showDateFormItem("date2".$randname, $date2, false);   
    } 
@@ -1625,10 +1620,11 @@ class PluginMreportingCommon extends CommonDBTM {
       if (!isset($_REQUEST['f_name'])) {
          $has_selector = false;
       } else {
-         $has_selector   = (isset($_SESSION['mreporting_selector'][$_REQUEST['f_name']]));
+         $has_selector = (isset($_SESSION['mreporting_selector'][$_REQUEST['f_name']]));
       }
-      echo "<div class='center'><form method='POST' action='?$request_string' name='form'"
-         ." id='mreporting_date_selector'>\n";
+      echo "<div class='center'>";
+      echo "<form method='POST' action='?$request_string' name='form' id='mreporting_date_selector'>";
+
       echo "<table class='tab_cadre_fixe'>";
       echo "<tr class='tab_bg_1'>";
 
@@ -1638,26 +1634,28 @@ class PluginMreportingCommon extends CommonDBTM {
 
       echo "<td colspan='2' class='center'>";
       if ($has_selector) {
-         echo "<input type='submit' class='submit' name='submit'
-                value=\"". _sx('button', 'Post') ."\">";
+         echo "<input type='submit' class='submit' name='submit' value=\"". _sx('button', 'Post') ."\">";
       }
-      $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1;
-      $_SERVER['REQUEST_URI'] .= "&date2".$randname."=".$date2;
+      $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1."&date2".$randname."=".$date2;
+
       Bookmark::showSaveButton(Bookmark::URI, __CLASS__);
 
       //If there's no selector for the report, there's no need for a reset button !
       if ($has_selector) {
-         echo "<a href='?$request_string&reset=reset' >";
-         echo "&nbsp;&nbsp;<img title=\"".__s('Blank')."\" alt=\"".__s('Blank')."\" src='".
-               $CFG_GLPI["root_doc"]."/pics/reset.png' class='calendrier'></a>";
+         echo "<a href='?$request_string&reset=reset'>&nbsp;&nbsp;";
+         echo "<img title=\"".__s('Blank')."\" alt=\"".__s('Blank')."\" src='".
+               $CFG_GLPI["root_doc"]."/pics/reset.png' class='calendrier'>";
+         echo "</a>";
       }
-      echo "</td>\n";
-      unset($_SESSION['mreporting_selector']);
-
+      echo "</td>";
       echo "</tr>";
+
       echo "</table>";
       Html::closeForm();
-      echo "</div>\n";
+
+      echo "</div>";
+
+      unset($_SESSION['mreporting_selector']);
 
       if(isset($_SERVER['HTTP_USER_AGENT']) 
          && !preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
@@ -1685,9 +1683,11 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $i = 1;
       foreach ($_SESSION['mreporting_selector'][$graphname] as $selector) {
-         if($i%4 == 0) echo '</tr><tr class="tab_bg_1">';
+         if ($i%4 == 0) {
+            echo '</tr><tr class="tab_bg_1">';
+         }
          $selector = 'selector'.ucfirst($selector);
-         if(method_exists('PluginMreportingCommon', $selector)) {
+         if (method_exists('PluginMreportingCommon', $selector)) {
             $classselector = 'PluginMreportingCommon';
          } elseif (method_exists($classname, $selector)) {
             $classselector = $classname;
@@ -1716,7 +1716,6 @@ class PluginMreportingCommon extends CommonDBTM {
    static function saveSelectors($graphname, $config = array()) {
       $remove = array('short_classname', 'f_name', 'gtype', 'submit');
       $values = array();
-      $pref   = new PluginMreportingPreference();
 
       foreach ($_REQUEST as $key => $value) {
          if (!preg_match("/^_/", $key) && !in_array($key, $remove) ) {
@@ -1742,6 +1741,8 @@ class PluginMreportingCommon extends CommonDBTM {
       if (!empty($values)) {
          $id = $pref->addDefaultPreference(Session::getLoginUserID());
          $tmp['id'] = $id;
+
+         $pref = new PluginMreportingPreference();
          $pref->getFromDB($id);
 
          if (!is_null($pref->fields['selectors'])) {
