@@ -561,7 +561,7 @@ class PluginMreportingConfig extends CommonDBTM {
          } else {
             $_GET['name'] = -1;
             $_GET['classname'] = -1;
-            $_GET['preconfig']==-1;
+            $_GET['preconfig'] = -1;
          }
       }
 
