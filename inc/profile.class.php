@@ -150,18 +150,22 @@ class PluginMreportingProfile extends CommonDBTM {
    * Function to add right on report to a profile
    * @param $idProfile
    */
-   function addRightToProfile($idProfile){
+   public static function addRightToProfile($idProfile){
+      global $DB;
 
       //get all reports
       $config = new PluginMreportingConfig();
 
       $reportProfile = new self();
-
+      
       foreach ($config->find() as $report) {
-         //add right for any reports for profile
-         $reportProfile->add(array('profiles_id' => $idProfile,
-                                 'reports'   => $report['id'],
-                                 'right' => READ));
+         // add right for any reports for profile
+         // Add manual request because Add function get error : right is set to NULL
+         $query = "INSERT INTO `glpi_plugin_mreporting_profiles` SET
+                     `profiles_id` = $idProfile,
+                     `reports` = {$report['id']},
+                     `right` = " . READ;
+         $DB->query($query) or die('An error occurs during profile initialisation.');
       }
 
    }
@@ -351,8 +355,7 @@ class PluginMreportingProfile extends CommonDBTM {
    // Hook done on add item case
    static function addProfiles(Profile $item) {
       if ($item->getType()=='Profile' && $item->getField('interface') != 'helpdesk') {
-         $profile = new PluginMreportingProfile();
-         $profile->addRightToProfile($item->getID());
+         PluginMreportingProfile::addRightToProfile($item->getID());
       }
 
       return true;
