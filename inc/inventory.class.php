@@ -95,21 +95,21 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
-      $manufacturers = array('Acer', 'Apple', 'Asus', 'Bull', 'Dell',
-                             'Fujistu', 'HP', 'HTC', 'IBM', 'Lenovo',
-                             'Oracle', 'Samsung', 'Toshiba');
+      $manufacturerObj = new Manufacturer();
+      $manufacturers = $manufacturerObj->find();
+      
       $query = "";
       $first = true;
       foreach ($manufacturers as $manufacturer) {
          $query.= (!$first?"UNION":"").
-                  " SELECT '$manufacturer' Manufacturer, count(*) Total, count(*)*100/(SELECT count(*)
+                  " SELECT m.name as Manufacturer, count(*) Total, count(*)*100/(SELECT count(*)
                         FROM glpi_computers c, glpi_manufacturers m
                         WHERE c.`is_deleted`=0 AND c.`is_template`=0
                         AND c.manufacturers_id = m.id $condition) Pourcentage
                     FROM glpi_computers c, glpi_manufacturers m
                     WHERE c.manufacturers_id = m.id
                     AND c.`is_deleted`=0 AND c.`is_template`=0
-                    AND m.name LIKE '%$manufacturer%' $condition";
+                    AND m.id = " . $manufacturer['id'] . " $condition";
          $first = false;
       }
       $query.=" ORDER BY Total DESC";
