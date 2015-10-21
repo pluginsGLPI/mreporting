@@ -41,11 +41,21 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
-      $oses = array('Windows', 'Linux', 'Solaris', 'AIX', 'BSD', 'VMWare', 'MAC', 'Android', 'HP-UX');
+      $oses = array(
+         'Windows'   => 'Windows',
+         'Linux'     => 'Linux|Ubuntu',
+         'Solaris'   => 'Solaris',
+         'AIX'       => 'AIX',
+         'BSD'       => 'BSD',
+         'VMWare'    => 'VMWare',
+         'MAC'       => 'MAC',
+         'Android'   => 'Android',
+         'HP-UX'     => 'HP-UX',
+      );
       $query = "";
       $first = true;
       $notlike = "";
-      foreach ($oses as $os) {
+      foreach ($oses as $os => $search) {
          $query.=(!$first?" UNION ":"")
             ."\n SELECT '$os' AS OS, count(*) AS Total, count(*)*100/(SELECT count(*)
                                                                         FROM glpi_computers c, glpi_operatingsystems os
@@ -54,9 +64,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                FROM glpi_computers c, glpi_operatingsystems os
                WHERE c.operatingsystems_id = os.id
                AND c.`is_deleted`='0' AND c.`is_template`='0'
-               AND os.name LIKE '%$os%' $condition";
+               AND os.name REGEXP '$search' $condition";
 
-         $notlike.= " AND os.name NOT LIKE '%$os%'";
+         $notlike.= " AND os.name NOT REGEXP '$search'";
          $first = false;
       }
       $query .= " UNION
@@ -279,7 +289,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       global $DB;
 
       $data = array();
-      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%'") as $os) {
+      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%'") as $os) {
          $number = countElementsInTable('glpi_computers',
                                           "`operatingsystems_id`='".$os['id']."'
                                              AND `is_deleted`='0'
@@ -310,7 +320,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       global $DB;
 
       $data = array();
-      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%'") as $os) {
+      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%'") as $os) {
          $number = countElementsInTable('glpi_computers',
                                           "`operatingsystems_id`='".$os['id']."'
                                              AND `is_deleted`='0'
