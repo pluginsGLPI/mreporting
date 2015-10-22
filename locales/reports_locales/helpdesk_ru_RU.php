@@ -30,17 +30,6 @@
 $LANG['plugin_mreporting']["name"] = "More Reporting";
 
 $LANG['plugin_mreporting']["right"]["manage"] = "Управление правами";
-$LANG['plugin_mreporting']["error"][0] = "Нет доступных отчетов!";
-$LANG['plugin_mreporting']["error"][1] = "Нет данных за этот период!";
-$LANG['plugin_mreporting']["error"][2] = "Неопределено";
-$LANG['plugin_mreporting']["error"][3] = "График не выбран";
-$LANG['plugin_mreporting']["error"][4] = "Объект уже существует";
-
-$LANG['plugin_mreporting']["export"][0] = "Общий отчет - ODT";
-$LANG['plugin_mreporting']["export"][1] = "Номер";
-$LANG['plugin_mreporting']["export"][2] = "Информация";
-$LANG['plugin_mreporting']["export"][3] = "Без информации";
-$LANG['plugin_mreporting']["export"][4] = "С информацией";
 
 $LANG['plugin_mreporting']["config"][0] = "Настройки";
 $LANG['plugin_mreporting']["config"][1] = "Смотреть область";
