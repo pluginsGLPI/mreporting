@@ -40,6 +40,8 @@ Html::popHeader(__("General Report - ODT", 'mreporting'), $_SERVER['PHP_SELF']);
 $common = new PluginMreportingCommon();
 $common->showExportForm($_POST);
 
-echo "<div class='center'><br><a href='javascript:window.close()'>".__("Close")."</a>";
+echo "<div class='center'>";
+echo "<br>";
+echo "<a href='javascript:window.close()'>".__("Back")."</a>";
 echo "</div>";
 Html::popFooter();
