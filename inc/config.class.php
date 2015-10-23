@@ -578,11 +578,6 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</tr>";
       echo "</table>";
 
-      if ($_GET['preconfig']==-1 && $ID <= 0) {
-         echo "style='display:none;'";
-      } else {
-         echo "style='display:block;'";
-      }
       $style = ($_GET['preconfig']==-1 && $ID <= 0) ? "display:none;" : "'display:block;'";
       echo "<div id='show_form' style='$style'>";
 
@@ -618,7 +613,6 @@ class PluginMreportingConfig extends CommonDBTM {
          echo __("No report is available !", 'mreporting');
       }
 
-      echo $link;
       echo "<input type='hidden' name='classname' value=\"".$this->fields["classname"]."\">";
       echo "</td>";
       echo "</tr>";
