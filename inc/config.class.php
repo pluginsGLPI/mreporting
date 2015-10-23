@@ -426,11 +426,7 @@ class PluginMreportingConfig extends CommonDBTM {
          }
       }
 
-      $items = array();
-      if (count($params['toadd'])>0) {
-         $items = $params['toadd'];
-      }
-
+      $items = $params['toadd'];
       $items += self::getLabelTypes($notall);
 
       return Dropdown::showFromArray($name, $items, $params);
@@ -541,8 +537,9 @@ class PluginMreportingConfig extends CommonDBTM {
       if (isset($input["classname"]) && method_exists(new $input["classname"](array()), 'checkConfig')) {
          $object = new $input["classname"](array());
          $checkConfig = $object->checkConfig($input);
-         if(!$checkConfig['result']) {
+         if (!$checkConfig['result']) {
             Session::addMessageAfterRedirect($checkConfig['message'],ERROR,true);
+
             return array();
          }
       }
@@ -550,14 +547,15 @@ class PluginMreportingConfig extends CommonDBTM {
       return $input;
    }
 
-   function showForm ($ID, $options=array()) {
+   function showForm($ID, $options=array()) {
       global $LANG;
 
       $this->initForm($ID, $options);
+
       if ($ID <= 0) {
          if (isset($_GET['name']) && isset($_GET['classname'])) {
             $this->preconfig($_GET['name'], $_GET['classname']);
-            $_GET['preconfig']=1;
+            $_GET['preconfig'] = 1;
          } else {
             $_GET['name'] = -1;
             $_GET['classname'] = -1;
@@ -580,14 +578,13 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</tr>";
       echo "</table>";
 
-      echo "<div id='show_form' ";
-
       if ($_GET['preconfig']==-1 && $ID <= 0) {
          echo "style='display:none;'";
       } else {
          echo "style='display:block;'";
       }
-      echo ">";
+      $style = ($_GET['preconfig']==-1 && $ID <= 0) ? "display:none;" : "'display:block;'";
+      echo "<div id='show_form' style='$style'>";
 
       $this->showFormHeader($options);
 
@@ -595,13 +592,11 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "<td>".__("Name")."</td>";
       echo "<td>";
       echo $this->fields["name"];
-      echo "<input type='hidden' name='name' value=\"".$this->fields["name"]."\">\n";
+      echo "<input type='hidden' name='name' value=\"".$this->fields["name"]."\">";
       echo "</td>";
 
       echo "<td colspan='2'>";
-      $title_func = '';
       $gtype = '';
-      $link = __("No report is available !", 'mreporting');
 
       $f_name = $this->fields["name"];
 
@@ -612,16 +607,19 @@ class PluginMreportingConfig extends CommonDBTM {
 
       $short_classname = str_replace('PluginMreporting', '', $this->fields["classname"]);
 
-      if (!empty($short_classname) && !empty($f_name)) {
-         if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-            $title_func = $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
-            $link="&nbsp;<a href='graph.php?short_classname=".
-            $short_classname."&f_name=".$f_name."&gtype=".$gtype."'>".$title_func."</a>";
-         }
+      if (!empty($short_classname) 
+        && !empty($f_name)
+        && isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
+            echo "&nbsp;";
+            echo "<a href='graph.php?short_classname=".$short_classname."&f_name=".$f_name."&gtype=".$gtype."'>";
+            echo $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+            echo "</a>";
+      } else {
+         echo __("No report is available !", 'mreporting');
       }
 
       echo $link;
-      echo "<input type='hidden' name='classname' value=\"".$this->fields["classname"]."\">\n";
+      echo "<input type='hidden' name='classname' value=\"".$this->fields["classname"]."\">";
       echo "</td>";
       echo "</tr>";
 
@@ -653,7 +651,7 @@ class PluginMreportingConfig extends CommonDBTM {
          Dropdown::showYesNo("show_area",$this->fields["show_area"]);
       } else {
          echo Dropdown::getYesNo($this->fields["show_area"]);
-         echo "<input type='hidden' name='show_area' value='0'>\n";
+         echo "<input type='hidden' name='show_area' value='0'>";
       }
 
       echo "</td>";
@@ -668,9 +666,8 @@ class PluginMreportingConfig extends CommonDBTM {
          Dropdown::showYesNo("spline",$this->fields["spline"]);
       } else {
          echo Dropdown::getYesNo($this->fields["spline"]);
-         echo "<input type='hidden' name='spline' value='0'>\n";
+         echo "<input type='hidden' name='spline' value='0'>";
       }
-
       echo "</td>";
 
       echo "<td>";
@@ -696,7 +693,7 @@ class PluginMreportingConfig extends CommonDBTM {
          Dropdown::showYesNo("flip_data",$this->fields["flip_data"]);
       } else {
          echo Dropdown::getYesNo($this->fields["flip_data"]);
-         echo "<input type='hidden' name='flip_data' value='0'>\n";
+         echo "<input type='hidden' name='flip_data' value='0'>";
       }
       echo "</td>";
 
@@ -774,9 +771,9 @@ class PluginMreportingConfig extends CommonDBTM {
          $crit['condition']   = $self->fields['condition'];
          $crit['show_graph']  = $self->fields['show_graph'];
          $crit['graphtype']   = $self->fields['graphtype'];
-
          $crit['randname']    = $classname.$name;
       }
+
       if (DEBUG_MREPORTING) {
          $crit['show_graph']  = 1;
       }
@@ -792,17 +789,14 @@ class PluginMreportingConfig extends CommonDBTM {
    **/
 
    static function showGraphConfigValue($name, $classname) {
-      $crit = false;
+      if (DEBUG_MREPORTING) {
+         return true;
+      }
 
       $self = new self();
       if ($self->getFromDBByFunctionAndClassname($name,$classname)) {
-         $crit = $self->fields['show_graph'];
+         return $self->fields['show_graph'];
       }
-
-      if (DEBUG_MREPORTING) {
-         $crit = true;
-      }
-
-      return $crit;
+      return false;
    }
 }

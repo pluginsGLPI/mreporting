@@ -104,15 +104,14 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       // Ajout d'une condition englobant les entités
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
-
-      $manufacturerObj = new Manufacturer();
-      $manufacturers = $manufacturerObj->find();
       
       $query = "";
       $first = true;
-      foreach ($manufacturers as $manufacturer) {
+
+      $manufacturerObj = new Manufacturer();
+      foreach ($manufacturerObj->find() as $manufacturer) {
          $query.= (!$first?"UNION":"").
-                  " SELECT m.name as Manufacturer, count(*) Total, count(*)*100/(SELECT count(*)
+                  "SELECT m.name as Manufacturer, count(*) Total, count(*)*100/(SELECT count(*)
                         FROM glpi_computers c, glpi_manufacturers m
                         WHERE c.`is_deleted`=0 AND c.`is_template`=0
                         AND c.manufacturers_id = m.id $condition) Pourcentage
@@ -122,7 +121,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                     AND m.id = " . $manufacturer['id'] . " $condition";
          $first = false;
       }
-      $query.=" ORDER BY Total DESC";
+      $query .=" ORDER BY Total DESC";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
@@ -235,10 +234,11 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                                     AND itemtype = 'Computer' $condition) Pourcentage
          FROM glpi_computers c, glpi_infocoms i
          WHERE c.id = i.items_id
-         AND c.`is_deleted`=0 AND c.`is_template`=0
-         AND itemtype = 'Computer'
-         AND i.warranty_date IS NULL $condition";
-      $query.=" ORDER BY Total DESC";
+            AND c.`is_deleted`=0 AND c.`is_template`=0
+            AND itemtype = 'Computer'
+            AND i.warranty_date IS NULL
+            $condition
+         ORDER BY Total DESC";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
@@ -417,9 +417,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
       $query = "SELECT count(*) AS cpt, useragent
                 FROM `glpi_plugin_fusioninventory_agents`
-                WHERE computers_id >0
+                WHERE computers_id > 0
                 GROUP BY useragent
-                ORDER BY cpt DESC ";
+                ORDER BY cpt DESC";
 
       foreach ($DB->request($query) as $agent) {
          $values = array();
@@ -441,20 +441,19 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   function reportHbarMonitors($config = array()) {
       global $DB;
 
-      $condition = " AND c.entities_id IN (".$this->where_entities.")";
+      $data = array();
 
       $query = "SELECT COUNT(*) AS cpt
                 FROM `glpi_computers_items` AS ci,
                      `glpi_computers` AS c
-                WHERE `ci`.`itemtype`='Monitor'
-                   AND `c`.`is_deleted`='0'
-                     AND `ci`.`computers_id`=c.`id`
-                     AND `c`.`is_template`='0'
-                     $condition
+                WHERE `ci`.`itemtype` = 'Monitor'
+                  AND `c`.`is_deleted` = '0'
+                  AND `ci`.`computers_id` = c.`id`
+                  AND `c`.`is_template` = '0' 
+                  AND c.entities_id IN ({$this->where_entities}) 
                 GROUP BY `ci`.`computers_id`
                 ORDER BY `cpt`";
 
-      $data = array();
       foreach ($DB->request($query) as $result) {
          $label = $result['cpt']." "._n('Monitor', 'Monitors', $result['cpt']);
          if (!isset($data['datas'][$label])) {
@@ -475,11 +474,15 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
       $query = "SELECT t.name status, count(*) Total, count(*)*100/(SELECT count(*)
                            FROM glpi_computers c, glpi_states t
-                           WHERE c.`is_deleted`=0 AND c.`is_template`=0 
-                           AND c.computertypes_id = t.id $condition) Pourcentage 
+                           WHERE c.`is_deleted` = 0
+                              AND c.`is_template` = 0 
+                              AND c.computertypes_id = t.id $condition) Pourcentage 
                            
          FROM glpi_computers c, glpi_states t
-         WHERE c.states_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
+         WHERE c.states_id = t.id 
+            $condition
+            AND c.`is_deleted` = 0
+            AND c.`is_template` = 0
          GROUP BY t.name";
       $result = $DB->query($query);
 

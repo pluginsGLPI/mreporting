@@ -44,11 +44,13 @@ class PluginMreportingDashboard extends CommonDBTM {
       if (get_class($item) == 'Central' 
          && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
          echo "<div id='mreporting_central_dashboard'>";
+
          echo "<script language='javascript' type='text/javascript'>
             function resizeIframe(obj) {
                obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
             }
          </script>";
+
          echo "<iframe src='".$CFG_GLPI['root_doc'].
               "/plugins/mreporting/ajax/dashboard.php?action=centralDashboard' ".
               "frameborder='0' scrolling='no' onload='javascript:resizeIframe(this);'></iframe>";
@@ -76,7 +78,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID'], 'id');
 
       //show dashboard
-      echo "<div  id='dashboard'>";
+      echo "<div id='dashboard'>";
 
       if ($show_reports_dropdown) {
          echo "<div class='center'>";
@@ -104,8 +106,7 @@ class PluginMreportingDashboard extends CommonDBTM {
               " &#xf061;</span>";
       }
       echo "</div>";
-      echo "
-      <div id='addReport_dialog'>".$this->getFormForColumn()."</div>
+      echo "<div id='addReport_dialog'>".$this->getFormForColumn()."</div>
       <script type='text/javascript'>
          $(function() {
             removeWidget = function(id){
@@ -149,8 +150,6 @@ class PluginMreportingDashboard extends CommonDBTM {
       $i = 0;
       foreach($widgets as $data) {
          $i++;
-
-         $rand_widget = mt_rand();
 
          $report = new PluginMreportingConfig();
          $report->getFromDB($data['reports_id']);
@@ -197,8 +196,9 @@ class PluginMreportingDashboard extends CommonDBTM {
             }
          }
 
-         echo "
-         <script type='text/javascript'>
+         $rand_widget = mt_rand();
+
+         echo "<script type='text/javascript'>
          $(function() {
             configWidget$rand_widget =  null;
             $.ajax({
@@ -271,29 +271,14 @@ class PluginMreportingDashboard extends CommonDBTM {
       return (count($dashboard->find("users_id = ".$_SESSION['glpiID'])) > 0);
    }
 
-   function getFormForColumn(){
-      global $DB, $CFG_GLPI;
-
-      if(isset($_SESSION['mreporting_values']['column'])) {
-         $nbColumn = $_SESSION['mreporting_values']['column'];
-      } else {
-         $nbColumn = 2;
-      }
-
-      if (isset($options['target'])) {
-         $target = $options['target'];
-      } else {
-         $target = $this->getFormURL();
-      }
-
-      $out  = "<form method='post' action='".$target."' method='post'>";
+   function getFormForColumn() {
+      $out  = "<form method='post' action='".$this->getFormURL()."'>";
       $out .= PluginMreportingCommon::getSelectAllReports(false, true);
       $out .= "&nbsp;<input type='submit' name='addReports' value='".__('Add')."' class='submit'>";
       $out .= Html::closeForm(false);
       $out .= "</div>";
 
       return $out;
-
    }
 
    static function removeReportFromDashboard($id) {
@@ -313,7 +298,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       $index = str_replace('PluginMreporting','',$report->fields['classname']);
       $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
-      $out = "Nothing to show" ;
+      $out = "Nothing to show";
 
       $f_name = $report->fields["name"];
 

@@ -92,8 +92,8 @@ class PluginMreportingProfile extends CommonDBTM {
    function getFromDBByProfile($profiles_id) {
       global $DB;
 
-      $query = "SELECT * FROM `".$this->getTable()."`
-         WHERE `profiles_id` = '".$profiles_id."' ";
+      $query = "SELECT * FROM `{$this->getTable()}`
+         WHERE `profiles_id` = '".$profiles_id."'";
       if ($result = $DB->query($query)) {
          if ($DB->numrows($result) != 1) {
             return false;
@@ -155,9 +155,6 @@ class PluginMreportingProfile extends CommonDBTM {
 
       //get all reports
       $config = new PluginMreportingConfig();
-
-      $reportProfile = new self();
-      
       foreach ($config->find() as $report) {
          // add right for any reports for profile
          // Add manual request because Add function get error : right is set to NULL
@@ -252,11 +249,13 @@ class PluginMreportingProfile extends CommonDBTM {
       
       echo "<div style='float:right;'>";
       echo "<input type='submit' 
-               style='background-image: url(".$CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat;width:14px;border:none;cursor:pointer;'
+               style='background-image: url(".
+                  $CFG_GLPI['root_doc']."/pics/add_dropdown.png);background-repeat:no-repeat;width:14px;border:none;cursor:pointer;'
                name='giveReadAccessForAllReport' value='' title='".__('Select all')."'>";
 
       echo "<input type='submit' 
-               style='background-image: url(".$CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat;width:14px;border:none;cursor:pointer;'
+               style='background-image: url(".
+                  $CFG_GLPI['root_doc']."/pics/sub_dropdown.png);background-repeat:no-repeat;width:14px;border:none;cursor:pointer;'
                name='giveNoneAccessForAllReport' value='' title='".__('Deselect all')."'>";
 
       echo "<br><br>";
@@ -282,7 +281,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
       $target = isset($options['target']) ? $options['target'] : $this->getFormURL();
       
-      echo'<form action="'.$target.'" method="post" name="form">';
+      echo '<form action="'.$target.'" method="post" name="form">';
       echo "<table class='tab_cadre_fixe'>\n";
       echo "<tr><th colspan='3'>".__("Rights management", 'mreporting')."</th></tr>\n";
 
@@ -302,7 +301,7 @@ class PluginMreportingProfile extends CommonDBTM {
          echo "<td>";
          Profile::dropdownNoneReadWrite($profile['id'], 
                                         $reportProfiles->fields['right'], 1, 1, 0);
-         echo "</td></tr>\n";
+         echo "</td></tr>";
       }
 
       echo "<tr class='tab_bg_4'>";
