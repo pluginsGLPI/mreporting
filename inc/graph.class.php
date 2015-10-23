@@ -63,12 +63,12 @@ class PluginMreportingGraph {
          $desc = '';
          if (!empty($options['desc'])) {
             $desc =$options['desc'];
-         }
-         if (!empty($options['desc'])
-               && isset($_SESSION['mreporting_values']['date1'.$randname])
+            if (isset($_SESSION['mreporting_values']['date1'.$randname])
                   && isset($_SESSION['mreporting_values']['date1'.$randname])) {
             $desc.= " - ";
+            }
          }
+         
          if (isset($_SESSION['mreporting_values']['date1'.$randname])
                && isset($_SESSION['mreporting_values']['date1'.$randname])) {
             $desc.= Html::convdate($_SESSION['mreporting_values']['date1'.$randname])." / ".
