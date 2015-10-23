@@ -28,13 +28,16 @@
  */
 
 class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
+
    function reportPieTicketNumberByEntity($config = array()) {
       $_SESSION['mreporting_selector']['reportPieTicketNumberByEntity'] = array('dateinterval');
+
       return $this->reportHbarTicketNumberByEntity($config);
    }
 
    function reportHbarTicketNumberByEntity($config = array()) {
       global $DB;
+
       $_SESSION['mreporting_selector']['reportHbarTicketNumberByEntity'] = array('dateinterval',
                                                                                  'limit');
 
@@ -45,14 +48,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $nb_ligne = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 
       $datas = array();
-      $query = "
-         SELECT
-         COUNT(glpi_tickets.id) as count,
+
+      $query = "SELECT COUNT(glpi_tickets.id) as count,
          glpi_entities.name as name
       FROM glpi_tickets
       LEFT JOIN glpi_entities
          ON (glpi_tickets.entities_id = glpi_entities.id)
-      WHERE ".$this->sql_date." ";
+      WHERE {$this->sql_date} ";
 
       if (Session::isMultiEntitiesMode()) {
          $query.= "AND glpi_entities.id IN (".$this->where_entities.") ";
@@ -91,13 +93,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                                                            $config['randname']);
 
       //get categories used in this period
-      $query_cat = "SELECT
-         DISTINCT(glpi_tickets.itilcategories_id) as itilcategories_id,
+      $query_cat = "SELECT DISTINCT(glpi_tickets.itilcategories_id) as itilcategories_id,
          glpi_itilcategories.completename as category
       FROM glpi_tickets
       LEFT JOIN glpi_itilcategories
          ON glpi_tickets.itilcategories_id = glpi_itilcategories.id
-      WHERE ".$this->sql_date." ";
+      WHERE {$this->sql_date} ";
 
       if (Session::isMultiEntitiesMode()) {
          $query_cat.= "AND glpi_tickets.entities_id IN (".$this->where_entities.") ";
@@ -135,7 +136,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       $query.= "AND ".$this->sql_date."
-      AND glpi_tickets.is_deleted = '0'
+         AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name, glpi_tickets.itilcategories_id
       ORDER BY glpi_entities.name ASC, glpi_tickets.itilcategories_id ASC";
       $res = $DB->query($query);
@@ -184,8 +185,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
       foreach($this->filters as $filter) {
 
-         $query = "
-            SELECT COUNT(*)
+         $query = "SELECT COUNT(*)
             FROM glpi_tickets
             WHERE ".$this->sql_date." ";
 
@@ -226,14 +226,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $status = $this->filters['open']['status'] + $this->filters['close']['status'];
       foreach($status as $key => $val) {
          if(in_array($key, $status_to_show)) {
-            $query = "
-               SELECT COUNT(glpi_tickets.id) as count
+            $query = "SELECT COUNT(glpi_tickets.id) as count
                FROM glpi_tickets
-               WHERE ".$this->sql_date."
-               AND glpi_tickets.is_deleted = '0'
-               AND glpi_tickets.entities_id IN (".$this->where_entities.")
-               AND glpi_tickets.status ='".$key."'
-            ";
+               WHERE {$this->sql_date}
+                  AND glpi_tickets.is_deleted = '0'
+                  AND glpi_tickets.entities_id IN ({$this->where_entities})
+                  AND glpi_tickets.status ='{$key}'";
             $result = $DB->query($query);
 
             while ($ticket = $DB->fetch_assoc($result)) {
@@ -260,20 +258,17 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                                                                 $config['randname']);
 
       $datas = array();
-      $query = "
-         SELECT COUNT(glpi_tickets.id) as count, glpi_tickets_users.users_id as users_id
+      $query = "SELECT COUNT(glpi_tickets.id) as count, glpi_tickets_users.users_id as users_id
          FROM glpi_tickets
-
          LEFT JOIN glpi_tickets_users
             ON (glpi_tickets_users.tickets_id = glpi_tickets.id AND glpi_tickets_users.type =1)
-         WHERE ".$this->sql_date."
-         AND ".$this->sql_closedate."
-         AND glpi_tickets.entities_id IN (".$this->where_entities.")
-         AND glpi_tickets.is_deleted = '0'
+         WHERE {$this->sql_date}
+            AND {$this->sql_closedate}
+            AND glpi_tickets.entities_id IN ({$this->where_entities})
+            AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_tickets_users.users_id
          ORDER BY count DESC
-         LIMIT 10
-      ";
+         LIMIT 10";
       $result = $DB->query($query);
       while ($ticket = $DB->fetch_assoc($result)) {
          if($ticket['users_id']==0) {
@@ -313,23 +308,20 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                                                            $config['delay'],
                                                            $config['randname']);
 
-      $query = "
-         SELECT
-            glpi_itilcategories.id as category_id,
+      $query = "SELECT glpi_itilcategories.id as category_id,
             glpi_itilcategories.completename as category_name,
             glpi_tickets.type as type,
             COUNT(glpi_tickets.id) as count
          FROM glpi_tickets
          LEFT JOIN glpi_itilcategories
             ON glpi_itilcategories.id = glpi_tickets.itilcategories_id
-         WHERE ".$this->sql_date."
-         AND glpi_tickets.entities_id IN (".$this->where_entities.")
-         AND glpi_tickets.status IN('".implode(
-            "', '", array_keys($this->filters[$filter]['status']))."')
-         AND glpi_tickets.is_deleted = '0'
+         WHERE {$this->sql_date}
+            AND glpi_tickets.entities_id IN ({$this->where_entities})
+            AND glpi_tickets.status IN('".implode(
+               "', '", array_keys($this->filters[$filter]['status']))."')
+            AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_itilcategories.id, glpi_tickets.type
-         ORDER BY glpi_itilcategories.name
-      ";
+         ORDER BY glpi_itilcategories.name";
       $result = $DB->query($query);
 
       $datas['datas'] = array();
@@ -366,41 +358,35 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       foreach($this->filters as $class => $filter) {
 
          $datas['labels2'][$filter['label']] = $filter['label'];
-         $query = "
-            SELECT COUNT(*)
+         $query = "SELECT COUNT(*)
             FROM glpi_tickets
             WHERE id NOT IN (
                SELECT tickets_id
                FROM glpi_groups_tickets
                WHERE glpi_groups_tickets.type = 1
             )
-            AND glpi_tickets.entities_id IN (".$this->where_entities.")
-            AND ".$this->sql_date."
-            AND status IN('".implode("', '", array_keys($filter['status']))."')
-         ";
+               AND glpi_tickets.entities_id IN (".$this->where_entities.")
+               AND {$this->sql_date} 
+               AND status IN('".implode("', '", array_keys($filter['status']))."')";
          $result = $DB->query($query);
 
          $datas['datas'][__("None")][$filter['label']] = $DB->result($result, 0, 0);
 
-         $query = "
-            SELECT
-               glpi_groups.name as group_name,
+         $query = "SELECT glpi_groups.name as group_name,
                COUNT(glpi_tickets.id) as count
             FROM glpi_tickets, glpi_groups_tickets, glpi_groups
             WHERE glpi_tickets.id = glpi_groups_tickets.tickets_id
-            AND glpi_tickets.entities_id IN (".$this->where_entities.")
-            AND glpi_groups_tickets.groups_id = glpi_groups.id
-            AND glpi_groups_tickets.type = 1
-            AND glpi_tickets.is_deleted = '0'
-            AND ".$this->sql_date."
-            AND glpi_tickets.status IN('".implode("', '", array_keys($filter['status']))."')
+               AND glpi_tickets.entities_id IN ({$this->where_entities})
+               AND glpi_groups_tickets.groups_id = glpi_groups.id
+               AND glpi_groups_tickets.type = 1
+               AND glpi_tickets.is_deleted = '0'
+               AND {$this->sql_date}
+               AND glpi_tickets.status IN('".implode("', '", array_keys($filter['status']))."')
             GROUP BY glpi_groups.id
-            ORDER BY glpi_groups.name
-         ";
+            ORDER BY glpi_groups.name";
          $result = $DB->query($query);
 
          while ($ticket = $DB->fetch_assoc($result)) {
-
             $datas['datas'][$ticket['group_name']][$filter['label']] = $ticket['count'];
          }
 
@@ -425,7 +411,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       // Get status to show
       if(isset($_POST['status_1'])) {
          foreach($_POST as $key => $value) {
-            if((substr($key, 0, 7) == 'status_') && ($value == 1)) $status_to_show[] = substr($key, 7, 1);
+            if(substr($key, 0, 7) == 'status_' && $value == 1) {
+               $status_to_show[] = substr($key, 7, 1);
+            }
          }
       }else{
          $status_to_show = array('1', '2', '3', '4');
@@ -434,22 +422,19 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $status = $this->filters['open']['status'] + $this->filters['close']['status'];
       $status_keys = array_keys($status);
 
-      $query = "
-         SELECT
-            glpi_tickets.status,
+      $query = "SELECT glpi_tickets.status,
             glpi_itilcategories.completename as category_name,
             COUNT(glpi_tickets.id) as count
          FROM glpi_tickets
          LEFT JOIN glpi_itilcategories
             ON glpi_itilcategories.id = glpi_tickets.itilcategories_id
-         WHERE ".$this->sql_date."
-         AND glpi_tickets.entities_id IN (".$this->where_entities.")
-         AND glpi_tickets.status IN('".implode("', '",$status_keys)."')
-         AND glpi_tickets.is_deleted = '0'
-         AND status IN (".implode(',', $status_to_show).")
+         WHERE {$this->sql_date}
+            AND glpi_tickets.entities_id IN (".$this->where_entities.")
+            AND glpi_tickets.status IN('".implode("', '",$status_keys)."')
+            AND glpi_tickets.is_deleted = '0'
+            AND status IN (".implode(',', $status_to_show).")
          GROUP BY glpi_itilcategories.id, glpi_tickets.status
-         ORDER BY glpi_itilcategories.name
-      ";
+         ORDER BY glpi_itilcategories.name";
       $result = $DB->query($query);
 
       while ($ticket = $DB->fetch_assoc($result)) {
@@ -499,9 +484,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          DATE_FORMAT(date, '".$this->period_label."') as period_name,
          COUNT(id) as nb
       FROM glpi_tickets
-      WHERE ".$this->sql_date."
-      AND glpi_tickets.entities_id IN (".$this->where_entities.")
-      AND glpi_tickets.is_deleted = '0'
+      WHERE {$this->sql_date}
+         AND glpi_tickets.entities_id IN ({$this->where_entities})
+         AND glpi_tickets.is_deleted = '0'
       GROUP BY period
       ORDER BY period";
       $res = $DB->query($query);
@@ -546,8 +531,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       //get dates used in this period
-      $query_date = "SELECT
-         DISTINCT
+      $query_date = "SELECT DISTINCT
          DATE_FORMAT(`date`, '".$this->period_sort."') AS period,
          DATE_FORMAT(`date`, '".$this->period_label."') AS period_name
       FROM `glpi_tickets`
@@ -574,9 +558,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          COUNT(id) as nb
       FROM glpi_tickets
       WHERE ".$this->sql_date."
-      AND glpi_tickets.entities_id IN (".$this->where_entities.")
-      AND glpi_tickets.is_deleted = '0'
-      AND status IN(".implode(',', $status_to_show).")
+         AND glpi_tickets.entities_id IN (".$this->where_entities.")
+         AND glpi_tickets.is_deleted = '0'
+         AND status IN(".implode(',', $status_to_show).")
       GROUP BY period, status
       ORDER BY period, status";
       $res = $DB->query($query);
@@ -614,8 +598,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $flat_datas = array();
       $datas = array();
 
-      $query = "SELECT
-            glpi_tickets.itilcategories_id as id,
+      $query = "SELECT glpi_tickets.itilcategories_id as id,
             glpi_itilcategories.name as name,
             glpi_itilcategories.itilcategories_id as parent,
             COUNT(glpi_tickets.id) as count
@@ -626,8 +609,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             AND glpi_tickets.entities_id IN ({$this->where_entities})
             AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_itilcategories.id
-         ORDER BY glpi_itilcategories.name
-      ";
+         ORDER BY glpi_itilcategories.name";
       $res = $DB->query($query);
       while ($data = $DB->fetch_assoc($res)) {
          $flat_datas[$data['id']] = $data;
@@ -673,8 +655,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       //get technician list
       $technicians = array();
-      $query = "
-         SELECT
+      $query = "SELECT
             CONCAT(glpi_users.firstname, ' ', glpi_users.realname) as fullname,
             glpi_users.name as username
          FROM glpi_tickets
@@ -683,11 +664,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             AND glpi_tickets_users.type = 2
          INNER JOIN glpi_users
             ON glpi_users.id = glpi_tickets_users.users_id
-         WHERE ".$this->sql_date."
-         AND glpi_tickets.entities_id IN (".$this->where_entities.")
+         WHERE {$this->sql_date}
+         AND glpi_tickets.entities_id IN ({$this->where_entities})
          AND glpi_tickets.is_deleted = '0'
-         ORDER BY fullname, username
-      ";
+         ORDER BY fullname, username";
       $result = $DB->query($query);
 
       while ($technician = $DB->fetch_assoc($result)) {
@@ -710,9 +690,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          }
       }
 
-      $query = "
-         SELECT
-            glpi_tickets.status,
+      $query = "SELECT glpi_tickets.status,
             CONCAT(glpi_users.firstname, ' ', glpi_users.realname) as technician,
             glpi_users.name as username,
             COUNT(glpi_tickets.id) as count
@@ -722,12 +700,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             AND glpi_tickets_users.type = 2
          INNER JOIN glpi_users
             ON glpi_users.id = glpi_tickets_users.users_id
-         WHERE ".$this->sql_date."
-         AND glpi_tickets.entities_id IN (".$this->where_entities.")
-         AND glpi_tickets.is_deleted = '0'
+         WHERE {$this->sql_date}
+            AND glpi_tickets.entities_id IN ({$this->where_entities})
+            AND glpi_tickets.is_deleted = '0'
          GROUP BY status, technician
-         ORDER BY technician, username
-      ";
+         ORDER BY technician, username";
       $result = $DB->query($query);
 
       while ($ticket = $DB->fetch_assoc($result)) {
@@ -750,12 +727,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
                                                            $config['delay'],
                                                            $config['randname']);
-      $nb_ligne = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 
       $datas = array();
-      $query = "
-         SELECT
-         COUNT(glpi_tickets.id) as count,
+
+      $query = "SELECT COUNT(glpi_tickets.id) as count,
          glpi_locations.name as name
       FROM glpi_tickets
       LEFT JOIN glpi_tickets_users
@@ -765,11 +740,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ON (glpi_tickets_users.users_id = glpi_users.id)
       LEFT JOIN glpi_locations
          ON (glpi_locations.id = glpi_users.locations_id)
-      WHERE ".$this->sql_date." ";
-      $query.= "AND glpi_tickets.is_deleted = '0'
+      WHERE {$this->sql_date} 
+         AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_locations.name
       ORDER BY count DESC
-      LIMIT 0, ".$nb_ligne;
+      LIMIT 0, ";
+      $query .= (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
+
       $result = $DB->query($query);
 
       while ($ticket = $DB->fetch_assoc($result)) {
