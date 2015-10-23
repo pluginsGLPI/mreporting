@@ -211,3 +211,42 @@ msgstr ""
 #: inc/profile.class.php:295
 msgid "Rights management"
 msgstr ""
+
+msgid "Add/remove software on a computer"
+msgstr ""
+
+msgid "Add/remove version on a software"
+msgstr ""
+
+msgid "Add infocom"
+msgstr ""
+
+msgid "Add/remove profile on a user"
+msgstr ""
+
+msgid "Add/remove group on a user"
+msgstr ""
+
+msgid "User deleted from LDAP"
+msgstr ""
+
+msgid "Webservice logs"
+msgstr ""
+
+msgid "OCS Infos"
+msgstr ""
+
+msgid "Add/update/remove device"
+msgstr ""
+
+msgid "Add/remove relation"
+msgstr ""
+
+msgid "Add/remove item"
+msgstr ""
+
+msgid "Comments & date_mod changes"
+msgstr ""
+
+msgid "Genericobject plugin logs"
+msgstr ""

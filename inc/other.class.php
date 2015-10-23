@@ -69,40 +69,40 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       $datas = array();
 
       $result = $DB->query($query_computer_software);
-      $datas['datas'][__('Add/remove software on a computer')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Add/remove software on a computer', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_software_version);
-      $datas['datas'][__('Add/remove version on a software')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Add/remove version on a software', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_add_infocom);
-      $datas['datas'][__('Add infocom')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Add infocom', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_user_profiles);
-      $datas['datas'][__('Add/remove profile on a user')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Add/remove profile on a user', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_user_groups);
-      $datas['datas'][__('Add/remove group on a user')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Add/remove group on a user', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_user_deleted);
-      $datas['datas'][__('User deleted from LDAP')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('User deleted from LDAP', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_webservice);
-      $datas['datas'][__('Webservice logs')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Webservice logs', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_ocs);
-      $datas['datas'][__('OCS Infos')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('OCS Infos', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_device);
-      $datas['datas'][__('Add/update/remove device')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Add/update/remove device', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_relation);
-      $datas['datas'][__('Add/remove relation')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Add/remove relation', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_item);
-      $datas['datas'][__('Add/remove item')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Add/remove item', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $result = $DB->query($query_other);
-      $datas['datas'][__('Comments & date_mod changes')] = $DB->result($result, 0, 'cpt');
+      $datas['datas'][__('Comments & date_mod changes', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
       $plugin = new Plugin();
       if ($plugin->isActivated("genericobject")) {
@@ -110,7 +110,7 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
 
          // Display this information is not usefull if genericobject is not activated
          $result = $DB->query($query_genericobject);
-         $datas['datas'][__('Genericobject plugin logs')] = $DB->result($result, 0, 'cpt');
+         $datas['datas'][__('Genericobject plugin logs', 'mreporting')] = $DB->result($result, 0, 'cpt');
       }
 
       return $datas;
