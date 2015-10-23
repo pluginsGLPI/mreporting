@@ -32,11 +32,6 @@ header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 $common = new PluginMreportingCommon();
-
-switch ($_REQUEST['classname']) {
-	default :
-      $common->showCentral($_REQUEST);
-		break;
-}
+$common->showCentral($_REQUEST);
 
 Html::ajaxFooter();
