@@ -79,6 +79,7 @@ function plugin_init_mreporting() {
 
          /* Menu */
          $PLUGIN_HOOKS['menu_toadd']['mreporting'] = array('tools' => 'PluginMreportingCommon');
+         $PLUGIN_HOOKS['config_page']['mreporting'] = 'front/config.php';
 
          /* Show Reports in standart stats page */
          $mreporting_common = new PluginMreportingCommon();
@@ -137,9 +138,18 @@ function plugin_version_mreporting() {
 }
 
 function includeAdditionalLanguageFiles() {
-   $language = isset($_SESSION["glpilanguage"]) ? $_SESSION["glpilanguage"] : 'fr_FR'; //Note : quick hack
-   foreach (glob(GLPI_ROOT."/plugins/mreporting/locales/reports_locales/*_$language.php") as $path) {
-      include_once($path);
+   $translations_path = GLPI_ROOT . "/plugins/mreporting/locales/reports_locales/";
+   
+   // Load default translations
+   foreach (glob($translations_path . "*_en_GB.php") as $path) {
+       include_once($path);
+   }
+   
+   // if isset user langage, overload translations by user langage ones if presents
+   if (isset($_SESSION["glpilanguage"])) {
+      foreach (glob($translations_path . "*_" . $_SESSION["glpilanguage"] . ".php") as $path) {
+          include_once($path);
+      }
    }
 }
 

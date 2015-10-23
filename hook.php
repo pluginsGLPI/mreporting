@@ -187,7 +187,7 @@ function plugin_mreporting_install() {
    $config = new PluginMreportingConfig();
    $config->createFirstConfig();
 
-   PluginMreportingProfile::addRightToProfiles($right);
+   PluginMreportingProfile::addRightToProfile($_SESSION['glpiactiveprofile']['id']);
    return true;
 }
 

@@ -41,6 +41,7 @@ if (isset($_POST['ext'])
       && !empty($_POST['ext'])) {
    if ($_POST['ext'] == "odt") {
       echo "&nbsp;";
+      $option = array();
       $option[0] = __("With data", 'mreporting');
       $option[1] = __("Without data", 'mreporting');
       Dropdown::showFromArray("withdata", $option, array());
