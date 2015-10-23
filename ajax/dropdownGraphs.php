@@ -36,13 +36,13 @@ if (!defined('GLPI_ROOT')) {
    die("Can not acces directly to this file");
 }
 
-$config= new PluginMreportingConfig();
 if ($_POST['graphname'] != -1) {
    $test = explode(";", $_POST['graphname']);
       if (isset($test[0])) {
-         $_POST['name']       = $test[1];
          $_POST['classname']  = $test[0];
-         echo "&nbsp;<a href='".$config->getFormURL().
-            "?name=".$_POST['name']."&classname=".$_POST['classname']."'>".__('Send')."</a>";
+         $_POST['name']       = $test[1];
+
+         $config= new PluginMreportingConfig();
+         echo "&nbsp;<a href='".$config->getFormURL()."?name=".$_POST['name']."&classname=".$_POST['classname']."'>".__('Send')."</a>";
       }
 }
