@@ -1593,6 +1593,11 @@ class PluginMreportingCommon extends CommonDBTM {
    static function getRequestString($var) {
       unset($var['submit']);
 
+      // For have clean URL (best practice)
+      if (isset($var['reset'])) {
+         unset($var['reset']);
+      }
+
       return http_build_query($var);
    }
 
