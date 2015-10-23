@@ -54,8 +54,6 @@ class PluginMreportingCommon extends CommonDBTM {
    static function getMenuContent() {
       global $CFG_GLPI;
 
-      $menu = parent::getMenuContent();
-
       $img_db = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/dashboard.png'
                            title='".__("Dashboard", 'mreporting')."' 
                            alt='".__("Dashboard", 'mreporting')."'>";
@@ -64,6 +62,8 @@ class PluginMreportingCommon extends CommonDBTM {
                            alt='".__("Reports list", 'mreporting')."'>";
       $url_central   = "/plugins/mreporting/front/central.php";
       $url_dashboard = "/plugins/mreporting/front/dashboard.php";
+
+      $menu = parent::getMenuContent();
 
       $menu['page'] = PluginMreportingDashboard::CurrentUserHaveDashboard() ? $url_dashboard : $url_central;
 
@@ -93,7 +93,6 @@ class PluginMreportingCommon extends CommonDBTM {
    /**
     * Parsing all classes
     * Search all class into inc folder
-    * @params
    */
    static function parseAllClasses($inc_dir) {
 
@@ -129,15 +128,16 @@ class PluginMreportingCommon extends CommonDBTM {
       $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
       $pics_dir = "../pics";
 
-      //parse inc dir to search report classes
-      $classes = self::parseAllClasses($inc_dir);
-
-      sort($classes);
       if (isset($params['classname'])
             && !empty($params['classname'])) {
          $classes = array();
          $classes[] = $params['classname'];
 
+      } else {
+         //parse inc dir to search report classes
+         $classes = self::parseAllClasses($inc_dir);
+
+         sort($classes);
       }
 
       //construct array to list classes and functions
@@ -730,10 +730,11 @@ class PluginMreportingCommon extends CommonDBTM {
                         echo "<img src='../pics/config.png' class='title_pics'/></a>";
                      }
                      if ($randname !== false) {
-
                         echo "<br><br>";
+
                         echo "<form method='post' action='export.php?$request_string'
                         style='margin: 0; padding: 0' target='_blank' id='export_form'>";
+
                         echo "<b>".__("Export")."</b> : ";
                         $params = array('myname'   => 'ext',
                            'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",
@@ -745,9 +746,8 @@ class PluginMreportingCommon extends CommonDBTM {
 
                         self::dropdownExt($params);
 
-                        echo "<span id='show_ext'>";
-                        echo "</span>";
-                        Html::Closeform();
+                        echo "<span id='show_ext'></span>";
+                        Html::closeForm();
 
                      }
                      echo "</span>";
@@ -1506,7 +1506,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $params['comments'] = false;
       ITILCategory::dropdown($params);
-      
+
       if ($type) {
          echo "</span>";
 
