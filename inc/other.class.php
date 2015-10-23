@@ -65,7 +65,6 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       $query_relation        = "$prefix `linked_action` IN (15, 16)";
       $query_item            = "$prefix `linked_action` IN (13, 14, 17, 18, 19, 20)";
       $query_other           = "$prefix `id_search_option` IN (16, 19)";
-      $query_genericobject   = "$prefix `itemtype` LIKE '%PluginGenericobject%'";
 
       $datas = array();
 
@@ -105,8 +104,14 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       $result = $DB->query($query_other);
       $datas['datas'][__('Comments & date_mod changes')] = $DB->result($result, 0, 'cpt');
 
-      $result = $DB->query($query_genericobject);
-      $datas['datas'][__('Genericobject plugin logs')] = $DB->result($result, 0, 'cpt');
+      $plugin = new Plugin();
+      if ($plugin->isActivated("genericobject")) {
+         $query_genericobject = "$prefix `itemtype` LIKE '%PluginGenericobject%'";
+
+         // Display this information is not usefull if genericobject is not activated
+         $result = $DB->query($query_genericobject);
+         $datas['datas'][__('Genericobject plugin logs')] = $DB->result($result, 0, 'cpt');
+      }
 
       return $datas;
    }
