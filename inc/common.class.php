@@ -1502,14 +1502,16 @@ class PluginMreportingCommon extends CommonDBTM {
          $params = array('type'            => '__VALUE__',
                          'currenttype'     => Ticket::INCIDENT_TYPE,
                          'entity_restrict' => -1,
+                         'condition'       => "`is_incident`='1'",
                          'value'           => isset($_SESSION['mreporting_values']['itilcategories_id']) 
                                               ? $_SESSION['mreporting_values']['itilcategories_id'] 
                                               : 0);
          echo "<span id='show_category_by_type'>";
-         $params['condition'] = "`is_incident`='1'";
       }
+
       $params['comments'] = false;
       ITILCategory::dropdown($params);
+      
       if ($type) {
          echo "</span>";
 
@@ -1521,6 +1523,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
    static function selectorLimit() {
       echo "<b>".__("Maximal count")." :</b><br />";
+
       Dropdown::showListLimit(); // glpilist_limit
    }
 
