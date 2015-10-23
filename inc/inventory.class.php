@@ -185,53 +185,57 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                            FROM glpi_computers c,  glpi_infocoms i
                            WHERE c.id = i.items_id
                            AND c.`is_deleted`=0 AND c.`is_template`=0
-                           AND itemtype = 'Computer' $condition) Pourcentage
+                           AND itemtype = 'Computer' $condition) Percent
          FROM glpi_computers c, glpi_infocoms i
          WHERE c.id = i.items_id
-         AND c.`is_deleted`=0 AND c.`is_template`=0
-         AND itemtype = 'Computer'
-         AND i.warranty_date > CURRENT_DATE - INTERVAL 1 YEAR $condition
+            AND c.`is_deleted`=0 AND c.`is_template`=0
+            AND itemtype = 'Computer'
+            AND i.warranty_date > CURRENT_DATE - INTERVAL 1 YEAR 
+            $condition
          UNION
-         SELECT '1 a 3 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT '1 à 3 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
                                     WHERE c.id = i.items_id
                                     AND c.`is_deleted`=0 AND c.`is_template`=0
-                                    AND itemtype = 'Computer' $condition) Pourcentage
+                                    AND itemtype = 'Computer' $condition) Percent
          FROM glpi_computers c, glpi_infocoms i
          WHERE c.id = i.items_id
-         AND c.`is_deleted`=0 AND c.`is_template`=0
-         AND itemtype = 'Computer'
-         AND i.warranty_date <= CURRENT_DATE - INTERVAL 1 YEAR
-         AND i.warranty_date > CURRENT_DATE - INTERVAL 3 YEAR $condition
+            AND c.`is_deleted`=0 AND c.`is_template`=0
+            AND itemtype = 'Computer'
+            AND i.warranty_date <= CURRENT_DATE - INTERVAL 1 YEAR
+            AND i.warranty_date > CURRENT_DATE - INTERVAL 3 YEAR 
+            $condition
          UNION
-         SELECT '3 a 5 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT '3 à 5 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
                                     WHERE c.id = i.items_id
                                     AND c.`is_deleted`=0 AND c.`is_template`=0
-                                    AND itemtype = 'Computer' $condition) Pourcentage
+                                    AND itemtype = 'Computer' $condition) Percent
          FROM glpi_computers c, glpi_infocoms i
          WHERE c.id = i.items_id
-         AND c.`is_deleted`=0 AND c.`is_template`=0
-         AND itemtype = 'Computer'
-         AND i.warranty_date <= CURRENT_DATE - INTERVAL 3 YEAR
-         AND i.warranty_date > CURRENT_DATE - INTERVAL 5 YEAR $condition
+            AND c.`is_deleted`=0 AND c.`is_template`=0
+            AND itemtype = 'Computer'
+            AND i.warranty_date <= CURRENT_DATE - INTERVAL 3 YEAR
+            AND i.warranty_date > CURRENT_DATE - INTERVAL 5 YEAR 
+            $condition
          UNION
          SELECT '> 5 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
                                     WHERE c.id = i.items_id
                                     AND c.`is_deleted`=0 AND c.`is_template`=0
-                                    AND itemtype = 'Computer' $condition) Pourcentage
+                                    AND itemtype = 'Computer' $condition) Percent
          FROM glpi_computers c, glpi_infocoms i
          WHERE c.id = i.items_id
-         AND c.`is_deleted`=0 AND c.`is_template`=0
-         AND itemtype = 'Computer'
-         AND i.warranty_date <= CURRENT_DATE - INTERVAL 5 YEAR $condition
+            AND c.`is_deleted`=0 AND c.`is_template`=0
+            AND itemtype = 'Computer'
+            AND i.warranty_date <= CURRENT_DATE - INTERVAL 5 YEAR 
+            $condition
          UNION
          SELECT 'Non defini' Age, count(*) Total, count(*)*100/(SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
                                     WHERE c.id = i.items_id
                                     AND c.`is_deleted`=0 AND c.`is_template`=0
-                                    AND itemtype = 'Computer' $condition) Pourcentage
+                                    AND itemtype = 'Computer' $condition) Percent
          FROM glpi_computers c, glpi_infocoms i
          WHERE c.id = i.items_id
             AND c.`is_deleted`=0 AND c.`is_template`=0
@@ -242,8 +246,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
-         $pourcentage = round($computer['Pourcentage'], 2);
-         $datas['datas'][$computer['Age']." ($pourcentage %)"] = $computer['Total'];
+         $percent = round($computer['Percent'], 2);
+
+         $datas['datas'][$computer['Age']." ($percent %)"] = $computer['Total'];
       }
 
       return $datas;
@@ -352,7 +357,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                               LEFT JOIN `glpi_operatingsystemversions` as s
                                  ON s.id=c.operatingsystemversions_id
                               WHERE c.`operatingsystems_id`='".$os['id']."'
-                              AND `c`.`entities_id` IN (".$this->where_entities.")
+                                 AND `c`.`entities_id` IN ({$this->where_entities})
                               GROUP BY c.operatingsystemversions_id ORDER BY s.name ASC";
             foreach ($DB->request($query_details) as $version) {
                if ($version['name'] != '' && $version['cpt']) {
@@ -477,7 +482,6 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                            WHERE c.`is_deleted` = 0
                               AND c.`is_template` = 0 
                               AND c.computertypes_id = t.id $condition) Pourcentage 
-                           
          FROM glpi_computers c, glpi_states t
          WHERE c.states_id = t.id 
             $condition
