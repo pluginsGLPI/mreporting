@@ -58,8 +58,6 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
 
       $query_user_deleted    = "$prefix `itemtype`='User' AND `linked_action` IN (12)";
 
-      $query_webservice      = "$prefix `itemtype`='PluginWebservicesClient'";
-
       $query_ocs             = "$prefix `linked_action` IN (8, 9, 10, 11)";
       $query_device          = "$prefix `linked_action` IN (1, 2, 3, 6, 7)";
       $query_relation        = "$prefix `linked_action` IN (15, 16)";
@@ -86,8 +84,14 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       $result = $DB->query($query_user_deleted);
       $datas['datas'][__('User deleted from LDAP', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-      $result = $DB->query($query_webservice);
-      $datas['datas'][__('Webservice logs', 'mreporting')] = $DB->result($result, 0, 'cpt');
+      $plugin = new Plugin();
+      if ($plugin->isActivated("webservices")) {
+         $query_webservice = "$prefix `itemtype`='PluginWebservicesClient'";
+
+         // Display this information is not usefull if webservices is not activated
+         $result = $DB->query($query_webservice);
+         $datas['datas'][__('Webservice logs', 'mreporting')] = $DB->result($result, 0, 'cpt');
+      }
 
       $result = $DB->query($query_ocs);
       $datas['datas'][__('OCS Infos', 'mreporting')] = $DB->result($result, 0, 'cpt');
