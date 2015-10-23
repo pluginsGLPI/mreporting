@@ -32,8 +32,8 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
    function initGraph($options) {
       if (!self::DEBUG_CSV) {
-         header ("Content-type: application/csv");
-         header ("Content-Disposition: inline; filename=export.csv");
+         header("Content-type: application/csv");
+         header("Content-Disposition: inline; filename=export.csv");
       }
    }
 

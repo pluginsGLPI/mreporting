@@ -777,7 +777,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
          $crit['randname']    = $classname.$name;
       }
-      if (DEBUG_MREPORTING == true) {
+      if (DEBUG_MREPORTING) {
          $crit['show_graph']  = 1;
       }
 

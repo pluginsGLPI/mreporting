@@ -460,7 +460,8 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "<tr class='tab_bg_2'>";
          echo "<td colspan='4' class='center'>";
          echo "<div align='center'>";
-         echo "<table><tr class='tab_bg_2'>";
+         echo "<table>";
+         echo "<tr class='tab_bg_2'>";
          echo "<td>".__("Begin date")."</td>";
          echo "<td>";
          $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
@@ -485,7 +486,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $option[1] = __("With data", 'mreporting');
          Dropdown::showFromArray("withdata", $option, array());
          echo "&nbsp;";
-         echo "<input type='button' id='export_submit'  value='".__("Export")."' class='submit'>";
+         echo "<input type='button' id='export_submit' value='".__("Export")."' class='submit'>";
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();

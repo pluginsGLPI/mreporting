@@ -45,16 +45,16 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
 
       $query_software_version  = "$prefix `itemtype`='Software'
                                   AND `itemtype_link`='SoftwareVersion'
-                                    AND `linked_action` IN (17, 18, 19)";
+                                  AND `linked_action` IN (17, 18, 19)";
       $query_add_infocom       = "$prefix `itemtype`='Software'
                                   AND `itemtype_link`='Infocom'
-                                    AND `linked_action` IN (17)";
+                                  AND `linked_action` IN (17)";
       $query_user_profiles     = "$prefix `itemtype`='User'
                                   AND `itemtype_link`='Profile_User'
-                                    AND `linked_action` IN (17, 18, 19)";
+                                  AND `linked_action` IN (17, 18, 19)";
       $query_user_groups     = "$prefix `itemtype`='User'
                                   AND `itemtype_link`='Group_User'
-                                    AND `linked_action` IN (17, 18, 19)";
+                                  AND `linked_action` IN (17, 18, 19)";
 
       $query_user_deleted    = "$prefix `itemtype`='User' AND `linked_action` IN (12)";
 
@@ -109,7 +109,6 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       $datas['datas'][__('Genericobject plugin logs')] = $DB->result($result, 0, 'cpt');
 
       return $datas;
-
    }
 
    /**
