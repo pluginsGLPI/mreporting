@@ -291,10 +291,12 @@ JAVASCRIPT;
                         "unit"   => $unit);
       PluginMreportingCommon::endGraph($options,$dashboard);
 
+      $content = ob_get_clean();
+
       if ($dashboard) {
-         return ob_get_clean();
+         return $content;
       } else {
-         echo ob_get_clean();
+         echo $content;
       }
    }
 
