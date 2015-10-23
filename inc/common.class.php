@@ -1473,9 +1473,8 @@ class PluginMreportingCommon extends CommonDBTM {
       $elements = array(
          'day'    => _n("Day", "Days", 1),
          'week'   => __("Week"),
-         'month'  => _n("Month", "Months", 1),
-         'year'   => __("By year"),
-      );
+         'month'  => __("Month"),
+         'year'   => __("By year"));
 
       Dropdown::showFromArray("period", $elements,
                               array('value' => isset($_SESSION['mreporting_values']['period'])
