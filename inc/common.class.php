@@ -228,70 +228,69 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    static function getSelectAllReports($onchange = false, $setIdInOptionsValues = false) {
-      $select = "";
-      $js_onchange = "";
-      if ($onchange) {
-         $js_onchange = " onchange='window.location.href=this.options[this.selectedIndex].value'";
-      }
 
-      $common = new self;
+      $common = new self();
       $reports = $common->getAllReports(true);
 
-      if (count($reports) > 0) {
-         $select .= "<select name='report' $js_onchange>";
-         $select .= "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
+      if (empty($reports)) {
+         return "";
+      }
 
-         foreach($reports as $classname => $report) {
-            $graphs = array();
-            foreach($report['functions'] as $function) {
-               if ($function['is_active']) {
-                  $graphs[$function['category_func']][] = $function;
-               }
-            }
+      $js_onchange = $onchange ? " onchange='window.location.href=this.options[this.selectedIndex].value'" : "";
 
-            foreach ($graphs as $cat => $graph) {
-               $remove = true;
-               foreach ($graph as $key => $value) {
-                  if ($value['right']) {
-                     $remove = false;
-                  }
-               }
-               if ($remove) {
-                  unset($graphs[$cat]);
-               }
-            }
+      $select  = "<select name='report' $js_onchange>";
+      $select .= "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
 
-            if (count($graphs) > 0) {
-               $select.= "<optgroup label=\"".$report['title']."\">";
-               foreach($graphs as $cat => $graph) {
-                  if (count($graph) > 0) {
-                     $select.= "<optgroup label=\"&nbsp;&nbsp;&nbsp;$cat\">";
-                     foreach($graph as $key => $value) {
-                        if ($value['right']) {
-                            if ($value['is_active']) {
-                                $comment = "";
-                                if (isset($value["desc"])) {
-                                    $comment = $value["desc"];
-                                }
-                                $option_value = $value["url_graph"];
-                                if ($setIdInOptionsValues) {
-                                 $option_value = $value['id'];
-                                }
-                                $icon = self::getIcon($value['function']);
-                                $select.= "<option value='$option_value' title=\"". Html::cleanInputText($comment).
-                                          "\">&nbsp;&nbsp;&nbsp;".$icon."&nbsp;".
-                                          $value["title"]."</option>";
-                            }
-                        }
-                     }
-                     $select.= "</optgroup>";
-                  }
-               }
-               $select.= "</optgroup>";
+      foreach($reports as $classname => $report) {
+         $graphs = array();
+         foreach($report['functions'] as $function) {
+            if ($function['is_active']) {
+               $graphs[$function['category_func']][] = $function;
             }
          }
-         $select.= "</select>";
+
+         foreach ($graphs as $cat => $graph) {
+            $remove = true;
+            foreach ($graph as $key => $value) {
+               if ($value['right']) {
+                  $remove = false;
+               }
+            }
+            if ($remove) {
+               unset($graphs[$cat]);
+            }
+         }
+
+         if (count($graphs) > 0) {
+            $select.= "<optgroup label=\"".$report['title']."\">";
+            foreach($graphs as $cat => $graph) {
+               if (count($graph) > 0) {
+                  $select.= "<optgroup label=\"&nbsp;&nbsp;&nbsp;$cat\">";
+                  foreach($graph as $key => $value) {
+                     if ($value['right']) {
+                         if ($value['is_active']) {
+                             $comment = "";
+                             if (isset($value["desc"])) {
+                                 $comment = $value["desc"];
+                             }
+                             $option_value = $value["url_graph"];
+                             if ($setIdInOptionsValues) {
+                              $option_value = $value['id'];
+                             }
+                             $icon = self::getIcon($value['function']);
+                             $select.= "<option value='$option_value' title=\"". Html::cleanInputText($comment).
+                                       "\">&nbsp;&nbsp;&nbsp;".$icon."&nbsp;".
+                                       $value["title"]."</option>";
+                         }
+                     }
+                  }
+                  $select.= "</optgroup>";
+               }
+            }
+            $select.= "</optgroup>";
+         }
       }
+      $select.= "</select>";
 
       return $select;
    }
