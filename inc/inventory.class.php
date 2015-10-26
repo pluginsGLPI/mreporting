@@ -70,7 +70,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          $first = false;
       }
       $query .= " UNION
-         SELECT 'Autres' AS OS, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT '".__("Others")."' AS OS, count(*) Total, count(*)*100/(SELECT count(*)
                                     FROM glpi_computers c, glpi_operatingsystems os
                                     WHERE c.`is_deleted`=0 AND c.`is_template`=0
                                     AND c.operatingsystems_id = os.id $condition) Pourcentage
