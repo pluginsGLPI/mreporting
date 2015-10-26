@@ -45,7 +45,6 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
                                                            $config['delay'],
                                                            $config['randname']);
-      $nb_ligne = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 
       $datas = array();
 
@@ -62,7 +61,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $query.= "AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name
       ORDER BY count DESC
-      LIMIT 0, ".$nb_ligne;
+      LIMIT 0, ";
+      $query .= (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
+
       $result = $DB->query($query);
 
       while ($ticket = $DB->fetch_assoc($result)) {
@@ -106,7 +107,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $query_cat.= "AND glpi_tickets.is_deleted = '0'
       ORDER BY glpi_itilcategories.id ASC";
+
       $res_cat = $DB->query($query_cat);
+
       $categories = array();
       while ($data = $DB->fetch_assoc($res_cat)) {
          if (empty($data['category'])) $data['category'] = __("None");
@@ -194,8 +197,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          }
 
          $query.= "AND glpi_tickets.is_deleted = '0'
-            AND glpi_tickets.status IN('".implode("', '", array_keys($filter['status']))."')
-         ";
+            AND glpi_tickets.status IN('".implode("', '", array_keys($filter['status']))."')";
          $result = $DB->query($query);
          $datas[$filter['label']] = $DB->result($result, 0, 0);
       }
@@ -205,6 +207,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportPieTicketOpenedbyStatus($config = array()) {
       global $DB;
+      
       $_SESSION['mreporting_selector']['reportPieTicketOpenedbyStatus']
          = array('dateinterval', 'allstates');
 

@@ -53,7 +53,6 @@ class PluginMreportingGraph {
          }
          //Show graph title
          echo "<div class='graph_title'>";
-         $backtrace = debug_backtrace();
          $gtype = $_REQUEST['gtype'];
 
          echo "<img src='".$CFG_GLPI['root_doc']."/plugins/mreporting/pics/chart-$gtype.png' class='title_pics' />";

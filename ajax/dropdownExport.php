@@ -62,18 +62,19 @@ if (isset($_POST['ext'])
       echo "<script type='text/javascript'>
             $('#export_svg_link').on('click', function () {
                var svg_content = vis{$randname}.scene[0].canvas.innerHTML;
+
                var form = document.getElementById('export_svg_form');
                form.svg_content.value = svg_content;
                form.submit();
 
-               //set new crsf token for svg export
+               // In svg export, set new crsf token
                $.ajax({
                   url: '../ajax/get_new_crsf_token.php'
                }).done(function(token) {
                   $('#export_svg_form input[name=_glpi_csrf_token]').val(token);
                });
 
-               // //set new crsf token for main form
+               // In main form, set new crsf token
                $.ajax({
                   url: '../ajax/get_new_crsf_token.php'
                }).done(function(token) {
