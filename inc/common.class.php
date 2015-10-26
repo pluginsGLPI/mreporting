@@ -723,7 +723,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      self::showNavigation();
                      echo "</span>";
                      echo "<span style='float:right'>";
-                     if (plugin_mreporting_haveRight('config', 'w')) {
+                     if (Session::haveRight('config', UPDATE)) {
                         echo "<b>".__("Configuration", 'mreporting')."</b> : ";
                         echo "&nbsp;<a href='config.form.php?name=".$opt['f_name'].
                         "&classname=".$opt['class']."' target='_blank'>";

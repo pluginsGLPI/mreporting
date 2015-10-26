@@ -175,6 +175,8 @@ function plugin_mreporting_check_config($verbose=false) {
    return false;
 }
 
+//useless
+/*
 function plugin_mreporting_haveRight($module,$right) {
    $matches=array(""  => array("","r","w"), // ne doit pas arriver normalement
                   "r" => array("r","w"),
@@ -186,3 +188,4 @@ function plugin_mreporting_haveRight($module,$right) {
       return true;
    else return false;
 }
+*/
