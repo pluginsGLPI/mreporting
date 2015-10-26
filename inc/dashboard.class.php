@@ -346,15 +346,6 @@ class PluginMreportingDashboard extends CommonDBTM {
       echo "<input type='submit' class='submit' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
 
       Html::closeForm();
-
-      if(!preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) {
-         echo "<script type='text/javascript'>
-         var elements = document.querySelectorAll('.chzn-select');
-         for (var i = 0; i < elements.length; i++) {
-            new Chosen(elements[i], {});
-         }
-         </script>";
-      }
    }
 
 }

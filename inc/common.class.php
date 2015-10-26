@@ -219,8 +219,8 @@ class PluginMreportingCommon extends CommonDBTM {
    */
    static function title($opt) {
       echo "<table class='tab_cadre_fixe'>";
-      echo "<tr><th colspan='2'>".__("Select statistics to be displayed")."&nbsp;:</th></tr>";
-      echo "<tr class='tab_bg_1'><td class='center'>";
+      echo "<tr><th>".__("Select statistics to be displayed")."&nbsp;:</th></tr>";
+      echo "<tr><td class='center'>";
       echo self::getSelectAllReports(true);
       echo "</td>";
       echo "</tr>";
@@ -1436,6 +1436,8 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorAllSlasWithTicket() {
       global $LANG, $DB;
 
+      echo "<b>" . $LANG['plugin_mreporting']['selector']["slas"] . " : </b><br />";
+
       $query = "SELECT DISTINCT s.id,
          s.name
       FROM glpi_slas s
@@ -1446,23 +1448,18 @@ class PluginMreportingCommon extends CommonDBTM {
          ) . ")
       AND t.is_deleted = '0'
       ORDER BY s.name ASC";
-
-      $selected_values = array();
-      if (isset($_SESSION['mreporting_values']['slas'])) {
-         $selected_values = $_SESSION['mreporting_values']['slas'];
-      }
-
-      echo "<b>" . $LANG['plugin_mreporting']['selector']["slas"] . " : </b><br />";
-      echo "<select name='slas[]' multiple class='chzn-select' data-placeholder='-----                 '>";
       $result = $DB->query($query);
+
+      $values = array();
       while ($data = $DB->fetch_assoc($result)) {
-         $selected = "";
-         if (in_array($data['id'], $selected_values)) {
-            $selected = "selected ";
-         }
-         echo "<option value='".$data['id']."' $selected>".$data['name']."</option>";
+         $values[$data['id']] = $data['name'];
       }
 
+      $selected_values = isset($_SESSION['mreporting_values']['slas']) ? $_SESSION['mreporting_values']['slas'] : array();
+
+      Dropdown::showFromArray('slas', $values, array('values' => $selected_values,
+                                                   'multiple' => true,
+                                                   'readonly' => false));
    }
 
    static function selectorPeriod($period = "day") {
