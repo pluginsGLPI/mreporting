@@ -479,9 +479,10 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
       $query = "SELECT t.name status, count(*) Total, count(*)*100/(SELECT count(*)
                            FROM glpi_computers c, glpi_states t
-                           WHERE c.`is_deleted` = 0
-                              AND c.`is_template` = 0 
-                              AND c.computertypes_id = t.id $condition) Pourcentage 
+                           WHERE c.states_id = t.id 
+                              $condition
+                              AND c.`is_deleted` = 0
+                              AND c.`is_template` = 0) Pourcentage 
          FROM glpi_computers c, glpi_states t
          WHERE c.states_id = t.id 
             $condition
