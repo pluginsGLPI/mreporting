@@ -444,7 +444,9 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
          if (!isset($datas['datas'][$ticket['category_name']])) {
             foreach($status as $statusKey => $statusLabel) {
-               $datas['datas'][$ticket['category_name']][$statusLabel] = 0;
+               if (in_array($statusKey, $status_to_show)) {
+                  $datas['datas'][$ticket['category_name']][$statusLabel] = 0;
+               }
             }
          }
 
