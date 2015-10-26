@@ -250,3 +250,16 @@ msgstr ""
 
 msgid "Genericobject plugin logs"
 msgstr ""
+
+# For reportHbarComputersByAge()
+msgid "< 1 year"
+msgstr ""
+
+msgid "1-3 years"
+msgstr ""
+
+msgid "3-5 years"
+msgstr ""
+
+msgid "> 5 years"
+msgstr ""

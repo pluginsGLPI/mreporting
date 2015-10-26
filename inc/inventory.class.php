@@ -181,7 +181,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
-      $query = "SELECT '< 1 an' Age, count(*) Total, count(*)*100/(SELECT count(*)
+      $query = "SELECT '< 1 year' Age, count(*) Total, count(*)*100/(SELECT count(*)
                            FROM glpi_computers c,  glpi_infocoms i
                            WHERE c.id = i.items_id
                            AND c.`is_deleted`=0 AND c.`is_template`=0
@@ -193,7 +193,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             AND i.warranty_date > CURRENT_DATE - INTERVAL 1 YEAR 
             $condition
          UNION
-         SELECT '1 à 3 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT '1-3 years' Age, count(*) Total, count(*)*100/(SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
                                     WHERE c.id = i.items_id
                                     AND c.`is_deleted`=0 AND c.`is_template`=0
@@ -206,7 +206,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             AND i.warranty_date > CURRENT_DATE - INTERVAL 3 YEAR 
             $condition
          UNION
-         SELECT '3 à 5 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT '3-5 years' Age, count(*) Total, count(*)*100/(SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
                                     WHERE c.id = i.items_id
                                     AND c.`is_deleted`=0 AND c.`is_template`=0
@@ -219,7 +219,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             AND i.warranty_date > CURRENT_DATE - INTERVAL 5 YEAR 
             $condition
          UNION
-         SELECT '> 5 ans' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT '> 5 years' Age, count(*) Total, count(*)*100/(SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
                                     WHERE c.id = i.items_id
                                     AND c.`is_deleted`=0 AND c.`is_template`=0
@@ -231,7 +231,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             AND i.warranty_date <= CURRENT_DATE - INTERVAL 5 YEAR 
             $condition
          UNION
-         SELECT 'Non defini' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT 'Undefined' Age, count(*) Total, count(*)*100/(SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
                                     WHERE c.id = i.items_id
                                     AND c.`is_deleted`=0 AND c.`is_template`=0
@@ -248,7 +248,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       while ($computer = $DB->fetch_assoc($result)) {
          $percent = round($computer['Percent'], 2);
 
-         $datas['datas'][$computer['Age']." ($percent %)"] = $computer['Total'];
+         $datas['datas'][__($computer['Age'], 'mreporting')." ($percent %)"] = $computer['Total'];
       }
 
       return $datas;
