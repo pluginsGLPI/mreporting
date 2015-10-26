@@ -101,6 +101,13 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    function reportHbarComputersByFabricant($config = array()) {
       global $DB;
       
+      $manufacturerObj = new Manufacturer();
+      $manufacturers = $manufacturerObj->find();
+
+      if (empty($manufacturers)) {
+         return array();
+      }
+
       // Ajout d'une condition englobant les entités
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
@@ -108,8 +115,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $query = "";
       $first = true;
 
-      $manufacturerObj = new Manufacturer();
-      foreach ($manufacturerObj->find() as $manufacturer) {
+      foreach ($manufacturers as $manufacturer) {
          $query.= (!$first?"UNION":"").
                   "SELECT m.name as Manufacturer, count(*) Total, count(*)*100/(SELECT count(*)
                         FROM glpi_computers c, glpi_manufacturers m
@@ -122,6 +128,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          $first = false;
       }
       $query .=" ORDER BY Total DESC";
+
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
