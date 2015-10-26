@@ -649,9 +649,11 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
             ) . ")
          AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
-         AND glpi_tickets.is_deleted = '0'
-         $sql_slas
-         GROUP BY s.name, period, respected_sla;";
+         AND glpi_tickets.is_deleted = '0'";
+         if (isset($_SESSION['mreporting_values']['slas'])) {
+            $query .= " AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).") ";
+         }
+         $query .= "GROUP BY s.name, period, respected_sla";
 
          $result = $DB->query($query);
          while ($data = $DB->fetch_assoc($result)) {
