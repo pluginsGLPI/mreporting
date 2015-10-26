@@ -631,6 +631,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $p['gtype']                   = '';
       $p['show_graph']              = '';
       $p['randname']                = '';
+      $p['display_svg']             = '';
       foreach ($options as $key => $value) {
          $p[$key] = $value;
       }
@@ -644,7 +645,9 @@ class PluginMreportingCommon extends CommonDBTM {
       $elements["csv"] = "CSV";
       if ($p['show_graph']) {
          $elements["png"] = "PNG";
-         $elements["svg"] = "SVG";
+         if ($p['display_svg']) {
+            $elements["svg"] = "SVG";
+         }
       }
       foreach ($elements as $key => $val) {
          echo "<option value='".$key."'>".$val."</option>";
@@ -742,6 +745,7 @@ class PluginMreportingCommon extends CommonDBTM {
                            'span'                    => 'show_ext',
                            'gtype'                   => $_REQUEST['gtype'],
                            'show_graph'              => $show_graph,
+                           'display_svg'             => ($config['graphtype'] != 'PNG'),
                            'randname'                => $randname);
 
                         self::dropdownExt($params);
