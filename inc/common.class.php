@@ -266,6 +266,8 @@ class PluginMreportingCommon extends CommonDBTM {
             foreach($graphs as $cat => $graph) {
                if (count($graph) > 0) {
                   $select.= "<optgroup label=\"&nbsp;&nbsp;&nbsp;$cat\">";
+
+                  $tests = array();
                   foreach($graph as $key => $value) {
                      if ($value['right']) {
                          if ($value['is_active']) {
@@ -278,12 +280,18 @@ class PluginMreportingCommon extends CommonDBTM {
                               $option_value = $value['id'];
                              }
                              $icon = self::getIcon($value['function']);
-                             $select.= "<option value='$option_value' title=\"". Html::cleanInputText($comment).
+                             $tests[$value['title']] = "<option value='$option_value' title=\"". Html::cleanInputText($comment).
                                        "\">&nbsp;&nbsp;&nbsp;".$icon."&nbsp;".
                                        $value["title"]."</option>";
                          }
                      }
                   }
+
+                  ksort($tests);
+                  foreach ($tests as $test) {
+                     $select.= $test;
+                  }
+
                   $select.= "</optgroup>";
                }
             }
