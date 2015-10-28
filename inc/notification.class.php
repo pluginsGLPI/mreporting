@@ -23,7 +23,7 @@ class PluginMreportingNotification extends CommonDBTM {
     *
     * @return array 'success' => true on success
     */
-   static function install() {
+   static function install($migration) {
       global $DB;
 
       // Création du template de la notification

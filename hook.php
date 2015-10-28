@@ -169,7 +169,7 @@ function plugin_mreporting_install() {
 
    // == Install notifications
    require_once "inc/notification.class.php";
-   PluginMreportingNotification::install();
+   PluginMreportingNotification::install($migration);
    CronTask::Register('PluginMreportingNotification', 'SendNotifications', MONTH_TIMESTAMP);
 
    $migration->addField("glpi_plugin_mreporting_preferences", "selectors", "text");
