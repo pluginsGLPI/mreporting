@@ -158,7 +158,7 @@ class PluginMreportingProfile extends CommonDBTM {
       foreach ($config->find() as $report) {
          // add right for any reports for profile
          // Add manual request because Add function get error : right is set to NULL
-         $query = "INSERT INTO `glpi_plugin_mreporting_profiles` SET
+         $query = "INSERT IGNORE INTO `glpi_plugin_mreporting_profiles` SET
                      `profiles_id` = $idProfile,
                      `reports` = {$report['id']},
                      `right` = " . READ;
