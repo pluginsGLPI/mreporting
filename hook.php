@@ -30,15 +30,10 @@
 function plugin_mreporting_install() {
    global $DB;
 
+   $version   = plugin_version_mreporting();
+   $migration = new Migration($version['version']);
+
    include_once(GLPI_ROOT."/plugins/mreporting/inc/profile.class.php");
-
-   //get version
-   $plugin = new Plugin();
-   $found  = $plugin->find("name = 'mreporting'");
-   $plugin_mreporting = array_shift($found);
-
-   //init migration
-   $migration = new Migration($plugin_mreporting['version']);
 
    //create profiles table
    $queries = array();
@@ -188,6 +183,7 @@ function plugin_mreporting_install() {
    $config->createFirstConfig();
 
    PluginMreportingProfile::addRightToProfile($_SESSION['glpiactiveprofile']['id']);
+
    return true;
 }
 
