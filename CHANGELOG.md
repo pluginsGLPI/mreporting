@@ -53,3 +53,17 @@ Mreporting 0.85+1.0-RC3
 
 * Migration to Jquery
 * Plugins locales are now in gettext
+
+
+Changelogs for MReporting 0.90
+==============================
+
+Mreporting 0.90-1.1
+-------------------
+
+* More strings in gettext : Put locales for reportHbarComputersByAge() in plugin locales
+* Fix bugs
+* Fix send reports in Notification (fix link, fix attachment)
+* Now don't use Mailqueue for send reports
+* Cleanup code
+
