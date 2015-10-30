@@ -61,7 +61,7 @@ class PluginMreportingProfile extends CommonDBTM {
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       switch ($item->getType()) {
          case 'Profile':
-            return __("More Reporting", 'mreporting');
+            return self::getTypeName();
          case 'PluginMreportingConfig':
             return __("Rights management", 'mreporting');
          default:

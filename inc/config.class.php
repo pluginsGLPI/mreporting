@@ -52,7 +52,7 @@ class PluginMreportingConfig extends CommonDBTM {
    function getSearchOptions() {
       $tab = array();
 
-      $tab['common'] = __("Configuration", 'mreporting');
+      $tab['common'] = self::getTypeName();
 
       $tab[1]['table']          = $this->getTable();
       $tab[1]['field']          ='name';
