@@ -122,16 +122,8 @@ msgstr ""
 msgid "Initialize graphics configuration"
 msgstr ""
 
-#: inc/config.class.php:398 inc/config.class.php:414
-msgid "Never"
-msgstr ""
-
 #: inc/config.class.php:399 inc/config.class.php:417
 msgid "On mouse over"
-msgstr ""
-
-#: inc/config.class.php:401 inc/config.class.php:420
-msgid "Always"
 msgstr ""
 
 #: inc/config.class.php:484

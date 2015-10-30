@@ -438,10 +438,10 @@ class PluginMreportingConfig extends CommonDBTM {
     * @return array of types
    **/
    static function getLabelTypes($notall = false) {
-      $options['never']     = __("Never", 'mreporting');
+      $options['never']     = __("Never");
       $options['hover']     = __("On mouse over", 'mreporting');
       if (!$notall) {
-         $options['always'] = __("Always", 'mreporting');
+         $options['always'] = __("Always");
       }
       return $options;
    }
@@ -456,9 +456,9 @@ class PluginMreportingConfig extends CommonDBTM {
          case 'hover' :
             return __("On mouse over", 'mreporting');
          case 'never' :
-            return __("Never", 'mreporting');
+            return __("Never");
          case 'always' :
-            return __("Always", 'mreporting');
+            return __("Always");
       }
    }
 

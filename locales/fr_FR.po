@@ -124,17 +124,9 @@ msgstr "Envoyer ce rapport avec les notifications"
 msgid "Initialize graphics configuration"
 msgstr "Initialiser la configuration des graphiques"
 
-#: inc/config.class.php:398 inc/config.class.php:414
-msgid "Never"
-msgstr "Jamais"
-
 #: inc/config.class.php:399 inc/config.class.php:417
 msgid "On mouse over"
 msgstr "Au passage de la souris"
-
-#: inc/config.class.php:401 inc/config.class.php:420
-msgid "Always"
-msgstr "Toujours"
 
 #: inc/config.class.php:484
 msgid "Object already exists"
