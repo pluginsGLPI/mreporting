@@ -215,22 +215,24 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
 
-
+   /**
+     * returns an array with the rgb values
+     **/
    static function colorHexToRGB($color) {
       $hex = substr($color, 4);
-      $alpha = substr($color, 0, 4);
 
-      if(strlen($hex) == 3) {
-         $r = hexdec(substr($hex,0,1).substr($hex,0,1));
-         $g = hexdec(substr($hex,1,1).substr($hex,1,1));
-         $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+      if (strlen($hex) == 3) {
+         $r = substr($hex,0,1).substr($hex,0,1);
+         $g = substr($hex,1,1).substr($hex,1,1);
+         $b = substr($hex,2,1).substr($hex,2,1);
       } else {
-         $r = hexdec(substr($hex,0,2));
-         $g = hexdec(substr($hex,2,2));
-         $b = hexdec(substr($hex,4,2));
+         $r = substr($hex,0,2);
+         $g = substr($hex,2,2);
+         $b = substr($hex,4,2);
       }
-      $rgb = array($r, $g, $b, $alpha);
-      return $rgb; // returns an array with the rgb values
+
+      $alpha = substr($color, 0, 4);
+      return array(hexdec($r), hexdec($g), hexdec($b), $alpha);
    }
 
 
