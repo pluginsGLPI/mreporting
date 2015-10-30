@@ -112,9 +112,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function showImage($contents, $export="png") {
       global $CFG_GLPI;
+      
       if ($export!="odt" && $export!="odtall") {
-
-         $show_inline = true;
 
          //test browser (if IE < 9, show img from temp dir instead base64 inline)
          if (isset($_SERVER["HTTP_USER_AGENT"])) {
@@ -123,7 +122,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             if(preg_match($pattern,$ua,$arr)){
                $ie_version = $arr[1];
                if (version_compare($ie_version, '9') < 0) {
-                  $show_inline = false;
                   $rand=mt_rand();
                   $filename = "mreporting_img_$rand.png";
                   $filedir = GLPI_ROOT."/files/_plugins/mreporting/$filename";
@@ -132,13 +130,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   echo "<img src='".$CFG_GLPI['root_doc'].
                      "/front/pluginimage.send.php?plugin=mreporting&name=".$filename.
                      "' alt='graph' title='graph' />";
+                  return;
                }
             }
          }
 
-         if ($show_inline)
-            echo "<img src='data:image/png;base64,".base64_encode($contents)
-               ."' alt='graph' title='graph' />";
+         echo "<img src='data:image/png;base64,".base64_encode($contents)
+            ."' alt='graph' title='graph' />";
 
       }
    }
