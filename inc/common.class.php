@@ -1402,11 +1402,8 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorForSingleGroup($field, $condition = '', $label = '') {
       echo "<br /><b>".$label." : </b><br />";
 
-      if (isset($_SESSION['mreporting_values'][$field])) {
-         $value = isset($_SESSION['mreporting_values'][$field]); //Note : strange code
-      } else {
-         $value = 0;
-      }
+      $value = isset($_SESSION['mreporting_values'][$field]) ? $_SESSION['mreporting_values'][$field] : 0;
+
       Dropdown::show("Group",array('comments'  => false,
                                    'name'      => $field,
                                    'value'     => $value,
