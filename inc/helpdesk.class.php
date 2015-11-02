@@ -756,7 +756,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       while ($ticket = $DB->fetch_assoc($result)) {
          if(empty($ticket['name'])) {
-            $label = "Aucun";
+            $label = __("None");
          } else {
             $label = $ticket['name'];
          }
