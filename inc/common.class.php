@@ -1383,7 +1383,11 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $values = array();
       if (isset($_SESSION['mreporting_values'][$field])) {
-         $values = $_SESSION['mreporting_values'][$field];
+         if (is_array($_SESSION['mreporting_values'][$field])) { //if link in from dashboard
+            $values = $_SESSION['mreporting_values'][$field];
+         } else {
+            $values = array($_SESSION['mreporting_values'][$field]);
+         }
       }
 
       if (strstr($condition, "ORDER BY") == false) { // Security
