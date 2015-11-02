@@ -1386,6 +1386,10 @@ class PluginMreportingCommon extends CommonDBTM {
          $values = $_SESSION['mreporting_values'][$field];
       }
 
+      if (strstr($condition, "ORDER BY") == false) { // Security
+         $condition .= " ORDER BY name";
+      }
+
       $datas = array();
       foreach (getAllDatasFromTable('glpi_groups', $condition) as $data) {
          $datas[$data['id']] = $data['completename'];
