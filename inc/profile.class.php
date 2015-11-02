@@ -115,8 +115,10 @@ class PluginMreportingProfile extends CommonDBTM {
       $myreport = new self();
       $table_fields = $DB->list_fields($myreport->getTable(),false);
 
+      $result_config = $DB->request("SELECT `id` FROM `glpi_plugin_mreporting_configs`");
+
       foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
-         foreach($DB->request("SELECT `id` FROM `glpi_plugin_mreporting_configs`") as $report){
+         foreach($result_config as $report){
 
             $tmp = array('profiles_id' => $prof['id'],
                         'reports'   => $report['id']);
