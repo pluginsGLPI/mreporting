@@ -77,9 +77,14 @@ function plugin_init_mreporting() {
          Plugin::registerClass('PluginMreportingPreference',
                         array('addtabon' => 'Preference'));
 
+         $mreporting_profile = new PluginMreportingProfile;
+         $reports_profiles = $mreporting_profile->find("`profiles_id` = '".$_SESSION['glpiactiveprofile']['id']."' AND `right` = ".READ);
+
          /* Menu */
-         $PLUGIN_HOOKS['menu_toadd']['mreporting'] = array('tools' => 'PluginMreportingCommon');
          $PLUGIN_HOOKS['config_page']['mreporting'] = 'front/config.php';
+         if (count($reports_profiles) > 0) {
+            $PLUGIN_HOOKS['menu_toadd']['mreporting'] = array('tools' => 'PluginMreportingCommon');
+         }
 
          /* Show Reports in standart stats page */
          $mreporting_common = new PluginMreportingCommon();
