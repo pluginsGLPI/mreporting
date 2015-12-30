@@ -471,7 +471,7 @@ class PluginMreportingConfig extends CommonDBTM {
    **/
    static function checkVisibility($show_label, &$always, &$hover) {
       switch ($show_label) {
-         default:
+
          case 'hover':
             $always = "false";
             $hover = "true";
