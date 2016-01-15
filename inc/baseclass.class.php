@@ -28,12 +28,12 @@
  */
 
 class PluginMreportingBaseclass {
-   
-   protected $sql_date, 
-             $sql_date_create, 
-             $sql_date_solve, 
-             $sql_date_closed, 
-             $filters, 
+
+   protected $sql_date,
+             $sql_date_create,
+             $sql_date_solve,
+             $sql_date_closed,
+             $filters,
              $where_entities;
 
    function __construct($config = array()) {

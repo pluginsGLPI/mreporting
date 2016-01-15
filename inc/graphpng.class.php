@@ -112,7 +112,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    function showImage($contents, $export="png") {
       global $CFG_GLPI;
-      
+
       if ($export!="odt" && $export!="odtall") {
 
          //test browser (if IE < 9, show img from temp dir instead base64 inline)

@@ -30,7 +30,7 @@
 class PluginMreportingDashboard extends CommonDBTM {
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-      if (get_class($item) == 'Central' 
+      if (get_class($item) == 'Central'
          && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
          return array(1 => __("Dashboard", 'mreporting'));
       }
@@ -41,7 +41,7 @@ class PluginMreportingDashboard extends CommonDBTM {
    static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
       global $CFG_GLPI;
 
-      if (get_class($item) == 'Central' 
+      if (get_class($item) == 'Central'
          && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
          echo "<div id='mreporting_central_dashboard'>";
 
@@ -115,7 +115,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                   data: {
                      id: id,
                      action: 'removeReportFromDashboard'
-                  }, 
+                  },
                   success: function(){
                      $('#mreportingwidget'+id).remove();
                      if ($('.mreportingwidget').length <= 0) {
@@ -155,7 +155,7 @@ class PluginMreportingDashboard extends CommonDBTM {
          $report->getFromDB($data['reports_id']);
 
          //Class may not exists: this case should only happen during development phase
-         if (!class_exists($report->fields["classname"]) 
+         if (!class_exists($report->fields["classname"])
             || !PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'], $report->getID())) {
             continue;
          }
@@ -181,10 +181,10 @@ class PluginMreportingDashboard extends CommonDBTM {
 
          if (!empty($short_classname) && !empty($f_name)) {
             if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-               $opt = array('short_classname' => $short_classname, 
-                            'f_name'          => $f_name, 
-                            'gtype'           => $gtype, 
-                            'width'           => 410, 
+               $opt = array('short_classname' => $short_classname,
+                            'f_name'          => $f_name,
+                            'gtype'           => $gtype,
+                            'width'           => 410,
                             'hide_title'      => true);
                $common = new PluginMreportingCommon();
                ob_start();
@@ -204,14 +204,14 @@ class PluginMreportingDashboard extends CommonDBTM {
             $.ajax({
                url: '$root_ajax',
                data: {
-                  action: 'getConfig', 
+                  action: 'getConfig',
                   target: '$target',
                   f_name:'$f_name',
                   short_classname:'$short_classname',
                   gtype:'$gtype'
                },
                success: function(content){
-                  configWidget$rand_widget = 
+                  configWidget$rand_widget =
                      $(\"<div id='configWidget$rand_widget' style='display:none' class='loading'>\"+content+\"</div>\")
                      .appendTo('body')
                      .dialog({
@@ -222,7 +222,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                         resizable: false,
                         title: '".__("Configure report", 'mreporting')."'
                      });
-               }   
+               }
             });
 
             $('#configWidget_button$rand_widget').button({
@@ -243,7 +243,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                removeWidget(".$data['id'].");
             });
 
-         }); 
+         });
          </script>
          <div class='mreportingwidget' id='mreportingwidget".$data['id']."'>
             <div class='mreportingwidget-header'>
@@ -260,7 +260,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                $report_script
             </div>
          </div>";
-      }  
+      }
 
       echo "<div class='m_clear'></div>";
       echo "</div>";

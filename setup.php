@@ -47,7 +47,7 @@ function plugin_init_mreporting() {
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
    $plugin = new Plugin();
-   if ($plugin->isInstalled("mreporting") 
+   if ($plugin->isInstalled("mreporting")
        && $plugin->isActivated("mreporting")) {
 
       // *Direct* access to rapport file (from e-mail) :
@@ -58,7 +58,7 @@ function plugin_init_mreporting() {
 
       //Load additionnal language files in needed
       includeAdditionalLanguageFiles();
-   
+
       if (Session::getLoginUserID()) {
          /* Profile */
          $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
@@ -67,8 +67,8 @@ function plugin_init_mreporting() {
 
          Plugin::registerClass('PluginMreportingNotification',
                         array('notificationtemplates_types' => true));
-         
-         Plugin::registerClass('PluginMreportingDashboard', 
+
+         Plugin::registerClass('PluginMreportingDashboard',
                         array('addtabon' => array('Central')));
 
          Plugin::registerClass('PluginMreportingProfile',
@@ -144,12 +144,12 @@ function plugin_version_mreporting() {
 
 function includeAdditionalLanguageFiles() {
    $translations_path = GLPI_ROOT . "/plugins/mreporting/locales/reports_locales/";
-   
+
    // Load default translations
    foreach (glob($translations_path . "*_en_GB.php") as $path) {
        include_once($path);
    }
-   
+
    // if isset user langage, overload translations by user langage ones if presents
    if (isset($_SESSION["glpilanguage"])) {
       foreach (glob($translations_path . "*_" . $_SESSION["glpilanguage"] . ".php") as $path) {

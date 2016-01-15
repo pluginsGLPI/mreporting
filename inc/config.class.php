@@ -602,7 +602,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
       $short_classname = str_replace('PluginMreporting', '', $this->fields["classname"]);
 
-      if (!empty($short_classname) 
+      if (!empty($short_classname)
         && !empty($f_name)
         && isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
             echo "&nbsp;";

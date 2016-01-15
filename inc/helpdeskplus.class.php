@@ -619,8 +619,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
                ) . ")
             AND glpi_tickets.`entities_id` IN (" . $this->where_entities . ")
-            AND glpi_tickets.`is_deleted` = '0' 
-            AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).") 
+            AND glpi_tickets.`is_deleted` = '0'
+            AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")
          ORDER BY `date` ASC";
          $res_date = $DB->query($query_date);
 
@@ -745,7 +745,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       $result = $DB->query($query);
       while ($data = $DB->fetch_assoc($result)) {
-         $value = ($data['respected_sla'] == 'ok') ? $this->lcl_slaok 
+         $value = ($data['respected_sla'] == 'ok') ? $this->lcl_slaok
                                                    : $this->lcl_slako;
          $datas['datas'][$data['name']][$value] = $data['nb'];
       }
@@ -899,9 +899,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $query = "SELECT COUNT(t.id) AS nb,
                gt.groups_id as groups_id,
                s.name,
-               CASE WHEN t.solve_delay_stat <= s.resolution_time 
-               THEN 'ok' 
-               ELSE 'nok' 
+               CASE WHEN t.solve_delay_stat <= s.resolution_time
+               THEN 'ok'
+               ELSE 'nok'
                END AS respected_sla
             FROM `glpi_tickets` t
             INNER JOIN `glpi_groups_tickets` gt
@@ -915,7 +915,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                      ) . ")
                AND t.entities_id IN ({$this->where_entities})
                AND t.is_deleted = '0'
-               AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).") 
+               AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")
             GROUP BY gt.groups_id, respected_sla;";
          $result = $DB->query($query);
 
@@ -983,9 +983,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
           && !empty($_SESSION['mreporting_values']['slas'])) {
 
          $query = "SELECT count(t.id) AS nb, s.name,
-                       CASE WHEN t.solve_delay_stat <= s.resolution_time 
-                        THEN 'ok' 
-                        ELSE 'nok' 
+                       CASE WHEN t.solve_delay_stat <= s.resolution_time
+                        THEN 'ok'
+                        ELSE 'nok'
                         END AS respected_sla
                      FROM `glpi_tickets` t
                      INNER JOIN `glpi_slas` s ON t.slas_id = s.id
@@ -995,7 +995,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                            ) . ")
                      AND t.entities_id IN ({$this->where_entities})
                      AND t.is_deleted = '0'
-                     AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).") 
+                     AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")
                      GROUP BY s.name, respected_sla;";
 
          $result = $DB->query($query);

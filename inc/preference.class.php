@@ -114,7 +114,7 @@ class PluginMreportingPreference extends CommonDBTM {
 
       echo "<form method='post' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
       echo "<div align='center'>";
-      
+
       echo "<table class='tab_cadre_fixe' cellpadding='5'>";
 
       echo "<tr><th colspan='2'>" . $version['name'] . " - ". $version['version'] . "</th></tr>";

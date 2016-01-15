@@ -7,7 +7,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
    function getEvents() {
       return array('sendReporting' => __('More Reporting', 'mreporting'));
    }
-   
+
    function getTags() {
       $this->addTagToList(array('tag'   => 'mreporting.file_url',
                                 'label' => __('Link'),
@@ -24,7 +24,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       $this->datas['##lang.mreporting.file_url##'] = __('Link');
       $this->datas['##mreporting.file_url##']      = $CFG_GLPI['url_base'].
                                                       "/index.php?redirect=plugin_mreporting_$file_name";
-      
+
       $this->additionalData['attachment']['path'] = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications/".$file_name;
       $this->additionalData['attachment']['name'] = $file_name;
    }
@@ -62,7 +62,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       $graphs = array();
       while ($graph = $result->fetch_array()) {
          $type = preg_split('/(?<=\\w)(?=[A-Z])/', $graph['name']);
-         
+
          $graphs[] = array(
             'class'     => substr($graph['classname'], 16),
             'classname' => $graph['classname'],
@@ -83,7 +83,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
                            'date2PluginMreporting'.$graph['class'].$graph['method'] => $graph['end'],
                            'randname'        => 'PluginMreporting'.$graph['class'].$graph['method'],
                            'hide_title'      => false); //New code
-         
+
          ob_start();
          $common = new PluginMreportingCommon();
          $common->showGraph($_REQUEST);

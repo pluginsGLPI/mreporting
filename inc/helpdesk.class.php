@@ -207,7 +207,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
    function reportPieTicketOpenedbyStatus($config = array()) {
       global $DB;
-      
+
       $_SESSION['mreporting_selector']['reportPieTicketOpenedbyStatus']
          = array('dateinterval', 'allstates');
 
@@ -369,7 +369,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                WHERE glpi_groups_tickets.type = 1
             )
                AND glpi_tickets.entities_id IN (".$this->where_entities.")
-               AND {$this->sql_date} 
+               AND {$this->sql_date}
                AND status IN('".implode("', '", array_keys($filter['status']))."')";
          $result = $DB->query($query);
 
@@ -745,7 +745,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ON (glpi_tickets_users.users_id = glpi_users.id)
       LEFT JOIN glpi_locations
          ON (glpi_locations.id = glpi_users.locations_id)
-      WHERE {$this->sql_date} 
+      WHERE {$this->sql_date}
          AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_locations.name
       ORDER BY count DESC

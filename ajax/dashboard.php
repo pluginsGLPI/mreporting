@@ -9,7 +9,7 @@ if (isset($_REQUEST['action'])) {
          break;
 
       case 'updateWidget':
-         PluginMreportingDashboard::updateWidget($_REQUEST['id']);         
+         PluginMreportingDashboard::updateWidget($_REQUEST['id']);
          break;
 
       case 'getConfig':

@@ -141,20 +141,20 @@ function plugin_mreporting_install() {
 
        //migration of field
       $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
-      $migration->changeField('glpi_plugin_mreporting_profiles', 'reports', 
+      $migration->changeField('glpi_plugin_mreporting_profiles', 'reports',
                              'reports','integer');
-      $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id', 
+      $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id',
                              'profiles_id','integer');
       $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
 
       $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
    }
 
-   // == UPDATE to 0.84+1.0 == 
+   // == UPDATE to 0.84+1.0 ==
    $query = "UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ".READ." WHERE pr.right = 'r'";
    $DB->query($query);
    if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
-      $query = "ALTER IGNORE TABLE glpi_plugin_mreporting_profiles 
+      $query = "ALTER IGNORE TABLE glpi_plugin_mreporting_profiles
                 ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)";
       $DB->query($query);
    }
