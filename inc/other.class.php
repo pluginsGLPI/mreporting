@@ -28,7 +28,7 @@
  */
 
 class PluginMreportingOther Extends PluginMreportingBaseclass {
-   
+
    function reportHbarLogs($configs = array()) {
       global $DB;
 

@@ -36,7 +36,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
   function reportHbarComputersByOS($config = array()) {
       global $DB;
-      
+
       /*Ajout d'une condition englobant les entités*/
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
@@ -100,7 +100,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
    function reportHbarComputersByFabricant($config = array()) {
       global $DB;
-      
+
       $manufacturerObj = new Manufacturer();
       $manufacturers = $manufacturerObj->find();
 
@@ -111,12 +111,12 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       // Ajout d'une condition englobant les entités
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
-      
+
       $query = "";
       $first = true;
 
       foreach ($manufacturers as $manufacturer) {
-         $query.= (!$first?"UNION":"").
+         $query .= (!$first ? " UNION " : "") .
                   "SELECT m.name as Manufacturer, count(*) Total, count(*)*100/(SELECT count(*)
                         FROM glpi_computers c, glpi_manufacturers m
                         WHERE c.`is_deleted`=0 AND c.`is_template`=0
@@ -127,7 +127,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                     AND m.id = " . $manufacturer['id'] . " $condition";
          $first = false;
       }
-      $query .=" ORDER BY Total DESC";
+      $query .= " ORDER BY Total DESC";
 
       $result = $DB->query($query);
 
@@ -149,7 +149,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
   function reportHbarComputersByType($config = array()) {
       global $DB;
-      
+
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -159,9 +159,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                            AND c.computertypes_id = t.id $condition) Pourcentage
 
          FROM glpi_computers c, glpi_computertypes t
-         WHERE c.computertypes_id = t.id $condition 
-            AND c.`is_deleted` = 0 
-            AND c.`is_template` = 0 
+         WHERE c.computertypes_id = t.id $condition
+            AND c.`is_deleted` = 0
+            AND c.`is_template` = 0
          GROUP BY t.name
          ORDER BY Total DESC
          ";
@@ -184,7 +184,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
   function reportHbarComputersByAge($config = array()) {
       global $DB;
-      
+
       $condition = " AND c.entities_id IN (".$this->where_entities.")";
       $datas = array();
 
@@ -197,7 +197,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          WHERE c.id = i.items_id
             AND c.`is_deleted`=0 AND c.`is_template`=0
             AND itemtype = 'Computer'
-            AND i.warranty_date > CURRENT_DATE - INTERVAL 1 YEAR 
+            AND i.warranty_date > CURRENT_DATE - INTERVAL 1 YEAR
             $condition
          UNION
          SELECT '1-3 years' Age, count(*) Total, count(*)*100/(SELECT count(*)
@@ -210,7 +210,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             AND c.`is_deleted`=0 AND c.`is_template`=0
             AND itemtype = 'Computer'
             AND i.warranty_date <= CURRENT_DATE - INTERVAL 1 YEAR
-            AND i.warranty_date > CURRENT_DATE - INTERVAL 3 YEAR 
+            AND i.warranty_date > CURRENT_DATE - INTERVAL 3 YEAR
             $condition
          UNION
          SELECT '3-5 years' Age, count(*) Total, count(*)*100/(SELECT count(*)
@@ -223,7 +223,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             AND c.`is_deleted`=0 AND c.`is_template`=0
             AND itemtype = 'Computer'
             AND i.warranty_date <= CURRENT_DATE - INTERVAL 3 YEAR
-            AND i.warranty_date > CURRENT_DATE - INTERVAL 5 YEAR 
+            AND i.warranty_date > CURRENT_DATE - INTERVAL 5 YEAR
             $condition
          UNION
          SELECT '> 5 years' Age, count(*) Total, count(*)*100/(SELECT count(*)
@@ -235,7 +235,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          WHERE c.id = i.items_id
             AND c.`is_deleted`=0 AND c.`is_template`=0
             AND itemtype = 'Computer'
-            AND i.warranty_date <= CURRENT_DATE - INTERVAL 5 YEAR 
+            AND i.warranty_date <= CURRENT_DATE - INTERVAL 5 YEAR
             $condition
          UNION
          SELECT 'Undefined' Age, count(*) Total, count(*)*100/(SELECT count(*)
@@ -354,9 +354,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Mac OS%'") as $os) {
          $number = countElementsInTable('glpi_computers',
-                                          "`operatingsystems_id`='".$os['id']."' 
-                                             AND `is_deleted`='0' 
-                                             AND `is_template`='0' 
+                                          "`operatingsystems_id`='".$os['id']."'
+                                             AND `is_deleted`='0'
+                                             AND `is_template`='0'
                                              AND `entities_id` IN (".$this->where_entities.")");
          if ($number) {
             $query_details = "SELECT count(*) as cpt, s.name as name
@@ -461,8 +461,8 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                 WHERE `ci`.`itemtype` = 'Monitor'
                   AND `c`.`is_deleted` = '0'
                   AND `ci`.`computers_id` = c.`id`
-                  AND `c`.`is_template` = '0' 
-                  AND c.entities_id IN ({$this->where_entities}) 
+                  AND `c`.`is_template` = '0'
+                  AND c.entities_id IN ({$this->where_entities})
                 GROUP BY `ci`.`computers_id`
                 ORDER BY `cpt`";
 
@@ -486,12 +486,12 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
       $query = "SELECT t.name status, count(*) Total, count(*)*100/(SELECT count(*)
                            FROM glpi_computers c, glpi_states t
-                           WHERE c.states_id = t.id 
+                           WHERE c.states_id = t.id
                               $condition
                               AND c.`is_deleted` = 0
-                              AND c.`is_template` = 0) Pourcentage 
+                              AND c.`is_template` = 0) Pourcentage
          FROM glpi_computers c, glpi_states t
-         WHERE c.states_id = t.id 
+         WHERE c.states_id = t.id
             $condition
             AND c.`is_deleted` = 0
             AND c.`is_template` = 0
@@ -501,6 +501,32 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       while ($computer = $DB->fetch_assoc($result)) {
          $pourcentage = round($computer['Pourcentage'], 2);
          $datas['datas'][$computer['status']." ($pourcentage %)"] = $computer['Total'];
+      }
+
+      return $datas;
+
+   }
+
+  function reportHbarPrintersByStatus($config = array()) {
+      global $DB;
+
+      $datas = array();
+
+      $condition = " AND c.entities_id IN (".$this->where_entities.")";
+
+      $query = "SELECT t.name status, count(*) Total, count(*)*100/(
+                     SELECT count(*)
+                     FROM glpi_printers c, glpi_states t
+                     WHERE c.`is_deleted`=0 AND c.`is_template`=0
+                     AND c.states_id = t.id $condition) Pourcentage
+                FROM glpi_printers c, glpi_states t
+                WHERE c.states_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
+                GROUP BY t.name";
+      $result = $DB->query($query);
+
+      while ($printer = $DB->fetch_assoc($result)) {
+         $pourcentage = round($printer['Pourcentage'], 2);
+         $datas['datas'][$printer['status']." ($pourcentage %)"] = $printer['Total'];
       }
 
       return $datas;

@@ -27,6 +27,10 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByStatus']['title'] 
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByStatus']['desc'] = "Barres";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByStatus']['category'] = "Statut";
 
+$LANG['plugin_mreporting']['Inventory']['reportHbarPrintersByStatus']['title'] = "Imprimantes par statut";
+$LANG['plugin_mreporting']['Inventory']['reportHbarPrintersByStatus']['desc'] = "Barres";
+$LANG['plugin_mreporting']['Inventory']['reportHbarPrintersByStatus']['category'] = "Statut";
+
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['title'] = "Ordinateurs par type";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['desc'] = "Camembert";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['category'] = "Type";

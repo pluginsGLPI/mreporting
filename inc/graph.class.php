@@ -67,7 +67,7 @@ class PluginMreportingGraph {
             $desc.= " - ";
             }
          }
-         
+
          if (isset($_SESSION['mreporting_values']['date1'.$randname])
                && isset($_SESSION['mreporting_values']['date1'.$randname])) {
             $desc.= Html::convdate($_SESSION['mreporting_values']['date1'.$randname])." / ".

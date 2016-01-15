@@ -52,5 +52,3 @@ class SegmentIterator implements RecursiveIterator
         $this->key ++;
     }
 }
-
-?>

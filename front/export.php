@@ -36,19 +36,19 @@ header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 if($_REQUEST['switchto'] == 'odt' || $_REQUEST['switchto'] == 'odtall') {
-   require_once('../lib/odtphp/odf.php');
+   require_once('../lib/odtphp/Odf.php');
 }
 
-if (PluginMreportingPreference::atLeastOneTemplateExists()) {
-      $template = PluginMreportingPreference::checkPreferenceTemplateValue(Session::getLoginUserID());
-   if ($template) {
+//if (PluginMreportingPreference::atLeastOneTemplateExists()) {
+//      $template = PluginMreportingPreference::checkPreferenceTemplateValue(Session::getLoginUserID());
+//   if ($template) {
       $common = new PluginMreportingCommon();
       $common->export($_REQUEST);
-   } else {
-      Session::addMessageAfterRedirect(__("Please, select a model in your preferences", 'mreporting'), false, ERROR);
-      Html::redirect("../../../front/preference.php");
-   }
-} else {
-   Session::addMessageAfterRedirect(__("No model available", 'mreporting'), false, ERROR);
-   Html::back();
-}
+//   } else {
+//      Session::addMessageAfterRedirect(__("Please, select a model in your preferences", 'mreporting'), false, ERROR);
+//      Html::redirect("../../../front/preference.php");
+//   }
+//} else {
+//   Session::addMessageAfterRedirect(__("No model available", 'mreporting'), false, ERROR);
+//   Html::back();
+//}

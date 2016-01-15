@@ -27,6 +27,10 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByStatus']['title'] 
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByStatus']['desc'] = "Bars";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByStatus']['category'] = "Status";
 
+$LANG['plugin_mreporting']['Inventory']['reportHbarPrintersByStatus']['title'] = "Printer per status";
+$LANG['plugin_mreporting']['Inventory']['reportHbarPrintersByStatus']['desc'] = "Bars";
+$LANG['plugin_mreporting']['Inventory']['reportHbarPrintersByStatus']['category'] = "Status";
+
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['title'] = "Computers per type";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['desc'] = "Pie";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['category'] = "Type";

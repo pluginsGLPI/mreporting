@@ -55,10 +55,10 @@ class PluginMreportingCommon extends CommonDBTM {
       global $CFG_GLPI;
 
       $img_db = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/dashboard.png'
-                           title='".__("Dashboard", 'mreporting')."' 
+                           title='".__("Dashboard", 'mreporting')."'
                            alt='".__("Dashboard", 'mreporting')."'>";
       $img_ct   = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/list_dashboard.png'
-                           title='".__("Reports list", 'mreporting')."' 
+                           title='".__("Reports list", 'mreporting')."'
                            alt='".__("Reports list", 'mreporting')."'>";
       $url_central   = "/plugins/mreporting/front/central.php";
       $url_dashboard = "/plugins/mreporting/front/dashboard.php";
@@ -193,7 +193,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      }
                      $reports[$classname]['functions'][$i]['right'] = READ;
                      if (isset($_SESSION['glpiactiveprofile'])) {
-                        $reports[$classname]['functions'][$i]['right'] = 
+                        $reports[$classname]['functions'][$i]['right'] =
                            PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'],$config->fields['id']);
                      }
                   }
@@ -372,7 +372,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
          if (isset($graphs[$classname]) && $count>0) {
             $height = 200 + 30*$count;
-            
+
             echo "<div class='f_right'>";
             echo __("Export")." : ";
             echo "<a href='#' onClick=\"var w = window.open('popup.php?classname=$classname' ,'glpipopup', ".
@@ -866,7 +866,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * @param $flip_data, flip array if necessary
    */
 
-   static function showGraphDatas ($datas=array(), $unit = '', $labels2=array(), 
+   static function showGraphDatas ($datas=array(), $unit = '', $labels2=array(),
                                    $flip_data = false, $show_graph = false) {
       global $CFG_GLPI;
 
@@ -1192,186 +1192,70 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $config = array('PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp');
 
-      if (PluginMreportingPreference::atLeastOneTemplateExists()) {
-
-         $template = PluginMreportingPreference::checkPreferenceTemplateValue(
-            Session::getLoginUserID());
-
-
-         $withdatas = $params[0]["withdata"];
-
-         if ($withdatas == 0) {
-            $odf = new odf("../templates/withoutdata.odt", $config);
-         } else {
-            $odf = new odf("../templates/$template", $config);
-         }
-         
-         $short_classname = str_replace('PluginMreporting', '', $params[0]['class']);
-         if (isset($LANG['plugin_mreporting'][$short_classname]['title'])) {
-            $titre = $LANG['plugin_mreporting'][$short_classname]['title'];
-         } else {
-            $titre = '';
-         }
-
-         $odf->setVars('titre', $titre, true, 'UTF-8');
-
-         $newpage = $odf->setSegment('newpage');
-
-         foreach ($params as $result => $page) {
-            // Default values of parameters
-            $title       = "";
-            $f_name      = "";
-            $raw_datas   = array();
-
-            foreach ($page as $key => $val) {
-               $$key=$val;
-            }
-
-            $datas = $raw_datas['datas'];
-
-            $labels2 = array();
-            if (isset($raw_datas['labels2'])) {
-               $labels2 = $raw_datas['labels2'];
-            }
-
-            $configs = PluginMreportingConfig::initConfigParams($f_name, $class);
-
-            foreach ($configs as $k => $v) {
-               $$k=$v;
-            }
-
-            if ($unit == '%') {
-
-               $datas = self::compileDatasForUnit($datas, $unit);
-            }
-
-            $newpage->setVars('message', $title, true, 'UTF-8');
-
-            $path = GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
-
-            if ($show_graph) {
-               $newpage->setImage('image', $path);
-            } else {
-               $newpage->setVars('image', "", true, 'UTF-8');
-            }
-
-            if ($withdatas > 0) {
-               $simpledatas = false;
-
-               //simple array
-               if (!$labels2) {
-                  $labels2 = array();
-                  $simpledatas = true;
-               }
-
-               if ($flip_data) {
-                  $labels2 = array_flip($labels2);
-               }
-
-               $types = array();
-
-               foreach($datas as $k => $v) {
-                  if (is_array($v)) {
-                     foreach($v as $key => $val) {
-                        if (isset($labels2[$key]))
-                           $types[$key][$k] = $val;
-                     }
-                  } else {
-                     $types[$k] = $v;
-                  }
-               }
-
-               if (! $flip_data) {
-                  $tmp = $datas;
-                  $datas = $types;
-                  $types = $tmp;
-               }
-               //simple array
-               if ($simpledatas) {
-
-                  $label = __("Number", 'mreporting');
-
-                  if ($template == "word.odt") {
-                     $newpage->data0->label_0(utf8_decode($label));
-                     $newpage->data0->merge();
-                  } else {
-                     $newpage->csvdata->setVars('TitreCategorie', $label, true, 'UTF-8');
-                  }
-                  if ($template == "word.odt") {
-                     foreach($types as $label2 => $cols) {
-                        $newpage->csvdata->label1->label_1(utf8_decode($label2));
-                        $newpage->csvdata->label1->merge();
-
-                        if (!empty($unit)) {
-                           $cols = $cols." ".$unit;
-                        }
-                        $newpage->csvdata->data1->data_1($cols);
-                        $newpage->csvdata->merge();
-                     }
-                  } else {
-                     foreach($types as $label2 => $cols) {
-                        if (!empty($unit)) {
-                           $cols = $cols." ".$unit;
-                        }
-
-                        $newpage->csvdata->csvdata2->label_1(utf8_decode($label2));
-                        $newpage->csvdata->csvdata2->data_1($cols);
-                        $newpage->csvdata->csvdata2->merge();
-                     }
-                     $newpage->csvdata->merge();
-                  }
-
-               } else {
-
-                  if ($template == "word.odt") {
-                     foreach($datas as $label => $val) {
-                        $newpage->data0->label_0(utf8_decode($label));
-                        $newpage->data0->merge();
-                     }
-
-                     foreach($types as $label2 => $cols) {
-                        $newpage->csvdata->label1->label_1(utf8_decode($label2));
-                        $newpage->csvdata->label1->merge();
-
-                        foreach($cols as $date => $nb) {
-                           if (!empty($unit)) {
-                              $nb = $nb." ".$unit;
-                           }
-                           if (!is_array($nb)) $newpage->csvdata->data1->data_1(utf8_decode($nb));
-                           $newpage->csvdata->data1->merge();
-                        }
-
-                        $newpage->csvdata->merge();
-                     }
-                  } else {
-                     foreach($types as $label2 => $cols) {
-                        foreach($cols as $label1 => $nb) {
-                           if (!empty($unit)) {
-                              $nb = $nb." ".$unit;
-                           }
-                           $newpage->csvdata->setVars('TitreCategorie', $label2, true, 'UTF-8');
-                           $newpage->csvdata->csvdata2->setVars(
-                              'label_1', utf8_decode($label1), true, 'UTF-8');
-                           if (!is_array($nb)) {
-                              $newpage->csvdata->csvdata2->setVars(
-                                 'data_1', utf8_decode($nb), true, 'UTF-8');
-                           }
-                           $newpage->csvdata->csvdata2->merge();
-                        }
-
-                        $newpage->csvdata->merge();
-                     }
-                  }
-               }
-            }
-            $newpage->merge();
-
-         }
-         $odf->mergeSegment($newpage);
-         // We export the file
-         $odf->exportAsAttachedFile();
-         unset($_SESSION['glpi_plugin_mreporting_odtarray']);
+      $category    = '';
+      $description = '';
+      $short_classname = str_replace('PluginMreporting', '', $params[0]['class']);
+      if (isset($LANG['plugin_mreporting'][$short_classname]['title'])) {
+         $category    = $LANG['plugin_mreporting'][$short_classname]['title'];
+         $description = $LANG['plugin_mreporting'][$short_classname][$params[0]['f_name']]['desc'];
       }
+
+      $odf = new odf("../templates/template.odt", $config);
+      $odf->setVars('category', $category, ENT_NOQUOTES, "utf-8");
+      $odf->setVars('title', $params[0]['title'], ENT_NOQUOTES, "utf-8");
+      $odf->setVars('description', $description, ENT_NOQUOTES, "utf-8");
+
+      $path = GLPI_PLUGIN_DOC_DIR."/mreporting/" . $params[0]['f_name'] . ".png";
+
+      if (is_file($path)) {
+         list($image_width, $image_height) = @getimagesize($path);
+         $image_width *= Odf::PIXEL_TO_CM;
+         $image_height *= Odf::PIXEL_TO_CM * 17 / $image_width;
+         $odf->setImage('image', $path, -1, 17, $image_height);
+      } else {
+         $odf->setVars('image', "", true, 'UTF-8');
+      }
+
+      $singledatas   = $odf->setSegment('singledatas');
+      $multipledatas = $odf->setSegment('multipledatas');
+
+      if ($params[0]['withdata']) {
+         $datas       = $params[0]['raw_datas']['datas'];
+         $first       = $datas;
+         $first       = array_shift($first);
+         $is_multiple = is_array($first);
+
+         // Multidatas graph
+         if ($is_multiple) {
+            $multipledatas->setVars('datas_title', mb_strtoupper(__('data', 'mreporting')), ENT_NOQUOTES, "utf-8");
+
+            foreach ($datas as $key => $value) {
+               $multipledatas->subtitle->datas_subtitle(mb_strtoupper($key), ENT_NOQUOTES, "utf-8");
+               $multipledatas->subtitle->merge();
+
+               foreach ($value as $col => $val) {
+                  $multipledatas->datas->row($col, ENT_NOQUOTES, "utf-8");
+                  $multipledatas->datas->value($val, ENT_NOQUOTES, "utf-8");
+                  $multipledatas->datas->merge();
+               }
+            $multipledatas->merge();
+            }
+
+         // Simples graph
+         } else {
+            $singledatas->setVars('datas_title', mb_strtoupper(__('data', 'mreporting')), ENT_NOQUOTES, "utf-8");
+            foreach ($datas as $key => $value) {
+               $singledatas->datas->row($key, ENT_NOQUOTES, "utf-8");
+               $singledatas->datas->value($value, ENT_NOQUOTES, "utf-8");
+               $singledatas->datas->merge();
+            }
+            $singledatas->merge();
+         }
+
+      }
+      $odf->mergeSegment($singledatas);
+      $odf->mergeSegment($multipledatas);
+      $odf->exportAsAttachedFile();
    }
 
    // === SELECTOR FUNCTIONS ====
@@ -1403,7 +1287,7 @@ class PluginMreportingCommon extends CommonDBTM {
                      'display'  => true,
                      'size'     => count($values),
                      'values'   => $values);
-      
+
       Dropdown::showFromArray($field, $datas, $param);
    }
 
@@ -1497,8 +1381,8 @@ class PluginMreportingCommon extends CommonDBTM {
 
    static function selectorType() {
       echo "<br /><b>"._n("Type", "Types", 1) ." : </b><br />";
-      Ticket::dropdownType('type', 
-                           array('value' => isset($_SESSION['mreporting_values']['type']) 
+      Ticket::dropdownType('type',
+                           array('value' => isset($_SESSION['mreporting_values']['type'])
                               ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
 
    }
@@ -1512,8 +1396,8 @@ class PluginMreportingCommon extends CommonDBTM {
                          'currenttype'     => Ticket::INCIDENT_TYPE,
                          'entity_restrict' => -1,
                          'condition'       => "`is_incident`='1'",
-                         'value'           => isset($_SESSION['mreporting_values']['itilcategories_id']) 
-                                              ? $_SESSION['mreporting_values']['itilcategories_id'] 
+                         'value'           => isset($_SESSION['mreporting_values']['itilcategories_id'])
+                                              ? $_SESSION['mreporting_values']['itilcategories_id']
                                               : 0);
          echo "<span id='show_category_by_type'>";
       }
@@ -1524,10 +1408,10 @@ class PluginMreportingCommon extends CommonDBTM {
       if ($type) {
          echo "</span>";
 
-         $rand = Ticket::dropdownType('type', 
-                             array('value' => isset($_SESSION['mreporting_values']['type']) 
-                                              ? $_SESSION['mreporting_values']['type'] 
-                                              : Ticket::INCIDENT_TYPE, 
+         $rand = Ticket::dropdownType('type',
+                             array('value' => isset($_SESSION['mreporting_values']['type'])
+                                              ? $_SESSION['mreporting_values']['type']
+                                              : Ticket::INCIDENT_TYPE,
                                     'toadd' => array(-1 => __('All'))));
 
          Ajax::updateItemOnSelectEvent("dropdown_type$rand", "show_category_by_type",
@@ -1585,11 +1469,11 @@ class PluginMreportingCommon extends CommonDBTM {
       $date2 = $_SESSION['mreporting_values']["date2".$randname];
       echo "<td>";
       echo "<b>".__("End date")."</b><br />";
-      Html::showDateFormItem("date2".$randname, $date2, false);   
-   } 
-   
+      Html::showDateFormItem("date2".$randname, $date2, false);
+   }
+
    static function canAccessAtLeastOneReport($profiles_id) {
-      return countElementsInTable("glpi_plugin_mreporting_profiles", 
+      return countElementsInTable("glpi_plugin_mreporting_profiles",
                                   "`profiles_id`='$profiles_id' AND `right`= ".READ);
    }
 

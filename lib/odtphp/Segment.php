@@ -40,7 +40,7 @@ class Segment implements IteratorAggregate, Countable
         $this->xml = (string) $xml;
 		$this->odf = $odf;
         $zipHandler = $this->odf->getConfig('ZIP_PROXY');
-        $this->file = new $zipHandler();	
+        $this->file = new $zipHandler();
         $this->_analyseChildren($this->xml);
     }
     /**
@@ -92,9 +92,9 @@ class Segment implements IteratorAggregate, Countable
             foreach ($this->children as $child) {
                 $this->xmlParsed = str_replace($child->xml, ($child->xmlParsed=="")?$child->merge():$child->xmlParsed, $this->xmlParsed);
                 $child->xmlParsed = '';
-                //Store all image names used in child segments in current segment array 
-				foreach ($child->manif_vars as $file) 
-                $this->manif_vars[] = $file; 
+                //Store all image names used in child segments in current segment array
+				foreach ($child->manif_vars as $file)
+                $this->manif_vars[] = $file;
                 $child->manif_vars=array();
             }
         }
@@ -107,7 +107,7 @@ class Segment implements IteratorAggregate, Countable
 			}
         }
 
-        $this->file->close();		
+        $this->file->close();
         return $this->xmlParsed;
     }
     /**
@@ -153,10 +153,15 @@ class Segment implements IteratorAggregate, Countable
      *
      * @param string $key name of the variable within the template
      * @param string $value path to the picture
+     * @param string $page anchor to page number (or -1 if anchor-type is aschar)
+     * @param string $width width of picture (keep original if null)
+     * @param string $height height of picture (keep original if null)
+     * @param string $offsetX offset by horizontal (not used if $page = -1)
+     * @param string $offsetY offset by vertical (not used if $page = -1)
      * @throws OdfException
      * @return Segment
      */
-    public function setImage($key, $value)
+    public function setImage($key, $value, $page=null, $width=null, $height=null, $offsetX=null, $offsetY=null)
     {
         $filename = strtok(strrchr($value, '/'), '/.');
         $file = substr(strrchr($value, '/'), 1);
@@ -164,29 +169,20 @@ class Segment implements IteratorAggregate, Countable
         if ($size === false) {
             throw new OdfException("Invalid image");
         }
-        list ($width, $height) = $size;
-        $width *= Odf::PIXEL_TO_CM;
-        $height *= Odf::PIXEL_TO_CM;
-         if($width>20 && $height<=26)  {
-            $width=$width*('0.8%');
-            $height=$height*('0.8%');
-         }
-         if($width>20 && $height>=26)  {
-            $width=$width*('0.6%');
-            $height=$height*('0.6%');
-         }
-         if($width<20 && $height>=26)  {
-            $width=$width*('0.6%');
-            $height=$height*('0.6%');
-         }
+        if (!$width && !$height) {
+            list ($width, $height) = $size;
+            $width *= Odf::PIXEL_TO_CM;
+            $height *= Odf::PIXEL_TO_CM;
+        }
+        $anchor = $page == -1 ? 'text:anchor-type="aschar"' : "text:anchor-type=\"page\" text:anchor-page-number=\"{$page}\" svg:x=\"{$offsetX}cm\" svg:y=\"{$offsetY}cm\"";
         $xml = <<<IMG
-<draw:frame draw:style-name="fr1" draw:name="$filename" text:anchor-type="aschar" svg:width="{$width}cm" svg:height="{$height}cm" draw:z-index="3"><draw:image xlink:href="Pictures/$file" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>
+<draw:frame draw:style-name="fr1" draw:name="$filename" {$anchor} svg:width="{$width}cm" svg:height="{$height}cm" draw:z-index="3"><draw:image xlink:href="Pictures/$file" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>
 IMG;
         $this->images[$value] = $file;
         $this->manif_vars[] = $file;	//save image name as array element
         $this->setVars($key, $xml, false);
         return $this;
-    }	
+    }
     /**
      * Shortcut to retrieve a child
      *
@@ -202,6 +198,11 @@ IMG;
             throw new SegmentException('child ' . $prop . ' does not exist');
         }
     }
+   public function getChildren()
+   {
+      return $this->children;
+   }
+
     /**
      * Proxy for setVars
      *
@@ -212,7 +213,8 @@ IMG;
     public function __call($meth, $args)
     {
         try {
-            return $this->setVars($meth, $args[0]);
+            array_unshift($args,$meth);
+            return call_user_func_array(array($this,'setVars'),$args);
         } catch (SegmentException $e) {
             throw new SegmentException("method $meth nor var $meth exist");
         }
@@ -227,5 +229,3 @@ IMG;
         return $this->xmlParsed;
     }
 }
-
-?>

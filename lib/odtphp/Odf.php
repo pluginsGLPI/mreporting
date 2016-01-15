@@ -22,7 +22,7 @@ class OdfException extends Exception
 class Odf
 {
     protected $config = array(
-    	'ZIP_PROXY' => 'PhpZipProxy',
+    	'ZIP_PROXY' => 'PclZipProxy',
     	'DELIMITER_LEFT' => '{',
     	'DELIMITER_RIGHT' => '}',
 		'PATH_TO_TMP' => null
@@ -71,9 +71,9 @@ class Odf
 			throw new OdfException("Something is wrong with META-INF/manifest.xm in source file '$filename'");
  			}
 
-        
+
         $this->file->close();
-        
+
         $tmp = tempnam($this->config['PATH_TO_TMP'], md5(uniqid()));
         copy($filename, $tmp);
         $this->tmpfile = $tmp;
@@ -94,7 +94,7 @@ class Odf
 		if (strpos($this->contentXml, $tag) === false && strpos($this->stylesXml , $tag) === false) {
  				throw new OdfException("var $key not found in the document");
  			}
-        $value = $encode ? htmlspecialchars($value) : $value;
+        $value = $encode ? $this->recursiveHtmlspecialchars($value) : $value;
         $value = ($charset == 'ISO-8859') ? utf8_encode($value) : $value;
         $this->vars[$tag] = str_replace("\n", "<text:line-break/>", $value);
         return $this;
@@ -104,10 +104,15 @@ class Odf
      *
      * @param string $key name of the variable within the template
      * @param string $value path to the picture
+     * @param integer $page anchor to page number (or -1 if anchor-type is aschar)
+     * @param integer $width width of picture (keep original if null)
+     * @param integer $height height of picture (keep original if null)
+     * @param integer $offsetX offset by horizontal (not used if $page = -1)
+     * @param integer $offsetY offset by vertical (not used if $page = -1)
      * @throws OdfException
      * @return odf
      */
-    public function setImage($key, $value)
+    public function setImage($key, $value, $page=null, $width=null, $height=null, $offsetX=null, $offsetY=null)
     {
         $filename = strtok(strrchr($value, '/'), '/.');
         $file = substr(strrchr($value, '/'), 1);
@@ -115,14 +120,18 @@ class Odf
         if ($size === false) {
             throw new OdfException("Invalid image");
         }
-        list ($width, $height) = $size;
-        $width *= self::PIXEL_TO_CM;
-        $height *= self::PIXEL_TO_CM;
+        if (!$width && !$height) {
+            list ($width, $height) = $size;
+            $width *= Odf::PIXEL_TO_CM;
+            $height *= Odf::PIXEL_TO_CM;
+        }
+        $anchor = $page == -1 ? 'text:anchor-type="aschar"' : "text:anchor-type=\"page\" text:anchor-page-number=\"{$page}\" svg:x=\"{$offsetX}cm\" svg:y=\"{$offsetY}cm\"";
         $xml = <<<IMG
-<draw:frame draw:style-name="fr1" draw:name="$filename" text:anchor-type="aschar" svg:width="{$width}cm" svg:height="{$height}cm" draw:z-index="3"><draw:image xlink:href="Pictures/$file" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>
+<draw:frame draw:style-name="fr1" draw:name="$filename" {$anchor} svg:width="{$width}cm" svg:height="{$height}cm" draw:z-index="3"><draw:image xlink:href="Pictures/$file" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>
 IMG;
-        $this->images[$value] = $file;  
-        $this->manif_vars[] = $file;	//save image name as array element
+
+        $this->images[$value] = $file;
+        $this->manif_vars[] = $file;    //save image name as array element
         $this->setVars($key, $xml, false);
         return $this;
     }
@@ -131,7 +140,7 @@ IMG;
      * Called automatically within the constructor
      *
      * @return void
-     */    
+     */
     private function _moveRowSegments()
     {
     	// Search all possible rows in the document
@@ -139,7 +148,7 @@ IMG;
 		preg_match_all($reg1, $this->contentXml, $matches);
 		for ($i = 0, $size = count($matches[0]); $i < $size; $i++) {
 			// Check if the current row contains a segment row.*
-			$reg2 = '#\[!--\sBEGIN\s(row.[\S]*)\s--\](.*)\[!--\sEND\s\\1\s--\]#sm';
+			$reg2 = '#\[!--\sBEGIN\s(row.[\S]*)\s--\](.*)\[!--\sEND\s\\1\s--\]#smU';
 			if (preg_match($reg2, $matches[0][$i], $matches2)) {
 				$balise = str_replace('row.', '', $matches2[1]);
 				// Move segment tags around the row
@@ -187,7 +196,7 @@ IMG;
     }
     /**
      * Display all the current template variables
-     * 
+     *
      * @return string
      */
     public function printVars()
@@ -206,7 +215,7 @@ IMG;
     }
     /**
      * Display loop segments declared with setSegment()
-     * 
+     *
      * @return string
      */
     public function printDeclaredSegments()
@@ -225,8 +234,8 @@ IMG;
         if (array_key_exists($segment, $this->segments)) {
             return $this->segments[$segment];
         }
-        // $reg = "#\[!--\sBEGIN\s$segment\s--\]<\/text:p>(.*)<text:p\s.*>\[!--\sEND\s$segment\s--\]#sm";
-        $reg = "#\[!--\sBEGIN\s$segment\s--\](.*)\[!--\sEND\s$segment\s--\]#sm";
+        // $reg = "#\[!--\sBEGIN\s$segment\s--\]<\/text:p>(.*?)<text:p\s.*>\[!--\sEND\s$segment\s--\]#sm";
+        $reg = "#\[!--\sBEGIN\s$segment\s--\](.*?)\[!--\sEND\s$segment\s--\]#smU";
         if (preg_match($reg, html_entity_decode($this->contentXml), $m) == 0) {
             throw new OdfException("'$segment' segment not found in the document");
         }
@@ -235,7 +244,7 @@ IMG;
     }
     /**
      * Save the odt file on the disk
-     * 
+     *
      * @param string $file name of the desired file
      * @throws OdfException
      * @return void
@@ -247,7 +256,7 @@ IMG;
             	throw new OdfException('Permission denied : can\'t create ' . $file);
         	}
             $this->_save();
-            copy($this->tmpfile, $file);     
+            copy($this->tmpfile, $file);
         } else {
             $this->_save();
         }
@@ -266,7 +275,7 @@ IMG;
  			throw new OdfException('Error during file export addFromString');
         }
         $lastpos=strrpos($this->manifestXml, "\n", -15); //find second last newline in the manifest.xml file
-       	$manifdata = "";  
+       	$manifdata = "";
 
        	//Enter all images description in $manifdata variable
 
@@ -300,19 +309,19 @@ IMG;
         if (headers_sent($filename, $linenum)) {
             throw new OdfException("headers already sent ($filename at $linenum)");
         }
-        
+
         if( $name == "" )
         {
         		$name = md5(uniqid()) . ".odt";
         }
-        
+
         header('Content-type: application/vnd.oasis.opendocument.text');
         header('Content-Disposition: attachment; filename="'.$name.'"');
         readfile($this->tmpfile);
     }
     /**
-     * Returns a variable of configuration 
-     * 
+     * Returns a variable of configuration
+     *
      * @return string The requested variable of configuration
      */
     public function getConfig($configKey)
@@ -324,7 +333,7 @@ IMG;
     }
     /**
      * Returns the temporary working file
-     * 
+     *
      * @return string le chemin vers le fichier temporaire de travail
      */
     public function getTmpfile()
@@ -333,10 +342,20 @@ IMG;
     }
     /**
      * Delete the temporary file when the object is destroyed
-     */    
+     */
     public function __destruct() {
           if (file_exists($this->tmpfile)) {
         	unlink($this->tmpfile);
+        }
+    }
+    /**
+     * Recursive htmlspecialchars
+     */
+    protected function recursiveHtmlspecialchars($value) {
+        if (is_array($value)) {
+            return array_map(array($this, 'recursiveHtmlspecialchars'), $value);
+        }else{
+            return htmlspecialchars($value);
         }
     }
 }
