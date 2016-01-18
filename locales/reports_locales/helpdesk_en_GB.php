@@ -1,7 +1,7 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdesk']['title'] = "Reporting Helpdesk";
+$LANG['plugin_mreporting']['Helpdesk']['title'] = "Helpdesk";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Number of ticket per entity";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['desc'] = "Bars";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['category'] = "Per entity";

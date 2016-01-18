@@ -1,7 +1,7 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdeskplus']['title'] = 'Advanced Helpdesk reporting';
+$LANG['plugin_mreporting']['Helpdeskplus']['title'] = 'Advanced Helpdesk';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['title']            = 'Backlog';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['desc']             = '';

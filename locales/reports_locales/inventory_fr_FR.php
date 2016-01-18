@@ -1,7 +1,7 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Inventory']['title'] = "Reporting inventaire";
+$LANG['plugin_mreporting']['Inventory']['title'] = "Inventaire";
 
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['title'] = "Ordinateurs par OS";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['desc'] = "Barres";
