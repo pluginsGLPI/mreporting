@@ -1,6 +1,6 @@
 <?php
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
+ * @version $Id
  -------------------------------------------------------------------------
  Mreporting plugin for GLPI
  Copyright (C) 2003-2011 by the mreporting Development Team.
@@ -29,226 +29,199 @@
 
 class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
-   /********* Fonctions pour les indicateurs par OS ***************************/
-   function reportPieComputersByOS($config = array()) {
-      return $this->reportHbarComputersByOS($config);
-   }
-
-  function reportHbarComputersByOS($config = array()) {
-      global $DB;
-
-      /*Ajout d'une condition englobant les entités*/
-      $condition = " AND c.entities_id IN (".$this->where_entities.")";
-      $datas = array();
-
-      $oses = array(
-         'Windows'   => 'Windows',
-         'Linux'     => 'Linux|Ubuntu',
-         'Solaris'   => 'Solaris',
-         'AIX'       => 'AIX',
-         'BSD'       => 'BSD',
-         'VMWare'    => 'VMWare',
-         'MAC'       => 'MAC',
-         'Android'   => 'Android',
-         'HP-UX'     => 'HP-UX',
-      );
-      $query = "";
-      $first = true;
-      $notlike = "";
-      foreach ($oses as $os => $search) {
-         $query.=(!$first?" UNION ":"")
-            ."\n SELECT '$os' AS OS, count(*) AS Total, count(*)*100/(SELECT count(*)
-                                                                        FROM glpi_computers c, glpi_operatingsystems os
-                                                                        WHERE c.`is_deleted`='0' AND c.`is_template`='0'
-                                                                        AND c.operatingsystems_id = os.id $condition) AS Pourcentage
-               FROM glpi_computers c, glpi_operatingsystems os
-               WHERE c.operatingsystems_id = os.id
-               AND c.`is_deleted`='0' AND c.`is_template`='0'
-               AND os.name REGEXP '$search' $condition";
-
-         $notlike.= " AND os.name NOT REGEXP '$search'";
-         $first = false;
-      }
-      $query .= " UNION
-         SELECT '".__("Others")."' AS OS, count(*) Total, count(*)*100/(SELECT count(*)
-                                    FROM glpi_computers c, glpi_operatingsystems os
-                                    WHERE c.`is_deleted`=0 AND c.`is_template`=0
-                                    AND c.operatingsystems_id = os.id $condition) Pourcentage
-         FROM glpi_computers c, glpi_operatingsystems os
-         WHERE c.operatingsystems_id = os.id
-         AND c.`is_deleted`=0 AND c.`is_template`=0 $notlike $condition";
-
-      $query.=" ORDER BY Total DESC";
-      $result = $DB->query($query);
-
-      while ($computer = $DB->fetch_assoc($result)) {
-         $pourcentage = round($computer['Pourcentage'], 2);
-         if ($computer['Total']) {
-            $datas['datas'][$computer['OS']." ($pourcentage %)"] = $computer['Total'];
-         }
-      }
-
-      return $datas;
-
-   }
-
-
-   /********************** Fonctions pour les indicateurs par fabricant ************************/
+   /* ==== MANUFACTURERS REPORTS ==== */
    function reportPieComputersByFabricant($config = array()) {
-      return $this->reportHbarComputersByFabricant($config);
+      $_SESSION['mreporting_selector']['reportPieComputersByFabricant'] = array('multiplestates');
+      return $this->computersByFabricant($config);
    }
 
    function reportHbarComputersByFabricant($config = array()) {
+      $_SESSION['mreporting_selector']['reportHbarComputersByFabricant'] = array('multiplestates');
+      return $this->computersByFabricant($configs);
+   }
+
+   function computersByFabricant($configs = array()) {
       global $DB;
 
       $manufacturerObj = new Manufacturer();
       $manufacturers = $manufacturerObj->find();
-
       if (empty($manufacturers)) {
          return array();
       }
 
-      // Ajout d'une condition englobant les entités
-      $condition = " AND c.entities_id IN (".$this->where_entities.")";
-      $datas = array();
-
+      $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
       $query = "";
       $first = true;
-
       foreach ($manufacturers as $manufacturer) {
-         $query .= (!$first ? " UNION " : "") .
-                  "SELECT m.name as Manufacturer, count(*) Total, count(*)*100/(SELECT count(*)
-                        FROM glpi_computers c, glpi_manufacturers m
-                        WHERE c.`is_deleted`=0 AND c.`is_template`=0
-                        AND c.manufacturers_id = m.id $condition) Pourcentage
-                    FROM glpi_computers c, glpi_manufacturers m
-                    WHERE c.manufacturers_id = m.id
-                    AND c.`is_deleted`=0 AND c.`is_template`=0
-                    AND m.id = " . $manufacturer['id'] . " $condition";
+         $query.= (!$first?" UNION ":"").
+                  "SELECT m.name as Manufacturer, count(*) Total, count(*) * 100 / (SELECT count(*)
+                        FROM glpi_computers     as c,
+                             glpi_manufacturers as m
+                        WHERE c.`is_deleted`=0
+                              AND c.`is_template`=0
+                              AND c.`manufacturers_id` = m.`id`
+                              $sql_entities) as Percent
+                    FROM glpi_computers     as c,
+                         glpi_manufacturers as m
+                    WHERE c.`manufacturers_id` = m.`id`
+                          AND c.`is_deleted` = 0
+                          AND c.`is_template` = 0
+                          AND m.`id` = ".$manufacturer['id']."
+                          $sql_entities";
          $first = false;
       }
       $query .= " ORDER BY Total DESC";
 
       $result = $DB->query($query);
 
+      $datas = array();
       while ($computer = $DB->fetch_assoc($result)) {
          if ($computer['Total']) {
-            $pourcentage = round($computer['Pourcentage'], 2);
-            $datas['datas'][$computer['Manufacturer']." ($pourcentage %)"] = $computer['Total'];
+            $percent = round($computer['Percent'], 2);
+            $datas['datas'][$computer['Manufacturer']." ($percent %)"] = $computer['Total'];
          }
       }
 
       return $datas;
-
    }
 
-   /*************************************Fonctions pour les indicateurs par type*************************************/
-  function reportPieComputersByType($config = array()) {
-      return $this->reportHbarComputersByType($config);
+   /* ==== COMPUTER'S TYPE REPORTS ==== */
+   function reportPieComputersByType($config = array()) {
+      $_SESSION['mreporting_selector']['reportPieComputersByType'] = array('multiplestates');
+      return $this->computersByType($config);
    }
 
-  function reportHbarComputersByType($config = array()) {
+   function reportHbarComputersByType($configs = array()) {
+      $_SESSION['mreporting_selector']['reportHbarComputersByType'] = array('multiplestates');
+      return $this->computersByType($configs);
+   }
+
+   function computersByType($configs = array()) {
       global $DB;
 
-      $condition = " AND c.entities_id IN (".$this->where_entities.")";
-      $datas = array();
-
-      $query = "SELECT t.name Type, count(*) Total, count(*)*100/(SELECT count(*)
-                           FROM glpi_computers c, glpi_computertypes t
-                           WHERE c.`is_deleted`=0 AND c.`is_template`=0
-                           AND c.computertypes_id = t.id $condition) Pourcentage
-
-         FROM glpi_computers c, glpi_computertypes t
-         WHERE c.computertypes_id = t.id $condition
-            AND c.`is_deleted` = 0
-            AND c.`is_template` = 0
-         GROUP BY t.name
-         ORDER BY Total DESC
-         ";
+      $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
+      $query = "SELECT t.`name`   as Type,
+                       count(*) as Total,
+                       count(*) * 100 / (SELECT count(*)
+                           FROM glpi_computers     as c,
+                                glpi_computertypes as t
+                           WHERE c.`is_deleted` = 0
+                                 AND c.`is_template` = 0
+                                 AND c.`computertypes_id` = t.`id`
+                                 $sql_entities) as Percent
+         FROM glpi_computers     as c,
+              glpi_computertypes as t
+         WHERE c.`computertypes_id` = t.`id`
+               $sql_entities
+               AND c.`is_deleted` = 0
+               AND c.`is_template` = 0
+         GROUP BY t.`name`
+         ORDER BY Total DESC";
       $result = $DB->query($query);
-
+      $datas = array();
       while ($computer = $DB->fetch_assoc($result)) {
-         $pourcentage = round($computer['Pourcentage'], 2);
-         $datas['datas'][$computer['Type']." ($pourcentage %)"] = $computer['Total'];
+         $percent = round($computer['Percent'], 2);
+         $datas['datas'][$computer['Type']." ($percent %)"] = $computer['Total'];
       }
 
       return $datas;
-
    }
 
-   /*************************************Fonctions pour les indicateurs par Ã¢ge*************************************/
-  function reportPieComputersByAge($config = array()) {
-      $config = PluginMreportingConfig::initConfigParams(__FUNCTION__, __CLASS__);
-      return $this->reportHbarComputersByAge($config);
+   /* ==== COMPUTER'S AGE REPORTS ==== */
+   function reportPieComputersByAge($config = array()) {
+      $_SESSION['mreporting_selector']['reportPieComputersByAge'] = array('multiplestates');
+      return $this->computersByAge($configs);
    }
 
-  function reportHbarComputersByAge($config = array()) {
+   function reportHbarComputersByAge($config = array()) {
+      $_SESSION['mreporting_selector']['reportHbarComputersByAge'] = array('multiplestates');
+      return $this->computersByAge($configs);
+   }
+
+   function computersByAge($config = array()) {
       global $DB;
 
-      $condition = " AND c.entities_id IN (".$this->where_entities.")";
+      $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
       $datas = array();
 
-      $query = "SELECT '< 1 year' Age, count(*) Total, count(*)*100/(SELECT count(*)
-                           FROM glpi_computers c,  glpi_infocoms i
-                           WHERE c.id = i.items_id
-                           AND c.`is_deleted`=0 AND c.`is_template`=0
-                           AND itemtype = 'Computer' $condition) Percent
-         FROM glpi_computers c, glpi_infocoms i
-         WHERE c.id = i.items_id
-            AND c.`is_deleted`=0 AND c.`is_template`=0
-            AND itemtype = 'Computer'
-            AND i.warranty_date > CURRENT_DATE - INTERVAL 1 YEAR
-            $condition
+      $query = "SELECT '< 1 year' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
+                           FROM glpi_computers as c,
+                                glpi_infocoms  as i
+                           WHERE c.`id` = i.`items_id`
+                             AND c.`is_deleted` = 0
+                             AND c.`is_template` = 0
+                             AND itemtype = 'Computer'
+                             $sql_entities) Percent
+         FROM glpi_computers as c,
+              glpi_infocoms  as i
+         WHERE c.`id` = i.`items_id`
+           AND c.`is_deleted` = 0
+           AND c.`is_template` = 0
+           AND itemtype = 'Computer'
+           AND i.`warranty_date` > CURRENT_DATE - INTERVAL 1 YEAR
+           $sql_entities
          UNION
-         SELECT '1-3 years' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT '1-3 years' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
-                                    WHERE c.id = i.items_id
-                                    AND c.`is_deleted`=0 AND c.`is_template`=0
-                                    AND itemtype = 'Computer' $condition) Percent
-         FROM glpi_computers c, glpi_infocoms i
-         WHERE c.id = i.items_id
-            AND c.`is_deleted`=0 AND c.`is_template`=0
-            AND itemtype = 'Computer'
-            AND i.warranty_date <= CURRENT_DATE - INTERVAL 1 YEAR
-            AND i.warranty_date > CURRENT_DATE - INTERVAL 3 YEAR
-            $condition
+                                    WHERE c.`id` = i.`items_id`
+                                    AND c.`is_deleted` = 0
+                                    AND c.`is_template` = 0
+                                    AND itemtype = 'Computer' $sql_entities) Percent
+         FROM glpi_computers as c,
+              glpi_infocoms  as i
+         WHERE c.`id` = i.`items_id`
+           AND c.`is_deleted` = 0
+           AND c.`is_template` = 0
+           AND itemtype = 'Computer'
+           AND i.`warranty_date` <= CURRENT_DATE - INTERVAL 1 YEAR
+           AND i.`warranty_date` > CURRENT_DATE - INTERVAL 3 YEAR
+           $sql_entities
          UNION
-         SELECT '3-5 years' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT '3-5 years' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
-                                    WHERE c.id = i.items_id
-                                    AND c.`is_deleted`=0 AND c.`is_template`=0
-                                    AND itemtype = 'Computer' $condition) Percent
-         FROM glpi_computers c, glpi_infocoms i
-         WHERE c.id = i.items_id
-            AND c.`is_deleted`=0 AND c.`is_template`=0
-            AND itemtype = 'Computer'
-            AND i.warranty_date <= CURRENT_DATE - INTERVAL 3 YEAR
-            AND i.warranty_date > CURRENT_DATE - INTERVAL 5 YEAR
-            $condition
+                                    WHERE c.`id` = i.`items_id`
+                                    AND c.`is_deleted` = 0
+                                    AND c.`is_template` = 0
+                                    AND itemtype = 'Computer' $sql_entities) Percent
+         FROM glpi_computers as c,
+              glpi_infocoms  as i
+         WHERE c.`id` = i.`items_id`
+           AND c.`is_deleted` = 0
+           AND c.`is_template` = 0
+           AND itemtype = 'Computer'
+           AND i.`warranty_date` <= CURRENT_DATE - INTERVAL 3 YEAR
+           AND i.`warranty_date` > CURRENT_DATE - INTERVAL 5 YEAR
+           $sql_entities
          UNION
-         SELECT '> 5 years' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT '> 5 years' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
-                                    WHERE c.id = i.items_id
-                                    AND c.`is_deleted`=0 AND c.`is_template`=0
-                                    AND itemtype = 'Computer' $condition) Percent
-         FROM glpi_computers c, glpi_infocoms i
-         WHERE c.id = i.items_id
-            AND c.`is_deleted`=0 AND c.`is_template`=0
-            AND itemtype = 'Computer'
-            AND i.warranty_date <= CURRENT_DATE - INTERVAL 5 YEAR
-            $condition
+                                    WHERE c.`id` = i.`items_id`
+                                    AND c.`is_deleted` = 0
+                                    AND c.`is_template` = 0
+                                    AND itemtype = 'Computer' $sql_entities) Percent
+         FROM glpi_computers as c,
+              glpi_infocoms  as i
+         WHERE c.`id` = i.`items_id`
+           AND c.`is_deleted` = 0
+           AND c.`is_template` = 0
+           AND itemtype = 'Computer'
+           AND i.`warranty_date` <= CURRENT_DATE - INTERVAL 5 YEAR
+           $sql_entities
          UNION
-         SELECT 'Undefined' Age, count(*) Total, count(*)*100/(SELECT count(*)
+         SELECT 'Undefined' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
                                     FROM glpi_computers c,  glpi_infocoms i
-                                    WHERE c.id = i.items_id
-                                    AND c.`is_deleted`=0 AND c.`is_template`=0
-                                    AND itemtype = 'Computer' $condition) Percent
-         FROM glpi_computers c, glpi_infocoms i
-         WHERE c.id = i.items_id
-            AND c.`is_deleted`=0 AND c.`is_template`=0
-            AND itemtype = 'Computer'
-            AND i.warranty_date IS NULL
-            $condition
+                                    WHERE c.`id` = i.`items_id`
+                                    AND c.`is_deleted` = 0
+                                    AND c.`is_template` = 0
+                                    AND itemtype = 'Computer' $sql_entities) Percent
+         FROM glpi_computers as c,
+              glpi_infocoms  as i
+         WHERE c.`id` = i.`items_id`
+           AND c.`is_deleted` = 0
+           AND c.`is_template` = 0
+           AND itemtype = 'Computer'
+            AND i.`warranty_date` IS NULL
+            $sql_entities
          ORDER BY Total DESC";
       $result = $DB->query($query);
 
@@ -263,18 +236,89 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
 
 
-  function reportHbarWindows($config = array()) {
+   /* === OS REPORTS === */
+   function reportPieComputersByOS($config = array()) {
+      return $this->reportHbarComputersByOS($config);
+   }
+
+   function reportHbarComputersByOS($config = array()) {
       global $DB;
 
-      $data = array();
+      $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
+      $oses = array('Windows' => 'Windows',
+                    'Linux'   => 'Linux|Ubuntu',
+                    'Solaris' => 'Solaris',
+                    'AIX'     => 'AIX',
+                    'BSD'     => 'BSD',
+                    'VMWare'  => 'VMWare',
+                    'MAC'     => 'MAC',
+                    'Android' => 'Android',
+                    'HP-UX'   => 'HP-UX');
+      $query = "";
+      $first = true;
+      $notlike = "";
+      foreach ($oses as $os => $search) {
+         $query.=(!$first?" UNION ":"")
+            ."\n SELECT '$os' AS OS, count(*) AS Total, count(*) * 100 / (SELECT count(*)
+                                                                        FROM glpi_computers        as c,
+                                                                             glpi_operatingsystems as os
+                                                                        WHERE c.`is_deleted`='0' AND c.`is_template`='0'
+                                                                        AND c.`operatingsystems_id` = os.`id` $sql_entities) AS Percent
+               FROM glpi_computers        as c,
+                    glpi_operatingsystems as os
+               WHERE c.`operatingsystems_id` = os.`id`
+                     AND c.`is_deleted`='0'
+                     AND c.`is_template`='0'
+                     AND os.`name` REGEXP '$search'
+                     $sql_entities";
 
-      $condition = " AND entities_id IN (".$this->where_entities.")";
+         $notlike.= " AND os.`name` NOT REGEXP '$search'";
+         $first = false;
+      }
+      $query .= " UNION
+         SELECT '".__("Others")."' AS OS, count(*) Total, count(*) * 100 / (SELECT count(*)
+                                    FROM glpi_computers        as c,
+                                         glpi_operatingsystems as os
+                                    WHERE c.`is_deleted`= 0
+                                          AND c.`is_template`=0
+                                          AND c.`operatingsystems_id` = os.`id`
+                                          $sql_entities) as Percent
+         FROM glpi_computers        as c,
+              glpi_operatingsystems as os
+         WHERE c.`operatingsystems_id` = os.`id`
+           AND c.`is_deleted` = 0
+           AND c.`is_template`=0
+           $notlike
+           $sql_entities " ;
+
+      $query.=" ORDER BY Total DESC";
+      $result = $DB->query($query);
+
+      $datas = array();
+      while ($computer = $DB->fetch_assoc($result)) {
+         $percent = round($computer['Percent'], 2);
+         if ($computer['Total']) {
+            $datas['datas'][$computer['OS']." ($percent %)"] = $computer['Total'];
+         }
+      }
+
+      return $datas;
+   }
+
+
+   function reportHbarWindows($config = array()) {
+      global $DB;
+
+      $_SESSION['mreporting_selector']['reportHbarWindows'] = array('multiplestates');
+
+      $sql_entities = " AND entities_id IN ({$this->where_entities})";
       $total_computers = countElementsInTable('glpi_computers',
-                                              "`is_deleted`=0 AND `is_template`=0 $condition");
+                                              "`is_deleted`=0 AND `is_template`=0 $sql_entities");
 
       $list_windows = array('Windows 3.1', 'Windows 95', 'Windows 98', 'Windows 2000 Pro',
                             'Windows XP', 'Windows 7', 'Windows Vista', 'Windows 8',
                             'Windows 2000 Server', 'Server 2003', 'Server 2008', 'Server 2012');
+      $data = array();
       foreach ($list_windows as $windows) {
          $oses = array();
          foreach ($DB->request('glpi_operatingsystems', "name LIKE '%$windows%'") as $os) {
@@ -283,11 +327,11 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          if (!empty($oses)) {
             $number = countElementsInTable('glpi_computers',
                                           "`operatingsystems_id` IN (".implode(',', $oses).")
-                                             AND `is_deleted`=0
-                                             AND `is_template`=0 $condition");
-            $pourcentage = round($number * 100 / $total_computers). " % du parc";
+                                            AND `is_deleted`=0
+                                            AND `is_template`=0 $sql_entities");
+            $percent = round($number * 100 / $total_computers). " % du parc";
             if ($number) {
-               $data['datas'][$windows." ($pourcentage)"] = $number;
+               $data['datas'][$windows." ($percent)"] = $number;
             }
          }
       }
@@ -295,26 +339,28 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          arsort($data['datas']);
       }
       return $data;
-  }
+   }
 
-  function reportHbarLinux($config = array()) {
+   function reportHbarLinux($config = array()) {
       global $DB;
 
+      $_SESSION['mreporting_selector']['reportHbarLinux'] = array('multiplestates');
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%'") as $os) {
          $number = countElementsInTable('glpi_computers',
                                           "`operatingsystems_id`='".$os['id']."'
-                                             AND `is_deleted`='0'
-                                             AND `is_template`='0'
-                                             AND `entities_id` IN (".$this->where_entities.")");
+                                           AND `is_deleted` = '0'
+                                           AND `is_template` = '0'
+                                           AND `entities_id` IN ({$this->where_entities})");
          if ($number) {
             $query_details = "SELECT count(*) as cpt, s.name as name
                               FROM `glpi_computers` as c
                               LEFT JOIN `glpi_operatingsystemversions` as s
-                                 ON s.id=c.operatingsystemversions_id
-                              WHERE c.`operatingsystems_id`='".$os['id']."'
-                              AND `c`.`entities_id` IN (".$this->where_entities.")
-                              GROUP BY c.operatingsystemversions_id ORDER BY s.name ASC";
+                                 ON s.`id` = c.`operatingsystemversions_id`
+                              WHERE c.`operatingsystems_id` = '".$os['id']."'
+                               AND `c`.`entities_id` IN ({$this->where_entities})
+                              GROUP BY c.operatingsystemversions_id
+                              ORDER BY s.name ASC";
             foreach ($DB->request($query_details) as $version) {
                if ($version['name'] != '' && $version['cpt']) {
                   $data['datas'][$os['name']. " ".$version['name']] = $version['cpt'];
@@ -326,18 +372,20 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          arsort($data['datas']);
       }
       return $data;
-  }
+   }
 
-  function reportHbarLinuxDistro($config = array()) {
+   function reportHbarLinuxDistro($config = array()) {
       global $DB;
+
+      $_SESSION['mreporting_selector']['reportHbarLinuxDistro'] = array('multiplestates');
 
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%'") as $os) {
          $number = countElementsInTable('glpi_computers',
-                                          "`operatingsystems_id`='".$os['id']."'
-                                             AND `is_deleted`='0'
-                                             AND `is_template`='0'
-                                             AND `entities_id` IN (".$this->where_entities.")");
+                                        "`operatingsystems_id`='".$os['id']."'
+                                         AND `is_deleted` = '0'
+                                         AND `is_template` = '0'
+                                         AND `entities_id` IN ({$this->where_entities})");
          if ($number) {
             $data['datas'][$os['name']] = $number;
          }
@@ -346,26 +394,29 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          arsort($data['datas']);
       }
       return $data;
-  }
+   }
 
-  function reportHbarMac($config = array()) {
+   function reportHbarMac($config = array()) {
       global $DB;
+
+      $_SESSION['mreporting_selector']['reportHbarMac'] = array('multiplestates');
 
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Mac OS%'") as $os) {
          $number = countElementsInTable('glpi_computers',
-                                          "`operatingsystems_id`='".$os['id']."'
-                                             AND `is_deleted`='0'
-                                             AND `is_template`='0'
-                                             AND `entities_id` IN (".$this->where_entities.")");
+                                        "`operatingsystems_id`='".$os['id']."'
+                                         AND `is_deleted` = '0'
+                                         AND `is_template` = '0'
+                                         AND `entities_id` IN ({$this->where_entities})");
          if ($number) {
             $query_details = "SELECT count(*) as cpt, s.name as name
                               FROM `glpi_computers` as c
                               LEFT JOIN `glpi_operatingsystemversions` as s
-                                 ON s.id=c.operatingsystemversions_id
-                              WHERE c.`operatingsystems_id`='".$os['id']."'
+                                 ON s.`id` = c.`operatingsystemversions_id`
+                              WHERE c.`operatingsystems_id` = '".$os['id']."'
                                  AND `c`.`entities_id` IN ({$this->where_entities})
-                              GROUP BY c.operatingsystemversions_id ORDER BY s.name ASC";
+                              GROUP BY c.operatingsystemversions_id
+                              ORDER BY s.name ASC";
             foreach ($DB->request($query_details) as $version) {
                if ($version['name'] != '' && $version['cpt']) {
                   $data['datas'][$os['name']. " ".$version['name']] = $version['cpt'];
@@ -374,26 +425,29 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          }
       }
       return $data;
-  }
+   }
 
-  function reportHbarMacFamily($config = array()) {
+   function reportHbarMacFamily($config = array()) {
       global $DB;
+
+      $_SESSION['mreporting_selector']['reportHbarMacFamily'] = array('multiplestates');
 
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Mac OS%'") as $os) {
          $number = countElementsInTable('glpi_computers',
-                                          "`operatingsystems_id`='".$os['id']."'
-                                             AND `is_deleted`='0'
-                                             AND `is_template`='0'
-                                             AND `entities_id` IN (".$this->where_entities.")");
+                                        "`operatingsystems_id`='".$os['id']."'
+                                         AND `is_deleted` = '0'
+                                         AND `is_template` = '0'
+                                         AND `entities_id` IN ({$this->where_entities})");
          if ($number) {
             $query_details = "SELECT count(*) as cpt, s.name as name
                               FROM `glpi_computers` as c
                               LEFT JOIN `glpi_operatingsystemversions` as s
-                                 ON s.id=c.operatingsystemversions_id
-                              WHERE c.`operatingsystems_id`='".$os['id']."'
-                              AND `c`.`entities_id` IN (".$this->where_entities.")
-                              GROUP BY c.operatingsystemversions_id ORDER BY s.name ASC";
+                                 ON `s`.`id` = `c`.`operatingsystemversions_id`
+                              WHERE c.`operatingsystems_id` = '".$os['id']."'
+                               AND `c`.`entities_id` IN ({$this->where_entities})
+                              GROUP BY c.operatingsystemversions_id
+                              ORDER BY s.name ASC";
             foreach ($DB->request($query_details) as $version) {
                if ($version['name'] != '' && $version['cpt']) {
                   if (preg_match("/(10.[0-9]+)/", $version['name'], $results)) {
@@ -411,9 +465,21 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          arsort($data['datas']);
       }
       return $data;
-  }
+   }
 
-  function reportHbarFusionInventory($config = array()) {
+
+   /* ==== FUSIONINVENTORY REPORTS ==== */
+   function reportPieFusionInventory($config = array()) {
+      $_SESSION['mreporting_selector']['reportPieFusionInventory'] = array('multiplestates');
+      return $this->fusionInventory($config);
+   }
+
+   function reportHbarFusionInventory($config = array()) {
+      $_SESSION['mreporting_selector']['reportHbarFusionInventory'] = array('multiplestates');
+      return $this->fusionInventory($config);
+   }
+
+   function fusionInventory($config = array()) {
       global $DB;
 
       $plugin = new Plugin();
@@ -421,18 +487,18 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          return array();
       }
 
-      $condition = " AND entities_id IN (".$this->where_entities.")";
-
-      $data = array();
       $total_computers = countElementsInTable('glpi_computers',
-                                              "`is_deleted`=0 AND `is_template`=0 $condition");
+                                              "`is_deleted`=0
+                                               AND `is_template`=0
+                                               AND entities_id IN ({$this->where_entities})");
 
-      $query = "SELECT count(*) AS cpt, useragent
+      $query = "SELECT count(*) AS cpt, `useragent`
                 FROM `glpi_plugin_fusioninventory_agents`
-                WHERE computers_id > 0
-                GROUP BY useragent
+                WHERE `computers_id` > 0
+                GROUP BY `useragent`
                 ORDER BY cpt DESC";
 
+      $data = array();
       foreach ($DB->request($query) as $agent) {
          $values = array();
          if (preg_match('/FusionInventory-Agent_v(.*)/i', $agent['useragent'], $values)) {
@@ -444,16 +510,13 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
       }
       return $data;
-  }
-
-  function reportPieFusionInventory($config = array()) {
-      return $this->reportHbarFusionInventory($config);
    }
 
-  function reportHbarMonitors($config = array()) {
+   /* ==== MONITOR REPORST ==== */
+   function reportHbarMonitors($config = array()) {
       global $DB;
 
-      $data = array();
+      $_SESSION['mreporting_selector']['reportHbarMonitors'] = array('multiplestates');
 
       $query = "SELECT COUNT(*) AS cpt
                 FROM `glpi_computers_items` AS ci,
@@ -462,10 +525,10 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                   AND `c`.`is_deleted` = '0'
                   AND `ci`.`computers_id` = c.`id`
                   AND `c`.`is_template` = '0'
-                  AND c.entities_id IN ({$this->where_entities})
+                  AND c.`entities_id` IN ({$this->where_entities})
                 GROUP BY `ci`.`computers_id`
                 ORDER BY `cpt`";
-
+      $data = array();
       foreach ($DB->request($query) as $result) {
          $label = $result['cpt']." "._n('Monitor', 'Monitors', $result['cpt']);
          if (!isset($data['datas'][$label])) {
@@ -475,36 +538,34 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       }
 
       return $data;
-  }
+   }
 
-  function reportHbarComputersByStatus($config = array()) {
+   /* ==== COMPUTER'S STATE REPORTS ==== */
+   function reportHbarComputersByStatus($config = array()) {
       global $DB;
 
-      $datas = array();
-
-      $condition = " AND c.entities_id IN (".$this->where_entities.")";
-
-      $query = "SELECT t.name status, count(*) Total, count(*)*100/(SELECT count(*)
-                           FROM glpi_computers c, glpi_states t
-                           WHERE c.states_id = t.id
-                              $condition
-                              AND c.`is_deleted` = 0
-                              AND c.`is_template` = 0) Pourcentage
-         FROM glpi_computers c, glpi_states t
-         WHERE c.states_id = t.id
-            $condition
-            AND c.`is_deleted` = 0
-            AND c.`is_template` = 0
-         GROUP BY t.name";
+      $query = "SELECT t.`name` status, count(*) Total, count(*) * 100 / (SELECT count(*)
+                           FROM glpi_computers as c,
+                                glpi_states    as t
+                           WHERE c.`states_id` = t.`id`
+                             AND c.`entities_id` IN ({$this->where_entities})
+                             AND c.`is_deleted` = 0
+                             AND c.`is_template` = 0) Percent
+         FROM glpi_computers as c,
+              glpi_states    as t
+         WHERE c.`states_id` = t.`id`
+           AND c.`entities_id` IN ({$this->where_entities})
+           AND c.`is_deleted` = 0
+           AND c.`is_template` = 0
+         GROUP BY t.`name`";
       $result = $DB->query($query);
-
+      $datas = array();
       while ($computer = $DB->fetch_assoc($result)) {
-         $pourcentage = round($computer['Pourcentage'], 2);
-         $datas['datas'][$computer['status']." ($pourcentage %)"] = $computer['Total'];
+         $percent = round($computer['Percent'], 2);
+         $datas['datas'][$computer['status']." ($percent %)"] = $computer['Total'];
       }
 
       return $datas;
-
    }
 
   function reportHbarPrintersByStatus($config = array()) {
