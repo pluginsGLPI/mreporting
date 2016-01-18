@@ -30,7 +30,7 @@
 class PluginMreportingInventory Extends PluginMreportingBaseclass {
    /* ==== SPECIFIC SELECTORS FOR INVENTORY ==== */
    static function selectorMultipleStates() {
-      self::selectorForMultipleStates('states_id', '', __("State"));
+      self::selectorForMultipleStates('states_id', '', _sx("item", "State"));
    }
 
    static function selectorForMultipleStates($field, $condition = '', $label = '') {
