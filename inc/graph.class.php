@@ -668,7 +668,10 @@ JAVASCRIPT;
          else return 1;
       });
 
-   if ({$export_txt} == false) wedge.event("mouseover", pv.Behavior.extjsTooltips(this.nodeName));
+   if ({$export_txt} == false) {
+      wedge.text(function(d) { return d.nodeName; });
+      wedge.event("mouseover", pv.Behavior.tipsy({gravity: "w", fade: true}));
+   }
 
    /*** wedge interaction ***/
    wedge.anchor().add(pv.Mark)
