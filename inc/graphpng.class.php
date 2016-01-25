@@ -1016,7 +1016,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $radius = $step * ($params['level']+1);
 
 
-      $darkerpalette = self::getDarkerPalette();
+      $darkerpalette = self::getDarkerPalette(50);
 
       foreach($datas as $key =>  $data) {
          if (is_array($data)) {
@@ -1042,7 +1042,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
          //get colors
-         $palette = $this->getPalette(5);
+         $palette = $this->getPalette(50);
          if ($params['current_index'] === false) $color = $palette[$index];
          else {
             $color = $palette[$params['current_index']];
