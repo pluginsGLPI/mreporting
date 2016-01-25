@@ -108,7 +108,7 @@ class PluginMreportingProfile extends CommonDBTM {
    /**
    * @param $right array
    */
-   static function addRightToProfiles($right){
+   static function addRightToAllProfiles(){
       global $DB;
 
       //TODO : We need to reload cache before else GLPI don't show migration table
@@ -121,12 +121,8 @@ class PluginMreportingProfile extends CommonDBTM {
          foreach($result_config as $report){
 
             $tmp = array('profiles_id' => $prof['id'],
-                        'reports'   => $report['id']);
-
-            //If profiles have right
-            if(in_array($prof['id'],$right)){
-               $tmp['right'] = READ;
-            }
+                        'reports'      => $report['id'],
+                        'right'        => 'NULL');
             $myreport->add($tmp);
          }
       }
@@ -160,7 +156,7 @@ class PluginMreportingProfile extends CommonDBTM {
       foreach ($config->find() as $report) {
          // add right for any reports for profile
          // Add manual request because Add function get error : right is set to NULL
-         $query = "INSERT IGNORE INTO `glpi_plugin_mreporting_profiles` SET
+         $query = "REPLACE INTO `glpi_plugin_mreporting_profiles` SET
                      `profiles_id` = $idProfile,
                      `reports` = {$report['id']},
                      `right` = " . READ;
