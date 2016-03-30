@@ -1,66 +1,103 @@
 <?php
-global $LANG;
+$LANG['plugin_mreporting']['Helpdeskplus'] = array(
+   'title'         => 'Helpdesk Avancé',
 
-$LANG['plugin_mreporting']['Helpdeskplus']['title'] = 'Advanced Helpdesk';
+   // MISC LOCALES
+   'backlogs'      => "Backlogs",
+   'opened'        => "Opened",
+   'period'        => "Period",
+   'backlogstatus' => "Status to display",
+   'slaobserved'   => "SLA observed",
+   'slanotobserved'=> "SLA not observed",
+   'observed'      => "observed",
+   'notobserved'   => "not observed",
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['title']            = 'Backlog';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['desc']             = '';
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['title']        = 'Ticket age';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['desc']         = '';
+   // SELECTOR
+   'selector'      => array(
+      'slas'       => "SLAS",
+      'categories' => "Categories",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketsgroups']['title']   = 'Tickets per group';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketsgroups']['desc']    = '';
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketstech']['title']     = 'Tickets per technician';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketstech']['desc']      = '';
+   // GENERAL REPORTS
+   'reportGlineBacklogs' => array(
+      'title'    => "Backlog",
+      'desc'     => "",
+      'category' => "General",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['title']        = 'Orientation des files';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['desc']         = 'Nombre de tickets pour chaque groupe d\'arrivée en fonction d\'un groupe de départ.<br />
-                                                                                       - Sélectionnez un groupe demandeur pour afficher le nombre de ticket pour les groupes attribués.<br />
-                                                                                       - Sélectionnez un groupe chargé du ticket pour afficher le nombre de ticket pour les groupes demandeurs.<br />
-                                                                                       <b>Vous ne pouvez sélectionner qu\'un critère à la fois !</b>';
+   'reportVstackbarLifetime' => array(
+      'title'    => "Ticket age",
+      'desc'     => "",
+      'category' => "General",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['title']          = 'TOP categories';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['desc']           = '';
+   'reportVstackbarTicketsgroups' => array(
+      'title'    => "Tickets per group",
+      'desc'     => "",
+      'category' => "General",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['title']         = 'TOP requester groups';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['desc']          = '';
+   'reportVstackbarTicketstech' => array(
+      'title'    => "Tickets per technician",
+      'desc'     => "",
+      'category' => "General",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['backlogs']        = 'Backlogs';
-$LANG['plugin_mreporting']['Helpdeskplus']['opened']          = 'Opened';
-$LANG['plugin_mreporting']['Helpdeskplus']['period']          = 'Period';
-$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']   = 'Status to display';
+   'reportVstackbarWorkflow' => array(
+      'title'    => "Orientation queues",
+      'desc'     => "",
+      'category' => "General",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['title'] = "Number of group changes";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['desc'] = "";
+   'reportHbarTopcategory' => array(
+      'title'    => "TOP categories",
+      'desc'     => "",
+      'category' => "General",
+   ),
 
-$LANG['plugin_mreporting']['selector']["slas"] = "SLAS";
+   'reportHbarTopapplicant' => array(
+      'title'    => "TOP requester groups",
+      'desc'     => "",
+      'category' => "General",
+   ),
 
-$LANG['plugin_mreporting']['selector']["categories"] = "Categories";
+   'reportVstackbarGroupChange' => array(
+      'title'    => "Number of group changes",
+      'desc'     => "",
+      'category' => "General",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'] = "SLA observed";
-$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved'] = "SLA not observed";
 
-$LANG['plugin_mreporting']['Helpdeskplus']['observed'] = "observed";
-$LANG['plugin_mreporting']['Helpdeskplus']['notobserved'] = "not observed";
+   // SLA REPORTS
+   'reportVstackbarNbTicketBySla' => array(
+      'title'    => "Number of tickets per SLA",
+      'desc'     => "",
+      'category' => "Per SLA",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['title'] = "Number of tickets per SLA";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['category'] = "Per SLA";
+   'reportGlineNbTicketBySla' => array(
+      'title'    => "Tickets evolution per SLA",
+      'desc'     => "",
+      'category' => "Per SLA",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['title'] = "Tickets evolution per SLA";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['category'] = "Per SLA";
+   'reportHgbarRespectedSlasByTopCategory' => array(
+      'title'    => "Tickets per SLA ordered by categories",
+      'desc'     => "",
+      'category' => "Per SLA",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['title'] = "Tickets per SLA ordered by categories";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['category'] = "Per SLA";
+   'reportHgbarRespectedSlasByTechnician' => array(
+      'title'    => "Tickets per SLA ordered by techicians",
+      'desc'     => "",
+      'category' => "Per SLA",
+   ),
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['title'] = "Tickets per SLA per sorted by techicians";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['category'] = "Per SLA";
-
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['title'] = "Tickets per SLA sorted by groups";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['category'] = "Per SLA";
+   'reportVstackbarRespectedSlasByGroup' => array(
+      'title'    => "Tickets per SLA sorted by groups",
+      'desc'     => "",
+      'category' => "Per SLA",
+   ),
+);
