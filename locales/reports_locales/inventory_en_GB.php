@@ -1,76 +1,113 @@
 <?php
-global $LANG;
+$LANG['plugin_mreporting']['Inventory'] = array(
 
-$LANG['plugin_mreporting']['Inventory']['title'] = "Inventory";
+   'title' => "Inventory",
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['title'] = "Computers per OS";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['category'] = "OS";
+   'reportHbarComputersByOS' => array(
+      'title'    => "Computers per OS",
+      'desc'     => "Bars",
+      'category' => "OS",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['title'] = "Computers per OS";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['category'] = "OS";
+   'reportPieComputersByOS' => array(
+      'title'    => "Computers per OS",
+      'desc'     => "Camenbert",
+      'category' => "OS",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByFabricant']['title'] = "Computers per manufacturer";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByFabricant']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByFabricant']['category'] = "Manufacturer";
+   'reportHbarComputersByFabricant' => array(
+      'title'    => "Computers per manufacturer",
+      'desc'     => "Bars",
+      'category' => "Manufacturer",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByFabricant']['title'] = "Computers per manufacturer";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByFabricant']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByFabricant']['category'] = "Manufacturer";
+   'reportPieComputersByFabricant' => array(
+      'title'    => "Computers per manufacturer",
+      'desc'     => "Pie",
+      'category' => "Manufacturer",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByType']['title'] = "Computers per type";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByType']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByType']['category'] = "Type";
+   'reportHbarComputersByType' => array(
+      'title'    => "Computers per type",
+      'desc'     => "Bars",
+      'category' => "Type",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByStatus']['title'] = "Computers per status";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByStatus']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByStatus']['category'] = "Status";
+   'reportPieComputersByType' => array(
+      'title'    => "Computers per type",
+      'desc'     => "Pie",
+      'category' => "Type",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarPrintersByStatus']['title'] = "Printer per status";
-$LANG['plugin_mreporting']['Inventory']['reportHbarPrintersByStatus']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarPrintersByStatus']['category'] = "Status";
+   'reportHbarComputersByStatus' => array(
+      'title'    => "Computers per status",
+      'desc'     => "Bars",
+      'category' => "Statut",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['title'] = "Computers per type";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['category'] = "Type";
+   'reportHbarPrintersByStatus' => array(
+      'title'    => "Printers per status",
+      'desc'     => "Bars",
+      'category' => "Statut",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['title'] = "Windows distribution";
-$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['category'] = "OS";
+   'reportHbarWindows' => array(
+      'title'    => "Windows distribution",
+      'desc'     => "Bars",
+      'category' => "OS",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['title'] = "Linux distribution detail";
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['category'] = "OS";
+   'reportHbarLinux' => array(
+      'title'    => "Linux distribution detail",
+      'desc'     => "Bars",
+      'category' => "OS",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['title'] = "Linux distribution";
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['desc'] = "Barres";
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['category'] = "OS";
+   'reportHbarLinuxDistro' => array(
+      'title'    => "Linux distribution detail",
+      'desc'     => "Bars",
+      'category' => "OS",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['title'] = "Mac OS X versions details";
-$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['category'] = "OS";
+   'reportHbarMac' => array(
+      'title'    => "Mac OS X versions details",
+      'desc'     => "Bars",
+      'category' => "OS",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['title'] = "MAC OS X version overview";
-$LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['category'] = "OS";
+   'reportHbarMacFamily' => array(
+      'title'    => "MAC OS X version overview",
+      'desc'     => "Bars",
+      'category' => "OS",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['title'] = "Computer per age";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['category'] = "Inventory";
+   'reportHbarComputersByAge' => array(
+      'title'    => "Computer per age",
+      'desc'     => "Bars",
+      'category' => "Inventaire",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['title'] = "Computer per age";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['category'] = "Inventory";
+   'reportPieComputersByAge' => array(
+      'title'    => "Computer per age",
+      'desc'     => "Pie",
+      'category' => "Inventaire",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarFusionInventory']['title'] = "FusionInventory agent distribution";
-$LANG['plugin_mreporting']['Inventory']['reportHbarFusionInventory']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarFusionInventory']['category'] = "Inventory";
+   'reportHbarFusionInventory' => array(
+      'title'    => "FusionInventory agent distribution",
+      'desc'     => "Bars",
+      'category' => "Agent",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['title'] = "FusionInventory agent distribution";
-$LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['desc'] = "Pie";
-$LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['category'] = "Inventory";
+   'reportPieFusionInventory' => array(
+      'title'    => "FusionInventory agent distribution",
+      'desc'     => "Pie",
+      'category' => "Agent",
+   ),
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['title'] = "Screens per computer distribution";
-$LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['desc'] = "Bars";
-$LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['category'] = "Inventory";
+   'reportHbarMonitors' => array(
+      'title'    => "Screens per computer distribution",
+      'desc'     => "Bars",
+      'category' => "Inventaire",
+   ),
+);
