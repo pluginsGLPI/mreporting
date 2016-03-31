@@ -596,6 +596,74 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       return $datas;
    }
 
+
+   function reportLineActiontimeVsSolvedelay($config = array()) {
+      global $DB;
+
+      $_SESSION['mreporting_selector']['reportLineActiontimeVsSolvedelay'] =
+         array('dateinterval', 'period', 'multiplegrouprequest',
+               'userassign', 'category', 'multiplegroupassign');
+
+      $sql_group_assign = "";
+      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
+         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
+            $sql_group_assign = " AND gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
+         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
+            $sql_group_assign = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
+         }
+      }
+      $sql_group_request = "";
+      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
+         if (is_array($_SESSION['mreporting_values']['groups_request_id'])) {
+            $sql_group_request = " AND gtr.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_request_id']).")";
+         } else if ($_SESSION['mreporting_values']['groups_request_id'] > 0) {
+            $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
+         }
+      }
+      $sql_user_assign  = isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0 ? " AND tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'] : "";
+      $sql_type         = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
+      $sql_itilcat      = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
+
+
+      $query = "SELECT
+         DATE_FORMAT(glpi_tickets.date, '{$this->period_sort}')  as period,
+         DATE_FORMAT(glpi_tickets.date, '{$this->period_label}') as period_name,
+         ROUND(AVG(actiontime_vs_solvedelay.time_percent), 1) as time_percent
+       FROM glpi_tickets
+         LEFT JOIN (
+            SELECT
+               glpi_tickets.id AS tickets_id,
+               (SUM(ta.actiontime) * 100) / glpi_tickets.solve_delay_stat as time_percent
+            FROM glpi_tickets
+            LEFT JOIN glpi_tickettasks    ta  ON ta.tickets_id  = glpi_tickets.id
+            LEFT JOIN glpi_tickets_users  tu  ON tu.tickets_id  = glpi_tickets.id AND tu.type  = 2
+            LEFT JOIN glpi_groups_tickets gt  ON gt.tickets_id  = glpi_tickets.id AND gt.type  = 2
+            LEFT JOIN glpi_groups_tickets gtr ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
+            WHERE glpi_tickets.solve_delay_stat > 0
+               AND ta.actiontime IS NOT NULL
+               AND {$this->sql_date_create}
+               AND glpi_tickets.entities_id IN ({$this->where_entities})
+               AND glpi_tickets.is_deleted = '0'
+               $sql_type
+               $sql_group_assign
+               $sql_group_request
+               $sql_user_assign
+               $sql_itilcat
+            GROUP BY glpi_tickets.id
+         ) AS actiontime_vs_solvedelay
+            ON actiontime_vs_solvedelay.tickets_id = glpi_tickets.id
+         WHERE {$this->sql_date_create}
+         GROUP BY period
+         ORDER BY period";
+      $data = array();
+      foreach ($DB->request($query) as $result) {
+         $data['datas'][$result['period_name']] = floatval($result['time_percent']);
+         $data['labels2'][$result['period_name']] = $result['period_name'];
+      }
+
+      return $data;
+   }
+
    function reportGlineNbTicketBySla($config = array()) {
       global $DB;
 

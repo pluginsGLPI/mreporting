@@ -71,6 +71,12 @@ $LANG['plugin_mreporting']['Helpdeskplus'] = array(
       'category' => "General",
    ),
 
+   'reportLineActiontimeVsSolvedelay' => array(
+      'title'    => "Task action times and solve delay comparison",
+      'desc'     => "",
+      'category' => "General",
+   ),
+
 
    // SLA REPORTS
    'reportVstackbarNbTicketBySla' => array(

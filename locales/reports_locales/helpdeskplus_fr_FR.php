@@ -78,6 +78,12 @@ $LANG['plugin_mreporting']['Helpdeskplus'] = array(
       'category' => "Général",
    ),
 
+   'reportLineActiontimeVsSolvedelay' => array(
+      'title'    => "Comparaison des durées de taches et du temps de traitement  ",
+      'desc'     => "Le graphique affiche un pourcentage comparant le temps déclaré dans les taches de tickets par rapport au temps de traitement calculés.<br>",
+      'category' => "Général",
+   ),
+
 
    // SLA REPORTS
    'reportVstackbarNbTicketBySla' => array(
