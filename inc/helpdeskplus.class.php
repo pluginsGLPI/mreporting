@@ -6,12 +6,66 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
+   protected $sql_group_assign  = "1=1",
+             $sql_group_request = "1=1",
+             $sql_user_assign   = "1=1",
+             $sql_type          = "glpi_tickets.type = ".Ticket::INCIDENT_TYPE,
+             $sql_itilcat       = "1=1",
+
+             $sql_join_cat      = "LEFT JOIN glpi_itilcategories cat
+                                       ON glpi_tickets.itilcategories_id = cat.id",
+             $sql_join_g        = "LEFT JOIN glpi_groups g
+                                       ON gt.groups_id = g.id",
+             $sql_join_u        = "LEFT JOIN glpi_users u
+                                       ON tu.users_id = u.id",
+             $sql_join_tt       = "LEFT JOIN glpi_tickettasks tt
+                                       ON tt.tickets_id  = glpi_tickets.id",
+             $sql_join_tu       = "LEFT JOIN glpi_tickets_users tu
+                                       ON tu.tickets_id = glpi_tickets.id
+                                       AND tu.type = ".Ticket_User::ASSIGN,
+             $sql_join_gt       = "LEFT JOIN glpi_groups_tickets gt
+                                       ON gt.tickets_id  = glpi_tickets.id
+                                       AND gt.type = ".Group_Ticket::ASSIGN,
+             $sql_join_gtr      = "LEFT JOIN glpi_groups_tickets gtr
+                                       ON gtr.tickets_id = glpi_tickets.id
+                                       AND gtr.type = ".Group_Ticket::REQUESTER;
+
+
    function __construct($config = array()) {
       global $LANG;
 
       parent::__construct($config);
+
       $this->lcl_slaok = $LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'];
       $this->lcl_slako = $LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved'];
+
+      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
+         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
+            $this->sql_group_assign = "gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
+         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
+            $this->sql_group_assign = "gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
+         }
+      }
+
+      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
+         if (is_array($_SESSION['mreporting_values']['groups_request_id'])) {
+            $this->sql_group_request = "gtr.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_request_id']).")";
+         } else if ($_SESSION['mreporting_values']['groups_request_id'] > 0) {
+            $this->sql_group_request = "gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
+         }
+      }
+
+      if (isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0) {
+         $this->sql_user_assign = "tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'];
+      }
+
+      if (isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0) {
+         $this->sql_type = "glpi_tickets.type = ".$_SESSION['mreporting_values']['type'];
+      }
+
+      if (isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0) {
+         $this->sql_itilcat = "glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'];
+      }
    }
 
    function reportGlineBacklogs($config = array()) {
@@ -24,30 +78,10 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $tab   = array();
       $datas = array();
 
-      $sql_group_assign = "";
-      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
-            $sql_group_assign = " AND gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
-            $sql_group_assign = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
-         }
-      }
-      $sql_group_request = "";
-      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_request_id'])) {
-            $sql_group_request = " AND gtr.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_request_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_request_id'] > 0) {
-            $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
-         }
-      }
-      $sql_user_assign  = isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0 ? " AND tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'] : "";
-
       $search_new       = (!isset($_SESSION['mreporting_values']['show_new']) || ($_SESSION['mreporting_values']['show_new'] == '1')) ? true : false;
       $search_solved    = (!isset($_SESSION['mreporting_values']['show_solved']) || ($_SESSION['mreporting_values']['show_solved'] == '1')) ? true : false;
       $search_backlogs  = (!isset($_SESSION['mreporting_values']['show_backlog']) || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? true : false;
       $search_closed    = (isset($_SESSION['mreporting_values']['show_closed']) && ($_SESSION['mreporting_values']['show_closed'] == '1')) ? true : false;
-      $sql_type         = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
-      $sql_itilcat      = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
 
       if($search_new) {
          $sql_create = "SELECT
@@ -55,17 +89,18 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   DATE_FORMAT(date, '{$this->period_label}') as period_name,
                   COUNT(DISTINCT glpi_tickets.id) as nb
                FROM glpi_tickets
-               LEFT JOIN glpi_tickets_users tu   ON tu.tickets_id = glpi_tickets.id  AND tu.type = 2
-               LEFT JOIN glpi_groups_tickets gt  ON gt.tickets_id = glpi_tickets.id  AND gt.type = 2
-               LEFT JOIN glpi_groups_tickets gtr ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
+               {$this->sql_join_tu}
+               {$this->sql_join_gt}
+               {$this->sql_join_gtr}
                WHERE {$this->sql_date_create}
                   AND glpi_tickets.entities_id IN ({$this->where_entities})
                   AND glpi_tickets.is_deleted = '0'
-                  $sql_type
-                  $sql_group_assign
-                  $sql_group_request
-                  $sql_user_assign
-                  $sql_itilcat
+                  AND {$this->sql_date_create}
+                  AND {$this->sql_type}
+                  AND {$this->sql_group_assign}
+                  AND {$this->sql_group_request}
+                  AND {$this->sql_user_assign}
+                  AND {$this->sql_itilcat}
                GROUP BY period
                ORDER BY period";
          foreach ($DB->request($sql_create) as $data) {
@@ -80,17 +115,17 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   DATE_FORMAT(solvedate, '{$this->period_label}') as period_name,
                   COUNT(DISTINCT glpi_tickets.id) as nb
                FROM glpi_tickets
-               LEFT JOIN glpi_tickets_users tu   ON tu.tickets_id = glpi_tickets.id  AND tu.type = 2
-               LEFT JOIN glpi_groups_tickets gt  ON gt.tickets_id = glpi_tickets.id  AND gt.type = 2
-               LEFT JOIN glpi_groups_tickets gtr ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
+               {$this->sql_join_tu}
+               {$this->sql_join_gt}
+               {$this->sql_join_gtr}
                WHERE {$this->sql_date_solve}
                   AND glpi_tickets.entities_id IN ({$this->where_entities})
                   AND glpi_tickets.is_deleted = '0'
-                  $sql_type
-                  $sql_group_assign
-                  $sql_group_request
-                  $sql_user_assign
-                  $sql_itilcat
+                  AND {$this->sql_type}
+                  AND {$this->sql_group_assign}
+                  AND {$this->sql_group_request}
+                  AND {$this->sql_user_assign}
+                  AND {$this->sql_itilcat}
                GROUP BY period
                ORDER BY period";
          foreach ($DB->request($sql_solved) as $data) {
@@ -143,16 +178,16 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          LEFT JOIN glpi_tickets
             ON glpi_tickets.date <= list_date.period_l
             AND (glpi_tickets.solvedate > list_date.period_l OR glpi_tickets.solvedate IS NULL)
-         LEFT JOIN glpi_tickets_users tu   ON tu.tickets_id = glpi_tickets.id  AND tu.type = 2
-         LEFT JOIN glpi_groups_tickets gt  ON gt.tickets_id = glpi_tickets.id  AND gt.type = 2
-         LEFT JOIN glpi_groups_tickets gtr ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
+         {$this->sql_join_tu}
+         {$this->sql_join_gt}
+         {$this->sql_join_gtr}
          WHERE glpi_tickets.entities_id IN ({$this->where_entities})
                AND glpi_tickets.is_deleted = '0'
-               $sql_type
-               $sql_group_assign
-               $sql_group_request
-               $sql_user_assign
-               $sql_itilcat_backlog
+               AND {$this->sql_type}
+               AND {$this->sql_group_assign}
+               AND {$this->sql_group_request}
+               AND {$this->sql_user_assign}
+               AND {$this->sql_itilcat}
                AND $sql_date_backlog
          GROUP BY period";
          foreach ($DB->request($sql_backlog) as $data) {
@@ -168,17 +203,17 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   DATE_FORMAT(closedate, '{$this->period_label}') as period_name,
                   COUNT(DISTINCT glpi_tickets.id) as nb
                FROM glpi_tickets
-               LEFT JOIN glpi_tickets_users tu   ON tu.tickets_id = glpi_tickets.id  AND tu.type = 2
-               LEFT JOIN glpi_groups_tickets gt  ON gt.tickets_id = glpi_tickets.id  AND gt.type = 2
-               LEFT JOIN glpi_groups_tickets gtr ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
+               {$this->sql_join_tu}
+               {$this->sql_join_gt}
+               {$this->sql_join_gtr}
                WHERE {$this->sql_date_closed}
                   AND glpi_tickets.entities_id IN ({$this->where_entities})
                   AND glpi_tickets.is_deleted = '0'
-                  $sql_type
-                  $sql_group_assign
-                  $sql_group_request
-                  $sql_user_assign
-                  $sql_itilcat
+                  AND {$this->sql_type}
+                  AND {$this->sql_group_assign}
+                  AND {$this->sql_group_request}
+                  AND {$this->sql_user_assign}
+                  AND {$this->sql_itilcat}
                GROUP BY period
                ORDER BY period";
          foreach ($DB->request($sql_closed) as $data) {
@@ -214,25 +249,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']]))
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
 
-      $sql_group_assign = "";
-      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
-            $sql_group_assign = " AND gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
-            $sql_group_assign = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
-         }
-      }
-      $sql_group_request = "";
-      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_request_id'])) {
-            $sql_group_request = " AND gtr.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_request_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_request_id'] > 0) {
-            $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
-         }
-      }
-      $sql_type        = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
-      $sql_itilcat     = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
-      $sql_user_assign = isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0 ? " AND tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'] : "";
 
       foreach ($this->status as $current_status) {
          $search_status = ($_SESSION['mreporting_values']['status_'.$current_status] == '1') ? true : false;
@@ -243,21 +259,18 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                      DATE_FORMAT(date, '{$this->period_label}') as period_name,
                      COUNT(DISTINCT glpi_tickets.id) as nb
                   FROM glpi_tickets
-                  LEFT JOIN glpi_tickets_users tu
-                     ON tu.tickets_id = glpi_tickets.id  AND tu.type = 2
-                  LEFT JOIN glpi_groups_tickets gt
-                     ON gt.tickets_id = glpi_tickets.id  AND gt.type = 2
-                  LEFT JOIN glpi_groups_tickets gtr
-                     ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
+                  {$this->sql_join_tu}
+                  {$this->sql_join_gt}
+                  {$this->sql_join_gtr}
                   WHERE {$this->sql_date_create}
                      AND glpi_tickets.entities_id IN ({$this->where_entities})
                      AND glpi_tickets.is_deleted = '0'
                      AND glpi_tickets.status = $current_status
-                     $sql_type
-                     $sql_itilcat
-                     $sql_group_assign
-                     $sql_group_request
-                     $sql_user_assign
+                     AND {$this->sql_type}
+                     AND {$this->sql_itilcat}
+                     AND {$this->sql_group_assign}
+                     AND {$this->sql_group_request}
+                     AND {$this->sql_user_assign}
                   GROUP BY period
                   ORDER BY period";
             $res = $DB->query($sql_status);
@@ -292,22 +305,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
       }
 
-      $sql_group_assign = "";
-      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
-            $sql_group_assign = " AND gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
-            $sql_group_assign = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
-         }
-      }
-      if (isset($_SESSION['mreporting_values']['type'])) {
-         $sql_type = ($_SESSION['mreporting_values']['type'] >= 0)
-                     ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type']
-                     : "";
-      } else {
-         $sql_type = " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
-      }
-      $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
 
       foreach ($this->status as $current_status) {
          $search_status = ($_SESSION['mreporting_values']['status_'.$current_status] == '1') ? true : false;
@@ -317,15 +314,15 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                      DISTINCT g.completename AS group_name,
                      COUNT(DISTINCT glpi_tickets.id) AS nb
                   FROM glpi_tickets
-                  LEFT JOIN glpi_groups_tickets gt ON gt.tickets_id = glpi_tickets.id AND gt.type = 2
-                  LEFT JOIN glpi_groups g ON gt.groups_id = g.id
+                  {$this->sql_join_gt}
+                  {$this->sql_join_g}
                   WHERE {$this->sql_date_create}
                      AND glpi_tickets.entities_id IN ({$this->where_entities})
                      AND glpi_tickets.is_deleted = '0'
                      AND glpi_tickets.status = $current_status
-                     $sql_type
-                     $sql_itilcat
-                     $sql_group_assign
+                     AND {$this->sql_type}
+                     AND {$this->sql_itilcat}
+                     AND {$this->sql_group_assign}
                   GROUP BY group_name
                   ORDER BY group_name";
             $res = $DB->query($sql_status);
@@ -360,32 +357,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
 
 
-      $sql_group_assign = "";
-      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
-            $sql_group_assign = " AND gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
-            $sql_group_assign = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
-         }
-      }
-      $sql_group_request = "";
-      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_request_id'])) {
-            $sql_group_request = " AND gtr.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_request_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_request_id'] > 0) {
-            $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
-         }
-      }
-      if (isset($_SESSION['mreporting_values']['type'])) {
-         $sql_type = ($_SESSION['mreporting_values']['type'] >= 0)
-                     ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : "";
-      } else {
-         $sql_type = " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
-      }
-
-      $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0
-                     ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
-
       foreach ($this->status as $current_status) {
          $search_status = ($_SESSION['mreporting_values']['status_'.$current_status] == '1') ? true : false;
          if($search_status) {
@@ -397,21 +368,18 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                      u.id as u_id,
                      COUNT(DISTINCT glpi_tickets.id) AS nb
                   FROM glpi_tickets
-                  LEFT JOIN glpi_tickets_users tu
-                     ON tu.tickets_id = glpi_tickets.id  AND tu.type = 2
-                  LEFT JOIN glpi_groups_tickets gt
-                     ON gt.tickets_id = glpi_tickets.id  AND gt.type = 2
-                  LEFT JOIN glpi_groups_tickets gtr
-                     ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
-                  LEFT JOIN glpi_users u ON tu.users_id = u.id
+                  {$this->sql_join_tu}
+                  {$this->sql_join_gt}
+                  {$this->sql_join_gtr}
+                  {$this->sql_join_u}
                   WHERE {$this->sql_date_create}
                      AND glpi_tickets.entities_id IN ({$this->where_entities})
                      AND glpi_tickets.is_deleted = '0'
                      AND glpi_tickets.status = $current_status
-                     $sql_group_assign
-                     $sql_group_request
-                     $sql_type
-                     $sql_itilcat
+                     AND {$this->sql_group_assign}
+                     AND {$this->sql_group_request}
+                     AND {$this->sql_type}
+                     AND {$this->sql_itilcat}
                   GROUP BY name
                   ORDER BY name";
             $res = $DB->query($sql_create);
@@ -445,41 +413,21 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $tab = array();
       $datas = array();
 
-      $sql_type = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
-
-      $sql_group_assign = "";
-      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
-            $sql_group_assign = " AND gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
-            $sql_group_assign = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
-         }
-      }
-      $sql_group_request = "";
-      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_request_id'])) {
-            $sql_group_request = " AND gtr.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_request_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_request_id'] > 0) {
-            $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
-         }
-      }
-      $sql_user_assign = isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0 ? " AND tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'] : "";
-
       $sql_create = "SELECT DISTINCT glpi_tickets.itilcategories_id,
                   COUNT(DISTINCT glpi_tickets.id) as nb,
                   cat.completename
                FROM glpi_tickets
-               LEFT JOIN glpi_itilcategories cat ON glpi_tickets.itilcategories_id = cat.id
-               LEFT JOIN glpi_tickets_users tu   ON tu.tickets_id = glpi_tickets.id  AND tu.type = 2
-               LEFT JOIN glpi_groups_tickets gt  ON gt.tickets_id = glpi_tickets.id  AND gt.type = 2
-               LEFT JOIN glpi_groups_tickets gtr ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
+               {$this->sql_join_cat}
+               {$this->sql_join_tu}
+               {$this->sql_join_gt}
+               {$this->sql_join_gtr}
                WHERE {$this->sql_date_create}
                   AND glpi_tickets.entities_id IN ({$this->where_entities})
                   AND glpi_tickets.is_deleted = '0'
-                  $sql_type
-                  $sql_group_assign
-                  $sql_group_request
-                  $sql_user_assign
+                  AND {$this->sql_type}
+                  AND {$this->sql_group_assign}
+                  AND {$this->sql_group_request}
+                  AND {$this->sql_user_assign}
                GROUP BY cat.completename
                ORDER BY nb DESC
                LIMIT 0, ";
@@ -502,16 +450,14 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $tab = array();
       $datas = array();
 
-      $sql_type = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
-
       $sql_create = "SELECT DISTINCT gt.groups_id,
                   COUNT(DISTINCT glpi_tickets.id) AS nb,
                   g.completename
                FROM glpi_tickets
-               LEFT JOIN glpi_groups_tickets gt ON glpi_tickets.id = gt.tickets_id AND gt.type = '1'
-               LEFT JOIN glpi_groups g ON g.id = gt.groups_id
+               {$this->sql_join_gt}
+               {$this->sql_join_g}
                WHERE {$this->sql_date_create}
-                  $sql_type
+                  AND {$this->sql_type}
                   AND glpi_tickets.entities_id IN ({$this->where_entities})
                   AND glpi_tickets.is_deleted = '0'
                GROUP BY g.completename
@@ -536,26 +482,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       $datas = array();
 
-      $sql_group_assign = "";
-      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
-            $sql_group_assign = " AND gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
-            $sql_group_assign = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
-         }
-      }
-      $sql_group_request = "";
-      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_request_id'])) {
-            $sql_group_request = " AND gtr.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_request_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_request_id'] > 0) {
-            $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
-         }
-      }
-      $sql_user_assign = isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0 ? " AND tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'] : "";
-      $sql_type        = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
-      $sql_itilcat     = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
-
       $query = "SELECT COUNT(DISTINCT ticc.id) as nb_ticket,
             ticc.nb_add_group - 1 as nb_add_group
          FROM (
@@ -568,18 +494,18 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                AND logs_tic.items_id = glpi_tickets.id
                AND logs_tic.itemtype_link = 'Group'
                AND logs_tic.linked_action = 15 /* add action */
-            LEFT JOIN glpi_itilcategories cat  ON glpi_tickets.itilcategories_id = cat.id
-            LEFT JOIN glpi_tickets_users tu    ON tu.tickets_id = glpi_tickets.id  AND tu.type = 2
-            LEFT JOIN glpi_groups_tickets gt   ON gt.tickets_id = glpi_tickets.id  AND gt.type = 2
-            LEFT JOIN glpi_groups_tickets gtr  ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
+            {$this->sql_join_cat}
+            {$this->sql_join_tu}
+            {$this->sql_join_gt}
+            {$this->sql_join_gtr}
             WHERE {$this->sql_date_create}
                AND glpi_tickets.entities_id IN ({$this->where_entities})
                AND glpi_tickets.is_deleted = '0'
-               $sql_type
-               $sql_group_assign
-               $sql_group_request
-               $sql_user_assign
-               $sql_itilcat
+               AND {$this->sql_type}
+               AND {$this->sql_group_assign}
+               AND {$this->sql_group_request}
+               AND {$this->sql_user_assign}
+               AND {$this->sql_itilcat}
             GROUP BY glpi_tickets.id
             HAVING nb_add_group > 0
          ) as ticc
@@ -604,27 +530,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          array('dateinterval', 'period', 'multiplegrouprequest',
                'userassign', 'category', 'multiplegroupassign');
 
-      $sql_group_assign = "";
-      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
-            $sql_group_assign = " AND gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
-            $sql_group_assign = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
-         }
-      }
-      $sql_group_request = "";
-      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_request_id'])) {
-            $sql_group_request = " AND gtr.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_request_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_request_id'] > 0) {
-            $sql_group_request = " AND gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
-         }
-      }
-      $sql_user_assign  = isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0 ? " AND tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'] : "";
-      $sql_type         = isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0 ? " AND glpi_tickets.type = ".$_SESSION['mreporting_values']['type'] : " AND glpi_tickets.type = ".Ticket::INCIDENT_TYPE;
-      $sql_itilcat      = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
-
-
       $query = "SELECT
          DATE_FORMAT(glpi_tickets.date, '{$this->period_sort}')  as period,
          DATE_FORMAT(glpi_tickets.date, '{$this->period_label}') as period_name,
@@ -633,22 +538,22 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          LEFT JOIN (
             SELECT
                glpi_tickets.id AS tickets_id,
-               (SUM(ta.actiontime) * 100) / glpi_tickets.solve_delay_stat as time_percent
+               (SUM(tt.actiontime) * 100) / glpi_tickets.solve_delay_stat as time_percent
             FROM glpi_tickets
-            LEFT JOIN glpi_tickettasks    ta  ON ta.tickets_id  = glpi_tickets.id
-            LEFT JOIN glpi_tickets_users  tu  ON tu.tickets_id  = glpi_tickets.id AND tu.type  = 2
-            LEFT JOIN glpi_groups_tickets gt  ON gt.tickets_id  = glpi_tickets.id AND gt.type  = 2
-            LEFT JOIN glpi_groups_tickets gtr ON gtr.tickets_id = glpi_tickets.id AND gtr.type = 1
+            {$this->sql_join_tt}
+            {$this->sql_join_tu}
+            {$this->sql_join_gt}
+            {$this->sql_join_gtr}
             WHERE glpi_tickets.solve_delay_stat > 0
-               AND ta.actiontime IS NOT NULL
-               AND {$this->sql_date_create}
+               AND tt.actiontime IS NOT NULL
                AND glpi_tickets.entities_id IN ({$this->where_entities})
                AND glpi_tickets.is_deleted = '0'
-               $sql_type
-               $sql_group_assign
-               $sql_group_request
-               $sql_user_assign
-               $sql_itilcat
+               AND {$this->sql_date_create}
+               AND {$this->sql_type}
+               AND {$this->sql_group_assign}
+               AND {$this->sql_group_request}
+               AND {$this->sql_user_assign}
+               AND {$this->sql_itilcat}
             GROUP BY glpi_tickets.id
          ) AS actiontime_vs_solvedelay
             ON actiontime_vs_solvedelay.tickets_id = glpi_tickets.id
@@ -663,6 +568,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       return $data;
    }
+
+
 
    function reportGlineNbTicketBySla($config = array()) {
       global $DB;
