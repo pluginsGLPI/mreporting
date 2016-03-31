@@ -1,4 +1,6 @@
 <?php
+global $LANG;
+
 $LANG['plugin_mreporting']['Other'] = array(
    'title' => "Другое",
 

@@ -1,4 +1,6 @@
 <?php
+global $LANG;
+
 $LANG['plugin_mreporting']['Helpdeskplus'] = array(
    'title'         => 'Helpdesk Avancé',
 
