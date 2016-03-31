@@ -39,32 +39,39 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $this->lcl_slaok = $LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'];
       $this->lcl_slako = $LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved'];
 
-      if (isset($_SESSION['mreporting_values']['groups_assign_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_assign_id'])) {
-            $this->sql_group_assign = "gt.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_assign_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_assign_id'] > 0) {
-            $this->sql_group_assign = "gt.groups_id = ".$_SESSION['mreporting_values']['groups_assign_id'];
+      $mr_values = $_SESSION['mreporting_values'];
+
+      if (isset($mr_values['groups_assign_id'])) {
+         if (is_array($mr_values['groups_assign_id'])) {
+            $this->sql_group_assign = "gt.groups_id IN (".
+                                       implode(',', $mr_values['groups_assign_id']).")";
+         } elseif ($mr_values['groups_assign_id'] > 0) {
+            $this->sql_group_assign = "gt.groups_id = ".$mr_values['groups_assign_id'];
          }
       }
 
-      if (isset($_SESSION['mreporting_values']['groups_request_id'])) {
-         if (is_array($_SESSION['mreporting_values']['groups_request_id'])) {
-            $this->sql_group_request = "gtr.groups_id IN (".implode(',', $_SESSION['mreporting_values']['groups_request_id']).")";
-         } else if ($_SESSION['mreporting_values']['groups_request_id'] > 0) {
-            $this->sql_group_request = "gt.groups_id = ".$_SESSION['mreporting_values']['groups_request_id'];
+      if (isset($mr_values['groups_request_id'])) {
+         if (is_array($mr_values['groups_request_id'])) {
+            $this->sql_group_request = "gtr.groups_id IN (".
+                                          implode(',', $mr_values['groups_request_id']).")";
+         } elseif ($mr_values['groups_request_id'] > 0) {
+            $this->sql_group_request = "gt.groups_id = ".$mr_values['groups_request_id'];
          }
       }
 
-      if (isset($_SESSION['mreporting_values']['users_assign_id']) && $_SESSION['mreporting_values']['users_assign_id'] > 0) {
-         $this->sql_user_assign = "tu.users_id = ".$_SESSION['mreporting_values']['users_assign_id'];
+      if (isset($mr_values['users_assign_id'])
+          && $mr_values['users_assign_id'] > 0) {
+         $this->sql_user_assign = "tu.users_id = ".$mr_values['users_assign_id'];
       }
 
-      if (isset($_SESSION['mreporting_values']['type']) && $_SESSION['mreporting_values']['type'] > 0) {
-         $this->sql_type = "glpi_tickets.type = ".$_SESSION['mreporting_values']['type'];
+      if (isset($mr_values['type'])
+          && $mr_values['type'] > 0) {
+         $this->sql_type = "glpi_tickets.type = ".$mr_values['type'];
       }
 
-      if (isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0) {
-         $this->sql_itilcat = "glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'];
+      if (isset($mr_values['itilcategories_id'])
+          && $mr_values['itilcategories_id'] > 0) {
+         $this->sql_itilcat = "glpi_tickets.itilcategories_id = ".$mr_values['itilcategories_id'];
       }
    }
 
@@ -78,10 +85,14 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $tab   = array();
       $datas = array();
 
-      $search_new       = (!isset($_SESSION['mreporting_values']['show_new']) || ($_SESSION['mreporting_values']['show_new'] == '1')) ? true : false;
-      $search_solved    = (!isset($_SESSION['mreporting_values']['show_solved']) || ($_SESSION['mreporting_values']['show_solved'] == '1')) ? true : false;
-      $search_backlogs  = (!isset($_SESSION['mreporting_values']['show_backlog']) || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? true : false;
-      $search_closed    = (isset($_SESSION['mreporting_values']['show_closed']) && ($_SESSION['mreporting_values']['show_closed'] == '1')) ? true : false;
+      $search_new       = (!isset($_SESSION['mreporting_values']['show_new'])
+                           || ($_SESSION['mreporting_values']['show_new'] == '1'))     ?true:false;
+      $search_solved    = (!isset($_SESSION['mreporting_values']['show_solved'])
+                           || ($_SESSION['mreporting_values']['show_solved'] == '1'))  ?true:false;
+      $search_backlogs  = (!isset($_SESSION['mreporting_values']['show_backlog'])
+                           || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ?true:false;
+      $search_closed    = (isset($_SESSION['mreporting_values']['show_closed'])
+                           && ($_SESSION['mreporting_values']['show_closed'] == '1'))  ?true:false;
 
       if($search_new) {
          $sql_create = "SELECT
@@ -153,11 +164,15 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             );
          }
 
-         $sql_itilcat_backlog = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? " AND tic.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
+         $sql_itilcat_backlog = isset($_SESSION['mreporting_values']['itilcategories_id'])
+                                && $_SESSION['mreporting_values']['itilcategories_id'] > 0
+                                ? " AND tic.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id']
+                                : "";
 
          $begin=strftime($this->period_sort_php ,$time1);
          $end=strftime($this->period_sort_php, $time2);
-         $sql_date_backlog =  "DATE_FORMAT(list_date.period_l, '{$this->period_sort}') >= '$begin' AND DATE_FORMAT(list_date.period_l, '{$this->period_sort}') <= '$end' ";
+         $sql_date_backlog =  "DATE_FORMAT(list_date.period_l, '{$this->period_sort}') >= '$begin'
+                               AND DATE_FORMAT(list_date.period_l, '{$this->period_sort}') <= '$end'";
          $sql_list_date2 = str_replace('date', 'solvedate', $this->sql_list_date);
          $sql_backlog = "SELECT
             DISTINCT(DATE_FORMAT(list_date.period_l, '$this->period_sort')) as period,
@@ -251,8 +266,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
 
       foreach ($this->status as $current_status) {
-         $search_status = ($_SESSION['mreporting_values']['status_'.$current_status] == '1') ? true : false;
-         if($search_status) {
+         if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
             $status_name = Ticket::getStatus($current_status);
             $sql_status = "SELECT
                      DISTINCT DATE_FORMAT(date, '{$this->period_sort}') as period,
@@ -307,8 +321,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
 
       foreach ($this->status as $current_status) {
-         $search_status = ($_SESSION['mreporting_values']['status_'.$current_status] == '1') ? true : false;
-         if($search_status) {
+         if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
             $status_name = Ticket::getStatus($current_status);
             $sql_status = "SELECT
                      DISTINCT g.completename AS group_name,
@@ -358,8 +371,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
 
       foreach ($this->status as $current_status) {
-         $search_status = ($_SESSION['mreporting_values']['status_'.$current_status] == '1') ? true : false;
-         if($search_status) {
+         if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
             $status_name = Ticket::getStatus($current_status);
 
             $sql_create = "SELECT
@@ -431,7 +443,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                GROUP BY cat.completename
                ORDER BY nb DESC
                LIMIT 0, ";
-      $sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit'])) ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
+      $sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit']))
+                     ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
 
       $res = $DB->query($sql_create);
       while ($data = $DB->fetch_assoc($res)) {
@@ -463,7 +476,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                GROUP BY g.completename
                ORDER BY nb DESC
                LIMIT 0, ";
-      $sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit'])) ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
+      $sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit']))
+                     ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
 
       $res = $DB->query($sql_create);
       while ($data = $DB->fetch_assoc($res)) {
@@ -478,7 +492,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportVstackbarGroupChange']
-         = array('dateinterval', 'userassign', 'category', 'multiplegrouprequest', 'multiplegroupassign');
+         = array('dateinterval', 'userassign', 'category',
+                 'multiplegrouprequest', 'multiplegroupassign');
 
       $datas = array();
 
@@ -820,7 +835,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<label>';
       echo '<input type="hidden" name="show_new" value="0" /> ';
       echo '<input type="checkbox" name="show_new" value="1"';
-      echo (!isset($_SESSION['mreporting_values']['show_new']) || ($_SESSION['mreporting_values']['show_new'] == '1')) ? ' checked="checked"' : '';
+      echo (!isset($_SESSION['mreporting_values']['show_new'])
+            || ($_SESSION['mreporting_values']['show_new'] == '1')) ? ' checked="checked"' : '';
       echo ' /> ';
       echo $LANG['plugin_mreporting']['Helpdeskplus']['opened'];
       echo '</label>';
@@ -829,7 +845,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<label>';
       echo '<input type="hidden" name="show_solved" value="0" /> ';
       echo '<input type="checkbox" name="show_solved" value="1"';
-      echo (!isset($_SESSION['mreporting_values']['show_solved']) || ($_SESSION['mreporting_values']['show_solved'] == '1')) ? ' checked="checked"' : '';
+      echo (!isset($_SESSION['mreporting_values']['show_solved'])
+            || ($_SESSION['mreporting_values']['show_solved'] == '1')) ? ' checked="checked"' : '';
       echo ' /> ';
       echo _x('status', 'Solved');
       echo '</label>';
@@ -840,7 +857,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<label>';
       echo '<input type="hidden" name="show_backlog" value="0" /> ';
       echo '<input type="checkbox" name="show_backlog" value="1"';
-      echo (!isset($_SESSION['mreporting_values']['show_backlog']) || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? ' checked="checked"' : '';
+      echo (!isset($_SESSION['mreporting_values']['show_backlog'])
+            || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? ' checked="checked"' : '';
       echo ' /> ';
       echo $LANG['plugin_mreporting']['Helpdeskplus']['backlogs'];
       echo '</label>';
@@ -849,7 +867,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<label>';
       echo '<input type="hidden" name="show_closed" value="0" /> ';
       echo '<input type="checkbox" name="show_closed" value="1"';
-      echo (isset($_SESSION['mreporting_values']['show_closed']) && ($_SESSION['mreporting_values']['show_closed'] == '1')) ? ' checked="checked"' : '';
+      echo (isset($_SESSION['mreporting_values']['show_closed'])
+            && ($_SESSION['mreporting_values']['show_closed'] == '1')) ? ' checked="checked"' : '';
       echo ' /> ';
       echo _x('status', 'Closed');
       echo '</label>';
