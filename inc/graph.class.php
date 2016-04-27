@@ -1752,7 +1752,6 @@ JAVASCRIPT;
       foreach ($links as $link) {
          $out.= "\t'".addslashes($link)."',\n";
       }
-      $out = substr($out,0, -2)."\n";
       $out.= "];\n";
 
       echo $out;
