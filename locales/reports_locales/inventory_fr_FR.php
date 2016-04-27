@@ -112,4 +112,11 @@ $LANG['plugin_mreporting']['Inventory'] = array(
       'desc'     => "Barres",
       'category' => "Inventaire",
    ),
+
+    'reportHbarComputersByEntity' => array(
+      'title'    => "Répartition du nombre d'ordinateurs par entités",
+      'desc'     => "Barres",
+      'category' => "Entité",
+    ),
+
 );

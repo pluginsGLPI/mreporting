@@ -166,7 +166,11 @@ class PluginMreportingGraph {
       }
 
       $datas = $raw_datas['datas'];
-      $datas = $this->initDatasSimple($datas, $unit);
+      $links = array();
+      if (isset($raw_datas['links'])) {
+         $links = $raw_datas['links'];
+      }
+      $datas = $this->initDatasSimple($datas, $unit, $links);
 
       $nb_bar = count($datas);
       $height = 25 * $nb_bar + 50;
@@ -222,6 +226,9 @@ class PluginMreportingGraph {
          })
          .event("mouseout", function()  {
             return this.parent.active(false);
+         })
+         .event("click", function() {
+            self.open(links[this.parent.parent.index], '_blank');
          })
          .fillStyle(function() {
             if (this.parent.active()) return colors(this.parent.parent.index).alpha(.5);
@@ -1719,7 +1726,7 @@ JAVASCRIPT;
     * @return nothing
     */
 
-   function initDatasSimple($datas, $unit = '') {
+   function initDatasSimple($datas, $unit = '', $links = array()) {
 
       $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
 
@@ -1737,6 +1744,13 @@ JAVASCRIPT;
       $out.= "var labels = [\n";
       foreach ($labels as $label) {
          $out.= "\t'".addslashes($label)."',\n";
+      }
+      $out = substr($out,0, -2)."\n";
+      $out.= "];\n";
+
+      $out.= "var links = [\n";
+      foreach ($links as $link) {
+         $out.= "\t'".addslashes($link)."',\n";
       }
       $out = substr($out,0, -2)."\n";
       $out.= "];\n";
