@@ -1,6 +1,8 @@
 <?php
 
-$USEDBREPLICATE         = 1;
+if (!isset($_POST['saveConfig']) && !isset($_POST['addReports'])) {
+   $USEDBREPLICATE         = 1;
+}
 $DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
 
 include ("../../../inc/includes.php");
