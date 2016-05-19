@@ -609,7 +609,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
       //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
       $obj = new $classname($config);
-      $datas = $obj->$opt['f_name']($config);
+      $datas = $obj->{$opt['f_name']}($config);
 
       //show graph (pgrah type determined by first entry of explode of camelcase of function name
       $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
@@ -1155,7 +1155,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $obj = new $classname($config);
 
          //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-         $datas = $obj->$opt['f_name']($config);
+         $datas = $obj->{$opt['f_name']}($config);
 
          //show graph (pgrah type determined by first entry of explode of camelcase of function name
          $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
