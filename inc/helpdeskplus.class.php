@@ -9,7 +9,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    protected $sql_group_assign  = "1=1",
              $sql_group_request = "1=1",
              $sql_user_assign   = "1=1",
-             $sql_type          = "glpi_tickets.type = ".Ticket::INCIDENT_TYPE,
+             $sql_type          = "glpi_tickets.type IN (".Ticket::INCIDENT_TYPE.", ".Ticket::DEMAND_TYPE.")",
              $sql_itilcat       = "1=1",
 
              $sql_join_cat      = "LEFT JOIN glpi_itilcategories cat
