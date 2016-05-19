@@ -112,4 +112,10 @@ $LANG['plugin_mreporting']['Inventory'] = array(
       'desc'     => "Bars",
       'category' => "Inventaire",
    ),
+
+    'reportHbarComputersByEntity' => array(
+      'title'    => "Computers per entities",
+      'desc'     => "Bars",
+      'category' => "Entity",
+    ),
 );

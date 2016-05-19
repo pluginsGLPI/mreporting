@@ -695,4 +695,56 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $datas;
 
    }
+
+   /* ==== COMPUTER'S ENTITIES REPORTS ==== */
+  function reportHbarComputersByEntity($config = array()) {
+      global $DB, $CFG_GLPI;
+
+      $_SESSION['mreporting_selector']['reportHbarComputersByEntity'] = array('multiplestates');
+
+      $datas = array();
+
+      $entity = new Entity();
+      $entity->getFromDB($_SESSION['glpiactive_entity']);
+      $entities_first_level = array($_SESSION['glpiactive_entity'] => $entity->getName());
+      $query = "SELECT `id`, `name` from `glpi_entities` WHERE `entities_id` = '".$_SESSION['glpiactive_entity']."' ORDER BY `name`";
+      $result = $DB->query($query);
+      while ($data = $DB->fetch_assoc($result)) {
+          $entities_first_level[$data['id']] = $data['name'];
+      }
+      $entities = array();
+      foreach ($entities_first_level as $entities_id=>$entities_name) {
+          if ($entities_id == $_SESSION['glpiactive_entity']) {
+              $restrict = " = '".$entities_id."'";
+          } else {
+              $restrict = "IN (".implode(',', getSonsOf('glpi_entities', $entities_id)).")";
+          }
+          $query = "SELECT count(*) Total FROM `glpi_computers` WHERE `entities_id` ".$restrict;
+          $result = $DB->query($query);
+
+          while ($computer = $DB->fetch_assoc($result)) {
+             $datas['tmp'][$entities_name." (pourcentage %)"] = $computer['Total'];
+             $entities[$entities_name." (pourcentage %)"] = $entities_id;
+          }
+      }
+      $total = array_sum($datas['tmp']);
+      foreach ($datas['tmp'] as $key=>$value) {
+         if ($value == 0) {
+            $percent = 0;
+         } else {
+            $percent = round((100 * $value) / $total);
+         }
+         $ent_id = $entities[$key];
+         $key = str_replace('pourcentage', $percent, $key);
+         $datas['datas'][$key] = $value;
+         $type = 'under';
+         if ($ent_id == $_SESSION['glpiactive_entity']) {
+            $type = 'equals';
+         }
+         $datas['links'][$key] = $CFG_GLPI["root_doc"].'/front/computer.php?is_deleted=0&criteria[0][field]=80&criteria[0][searchtype]='.$type.'&criteria[0][value]='.$ent_id.'&itemtype=Computer&start=0';
+      }
+      unset($datas['tmp']);
+
+      return $datas;
+   }
 }
