@@ -3,21 +3,20 @@
 # This file is distributed under the same license as the GLPI - Mreporting plugin package.
 # 
 # Translators:
-# Alexandre DELAUNAY <delaunay.alexandre@gmail.com>, 2016
-# Jérémy MOREAU <jmoreau.dev@gmail.com>, 2015
+# Andrejs <andrew.k2@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-02 14:27+0200\n"
-"PO-Revision-Date: 2016-06-02 12:32+0000\n"
+"PO-Revision-Date: 2016-06-02 12:27+0000\n"
 "Last-Translator: Alexandre DELAUNAY <delaunay.alexandre@gmail.com>\n"
-"Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/fr_FR/)\n"
+"Language-Team: Latvian (Latvia) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/lv_LV/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: lv_LV\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #: setup.php:139 test.php:4 front/central.php:33 front/config.form.php:53
 #: front/config.php:45 front/dashboard.form.php:34 front/graph.php:37
@@ -26,131 +25,131 @@ msgstr ""
 #: inc/notificationtargetnotification.class.php:8 inc/preference.class.php:182
 #: inc/profile.class.php:38
 msgid "More Reporting"
-msgstr "Plus de rapports"
+msgstr "More Reporting"
 
 #: ajax/dropdownExport.php:45 inc/common.class.php:494
 msgid "With data"
-msgstr "Avec les données"
+msgstr "Ar datiem"
 
 #: ajax/dropdownExport.php:46 inc/common.class.php:493
 msgid "Without data"
-msgstr "Sans les données"
+msgstr "Bez datiem"
 
 #: ajax/homepage_link.php:6 inc/common.class.php:58 inc/common.class.php:59
 #: inc/common.class.php:71 inc/dashboard.class.php:35
 msgid "Dashboard"
-msgstr "Tableau de bord"
+msgstr "Informācijas panelis"
 
 #: front/central.php:73 front/central.php:80 inc/common.class.php:316
 #: inc/common.class.php:383 inc/common.class.php:417 inc/config.class.php:613
 msgid "No report is available !"
-msgstr "Aucun rapport disponible !"
+msgstr "Nav pieejami pārskati !"
 
 #: front/popup.php:38 inc/common.class.php:1124 inc/common.class.php:1131
 #: inc/common.class.php:1139
 msgid "General Report - ODT"
-msgstr "Rapport général - ODT"
+msgstr "Vispārīgs Pārskats - ODT"
 
 #: inc/common.class.php:61 inc/common.class.php:62 inc/common.class.php:80
 msgid "Reports list"
-msgstr "Liste des rapports"
+msgstr "Pārskatu saraksts"
 
 #: inc/common.class.php:910
 msgid "Number"
-msgstr "Nombre"
+msgstr "Skaits"
 
 #: inc/common.class.php:931 inc/common.class.php:1230
 #: inc/common.class.php:1246
 msgid "data"
-msgstr "Données"
+msgstr "dati"
 
 #: inc/common.class.php:1125 inc/preference.class.php:123
 msgid "Please, select a model in your preferences"
-msgstr "Merci de sélectionner un modèle dans vos préférences"
+msgstr "Lūdzu, izvelieties modeli savos iestatījumos"
 
 #: inc/common.class.php:1132
 msgid "No model available"
-msgstr "Aucun modèle n'existe"
+msgstr "Nav pieejamu modeļu"
 
 #: inc/common.class.php:1140
 msgid "No graphic selected"
-msgstr "aucun graphique sélectionné"
+msgstr "Nav izvēlēts grafiks"
 
 #: inc/config.class.php:38
 msgid "Configuration"
-msgstr "Configuration"
+msgstr "Konfigurācija"
 
 #: inc/config.class.php:70 inc/config.class.php:641
 msgid "See area"
-msgstr "Voir l'aire"
+msgstr "Redzamais apgabals"
 
 #: inc/config.class.php:76 inc/config.class.php:656 inc/config.class.php:668
 msgid "Curve lines (SVG)"
-msgstr "Incurver les lignes (SVG)"
+msgstr ""
 
 #: inc/config.class.php:82
 msgid "See values"
-msgstr "Voir les valeurs"
+msgstr "Redzamas vērtības"
 
 #: inc/config.class.php:89 inc/config.class.php:683
 msgid "Reverse data array"
-msgstr "Inverser le tableau de données"
+msgstr "Apgriezt datu masīvu"
 
 #: inc/config.class.php:95 inc/config.class.php:695
 msgid "Unit"
-msgstr "Unité"
+msgstr "Vienība"
 
 #: inc/config.class.php:99 inc/config.class.php:705
 msgid "Default delay"
-msgstr "Délai par défaut"
+msgstr "Noklusēta aizkave"
 
 #: inc/config.class.php:103 inc/config.class.php:713
 msgid "Additional condition for MySQL"
-msgstr "Condition supplémentaire Mysql"
+msgstr "Papildus MySQL nosacījumi"
 
 #: inc/config.class.php:107 inc/config.class.php:621
 msgid "See graphic"
-msgstr "Voir le graphique"
+msgstr "Redzamais grafiks"
 
 #: inc/config.class.php:113
 msgid "Class"
-msgstr "Classe"
+msgstr "Klase"
 
 #: inc/config.class.php:125 inc/config.class.php:722
 msgid "Send this report with the notification"
-msgstr "Envoyer ce rapport avec les notifications"
+msgstr "Nosūtīt šo pārskatu ar paziņojumu"
 
 #: inc/config.class.php:209
 msgid "Initialize graphics configuration"
-msgstr "Initialiser la configuration des graphiques"
+msgstr "Inicializēt grafisko konfigurāciju"
 
 #: inc/config.class.php:442 inc/config.class.php:457
 msgid "On mouse over"
-msgstr "Au passage de la souris"
+msgstr "Uz peles pāri"
 
 #: inc/config.class.php:525
 msgid "Object already exists"
-msgstr "L'objet existe déjà"
+msgstr "Objekts jau eksistē"
 
 #: inc/dashboard.class.php:85
 msgid "Select a report to display"
-msgstr "Sélectionnez un rapport à afficher"
+msgstr "Izvēlēties pārskatu kuru attēlot"
 
 #: inc/dashboard.class.php:96
 msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur l'icône"
+msgstr ""
 
 #: inc/dashboard.class.php:105
 msgid "Add a report"
-msgstr "Ajouter un rapport"
+msgstr "Pievienot pārskatu"
 
 #: inc/dashboard.class.php:134
 msgid "Select a report to add"
-msgstr "Sélectionnez un rapport à ajouter"
+msgstr "Izvēlēties pārskatu lai pievienot"
 
 #: inc/dashboard.class.php:223
 msgid "Configure report"
-msgstr "Configurer le rapport"
+msgstr "Nokonfigurēt pārskatu"
 
 #: inc/graph.class.php:155 inc/graph.class.php:354 inc/graph.class.php:548
 #: inc/graph.class.php:808 inc/graph.class.php:1029 inc/graph.class.php:1259
@@ -159,16 +158,16 @@ msgstr "Configurer le rapport"
 #: inc/graphpng.class.php:1202 inc/graphpng.class.php:1433
 #: inc/graphpng.class.php:1736 inc/graphpng.class.php:1999
 msgid "No data for this date range !"
-msgstr "Aucune données pour cette plage de date !"
+msgstr "Nav datu par šo laika periodu !"
 
 #: inc/helpdesk.class.php:278 inc/helpdesk.class.php:337
 msgid "Undefined"
-msgstr "Non défini"
+msgstr "Nav definēts"
 
 #: inc/notification.class.php:34 inc/notification.class.php:54
 #: inc/notification.class.php:119
 msgid "Notification for \"More Reporting\""
-msgstr "Notification \"plus de rapports\""
+msgstr "Paziņojums par \"More Reporting\""
 
 #: inc/notification.class.php:39
 msgid ""
@@ -178,11 +177,11 @@ msgid ""
 "<p>GLPI reports are available.<br />\n"
 "You will find attached in this email.</p>\n"
 "\n"
-msgstr "\n\n<p>Bonjour,</p>\n\n<p>Les rapports de GLPI sont disponibles.<br />\nVous les trouverez en pièce jointe dans cet e-mail.</p>\n\n"
+msgstr "\n<p>Sveicināti,</p>\n\n<p>GLPI pārskati sagatavoti.<br />\nJūs atradīsiet tos epasta vēstules pielikumā.</p>\n"
 
 #: inc/notification.class.php:46 inc/pdf.class.php:15
 msgid "GLPI statistics reports"
-msgstr "Rapports statistiques de GLPI"
+msgstr "GLPI statistikas pārskati"
 
 #: inc/notification.class.php:47
 msgid ""
@@ -191,69 +190,69 @@ msgid ""
 "GLPI reports are available.\n"
 "You will find attached in this email.\n"
 "\n"
-msgstr "Bonjour,\n\nLes rapports de GLPI sont disponibles.\nVous les trouverez en pièce jointe dans cet e-mail.\n\n"
+msgstr "Sveicināti,\n\nGLPI pārskati sagatavoti.\nJūs atradīsiet tos epasta vēstules pielikumā.\n\n"
 
 #: inc/notification.class.php:144
 msgid "Notification(s) sent !"
-msgstr "Notification(s) envoyée(s) !"
+msgstr "Paziņojums(i) nosūtīti !"
 
 #: inc/other.class.php:70
 msgid "Add/remove software on a computer"
-msgstr "Ajout/suppression d'un logiciel sur un ordinateur"
+msgstr "Pievienot/noņemt programmatūru uz datora"
 
 #: inc/other.class.php:73
 msgid "Add/remove version on a software"
-msgstr "Ajout/suppression d'une version sur un logiciel"
+msgstr "Pievienot/noņemt programmatūras versiju"
 
 #: inc/other.class.php:76
 msgid "Add infocom"
-msgstr "Ajout des informations financières"
+msgstr "Pievienot Infocom"
 
 #: inc/other.class.php:79
 msgid "Add/remove profile on a user"
-msgstr "Ajout/suppression d'un profil à un utilisateur"
+msgstr "Pievienot/noņemt profilu lietotājam"
 
 #: inc/other.class.php:82
 msgid "Add/remove group on a user"
-msgstr "Ajout/suppression d'un groupe à un utilisateur"
+msgstr "Pievienot/noņemt grupu lietotājam"
 
 #: inc/other.class.php:85
 msgid "User deleted from LDAP"
-msgstr "Utilisateur supprimé depuis LDAP"
+msgstr "Lietotājs izdzēsts no LDAP"
 
 #: inc/other.class.php:93
 msgid "Webservice logs"
-msgstr "Logs Webservices"
+msgstr "Web servisu žurnāls"
 
 #: inc/other.class.php:97
 msgid "OCS Infos"
-msgstr "Infos OCS"
+msgstr "OCS Informācija"
 
 #: inc/other.class.php:100
 msgid "Add/update/remove device"
-msgstr "Ajout/mise à jour/suppression d'un périphérique"
+msgstr "Pievienot/atjaunināt/noņemt ierīci"
 
 #: inc/other.class.php:103
 msgid "Add/remove relation"
-msgstr "Ajout/suppression d'une relation"
+msgstr "Pievienot/noņemt sasaisti"
 
 #: inc/other.class.php:106
 msgid "Add/remove item"
-msgstr "Ajout/suppression d'un élément"
+msgstr "Pievienot/noņemt objektu"
 
 #: inc/other.class.php:109
 msgid "Comments & date_mod changes"
-msgstr "Modifications commentaires & date_mod"
+msgstr "Komentāri & date_mode izmaiņas"
 
 #: inc/other.class.php:117
 msgid "Genericobject plugin logs"
-msgstr "Logs plugin Genericobjec"
+msgstr "Papildspraudņa Genericobject žurnāls"
 
 #: inc/pdf.class.php:16
 msgid "Automaticaly generated by GLPI"
-msgstr "Généré automatiquement par GLPI"
+msgstr "Automātiski ģenerēts ar GLPI"
 
 #: inc/profile.class.php:66 inc/profile.class.php:212
 #: inc/profile.class.php:280
 msgid "Rights management"
-msgstr "Gestion des droits"
+msgstr "Tiesību pārvaldība"

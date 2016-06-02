@@ -73,7 +73,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
       $tab[4]['table']          = $this->getTable();
       $tab[4]['field']          = 'spline';
-      $tab[4]['name']           = __("Curves lines (SVG)", 'mreporting');
+      $tab[4]['name']           = __("Curve lines (SVG)", 'mreporting');
       $tab[4]['datatype']       = 'bool';
       $tab[4]['massiveaction']  = false;
 
@@ -653,7 +653,7 @@ class PluginMreportingConfig extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __("Curves lines (SVG)", 'mreporting');
+      echo __("Curve lines (SVG)", 'mreporting');
       echo "</td>";
       echo "<td>";
       if ($gtype == 'area' || $gtype == 'garea' || $gtype == 'line' || $gtype == 'gline') {
@@ -665,7 +665,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      echo __("Curves lines (SVG)", 'mreporting');
+      echo __("Curve lines (SVG)", 'mreporting');
       echo "</td>";
 
       echo "<td>";
