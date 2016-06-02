@@ -87,10 +87,10 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
    function reportHbarComputersByFabricant($config = array()) {
       $_SESSION['mreporting_selector']['reportHbarComputersByFabricant'] = array('multiplestates');
-      return $this->computersByFabricant($configs);
+      return $this->computersByFabricant($config);
    }
 
-   function computersByFabricant($configs = array()) {
+   function computersByFabricant($config = array()) {
       global $DB;
 
       $manufacturerObj = new Manufacturer();
@@ -144,12 +144,12 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $this->computersByType($config);
    }
 
-   function reportHbarComputersByType($configs = array()) {
+   function reportHbarComputersByType($config = array()) {
       $_SESSION['mreporting_selector']['reportHbarComputersByType'] = array('multiplestates');
-      return $this->computersByType($configs);
+      return $this->computersByType($config);
    }
 
-   function computersByType($configs = array()) {
+   function computersByType($config = array()) {
       global $DB;
 
       $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
@@ -186,12 +186,12 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    /* ==== COMPUTER'S AGE REPORTS ==== */
    function reportPieComputersByAge($config = array()) {
       $_SESSION['mreporting_selector']['reportPieComputersByAge'] = array('multiplestates');
-      return $this->computersByAge($configs);
+      return $this->computersByAge($config);
    }
 
    function reportHbarComputersByAge($config = array()) {
       $_SESSION['mreporting_selector']['reportHbarComputersByAge'] = array('multiplestates');
-      return $this->computersByAge($configs);
+      return $this->computersByAge($config);
    }
 
    function computersByAge($config = array()) {
@@ -308,17 +308,17 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
 
    /* === OS REPORTS === */
-   function reportPieComputersByOS($configs = array()) {
+   function reportPieComputersByOS($config = array()) {
       $_SESSION['mreporting_selector']['reportPieComputersByOS'] = array('multiplestates');
-      return $this->computersByOS($configs);
+      return $this->computersByOS($config);
    }
 
-  function reportHbarComputersByOS($configs = array()) {
+  function reportHbarComputersByOS($config = array()) {
       $_SESSION['mreporting_selector']['reportHbarComputersByOS'] = array('multiplestates');
-      return $this->computersByOS($configs);
+      return $this->computersByOS($config);
   }
 
-  function computersByOS($configs = array()) {
+  function computersByOS($config = array()) {
       global $DB;
 
       $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
