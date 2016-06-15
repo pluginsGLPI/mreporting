@@ -87,12 +87,14 @@ function plugin_init_mreporting() {
          }
 
          /* Show Reports in standart stats page */
-         $mreporting_common = new PluginMreportingCommon();
-         $reports = $mreporting_common->getAllReports();
-         if ($reports !== false) {
-            foreach($reports as $report) {
-               foreach($report['functions'] as $func) {
-                  $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
+         if (preg_match('#front/stat.*\.php#', $_SERVER['SCRIPT_NAME'])) {
+            $mreporting_common = new PluginMreportingCommon();
+            $reports = $mreporting_common->getAllReports();
+            if ($reports !== false) {
+               foreach($reports as $report) {
+                  foreach($report['functions'] as $func) {
+                     $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
+                  }
                }
             }
          }
