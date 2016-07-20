@@ -42,7 +42,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       } else {
          $selected_states = self::getDefaultState();
       }
-
+      $datas = array();
       foreach (getAllDatasFromTable('glpi_states', $condition) as $data) {
          $datas[$data['id']] = $data['completename'];
       }
