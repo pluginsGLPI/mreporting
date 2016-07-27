@@ -28,7 +28,7 @@
  */
 include ("../../../inc/includes.php");
 
-Session::checkRight("config", CREATE);
+Session::checkRight("config", UPDATE);
 
 $plugin = new Plugin();
 if ($plugin->isActivated("mreporting")) {
