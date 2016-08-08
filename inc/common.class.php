@@ -609,7 +609,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
       //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
       $obj = new $classname($config);
-      $datas = $obj->{$opt['f_name']}($config);
+      $datas = $obj->$opt['f_name']($config);
 
       //show graph (pgrah type determined by first entry of explode of camelcase of function name
       $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
@@ -1155,7 +1155,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $obj = new $classname($config);
 
          //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-         $datas = $obj->{$opt['f_name']}($config);
+         $datas = $obj->$opt['f_name']($config);
 
          //show graph (pgrah type determined by first entry of explode of camelcase of function name
          $title_func = $LANG['plugin_mreporting'][$opt['short_classname']][$opt['f_name']]['title'];
@@ -1545,7 +1545,47 @@ class PluginMreportingCommon extends CommonDBTM {
       }
       echo "</td>";
       echo "</tr>";
+// ------------------------------------------------------------------------------------------------
+      // By default, don't display levels selector
+      $displayLevels = false;
 
+      // If graph's "f_name" contains "entity" (non-case-sensitive), enable levels selector
+      if (preg_match('/entity/i', $_GET['f_name'])) {
+         $displayLevels = true;
+      }
+
+      // If levels selector is enabled, display it
+      if ($displayLevels) {
+         echo "<tr><td colspan='10' class='center'>".__('Entities Details on', 'mreporting');
+
+         // Get page's URL with $_GET values
+         $url = $_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'];
+
+         // Remove any previously selected levels
+         $url = preg_replace('/&levels=(.*)/', null, $url);
+
+         // Init dropdown ==> when change, reload page with new selected level
+         $levels = '<select name="levels" onChange="window.location.href=this.options[this.selectedIndex].value">';
+         for ($i = 0 ; $i <= 10 ; $i++) {
+            $selected = null;
+            // Pre-select level value in list
+            if (isset($_GET['levels']) && $_GET['levels'] == $i) {
+               $selected = ' selected="selected"';
+            }
+            // Add option to dropdown
+            $levels .= "<option value='$url&levels=$i'$selected>$i</option>";
+         }
+         if (isset($_GET['levels']) && $_GET['levels'] == '1000') {
+            $selected = 'selected="selected"';
+         }
+         // Add "ALL" option to dropdown
+         $levels .= "<option value='$url&levels=1000'$selected>".__('All')."</option>";
+         $levels .= '</select>';
+
+         // Display dropdown
+         echo " $levels ".__('Level(s)', 'mreporting')."</td></tr>";
+      }
+// ------------------------------------------------------------------------------------------------
       echo "</table>";
       Html::closeForm();
 
@@ -1875,4 +1915,61 @@ class PluginMreportingCommon extends CommonDBTM {
 
       return $icons[$chart_type];
    }
+
+   function getSubEntities($entities_id) {
+      global $DB, $CFG_GLPI;
+      $entity = new Entity();
+      $entity->getFromDB($entities_id);
+      $entities = array();
+      $query = "SELECT `id`, `name` from `glpi_entities` WHERE `entities_id` = '".$entities_id."' ORDER BY `name`";
+      $result = $DB->query($query);
+      while ($data = $DB->fetch_assoc($result)) {
+          $entities[$data['id']] = $data['name'];
+      }
+      return $entities;
+   }
+
+   function getEntities() {
+    global $DB, $CFG_GLPI;
+    // Get current entity
+      $entity = new Entity();
+      $entity->getFromDB($_SESSION['glpiactive_entity']);
+
+    // Get selected levels scale
+      if (isset($_GET['levels'])) {
+        $lvl = $_GET['levels'];
+      }
+      else {
+        $lvl = 0;
+      }
+
+    // Levels array
+      $levels     = array();
+      $levels[0]  = array($_SESSION['glpiactive_entity'] => $entity->getName());
+
+    // Entities array ==> set current entity as default
+      $entities   = array();
+      $entities[$_SESSION['glpiactive_entity']] = $entity->getName();
+
+    // For each levels selected...
+      for ($i = 1 ; $i <= $lvl ; $i++) {
+    // If previous level is set (to prevent "Undefined offset" error)...
+        if (isset($levels[$i-1])) {
+    // For each entities in previous level...
+          foreach ($levels[$i-1] as $id=>$name) {
+    // Set current level with subentities of previous level and...
+            $levels[$i] = $this->getSubEntities($id);
+    // For each entities in current level...
+            foreach ($levels[$i] as $entities_id=>$entities_name) {
+    // Add entity in entities array.
+              $entities[$entities_id] = $entities_name;
+            }
+          }
+        }
+      }
+
+      return $entities;
+
+    }
+
 }
