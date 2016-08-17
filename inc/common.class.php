@@ -1599,7 +1599,7 @@ class PluginMreportingCommon extends CommonDBTM {
       echo $content;
    }
 
-   static function saveSelectors($graphname, $config = array(),$save_dashboard = false , $widget_id = 0) {
+   static function saveSelectors($graphname, $config = array()) {
       $remove = array('short_classname', 'f_name', 'gtype', 'submit');
       $values = array();
 
@@ -1627,36 +1627,21 @@ class PluginMreportingCommon extends CommonDBTM {
       }
 
       if (!empty($values)) {
+         $pref = new PluginMreportingPreference();
+         $id = $pref->addDefaultPreference(Session::getLoginUserID());
+         $tmp['id'] = $id;
 
-         if(!$save_dashboard){
-            $pref = new PluginMreportingPreference();
-            $id = $pref->addDefaultPreference(Session::getLoginUserID());
-            $tmp['id'] = $id;
+         $pref->getFromDB($id);
 
-            $pref->getFromDB($id);
-
-            if (!is_null($pref->fields['selectors'])) {
-               $selectors = $pref->fields['selectors'];
-               $sel = json_decode(stripslashes($selectors), true);
-               $sel[$graphname] = $values;
-            } else {
-               $sel = $values;
-            }
-            $tmp['selectors'] = addslashes(json_encode($sel));
-            $pref->update($tmp);
-         }else{
-            $widget = new PluginMreportingDashboard();
-            $widget->getFromDB($widget_id);
-
-
-
-            $sel = json_decode(stripslashes($widget->fields['configuration']), true);
-            $sel[$graphname.$widget_id] = $values;
-
-            $widget->fields['configuration'] = addslashes(json_encode($sel));
-            $widget->update($widget->fields);
-         } 
-
+         if (!is_null($pref->fields['selectors'])) {
+            $selectors = $pref->fields['selectors'];
+            $sel = json_decode(stripslashes($selectors), true);
+            $sel[$graphname] = $values;
+         } else {
+            $sel = $values;
+         }
+         $tmp['selectors'] = addslashes(json_encode($sel));
+         $pref->update($tmp);
       }
       $_SESSION['mreporting_values'] = $values;
    }
