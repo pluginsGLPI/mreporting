@@ -166,7 +166,6 @@ class PluginMreportingDashboard extends CommonDBTM {
          //$config = "No configuration";
 
          $f_name = $report->fields["name"];
-         $widget_id = $data["id"];
 
          $gtype = '';
          $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
@@ -208,7 +207,6 @@ class PluginMreportingDashboard extends CommonDBTM {
                   action: 'getConfig',
                   target: '$target',
                   f_name:'$f_name',
-                  widget_id:'$widget_id',
                   short_classname:'$short_classname',
                   gtype:'$gtype'
                },
@@ -324,7 +322,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       echo $out;
    }
 
-   static function getConfig($id_widget) {
+   static function getConfig() {
       PluginMreportingCommon::getSelectorValuesByUser();
 
       $reportSelectors = PluginMreportingCommon::getReportSelectors(true);
@@ -343,7 +341,6 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       echo "<input type='hidden' name='short_classname' value='".$_REQUEST['short_classname']."' class='submit'>";
       echo "<input type='hidden' name='f_name' value='".$_REQUEST['f_name']."' class='submit'>";
-      echo "<input type='hidden' name='widget_id' value='".$id_widget."' class='submit'>";
       echo "<input type='hidden' name='gtype' value='".$_REQUEST['gtype']."' class='submit'>";
       echo "<input type='submit' class='submit' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
 

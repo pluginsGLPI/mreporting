@@ -13,7 +13,7 @@ if (isset($_REQUEST['action'])) {
          break;
 
       case 'getConfig':
-         PluginMreportingDashboard::getConfig($_REQUEST['widget_id']);
+         PluginMreportingDashboard::getConfig();
          break;
 
       case 'centralDashboard' :
