@@ -765,7 +765,7 @@ class PluginMreportingConfig extends CommonDBTM {
          $crit['condition']   = $self->fields['condition'];
          $crit['show_graph']  = $self->fields['show_graph'];
          $crit['graphtype']   = $self->fields['graphtype'];
-         $crit['randname']    = $classname.$name;
+         $crit['randname']    = $classname.$name.mt_rand();
       }
 
       if (DEBUG_MREPORTING) {
