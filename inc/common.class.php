@@ -562,7 +562,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * @params $opt (classname, short_classname, f_name, gtype)
    */
 
-   function showGraph($opt, $export = false) {
+   function showGraph($opt, $dashboard = false, $export = false) {
       global $LANG, $CFG_GLPI;
 
       if (!isset($opt['hide_title'])) {
@@ -603,6 +603,10 @@ class PluginMreportingCommon extends CommonDBTM {
          self::resetSelectorsForReport($opt['f_name']);
       }
       self::getSelectorValuesByUser();
+
+      if ($dashboard) {
+         $config['widget_id'] = $opt['widget_id'];
+      }
 
       //dynamic instanciation of class passed by 'short_classname' GET parameter
       $classname = 'PluginMreporting'.$opt['short_classname'];
@@ -780,7 +784,12 @@ class PluginMreportingCommon extends CommonDBTM {
 
       //destroy specific palette
       unset($_SESSION['mreporting']['colors']);
-      unset($_SESSION['mreporting_values']);
+      //unset($_SESSION['mreporting_values']);
+      foreach ($_SESSION['mreporting_values'] as $key => $value) {
+         if (!preg_match('/show_/', $key) && !preg_match('/status_/', $key)) {
+            unset($_SESSION['mreporting_values'][$key]);
+         }
+      }
    }
 
    /**
@@ -1274,6 +1283,11 @@ class PluginMreportingCommon extends CommonDBTM {
          }
       }
 
+      if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST) &&
+          isset($_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']][$field])) {
+         $values = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']][$field];
+      }
+
       if (strstr($condition, "ORDER BY") == false) { // Security
          $condition .= " ORDER BY name";
       }
@@ -1295,6 +1309,11 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "<br /><b>".$label." : </b><br />";
 
       $value = isset($_SESSION['mreporting_values'][$field]) ? $_SESSION['mreporting_values'][$field] : 0;
+
+      if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST) &&
+          isset($_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']][$field])) {
+         $value = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']][$field];
+      }
 
       Dropdown::show("Group",array('comments'  => false,
                                    'name'      => $field,
@@ -1323,10 +1342,20 @@ class PluginMreportingCommon extends CommonDBTM {
 
    static function selectorUserassign() {
       echo "<br /><b>".__("Technician in charge of the ticket")." : </b><br />";
+
+      $entity  = isset($_SESSION['glpiactive_entity']) ? $_SESSION['glpiactive_entity'] : 0;
+      $value   = isset($_SESSION['mreporting_values']['users_assign_id'])
+               ? $_SESSION['mreporting_values']['users_assign_id']
+               : 0;
+
+      if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
+         $value = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]['users_assign_id'];
+      }
+
       $options = array('name'        => 'users_assign_id',
-                       'entity'      => isset($_SESSION['glpiactive_entity']) ? $_SESSION['glpiactive_entity'] : 0,
+                       'entity'      => $entity,
                        'right'       => 'own_ticket',
-                       'value'       => isset($_SESSION['mreporting_values']['users_assign_id']) ? $_SESSION['mreporting_values']['users_assign_id'] : 0,
+                       'value'       => $value,
                        'ldap_import' => false,
                        'comments'    => false);
       User::dropdown($options);
@@ -1337,7 +1366,7 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorAllSlasWithTicket() {
       global $LANG, $DB;
 
-      echo "<b>" . $LANG['plugin_mreporting']['selector']["slas"] . " : </b><br />";
+      echo "<b>" . $LANG['plugin_mreporting']["Helpdeskplus"]['selector']["slas"] . " : </b><br />";
 
       $query = "SELECT DISTINCT s.id,
          s.name
@@ -1356,7 +1385,12 @@ class PluginMreportingCommon extends CommonDBTM {
          $values[$data['id']] = $data['name'];
       }
 
-      $selected_values = isset($_SESSION['mreporting_values']['slas']) ? $_SESSION['mreporting_values']['slas'] : array();
+      $selected_values = isset($_SESSION['mreporting_values']['slas'])
+                             ? $_SESSION['mreporting_values']['slas'] : array();
+
+      if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
+         $selected_values = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]['slas'];
+      }
 
       Dropdown::showFromArray('slas', $values, array('values' => $selected_values,
                                                    'multiple' => true,
@@ -1374,16 +1408,29 @@ class PluginMreportingCommon extends CommonDBTM {
          'month'  => __("Month"),
          'year'   => __("By year"));
 
+      $value = (isset($_SESSION['mreporting_values']['period']))
+                    ? $_SESSION['mreporting_values']['period'] : 'month';
+
+      if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
+         $value = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]['period'];
+      }
+
       Dropdown::showFromArray("period", $elements,
-                              array('value' => isset($_SESSION['mreporting_values']['period'])
-                                 ? $_SESSION['mreporting_values']['period'] : 'month'));
+                              array('value' => $value));
    }
 
    static function selectorType() {
       echo "<br /><b>"._n("Type", "Types", 1) ." : </b><br />";
-      Ticket::dropdownType('type',
-                           array('value' => isset($_SESSION['mreporting_values']['type'])
-                              ? $_SESSION['mreporting_values']['type'] : Ticket::INCIDENT_TYPE));
+
+      $value = isset($_SESSION['mreporting_values']['type'])
+             ? $_SESSION['mreporting_values']['type']
+             : Ticket::INCIDENT_TYPE;
+
+      if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
+         $value = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]['type'];
+      }
+
+      Ticket::dropdownType('type', array('value' => $value));
 
    }
 
@@ -1391,14 +1438,27 @@ class PluginMreportingCommon extends CommonDBTM {
       global $CFG_GLPI;
 
       echo "<br /><b>"._n('Ticket category', 'Ticket categories', 2) ." : </b><br />";
+
+      $value      = isset($_SESSION['mreporting_values']['itilcategories_id'])
+                  ? $_SESSION['mreporting_values']['itilcategories_id']
+                  : 0;
+
+      $type_value = isset($_SESSION['mreporting_values']['type'])
+                  ? $_SESSION['mreporting_values']['type']
+                  : Ticket::INCIDENT_TYPE;
+
+      if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
+         $widget_config = PluginMreportingDashboard::getWidgetConfig($_REQUEST['widget_id']);
+         $value         = $widget_config['itilcategories_id'];
+         $type_value    = $widget_config['type'];
+      }
+
       if ($type) {
          $params = array('type'            => '__VALUE__',
                          'currenttype'     => Ticket::INCIDENT_TYPE,
                          'entity_restrict' => -1,
                          'condition'       => "`is_incident`='1'",
-                         'value'           => isset($_SESSION['mreporting_values']['itilcategories_id'])
-                                              ? $_SESSION['mreporting_values']['itilcategories_id']
-                                              : 0);
+                         'value'           => $value);
          echo "<span id='show_category_by_type'>";
       }
 
@@ -1409,12 +1469,10 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</span>";
 
          $rand = Ticket::dropdownType('type',
-                             array('value' => isset($_SESSION['mreporting_values']['type'])
-                                              ? $_SESSION['mreporting_values']['type']
-                                              : Ticket::INCIDENT_TYPE,
+                             array('value' => $type_value,
                                     'toadd' => array(-1 => __('All'))));
 
-         Ajax::updateItemOnSelectEvent("dropdown_type$rand", "show_category_by_type",
+         Ajax::updateItemOnSelectEvent("dropdown_type$rand", "show_category_by_type$rand",
                                        $CFG_GLPI["root_doc"]."/ajax/dropdownTicketCategories.php",
                                        $params);
       }
@@ -1438,16 +1496,29 @@ class PluginMreportingCommon extends CommonDBTM {
       foreach(Ticket::getAllStatusArray() as $value => $name) {
          echo '<label>';
          echo '<input type="hidden" name="status_'.$value.'" value="0" /> ';
-         echo '<input type="checkbox" name="status_'.$value.'" value="1"';
-         if((isset($_SESSION['mreporting_values']['status_'.$value])
-            && ($_SESSION['mreporting_values']['status_'.$value] == '1'))
-               || (!isset($_SESSION['mreporting_values']['status_'.$value])
-                  && in_array($value, $default))) {
-            echo ' checked="checked"';
+         echo '<input type="checkbox" name="status_'.$value.'" value="1" ';
+
+         $status = '';
+
+         if (PluginMreportingDashboard::getDefaultConfig("status_$value")) {
+            $status = ' checked="checked"';
          }
-         echo ' /> ';
-         echo $name;
-         echo '</label>';
+
+         if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
+
+            $widget_config = PluginMreportingDashboard::getWidgetConfig($_REQUEST['widget_id']);
+
+            if ($widget_config["status_$value"]) {
+               $status = ' checked="checked"';
+            }
+            else {   // If widget config for current status is false,
+                     // reset it in case of true by default.
+               $status = '';
+            }
+
+         }
+
+         echo "$status /> $name</label>";
          if ($i%3 == 0) echo "<br />";
          $i++;
       }
@@ -1456,17 +1527,20 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorDateinterval() {
       $randname = 'PluginMreporting'.$_REQUEST['short_classname'].$_REQUEST['f_name'];
 
-      if (!isset($_SESSION['mreporting_values']['date1'.$randname]))
-         $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d", time() - (365 * 24 * 60 * 60));
-      if (!isset($_SESSION['mreporting_values']['date2'.$randname]))
-         $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
+      $date1 = PluginMreportingDashboard::getDefaultConfig("date1$randname");
+      $date2 = PluginMreportingDashboard::getDefaultConfig("date2$randname");
 
-      $date1 = $_SESSION['mreporting_values']["date1".$randname];
+      if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
+         $widget_config = PluginMreportingDashboard::getWidgetConfig($_REQUEST['widget_id']);
+         $date1         = $widget_config["date1$randname"];
+         $date2         = $widget_config["date2$randname"];
+      }
+
       echo "<b>".__("Start date")."</b><br />";
       Html::showDateFormItem("date1".$randname, $date1, false);
       echo "</td>";
 
-      $date2 = $_SESSION['mreporting_values']["date2".$randname];
+      
       echo "<td>";
       echo "<b>".__("End date")."</b><br />";
       Html::showDateFormItem("date2".$randname, $date2, false);
@@ -1644,37 +1718,61 @@ class PluginMreportingCommon extends CommonDBTM {
             }
             $tmp['selectors'] = addslashes(json_encode($sel));
             $pref->update($tmp);
+            $_SESSION['mreporting_values'] = $values;
          }else{
             $widget = new PluginMreportingDashboard();
             $widget->getFromDB($widget_id);
-
-
 
             $sel = json_decode(stripslashes($widget->fields['configuration']), true);
             $sel[$graphname.$widget_id] = $values;
 
             $widget->fields['configuration'] = addslashes(json_encode($sel));
             $widget->update($widget->fields);
-         } 
+         }
 
       }
-      $_SESSION['mreporting_values'] = $values;
    }
 
    static function getSelectorValuesByUser() {
       global $DB;
 
       $myvalues  = (isset($_SESSION['mreporting_values'])?$_SESSION['mreporting_values']:array());
-      $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', Session::getLoginUserID());
-      if ($selectors) {
-         $values = json_decode(stripslashes($selectors), true);
-         if (isset($values[$_REQUEST['f_name']])) {
-            foreach ($values[$_REQUEST['f_name']] as $key => $value) {
-               $myvalues[$key] = $value;
+
+      $dashboard = new PluginMreportingDashboard();
+      $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID'], 'id');
+
+      foreach ($widgets as $widget) {
+         $widget_options = json_decode($widget['configuration'], true);
+         if (is_array($widget_options)) {
+            foreach ($widget_options as $widget_configuration) {
+               $_SESSION['mreporting_values_dashboard'][$widget['id']] = $widget_configuration;
             }
          }
       }
-      $_SESSION['mreporting_values'] = $myvalues;
+
+      $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', Session::getLoginUserID());
+
+      if ($selectors) {
+         
+         $values = json_decode(stripslashes($selectors), true);
+         
+         // If report has preferences, get it.
+         if (isset($values[$_REQUEST['f_name']])) {
+            $array = $values[$_REQUEST['f_name']];
+         }
+         // Else, get default preferences.
+         else {
+            $array = $values;
+         }
+
+         foreach ($array as $key => $value) {
+            $myvalues[$key] = $value;
+         }
+
+         $_SESSION['mreporting_values'] = $myvalues;
+
+      }
+
    }
 
    static function addToSelector() {
@@ -1713,27 +1811,41 @@ class PluginMreportingCommon extends CommonDBTM {
     * @param  string $randname   random string (to prevent conflict in js selection)
     * @return string             The sql test to insert in your query
     */
-   static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname) {
+   static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname, $widget_id = NULL) {
 
-      if (empty($_SESSION['mreporting_values']['date1'.$randname]))
-         $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
-      if (empty($_SESSION['mreporting_values']['date2'.$randname]))
-         $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
+      if (empty($_SESSION['mreporting_values']['date1'.$randname])) {
+         $date1 = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+         $_SESSION['mreporting_values']['date1'.$randname] = $date1;
+      }
+      else {
+         $date1 = $_SESSION['mreporting_values']['date1'.$randname];
+      }
 
-      $date_array1=explode("-",$_SESSION['mreporting_values']['date1'.$randname]);
+      if (empty($_SESSION['mreporting_values']['date2'.$randname])) {
+         $date2 = strftime("%Y-%m-%d");
+         $_SESSION['mreporting_values']['date1'.$randname] = $date1;
+      }
+      else {
+         $date2 = $_SESSION['mreporting_values']['date2'.$randname];
+      }
+
+      if (PluginMreportingDashboard::checkWidgetConfig($widget_id)) {
+         $name          = preg_replace('/[0-9]*/', null, $randname);
+         $widget_config = PluginMreportingDashboard::getWidgetConfig($widget_id);
+         $date1         = $widget_config["date1$name"];
+         $date2         = $widget_config["date2$name"];
+      }
+
+      $date_array1=explode("-",$date1);
       $time1=mktime(0,0,0,$date_array1[1],$date_array1[2],$date_array1[0]);
 
-      $date_array2=explode("-",$_SESSION['mreporting_values']['date2'.$randname]);
+      $date_array2=explode("-",$date2);
       $time2=mktime(0,0,0,$date_array2[1],$date_array2[2],$date_array2[0]);
 
       //if data inverted, reverse it
       if ($time1 > $time2) {
          list($time1, $time2) = array($time2, $time1);
-         list($_SESSION['mreporting_values']['date1'.$randname],
-            $_SESSION['mreporting_values']['date2'.$randname]) = array(
-            $_SESSION['mreporting_values']['date2'.$randname],
-            $_SESSION['mreporting_values']['date1'.$randname]
-         );
+         list($date1, $date2) = array($date2, $date1);
       }
 
       $begin=date("Y-m-d H:i:s",$time1);
@@ -1890,4 +2002,5 @@ class PluginMreportingCommon extends CommonDBTM {
 
       return $icons[$chart_type];
    }
+
 }

@@ -43,6 +43,12 @@ class PluginMreportingGraph {
       $width        = $this->width + 100;
       $randname     = $options['randname'];
 
+      // If NOT in dashboard mode, remove rand from randname
+      // to prevent "undefined index" <$date[1|2]$randname>.
+      if (!isset($_REQUEST['widget_id'])) {
+         $randname = preg_replace('/[0-9]*/', null, $randname);
+      }
+
       if(!$options['showHeader']){
          echo "<div class='center'><div id='fig' style='width:{$width}px'>";
          //Show global title
@@ -75,11 +81,28 @@ class PluginMreportingGraph {
          }
          echo "<div class='graph_desc'>".$desc."</div>";
 
+         // Get default dates configurations
+         $date1 = (PluginMreportingDashboard::getDefaultConfig("date1$randname"))
+                ?  PluginMreportingDashboard::getDefaultConfig("date1$randname")
+                :  strftime("%Y-%m-%d");
+
+         $date2 = (PluginMreportingDashboard::getDefaultConfig("date2$randname"))
+                ?  PluginMreportingDashboard::getDefaultConfig("date2$randname")
+                :  strftime("%Y-%m-%d");
+
+         // If in dashboard mode, get widget's dates configurations, if exists.
+         if (isset($options['widget_id']) &&
+             PluginMreportingCommon::ckeckWidgetConfig($options['widget_id'])) {
+            $widget_config = PluginMreportingDashboard::getWidgetConfig($options['widget_id']);
+            $date1         = $widget_config["date1$randname"];
+            $date2         = $widget_config["date2$randname"];
+         }
+
          //Show date selector
          echo "<div class='graph_navigation'>";
          PluginMreportingCommon::showSelector(
-            $_SESSION['mreporting_values']['date1'.$randname],
-            $_SESSION['mreporting_values']['date2'.$randname],
+            $date1,
+            $date2,
             $randname);
          echo "</div>";
 
@@ -101,11 +124,11 @@ class PluginMreportingGraph {
 
       //Script for graph display
       if ($randname !== false) {
-         echo "<div class='graph' id='graph_content$randname'>";
+         echo "<div class='graph' id='graph_content{$options["randname"]}'>";
 
          $colors = "'".implode ("', '", PluginMreportingConfig::getColors())."'";
          echo "<script type='text/javascript+protovis'>
-            showGraph$randname = function() {
+            showGraph{$options["randname"]} = function() {
                colors = pv.colors($colors);";
       }
    }

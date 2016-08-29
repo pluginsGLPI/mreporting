@@ -167,6 +167,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
          $f_name = $report->fields["name"];
          $widget_id = $data["id"];
+         $_REQUEST['widget_id'] = $widget_id;
 
          $gtype = '';
          $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
@@ -186,10 +187,11 @@ class PluginMreportingDashboard extends CommonDBTM {
                             'f_name'          => $f_name,
                             'gtype'           => $gtype,
                             'width'           => 410,
-                            'hide_title'      => true);
+                            'hide_title'      => true,
+                            'widget_id'       => $widget_id);
                $common = new PluginMreportingCommon();
                ob_start();
-               $report_script = $common->showGraph($opt);
+               $report_script = $common->showGraph($opt, true);
                if ($report_script === false) {
                   $report_script = "</div>";
                }
@@ -325,6 +327,9 @@ class PluginMreportingDashboard extends CommonDBTM {
    }
 
    static function getConfig($id_widget) {
+
+      $_REQUEST['widget_id'] = $id_widget;
+
       PluginMreportingCommon::getSelectorValuesByUser();
 
       $reportSelectors = PluginMreportingCommon::getReportSelectors(true);
@@ -348,6 +353,96 @@ class PluginMreportingDashboard extends CommonDBTM {
       echo "<input type='submit' class='submit' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
 
       Html::closeForm();
+   }
+
+   static function getDefaultConfig($index) {
+      if (isset($_SESSION['mreporting_values'][$index]) &&
+                $_SESSION['mreporting_values'][$index] !== NULL) {
+         return $_SESSION['mreporting_values'][$index];
+      }
+      else {
+         $tmstmp = time() - (365 * 24 * 60 * 60);
+         switch ($index) {
+            case preg_match('/^date1(.)*/', $index)   : return strftime("%Y-%m-%d");          break;
+            case preg_match('/^date2(.)*/', $index)   : return strftime("%Y-%m-%d", $tmstmp); break;
+            case preg_match('/^status_(.)*/', $index) : return true;                          break;
+            default                                   : return false;                         break;
+         }
+      }
+   }
+
+   static function checkWidgetConfig($widget) {
+
+      if (is_array($widget) && isset($widget['widget_id'])) {
+         $widget_id = $widget['widget_id'];
+      }
+      else if (!is_array($widget)) {
+         $widget_id = $widget;
+      }
+      else {
+         $widget_id = NULL;
+      }
+
+      if (isset($_SESSION['mreporting_values_dashboard'][$widget_id]) &&
+         !is_null($_SESSION['mreporting_values_dashboard'][$widget_id])) {
+         return true;
+      }
+      else {
+         return false;
+      }
+
+   }
+
+   static function getWidgetConfig($widget_id, $index = NULL) {
+      if (self::checkWidgetConfig($widget_id)) {
+         $output                       = $_SESSION['mreporting_values_dashboard'][$widget_id];
+         $output['groups_assign_sql']  = self::getWidgetSQL($widget_id,'groups_assign_id');
+         $output['groups_request_sql'] = self::getWidgetSQL($widget_id,'groups_request_id');
+         $output['type_sql']           = self::getWidgetSQL($widget_id,'type');
+         $output['itilcategories_sql'] = self::getWidgetSQL($widget_id,'itilcategories_id');
+         $output['users_assign_sql']   = self::getWidgetSQL($widget_id,'users_assign_id');
+         if (!is_null($index)) {
+            return $output[$index];
+         }
+         else {
+            return $output;
+         }
+      }
+      else {
+         return false;
+      }
+   }
+
+   private static function getWidgetSQL($widget_id, $index) {
+      if (isset($_SESSION['mreporting_values_dashboard'][$widget_id][$index]) &&
+                $_SESSION['mreporting_values_dashboard'][$widget_id][$index] > 0) {
+         $value = $_SESSION['mreporting_values_dashboard'][$widget_id][$index];
+         // Using switch in expectation of possible future cases
+         switch ($index) {
+            case 'type'              : $output = "glpi_tickets.type = $value";                break;
+            case 'itilcategories_id' : $output = "glpi_tickets.itilcategories_id = $value";   break;
+            case 'users_assign_id'   : $output = "tu.users_id = $value";                      break;
+            case 'groups_assign_id'  : $output = self::formatGroupStr($value, 'gt');          break;
+            case 'groups_request_id' : $output = self::formatGroupStr($value, 'gtr');         break;
+            default                  : $output = "1=1";                                       break;
+         }
+         return $output;
+      }
+      return "1=1";
+   }
+
+   private static function formatGroupStr($groups_array, $table) {
+      $output = '';
+      $first = true;
+      foreach ($groups_array as $group_id) {
+         if (!$first) {
+            $output .= ', ';
+         }
+         $output .= $group_id;
+         $first = false;
+      }
+      $output = "$table.groups_id IN ($output)";
+      return $output;
    }
 
 }

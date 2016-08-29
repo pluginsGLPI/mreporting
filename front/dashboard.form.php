@@ -31,7 +31,6 @@ if (isset($_POST['saveConfig'])) {
     $post = array('users_id' => $_SESSION['glpiID'], 'reports_id' => $_POST['report']);
     $dashboard->add($post);
 
-
     Html::back();
 
 } else {
