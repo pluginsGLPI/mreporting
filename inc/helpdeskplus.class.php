@@ -636,20 +636,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       if (isset($slas) && !empty($slas)) {
          //get dates used in this period
-         /*$query_date = "SELECT DISTINCT DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
-            DATE_FORMAT(`date`, '{$this->period_label}') AS period_name
-         FROM `glpi_tickets`
-         INNER JOIN glpi_slas sla ON sla.id = `glpi_tickets`.slts_tto_id
-                                  OR sla.id = `glpi_tickets`.slts_ttr_id
-         WHERE {$this->sql_date_create}
-            AND status IN (" . implode(
-                  ',',
-                  array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-               ) . ")
-            AND glpi_tickets.`entities_id` IN (" . $this->where_entities . ")
-            AND glpi_tickets.`is_deleted` = '0'
-            AND sla.id IN (".implode(',', $slas).")
-         ORDER BY `date` ASC";*/
          $query_date = "SELECT DISTINCT DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
             DATE_FORMAT(`date`, '{$this->period_label}') AS period_name
          FROM `glpi_tickets`
@@ -676,27 +662,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          foreach (array_values($dates) as $id) {
             $tmp_date[] = $id;
          }
-
-         /*$query = "SELECT DISTINCT
-            DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
-            DATE_FORMAT(`date`, '{$this->period_label}') AS period_name,
-            count(glpi_tickets.id) AS nb,
-            s.name,
-            CASE WHEN solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
-         FROM `glpi_tickets`
-         INNER JOIN `glpi_slas` s
-            ON slas_id = s.id
-         WHERE {$this->sql_date_create}
-         AND status IN (" . implode(
-               ',',
-               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
-         AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
-         AND glpi_tickets.is_deleted = '0'";
-         if (isset($slas)) {
-            $query .= " AND s.id IN (".implode(',', $slas).") ";
-         }
-         $query .= "GROUP BY s.name, period, respected_sla";*/
 
          $query = "SELECT DISTINCT
             DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
@@ -894,8 +859,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
             // If in dashboard mode, overwrite default config with widget config
             if (PluginMreportingDashboard::checkWidgetConfig($widget_id)) {
-               $show_status = PluginMreportingDashboard::checkWidgetConfig($widget_id,
-                                                                           "status$current_status");
+               $show_status = PluginMreportingDashboard::getWidgetConfig($widget_id,
+                                                                         "status_$current_status");
             }
 
             if ($show_status) {
@@ -921,27 +886,25 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       echo "<br /><b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
 
-      $show_new     = (PluginMreportingDashboard::getDefaultConfig('show_new'))
-                    ? 'checked="checked"' : '';
-      $show_solved  = (PluginMreportingDashboard::getDefaultConfig('show_solved'))
-                    ? 'checked="checked"' : '';
-      $show_backlog = (PluginMreportingDashboard::getDefaultConfig('show_backlog'))
-                    ? 'checked="checked"' : '';
-      $show_closed  = (PluginMreportingDashboard::getDefaultConfig('show_closed'))
-                    ? 'checked="checked"' : '';
+      $show_new     = PluginMreportingDashboard::getDefaultConfig('show_new');
+      $show_solved  = PluginMreportingDashboard::getDefaultConfig('show_solved');
+      $show_backlog = PluginMreportingDashboard::getDefaultConfig('show_backlog');
+      $show_closed  = PluginMreportingDashboard::getDefaultConfig('show_closed');
 
       // If in dashboard mode, overwrite default config with widget config
       if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
          $widget_id     = $_REQUEST['widget_id'];
-         $show_new      = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_new')
-                        ? 'checked="checked"' : '';
-         $show_solved   = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_solved')
-                        ? 'checked="checked"' : '';
-         $show_backlog  = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_backlog')
-                        ? 'checked="checked"' : '';
-         $show_closed   = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_closed')
-                        ? 'checked="checked"' : '';
+         $show_new      = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_new');
+         $show_solved   = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_solved');
+         $show_backlog  = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_backlog');
+         $show_closed   = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_closed');
       }
+
+      // If show_<state> is true, replace it by <checked="checked">. Else, replace it by < >.
+      $show_new      = ($show_new)     ? 'checked="checked"' : '';
+      $show_solved   = ($show_solved)  ? 'checked="checked"' : '';
+      $show_backlog  = ($show_backlog) ? 'checked="checked"' : '';
+      $show_closed   = ($show_closed)  ? 'checked="checked"' : '';
 
       // Opened
       echo '<label>';
@@ -1093,7 +1056,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $slas = PluginMreportingDashboard::getDefaultConfig('slas');
 
       if (PluginMreportingDashboard::checkWidgetConfig($config)) {
-         $slas = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'];
+         $slas = PluginMreportingDashboard::getWidgetConfig($config['widget_id'], 'slas');
       }
 
       if (isset($slas) && !empty($slas)) {
