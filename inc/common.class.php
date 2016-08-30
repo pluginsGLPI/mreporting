@@ -1368,10 +1368,22 @@ class PluginMreportingCommon extends CommonDBTM {
 
       echo "<b>" . $LANG['plugin_mreporting']["Helpdeskplus"]['selector']["slas"] . " : </b><br />";
 
-      $query = "SELECT DISTINCT s.id,
+      /*$query = "SELECT DISTINCT s.id,
          s.name
       FROM glpi_slas s
       INNER JOIN glpi_tickets t ON s.id = t.slas_id
+      WHERE t.status IN (" . implode(
+            ',',
+            array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
+         ) . ")
+      AND t.is_deleted = '0'
+      ORDER BY s.name ASC";*/
+      $query = "SELECT DISTINCT s.id,
+         s.name
+      FROM glpi_slas s
+      INNER JOIN glpi_slts slt ON s.id = slt.slas_id
+      INNER JOIN glpi_tickets t ON slt.id = t.slts_tto_id
+                                OR slt.id = t.slts_ttr_id
       WHERE t.status IN (" . implode(
             ',',
             array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
@@ -1389,7 +1401,12 @@ class PluginMreportingCommon extends CommonDBTM {
                              ? $_SESSION['mreporting_values']['slas'] : array();
 
       if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
-         $selected_values = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]['slas'];
+         $widget_id        = $_REQUEST['widget_id'];
+         $selected_values  = PluginMreportingDashboard::getWidgetConfig($widget_id, 'slas');
+      }
+
+      if (!isset($selected_values) || empty($selected_values)) {
+         $selected_values = array();
       }
 
       Dropdown::showFromArray('slas', $values, array('values' => $selected_values,
@@ -1531,9 +1548,9 @@ class PluginMreportingCommon extends CommonDBTM {
       $date2 = PluginMreportingDashboard::getDefaultConfig("date2$randname");
 
       if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
-         $widget_config = PluginMreportingDashboard::getWidgetConfig($_REQUEST['widget_id']);
-         $date1         = $widget_config["date1$randname"];
-         $date2         = $widget_config["date2$randname"];
+         $widget_id  = $_REQUEST['widget_id'];
+         $date1      = PluginMreportingDashboard::getWidgetConfig($widget_id, "date1$randname");
+         $date2      = PluginMreportingDashboard::getWidgetConfig($widget_id, "date2$randname");
       }
 
       echo "<b>".__("Start date")."</b><br />";
@@ -1830,10 +1847,9 @@ class PluginMreportingCommon extends CommonDBTM {
       }
 
       if (PluginMreportingDashboard::checkWidgetConfig($widget_id)) {
-         $name          = preg_replace('/[0-9]*/', null, $randname);
-         $widget_config = PluginMreportingDashboard::getWidgetConfig($widget_id);
-         $date1         = $widget_config["date1$name"];
-         $date2         = $widget_config["date2$name"];
+         $name    = preg_replace('/[0-9]*/', null, $randname);
+         $date1   = PluginMreportingDashboard::getWidgetConfig($widget_id, "date1$name");
+         $date2   = PluginMreportingDashboard::getWidgetConfig($widget_id, "date2$name");
       }
 
       $date_array1=explode("-",$date1);

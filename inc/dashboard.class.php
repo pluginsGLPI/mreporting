@@ -363,10 +363,18 @@ class PluginMreportingDashboard extends CommonDBTM {
       else {
          $tmstmp = time() - (365 * 24 * 60 * 60);
          switch ($index) {
-            case preg_match('/^date1(.)*/', $index)   : return strftime("%Y-%m-%d");          break;
-            case preg_match('/^date2(.)*/', $index)   : return strftime("%Y-%m-%d", $tmstmp); break;
-            case preg_match('/^status_(.)*/', $index) : return true;                          break;
-            default                                   : return false;                         break;
+            case (preg_match('/^date1/', $index) ? true : false) :
+               return strftime("%Y-%m-%d", $tmstmp);
+               break;
+            case (preg_match('/^date2/', $index) ? true : false) :
+               return strftime("%Y-%m-%d");
+               break;
+            case (preg_match('/^status_/', $index) ? true : false) :
+               return true;
+               break;
+            default :
+               return false;
+               break;
          }
       }
    }
@@ -401,6 +409,9 @@ class PluginMreportingDashboard extends CommonDBTM {
          $output['type_sql']           = self::getWidgetSQL($widget_id,'type');
          $output['itilcategories_sql'] = self::getWidgetSQL($widget_id,'itilcategories_id');
          $output['users_assign_sql']   = self::getWidgetSQL($widget_id,'users_assign_id');
+         if (!isset($output[$index])) {
+            return false;
+         }
          if (!is_null($index)) {
             return $output[$index];
          }
