@@ -41,10 +41,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportHbarTicketNumberByEntity'] = array('dateinterval',
                                                                                  'limit');
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       $datas = array();
 
@@ -88,10 +94,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
       $tmp_datas = array();
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       //get categories used in this period
       $query_cat = "SELECT DISTINCT(glpi_tickets.itilcategories_id) as itilcategories_id,
@@ -180,10 +192,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportPieTicketOpenedAndClosed']
          = array('dateinterval');
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       $datas = array();
       foreach($this->filters as $filter) {
@@ -211,10 +229,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportPieTicketOpenedbyStatus']
          = array('dateinterval', 'allstates');
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       // Get status to show
       if(isset($_POST['status_1'])) {
@@ -223,6 +247,26 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          }
       }else{
          $status_to_show = array('1', '2', '3', '4');
+      }
+
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+
+         $status_to_show_tmp = array();
+
+         foreach (Ticket::getAllStatusArray() as $key => $status) {
+            if (PluginMreportingDashboard::getWidgetConfig($config['widget_id'], "status_$key")) {
+               $status_to_show_tmp[] = $key;
+            }
+         }
+
+         // If tmp array isn't empty, replace final by tmp
+         if (!empty($status_to_show_tmp)) {
+            $status_to_show = $status_to_show_tmp;
+         }
+         else { // If no status was selected in widget, reset final array
+            $status_to_show = array(0);
+         }
+
       }
 
       $datas = array();
@@ -244,6 +288,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       return $datas;
+
    }
 
    function reportPieTopTenAuthor($config = array()) {
@@ -252,13 +297,20 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportPieTopTenAuthor']
          = array('dateinterval');
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
       $this->sql_closedate = PluginMreportingCommon::getSQLDate("glpi_tickets.closedate",
                                                                 $config['delay'],
-                                                                $config['randname']);
+                                                                $config['randname'],
+                                                                $widget_id);
 
       $datas = array();
       $query = "SELECT COUNT(glpi_tickets.id) as count, glpi_tickets_users.users_id as users_id
@@ -306,10 +358,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $datas = array();
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       $query = "SELECT glpi_itilcategories.id as category_id,
             glpi_itilcategories.completename as category_name,
@@ -353,10 +411,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $datas = array();
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       foreach($this->filters as $class => $filter) {
 
@@ -406,10 +470,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $datas = array();
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       // Get status to show
       if(isset($_POST['status_1'])) {
@@ -420,6 +490,26 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          }
       }else{
          $status_to_show = array('1', '2', '3', '4');
+      }
+
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+
+         $status_to_show_tmp = array();
+
+         foreach (Ticket::getAllStatusArray() as $key => $status) {
+            if (PluginMreportingDashboard::getWidgetConfig($config['widget_id'], "status_$key")) {
+               $status_to_show_tmp[] = $key;
+            }
+         }
+
+         // If tmp array isn't empty, replace final by tmp
+         if (!empty($status_to_show_tmp)) {
+            $status_to_show = $status_to_show_tmp;
+         }
+         else { // If no status was selected in widget, reset final array
+            $status_to_show = array(0);
+         }
+
       }
 
       $status = $this->filters['open']['status'] + $this->filters['close']['status'];
@@ -479,10 +569,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $datas = array();
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       $query = "SELECT
          DISTINCT DATE_FORMAT(date, '".$this->period_sort."') as period,
@@ -521,10 +617,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $datas = array();
       $tmp_datas = array();
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       // Get status to show
       if(isset($_POST['status_1'])) {
@@ -533,6 +635,26 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          }
       }else{
          $status_to_show = array('1', '2', '3', '4');
+      }
+
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+
+         $status_to_show_tmp = array();
+
+         foreach (Ticket::getAllStatusArray() as $key => $status) {
+            if (PluginMreportingDashboard::getWidgetConfig($config['widget_id'], "status_$key")) {
+               $status_to_show_tmp[] = $key;
+            }
+         }
+
+         // If tmp array isn't empty, replace final by tmp
+         if (!empty($status_to_show_tmp)) {
+            $status_to_show = $status_to_show_tmp;
+         }
+         else { // If no status was selected in widget, reset final array
+            $status_to_show = array(0);
+         }
+
       }
 
       //get dates used in this period
@@ -580,11 +702,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          foreach($datas['datas'] as &$data) {
             $data = $data + array_fill_keys($tmp_date, 0);
          }
-      }
-
-      //fix order of datas
-      foreach ($datas['datas'] as &$data) {
-         ksort($data);
+         //fix order of datas
+         foreach ($datas['datas'] as &$data) {
+            ksort($data);
+         }
       }
 
       return $datas;
@@ -595,10 +716,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $_SESSION['mreporting_selector']['reportSunburstTicketByCategories'] = array('dateinterval');
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       $flat_datas = array();
       $datas = array();
@@ -650,10 +777,17 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportVstackbarTicketStatusByTechnician'] = array('dateinterval');
 
       $datas = array();
+
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       $status = $this->filters['open']['status'] + $this->filters['close']['status'];
       $status_keys = array_keys($status);
@@ -728,10 +862,16 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportHbarTicketNumberByLocation']
          = array('dateinterval', 'limit');
 
+      $widget_id = null;
+      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+         $widget_id = $config['widget_id'];
+      }
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
                                                            $config['delay'],
-                                                           $config['randname']);
+                                                           $config['randname'],
+                                                           $widget_id);
 
       $datas = array();
 
