@@ -355,31 +355,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       Html::closeForm();
    }
 
-   static function getDefaultConfig($index) {
-      if (isset($_SESSION['mreporting_values'][$index]) &&
-                $_SESSION['mreporting_values'][$index] !== NULL) {
-         return $_SESSION['mreporting_values'][$index];
-      }
-      else {
-         $tmstmp = time() - (365 * 24 * 60 * 60);
-         switch ($index) {
-            case (preg_match('/^date1/', $index) ? true : false) :
-               return strftime("%Y-%m-%d", $tmstmp); // Default value for $date1$randname
-               break;
-            case (preg_match('/^date2/', $index) ? true : false) :
-               return strftime("%Y-%m-%d"); // Default value for $date2$randname
-               break;
-            case (preg_match('/^status_/', $index) ? true : false) :
-               return true; // Default value for $status_$current_status
-               break;
-            default :
-               return false;
-               break;
-         }
-      }
-   }
-
-   static function checkWidgetConfig($widget) {
+   static function isDashboard($widget) {
 
       if (is_array($widget) && isset($widget['widget_id'])) {
          $widget_id = $widget['widget_id']; // If checking $_REQUEST or $config
@@ -399,61 +375,6 @@ class PluginMreportingDashboard extends CommonDBTM {
          return false;
       }
 
-   }
-
-   static function getWidgetConfig($widget_id, $index = NULL) {
-      if (self::checkWidgetConfig($widget_id)) {
-         $output                       = $_SESSION['mreporting_values_dashboard'][$widget_id];
-         $output['groups_assign_sql']  = self::getWidgetSQL($widget_id,'groups_assign_id');
-         $output['groups_request_sql'] = self::getWidgetSQL($widget_id,'groups_request_id');
-         $output['type_sql']           = self::getWidgetSQL($widget_id,'type');
-         $output['itilcategories_sql'] = self::getWidgetSQL($widget_id,'itilcategories_id');
-         $output['users_assign_sql']   = self::getWidgetSQL($widget_id,'users_assign_id');
-         if (!is_null($index)) {
-            if (!isset($output[$index])) {
-               return false;
-            }
-            return $output[$index];
-         }
-         else {
-            return $output;
-         }
-      }
-      else {
-         return false;
-      }
-   }
-
-   private static function getWidgetSQL($widget_id, $index) {
-      if (isset($_SESSION['mreporting_values_dashboard'][$widget_id][$index]) &&
-                $_SESSION['mreporting_values_dashboard'][$widget_id][$index] > 0) {
-         $value = $_SESSION['mreporting_values_dashboard'][$widget_id][$index];
-         // Using switch in expectation of possible future cases
-         switch ($index) {
-            case 'type'              : $output = "glpi_tickets.type = $value";               break;
-            case 'itilcategories_id' : $output = "glpi_tickets.itilcategories_id = $value";  break;
-            case 'users_assign_id'   : $output = "tu.users_id = $value";                     break;
-            case 'groups_assign_id'  : $output = self::formatGroupStr($value, 'gt');         break;
-            case 'groups_request_id' : $output = self::formatGroupStr($value, 'gtr');        break;
-            default                  : $output = "1=1";                                      break;
-         }
-         return $output;
-      }
-      return "1=1";
-   }
-
-   private static function formatGroupStr($groups_array, $table) {
-      $output = '';
-      $first = true;
-      foreach ($groups_array as $group_id) {
-         if (!$first) {
-            $output .= ', ';
-         }
-         $output .= $group_id;
-         $first = false;
-      }
-      $output = "$table.groups_id IN ($output)";
-      return $output;
    }
 
 }

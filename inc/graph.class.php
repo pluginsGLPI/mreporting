@@ -82,20 +82,15 @@ class PluginMreportingGraph {
          echo "<div class='graph_desc'>".$desc."</div>";
 
          // Get default dates configurations
-         $date1 = (PluginMreportingDashboard::getDefaultConfig("date1$randname"))
-                ?  PluginMreportingDashboard::getDefaultConfig("date1$randname")
-                :  strftime("%Y-%m-%d");
-
-         $date2 = (PluginMreportingDashboard::getDefaultConfig("date2$randname"))
-                ?  PluginMreportingDashboard::getDefaultConfig("date2$randname")
-                :  strftime("%Y-%m-%d");
+         $date1 = $_SESSION['mreporting_values']["date1$randname"];
+         $date2 = $_SESSION['mreporting_values']["date2$randname"];
 
          // If in dashboard mode, get widget's dates configurations, if exists.
-         if (isset($options['widget_id']) &&
-             PluginMreportingCommon::ckeckWidgetConfig($options['widget_id'])) {
-            $widget_config = PluginMreportingDashboard::getWidgetConfig($options['widget_id']);
-            $date1         = $widget_config["date1$randname"];
-            $date2         = $widget_config["date2$randname"];
+         if (PluginMreportingDashboard::isDashboard($_REQUEST)) {
+            $date1 = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                              ["date1$randname"];
+            $date2 = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                              ["date2$randname"];
          }
 
          //Show date selector

@@ -42,6 +42,18 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       } else {
          $selected_states = self::getDefaultState();
       }
+
+      if (PluginMreportingDashboard::isDashboard($_REQUEST)) {
+        $widget_config = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']];
+        if (isset($widget_config[$field])) {
+          $selected_states = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                      [$field];
+        }
+        else {
+          $selected_states = array();
+        }
+      }
+
       $datas = array();
       foreach (getAllDatasFromTable('glpi_states', $condition) as $data) {
          $datas[$data['id']] = $data['completename'];
@@ -75,6 +87,15 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          } else if ($_SESSION['mreporting_values']['states_id'] > 0) {
             $sql_states = " AND $field = ".$_SESSION['mreporting_values']['states_id'];
          }
+      }
+      if (PluginMreportingDashboard::isDashboard($_REQUEST)) {
+        $widget_config = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']];
+        if (isset($widget_config['states_id']) && is_array($widget_config['states_id'])) {
+          $sql_states = " AND $field IN (".implode(', ', $widget_config['states_id']).")";
+        }
+        else if (isset($widget_config['states_id']) && $widget_config['states_id'] > 0) {
+          $sql_states = " AND $field = ".$widget_config['states_id'];
+        }
       }
       return $sql_states;
    }

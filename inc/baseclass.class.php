@@ -105,22 +105,40 @@ class PluginMreportingBaseclass {
          $_SESSION['mreporting_values']['period'] = 'month';
       }
 
-      $period     = $_SESSION['mreporting_values']['period'];
-      $widget_id  = null;
+      $period = $_SESSION['mreporting_values']['period'];
 
       // Check if we're in dashboard
-      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+      if (PluginMreportingDashboard::isDashboard($config)) {
 
-        $widget_id                = $config['widget_id'];
-        $widget_config            = PluginMreportingDashboard::getWidgetConfig($widget_id);
-        $this->sql_group_assign   = $widget_config['groups_assign_sql'];
-        $this->sql_group_request  = $widget_config['groups_request_sql'];
-        $this->sql_type           = $widget_config['type_sql'];
-        $this->sql_itilcat        = $widget_config['itilcategories_sql'];
-        $this->sql_user_assign    = $widget_config['users_assign_sql'];
+        $widget_config = $_SESSION['mreporting_values_dashboard'][$config['widget_id']];
 
         if (isset($widget_config['period'])) {
-          $period                 = $widget_config['period'];
+          $period = $widget_config['period'];
+        }
+
+        if (isset($widget_config['type']) && $widget_config['type'] > 0) {
+          $this->sql_type = 'glpi_tickets.type = '.$widget_config['type'];
+        }
+
+        if (isset($widget_config['itilcategories_id']) && $widget_config['itilcategories_id'] > 0) {
+          $this->sql_itilcat = 'glpi_tickets.itilcategories_id = '.
+                                $widget_config['itilcategories_id'];
+        }
+
+        if (isset($widget_config['users_assign_id']) && $widget_config['users_assign_id'] > 0) {
+          $this->sql_user_assign = 'tu.users_id = '.$widget_config['users_assign_id'];
+        }
+
+        if (isset($widget_config['groups_assign_id'])) {
+          $this->sql_group_assign = 'gt.groups_id IN ('.
+                                    implode(', ', $widget_config['groups_assign_id']).
+                                    ')';
+        }
+
+        if (isset($widget_config['groups_request_id'])) {
+          $this->sql_group_request = 'gtr.groups_id IN ('.
+                                     implode(', ', $widget_config['groups_request_id']).
+                                     ')';
         }
 
       }
@@ -166,16 +184,13 @@ class PluginMreportingBaseclass {
 
       $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                                   $config['delay'],
-                                                                  $config['randname'],
-                                                                  $widget_id);
+                                                                  $config['randname']);
       $this->sql_date_solve =  PluginMreportingCommon::getSQLDate("glpi_tickets.solvedate",
                                                                   $config['delay'],
-                                                                  $config['randname'],
-                                                                  $widget_id);
+                                                                  $config['randname']);
       $this->sql_date_closed = PluginMreportingCommon::getSQLDate("glpi_tickets.closedate",
                                                                   $config['delay'],
-                                                                  $config['randname'],
-                                                                  $widget_id);
+                                                                  $config['randname']);
 
    }
 }

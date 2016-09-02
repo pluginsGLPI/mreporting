@@ -85,23 +85,28 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $tab              = array();
       $datas            = array();
       $randname         = $config['randname'];
-      $search_new       = PluginMreportingDashboard::getDefaultConfig('show_new');
-      $search_solved    = PluginMreportingDashboard::getDefaultConfig('show_solved');
-      $search_backlogs  = PluginMreportingDashboard::getDefaultConfig('show_backlog');
-      $search_closed    = PluginMreportingDashboard::getDefaultConfig('show_closed');
-      $date1            = PluginMreportingDashboard::getDefaultConfig("date1$randname");
-      $date2            = PluginMreportingDashboard::getDefaultConfig("date2$randname");
+      $search_new       = $_SESSION['mreporting_values']['show_new'];
+      $search_solved    = $_SESSION['mreporting_values']['show_solved'];
+      $search_backlogs  = $_SESSION['mreporting_values']['show_backlog'];
+      $search_closed    = $_SESSION['mreporting_values']['show_closed'];
+      $date1            = $_SESSION['mreporting_values']["date1$randname"];
+      $date2            = $_SESSION['mreporting_values']["date2$randname"];
 
       // If in dashboard mode, overwrite default config with widget config
-      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
+      if (PluginMreportingDashboard::isDashboard($config)) {
          $randname        = preg_replace('/[0-9]*/', null, $randname);
-         $widget_id       = $config['widget_id'];
-         $search_new      = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_new');
-         $search_solved   = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_solved');
-         $search_backlogs = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_backlog');
-         $search_closed   = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_closed');
-         $date1           = PluginMreportingDashboard::getWidgetConfig($widget_id,"date1$randname");
-         $date2           = PluginMreportingDashboard::getWidgetConfig($widget_id,"date2$randname");
+         $search_new      = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ['show_new'];
+         $search_solved   = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ['show_solved'];
+         $search_backlogs = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ['show_backlog'];
+         $search_closed   = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ['show_closed'];
+         $date1           = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ["date1$randname"];
+         $date2           = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ["date2$randname"];
       }
 
       if($search_new) {
@@ -268,14 +273,12 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       foreach ($this->status as $current_status) {
 
-         $widget_id     = null;
-         $show_status   = PluginMreportingDashboard::getDefaultConfig("status_$current_status");
+         $show_status = $_SESSION['mreporting_values']["status_$current_status"];
 
          // If in dashboard mode, overwrite default config with widget config
-         if (PluginMreportingDashboard::checkWidgetConfig($config)) {
-            $widget_id     = $config['widget_id'];
-            $show_status   = PluginMreportingDashboard::getWidgetConfig($widget_id,
-                                                                        "status_$current_status");
+         if (PluginMreportingDashboard::isDashboard($config)) {
+            $show_status = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                    ["status_$current_status"];
          }
 
          if ($show_status) {
@@ -311,7 +314,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       ksort($tab);
 
       //fill missing datas with zeros
-      $datas = $this->fillStatusMissingValues($tab, $labels2, $widget_id);
+      $datas = $this->fillStatusMissingValues($tab, $labels2);
 
       return $datas;
    }
@@ -333,14 +336,12 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       foreach ($this->status as $current_status) {
 
-         $widget_id = null;
-         $show_status = PluginMreportingDashboard::getDefaultConfig("status_$current_status");
+         $show_status = $_SESSION['mreporting_values']["status_$current_status"];
 
          // If in dashboard mode, overwrite default config with widget config
-         if (PluginMreportingDashboard::checkWidgetConfig($config)) {
-            $widget_id     = $config['widget_id'];
-            $show_status   = PluginMreportingDashboard::getWidgetConfig($widget_id,
-                                                                        "status_$current_status");
+         if (PluginMreportingDashboard::isDashboard($config)) {
+            $show_status = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                    ["status_$current_status"];
          }
 
          if ($show_status) {
@@ -372,7 +373,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       ksort($tab);
 
       //fill missing datas with zeros
-      $datas = $this->fillStatusMissingValues($tab, array(), $widget_id);
+      $datas = $this->fillStatusMissingValues($tab, array());
 
       return $datas;
    }
@@ -393,14 +394,12 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       foreach ($this->status as $current_status) {
 
-         $widget_id     = null;
-         $show_status   = PluginMreportingDashboard::getDefaultConfig("status_$current_status");
+         $show_status = $_SESSION['mreporting_values']["status_$current_status"];
 
          // If in dashboard mode, overwrite default config with widget config
-         if (PluginMreportingDashboard::checkWidgetConfig($config)) {
-            $widget_id     = $config['widget_id'];
-            $show_status   = PluginMreportingDashboard::getWidgetConfig($widget_id,
-                                                                        "status_$current_status");
+         if (PluginMreportingDashboard::isDashboard($config)) {
+            $show_status = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                    ["status_$current_status"];
          }
 
          if ($show_status) {
@@ -443,7 +442,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       ksort($tab);
 
       //fill missing datas with zeros
-      $datas = $this->fillStatusMissingValues($tab, array(), $widget_id);
+      $datas = $this->fillStatusMissingValues($tab, array());
 
       return $datas;
    }
@@ -627,11 +626,14 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportGlineNbTicketBySla']
          = array('dateinterval', 'period', 'allSlasWithTicket');
 
-      $slas = PluginMreportingDashboard::getDefaultConfig('slas');
+      $slas = (isset($_SESSION['mreporting_values']['slas']))
+            ? $_SESSION['mreporting_values']['slas']
+            : NULL;
 
       // If in dashboard mode, overwrite default config with widget config
-      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
-         $slas = PluginMreportingDashboard::getWidgetConfig($config['widget_id'], 'slas');
+      if (PluginMreportingDashboard::isDashboard($config) &&
+          isset($_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'])) {
+         $slas = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'];
       }
 
       if (isset($slas) && !empty($slas)) {
@@ -850,17 +852,17 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-   function fillStatusMissingValues($tab, $labels2 = array(), $widget_id) {
+   function fillStatusMissingValues($tab, $labels2 = array()) {
       $datas = array();
       foreach($tab as $name => $data) {
          foreach ($this->status as $current_status) {
 
-            $show_status = PluginMreportingDashboard::getDefaultConfig("status_$current_status");
+            $show_status = $_SESSION['mreporting_values']["status_$current_status"];
 
             // If in dashboard mode, overwrite default config with widget config
-            if (PluginMreportingDashboard::checkWidgetConfig($widget_id)) {
-               $show_status = PluginMreportingDashboard::getWidgetConfig($widget_id,
-                                                                         "status_$current_status");
+            if (PluginMreportingDashboard::isDashboard($_REQUEST)) {
+               $show_status = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                       ["status_$current_status"];
             }
 
             if ($show_status) {
@@ -886,18 +888,33 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       echo "<br /><b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
 
-      $show_new     = PluginMreportingDashboard::getDefaultConfig('show_new');
-      $show_solved  = PluginMreportingDashboard::getDefaultConfig('show_solved');
-      $show_backlog = PluginMreportingDashboard::getDefaultConfig('show_backlog');
-      $show_closed  = PluginMreportingDashboard::getDefaultConfig('show_closed');
+      $show_new     =   (!isset($_SESSION['mreporting_values']['show_new']) ||
+                        ($_SESSION['mreporting_values']['show_new'] == '1'))
+                        ? ' checked="checked"'
+                        : '';
+      $show_solved  =   (!isset($_SESSION['mreporting_values']['show_solved']) ||
+                        ($_SESSION['mreporting_values']['show_solved'] == '1'))
+                        ? ' checked="checked"'
+                        : '';
+      $show_backlog =   (!isset($_SESSION['mreporting_values']['show_backlog']) ||
+                        ($_SESSION['mreporting_values']['show_backlog'] == '1'))
+                        ? ' checked="checked"'
+                        : '';
+      $show_closed  =   (!isset($_SESSION['mreporting_values']['show_closed']) ||
+                        ($_SESSION['mreporting_values']['show_closed'] == '1'))
+                        ? ' checked="checked"'
+                        : '';
 
       // If in dashboard mode, overwrite default config with widget config
-      if (PluginMreportingDashboard::checkWidgetConfig($_REQUEST)) {
-         $widget_id     = $_REQUEST['widget_id'];
-         $show_new      = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_new');
-         $show_solved   = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_solved');
-         $show_backlog  = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_backlog');
-         $show_closed   = PluginMreportingDashboard::getWidgetConfig($widget_id,'show_closed');
+      if (PluginMreportingDashboard::isDashboard($_REQUEST)) {
+         $show_new      = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                   ['show_new'];
+         $show_solved   = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                   ['show_solved'];
+         $show_backlog  = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                   ['show_backlog'];
+         $show_closed   = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                   ['show_closed'];
       }
 
       // If show_<state> is true, replace it by <checked="checked">. Else, replace it by < >.
@@ -958,10 +975,13 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                                                                   $config['delay'],
                                                                   $config['randname']);
 
-      $slas = PluginMreportingDashboard::getDefaultConfig('slas');
+      $slas = (isset($_SESSION['mreporting_values']['slas']))
+            ? $_SESSION['mreporting_values']['slas']
+            : NULL;
 
-      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
-         $slas = PluginMreportingDashboard::getWidgetConfig($config['widget_id'], 'slas');
+      if (PluginMreportingDashboard::isDashboard($config) &&
+          isset($_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'])) {
+         $slas = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'];
       }
 
       if (isset($slas) && !empty($slas)) {
@@ -1053,10 +1073,13 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                                                                   $config['delay'],
                                                                   $config['randname']);
 
-      $slas = PluginMreportingDashboard::getDefaultConfig('slas');
+      $slas = (isset($_SESSION['mreporting_values']['slas']))
+            ? $_SESSION['mreporting_values']['slas']
+            : NULL;
 
-      if (PluginMreportingDashboard::checkWidgetConfig($config)) {
-         $slas = PluginMreportingDashboard::getWidgetConfig($config['widget_id'], 'slas');
+      if (PluginMreportingDashboard::isDashboard($config) &&
+          isset($_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'])) {
+         $slas = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'];
       }
 
       if (isset($slas) && !empty($slas)) {
