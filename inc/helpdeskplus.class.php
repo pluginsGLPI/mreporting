@@ -82,9 +82,10 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          array('dateinterval', 'period', 'backlogstates', 'multiplegrouprequest',
                'userassign', 'category', 'multiplegroupassign');
 
+      $randname = preg_replace('/[0-9]*/', NULL, $config['randname']);
+
       $tab              = array();
       $datas            = array();
-      $randname         = $config['randname'];
       $search_new       = $_SESSION['mreporting_values']['show_new'];
       $search_solved    = $_SESSION['mreporting_values']['show_solved'];
       $search_backlogs  = $_SESSION['mreporting_values']['show_backlog'];
@@ -94,7 +95,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       // If in dashboard mode, overwrite default config with widget config
       if (PluginMreportingDashboard::isDashboard($config)) {
-         $randname        = preg_replace('/[0-9]*/', null, $randname);
          $search_new      = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
                                      ['show_new'];
          $search_solved   = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
