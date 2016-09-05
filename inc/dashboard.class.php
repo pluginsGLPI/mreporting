@@ -168,6 +168,7 @@ class PluginMreportingDashboard extends CommonDBTM {
          $f_name = $report->fields["name"];
          $widget_id = $data["id"];
          $_REQUEST['widget_id'] = $widget_id;
+         $delay = $report->fields['default_delay'];
 
          $gtype = '';
          $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
@@ -212,7 +213,8 @@ class PluginMreportingDashboard extends CommonDBTM {
                   f_name:'$f_name',
                   widget_id:'$widget_id',
                   short_classname:'$short_classname',
-                  gtype:'$gtype'
+                  gtype:'$gtype',
+                  delay:'$delay'
                },
                success: function(content){
                   configWidget$rand_widget =

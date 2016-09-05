@@ -82,7 +82,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          array('dateinterval', 'period', 'backlogstates', 'multiplegrouprequest',
                'userassign', 'category', 'multiplegroupassign');
 
-      $randname = preg_replace('/[0-9]*/', NULL, $config['randname']);
+      $randname         = preg_replace('/[0-9]*/', NULL, $config['randname']);
 
       $tab              = array();
       $datas            = array();
@@ -90,8 +90,12 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $search_solved    = $_SESSION['mreporting_values']['show_solved'];
       $search_backlogs  = $_SESSION['mreporting_values']['show_backlog'];
       $search_closed    = $_SESSION['mreporting_values']['show_closed'];
-      $date1            = $_SESSION['mreporting_values']["date1$randname"];
-      $date2            = $_SESSION['mreporting_values']["date2$randname"];
+      $date1            = (isset($_SESSION['mreporting_values']["date1$randname"]))
+                        ? $_SESSION['mreporting_values']["date1$randname"]
+                        : strftime("%Y-%m-%d", time() - ($config['delay'] * 24 * 60 * 60));
+      $date2            = (isset($_SESSION['mreporting_values']["date2$randname"]))
+                        ? $_SESSION['mreporting_values']["date2$randname"]
+                        : strftime("%Y-%m-%d");
 
       // If in dashboard mode, overwrite default config with widget config
       if (PluginMreportingDashboard::isDashboard($config)) {

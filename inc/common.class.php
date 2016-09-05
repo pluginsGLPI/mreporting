@@ -1532,7 +1532,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $date1 = (isset($_SESSION['mreporting_values']["date1$randname"]))
              ? $_SESSION['mreporting_values']["date1$randname"]
-             : strftime("%Y-%m-%d", time() - (365 * 24 * 60 * 60));
+             : strftime("%Y-%m-%d", time() - ($_REQUEST['delay'] * 24 * 60 * 60));
       $date2 = (isset($_SESSION['mreporting_values']["date2$randname"]))
              ? $_SESSION['mreporting_values']["date2$randname"]
              : strftime("%Y-%m-%d");
@@ -1821,14 +1821,12 @@ class PluginMreportingCommon extends CommonDBTM {
     */
    static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname) {
 
-      $randname = 'PluginMreporting'.$_REQUEST['short_classname'].$_REQUEST['f_name'];
-
-      if (empty($_SESSION['mreporting_values']["date1$randname"])) {
+      if (!isset($_SESSION['mreporting_values']["date1$randname"])) {
          $_SESSION['mreporting_values']["date1$randname"] = strftime("%Y-%m-%d",
-                                                                  time() - ($delay * 24 * 60 * 60));
+                                                            time() - ($delay * 24 * 60 * 60));
       }
 
-      if (empty($_SESSION['mreporting_values']["date2$randname"])) {
+      if (!isset($_SESSION['mreporting_values']["date2$randname"])) {
          $_SESSION['mreporting_values']["date2$randname"] = strftime("%Y-%m-%d");
       }
 

@@ -82,8 +82,14 @@ class PluginMreportingGraph {
          echo "<div class='graph_desc'>".$desc."</div>";
 
          // Get default dates configurations
-         $date1 = $_SESSION['mreporting_values']["date1$randname"];
-         $date2 = $_SESSION['mreporting_values']["date2$randname"];
+         $date1 = (isset($_SESSION['mreporting_values']["date1$randname"]))
+                ? $_SESSION['mreporting_values']["date1$randname"]
+                : strftime("%Y-%m-%d", time() - ($options['delay'] * 24 * 60 * 60));
+         $date2 = (isset($_SESSION['mreporting_values']["date2$randname"]))
+                ? $_SESSION['mreporting_values']["date2$randname"]
+                : strftime("%Y-%m-%d");
+
+         $_REQUEST['delay'] = $options['delay'];
 
          // If in dashboard mode, get widget's dates configurations, if exists.
          if (PluginMreportingDashboard::isDashboard($_REQUEST)) {
