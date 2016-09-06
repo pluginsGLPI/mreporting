@@ -1628,16 +1628,8 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 // ------------------------------------------------------------------------------------------------
-      // By default, don't display levels selector
-      $displayLevels = false;
-
-      // If graph's "f_name" contains "entity" (non-case-sensitive), enable levels selector
+      // If graph's "f_name" contains "entity" (non-case-sensitive), display levels selector
       if (preg_match('/entity/i', $_GET['f_name'])) {
-         $displayLevels = true;
-      }
-
-      // If levels selector is enabled, display it
-      if ($displayLevels) {
          echo "<tr><td colspan='10' class='center'>".__('Entities Details on', 'mreporting');
 
          // Get page's URL with $_GET values
