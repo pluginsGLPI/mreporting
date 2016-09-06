@@ -2051,14 +2051,12 @@ class PluginMreportingCommon extends CommonDBTM {
       return $icons[$chart_type];
    }
 
-<<<<<<< HEAD
-=======
    function getSubEntities($entities_id) {
       global $DB, $CFG_GLPI;
       $entity = new Entity();
       $entity->getFromDB($entities_id);
       $entities = array();
-      $query = "SELECT `id`, `name` from `glpi_entities` WHERE `entities_id` = '".$entities_id."' ORDER BY `name`";
+      $query = "SELECT `id`, `name` from `glpi_entities` WHERE `entities_id` = '$entities_id' ORDER BY `name`";
       $result = $DB->query($query);
       while ($data = $DB->fetch_assoc($result)) {
           $entities[$data['id']] = $data['name'];
@@ -2109,5 +2107,4 @@ class PluginMreportingCommon extends CommonDBTM {
 
     }
 
->>>>>>> 4d966445fe8846bd15eda9662b7c4175efe471d5
 }
