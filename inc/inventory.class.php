@@ -746,7 +746,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          }
          $ent_id = $entities[$key];
          $key = str_replace('pourcentage', $percent, $key);
-          $datas['datas'][$key] = $value;
+         $datas['datas'][$key] = $value;
          $type = 'under';
          if ($ent_id == $_SESSION['glpiactive_entity']) {
             $type = 'equals';
