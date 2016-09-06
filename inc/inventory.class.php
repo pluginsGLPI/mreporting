@@ -720,26 +720,15 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    /* ==== COMPUTER'S ENTITIES REPORTS ==== */
   function reportHbarComputersByEntity($config = array()) {
       global $DB, $CFG_GLPI;
-
       $_SESSION['mreporting_selector']['reportHbarComputersByEntity'] = array('multiplestates');
 
       $datas = array();
 
-      $entity = new Entity();
-      $entity->getFromDB($_SESSION['glpiactive_entity']);
-      $entities_first_level = array($_SESSION['glpiactive_entity'] => $entity->getName());
-      $query = "SELECT `id`, `name` from `glpi_entities` WHERE `entities_id` = '".$_SESSION['glpiactive_entity']."' ORDER BY `name`";
-      $result = $DB->query($query);
-      while ($data = $DB->fetch_assoc($result)) {
-          $entities_first_level[$data['id']] = $data['name'];
-      }
-      $entities = array();
-      foreach ($entities_first_level as $entities_id=>$entities_name) {
-          if ($entities_id == $_SESSION['glpiactive_entity']) {
-              $restrict = " = '".$entities_id."'";
-          } else {
-              $restrict = "IN (".implode(',', getSonsOf('glpi_entities', $entities_id)).")";
-          }
+      $common = new PluginMreportingCommon();
+      $entities = $common->getEntities();
+
+      foreach ($entities as $entities_id=>$entities_name) {
+          $restrict = " = '".$entities_id."'";
           $query = "SELECT count(*) Total FROM `glpi_computers` WHERE `entities_id` ".$restrict;
           $result = $DB->query($query);
 
@@ -757,7 +746,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          }
          $ent_id = $entities[$key];
          $key = str_replace('pourcentage', $percent, $key);
-         $datas['datas'][$key] = $value;
+         if ($value !== '0') {
+          $datas['datas'][$key] = $value;
+         }
          $type = 'under';
          if ($ent_id == $_SESSION['glpiactive_entity']) {
             $type = 'equals';

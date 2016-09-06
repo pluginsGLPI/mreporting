@@ -56,6 +56,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       WHERE {$this->sql_date} ";
 
       if (Session::isMultiEntitiesMode()) {
+         $common = new PluginMreportingCommon();
+         $entities = $common->getEntities();
+         $this->where_entities = $_SESSION['glpiactive_entity'];
+         foreach ($entities as $entities_id=>$entities_name) {
+            $this->where_entities .= ",$entities_id";
+         }
          $query.= "AND glpi_entities.id IN (".$this->where_entities.") ";
       }
       $query.= "AND glpi_tickets.is_deleted = '0'
@@ -135,7 +141,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       WHERE glpi_tickets.itilcategories_id IN ($cat_str) ";
 
       if (Session::isMultiEntitiesMode()) {
-         $query.= "AND glpi_tickets.entities_id IN (".$this->where_entities.")";
+         $common = new PluginMreportingCommon();
+         $entities = $common->getEntities();
+         $this->where_entities = $_SESSION['glpiactive_entity'];
+         foreach ($entities as $entities_id=>$entities_name) {
+            $this->where_entities .= ",$entities_id";
+         }
+         $query.= "AND glpi_entities.id IN (".$this->where_entities.") ";
       }
 
       $query.= "AND ".$this->sql_date."
