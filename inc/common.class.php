@@ -2102,7 +2102,7 @@ class PluginMreportingCommon extends CommonDBTM {
             }
           }
         }
-      } Html::printCleanArray($levels);
+      }
 
       return $entities;
 
