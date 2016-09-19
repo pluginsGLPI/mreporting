@@ -139,7 +139,7 @@ function plugin_init_mreporting() {
 // Get the name and the version of the plugin - Needed
 function plugin_version_mreporting() {
    return array('name'           => __('More Reporting', 'mreporting'),
-                'version'        => "0.90+1.1",
+                'version'        => "0.90+1.2",
                 'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
                                        & <a href='http://www.infotel.com'>Infotel</a>",
                 'homepage'       => "https://github.com/pluginsGLPI/mreporting",
