@@ -86,60 +86,100 @@ class PluginMreportingBaseclass {
 
       // init default value for status selector
       if (!isset($_SESSION['mreporting_values']['status_1'])) {
-         $_SESSION['mreporting_values']['status_1']
-            = $_SESSION['mreporting_values']['status_2']
-            = $_SESSION['mreporting_values']['status_3']
-            = $_SESSION['mreporting_values']['status_4'] = 1;
-         $_SESSION['mreporting_values']['status_5']
-            = $_SESSION['mreporting_values']['status_6'] = 0;
+          $_SESSION['mreporting_values']['status_1']
+        = $_SESSION['mreporting_values']['status_2']
+        = $_SESSION['mreporting_values']['status_3']
+        = $_SESSION['mreporting_values']['status_4'] = 1;
+          $_SESSION['mreporting_values']['status_5']
+        = $_SESSION['mreporting_values']['status_6'] = 0;
+      }
+
+      if (!isset($_SESSION['mreporting_values']['show_new'])) {
+        $_SESSION['mreporting_values']['show_new']      = 1;
+        $_SESSION['mreporting_values']['show_solved']   = 1;
+        $_SESSION['mreporting_values']['show_backlog']  = 1;
+        $_SESSION['mreporting_values']['show_closed']   = 1;
       }
 
       if (!isset($_SESSION['mreporting_values']['period']))  {
          $_SESSION['mreporting_values']['period'] = 'month';
       }
-      if (isset($_SESSION['mreporting_values']['period'])
-          && !empty($_SESSION['mreporting_values']['period'])) {
-         switch($_SESSION['mreporting_values']['period']) {
-            case 'day':
-               $this->period_sort = '%y%m%d';
-               $this->period_sort_php = $this->period_sort = '%y%m%d';
-               $this->period_datetime = '%Y-%m-%d 23:59:59';
-               $this->period_label = '%d %b';
-               $this->period_interval = 'DAY';
-               $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` , '{$this->period_datetime}') as period_l";
-               break;
-            case 'week':
-               $this->period_sort = '%x%v';
-               $this->period_sort_php = '%Y%V';
-               $this->period_datetime = "%Y-%m-%d 23:59:59";
-               $this->period_label = 'S%v %x';
-               $this->period_interval = 'WEEK';
-               $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l";
-               break;
-            case 'month':
-               $this->period_sort = '%y%m';
-               $this->period_sort_php = $this->period_sort = '%y%m';
-               $this->period_datetime = '%Y-%m-01 23:59:59';
-               $this->period_label = '%b %Y';
-               $this->period_interval = 'MONTH';
-               $this->sql_list_date = "DISTINCT CONCAT(LAST_DAY(DATE_FORMAT(`date` , '{$this->period_datetime}')), ' 23:59:59') as period_l";
-               break;
-            case 'year':
-               $this->period_sort = '%Y';
-               $this->period_sort_php = $this->period_sort = '%Y';
-               $this->period_datetime = '%Y-12-31 23:59:59';
-               $this->period_label = '%Y';
-               $this->period_interval = 'YEAR';
-               $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` , '{$this->period_datetime}') as period_l";
-               break;
-            default :
-               $this->period_sort = '%y%u';
-               $this->period_label = 'S-%u %y';
-               break;
-         }
-      } else{
-         $this->period_sort = '%y%m';
-         $this->period_label = '%b %Y';
+
+      $period = $_SESSION['mreporting_values']['period'];
+
+      // Check if we're in dashboard
+      if (PluginMreportingDashboard::isDashboard($config)) {
+
+        $widget_config = $_SESSION['mreporting_values_dashboard'][$config['widget_id']];
+
+        if (isset($widget_config['period'])) {
+          $period = $widget_config['period'];
+        }
+
+        if (isset($widget_config['type']) && $widget_config['type'] > 0) {
+          $this->sql_type = 'glpi_tickets.type = '.$widget_config['type'];
+        }
+
+        if (isset($widget_config['itilcategories_id']) && $widget_config['itilcategories_id'] > 0) {
+          $this->sql_itilcat = 'glpi_tickets.itilcategories_id = '.
+                                $widget_config['itilcategories_id'];
+        }
+
+        if (isset($widget_config['users_assign_id']) && $widget_config['users_assign_id'] > 0) {
+          $this->sql_user_assign = 'tu.users_id = '.$widget_config['users_assign_id'];
+        }
+
+        if (isset($widget_config['groups_assign_id'])) {
+          $this->sql_group_assign = 'gt.groups_id IN ('.
+                                    implode(', ', $widget_config['groups_assign_id']).
+                                    ')';
+        }
+
+        if (isset($widget_config['groups_request_id'])) {
+          $this->sql_group_request = 'gtr.groups_id IN ('.
+                                     implode(', ', $widget_config['groups_request_id']).
+                                     ')';
+        }
+
+      }
+
+      switch($period) {
+         case 'day':
+            $this->period_sort = '%y%m%d';
+            $this->period_sort_php = $this->period_sort = '%y%m%d';
+            $this->period_datetime = '%Y-%m-%d 23:59:59';
+            $this->period_label = '%d %b';
+            $this->period_interval = 'DAY';
+            $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` , '{$this->period_datetime}') as period_l";
+            break;
+         case 'week':
+            $this->period_sort = '%x%v';
+            $this->period_sort_php = '%Y%V';
+            $this->period_datetime = "%Y-%m-%d 23:59:59";
+            $this->period_label = 'S%v %x';
+            $this->period_interval = 'WEEK';
+            $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l";
+            break;
+         case 'month':
+            $this->period_sort = '%y%m';
+            $this->period_sort_php = $this->period_sort = '%y%m';
+            $this->period_datetime = '%Y-%m-01 23:59:59';
+            $this->period_label = '%b %Y';
+            $this->period_interval = 'MONTH';
+            $this->sql_list_date = "DISTINCT CONCAT(LAST_DAY(DATE_FORMAT(`date` , '{$this->period_datetime}')), ' 23:59:59') as period_l";
+            break;
+         case 'year':
+            $this->period_sort = '%Y';
+            $this->period_sort_php = $this->period_sort = '%Y';
+            $this->period_datetime = '%Y-12-31 23:59:59';
+            $this->period_label = '%Y';
+            $this->period_interval = 'YEAR';
+            $this->sql_list_date = "DISTINCT DATE_FORMAT(`date` , '{$this->period_datetime}') as period_l";
+            break;
+         default :
+            $this->period_sort = '%y%u';
+            $this->period_label = 'S-%u %y';
+            break;
       }
 
       $this->sql_date_create = PluginMreportingCommon::getSQLDate("glpi_tickets.date",

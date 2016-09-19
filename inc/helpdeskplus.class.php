@@ -82,17 +82,36 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          array('dateinterval', 'period', 'backlogstates', 'multiplegrouprequest',
                'userassign', 'category', 'multiplegroupassign');
 
-      $tab   = array();
-      $datas = array();
+      $randname         = preg_replace('/[0-9]*/', NULL, $config['randname']);
 
-      $search_new       = (!isset($_SESSION['mreporting_values']['show_new'])
-                           || ($_SESSION['mreporting_values']['show_new'] == '1'))     ?true:false;
-      $search_solved    = (!isset($_SESSION['mreporting_values']['show_solved'])
-                           || ($_SESSION['mreporting_values']['show_solved'] == '1'))  ?true:false;
-      $search_backlogs  = (!isset($_SESSION['mreporting_values']['show_backlog'])
-                           || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ?true:false;
-      $search_closed    = (isset($_SESSION['mreporting_values']['show_closed'])
-                           && ($_SESSION['mreporting_values']['show_closed'] == '1'))  ?true:false;
+      $tab              = array();
+      $datas            = array();
+      $search_new       = $_SESSION['mreporting_values']['show_new'];
+      $search_solved    = $_SESSION['mreporting_values']['show_solved'];
+      $search_backlogs  = $_SESSION['mreporting_values']['show_backlog'];
+      $search_closed    = $_SESSION['mreporting_values']['show_closed'];
+      $date1            = (isset($_SESSION['mreporting_values']["date1$randname"]))
+                        ? $_SESSION['mreporting_values']["date1$randname"]
+                        : strftime("%Y-%m-%d", time() - ($config['delay'] * 24 * 60 * 60));
+      $date2            = (isset($_SESSION['mreporting_values']["date2$randname"]))
+                        ? $_SESSION['mreporting_values']["date2$randname"]
+                        : strftime("%Y-%m-%d");
+
+      // If in dashboard mode, overwrite default config with widget config
+      if (PluginMreportingDashboard::isDashboard($config)) {
+         $search_new      = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ['show_new'];
+         $search_solved   = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ['show_solved'];
+         $search_backlogs = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ['show_backlog'];
+         $search_closed   = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ['show_closed'];
+         $date1           = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ["date1$randname"];
+         $date2           = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                     ["date2$randname"];
+      }
 
       if($search_new) {
          $sql_create = "SELECT
@@ -106,7 +125,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                WHERE {$this->sql_date_create}
                   AND glpi_tickets.entities_id IN ({$this->where_entities})
                   AND glpi_tickets.is_deleted = '0'
-                  AND {$this->sql_date_create}
                   AND {$this->sql_type}
                   AND {$this->sql_group_assign}
                   AND {$this->sql_group_request}
@@ -149,25 +167,17 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
        * Backlog : Tickets Ouverts à la date en cours...
        */
       if($search_backlogs) {
-         $date_array1=explode("-",$_SESSION['mreporting_values']['date1'.$config['randname']]);
+         $date_array1=explode("-",$date1);
          $time1=mktime(0,0,0,$date_array1[1],$date_array1[2],$date_array1[0]);
 
-         $date_array2=explode("-",$_SESSION['mreporting_values']['date2'.$config['randname']]);
+         $date_array2=explode("-",$date2);
          $time2=mktime(0,0,0,$date_array2[1],$date_array2[2],$date_array2[0]);
 
          //if data inverted, reverse it
          if ($time1 > $time2) {
             list($time1, $time2) = array($time2, $time1);
-            list($_SESSION['mreporting_values']['date1'.$config['randname']], $_SESSION['mreporting_values']['date2'.$config['randname']]) = array(
-               $_SESSION['mreporting_values']['date2'.$config['randname']],
-               $_SESSION['mreporting_values']['date1'.$config['randname']]
-            );
+            list($date1, $date2) = array($date2, $date1);
          }
-
-         $sql_itilcat_backlog = isset($_SESSION['mreporting_values']['itilcategories_id'])
-                                && $_SESSION['mreporting_values']['itilcategories_id'] > 0
-                                ? " AND tic.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id']
-                                : "";
 
          $begin=strftime($this->period_sort_php ,$time1);
          $end=strftime($this->period_sort_php, $time2);
@@ -266,7 +276,16 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
 
       foreach ($this->status as $current_status) {
-         if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
+
+         $show_status = $_SESSION['mreporting_values']["status_$current_status"];
+
+         // If in dashboard mode, overwrite default config with widget config
+         if (PluginMreportingDashboard::isDashboard($config)) {
+            $show_status = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                    ["status_$current_status"];
+         }
+
+         if ($show_status) {
             $status_name = Ticket::getStatus($current_status);
             $sql_status = "SELECT
                      DISTINCT DATE_FORMAT(date, '{$this->period_sort}') as period,
@@ -319,9 +338,17 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
       }
 
-
       foreach ($this->status as $current_status) {
-         if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
+
+         $show_status = $_SESSION['mreporting_values']["status_$current_status"];
+
+         // If in dashboard mode, overwrite default config with widget config
+         if (PluginMreportingDashboard::isDashboard($config)) {
+            $show_status = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                    ["status_$current_status"];
+         }
+
+         if ($show_status) {
             $status_name = Ticket::getStatus($current_status);
             $sql_status = "SELECT
                      DISTINCT g.completename AS group_name,
@@ -350,7 +377,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       ksort($tab);
 
       //fill missing datas with zeros
-      $datas = $this->fillStatusMissingValues($tab);
+      $datas = $this->fillStatusMissingValues($tab, array());
 
       return $datas;
    }
@@ -369,9 +396,17 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']]))
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
 
-
       foreach ($this->status as $current_status) {
-         if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
+
+         $show_status = $_SESSION['mreporting_values']["status_$current_status"];
+
+         // If in dashboard mode, overwrite default config with widget config
+         if (PluginMreportingDashboard::isDashboard($config)) {
+            $show_status = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]
+                                    ["status_$current_status"];
+         }
+
+         if ($show_status) {
             $status_name = Ticket::getStatus($current_status);
 
             $sql_create = "SELECT
@@ -411,7 +446,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       ksort($tab);
 
       //fill missing datas with zeros
-      $datas = $this->fillStatusMissingValues($tab);
+      $datas = $this->fillStatusMissingValues($tab, array());
 
       return $datas;
    }
@@ -595,14 +630,24 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportGlineNbTicketBySla']
          = array('dateinterval', 'period', 'allSlasWithTicket');
 
-      if (isset($_SESSION['mreporting_values']['slas'])
-          && !empty($_SESSION['mreporting_values']['slas'])) {
+      $slas = (isset($_SESSION['mreporting_values']['slas']))
+            ? $_SESSION['mreporting_values']['slas']
+            : NULL;
+
+      // If in dashboard mode, overwrite default config with widget config
+      if (PluginMreportingDashboard::isDashboard($config) &&
+          isset($_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'])) {
+         $slas = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'];
+      }
+
+      if (isset($slas) && !empty($slas)) {
          //get dates used in this period
          $query_date = "SELECT DISTINCT DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
             DATE_FORMAT(`date`, '{$this->period_label}') AS period_name
          FROM `glpi_tickets`
-         INNER JOIN `glpi_slas` s
-            ON slas_id = s.id
+         INNER JOIN glpi_slts slt ON slt.id = `glpi_tickets`.slts_tto_id
+                                  OR slt.id = `glpi_tickets`.slts_ttr_id
+         INNER JOIN glpi_slas sla ON sla.id = slt.id
          WHERE {$this->sql_date_create}
             AND status IN (" . implode(
                   ',',
@@ -610,7 +655,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                ) . ")
             AND glpi_tickets.`entities_id` IN (" . $this->where_entities . ")
             AND glpi_tickets.`is_deleted` = '0'
-            AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")
+            AND sla.id IN (".implode(',', $slas).")
          ORDER BY `date` ASC";
          $res_date = $DB->query($query_date);
 
@@ -628,22 +673,22 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             DATE_FORMAT(`date`, '{$this->period_sort}') AS period,
             DATE_FORMAT(`date`, '{$this->period_label}') AS period_name,
             count(glpi_tickets.id) AS nb,
-            s.name,
-            CASE WHEN solve_delay_stat <= s.resolution_time THEN 'ok' ELSE 'nok' END AS respected_sla
+            sla.name,
+            CASE WHEN `glpi_tickets`.solvedate <= `glpi_tickets`.due_date
+                        THEN 'ok' ELSE 'nok' END AS respected_sla
          FROM `glpi_tickets`
-         INNER JOIN `glpi_slas` s
-            ON slas_id = s.id
+         INNER JOIN glpi_slts slt ON slt.id = `glpi_tickets`.slts_tto_id
+                                  OR slt.id = `glpi_tickets`.slts_ttr_id
+         INNER JOIN glpi_slas sla ON sla.id = slt.id
          WHERE {$this->sql_date_create}
          AND status IN (" . implode(
                ',',
                array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
             ) . ")
          AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
-         AND glpi_tickets.is_deleted = '0'";
-         if (isset($_SESSION['mreporting_values']['slas'])) {
-            $query .= " AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).") ";
-         }
-         $query .= "GROUP BY s.name, period, respected_sla";
+         AND glpi_tickets.is_deleted = '0'
+         AND sla.id IN (".implode(',', $slas).")
+         GROUP BY sla.name, period, respected_sla";
 
          $result = $DB->query($query);
          while ($data = $DB->fetch_assoc($result)) {
@@ -693,8 +738,11 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             count(glpi_tickets.id) as nb,
             c.id
          FROM glpi_tickets
+         INNER JOIN glpi_slts slts
+            ON glpi_tickets.slts_tto_id = slts.id
+            OR glpi_tickets.slts_ttr_id = slts.id
          INNER JOIN glpi_slas s
-            ON glpi_tickets.slas_id = s.id
+            ON slts.slas_id = s.id
          INNER JOIN glpi_itilcategories c
             ON glpi_tickets.itilcategories_id = c.id
          WHERE " . $this->sql_date_create . "
@@ -711,15 +759,18 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       }
 
       $query = "SELECT COUNT(glpi_tickets.id) as nb,
-            CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time
+            CASE WHEN `glpi_tickets`.solvedate <= `glpi_tickets`.due_date
                THEN 'ok'
                ELSE 'nok'
             END AS respected_sla,
             c.id,
             c.name
          FROM glpi_tickets
+         INNER JOIN glpi_slts slts
+            ON glpi_tickets.slts_tto_id = slts.id
+            OR glpi_tickets.slts_ttr_id = slts.id
          INNER JOIN glpi_slas s
-            ON glpi_tickets.slas_id = s.id
+            ON slts.slas_id = s.id
          INNER JOIN glpi_itilcategories c
             ON glpi_tickets.itilcategories_id = c.id
          WHERE " . $this->sql_date_create . "
@@ -763,13 +814,16 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             CONCAT(u.firstname, ' ', u.realname) as fullname,
             u.id,
             COUNT(glpi_tickets.id) as nb,
-            CASE WHEN glpi_tickets.solve_delay_stat <= s.resolution_time
+            CASE WHEN `glpi_tickets`.solvedate <= `glpi_tickets`.due_date
                THEN 'ok'
                ELSE 'nok'
             END AS respected_sla
          FROM glpi_tickets
+         INNER JOIN glpi_slts slts
+            ON glpi_tickets.slts_tto_id = slts.id
+            OR glpi_tickets.slts_ttr_id = slts.id
          INNER JOIN glpi_slas s
-            ON glpi_tickets.slas_id = s.id
+            ON slts.slas_id = s.id
          INNER JOIN glpi_tickets_users tu
             ON tu.tickets_id = glpi_tickets.id
             AND tu.type = " . Ticket_User::ASSIGN . "
@@ -806,9 +860,16 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $datas = array();
       foreach($tab as $name => $data) {
          foreach ($this->status as $current_status) {
-            if(!isset($_SESSION['mreporting_values']['status_'.$current_status])
-               || ($_SESSION['mreporting_values']['status_'.$current_status] == '1')) {
 
+            $show_status = $_SESSION['mreporting_values']["status_$current_status"];
+
+            // If in dashboard mode, overwrite default config with widget config
+            if (PluginMreportingDashboard::isDashboard($_REQUEST)) {
+               $show_status = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                       ["status_$current_status"];
+            }
+
+            if ($show_status) {
                $status_name = Ticket::getStatus($current_status);
                if (isset($data[$status_name])) {
                   $datas['datas'][$status_name][] = $data[$status_name];
@@ -831,12 +892,46 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       echo "<br /><b>".$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']." : </b><br />";
 
+      $show_new     =   (!isset($_SESSION['mreporting_values']['show_new']) ||
+                        ($_SESSION['mreporting_values']['show_new'] == '1'))
+                        ? ' checked="checked"'
+                        : '';
+      $show_solved  =   (!isset($_SESSION['mreporting_values']['show_solved']) ||
+                        ($_SESSION['mreporting_values']['show_solved'] == '1'))
+                        ? ' checked="checked"'
+                        : '';
+      $show_backlog =   (!isset($_SESSION['mreporting_values']['show_backlog']) ||
+                        ($_SESSION['mreporting_values']['show_backlog'] == '1'))
+                        ? ' checked="checked"'
+                        : '';
+      $show_closed  =   (!isset($_SESSION['mreporting_values']['show_closed']) ||
+                        ($_SESSION['mreporting_values']['show_closed'] == '1'))
+                        ? ' checked="checked"'
+                        : '';
+
+      // If in dashboard mode, overwrite default config with widget config
+      if (PluginMreportingDashboard::isDashboard($_REQUEST)) {
+         $show_new      = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                   ['show_new'];
+         $show_solved   = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                   ['show_solved'];
+         $show_backlog  = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                   ['show_backlog'];
+         $show_closed   = $_SESSION['mreporting_values_dashboard'][$_REQUEST['widget_id']]
+                                   ['show_closed'];
+      }
+
+      // If show_<state> is true, replace it by <checked="checked">. Else, replace it by < >.
+      $show_new      = ($show_new)     ? 'checked="checked"' : '';
+      $show_solved   = ($show_solved)  ? 'checked="checked"' : '';
+      $show_backlog  = ($show_backlog) ? 'checked="checked"' : '';
+      $show_closed   = ($show_closed)  ? 'checked="checked"' : '';
+
       // Opened
       echo '<label>';
       echo '<input type="hidden" name="show_new" value="0" /> ';
       echo '<input type="checkbox" name="show_new" value="1"';
-      echo (!isset($_SESSION['mreporting_values']['show_new'])
-            || ($_SESSION['mreporting_values']['show_new'] == '1')) ? ' checked="checked"' : '';
+      echo " $show_new";
       echo ' /> ';
       echo $LANG['plugin_mreporting']['Helpdeskplus']['opened'];
       echo '</label>';
@@ -845,8 +940,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<label>';
       echo '<input type="hidden" name="show_solved" value="0" /> ';
       echo '<input type="checkbox" name="show_solved" value="1"';
-      echo (!isset($_SESSION['mreporting_values']['show_solved'])
-            || ($_SESSION['mreporting_values']['show_solved'] == '1')) ? ' checked="checked"' : '';
+      echo "$show_solved";
       echo ' /> ';
       echo _x('status', 'Solved');
       echo '</label>';
@@ -857,8 +951,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<label>';
       echo '<input type="hidden" name="show_backlog" value="0" /> ';
       echo '<input type="checkbox" name="show_backlog" value="1"';
-      echo (!isset($_SESSION['mreporting_values']['show_backlog'])
-            || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? ' checked="checked"' : '';
+      echo "$show_backlog";
       echo ' /> ';
       echo $LANG['plugin_mreporting']['Helpdeskplus']['backlogs'];
       echo '</label>';
@@ -867,8 +960,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       echo '<label>';
       echo '<input type="hidden" name="show_closed" value="0" /> ';
       echo '<input type="checkbox" name="show_closed" value="1"';
-      echo (isset($_SESSION['mreporting_values']['show_closed'])
-            && ($_SESSION['mreporting_values']['show_closed'] == '1')) ? ' checked="checked"' : '';
+      echo "$show_closed";
       echo ' /> ';
       echo _x('status', 'Closed');
       echo '</label>';
@@ -887,13 +979,21 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                                                                   $config['delay'],
                                                                   $config['randname']);
 
-      if (isset($_SESSION['mreporting_values']['slas'])
-          && !empty($_SESSION['mreporting_values']['slas'])) {
+      $slas = (isset($_SESSION['mreporting_values']['slas']))
+            ? $_SESSION['mreporting_values']['slas']
+            : NULL;
+
+      if (PluginMreportingDashboard::isDashboard($config) &&
+          isset($_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'])) {
+         $slas = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'];
+      }
+
+      if (isset($slas) && !empty($slas)) {
 
          $query = "SELECT COUNT(t.id) AS nb,
                gt.groups_id as groups_id,
                s.name,
-               CASE WHEN t.solve_delay_stat <= s.resolution_time
+               CASE WHEN t.solvedate <= t.due_date
                THEN 'ok'
                ELSE 'nok'
                END AS respected_sla
@@ -901,7 +1001,11 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             INNER JOIN `glpi_groups_tickets` gt
                ON gt.tickets_id = t.id
                AND gt.type = ".CommonITILActor::ASSIGN."
-            INNER JOIN `glpi_slas` s ON t.slas_id = s.id
+            INNER JOIN glpi_slts slts
+               ON t.slts_tto_id = slts.id
+               OR t.slts_ttr_id = slts.id
+            INNER JOIN glpi_slas s
+               ON slts.slas_id = s.id
             WHERE {$this->sql_date_create}
                AND t.status IN (" . implode(
                            ',',
@@ -909,7 +1013,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                      ) . ")
                AND t.entities_id IN ({$this->where_entities})
                AND t.is_deleted = '0'
-               AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")
+               AND s.id IN (".implode(',', $slas).")
             GROUP BY gt.groups_id, respected_sla;";
          $result = $DB->query($query);
 
@@ -973,23 +1077,35 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                                                                   $config['delay'],
                                                                   $config['randname']);
 
-      if (isset($_SESSION['mreporting_values']['slas'])
-          && !empty($_SESSION['mreporting_values']['slas'])) {
+      $slas = (isset($_SESSION['mreporting_values']['slas']))
+            ? $_SESSION['mreporting_values']['slas']
+            : NULL;
+
+      if (PluginMreportingDashboard::isDashboard($config) &&
+          isset($_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'])) {
+         $slas = $_SESSION['mreporting_values_dashboard'][$config['widget_id']]['slas'];
+      }
+
+      if (isset($slas) && !empty($slas)) {
 
          $query = "SELECT count(t.id) AS nb, s.name,
-                       CASE WHEN t.solve_delay_stat <= s.resolution_time
+                       CASE WHEN t.solvedate <= t.due_date
                         THEN 'ok'
                         ELSE 'nok'
                         END AS respected_sla
                      FROM `glpi_tickets` t
-                     INNER JOIN `glpi_slas` s ON t.slas_id = s.id
+                  INNER JOIN glpi_slts slts
+                     ON t.slts_tto_id = slts.id
+                     OR t.slts_ttr_id = slts.id
+                  INNER JOIN glpi_slas s
+                     ON slts.slas_id = s.id
                      WHERE {$this->sql_date_create}
                      AND t.status IN (" . implode(',',
                               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
                            ) . ")
                      AND t.entities_id IN ({$this->where_entities})
                      AND t.is_deleted = '0'
-                     AND s.id IN (".implode(',', $_SESSION['mreporting_values']['slas']).")
+                     AND s.id IN (".implode(',', $slas).")
                      GROUP BY s.name, respected_sla;";
 
          $result = $DB->query($query);

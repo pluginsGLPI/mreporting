@@ -11,9 +11,13 @@ Session::checkLoginUser();
 
 if (isset($_POST['saveConfig'])) {
 
+    //check if need to save widget configuration or report configuration
+    $save_dashboard = false;
+    if(isset($_POST['widget_id'])){
+        $save_dashboard = true;
+    }
 
-    PluginMreportingCommon::saveSelectors($_POST['f_name']);
-
+    PluginMreportingCommon::saveSelectors($_POST['f_name'],array(),$save_dashboard,$_POST['widget_id']);
     $_REQUEST['f_name'] = $_POST['f_name'];
     $_REQUEST['short_classname'] = $_POST['short_classname'];
     PluginMreportingCommon::getSelectorValuesByUser();
@@ -26,7 +30,6 @@ if (isset($_POST['saveConfig'])) {
     $dashboard = new PluginMreportingDashboard();
     $post = array('users_id' => $_SESSION['glpiID'], 'reports_id' => $_POST['report']);
     $dashboard->add($post);
-
 
     Html::back();
 

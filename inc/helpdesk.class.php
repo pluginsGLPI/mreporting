@@ -56,6 +56,12 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       WHERE {$this->sql_date} ";
 
       if (Session::isMultiEntitiesMode()) {
+         $common = new PluginMreportingCommon();
+         $entities = $common->getEntities();
+         $this->where_entities = $_SESSION['glpiactive_entity'];
+         foreach ($entities as $entities_id=>$entities_name) {
+            $this->where_entities .= ",$entities_id";
+         }
          $query.= "AND glpi_entities.id IN (".$this->where_entities.") ";
       }
       $query.= "AND glpi_tickets.is_deleted = '0'
@@ -135,7 +141,13 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       WHERE glpi_tickets.itilcategories_id IN ($cat_str) ";
 
       if (Session::isMultiEntitiesMode()) {
-         $query.= "AND glpi_tickets.entities_id IN (".$this->where_entities.")";
+         $common = new PluginMreportingCommon();
+         $entities = $common->getEntities();
+         $this->where_entities = $_SESSION['glpiactive_entity'];
+         foreach ($entities as $entities_id=>$entities_name) {
+            $this->where_entities .= ",$entities_id";
+         }
+         $query.= "AND glpi_entities.id IN (".$this->where_entities.") ";
       }
 
       $query.= "AND ".$this->sql_date."
@@ -217,12 +229,32 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                                                            $config['randname']);
 
       // Get status to show
-      if(isset($_POST['status_1'])) {
-         foreach($_POST as $key => $value) {
-            if((substr($key, 0, 7) == 'status_') && ($value == 1)) $status_to_show[] = substr($key, 7, 1);
+      
+      $status_to_show = array(0);
+      foreach (Ticket::getAllStatusArray() as $key => $status) {
+         if ($_SESSION['mreporting_values']["status_$key"]) {
+            $status_to_show[] = $key;
          }
-      }else{
-         $status_to_show = array('1', '2', '3', '4');
+      }
+
+      if (PluginMreportingDashboard::isDashboard($config)) {
+
+         $status_to_show_tmp = array();
+
+         foreach (Ticket::getAllStatusArray() as $key => $status) {
+            if ($_SESSION['mreporting_values_dashboard'][$config['widget_id']]["status_$key"]) {
+               $status_to_show_tmp[] = $key;
+            }
+         }
+
+         // If tmp array isn't empty, replace final by tmp
+         if (!empty($status_to_show_tmp)) {
+            $status_to_show = $status_to_show_tmp;
+         }
+         else { // If no status was selected in widget, reset final array to empty
+            $status_to_show = array();
+         }
+
       }
 
       $datas = array();
@@ -244,6 +276,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       return $datas;
+
    }
 
    function reportPieTopTenAuthor($config = array()) {
@@ -412,14 +445,32 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                                                            $config['randname']);
 
       // Get status to show
-      if(isset($_POST['status_1'])) {
-         foreach($_POST as $key => $value) {
-            if(substr($key, 0, 7) == 'status_' && $value == 1) {
-               $status_to_show[] = substr($key, 7, 1);
+      
+      $status_to_show = array(0);
+      foreach (Ticket::getAllStatusArray() as $key => $status) {
+         if ($_SESSION['mreporting_values']["status_$key"]) {
+            $status_to_show[] = $key;
+         }
+      }
+
+      if (PluginMreportingDashboard::isDashboard($config)) {
+
+         $status_to_show_tmp = array();
+
+         foreach (Ticket::getAllStatusArray() as $key => $status) {
+            if ($_SESSION['mreporting_values_dashboard'][$config['widget_id']]["status_$key"]) {
+               $status_to_show_tmp[] = $key;
             }
          }
-      }else{
-         $status_to_show = array('1', '2', '3', '4');
+
+         // If tmp array isn't empty, replace final by tmp
+         if (!empty($status_to_show_tmp)) {
+            $status_to_show = $status_to_show_tmp;
+         }
+         else { // If no status was selected in widget, reset final array to empty
+            $status_to_show = array(0);
+         }
+
       }
 
       $status = $this->filters['open']['status'] + $this->filters['close']['status'];
@@ -527,12 +578,32 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                                                            $config['randname']);
 
       // Get status to show
-      if(isset($_POST['status_1'])) {
-         foreach($_POST as $key => $value) {
-            if((substr($key, 0, 7) == 'status_') && ($value == 1)) $status_to_show[] = substr($key, 7, 1);
+      
+      $status_to_show = array(0);
+      foreach (Ticket::getAllStatusArray() as $key => $status) {
+         if ($_SESSION['mreporting_values']["status_$key"]) {
+            $status_to_show[] = $key;
          }
-      }else{
-         $status_to_show = array('1', '2', '3', '4');
+      }
+
+      if (PluginMreportingDashboard::isDashboard($config)) {
+
+         $status_to_show_tmp = array();
+
+         foreach (Ticket::getAllStatusArray() as $key => $status) {
+            if ($_SESSION['mreporting_values_dashboard'][$config['widget_id']]["status_$key"]) {
+               $status_to_show_tmp[] = $key;
+            }
+         }
+
+         // If tmp array isn't empty, replace final by tmp
+         if (!empty($status_to_show_tmp)) {
+            $status_to_show = $status_to_show_tmp;
+         }
+         else { // If no status was selected in widget, reset final array to empty
+            $status_to_show = array(0);
+         }
+
       }
 
       //get dates used in this period
@@ -580,11 +651,10 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          foreach($datas['datas'] as &$data) {
             $data = $data + array_fill_keys($tmp_date, 0);
          }
-      }
-
-      //fix order of datas
-      foreach ($datas['datas'] as &$data) {
-         ksort($data);
+         //fix order of datas
+         foreach ($datas['datas'] as &$data) {
+            ksort($data);
+         }
       }
 
       return $datas;
@@ -650,6 +720,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportVstackbarTicketStatusByTechnician'] = array('dateinterval');
 
       $datas = array();
+
       //Init delay value
       $this->sql_date = PluginMreportingCommon::getSQLDate("glpi_tickets.date",
                                                            $config['delay'],

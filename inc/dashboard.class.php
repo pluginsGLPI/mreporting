@@ -166,6 +166,9 @@ class PluginMreportingDashboard extends CommonDBTM {
          //$config = "No configuration";
 
          $f_name = $report->fields["name"];
+         $widget_id = $data["id"];
+         $_REQUEST['widget_id'] = $widget_id;
+         $delay = $report->fields['default_delay'];
 
          $gtype = '';
          $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
@@ -185,10 +188,11 @@ class PluginMreportingDashboard extends CommonDBTM {
                             'f_name'          => $f_name,
                             'gtype'           => $gtype,
                             'width'           => 410,
-                            'hide_title'      => true);
+                            'hide_title'      => true,
+                            'widget_id'       => $widget_id);
                $common = new PluginMreportingCommon();
                ob_start();
-               $report_script = $common->showGraph($opt);
+               $report_script = $common->showGraph($opt, true);
                if ($report_script === false) {
                   $report_script = "</div>";
                }
@@ -207,8 +211,10 @@ class PluginMreportingDashboard extends CommonDBTM {
                   action: 'getConfig',
                   target: '$target',
                   f_name:'$f_name',
+                  widget_id:'$widget_id',
                   short_classname:'$short_classname',
-                  gtype:'$gtype'
+                  gtype:'$gtype',
+                  delay:'$delay'
                },
                success: function(content){
                   configWidget$rand_widget =
@@ -322,7 +328,10 @@ class PluginMreportingDashboard extends CommonDBTM {
       echo $out;
    }
 
-   static function getConfig() {
+   static function getConfig($id_widget) {
+
+      $_REQUEST['widget_id'] = $id_widget;
+
       PluginMreportingCommon::getSelectorValuesByUser();
 
       $reportSelectors = PluginMreportingCommon::getReportSelectors(true);
@@ -341,10 +350,33 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       echo "<input type='hidden' name='short_classname' value='".$_REQUEST['short_classname']."' class='submit'>";
       echo "<input type='hidden' name='f_name' value='".$_REQUEST['f_name']."' class='submit'>";
+      echo "<input type='hidden' name='widget_id' value='".$id_widget."' class='submit'>";
       echo "<input type='hidden' name='gtype' value='".$_REQUEST['gtype']."' class='submit'>";
       echo "<input type='submit' class='submit' name='saveConfig' value=\"". _sx('button', 'Post') ."\">";
 
       Html::closeForm();
+   }
+
+   static function isDashboard($widget) {
+
+      if (is_array($widget) && isset($widget['widget_id'])) {
+         $widget_id = $widget['widget_id']; // If checking $_REQUEST or $config
+      }
+      else if (!is_array($widget)) {
+         $widget_id = $widget; // If int
+      }
+      else {
+         $widget_id = NULL; // Else no value
+      }
+
+      if (isset($_SESSION['mreporting_values_dashboard'][$widget_id]) &&
+         !is_null($_SESSION['mreporting_values_dashboard'][$widget_id])) {
+         return true;
+      }
+      else {
+         return false;
+      }
+
    }
 
 }
