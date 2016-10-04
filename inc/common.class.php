@@ -413,10 +413,6 @@ class PluginMreportingCommon extends CommonDBTM {
 
          echo "<table class='tab_cadre_fixe'>";
 
-         echo "<tr><th colspan='4'>";
-         echo __("No report is available !", 'mreporting');
-         echo "</th></tr>";
-
          $reports = $this->getAllReports(false, $opt);
 
          foreach($reports as $class => $report) {
@@ -1337,12 +1333,12 @@ class PluginMreportingCommon extends CommonDBTM {
    static function selectorAllSlasWithTicket() {
       global $LANG, $DB;
 
-      echo "<b>" . $LANG['plugin_mreporting']['selector']["slas"] . " : </b><br />";
+      echo "<b>" . $LANG['plugin_mreporting']['Helpdeskplus']['selector']["slas"] . " : </b><br />";
 
       $query = "SELECT DISTINCT s.id,
          s.name
-      FROM glpi_slas s
-      INNER JOIN glpi_tickets t ON s.id = t.slas_id
+      FROM glpi_slts s
+      INNER JOIN glpi_tickets t ON s.id = t.slts_ttr_id
       WHERE t.status IN (" . implode(
             ',',
             array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())

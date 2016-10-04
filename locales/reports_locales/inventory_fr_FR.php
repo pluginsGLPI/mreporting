@@ -84,13 +84,13 @@ $LANG['plugin_mreporting']['Inventory'] = array(
    ),
 
    'reportHbarComputersByAge' => array(
-      'title'    => "Ordinateurs par &acirc,ge",
+      'title'    => "Ordinateurs par &acirc;ge",
       'desc'     => "Barres",
       'category' => "Inventaire",
    ),
 
    'reportPieComputersByAge' => array(
-      'title'    => "Ordinateurs par &acirc,ge",
+      'title'    => "Ordinateurs par &acirc;ge",
       'desc'     => "Camembert",
       'category' => "Inventaire",
    ),
