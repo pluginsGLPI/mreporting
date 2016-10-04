@@ -583,10 +583,11 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       }
 
       //fix order of datas
-      foreach ($datas['datas'] as &$data) {
-         ksort($data);
+      if (count($datas) > 0) {
+         foreach ($datas['datas'] as &$data) {
+            ksort($data);
+         }
       }
-
       return $datas;
    }
 
