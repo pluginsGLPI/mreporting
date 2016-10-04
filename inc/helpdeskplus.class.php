@@ -6,34 +6,45 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
-   protected $sql_group_assign  = "1=1",
-             $sql_group_request = "1=1",
-             $sql_user_assign   = "1=1",
-             $sql_type          = "glpi_tickets.type IN (".Ticket::INCIDENT_TYPE.", ".Ticket::DEMAND_TYPE.")",
-             $sql_itilcat       = "1=1",
-
-             $sql_join_cat      = "LEFT JOIN glpi_itilcategories cat
-                                       ON glpi_tickets.itilcategories_id = cat.id",
-             $sql_join_g        = "LEFT JOIN glpi_groups g
-                                       ON gt.groups_id = g.id",
-             $sql_join_u        = "LEFT JOIN glpi_users u
-                                       ON tu.users_id = u.id",
-             $sql_join_tt       = "LEFT JOIN glpi_tickettasks tt
-                                       ON tt.tickets_id  = glpi_tickets.id",
-             $sql_join_tu       = "LEFT JOIN glpi_tickets_users tu
-                                       ON tu.tickets_id = glpi_tickets.id
-                                       AND tu.type = ".Ticket_User::ASSIGN,
-             $sql_join_gt       = "LEFT JOIN glpi_groups_tickets gt
-                                       ON gt.tickets_id  = glpi_tickets.id
-                                       AND gt.type = ".Group_Ticket::ASSIGN,
-             $sql_join_gtr      = "LEFT JOIN glpi_groups_tickets gtr
-                                       ON gtr.tickets_id = glpi_tickets.id
-                                       AND gtr.type = ".Group_Ticket::REQUESTER;
+   protected   $sql_group_assign,
+               $sql_group_request,
+               $sql_user_assign,
+               $sql_type,
+               $sql_itilcat,
+               $sql_join_cat,
+               $sql_join_g,
+               $sql_join_u,
+               $sql_join_tt,
+               $sql_join_tu,
+               $sql_join_gt,
+               $sql_join_gtr;
 
 
    function __construct($config = array()) {
       global $LANG;
-
+      $this->sql_group_assign  = "1=1";
+      $this->sql_group_request = "1=1";
+      $this->sql_user_assign   = "1=1";
+      $this->sql_type          = "glpi_tickets.type IN (".Ticket::INCIDENT_TYPE.", ".Ticket::DEMAND_TYPE.")";
+      $this->sql_itilcat       = "1=1";
+      $this->sql_join_cat      = "LEFT JOIN glpi_itilcategories cat
+                              ON glpi_tickets.itilcategories_id = cat.id";
+      $this->sql_join_g        = "LEFT JOIN glpi_groups g
+                              ON gt.groups_id = g.id";
+      $this->sql_join_u        = "LEFT JOIN glpi_users u
+                              ON tu.users_id = u.id";
+      $this->sql_join_tt       = "LEFT JOIN glpi_tickettasks tt
+                              ON tt.tickets_id  = glpi_tickets.id";
+      $this->sql_join_tu       = "LEFT JOIN glpi_tickets_users tu
+                              ON tu.tickets_id = glpi_tickets.id
+                              AND tu.type = ".Ticket_User::ASSIGN;
+      $this->sql_join_gt       = "LEFT JOIN glpi_groups_tickets gt
+                              ON gt.tickets_id  = glpi_tickets.id
+                              AND gt.type = ".Group_Ticket::ASSIGN;
+      $this->sql_join_gtr      = "LEFT JOIN glpi_groups_tickets gtr
+                              ON gtr.tickets_id = glpi_tickets.id
+                              AND gtr.type = ".Group_Ticket::REQUESTER;
+                                       
       parent::__construct($config);
 
       $this->lcl_slaok = $LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'];

@@ -41,11 +41,11 @@ class PluginMreportingNotification extends CommonDBTM {
          // Ajout d'une traduction (texte) en Français
          $translation = new NotificationTemplateTranslation();
          $translation->add(array(
-         	'notificationtemplates_id' => $template_id,
+            'notificationtemplates_id' => $template_id,
             'language'                 => '',
-         	'subject'                  => __("GLPI statistics reports", 'mreporting'),
-         	'content_text'             => __("Hello,\n\nGLPI reports are available.\nYou will find attached in this email.\n\n", 'mreporting'),
-         	'content_html'             => $content_html)
+            'subject'                  => __("GLPI statistics reports", 'mreporting'),
+            'content_text'             => __("Hello,\n\nGLPI reports are available.\nYou will find attached in this email.\n\n", 'mreporting'),
+            'content_html'             => $content_html)
          );
 
          // Création de la notification
@@ -115,8 +115,8 @@ class PluginMreportingNotification extends CommonDBTM {
     */
    static function cronInfo($name) {
       switch ($name) {
-      	case 'SendNotifications' :
-      	   return array('description' => __('Notification for "More Reporting"', 'mreporting'));
+         case 'SendNotifications' :
+            return array('description' => __('Notification for "More Reporting"', 'mreporting'));
       }
       return array();
    }
