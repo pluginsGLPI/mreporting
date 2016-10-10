@@ -26,6 +26,9 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+
+define ('PLUGIN_MREPORTING_VERSION', '1.3.0');
+
 if (!defined('PLUGIN_MREPORTING_TEMPLATE_DIR')) {
    define("PLUGIN_MREPORTING_TEMPLATE_DIR", GLPI_ROOT."/plugins/mreporting/templates/");
 }
@@ -139,7 +142,7 @@ function plugin_init_mreporting() {
 // Get the name and the version of the plugin - Needed
 function plugin_version_mreporting() {
    return array('name'           => __('More Reporting', 'mreporting'),
-                'version'        => "9.1+1.0",
+                'version'        => PLUGIN_MREPORTING_VERSION,
                 'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
                                        & <a href='http://www.infotel.com'>Infotel</a>",
                 'homepage'       => "https://github.com/pluginsGLPI/mreporting",
