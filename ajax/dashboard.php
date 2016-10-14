@@ -2,6 +2,8 @@
 include('../../../inc/includes.php');
 Html::header_nocache();
 
+Session::checkLoginUser();
+
 if (isset($_REQUEST['action'])) {
    switch ($_REQUEST['action']) {
       case 'removeReportFromDashboard':

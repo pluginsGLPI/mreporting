@@ -32,9 +32,8 @@ if (strpos($_SERVER['PHP_SELF'],"dropdownGraphs.php")) {
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }
-if (!defined('GLPI_ROOT')) {
-   die("Can not acces directly to this file");
-}
+
+Session::checkLoginUser();
 
 if ($_POST['graphname'] != -1) {
    $test = explode(";", $_POST['graphname']);

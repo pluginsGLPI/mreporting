@@ -32,6 +32,8 @@ $DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
 
 include ("../../../inc/includes.php");
 
+Session::checkLoginUser();
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 

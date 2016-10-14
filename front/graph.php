@@ -34,6 +34,8 @@ $DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
 
 include ("../../../inc/includes.php");
 
+Session::checkLoginUser();
+
 Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'viewreports');
 
 $common = new PluginMreportingCommon();
