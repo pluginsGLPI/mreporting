@@ -1,6 +1,33 @@
 Changelogs for MReporting 0.84
 ==============================
 
+GLPI Mreporting 1.3.0
+---------------------
+
+* New release schema following [Semantic versionning](http://semver.org)
+* Fix GLPi 9.1 compatibility
+* Fix SLA graph
+* Fix manufacturer graph
+* Prevent not logged in users to display graphs
+
+GLPI Mreporting 0.90+1.2
+------------------------
+
+* GLPi 9.1 compatible
+* bugfixes
+
+GLPI Mreporting 0.90+1.1
+------------------------
+
+* Bugfixes
+
+GLPI Mreporting 0.90+1.0
+------------------------
+
+* GLPi 0.90 compatible
+* ...
+
+
 GLPI Mreporting 0.84+2.3.3
 --------------------------
 
