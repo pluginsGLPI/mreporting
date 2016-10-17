@@ -9,4 +9,3 @@ GLPI Plugin
 
 * Download : https://github.com/PluginsGLPI/mreporting/releases
 * WIKI (Develop new reports) : https://github.com/PluginsGLPI/mreporting/wiki
-* Vanilla versions : https://forge.indepnet.net/projects/mreporting/files
