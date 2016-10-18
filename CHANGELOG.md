@@ -1,5 +1,5 @@
-Changelogs for MReporting 0.84
-==============================
+Changelog for MReporting
+========================
 
 GLPI Mreporting 1.3.0
 ---------------------
