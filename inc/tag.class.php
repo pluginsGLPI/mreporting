@@ -26,11 +26,7 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-
-if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
-}
-
+ 
 class PluginMreportingTag Extends PluginMreportingBaseclass {
 
    function reportPieTag($config = array()) {
