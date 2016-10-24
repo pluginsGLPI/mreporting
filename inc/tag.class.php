@@ -39,8 +39,6 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
    function reportPieTag($config = array()) {
       global $DB;
 
-      ddd();
-
       $plugin = new Plugin();
       if (!$plugin->isActivated('tag')) {
          return array();
