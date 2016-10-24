@@ -29,8 +29,17 @@
  
 class PluginMreportingTag Extends PluginMreportingBaseclass {
 
+   /**
+    * Default pie graph for the use of tags.
+    * For all linked itemtypes without filter.
+    *
+    * @param array   $config (optionnal)
+    * @return array  $datas array of query results (tag => count number)
+    */
    function reportPieTag($config = array()) {
       global $DB;
+
+      ddd();
 
       $plugin = new Plugin();
       if (!$plugin->isActivated('tag')) {
@@ -54,6 +63,13 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
       return $datas;
    }
 
+   /**
+    * Pie graph for the use of tags in Ticket,
+    * with itilcategory filter.
+    *
+    * @param array   $config (optionnal)
+    * @return array  $datas array of query results (tag => count number)
+    */
    function reportPieTagOnTicket($config = array()) {
       global $DB;
 
