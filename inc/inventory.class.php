@@ -283,8 +283,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
            AND itemtype = 'Computer'
             AND i.`warranty_date` IS NULL
             $sql_entities
-            $sql_states
-         ORDER BY Total DESC";
+            $sql_states";
       $result = $DB->query($query);
 
       while ($computer = $DB->fetch_assoc($result)) {
