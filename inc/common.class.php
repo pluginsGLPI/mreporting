@@ -1388,6 +1388,11 @@ class PluginMreportingCommon extends CommonDBTM {
 
       echo "<br /><b>"._n('Ticket category', 'Ticket categories', 2) ." : </b><br />";
       if ($type) {
+         $rand = Ticket::dropdownType('type', 
+                                      array('value' => isset($_SESSION['mreporting_values']['type']) 
+                                                       ? $_SESSION['mreporting_values']['type'] 
+                                                       : Ticket::INCIDENT_TYPE, 
+                                             'toadd' => array(-1 => __('All'))));
          $params = array('type'            => '__VALUE__',
                          'currenttype'     => Ticket::INCIDENT_TYPE,
                          'entity_restrict' => -1,
@@ -1403,13 +1408,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
       if ($type) {
          echo "</span>";
-
-         $rand = Ticket::dropdownType('type',
-                             array('value' => isset($_SESSION['mreporting_values']['type'])
-                                              ? $_SESSION['mreporting_values']['type']
-                                              : Ticket::INCIDENT_TYPE,
-                                    'toadd' => array(-1 => __('All'))));
-
+         
          Ajax::updateItemOnSelectEvent("dropdown_type$rand", "show_category_by_type",
                                        $CFG_GLPI["root_doc"]."/ajax/dropdownTicketCategories.php",
                                        $params);
