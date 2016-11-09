@@ -698,8 +698,13 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $entity = new Entity();
       $entity->getFromDB($_SESSION['glpiactive_entity']);
       $entities_first_level = array($_SESSION['glpiactive_entity'] => $entity->getName());
-      $query = "SELECT `id`, `name` from `glpi_entities` WHERE `entities_id` = '".$_SESSION['glpiactive_entity']."' ORDER BY `name`";
+
+      $query = "SELECT `id`, `name`
+                  FROM `glpi_entities`
+                  WHERE `entities_id` = '".$_SESSION['glpiactive_entity']."'
+                  ORDER BY `name`";
       $result = $DB->query($query);
+      
       while ($data = $DB->fetch_assoc($result)) {
           $entities_first_level[$data['id']] = $data['name'];
       }
@@ -710,7 +715,11 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
           } else {
               $restrict = "IN (".implode(',', getSonsOf('glpi_entities', $entities_id)).")";
           }
-          $query = "SELECT count(*) Total FROM `glpi_computers` WHERE `entities_id` ".$restrict;
+          $query = "SELECT count(*) Total
+                     FROM `glpi_computers`
+                     WHERE `entities_id` " . $restrict . "
+                     AND `is_deleted` = 0
+                     AND `is_template` = 0";
           $result = $DB->query($query);
 
           while ($computer = $DB->fetch_assoc($result)) {
