@@ -17,7 +17,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                $sql_join_tt,
                $sql_join_tu,
                $sql_join_gt,
-               $sql_join_gtr;
+               $sql_join_gtr,
+               $sql_select_sla;
 
 
    function __construct($config = array()) {
