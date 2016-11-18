@@ -43,9 +43,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       if (!is_dir($dir)) {
          return false;
       }
-
-      require_once GLPI_ROOT.'/plugins/mreporting/lib/tcpdf/tcpdf.php';
-
+      
       setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
       ini_set('memory_limit', '256M');
       set_time_limit(300);
