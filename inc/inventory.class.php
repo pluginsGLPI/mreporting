@@ -386,7 +386,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $_SESSION['mreporting_selector']['reportHbarWindows'] = array('multiplestates');
 
       $sql_entities = " AND entities_id IN ({$this->where_entities})";
-      $sql_states   = self::getStateCondition('c.states_id');
+      $sql_states   = self::getStateCondition('glpi_computers.states_id');
       $total_computers = countElementsInTable('glpi_computers',
                                               "`is_deleted`=0 AND `is_template`=0 $sql_entities");
 
@@ -422,7 +422,9 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHbarLinux'] = array('multiplestates');
-      $sql_states = self::getStateCondition('c.states_id');
+      $sql_states = self::getStateCondition('glpi_computers.states_id');
+      $sql_states2 = self::getStateCondition('c.states_id');
+
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%'") as $os) {
          $number = countElementsInTable('glpi_computers',
@@ -438,7 +440,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                                  ON s.`id` = c.`operatingsystemversions_id`
                               WHERE c.`operatingsystems_id` = '".$os['id']."'
                                AND `c`.`entities_id` IN ({$this->where_entities})
-                               $sql_states
+                               $sql_states2
                               GROUP BY c.operatingsystemversions_id
                               ORDER BY s.name ASC";
             foreach ($DB->request($query_details) as $version) {
@@ -698,8 +700,13 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $entity = new Entity();
       $entity->getFromDB($_SESSION['glpiactive_entity']);
       $entities_first_level = array($_SESSION['glpiactive_entity'] => $entity->getName());
-      $query = "SELECT `id`, `name` from `glpi_entities` WHERE `entities_id` = '".$_SESSION['glpiactive_entity']."' ORDER BY `name`";
+
+      $query = "SELECT `id`, `name`
+                  FROM `glpi_entities`
+                  WHERE `entities_id` = '".$_SESSION['glpiactive_entity']."'
+                  ORDER BY `name`";
       $result = $DB->query($query);
+      
       while ($data = $DB->fetch_assoc($result)) {
           $entities_first_level[$data['id']] = $data['name'];
       }
@@ -710,7 +717,11 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
           } else {
               $restrict = "IN (".implode(',', getSonsOf('glpi_entities', $entities_id)).")";
           }
-          $query = "SELECT count(*) Total FROM `glpi_computers` WHERE `entities_id` ".$restrict;
+          $query = "SELECT count(*) Total
+                     FROM `glpi_computers`
+                     WHERE `entities_id` " . $restrict . "
+                     AND `is_deleted` = 0
+                     AND `is_template` = 0";
           $result = $DB->query($query);
 
           while ($computer = $DB->fetch_assoc($result)) {
