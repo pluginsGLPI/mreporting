@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define ('PLUGIN_MREPORTING_VERSION', '1.3.0');
+define ('PLUGIN_MREPORTING_VERSION', '1.3.1');
 
 if (!defined('PLUGIN_MREPORTING_TEMPLATE_DIR')) {
    define("PLUGIN_MREPORTING_TEMPLATE_DIR", GLPI_ROOT."/plugins/mreporting/templates/");
