@@ -1,6 +1,18 @@
 Changelog for MReporting
 ========================
 
+GLPI Mreporting 1.3.1
+---------------------
+
+* Fix #56 : Bad comparaison in Nb tickets per SLA bug (thank's awslgr)
+* Fix #78 : Review dashboard feature on helpdesk interface
+* Fix #74 : Remove require "GLPI_PHPMAILER_DIR"
+* Fix #57 : Selection from the dropdown itilcategory (thank's myoaction)
+* Fix #73 : Don't use Templates and Deleted computers (thank's johannsan)
+* Fix #26 : Error Ext on GLPI 0.90 (thank's tsmr - Infotel Conseil)
+* Fix #77 : Queries filtered by status for inventory reporting (thank's sebfun)
+* Task #80 : Remove lib tcpdf
+
 GLPI Mreporting 1.3.0
 ---------------------
 
