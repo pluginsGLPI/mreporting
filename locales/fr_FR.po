@@ -76,6 +76,10 @@ msgstr "Aucun modèle n'existe"
 msgid "No graphic selected"
 msgstr "aucun graphique sélectionné"
 
+#: inc/common.class.php:1479
+msgid "Max depth entity level"
+msgstr "Profondeur maximum des entités"
+
 #: inc/config.class.php:38
 msgid "Configuration"
 msgstr "Configuration"
