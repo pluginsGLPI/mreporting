@@ -1467,6 +1467,95 @@ class PluginMreportingCommon extends CommonDBTM {
       Html::showDateFormItem("date2".$randname, $date2, false);
    }
 
+   /**
+    * Show entity level selector.
+    * @return display selector
+    */
+   static function selectorEntityLevel() {
+      global $DB;
+
+      echo "<b>".__('Max depth entity level', 'mreporting')." :</b><br />";
+
+      $default_level = self::getActiveEntityLevel();
+      if (isset($_SESSION['mreporting_values']['entitylevel'])) {
+         $selected = $_SESSION['mreporting_values']['entitylevel'];
+      } else {
+         $selected = $default_level;
+      }
+
+      $values = array($default_level);
+      $maxlevel = self::getMaxEntityLevel();
+      for ($i=($default_level+1) ; $i<=$maxlevel ; $i++) {
+         $values[$i] = $i;
+      }
+
+      return Dropdown::showFromArray('entitylevel', $values, array('value'  => $selected));
+   }
+
+   /**
+    * Get SQL condition to filter entity depth by level.
+    * @param  string  $field     the sql table field to compare
+    * @return string sql condition
+    */
+   static function getSQLEntityLevel($field = "`glpi_entities`.`level`") {
+
+      if (isset($_SESSION['mreporting_values']['entitylevel'])) {
+         $maxlevel = $_SESSION['mreporting_values']['entitylevel'];
+      } else {
+         $maxlevel = self::getMaxEntityLevel();
+      }
+
+      $default_level = self::getActiveEntityLevel();
+
+      $where_entities_level = "({$field} = {$default_level}";
+      for($i=($default_level+1) ; $i<=$maxlevel ; $i++) {
+         $where_entities_level.= " OR {$field} = {$i}";
+      }
+      $where_entities_level.= ")";
+
+      return $where_entities_level;
+   }
+
+   /**
+    * Get active entity level according to GLPi SESSION
+    * @return integer default entity level
+    */
+   static function getActiveEntityLevel() {
+
+      if (isset($_SESSION['glpiactive_entity'])) {
+         $Entity = new Entity();
+         $Entity->getFromDB($_SESSION['glpiactive_entity']);
+         return $Entity->fields['level'];
+      } else {
+         return 0;
+      }
+   }
+
+   /**
+    * Get max entity level according to GLPi SESSION current active entity
+    * @return integer max entity level
+    */
+   static function getMaxEntityLevel() {
+      global $DB;
+
+      if (count($_SESSION['glpiactiveentities']) > 1) {
+         $restrict = " `id` IN ({$_SESSION['glpiactiveentities_string']})";
+      } else {
+         $restrict = " `id` = {$_SESSION['glpiactiveentities_string']}";
+      }
+      
+      $query = "SELECT MAX(level) AS 'maxlevel' 
+                  FROM glpi_entities
+                  WHERE {$restrict}";
+
+      $result = $DB->query($query);
+      if ($DB->numrows($result) > 0) {
+         return $DB->result($result, 0, "maxlevel");
+      } else {
+         return 0;
+      }
+   }
+
    static function canAccessAtLeastOneReport($profiles_id) {
       return countElementsInTable("glpi_plugin_mreporting_profiles",
                                   "`profiles_id`='$profiles_id' AND `right`= ".READ);
@@ -1477,7 +1566,6 @@ class PluginMreportingCommon extends CommonDBTM {
       echo "<a href='central.php'>".__("Back")."</a>";
       echo "</div>";
    }
-
 
    /**
     * Transform a request var into a get string

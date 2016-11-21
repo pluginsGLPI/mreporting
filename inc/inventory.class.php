@@ -692,7 +692,10 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
   function reportHbarComputersByEntity($config = array()) {
       global $DB, $CFG_GLPI;
 
-      $_SESSION['mreporting_selector']['reportHbarComputersByEntity'] = array('multiplestates');
+      $_SESSION['mreporting_selector']['reportHbarComputersByEntity'] = array('multiplestates',
+                                                                              'entityLevel');
+
+      $this->where_entities_level = PluginMreportingCommon::getSQLEntityLevel("`glpi_entities`.`level`");
 
       $datas = array();
 
@@ -703,6 +706,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $query = "SELECT `id`, `name`
                   FROM `glpi_entities`
                   WHERE `entities_id` = '".$_SESSION['glpiactive_entity']."'
+                  AND {$this->where_entities_level}
                   ORDER BY `name`";
       $result = $DB->query($query);
       
