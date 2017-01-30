@@ -144,14 +144,14 @@ select[name=graphmenu] option {
 
 .m_dashboard_controls {
    position: absolute;
-   right: 20px;   
-   color: #999; 
+   right: 20px;
+   color: #999;
    z-index: 100;
 }
 
 .add_report {
    border: 3px solid #999;
-   float: right;   
+   float: right;
    border-radius: 6px;
    cursor: pointer;
    height: 30px;
@@ -195,7 +195,7 @@ select[name=graphmenu] option {
 
 .empty_dashboard {
    position: absolute;
-   right: 40px;   
+   right: 40px;
    background: url(pics/howto_arrow.png) no-repeat right top;
    z-index: 50;
 }

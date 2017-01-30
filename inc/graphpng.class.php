@@ -374,7 +374,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $yb = ceil($y) - $y;
 
             if ($x > $width) {
-            	break;
+                break;
             }
 
             if ($y > $height) {
@@ -1015,7 +1015,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $step = $height / $params['depth'];
       $radius = $step * ($params['level']+1);
 
-
       $darkerpalette = self::getDarkerPalette(50);
 
       foreach($datas as $key =>  $data) {
@@ -1065,7 +1064,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             ($params['start_angle'] + 0.8 / ($params['level']+1)) * M_PI / 180,
             ($params['start_angle'] + $angle - 0.8 / ($params['level']+1)) * M_PI / 180
          );
-
 
          //text associated with pie arc (only for angle > 2°)
          $am   = $params['start_angle'] + $angle / 2; //mediant angle
@@ -1135,7 +1133,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                (is_array($data)) ? $sum : $data
             );
          }
-
 
          $params['start_angle']+= $angle;
          $index++;
@@ -1453,7 +1450,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $labels = array_keys($datas);
 
-
       $max = 1;
       foreach ($values as $line) {
          foreach ($line as $label2 => $value) {
@@ -1481,7 +1477,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          if ($tmp_cum > $cum) $cum = $tmp_cum;
       }
 
-
       $nb_bar = count($labels2);
       $nb_labels2 = count($datas);
       $height = 400;
@@ -1493,7 +1488,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $y_labels_width = .1 * $this->width;
       $x_labels_height = $height - 0.95 * $height;
       $legend_height = $nb_labels2 * 15 + 10;
-
 
       //longueur du texte en dessous des barres
       $index = 0;
@@ -1564,7 +1558,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $this->black, $this->font, $desc);
          }
 
-
          $index1 = 0;
          $index2 = 0;
 
@@ -1607,7 +1600,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs($box[4] - $box[6]);
             $textwidth = abs(sqrt((pow($textwidth, 2) / 2)));
 
-
             $lx = $y_labels_width + $index1 * $x_bar + ($width_bar / 2.5);
             imagettftext(
                $image,
@@ -1623,7 +1615,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $index1++;
             $index2 = 0;
          }
-
 
          //legend (align right)
          $index = 0;
@@ -1675,7 +1666,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
       PluginMreportingCommon::endGraph($options,$dashboard);
-    }
+   }
 
 
    /**
@@ -1857,7 +1848,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $index++;
          }
 
-
          //if curved spline activated, draw cubic spline for the current line
          if ($spline) {
             $aCoords[$x2] = $y2;
@@ -1906,7 +1896,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $old_label = $label;
             $index++;
          }
-
 
          //display last value, dot and axis label
          if (isset($x2)) {
@@ -2038,7 +2027,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $step = ceil($nb / 21);
       $height = 450;
       if($dashboard){
-        $height = 350;
+         $height = 350;
       }
       $y_labels_width = .1 * $this->width;
       $x_labels_height = 60;

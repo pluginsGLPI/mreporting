@@ -128,7 +128,7 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
    * @param PluginMreportingConfig $config
    * @return $config
    */
-    function preconfig($funct_name, $classname, PluginMreportingConfig $config) {
+   function preconfig($funct_name, $classname, PluginMreportingConfig $config) {
 
       if ($funct_name != -1 && $classname) {
 

@@ -220,7 +220,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $i = 0;
       foreach($datas as $label => $value) {
          for ($j=0; $j < $level; $j++) {
-           if ($i > 0) $out.= $CFG_GLPI['csv_delimiter'];
+            if ($i > 0) $out.= $CFG_GLPI['csv_delimiter'];
          }
 
          if (is_array($value)) {

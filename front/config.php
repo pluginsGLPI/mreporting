@@ -49,12 +49,12 @@ if ($plugin->isActivated("mreporting")) {
    }
 
 } else {
-	Html::header(__("Setup"),'',"config","plugins");
-	echo "<div align='center'>";
-	echo "<br><br>";
-	echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt=\"warning\">";
-	echo "<br><br>";
-	echo "<b>Please activate the plugin</b></div>";
+    Html::header(__("Setup"),'',"config","plugins");
+    echo "<div align='center'>";
+    echo "<br><br>";
+    echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt=\"warning\">";
+    echo "<br><br>";
+    echo "<b>Please activate the plugin</b></div>";
 }
 
 Html::footer();
