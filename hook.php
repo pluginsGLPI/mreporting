@@ -3,9 +3,9 @@
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  Mreporting plugin for GLPI
- Copyright (C) 2003-2011 by the mreporting Development Team.
+ Copyright (C) 2003-2017 by the mreporting Development Team.
 
- https://forge.indepnet.net/projects/mreporting
+ https://github.com/pluginsGLPI/mreporting
  -------------------------------------------------------------------------
 
  LICENSE
@@ -27,6 +27,11 @@
  --------------------------------------------------------------------------
  */
 
+/**
+ * Plugin install process
+ *
+ * @return boolean
+ */
 function plugin_mreporting_install() {
    global $DB;
 
@@ -189,7 +194,11 @@ function plugin_mreporting_install() {
    return true;
 }
 
-
+/**
+ * Plugin uninstall process
+ *
+ * @return boolean
+ */
 function plugin_mreporting_uninstall() {
    global $DB;
 
