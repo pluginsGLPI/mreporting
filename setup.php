@@ -1,11 +1,10 @@
 <?php
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  Mreporting plugin for GLPI
  Copyright (C) 2003-2011 by the mreporting Development Team.
 
- https://forge.indepnet.net/projects/mreporting
+ https://github.com/pluginsGLPI/mreporting
  -------------------------------------------------------------------------
 
  LICENSE
@@ -43,7 +42,12 @@ if (isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::
    define('DEBUG_MREPORTING', false);
 }
 
-// Init the hooks of the plugins -Needed
+/**
+ * Init hooks of the plugin.
+ * REQUIRED
+ *
+ * @return void
+ */
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
@@ -128,7 +132,7 @@ function plugin_init_mreporting() {
       }
 
       //Add specific files to add to the header : css
-      $PLUGIN_HOOKS['add_css']['mreporting'] = array("mreporting.css",
+      $PLUGIN_HOOKS['add_css']['mreporting'] = array("css/mreporting.css",
                                                      "lib/font-awesome-4.2.0/css/font-awesome.min.css",
                                                       "lib/jquery.tipsy/jquery.tipsy.css");
 
@@ -139,7 +143,12 @@ function plugin_init_mreporting() {
 
 }
 
-// Get the name and the version of the plugin - Needed
+/**
+ * Get the name and the version of the plugin
+ * REQUIRED
+ *
+ * @return array
+ */
 function plugin_version_mreporting() {
    return array('name'           => __('More Reporting', 'mreporting'),
                 'version'        => PLUGIN_MREPORTING_VERSION,
@@ -166,18 +175,31 @@ function includeAdditionalLanguageFiles() {
    }
 }
 
-// Optional : check prerequisites before install : may print errors or add to message after redirect
+/**
+ * Check pre-requisites before install
+ * OPTIONNAL, but recommanded
+ *
+ * @return boolean
+ */
 function plugin_mreporting_check_prerequisites() {
-   if (version_compare(GLPI_VERSION,'9.1','lt')) {
-      echo "This plugin requires GLPI >= 9.1";
+   if (version_compare(GLPI_VERSION, '9.1', 'lt')) {
+      if (method_exists('Plugin', 'messageIncompatible')) {
+         echo Plugin::messageIncompatible('core', '9.1');
+      } else {
+         echo "This plugin requires GLPI >= 9.1";
+      }
       return false;
    }
    return true;
 }
 
-
-// Check configuration process for plugin : need to return true if succeeded
-// Can display a message only if failure and $verbose is true
+/**
+ * Check configuration process
+ *
+ * @param boolean $verbose Whether to display message on failure. Defaults to false
+ *
+ * @return boolean
+ */
 function plugin_mreporting_check_config($verbose=false) {
    if (true) { // Your configuration check
       return true;
