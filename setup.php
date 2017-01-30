@@ -124,7 +124,7 @@ function plugin_init_mreporting() {
                                                             "lib/jquery.tipsy/tipsy.js");
       if (isset($_SESSION['glpiactiveprofile']['id']) && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
          if (PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
-            $PLUGIN_HOOKS['add_javascript']['mreporting'][] = 'scripts/helpdesk-menu.js'; //This need Ext js lib !
+            $PLUGIN_HOOKS['add_javascript']['mreporting'][] = 'js/helpdesk-menu.js'; //This need Ext js lib !
             $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = false;
          }
       } else {
