@@ -56,7 +56,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                                        THEN 'ok' 
                                  ELSE 'nok' 
                                  END AS respected_sla";
-                                       
+
       parent::__construct($config);
 
       $this->lcl_slaok = $LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'];
@@ -68,7 +68,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          if (is_array($mr_values['groups_assign_id'])) {
             $this->sql_group_assign = "gt.groups_id IN (".
                                        implode(',', $mr_values['groups_assign_id']).")";
-         } elseif ($mr_values['groups_assign_id'] > 0) {
+         } else if ($mr_values['groups_assign_id'] > 0) {
             $this->sql_group_assign = "gt.groups_id = ".$mr_values['groups_assign_id'];
          }
       }
@@ -77,7 +77,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          if (is_array($mr_values['groups_request_id'])) {
             $this->sql_group_request = "gtr.groups_id IN (".
                                           implode(',', $mr_values['groups_request_id']).")";
-         } elseif ($mr_values['groups_request_id'] > 0) {
+         } else if ($mr_values['groups_request_id'] > 0) {
             $this->sql_group_request = "gt.groups_id = ".$mr_values['groups_request_id'];
          }
       }
@@ -283,10 +283,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          = array('dateinterval', 'period', 'allstates', 'multiplegrouprequest',
                  'multiplegroupassign', 'userassign', 'category');
 
-
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']]))
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
-
 
       foreach ($this->status as $current_status) {
          if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
@@ -342,7 +340,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
       }
 
-
       foreach ($this->status as $current_status) {
          if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
             $status_name = Ticket::getStatus($current_status);
@@ -391,7 +388,6 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']]))
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
-
 
       foreach ($this->status as $current_status) {
          if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
@@ -745,11 +741,11 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          WHERE " . $this->sql_date_create . "
          AND `glpi_tickets`.entities_id IN (" . $this->where_entities . ")
          AND `glpi_tickets`.is_deleted = '0'";
-         if ($category) {
-            $query .= " AND `glpi_itilcategories`.id = " . $category;
-         } elseif (!empty($categories)) {
-            $query .= " AND `glpi_itilcategories`.id IN (" . implode(',', $categories) . ")";
-         }
+      if ($category) {
+         $query .= " AND `glpi_itilcategories`.id = " . $category;
+      } else if (!empty($categories)) {
+         $query .= " AND `glpi_itilcategories`.id IN (" . implode(',', $categories) . ")";
+      }
          $query .= " GROUP BY respected_sla, `glpi_itilcategories`.id
          ORDER BY nb DESC";
 
@@ -947,14 +943,14 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $gp_found = $gp->find("", "name"); //Tri précose qui n'est pas utile
 
          foreach($gp_found as $group){
-         	$group_name = $group['name'];
-           if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name])){
-              $datas['labels2'][$group_name] = $group_name;
-              $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name] = 0;
-           }
-           if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name])){
-              $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name] = 0;
-           }
+             $group_name = $group['name'];
+            if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name])){
+               $datas['labels2'][$group_name] = $group_name;
+               $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name] = 0;
+            }
+            if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name])){
+               $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name] = 0;
+            }
          }
 
          //Flip array to have observed SLA first

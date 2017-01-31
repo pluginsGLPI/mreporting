@@ -117,7 +117,6 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          ORDER BY Total DESC";
       $result = $DB->query($query);
 
-
       $datas = array();
       while ($computer = $DB->fetch_assoc($result)) {
          if ($computer['Total']) {
@@ -303,12 +302,12 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $this->computersByOS($config);
    }
 
-  function reportHbarComputersByOS($config = array()) {
+   function reportHbarComputersByOS($config = array()) {
       $_SESSION['mreporting_selector']['reportHbarComputersByOS'] = array('multiplestates');
       return $this->computersByOS($config);
-  }
+   }
 
-  function computersByOS($config = array()) {
+   function computersByOS($config = array()) {
       global $DB;
 
       $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
@@ -322,12 +321,12 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                     'MAC'     => 'MAC',
                     'Android' => 'Android',
                     'HP-UX'   => 'HP-UX');
-      $query = "";
-      $first = true;
-      $notlike = "";
+       $query = "";
+       $first = true;
+       $notlike = "";
       foreach ($oses as $os => $search) {
          $query.=(!$first?" UNION ":"")
-            ."\n SELECT '$os' AS OS, count(*) AS Total, count(*) * 100 / (SELECT count(*)
+           ."\n SELECT '$os' AS OS, count(*) AS Total, count(*) * 100 / (SELECT count(*)
                                                                         FROM glpi_computers        as c,
                                                                              glpi_operatingsystems as os
                                                                         WHERE c.`is_deleted`='0' AND c.`is_template`='0'
@@ -346,7 +345,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          $notlike.= " AND os.`name` NOT REGEXP '$search'";
          $first = false;
       }
-      $query .= " UNION
+        $query .= " UNION
          SELECT '".__("Others")."' AS OS, count(*) Total, count(*) * 100 / (SELECT count(*)
                                     FROM glpi_computers        as c,
                                          glpi_operatingsystems as os
@@ -364,18 +363,18 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
            $sql_entities
            $sql_states" ;
 
-      $query.=" ORDER BY Total DESC";
-      $result = $DB->query($query);
+        $query.=" ORDER BY Total DESC";
+        $result = $DB->query($query);
 
-      $datas = array();
+        $datas = array();
       while ($computer = $DB->fetch_assoc($result)) {
-         $percent = round($computer['Percent'], 2);
+          $percent = round($computer['Percent'], 2);
          if ($computer['Total']) {
             $datas['datas'][$computer['OS']." ($percent %)"] = $computer['Total'];
          }
       }
 
-      return $datas;
+        return $datas;
    }
 
 
@@ -544,7 +543,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                   if (preg_match("/(10.[0-9]+)/", $version['name'], $results)) {
                      if (!isset($data['datas'][$os['name']. " ".$results[1]])) {
                         $data['datas'][$os['name']. " ".$results[1]] = $version['cpt'];
-                      } else {
+                     } else {
                         $data['datas'][$os['name']. " ".$results[1]] += $version['cpt'];
                      }
                   }
@@ -662,7 +661,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $datas;
    }
 
-  function reportHbarPrintersByStatus($config = array()) {
+   function reportHbarPrintersByStatus($config = array()) {
       global $DB;
 
       $datas = array();
@@ -689,67 +688,67 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
    }
 
    /* ==== COMPUTER'S ENTITIES REPORTS ==== */
-  function reportHbarComputersByEntity($config = array()) {
+   function reportHbarComputersByEntity($config = array()) {
       global $DB, $CFG_GLPI;
 
       $_SESSION['mreporting_selector']['reportHbarComputersByEntity'] = array('multiplestates',
                                                                               'entityLevel');
 
-      $this->where_entities_level = PluginMreportingCommon::getSQLEntityLevel("`glpi_entities`.`level`");
+       $this->where_entities_level = PluginMreportingCommon::getSQLEntityLevel("`glpi_entities`.`level`");
 
-      $datas = array();
+       $datas = array();
 
-      $entity = new Entity();
-      $entity->getFromDB($_SESSION['glpiactive_entity']);
-      $entities_first_level = array($_SESSION['glpiactive_entity'] => $entity->getName());
+       $entity = new Entity();
+       $entity->getFromDB($_SESSION['glpiactive_entity']);
+       $entities_first_level = array($_SESSION['glpiactive_entity'] => $entity->getName());
 
-      $query = "SELECT `id`, `name`
+       $query = "SELECT `id`, `name`
                   FROM `glpi_entities`
                   WHERE `entities_id` = '".$_SESSION['glpiactive_entity']."'
                   AND {$this->where_entities_level}
                   ORDER BY `name`";
-      $result = $DB->query($query);
-      
+       $result = $DB->query($query);
+
       while ($data = $DB->fetch_assoc($result)) {
-          $entities_first_level[$data['id']] = $data['name'];
+         $entities_first_level[$data['id']] = $data['name'];
       }
-      $entities = array();
+        $entities = array();
       foreach ($entities_first_level as $entities_id=>$entities_name) {
-          if ($entities_id == $_SESSION['glpiactive_entity']) {
-              $restrict = " = '".$entities_id."'";
-          } else {
-              $restrict = "IN (".implode(',', getSonsOf('glpi_entities', $entities_id)).")";
-          }
-          $query = "SELECT count(*) Total
+         if ($entities_id == $_SESSION['glpiactive_entity']) {
+            $restrict = " = '".$entities_id."'";
+         } else {
+            $restrict = "IN (".implode(',', getSonsOf('glpi_entities', $entities_id)).")";
+         }
+            $query = "SELECT count(*) Total
                      FROM `glpi_computers`
                      WHERE `entities_id` " . $restrict . "
                      AND `is_deleted` = 0
                      AND `is_template` = 0";
-          $result = $DB->query($query);
+            $result = $DB->query($query);
 
-          while ($computer = $DB->fetch_assoc($result)) {
-             $datas['tmp'][$entities_name." (pourcentage %)"] = $computer['Total'];
-             $entities[$entities_name." (pourcentage %)"] = $entities_id;
-          }
+         while ($computer = $DB->fetch_assoc($result)) {
+            $datas['tmp'][$entities_name." (pourcentage %)"] = $computer['Total'];
+            $entities[$entities_name." (pourcentage %)"] = $entities_id;
+         }
       }
-      $total = array_sum($datas['tmp']);
+        $total = array_sum($datas['tmp']);
       foreach ($datas['tmp'] as $key=>$value) {
          if ($value == 0) {
             $percent = 0;
          } else {
-            $percent = round((100 * $value) / $total);
+             $percent = round((100 * $value) / $total);
          }
-         $ent_id = $entities[$key];
-         $key = str_replace('pourcentage', $percent, $key);
-         $datas['datas'][$key] = $value;
-         $type = 'under';
+           $ent_id = $entities[$key];
+           $key = str_replace('pourcentage', $percent, $key);
+           $datas['datas'][$key] = $value;
+           $type = 'under';
          if ($ent_id == $_SESSION['glpiactive_entity']) {
             $type = 'equals';
          }
-         $datas['links'][$key] = $CFG_GLPI["root_doc"].'/front/computer.php?is_deleted=0&criteria[0][field]=80&criteria[0][searchtype]='.$type.'&criteria[0][value]='.$ent_id.'&itemtype=Computer&start=0';
+           $datas['links'][$key] = $CFG_GLPI["root_doc"].'/front/computer.php?is_deleted=0&criteria[0][field]=80&criteria[0][searchtype]='.$type.'&criteria[0][value]='.$ent_id.'&itemtype=Computer&start=0';
       }
-      unset($datas['tmp']);
+        unset($datas['tmp']);
 
-      return $datas;
+        return $datas;
    }
 }

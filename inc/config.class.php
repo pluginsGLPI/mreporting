@@ -42,10 +42,10 @@ class PluginMreportingConfig extends CommonDBTM {
     * Définition des onglets
    **/
    function defineTabs($options=array()) {
-     $ong = array();
-     $this->addDefaultFormTab($ong);
-     $this->addStandardTab('PluginMreportingProfile', $ong, $options);
-     return $ong;
+      $ong = array();
+      $this->addDefaultFormTab($ong);
+      $this->addStandardTab('PluginMreportingProfile', $ong, $options);
+      return $ong;
    }
 
 

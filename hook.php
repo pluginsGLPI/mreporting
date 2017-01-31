@@ -71,7 +71,6 @@ function plugin_mreporting_install() {
    KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
-
     //create configuration table
     $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_dashboards` (
    `id` int(11) NOT NULL auto_increment,
@@ -80,7 +79,6 @@ function plugin_mreporting_install() {
    `configuration` VARCHAR(500) default NULL,
    PRIMARY KEY  (`id`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-
 
    $queries[] = "CREATE TABLE  IF NOT EXISTS `glpi_plugin_mreporting_preferences` (
    `id` int(11) NOT NULL auto_increment,
@@ -187,7 +185,6 @@ function plugin_mreporting_install() {
    $config = new PluginMreportingConfig();
    $config->createFirstConfig();
 
-
    PluginMreportingProfile::addRightToAllProfiles();
    PluginMreportingProfile::addRightToProfile($_SESSION['glpiactiveprofile']['id']);
 
@@ -201,7 +198,6 @@ function plugin_mreporting_install() {
  */
 function plugin_mreporting_uninstall() {
    global $DB;
-
 
    $migration = new Migration("2.3.0");
    $tables = array("glpi_plugin_mreporting_profiles",

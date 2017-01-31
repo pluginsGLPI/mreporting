@@ -26,7 +26,7 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 class PluginMreportingTag Extends PluginMreportingBaseclass {
 
    /**
@@ -78,7 +78,7 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
 
       $_SESSION['mreporting_selector'][__FUNCTION__] = array('category');
 
-      $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ? 
+      $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ?
                      " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
 
       $datas = array();

@@ -625,18 +625,18 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       krsort($flat_datas);
       $itilcategory = new ITILCategory;
       foreach ($flat_datas as $cat_id => $current_datas) {
-      	if (!isset($flat_datas[$current_datas['parent']])) {
+         if (!isset($flat_datas[$current_datas['parent']])) {
 
-      		if ($current_datas['parent'] != 0
-      			 && $itilcategory->getFromDB($current_datas['parent'])) {
-	      		$flat_datas[$current_datas['parent']] = array(
-	      			'id'     => $current_datas['parent'],
-	      			'name'   => $itilcategory->fields['name'],
-	      			'parent' => $itilcategory->fields['itilcategories_id'],
-	      			'count'  => 0
-	      		);
-	      	}
-      	}
+            if ($current_datas['parent'] != 0
+            && $itilcategory->getFromDB($current_datas['parent'])) {
+               $flat_datas[$current_datas['parent']] = array(
+                'id'     => $current_datas['parent'],
+                'name'   => $itilcategory->fields['name'],
+                'parent' => $itilcategory->fields['itilcategories_id'],
+                'count'  => 0
+               );
+            }
+         }
       }
 
       $tree_datas['datas'] = PluginMreportingCommon::buildTree($flat_datas);
@@ -793,7 +793,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
    * @param PluginMreportingConfig $config
    * @return $config
    */
-    function preconfig($funct_name, $classname, PluginMreportingConfig $config) {
+   function preconfig($funct_name, $classname, PluginMreportingConfig $config) {
 
       if ($funct_name != -1 && $classname) {
 

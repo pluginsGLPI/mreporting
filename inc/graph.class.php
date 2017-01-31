@@ -64,7 +64,7 @@ class PluginMreportingGraph {
             $desc =$options['desc'];
             if (isset($_SESSION['mreporting_values']['date1'.$randname])
                   && isset($_SESSION['mreporting_values']['date1'.$randname])) {
-            $desc.= " - ";
+               $desc.= " - ";
             }
          }
 
@@ -82,7 +82,6 @@ class PluginMreportingGraph {
             $_SESSION['mreporting_values']['date2'.$randname],
             $randname);
          echo "</div>";
-
 
          $ex_func = explode($options['short_classname'], $options['randname']);
          if (!is_numeric($ex_func[0])) {
@@ -839,7 +838,6 @@ JAVASCRIPT;
          $bottomAxis = -15;
       }
 
-
       $JS = <<<JAVASCRIPT
    var width_hgbar = {$this->width};
    var height_hgbar = {$height};
@@ -1058,7 +1056,6 @@ JAVASCRIPT;
       if($dashboard){
          $height = 250;
       }
-
 
       $JS = <<<JAVASCRIPT
    var w = {$width},
@@ -1733,7 +1730,6 @@ JAVASCRIPT;
       $labels = array_keys($datas);
       $values = array_values($datas);
 
-
       $out = "var datas = [\n";
       foreach ($values as $value) {
          $out.= "\t".addslashes($value).",\n";
@@ -1819,14 +1815,12 @@ JAVASCRIPT;
       $out = substr($out,0, -2)."\n";
       $out.= "];\n";
 
-
       $out.= "var labels = [\n";
       foreach ($labels as $label) {
          $out.= "\t'".addslashes($label)."',\n";
       }
       $out = substr($out,0, -2)."\n";
       $out.= "];\n";
-
 
       $out.= "var labels2 = [\n";
       foreach ($labels2 as $label) {
