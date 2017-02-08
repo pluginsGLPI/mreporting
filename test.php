@@ -1,7 +1,7 @@
 <?php
 include ("../../inc/includes.php");
 
-Html::header(__("More Reporting", 'mreporting'), '' ,"plugins", "hreporting");
+Html::header(__("More Reporting", 'mreporting'), '', "plugins", "hreporting");
 ?>
 <link href="lib/protovis/examples/ex.css" rel="stylesheet" type="text/css">
 <script src="lib/protovis/protovis.min.js" type="text/javascript"></script>

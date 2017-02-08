@@ -361,7 +361,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
            AND c.`is_template`=0
            $notlike
            $sql_entities
-           $sql_states" ;
+           $sql_states";
 
         $query.=" ORDER BY Total DESC";
         $result = $DB->query($query);

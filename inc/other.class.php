@@ -133,10 +133,12 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       if ($funct_name != -1 && $classname) {
 
          $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);
-         if ($ex_func[0] != 'report') return false;
+         if ($ex_func[0] != 'report') {
+            return false;
+         }
          $gtype = strtolower($ex_func[1]);
 
-         switch($gtype) {
+         switch ($gtype) {
             case 'pie':
                $config->fields["name"]=$funct_name;
                $config->fields["classname"]=$classname;

@@ -63,11 +63,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          $width = $this->width + 100;
 
-         if (!isset($_REQUEST['date1'.$randname]))
+         if (!isset($_REQUEST['date1'.$randname])) {
             $_REQUEST['date1'.$randname] = strftime("%Y-%m-%d", time()
                - ($options['delay'] * 24 * 60 * 60));
-         if (!isset($_REQUEST['date2'.$randname]))
+         }
+         if (!isset($_REQUEST['date2'.$randname])) {
             $_REQUEST['date2'.$randname] = strftime("%Y-%m-%d");
+         }
 
          $backtrace = debug_backtrace();
          $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));
@@ -101,7 +103,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          echo "<div class='graph_navigation'>";
          PluginMreportingCommon::showSelector(
-            $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname],$randname);
+            $_REQUEST['date1'.$randname], $_REQUEST['date2'.$randname], $randname);
          echo "</div>";
       }
       if ($options['export']!="odt" && $options['export']!="odtall") {
@@ -119,7 +121,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          if (isset($_SERVER["HTTP_USER_AGENT"])) {
             $ua = trim(strtolower($_SERVER["HTTP_USER_AGENT"]));
             $pattern = "/msie\s(\d+)\.0/";
-            if(preg_match($pattern,$ua,$arr)){
+            if (preg_match($pattern, $ua, $arr)) {
                $ie_version = $arr[1];
                if (version_compare($ie_version, '9') < 0) {
                   $rand=mt_rand();
@@ -161,10 +163,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       ob_start();
 
       if ($export=="odt") {
-         $show_graph = PluginMreportingConfig::showGraphConfigValue($f_name,$class);
+         $show_graph = PluginMreportingConfig::showGraphConfigValue($f_name, $class);
          if ($show_graph) {
             $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
-            imagepng($image,$path);
+            imagepng($image, $path);
          }
          $common = new PluginMreportingCommon();
          $options[] = array("title"   => $title,
@@ -178,10 +180,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       } else if ($export=="odtall") {
 
-         $show_graph = PluginMreportingConfig::showGraphConfigValue($f_name,$class);
+         $show_graph = PluginMreportingConfig::showGraphConfigValue($f_name, $class);
          if ($show_graph) {
             $path=GLPI_PLUGIN_DOC_DIR."/mreporting/".$f_name.".png";
-            imagepng($image,$path);
+            imagepng($image, $path);
          }
          if (isset($raw_datas['datas'])) {
             $_SESSION['glpi_plugin_mreporting_odtarray'][]=array("title"   => $title,
@@ -206,7 +208,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    static function getColors($index = 20) {
       $colors = PluginMreportingConfig::getColors($index);
-      foreach($colors as &$color) {
+      foreach ($colors as &$color) {
          $color = str_replace('#', '', $color);
       }
       return $colors;
@@ -220,13 +222,13 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $hex = substr($color, 4);
 
       if (strlen($hex) == 3) {
-         $r = substr($hex,0,1).substr($hex,0,1);
-         $g = substr($hex,1,1).substr($hex,1,1);
-         $b = substr($hex,2,1).substr($hex,2,1);
+         $r = substr($hex, 0, 1).substr($hex, 0, 1);
+         $g = substr($hex, 1, 1).substr($hex, 1, 1);
+         $b = substr($hex, 2, 1).substr($hex, 2, 1);
       } else {
-         $r = substr($hex,0,2);
-         $g = substr($hex,2,2);
-         $b = substr($hex,4,2);
+         $r = substr($hex, 0, 2);
+         $g = substr($hex, 2, 2);
+         $b = substr($hex, 4, 2);
       }
 
       $alpha = substr($color, 0, 4);
@@ -237,7 +239,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    static function getPalette($nb_index = 20, $alpha = "00") {
       $palette = array();
-      foreach(self::getColors($nb_index) as $color) {
+      foreach (self::getColors($nb_index) as $color) {
          $palette[] = "0x$alpha".substr($color, 0, 6);
       }
 
@@ -255,7 +257,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    static function getDarkerPalette($nb_index = 20, $alpha = "00") {
       $palette = array();
-      foreach(self::getColors($nb_index) as $color) {
+      foreach (self::getColors($nb_index) as $color) {
          $palette[] = "0x$alpha".substr(self::darker($color), 0, 6);
       }
       if ($nb_index > 20) {
@@ -271,7 +273,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
    static function getLighterPalette($nb_index = 20, $alpha = "00") {
       $palette = array();
-      foreach(self::getColors($nb_index) as $color) {
+      foreach (self::getColors($nb_index) as $color) {
          $palette[] = "0x$alpha".substr(self::lighter($color), 0, 6);
       }
       if ($nb_index > 20) {
@@ -285,7 +287,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    }
 
    static function darker($color,$factor = 50) {
-      if (strlen($color) == 10) $color = substr($color, 4);
+      if (strlen($color) == 10) {
+         $color = substr($color, 4);
+      }
 
       $new_hex = '';
 
@@ -299,7 +303,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $new_decimal = $v - $amount;
 
          $new_hex_component = dechex($new_decimal);
-         if(strlen($new_hex_component) < 2)  $new_hex_component = "0".$new_hex_component;
+         if (strlen($new_hex_component) < 2) {
+            $new_hex_component = "0".$new_hex_component;
+         }
          $new_hex .= $new_hex_component;
       }
 
@@ -308,7 +314,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
 
    static function lighter($color,$factor = 50) {
-      if (strlen($color) == 10) $color = substr($color, 4);
+      if (strlen($color) == 10) {
+         $color = substr($color, 4);
+      }
 
       $new_hex = '';
 
@@ -323,7 +331,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $new_decimal = $v + $amount;
 
          $new_hex_component = dechex($new_decimal);
-         if(strlen($new_hex_component) < 2) $new_hex_component = "0".$new_hex_component;
+         if (strlen($new_hex_component) < 2) {
+            $new_hex_component = "0".$new_hex_component;
+         }
          $new_hex .= $new_hex_component;
       }
 
@@ -460,8 +470,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $oCurve = new CubicSplines();
       if ($oCurve->setInitCoords($coords, 6) !== false) {
-         if (!$r = $oCurve->processCoords()) $r = $coords;
-      } else $r = $coords;
+         if (!$r = $oCurve->processCoords()) {
+            $r = $coords;
+         }
+      } else {
+         $r = $coords;
+      }
 
       list($iPrevX, $iPrevY) = each($r);
 
@@ -488,7 +502,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showHbar($params, $dashboard = false , $width = false) {
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width + 50;
       }
 
@@ -506,7 +520,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$k=$v;
       }
 
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
+      }
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
@@ -547,13 +563,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $values = array_values($datas);
       $labels = array_keys($datas);
       $max = max($values);
-      if ($max <= 1) $max = 1;
-      if ($max == 1 && $unit == '%') $max = 100;
+      if ($max <= 1) {
+         $max = 1;
+      }
+      if ($max == 1 && $unit == '%') {
+         $max = 100;
+      }
 
       $nb_bar = count($datas);
       $width  = $this->width;
       $height = 30 * $nb_bar + 80;
-      if($dashboard){
+      if ($dashboard) {
          if ($height > 380) {
             $height = 380;
          }
@@ -605,7 +625,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index]);
 
             //create data label
-            if($show_label == "always" || $show_label == "hover") {
+            if ($show_label == "always" || $show_label == "hover") {
                imagettftext(
                   $image,
                   $this->fontsize,
@@ -618,7 +638,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                );
             }
             //create axis label (align right)
-            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$labels[$index]);
+            $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $labels[$index]);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext(
@@ -650,14 +670,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $contents = $this->generateImage($params);
       if ($show_graph) {
-         $this->showImage($contents,$export);
+         $this->showImage($contents, $export);
       }
       $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
                         "export" => $export,
                         "datas"  => $datas,
                         "unit"   => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
    }
 
 
@@ -683,7 +703,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$key=$val;
       }
 
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
 
@@ -693,7 +713,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$k=$v;
       }
 
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
+      }
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
@@ -735,11 +757,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $labels = array_keys($datas);
       $max = 0;
-      foreach($values as $value) {
+      foreach ($values as $value) {
          $max += $value;
       }
-      if ($max < 1) $max = 1;
-      if ($max == 1 && $unit == '%') $max = 100;
+      if ($max < 1) {
+         $max = 1;
+      }
+      if ($max == 1 && $unit == '%') {
+         $max = 100;
+      }
 
       $nb_bar = count($datas);
       $width = $this->width;
@@ -825,11 +851,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext($image, $this->fontsize, $this->fontangle,
-               20, 55 + $index * 14 , $this->black, $this->font, $label);
+               20, 55 + $index * 14, $this->black, $this->font, $label);
 
             //legend circle
             $color_rbg = self::colorHexToRGB($palette[$index]);
-            imageSmoothArc($image, 10, 50 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
+            imageSmoothArc($image, 10, 50 + $index * 14, 7, 7, $color_rbg, 0, 2 * M_PI);
 
             $index++;
          }
@@ -846,7 +872,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $contents = $this->generateImage($params);
       if ($show_graph) {
-         $this->showImage($contents,$export);
+         $this->showImage($contents, $export);
       }
       $opt['randname'] = $randname;
       $options = array("opt"     => $opt,
@@ -854,7 +880,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "datas"  => $datas,
                         "unit"   => $unit);
 
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
    }
 
 
@@ -887,7 +913,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$k=$v;
       }
 
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
+      }
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
@@ -945,7 +973,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height , $this->black);
+            imagerectangle($image, 0, 0, $width - 1, $height, $this->black);
          }
 
          //add title on export
@@ -984,7 +1012,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "raw_datas" => $raw_datas,
                        "withdata"   => $opt['withdata']);
       $contents = $this->generateImage($params);
-      $this->showImage($contents,$export);
+      $this->showImage($contents, $export);
 
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
@@ -993,7 +1021,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
    }
 
    function drawSunburstLevel($image, $datas, $params=array()) {
@@ -1017,7 +1045,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $darkerpalette = self::getDarkerPalette(50);
 
-      foreach($datas as $key =>  $data) {
+      foreach ($datas as $key =>  $data) {
          if (is_array($data)) {
             arsort($data);
 
@@ -1042,8 +1070,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //get colors
          $palette = $this->getPalette(50);
-         if ($params['current_index'] === false) $color = $palette[$index];
-         else {
+         if ($params['current_index'] === false) {
+            $color = $palette[$index];
+         } else {
             $color = $palette[$params['current_index']];
             //get lighter color
             $color = "0x00".substr(self::lighter($color, 15 * $params['level'] * $index), 0, 6);
@@ -1071,19 +1100,37 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //adjust label position (in fonction of angle position)
          $dx = $dy = 0;
-         if( $amr>=7*M_PI/4 || $amr <= M_PI/4 ) $dx=0;
-         if( $amr>=M_PI/4 && $amr <= 3*M_PI/4 ) $dx=($amr-M_PI/4)*2/M_PI;
-         if( $amr>=3*M_PI/4 && $amr <= 5*M_PI/4 ) $dx=1;
-         if( $amr>=5*M_PI/4 && $amr <= 7*M_PI/4 ) $dx=(1-($amr-M_PI*5/4)*2/M_PI);
+         if ($amr>=7*M_PI/4 || $amr <= M_PI/4) {
+            $dx=0;
+         }
+         if ($amr>=M_PI/4 && $amr <= 3*M_PI/4) {
+            $dx=($amr-M_PI/4)*2/M_PI;
+         }
+         if ($amr>=3*M_PI/4 && $amr <= 5*M_PI/4) {
+            $dx=1;
+         }
+         if ($amr>=5*M_PI/4 && $amr <= 7*M_PI/4) {
+            $dx=(1-($amr-M_PI*5/4)*2/M_PI);
+         }
 
-         if( $amr>=7*M_PI/4 ) $dy=(($amr-M_PI)-3*M_PI/4)*2/M_PI;
-         if( $amr<=M_PI/4 ) $dy=(1-$amr*2/M_PI);
-         if( $amr>=M_PI/4 && $amr <= 3*M_PI/4 ) $dy=1;
-         if( $amr>=3*M_PI/4 && $amr <= 5*M_PI/4 ) $dy=(1-($amr-3*M_PI/4)*2/M_PI);
-         if( $amr>=5*M_PI/4 && $amr <= 7*M_PI/4 ) $dy=0;
+         if ($amr>=7*M_PI/4) {
+            $dy=(($amr-M_PI)-3*M_PI/4)*2/M_PI;
+         }
+         if ($amr<=M_PI/4) {
+            $dy=(1-$amr*2/M_PI);
+         }
+         if ($amr>=M_PI/4 && $amr <= 3*M_PI/4) {
+            $dy=1;
+         }
+         if ($amr>=3*M_PI/4 && $amr <= 5*M_PI/4) {
+            $dy=(1-($amr-3*M_PI/4)*2/M_PI);
+         }
+         if ($amr>=5*M_PI/4 && $amr <= 7*M_PI/4) {
+            $dy=0;
+         }
 
          //get label size
-         $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$key);
+         $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $key);
          $tw = abs($box[4] - $box[0]);
          $th = abs($box[5] - $box[1]);
 
@@ -1114,7 +1161,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $samr = ($params['start_angle'] + 10/($params['level']+1)) * M_PI / 180;
 
             //get label size
-            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,
+            $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font,
                (is_array($data)) ? $gsum : $data);
             $tw = abs($box[4] - $box[0]);
             $th = abs($box[5] - $box[1]);
@@ -1157,7 +1204,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showHgbar($params, $dashboard = false , $width = false) {
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
 
@@ -1175,7 +1222,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$k=$v;
       }
 
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
+      }
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
@@ -1221,10 +1270,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $max = 1;
       foreach ($values as $line) {
          foreach ($line as $label2 => $value) {
-            if ($value > $max) $max = $value;
+            if ($value > $max) {
+               $max = $value;
+            }
          }
       }
-      if ($max == 1 && $unit == '%') $max = 100;
+      if ($max == 1 && $unit == '%') {
+         $max = 100;
+      }
 
       $nb_bar = count($datas) * count($labels2);
       $width = $this->width;
@@ -1274,7 +1327,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $step = $index1 * count($labels2) * 28;
 
             //create axis label (align right)
-            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$labels[$index1]);
+            $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $labels[$index1]);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext(
@@ -1300,7 +1353,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                imagerectangle($image, $bx1, $by1-2, $bx2+2, $by2+2, $darkerpalette[$index2]);
 
                //create data label
-               if($show_label == "always" || $show_label == "hover") {
+               if ($show_label == "always" || $show_label == "hover") {
                   imagettftext(
                      $image,
                      $this->fontsize,
@@ -1325,7 +1378,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //legend (align right)
          $index = 0;
          foreach ($labels2 as $label) {
-            $box = @imageTTFBbox($this->fontsize+1,$this->fontangle,$this->font,$label);
+            $box = @imageTTFBbox($this->fontsize+1, $this->fontangle, $this->font, $label);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
 
@@ -1335,7 +1388,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $this->fontsize,
                $this->fontangle,
                $width - $textwidth - 18,
-               10 + $index * 15 ,
+               10 + $index * 15,
                $this->black,
                $this->font,
                Html::clean($label)
@@ -1360,7 +1413,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $contents = $this->generateImage($params);
       if ($show_graph) {
-         $this->showImage($contents,$export);
+         $this->showImage($contents, $export);
       }
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
@@ -1369,7 +1422,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
    }
 
 
@@ -1388,7 +1441,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showVstackbar($params, $dashboard = false , $width = false) {
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
 
@@ -1406,7 +1459,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$k=$v;
       }
 
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
+      }
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
@@ -1453,10 +1508,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $max = 1;
       foreach ($values as $line) {
          foreach ($line as $label2 => $value) {
-             if ($value > $max) $max = $value;
+            if ($value > $max) {
+               $max = $value;
+            }
          }
       }
-      if ($max == 1 && $unit == '%') $max = 100;
+      if ($max == 1 && $unit == '%') {
+         $max = 100;
+      }
 
       //process datas (reverse keys)
       $new_datas=array();
@@ -1474,13 +1533,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          foreach ($data as $key2 => $subdata) {
             $tmp_cum += $subdata;
          }
-         if ($tmp_cum > $cum) $cum = $tmp_cum;
+         if ($tmp_cum > $cum) {
+            $cum = $tmp_cum;
+         }
       }
 
       $nb_bar = count($labels2);
       $nb_labels2 = count($datas);
       $height = 400;
-      if($dashboard) {
+      if ($dashboard) {
          $height = 350;
       }
       $x_bar = (0.85 * $this->width / $nb_bar);
@@ -1493,11 +1554,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $index = 0;
       foreach ($labels2 as $label) {
          $lx = 55 + $index * $width_bar;
-         $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$label);
+         $box = @imageTTFBbox($this->fontsize-1, $this->fontangle, $this->font, $label);
          $textwidth[$label] = abs($box[4] - $box[0]);
          $index++;
       }
-      $maxtextwidth = max($textwidth) ;
+      $maxtextwidth = max($textwidth);
 
       //create image
       $image = imagecreatetruecolor ($this->width, $height + $maxtextwidth);
@@ -1520,7 +1581,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //draw x-axis grey step line and values ticks
          $xstep = round(($height - $legend_height - $x_labels_height) / 12);
          for ($i = 0; $i <= 12; $i++) {
-            $yaxis = $height - $x_labels_height - $xstep * $i ;
+            $yaxis = $height - $x_labels_height - $xstep * $i;
             imageLine($image, .9 * $y_labels_width, $yaxis, 0.95 * $this->width, $yaxis, $this->grey);
 
             //value label
@@ -1571,12 +1632,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $bx2 = $bx1 + $width_bar;
 
                if ($by1 != $by2) { // no draw for empty datas
-                  imagefilledrectangle($image, $bx1 , $by1 , $bx2, $by2, $alphapalette[$index2]);
-                  imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, $darkerpalette[$index2]);
+                  imagefilledrectangle($image, $bx1, $by1, $bx2, $by2, $alphapalette[$index2]);
+                  imagerectangle($image, $bx1, $by1, $bx2, $by2, $darkerpalette[$index2]);
 
                   //create data label  // Affichage des données à côté des barres
-                  if(($show_label == "always" || $show_label == "hover") && $subdata>0) {
-                     $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$subdata.$unit);
+                  if (($show_label == "always" || $show_label == "hover") && $subdata>0) {
+                     $box = @imageTTFBbox($this->fontsize-1, $this->fontangle, $this->font, $subdata.$unit);
                      $textwidth = abs($box[4] - $box[6]);
 
                      imagettftext(
@@ -1596,7 +1657,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             }
 
             //create label 2
-            $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$labels2[$label]);
+            $box = @imageTTFBbox($this->fontsize-1, $this->fontangle, $this->font, $labels2[$label]);
             $textwidth = abs($box[4] - $box[6]);
             $textwidth = abs(sqrt((pow($textwidth, 2) / 2)));
 
@@ -1619,7 +1680,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //legend (align right)
          $index = 0;
          foreach ($datas as $label => $data) {
-            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$labels[$index]);
+            $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $labels[$index]);
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             $y_legend = 5 + ($index + 1) * 15;
@@ -1630,7 +1691,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $this->fontsize-1,
                $this->fontangle,
                $this->width - $textwidth - 18,
-               $y_legend ,
+               $y_legend,
                $this->black,
                $this->font,
                Html::clean($labels[$index])
@@ -1656,7 +1717,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $contents = $this->generateImage($params);
       if ($show_graph) {
-         $this->showImage($contents,$export);
+         $this->showImage($contents, $export);
       }
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
@@ -1665,7 +1726,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
    }
 
 
@@ -1685,7 +1746,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showArea($params, $dashboard = false , $width = false) {
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
 
@@ -1703,7 +1764,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$k=$v;
       }
 
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
+      }
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
@@ -1744,8 +1807,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $values = array_values($datas);
       $labels = array_keys($datas);
       $max = max($values);
-      if ($max <= 1) $max = 1;
-      if ($max == 1 && $unit == '%') $max = 100;
+      if ($max <= 1) {
+         $max = 1;
+      }
+      if ($max == 1 && $unit == '%') {
+         $max = 100;
+      }
 
       $nb = count($datas);
       $width = $this->width;
@@ -1769,14 +1836,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //draw x-axis grey step line and values
          $xstep = round(($height - 60) / 13);
          for ($i = 0; $i< 13; $i++) {
-            $yaxis = $height- 30 - $xstep * $i ;
+            $yaxis = $height- 30 - $xstep * $i;
 
             //grey lines
             imageLine($image, 30, $yaxis, 30+$width_line*($nb-1), $yaxis, $this->grey);
 
             //value labels
             $val = round($i * $max / 12);
-            $box = @imageTTFBbox($this->fontsize,$this->fontangle,$this->font,$val);
+            $box = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $val);
             $textwidth = abs($box[4] - $box[0]);
             imagettftext($image, $this->fontsize, $this->fontangle,
                28-$textwidth, $yaxis+5, $this->darkgrey, $this->font, $val);
@@ -1806,7 +1873,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
          //on png graph, no way to draw curved polygons, force area reports to be linear
-         if ($area) $spline = false;
+         if ($area) {
+            $spline = false;
+         }
 
          //parse datas
          $index = 0;
@@ -1836,7 +1905,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   $x2, $height - 30,
                   $x1, $height - 30
                );
-               imagefilledpolygon($image, $points , 4 ,  $alphapalette[0]);
+               imagefilledpolygon($image, $points, 4, $alphapalette[0]);
             }
 
             //trace lines between points (if linear)
@@ -1878,7 +1947,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
 
             //display values label
-            if($show_label == "always" || $show_label == "hover") {
+            if ($show_label == "always" || $show_label == "hover") {
                imagettftext($image, $this->fontsize-1, $this->fontangle,
                   ($index == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
                   $darkerpalette[0], $this->font, $old_data);
@@ -1888,7 +1957,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             if ($step!=0 && ($index / $step) == round($index / $step)) {
                imageline($image, $x1, $height-30, $x1, $height-27, $darkerpalette[0]);
 
-               imagettftext($image, $this->fontsize, $this->fontangle, $x1 - 10 , $height-10,
+               imagettftext($image, $this->fontsize, $this->fontangle, $x1 - 10, $height-10,
                   $this->black, $this->font, $old_label);
             }
 
@@ -1905,7 +1974,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
             imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
             imagettftext($image, $this->fontsize, $this->fontangle,
-               $x2 - 10 , $height-10, $this->black, $this->font, $label);
+               $x2 - 10, $height-10, $this->black, $this->font, $label);
             imageline($image, $x2, $height-30, $x2, $height-27, $darkerpalette[0]);
          }
       }
@@ -1920,14 +1989,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                       "withdata"   => $opt['withdata']);
       $contents = $this->generateImage($params);
       if ($show_graph) {
-         $this->showImage($contents,$export);
+         $this->showImage($contents, $export);
       }
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
                         "export"    => $export,
                         "datas"     => $datas,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
    } // end Area
 
 
@@ -1946,7 +2015,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
     * @return nothing
     */
    function showGArea($params, $dashboard = false , $width = false) {
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
 
@@ -1964,7 +2033,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $$k=$v;
       }
 
-      if (self::DEBUG_GRAPH && isset($raw_datas)) Toolbox::logdebug($raw_datas);
+      if (self::DEBUG_GRAPH && isset($raw_datas)) {
+         Toolbox::logdebug($raw_datas);
+      }
 
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
@@ -2010,10 +2081,14 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $max = 1;
       foreach ($values as $line) {
          foreach ($line as $label2 => $value) {
-            if ($value > $max) $max = $value;
+            if ($value > $max) {
+               $max = $value;
+            }
          }
       }
-      if ($max == 1 && $unit == '%') $max = 100;
+      if ($max == 1 && $unit == '%') {
+         $max = 100;
+      }
 
       $nb = count($labels2);
       $width = $this->width;
@@ -2026,7 +2101,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $index3 = 1;
       $step = ceil($nb / 21);
       $height = 450;
-      if($dashboard){
+      if ($dashboard) {
          $height = 350;
       }
       $y_labels_width = .1 * $this->width;
@@ -2050,17 +2125,19 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //draw x-axis grey step line and value ticks
          $xstep = round(($height - $legend_height - $x_labels_height) / 12);
          for ($i = 0; $i< 12; $i++) {
-            $yaxis = $height - $x_labels_height - $xstep * $i ;
+            $yaxis = $height - $x_labels_height - $xstep * $i;
 
             //horizontal grey lines
             imageLine($image, $x_bar, $yaxis, $x_bar+$width_line*($nb-1), $yaxis, $this->grey);
 
             //value ticks
-            if($i * $max / 12 < 10) {
+            if ($i * $max / 12 < 10) {
                $val = round($i * $max / 12, 1);
-            } else $val = round($i * $max / 12);
+            } else {
+               $val = round($i * $max / 12);
+            }
 
-            $box = @imageTTFBbox($this->fontsize-1,$this->fontangle,$this->font,$val);
+            $box = @imageTTFBbox($this->fontsize-1, $this->fontangle, $this->font, $val);
             $textwidth = abs($box[4] - $box[0]);
 
             imagettftext($image, $this->fontsize-1, $this->fontangle,
@@ -2077,7 +2154,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imageLine($image, $x_bar, $height - $x_labels_height, $x_bar, $legend_height, $this->black);
 
          //draw y-axis
-         imageLine($image, $x_bar, $height - $x_labels_height,  $width - 50, $height - $x_labels_height, $this->black);
+         imageLine($image, $x_bar, $height - $x_labels_height, $width - 50, $height - $x_labels_height, $this->black);
 
          //create border on export
          if ($export) {
@@ -2085,7 +2162,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          }
 
          //on png graph, no way to draw curved polygons, force area reports to be linear
-         if ($area) $spline = false;
+         if ($area) {
+            $spline = false;
+         }
 
          //add title on export
          if ($export) {
@@ -2122,21 +2201,22 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                      $x2, $height - $x_labels_height,
                      $x1, $height - $x_labels_height
                   );
-                  imagefilledpolygon($image, $points , 4,  $alphapalette[$index1]);
+                  imagefilledpolygon($image, $points, 4, $alphapalette[$index1]);
                }
 
                //trace lines between points (if linear)
-               if (!$spline)
+               if (!$spline) {
                   $this->imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $palette[$index1]);
+               }
                $aCoords[$x1]=$y1;
 
                //trace dots
                $color_rbg = self::colorHexToRGB($darkerpalette[$index1]);
-               imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
-               imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
+               imageSmoothArc($image, $x1-1, $y1-1, 7, 7, $color_rbg, 0, 2 * M_PI);
+               imageSmoothArc($image, $x1-1, $y1-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
 
                //display values label
-               if($show_label == "always" || $show_label == "hover") {
+               if ($show_label == "always" || $show_label == "hover") {
                   imagettftext($image, $this->fontsize-2, $this->fontangle,
                      ($index2 == 1 ? $x1 : $x1 - 6 ), $y1 - 5,
                      $darkerpalette[$index1], $this->font, $old_data);
@@ -2163,11 +2243,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             if (isset($x2)) {
                //trace dots
                $color_rbg = self::colorHexToRGB($darkerpalette[$index1]);
-               imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0 , 2 * M_PI);
-               imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0 , 2 * M_PI);
+               imageSmoothArc($image, $x2-1, $y2-1, 7, 7, $color_rbg, 0, 2 * M_PI);
+               imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
 
                //display value label
-               if($show_label == "always" || $show_label == "hover") {
+               if ($show_label == "always" || $show_label == "hover") {
                   imagettftext($image, $this->fontsize-2, $this->fontangle,
                      ($index2 == 1 ? $x2 : $x2 - 6 ), $y2 - 5,
                      $darkerpalette[$index1], $this->font, $old_data);
@@ -2180,10 +2260,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          //display labels2
          $index = 0;
          foreach ($labels2 as $label) {
-            $x = $x_bar + $index * $width_line - 2 ;
+            $x = $x_bar + $index * $width_line - 2;
 
             if ($step!=0 && ($index / $step) == round($index / $step)) {
-               imagettftext($image, $this->fontsize-1, -45, $x , $height - $x_labels_height + 11,
+               imagettftext($image, $this->fontsize-1, -45, $x, $height - $x_labels_height + 11,
                   $this->black, $this->font, $label);
             }
 
@@ -2198,11 +2278,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext($image, $this->fontsize-1, $this->fontangle,
-               20, 15 + $index * 14 , $this->black, $this->font, $label);
+               20, 15 + $index * 14, $this->black, $this->font, $label);
 
             //legend circle
             $color_rbg = self::colorHexToRGB($palette[$index]);
-            imageSmoothArc($image, 10, 10 + $index * 14, 7, 7, $color_rbg, 0 , 2 * M_PI);
+            imageSmoothArc($image, 10, 10 + $index * 14, 7, 7, $color_rbg, 0, 2 * M_PI);
 
             $index++;
          }
@@ -2219,7 +2299,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
       $contents = $this->generateImage($params);
 
       if ($show_graph) {
-         $this->showImage($contents,$export);
+         $this->showImage($contents, $export);
       }
       $opt['randname'] = $randname;
       $options = array("opt"        => $opt,
@@ -2228,7 +2308,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
    }// End Garea
 
 }// End Class

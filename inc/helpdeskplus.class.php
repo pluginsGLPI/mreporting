@@ -117,7 +117,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $search_closed    = (isset($_SESSION['mreporting_values']['show_closed'])
                            && ($_SESSION['mreporting_values']['show_closed'] == '1'))  ?true:false;
 
-      if($search_new) {
+      if ($search_new) {
          $sql_create = "SELECT
                   DISTINCT DATE_FORMAT(date, '{$this->period_sort}') as period,
                   DATE_FORMAT(date, '{$this->period_label}') as period_name,
@@ -143,7 +143,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          }
       }
 
-      if($search_solved) {
+      if ($search_solved) {
          $sql_solved = "SELECT
                   DISTINCT DATE_FORMAT(solvedate, '{$this->period_sort}') as period,
                   DATE_FORMAT(solvedate, '{$this->period_label}') as period_name,
@@ -171,12 +171,12 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       /**
        * Backlog : Tickets Ouverts à la date en cours...
        */
-      if($search_backlogs) {
-         $date_array1=explode("-",$_SESSION['mreporting_values']['date1'.$config['randname']]);
-         $time1=mktime(0,0,0,$date_array1[1],$date_array1[2],$date_array1[0]);
+      if ($search_backlogs) {
+         $date_array1=explode("-", $_SESSION['mreporting_values']['date1'.$config['randname']]);
+         $time1=mktime(0, 0, 0, $date_array1[1], $date_array1[2], $date_array1[0]);
 
-         $date_array2=explode("-",$_SESSION['mreporting_values']['date2'.$config['randname']]);
-         $time2=mktime(0,0,0,$date_array2[1],$date_array2[2],$date_array2[0]);
+         $date_array2=explode("-", $_SESSION['mreporting_values']['date2'.$config['randname']]);
+         $time2=mktime(0, 0, 0, $date_array2[1], $date_array2[2], $date_array2[0]);
 
          //if data inverted, reverse it
          if ($time1 > $time2) {
@@ -192,7 +192,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                                 ? " AND tic.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id']
                                 : "";
 
-         $begin=strftime($this->period_sort_php ,$time1);
+         $begin=strftime($this->period_sort_php, $time1);
          $end=strftime($this->period_sort_php, $time2);
          $sql_date_backlog =  "DATE_FORMAT(list_date.period_l, '{$this->period_sort}') >= '$begin'
                                AND DATE_FORMAT(list_date.period_l, '{$this->period_sort}') <= '$end'";
@@ -235,7 +235,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       }
 
-      if($search_closed) {
+      if ($search_closed) {
          $sql_closed = "SELECT
                   DISTINCT DATE_FORMAT(closedate, '{$this->period_sort}') as period,
                   DATE_FORMAT(closedate, '{$this->period_label}') as period_name,
@@ -262,11 +262,19 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       ksort($tab);
 
-      foreach($tab as $period => $data) {
-         if($search_new) $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['opened']][] = (isset($data['open'])) ? $data['open'] : 0;
-         if($search_solved) $datas['datas'][_x('status', 'Solved')][] = (isset($data['solved'])) ? $data['solved'] : 0;
-         if($search_closed) $datas['datas'][_x('status', 'Closed')][] = (isset($data['closed'])) ? $data['closed'] : 0;
-         if($search_backlogs) $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['backlogs']][] = (isset($data['backlog'])) ? $data['backlog'] : 0;
+      foreach ($tab as $period => $data) {
+         if ($search_new) {
+            $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['opened']][] = (isset($data['open'])) ? $data['open'] : 0;
+         }
+         if ($search_solved) {
+            $datas['datas'][_x('status', 'Solved')][] = (isset($data['solved'])) ? $data['solved'] : 0;
+         }
+         if ($search_closed) {
+            $datas['datas'][_x('status', 'Closed')][] = (isset($data['closed'])) ? $data['closed'] : 0;
+         }
+         if ($search_backlogs) {
+            $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['backlogs']][] = (isset($data['backlog'])) ? $data['backlog'] : 0;
+         }
          $datas['labels2'][] = $data['period_name'];
       }
 
@@ -283,8 +291,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          = array('dateinterval', 'period', 'allstates', 'multiplegrouprequest',
                  'multiplegroupassign', 'userassign', 'category');
 
-      if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']]))
+      if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']])) {
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
+      }
 
       foreach ($this->status as $current_status) {
          if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
@@ -360,7 +369,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   ORDER BY group_name";
             $res = $DB->query($sql_status);
             while ($data = $DB->fetch_assoc($res)) {
-               if (empty($data['group_name'])) $data['group_name'] = __("None");
+               if (empty($data['group_name'])) {
+                  $data['group_name'] = __("None");
+               }
                $tab[$data['group_name']][$status_name] = $data['nb'];
             }
          }
@@ -386,8 +397,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $tab = array();
       $datas = array();
 
-      if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']]))
+      if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']])) {
          $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
+      }
 
       foreach ($this->status as $current_status) {
          if ($_SESSION['mreporting_values']['status_'.$current_status] == '1') {
@@ -467,7 +479,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       $res = $DB->query($sql_create);
       while ($data = $DB->fetch_assoc($res)) {
-         if (empty($data['completename'])) $data['completename'] = __("None");
+         if (empty($data['completename'])) {
+            $data['completename'] = __("None");
+         }
          $datas['datas'][$data['completename']] = $data['nb'];
       }
 
@@ -500,7 +514,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       $res = $DB->query($sql_create);
       while ($data = $DB->fetch_assoc($res)) {
-         if (empty($data['completename'])) $data['completename'] = __("None");
+         if (empty($data['completename'])) {
+            $data['completename'] = __("None");
+         }
          $datas['datas'][$data['completename']] = $data['nb'];
       }
 
@@ -817,9 +833,9 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
    function fillStatusMissingValues($tab, $labels2 = array()) {
       $datas = array();
-      foreach($tab as $name => $data) {
+      foreach ($tab as $name => $data) {
          foreach ($this->status as $current_status) {
-            if(!isset($_SESSION['mreporting_values']['status_'.$current_status])
+            if (!isset($_SESSION['mreporting_values']['status_'.$current_status])
                || ($_SESSION['mreporting_values']['status_'.$current_status] == '1')) {
 
                $status_name = Ticket::getStatus($current_status);
@@ -930,7 +946,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
             $datas['labels2'][$gp->fields['name']] = $gp->fields['name'];
 
-            if ($data['respected_sla'] == 'ok'){
+            if ($data['respected_sla'] == 'ok') {
                $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$gp->fields['name']] = $data['nb'];
             } else {
                $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$gp->fields['name']] = $data['nb'];
@@ -942,13 +958,13 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $gp = new Group();
          $gp_found = $gp->find("", "name"); //Tri précose qui n'est pas utile
 
-         foreach($gp_found as $group){
+         foreach ($gp_found as $group) {
              $group_name = $group['name'];
-            if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name])){
+            if (!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name])) {
                $datas['labels2'][$group_name] = $group_name;
                $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name] = 0;
             }
-            if(!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name])){
+            if (!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name])) {
                $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name] = 0;
             }
          }
