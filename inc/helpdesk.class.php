@@ -304,7 +304,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       return $this->reportHgbarTicketNumberByCategoryAndByType($config, 'close');
    }
 
-   private function reportHgbarTicketNumberByCategoryAndByType($config=array(), $filter) {
+   private function reportHgbarTicketNumberByCategoryAndByType(array $config, $filter) {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCategoryAndByType']

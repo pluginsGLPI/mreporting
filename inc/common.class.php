@@ -1805,7 +1805,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * @param  string $randname   random string (to prevent conflict in js selection)
     * @return string             The sql test to insert in your query
     */
-   static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname) {
+   static function getSQLDate($field = "`glpi_tickets`.`date`", $delay=365, $randname = '') {
 
       if (empty($_SESSION['mreporting_values']['date1'.$randname])) {
          $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
