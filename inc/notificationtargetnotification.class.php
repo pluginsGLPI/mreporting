@@ -113,7 +113,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
          $format = '%e';
          if (strftime('%Y', strtotime($graph['start'])) != strftime('%Y', strtotime($graph['end']))) {
             $format .= ' %B %Y';
-         } else if(strftime('%B', strtotime($graph['start'])) != strftime('%B', strtotime($graph['end']))) {
+         } else if (strftime('%B', strtotime($graph['start'])) != strftime('%B', strtotime($graph['end']))) {
             $format .= ' %B';
          }
 

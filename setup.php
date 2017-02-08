@@ -98,8 +98,8 @@ function plugin_init_mreporting() {
             $mreporting_common = new PluginMreportingCommon();
             $reports = $mreporting_common->getAllReports();
             if ($reports !== false) {
-               foreach($reports as $report) {
-                  foreach($report['functions'] as $func) {
+               foreach ($reports as $report) {
+                  foreach ($report['functions'] as $func) {
                      $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
                   }
                }

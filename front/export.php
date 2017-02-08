@@ -37,7 +37,7 @@ Session::checkLoginUser();
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-if($_REQUEST['switchto'] == 'odt' || $_REQUEST['switchto'] == 'odtall') {
+if ($_REQUEST['switchto'] == 'odt' || $_REQUEST['switchto'] == 'odtall') {
    require_once('../lib/odtphp/Odf.php');
 }
 
