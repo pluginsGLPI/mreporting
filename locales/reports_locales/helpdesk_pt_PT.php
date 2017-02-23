@@ -18,9 +18,9 @@ $LANG['plugin_mreporting']['Helpdesk'] = array(
       'category' => "Por entidade",
    ),
    'reportPieTopTenAuthor' => array(
-      'title'    => "Top 10 requerentes",
+      'title'    => "Top 10 solicitantes",
       'desc'     => "Circular",
-      'category' => "Por requerente",
+      'category' => "Por solicitante",
    ),
    'reportHgbarOpenTicketNumberByCategoryAndByType' => array(
       'title'    => "Número de indidências abertas por Categoria e Tipo",
@@ -88,8 +88,8 @@ $LANG['plugin_mreporting']['Helpdesk'] = array(
       'category' => "Por indidência",
    ),
    'reportHbarTicketNumberByLocation' => array(
-      'title'    => "Número de indidências por requerente e local",
+      'title'    => "Número de indidências por solicitante e local",
       'desc'     => "Barras",
-      'category' => "Por requerente",
+      'category' => "Por solicitante",
    ),
 );
