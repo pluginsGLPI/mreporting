@@ -1068,7 +1068,8 @@ class PluginMreportingCommon extends CommonDBTM {
 
                         //dynamic call of method passed by 'f_name'
                         //GET parameter with previously instancied class
-                        $datas = $obj->$func['function']($config);
+                        $method = $func['function'];
+                        $datas = $obj->$method($config);
 
                         //show graph (pgrah type determined by
                         //first entry of explode of camelcase of function name
@@ -1366,8 +1367,8 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $elements = array(
          'day'    => _n("Day", "Days", 1),
-         'week'   => __("Week"),
-         'month'  => __("Month"),
+         'week'   => __("Week", 'mreporting'),
+         'month'  => __("Month", 'mreporting'),
          'year'   => __("By year"));
 
       Dropdown::showFromArray("period", $elements,
