@@ -3,19 +3,18 @@
 # This file is distributed under the same license as the GLPI - Mreporting plugin package.
 # 
 # Translators:
-# Shawn Long <webaccounts@kkg.org>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-02 14:27+0200\n"
-"PO-Revision-Date: 2017-02-21 16:38+0000\n"
-"Last-Translator: Shawn Long <webaccounts@kkg.org>\n"
-"Language-Team: English (United States) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/en_US/)\n"
+"PO-Revision-Date: 2017-03-02 19:56+0000\n"
+"Last-Translator: Eskiso <wiSe_gdr@hotmail.com>\n"
+"Language-Team: Portuguese (Portugal) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en_US\n"
+"Language: pt_PT\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: setup.php:139 test.php:4 front/central.php:33 front/config.form.php:53
@@ -29,127 +28,127 @@ msgstr "More Reporting"
 
 #: ajax/dropdownExport.php:45 inc/common.class.php:494
 msgid "With data"
-msgstr "With data"
+msgstr "Com dados"
 
 #: ajax/dropdownExport.php:46 inc/common.class.php:493
 msgid "Without data"
-msgstr "Without data"
+msgstr "Sem dados"
 
 #: ajax/homepage_link.php:6 inc/common.class.php:58 inc/common.class.php:59
 #: inc/common.class.php:71 inc/dashboard.class.php:35
 msgid "Dashboard"
-msgstr "Dashboard"
+msgstr "Painel"
 
 #: front/central.php:73 front/central.php:80 inc/common.class.php:316
 #: inc/common.class.php:383 inc/common.class.php:417 inc/config.class.php:613
 msgid "No report is available !"
-msgstr "No report is available !"
+msgstr "Nenhum reporte disponível !"
 
 #: front/popup.php:38 inc/common.class.php:1124 inc/common.class.php:1131
 #: inc/common.class.php:1139
 msgid "General Report - ODT"
-msgstr "General Report - ODT"
+msgstr "Reporte Geral - ODT"
 
 #: inc/common.class.php:61 inc/common.class.php:62 inc/common.class.php:80
 msgid "Reports list"
-msgstr "Reports List"
+msgstr "Lista de reportes"
 
 #: inc/common.class.php:910
 msgid "Number"
-msgstr "Number"
+msgstr "Número"
 
 #: inc/common.class.php:931 inc/common.class.php:1230
 #: inc/common.class.php:1246
 msgid "data"
-msgstr "data"
+msgstr "dados"
 
 #: inc/common.class.php:1125 inc/preference.class.php:123
 msgid "Please, select a model in your preferences"
-msgstr "Please, select a model in your preferences"
+msgstr "Por favor, escolha um modelo nas suas preferências"
 
 #: inc/common.class.php:1132
 msgid "No model available"
-msgstr "No model available"
+msgstr "Nenhum modelo disponivel"
 
 #: inc/common.class.php:1140
 msgid "No graphic selected"
-msgstr "No graphic selected"
+msgstr "Nenhum gráfico seleccionado"
 
 #: inc/config.class.php:38
 msgid "Configuration"
-msgstr "Configuration"
+msgstr "Configuração"
 
 #: inc/config.class.php:70 inc/config.class.php:641
 msgid "See area"
-msgstr "See area"
+msgstr "Ver area"
 
 #: inc/config.class.php:76 inc/config.class.php:656 inc/config.class.php:668
 msgid "Curve lines (SVG)"
-msgstr "Curve lines (SVG)"
+msgstr "Linhas curvas (SVG)"
 
 #: inc/config.class.php:82
 msgid "See values"
-msgstr "See values"
+msgstr "Ver valores"
 
 #: inc/config.class.php:89 inc/config.class.php:683
 msgid "Reverse data array"
-msgstr "Reverse data array"
+msgstr "Inverter array de dados"
 
 #: inc/config.class.php:95 inc/config.class.php:695
 msgid "Unit"
-msgstr "Unit"
+msgstr "Unidade"
 
 #: inc/config.class.php:99 inc/config.class.php:705
 msgid "Default delay"
-msgstr "Default delay"
+msgstr "Atraso por defeito"
 
 #: inc/config.class.php:103 inc/config.class.php:713
 msgid "Additional condition for MySQL"
-msgstr "Additional condition for MySQL"
+msgstr "Condição adicional para MySQL"
 
 #: inc/config.class.php:107 inc/config.class.php:621
 msgid "See graphic"
-msgstr "See graphic"
+msgstr "Ver gráfico"
 
 #: inc/config.class.php:113
 msgid "Class"
-msgstr "Class"
+msgstr "Classe"
 
 #: inc/config.class.php:125 inc/config.class.php:722
 msgid "Send this report with the notification"
-msgstr "Send this report with the notification"
+msgstr "Enviar este reporte com a notificação"
 
 #: inc/config.class.php:209
 msgid "Initialize graphics configuration"
-msgstr "Initialize graphics configuration"
+msgstr "Inicializar configuração de gráficos"
 
 #: inc/config.class.php:442 inc/config.class.php:457
 msgid "On mouse over"
-msgstr "On mouse over"
+msgstr "Com rato por cima"
 
 #: inc/config.class.php:525
 msgid "Object already exists"
-msgstr "Object already exists"
+msgstr "Objecto já existe"
 
 #: inc/dashboard.class.php:85
 msgid "Select a report to display"
-msgstr "Select a report to display"
+msgstr "Seleccione um reporte para ver"
 
 #: inc/dashboard.class.php:96
 msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "Painel está vazio. Adicione um reporte clicando no ícone."
 
 #: inc/dashboard.class.php:105
 msgid "Add a report"
-msgstr "Add a report"
+msgstr "Adicionar um reporte"
 
 #: inc/dashboard.class.php:134
 msgid "Select a report to add"
-msgstr "Select a report to add"
+msgstr "Seleccione um reporte para adicionar"
 
 #: inc/dashboard.class.php:223
 msgid "Configure report"
-msgstr "Configure report"
+msgstr "Configurar reporte"
 
 #: inc/graph.class.php:155 inc/graph.class.php:354 inc/graph.class.php:548
 #: inc/graph.class.php:808 inc/graph.class.php:1029 inc/graph.class.php:1259
@@ -158,16 +157,16 @@ msgstr "Configure report"
 #: inc/graphpng.class.php:1202 inc/graphpng.class.php:1433
 #: inc/graphpng.class.php:1736 inc/graphpng.class.php:1999
 msgid "No data for this date range !"
-msgstr "No data for this date range !"
+msgstr "Sem dados para este período !"
 
 #: inc/helpdesk.class.php:278 inc/helpdesk.class.php:337
 msgid "Undefined"
-msgstr "Undefined"
+msgstr "Indefinido"
 
 #: inc/notification.class.php:34 inc/notification.class.php:54
 #: inc/notification.class.php:119
 msgid "Notification for \"More Reporting\""
-msgstr "Notification for \"More Reporting\""
+msgstr "Notificações para \"More Reporting\""
 
 #: inc/notification.class.php:39
 msgid ""
@@ -177,11 +176,11 @@ msgid ""
 "<p>GLPI reports are available.<br />\n"
 "You will find attached in this email.</p>\n"
 "\n"
-msgstr "\n<p>Hello,</p>\n\n<p>GLPI reports are available.<br />\nYou will find attached in this email.</p>\n\n"
+msgstr "\n<p>Olá,</p>\n\n<p>Reportes GLPI estão disponíveis<br />\nVai encontrá-los anexados a este email.</p>\n\n"
 
 #: inc/notification.class.php:46 inc/pdf.class.php:15
 msgid "GLPI statistics reports"
-msgstr "GLPI statistics reports"
+msgstr "Reporte de estatísticas GLPI"
 
 #: inc/notification.class.php:47
 msgid ""
@@ -190,69 +189,69 @@ msgid ""
 "GLPI reports are available.\n"
 "You will find attached in this email.\n"
 "\n"
-msgstr "Hello,\n\nGLPI reports are available.\nYou will find attached in this email.\n\n"
+msgstr "Olá,\n\nReportes GLPI estão disponíveis.\nVai encontrá-los anexados a este email.</p>\n\n\n"
 
 #: inc/notification.class.php:144
 msgid "Notification(s) sent !"
-msgstr "Notification(s) sent !"
+msgstr "Notificação(ões) enviada(s) !"
 
 #: inc/other.class.php:70
 msgid "Add/remove software on a computer"
-msgstr "Add/remove software on a computer"
+msgstr "Adicionar/remover software num computador"
 
 #: inc/other.class.php:73
 msgid "Add/remove version on a software"
-msgstr "Add/remove version on a software"
+msgstr "Adicionar/remover versão a um software"
 
 #: inc/other.class.php:76
 msgid "Add infocom"
-msgstr "Add infocom"
+msgstr "Adicionar infocom"
 
 #: inc/other.class.php:79
 msgid "Add/remove profile on a user"
-msgstr "Add/Remove profile on a user"
+msgstr "Adicionar/remover perfil a um utilizador"
 
 #: inc/other.class.php:82
 msgid "Add/remove group on a user"
-msgstr "Add/Remove group on a user"
+msgstr "Adicionar/remover grupo a um utilizador"
 
 #: inc/other.class.php:85
 msgid "User deleted from LDAP"
-msgstr "User deleted from LDAP"
+msgstr "Utilizador removido do LDAP"
 
 #: inc/other.class.php:93
 msgid "Webservice logs"
-msgstr "Webservice logs"
+msgstr "Registros do webservice"
 
 #: inc/other.class.php:97
 msgid "OCS Infos"
-msgstr "OCS Infos"
+msgstr "Informações OCS"
 
 #: inc/other.class.php:100
 msgid "Add/update/remove device"
-msgstr "Add/Update/Remove device"
+msgstr "Adicionar/actualizar/remover aparelho"
 
 #: inc/other.class.php:103
 msgid "Add/remove relation"
-msgstr "Add/Remove relation"
+msgstr "Adicionar/remover relação"
 
 #: inc/other.class.php:106
 msgid "Add/remove item"
-msgstr "Add/Remove item"
+msgstr "Adicionar/remover item"
 
 #: inc/other.class.php:109
 msgid "Comments & date_mod changes"
-msgstr "Comments & date_mod changes"
+msgstr "Comentários & alterações date_mod"
 
 #: inc/other.class.php:117
 msgid "Genericobject plugin logs"
-msgstr "Generic object plugin logs"
+msgstr "Registros do plugin Genericobject"
 
 #: inc/pdf.class.php:16
 msgid "Automaticaly generated by GLPI"
-msgstr "Automatically generated by GLPI"
+msgstr "Gerado automaticamente por GLPI"
 
 #: inc/profile.class.php:66 inc/profile.class.php:212
 #: inc/profile.class.php:280
 msgid "Rights management"
-msgstr "Rights management"
+msgstr "Gestão de direitos"
