@@ -1,17 +1,17 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Mreporting Development Team
-# This file is distributed under the same license as the GLPI - Mreporting plugin package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Alexandre DELAUNAY <delaunay.alexandre@gmail.com>, 2016
+# alexandre delaunay <delaunay.alexandre@gmail.com>, 2016
 # Jérémy MOREAU <jmoreau.dev@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-02 14:27+0200\n"
-"PO-Revision-Date: 2016-06-02 12:32+0000\n"
-"Last-Translator: Alexandre DELAUNAY <delaunay.alexandre@gmail.com>\n"
+"POT-Creation-Date: 2017-04-19 08:35+0200\n"
+"PO-Revision-Date: 2017-04-19 06:36+0000\n"
+"Last-Translator: Johan Cwiklinski <trasher@x-tnd.be>\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,66 +19,68 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: setup.php:139 test.php:4 front/central.php:33 front/config.form.php:53
-#: front/config.php:45 front/dashboard.form.php:34 front/graph.php:37
-#: front/preference.form.php:43 inc/common.class.php:47
-#: inc/notification.class.php:18
-#: inc/notificationtargetnotification.class.php:8 inc/preference.class.php:182
-#: inc/profile.class.php:38
+#: front/graph.php:39 front/config.php:45 front/dashboard.form.php:34
+#: front/dashboard.form.php:39 front/central.php:33 front/config.form.php:52
+#: front/preference.form.php:45 test.php:4 inc/notification.class.php:18
+#: inc/notificationtargetnotification.class.php:8 inc/profile.class.php:38
+#: inc/preference.class.php:182 inc/common.class.php:47 setup.php:152
 msgid "More Reporting"
 msgstr "Plus de rapports"
 
-#: ajax/dropdownExport.php:45 inc/common.class.php:494
-msgid "With data"
-msgstr "Avec les données"
-
-#: ajax/dropdownExport.php:46 inc/common.class.php:493
-msgid "Without data"
-msgstr "Sans les données"
-
-#: ajax/homepage_link.php:6 inc/common.class.php:58 inc/common.class.php:59
-#: inc/common.class.php:71 inc/dashboard.class.php:35
-msgid "Dashboard"
-msgstr "Tableau de bord"
-
-#: front/central.php:73 front/central.php:80 inc/common.class.php:316
-#: inc/common.class.php:383 inc/common.class.php:417 inc/config.class.php:613
+#: front/central.php:73 front/central.php:80 inc/config.class.php:613
+#: inc/common.class.php:316 inc/common.class.php:383
 msgid "No report is available !"
 msgstr "Aucun rapport disponible !"
 
-#: front/popup.php:38 inc/common.class.php:1124 inc/common.class.php:1131
-#: inc/common.class.php:1139
+#: front/popup.php:38 inc/common.class.php:1118 inc/common.class.php:1125
+#: inc/common.class.php:1133
 msgid "General Report - ODT"
 msgstr "Rapport général - ODT"
 
-#: inc/common.class.php:61 inc/common.class.php:62 inc/common.class.php:80
-msgid "Reports list"
-msgstr "Liste des rapports"
+#: ajax/dropdownExport.php:41 inc/common.class.php:490
+msgid "With data"
+msgstr "Avec les données"
 
-#: inc/common.class.php:910
-msgid "Number"
-msgstr "Nombre"
+#: ajax/dropdownExport.php:42 inc/common.class.php:489
+msgid "Without data"
+msgstr "Sans les données"
 
-#: inc/common.class.php:931 inc/common.class.php:1230
-#: inc/common.class.php:1246
-msgid "data"
-msgstr "Données"
+#: ajax/homepage_link.php:8 inc/dashboard.class.php:35 inc/common.class.php:58
+#: inc/common.class.php:59 inc/common.class.php:71
+msgid "Dashboard"
+msgstr "Tableau de bord"
 
-#: inc/common.class.php:1125 inc/preference.class.php:123
-msgid "Please, select a model in your preferences"
-msgstr "Merci de sélectionner un modèle dans vos préférences"
+#: inc/notification.class.php:34 inc/notification.class.php:54
+#: inc/notification.class.php:119
+msgid "Notification for \"More Reporting\""
+msgstr "Notification \"plus de rapports\""
 
-#: inc/common.class.php:1132
-msgid "No model available"
-msgstr "Aucun modèle n'existe"
+#: inc/notification.class.php:39
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"\n"
+"<p>GLPI reports are available.<br />\n"
+"You will find attached in this email.</p>\n"
+"\n"
+msgstr "\n\n<p>Bonjour,</p>\n\n<p>Les rapports de GLPI sont disponibles.<br />\nVous les trouverez en pièce jointe dans cet e-mail.</p>\n\n"
 
-#: inc/common.class.php:1140
-msgid "No graphic selected"
-msgstr "aucun graphique sélectionné"
+#: inc/notification.class.php:46 inc/pdf.class.php:15
+msgid "GLPI statistics reports"
+msgstr "Rapports statistiques de GLPI"
 
-#: inc/common.class.php:1479
-msgid "Max depth entity level"
-msgstr "Profondeur maximum des entités"
+#: inc/notification.class.php:47
+msgid ""
+"Hello,\n"
+"\n"
+"GLPI reports are available.\n"
+"You will find attached in this email.\n"
+"\n"
+msgstr "Bonjour,\n\nLes rapports de GLPI sont disponibles.\nVous les trouverez en pièce jointe dans cet e-mail.\n\n"
+
+#: inc/notification.class.php:144
+msgid "Notification(s) sent !"
+msgstr "Notification(s) envoyée(s) !"
 
 #: inc/config.class.php:38
 msgid "Configuration"
@@ -136,70 +138,14 @@ msgstr "Au passage de la souris"
 msgid "Object already exists"
 msgstr "L'objet existe déjà"
 
-#: inc/dashboard.class.php:85
-msgid "Select a report to display"
-msgstr "Sélectionnez un rapport à afficher"
-
-#: inc/dashboard.class.php:96
-msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur l'icône"
-
-#: inc/dashboard.class.php:105
-msgid "Add a report"
-msgstr "Ajouter un rapport"
-
-#: inc/dashboard.class.php:134
-msgid "Select a report to add"
-msgstr "Sélectionnez un rapport à ajouter"
-
-#: inc/dashboard.class.php:223
-msgid "Configure report"
-msgstr "Configurer le rapport"
-
-#: inc/graph.class.php:155 inc/graph.class.php:354 inc/graph.class.php:548
-#: inc/graph.class.php:808 inc/graph.class.php:1029 inc/graph.class.php:1259
-#: inc/graph.class.php:1500 inc/graphpng.class.php:530
+#: inc/graph.class.php:154 inc/graph.class.php:353 inc/graph.class.php:547
+#: inc/graph.class.php:807 inc/graph.class.php:1027 inc/graph.class.php:1256
+#: inc/graph.class.php:1497 inc/graphpng.class.php:530
 #: inc/graphpng.class.php:717 inc/graphpng.class.php:911
-#: inc/graphpng.class.php:1202 inc/graphpng.class.php:1433
-#: inc/graphpng.class.php:1736 inc/graphpng.class.php:1999
+#: inc/graphpng.class.php:1199 inc/graphpng.class.php:1430
+#: inc/graphpng.class.php:1727 inc/graphpng.class.php:1988
 msgid "No data for this date range !"
 msgstr "Aucune données pour cette plage de date !"
-
-#: inc/helpdesk.class.php:278 inc/helpdesk.class.php:337
-msgid "Undefined"
-msgstr "Non défini"
-
-#: inc/notification.class.php:34 inc/notification.class.php:54
-#: inc/notification.class.php:119
-msgid "Notification for \"More Reporting\""
-msgstr "Notification \"plus de rapports\""
-
-#: inc/notification.class.php:39
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"\n"
-"<p>GLPI reports are available.<br />\n"
-"You will find attached in this email.</p>\n"
-"\n"
-msgstr "\n\n<p>Bonjour,</p>\n\n<p>Les rapports de GLPI sont disponibles.<br />\nVous les trouverez en pièce jointe dans cet e-mail.</p>\n\n"
-
-#: inc/notification.class.php:46 inc/pdf.class.php:15
-msgid "GLPI statistics reports"
-msgstr "Rapports statistiques de GLPI"
-
-#: inc/notification.class.php:47
-msgid ""
-"Hello,\n"
-"\n"
-"GLPI reports are available.\n"
-"You will find attached in this email.\n"
-"\n"
-msgstr "Bonjour,\n\nLes rapports de GLPI sont disponibles.\nVous les trouverez en pièce jointe dans cet e-mail.\n\n"
-
-#: inc/notification.class.php:144
-msgid "Notification(s) sent !"
-msgstr "Notification(s) envoyée(s) !"
 
 #: inc/other.class.php:70
 msgid "Add/remove software on a computer"
@@ -257,7 +203,60 @@ msgstr "Logs plugin Genericobjec"
 msgid "Automaticaly generated by GLPI"
 msgstr "Généré automatiquement par GLPI"
 
+#: inc/dashboard.class.php:85
+msgid "Select a report to display"
+msgstr "Sélectionnez un rapport à afficher"
+
+#: inc/dashboard.class.php:96
+msgid "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur l'icône"
+
+#: inc/dashboard.class.php:105
+msgid "Add a report"
+msgstr "Ajouter un rapport"
+
+#: inc/dashboard.class.php:134
+msgid "Select a report to add"
+msgstr "Sélectionnez un rapport à ajouter"
+
+#: inc/dashboard.class.php:223
+msgid "Configure report"
+msgstr "Configurer le rapport"
+
 #: inc/profile.class.php:66 inc/profile.class.php:212
 #: inc/profile.class.php:280
 msgid "Rights management"
 msgstr "Gestion des droits"
+
+#: inc/preference.class.php:123 inc/common.class.php:1119
+msgid "Please, select a model in your preferences"
+msgstr "Merci de sélectionner un modèle dans vos préférences"
+
+#: inc/common.class.php:61 inc/common.class.php:62 inc/common.class.php:80
+msgid "Reports list"
+msgstr "Liste des rapports"
+
+#: inc/common.class.php:905
+msgid "Number"
+msgstr "Nombre"
+
+#: inc/common.class.php:926 inc/common.class.php:1224
+#: inc/common.class.php:1240
+msgid "data"
+msgstr "Données"
+
+#: inc/common.class.php:1126
+msgid "No model available"
+msgstr "Aucun modèle n'existe"
+
+#: inc/common.class.php:1134
+msgid "No graphic selected"
+msgstr "aucun graphique sélectionné"
+
+#: inc/common.class.php:1475
+msgid "Max depth entity level"
+msgstr ""
+
+#: inc/helpdesk.class.php:278 inc/helpdesk.class.php:337
+msgid "Undefined"
+msgstr "Non défini"

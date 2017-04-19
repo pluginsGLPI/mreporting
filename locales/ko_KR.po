@@ -1,6 +1,6 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Mreporting Development Team
-# This file is distributed under the same license as the GLPI - Mreporting plugin package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
 # SeongHyeon Cho <jaymz9634@gmail.com>, 2017
@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-02 14:27+0200\n"
-"PO-Revision-Date: 2017-04-12 08:33+0000\n"
-"Last-Translator: SeongHyeon Cho <jaymz9634@gmail.com>\n"
+"POT-Creation-Date: 2017-04-19 08:35+0200\n"
+"PO-Revision-Date: 2017-04-19 06:36+0000\n"
+"Last-Translator: Johan Cwiklinski <trasher@x-tnd.be>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,62 +18,68 @@ msgstr ""
 "Language: ko_KR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: setup.php:139 test.php:4 front/central.php:33 front/config.form.php:53
-#: front/config.php:45 front/dashboard.form.php:34 front/graph.php:37
-#: front/preference.form.php:43 inc/common.class.php:47
-#: inc/notification.class.php:18
-#: inc/notificationtargetnotification.class.php:8 inc/preference.class.php:182
-#: inc/profile.class.php:38
+#: front/graph.php:39 front/config.php:45 front/dashboard.form.php:34
+#: front/dashboard.form.php:39 front/central.php:33 front/config.form.php:52
+#: front/preference.form.php:45 test.php:4 inc/notification.class.php:18
+#: inc/notificationtargetnotification.class.php:8 inc/profile.class.php:38
+#: inc/preference.class.php:182 inc/common.class.php:47 setup.php:152
 msgid "More Reporting"
 msgstr "보고서 더 보기"
 
-#: ajax/dropdownExport.php:45 inc/common.class.php:494
-msgid "With data"
-msgstr "자료 포함"
-
-#: ajax/dropdownExport.php:46 inc/common.class.php:493
-msgid "Without data"
-msgstr "자료 제외"
-
-#: ajax/homepage_link.php:6 inc/common.class.php:58 inc/common.class.php:59
-#: inc/common.class.php:71 inc/dashboard.class.php:35
-msgid "Dashboard"
-msgstr "대시보드"
-
-#: front/central.php:73 front/central.php:80 inc/common.class.php:316
-#: inc/common.class.php:383 inc/common.class.php:417 inc/config.class.php:613
+#: front/central.php:73 front/central.php:80 inc/config.class.php:613
+#: inc/common.class.php:316 inc/common.class.php:383
 msgid "No report is available !"
 msgstr "사용 가능한 보고서가 없습니다!"
 
-#: front/popup.php:38 inc/common.class.php:1124 inc/common.class.php:1131
-#: inc/common.class.php:1139
+#: front/popup.php:38 inc/common.class.php:1118 inc/common.class.php:1125
+#: inc/common.class.php:1133
 msgid "General Report - ODT"
 msgstr "일반 보고서 - ODT"
 
-#: inc/common.class.php:61 inc/common.class.php:62 inc/common.class.php:80
-msgid "Reports list"
-msgstr "보고서 목록"
+#: ajax/dropdownExport.php:41 inc/common.class.php:490
+msgid "With data"
+msgstr "자료 포함"
 
-#: inc/common.class.php:910
-msgid "Number"
-msgstr "연번"
+#: ajax/dropdownExport.php:42 inc/common.class.php:489
+msgid "Without data"
+msgstr "자료 제외"
 
-#: inc/common.class.php:931 inc/common.class.php:1230
-#: inc/common.class.php:1246
-msgid "data"
-msgstr "자료"
+#: ajax/homepage_link.php:8 inc/dashboard.class.php:35 inc/common.class.php:58
+#: inc/common.class.php:59 inc/common.class.php:71
+msgid "Dashboard"
+msgstr "대시보드"
 
-#: inc/common.class.php:1125 inc/preference.class.php:123
-msgid "Please, select a model in your preferences"
-msgstr "사용자 설정 모델을 선택해 주세요"
+#: inc/notification.class.php:34 inc/notification.class.php:54
+#: inc/notification.class.php:119
+msgid "Notification for \"More Reporting\""
+msgstr "\"보고서 더 보기\"에 대한 알림"
 
-#: inc/common.class.php:1132
-msgid "No model available"
-msgstr "사용 가능한 모델 없음"
+#: inc/notification.class.php:39
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"\n"
+"<p>GLPI reports are available.<br />\n"
+"You will find attached in this email.</p>\n"
+"\n"
+msgstr "\n<p>안녕하세요,</p>\n\n<p>GLPI 보고서를 사용할 수 있습니다.<br />\n이 이메일에 첨부되어 있습니다.</p>\n\n"
 
-#: inc/common.class.php:1140
-msgid "No graphic selected"
-msgstr "선택된 시각화 없음"
+#: inc/notification.class.php:46 inc/pdf.class.php:15
+msgid "GLPI statistics reports"
+msgstr "GLPI 통계 보고서"
+
+#: inc/notification.class.php:47
+msgid ""
+"Hello,\n"
+"\n"
+"GLPI reports are available.\n"
+"You will find attached in this email.\n"
+"\n"
+msgstr "안녕하세요,\n\nGLPI 보고서를 사용할 수 있습니다.\n이 이메일에 첨부되어 있습니다.\n"
+
+#: inc/notification.class.php:144
+msgid "Notification(s) sent !"
+msgstr "알림(들) 발송!"
 
 #: inc/config.class.php:38
 msgid "Configuration"
@@ -131,70 +137,14 @@ msgstr "마우스를 위로 올릴때"
 msgid "Object already exists"
 msgstr "객체가 이미 존재함"
 
-#: inc/dashboard.class.php:85
-msgid "Select a report to display"
-msgstr "표시할 보고서 선택"
-
-#: inc/dashboard.class.php:96
-msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "대시보드가 비었습니다. 아이콘 위를 클릭하여 보고서를 추가하세요"
-
-#: inc/dashboard.class.php:105
-msgid "Add a report"
-msgstr "보고서 추가"
-
-#: inc/dashboard.class.php:134
-msgid "Select a report to add"
-msgstr "추가할 보고서 선택"
-
-#: inc/dashboard.class.php:223
-msgid "Configure report"
-msgstr "구성 보고서"
-
-#: inc/graph.class.php:155 inc/graph.class.php:354 inc/graph.class.php:548
-#: inc/graph.class.php:808 inc/graph.class.php:1029 inc/graph.class.php:1259
-#: inc/graph.class.php:1500 inc/graphpng.class.php:530
+#: inc/graph.class.php:154 inc/graph.class.php:353 inc/graph.class.php:547
+#: inc/graph.class.php:807 inc/graph.class.php:1027 inc/graph.class.php:1256
+#: inc/graph.class.php:1497 inc/graphpng.class.php:530
 #: inc/graphpng.class.php:717 inc/graphpng.class.php:911
-#: inc/graphpng.class.php:1202 inc/graphpng.class.php:1433
-#: inc/graphpng.class.php:1736 inc/graphpng.class.php:1999
+#: inc/graphpng.class.php:1199 inc/graphpng.class.php:1430
+#: inc/graphpng.class.php:1727 inc/graphpng.class.php:1988
 msgid "No data for this date range !"
 msgstr "이 날짜 범위에는 자료가 없습니다!"
-
-#: inc/helpdesk.class.php:278 inc/helpdesk.class.php:337
-msgid "Undefined"
-msgstr "지정되지 않음"
-
-#: inc/notification.class.php:34 inc/notification.class.php:54
-#: inc/notification.class.php:119
-msgid "Notification for \"More Reporting\""
-msgstr "\"보고서 더 보기\"에 대한 알림"
-
-#: inc/notification.class.php:39
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"\n"
-"<p>GLPI reports are available.<br />\n"
-"You will find attached in this email.</p>\n"
-"\n"
-msgstr "\n<p>안녕하세요,</p>\n\n<p>GLPI 보고서를 사용할 수 있습니다.<br />\n이 이메일에 첨부되어 있습니다.</p>\n\n"
-
-#: inc/notification.class.php:46 inc/pdf.class.php:15
-msgid "GLPI statistics reports"
-msgstr "GLPI 통계 보고서"
-
-#: inc/notification.class.php:47
-msgid ""
-"Hello,\n"
-"\n"
-"GLPI reports are available.\n"
-"You will find attached in this email.\n"
-"\n"
-msgstr "안녕하세요,\n\nGLPI 보고서를 사용할 수 있습니다.\n이 이메일에 첨부되어 있습니다.\n"
-
-#: inc/notification.class.php:144
-msgid "Notification(s) sent !"
-msgstr "알림(들) 발송!"
 
 #: inc/other.class.php:70
 msgid "Add/remove software on a computer"
@@ -252,7 +202,60 @@ msgstr "일반객체 플러그인 로그"
 msgid "Automaticaly generated by GLPI"
 msgstr "GLPI가 자동으로 생성함"
 
+#: inc/dashboard.class.php:85
+msgid "Select a report to display"
+msgstr "표시할 보고서 선택"
+
+#: inc/dashboard.class.php:96
+msgid "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "대시보드가 비었습니다. 아이콘 위를 클릭하여 보고서를 추가하세요"
+
+#: inc/dashboard.class.php:105
+msgid "Add a report"
+msgstr "보고서 추가"
+
+#: inc/dashboard.class.php:134
+msgid "Select a report to add"
+msgstr "추가할 보고서 선택"
+
+#: inc/dashboard.class.php:223
+msgid "Configure report"
+msgstr "구성 보고서"
+
 #: inc/profile.class.php:66 inc/profile.class.php:212
 #: inc/profile.class.php:280
 msgid "Rights management"
 msgstr "저작권 관리"
+
+#: inc/preference.class.php:123 inc/common.class.php:1119
+msgid "Please, select a model in your preferences"
+msgstr "사용자 설정 모델을 선택해 주세요"
+
+#: inc/common.class.php:61 inc/common.class.php:62 inc/common.class.php:80
+msgid "Reports list"
+msgstr "보고서 목록"
+
+#: inc/common.class.php:905
+msgid "Number"
+msgstr "연번"
+
+#: inc/common.class.php:926 inc/common.class.php:1224
+#: inc/common.class.php:1240
+msgid "data"
+msgstr "자료"
+
+#: inc/common.class.php:1126
+msgid "No model available"
+msgstr "사용 가능한 모델 없음"
+
+#: inc/common.class.php:1134
+msgid "No graphic selected"
+msgstr "선택된 시각화 없음"
+
+#: inc/common.class.php:1475
+msgid "Max depth entity level"
+msgstr ""
+
+#: inc/helpdesk.class.php:278 inc/helpdesk.class.php:337
+msgid "Undefined"
+msgstr "지정되지 않음"
