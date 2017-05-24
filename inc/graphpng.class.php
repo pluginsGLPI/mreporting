@@ -852,7 +852,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext($image, $this->fontsize, $this->fontangle,
-               20, 55 + $index * 14 , hexdec($this->black), $this->font, $label);
+               20, 55 + $index * 14, hexdec($this->black), $this->font, $label);
 
             //legend circle
             $color_rbg = self::colorHexToRGB($palette[$index]);
@@ -974,7 +974,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
          //create border on export
          if ($export) {
-            imagerectangle($image, 0, 0, $width - 1, $height , hexdec($this->black));
+            imagerectangle($image, 0, 0, $width - 1, $height, hexdec($this->black));
          }
 
          //add title on export
@@ -1633,8 +1633,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                $bx2 = $bx1 + $width_bar;
 
                if ($by1 != $by2) { // no draw for empty datas
-                  imagefilledrectangle($image, $bx1 , $by1 , $bx2, $by2, hexdec($alphapalette[$index2]));
-                  imagerectangle($image, $bx1 ,$by1 , $bx2, $by2, hexdec($darkerpalette[$index2]));
+                  imagefilledrectangle($image, $bx1, $by1, $bx2, $by2, hexdec($alphapalette[$index2]));
+                  imagerectangle($image, $bx1, $by1, $bx2, $by2, hexdec($darkerpalette[$index2]));
 
                   //create data label  // Affichage des données à côté des barres
                   if (($show_label == "always" || $show_label == "hover") && $subdata>0) {
@@ -1906,7 +1906,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                   $x2, $height - 30,
                   $x1, $height - 30
                );
-               imagefilledpolygon($image, $points , 4 ,  hexdec($alphapalette[0]));
+               imagefilledpolygon($image, $points, 4, hexdec($alphapalette[0]));
             }
 
             //trace lines between points (if linear)
@@ -1975,7 +1975,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             imageSmoothArc($image, $x2-1, $y2-1, 8, 8, $color_rbg, 0, 2 * M_PI);
             imageSmoothArc($image, $x2-1, $y2-1, 4, 4, array(255,255,255,0), 0, 2 * M_PI);
             imagettftext($image, $this->fontsize, $this->fontangle,
-               $x2 - 10 , $height-10, hexdec($this->black), $this->font, $label);
+               $x2 - 10, $height-10, hexdec($this->black), $this->font, $label);
             imageline($image, $x2, $height-30, $x2, $height-27, hexdec($darkerpalette[0]));
          }
       }
@@ -2155,7 +2155,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          imageLine($image, $x_bar, $height - $x_labels_height, $x_bar, $legend_height, hexdec($this->black));
 
          //draw y-axis
-         imageLine($image, $x_bar, $height - $x_labels_height,  $width - 50, $height - $x_labels_height, hexdec($this->black));
+         imageLine($image, $x_bar, $height - $x_labels_height, $width - 50, $height - $x_labels_height, hexdec($this->black));
 
          //create border on export
          if ($export) {
@@ -2202,7 +2202,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
                      $x2, $height - $x_labels_height,
                      $x1, $height - $x_labels_height
                   );
-                  imagefilledpolygon($image, $points , 4,  hexdec($alphapalette[$index1]));
+                  imagefilledpolygon($image, $points, 4, hexdec($alphapalette[$index1]));
                }
 
                //trace lines between points (if linear)
@@ -2279,7 +2279,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             $textwidth = abs($box[4] - $box[0]);
             $textheight = abs($box[5] - $box[1]);
             imagettftext($image, $this->fontsize-1, $this->fontangle,
-               20, 15 + $index * 14 , hexdec($this->black), $this->font, $label);
+               20, 15 + $index * 14, hexdec($this->black), $this->font, $label);
 
             //legend circle
             $color_rbg = self::colorHexToRGB($palette[$index]);
