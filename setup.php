@@ -42,6 +42,12 @@ if (isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::
    define('DEBUG_MREPORTING', false);
 }
 
+if (!defined('PCLZIP_TEMPORARY_DIR')) {
+   define('PCLZIP_TEMPORARY_DIR', GLPI_DOC_DIR . '/_tmp/pclzip');
+}
+include_once GLPI_ROOT . "/plugins/mreporting/vendor/autoload.php";
+
+
 /**
  * Init hooks of the plugin.
  * REQUIRED
@@ -55,7 +61,7 @@ function plugin_init_mreporting() {
 
    $plugin = new Plugin();
    if ($plugin->isInstalled("mreporting")
-       && $plugin->isActivated("mreporting")) {
+      && $plugin->isActivated("mreporting")) {
 
       // *Direct* access to rapport file (from e-mail) :
       if (isset($_GET['redirect']) && strpos($_GET['redirect'], 'plugin_mreporting') !== false) {

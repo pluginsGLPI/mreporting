@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Odtphp\Odf;
+
 class PluginMreportingCommon extends CommonDBTM {
    static $rightname = 'statistic';
 
@@ -1213,7 +1215,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $description = $LANG['plugin_mreporting'][$short_classname][$params[0]['f_name']]['desc'];
       }
 
-      $odf = new odf("../templates/template.odt", $config);
+      $odf = new Odf("../templates/template.odt", $config);
       $odf->setVars('category', $category, ENT_NOQUOTES, "utf-8");
       $odf->setVars('title', $params[0]['title'], ENT_NOQUOTES, "utf-8");
       $odf->setVars('description', $description, ENT_NOQUOTES, "utf-8");
@@ -1638,7 +1640,12 @@ class PluginMreportingCommon extends CommonDBTM {
       }
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1."&date2".$randname."=".$date2;
 
-      Bookmark::showSaveButton(Bookmark::URI, __CLASS__);
+      if (class_exists('Bookmark')) {
+         Bookmark::showSaveButton(Bookmark::URI, __CLASS__);
+      } else {
+         //@since GLPI 9.2
+         SavedSearch::showSaveButton(SavedSearch::URI, __CLASS__);
+      }
 
       //If there's no selector for the report, there's no need for a reset button !
       if ($has_selector) {
