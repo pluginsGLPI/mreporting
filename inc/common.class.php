@@ -469,12 +469,14 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "<td>".__("Begin date")."</td>";
          echo "<td>";
          $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
-         Html::showDateFormItem("date1",$date1,true);
+         Html::showDateField("date1", ['value'      => $date1,
+                                       'maybeempty' => true]);
          echo "</td>";
          echo "<td>".__("End date")."</td>";
          echo "<td>";
          $date2 = strftime("%Y-%m-%d");
-         Html::showDateFormItem("date2",$date2,true);
+         Html::showDateField("date2", ['value'      => $date1,
+                                       'maybeempty' => true]);
          echo "</td>";
          echo "</tr>";
          echo "</table>";
@@ -1458,13 +1460,15 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $date1 = $_SESSION['mreporting_values']["date1".$randname];
       echo "<b>".__("Start date")."</b><br />";
-      Html::showDateFormItem("date1".$randname, $date1, false);
+      Html::showDateField("date1", ['value'      => $date1,
+                                    'maybeempty' => false]);
       echo "</td>";
 
       $date2 = $_SESSION['mreporting_values']["date2".$randname];
       echo "<td>";
       echo "<b>".__("End date")."</b><br />";
-      Html::showDateFormItem("date2".$randname, $date2, false);
+      Html::showDateField("date2", ['value'      => $date1,
+                                    'maybeempty' => false]);
    }
 
    static function canAccessAtLeastOneReport($profiles_id) {
