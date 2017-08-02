@@ -224,8 +224,11 @@ class PluginMreportingProfile extends CommonDBTM {
             echo "<tr class='tab_bg_1'>";
             echo "<td>".$mreportingConfig->getLink()."&nbsp(".$title."): </td>";
             echo "<td>";
-            Profile::dropdownNoneReadWrite($report['id'],
-                                           $profile->fields['right'], 1, 1, 0);
+            Profile::dropdownRight($report['id'],
+                                   ['value'   => $profile->fields['right'],
+                                    'nonone'  => 0,
+                                    'noread'  => 0,
+                                    'nowrite' => 1]);
             echo "</td>";
             echo "</tr>\n";
          }
@@ -292,8 +295,11 @@ class PluginMreportingProfile extends CommonDBTM {
          echo "<tr class='tab_bg_1'>";
          echo "<td>".$prof->getLink()."</td>";
          echo "<td>";
-         Profile::dropdownNoneReadWrite($profile['id'],
-                                        $reportProfiles->fields['right'], 1, 1, 0);
+         Profile::dropdownRight($profile['id'],
+                                ['value'   => $reportProfiles->fields['right'],
+                                 'nonone'  => 0,
+                                 'noread'  => 0,
+                                 'nowrite' => 1]);
          echo "</td></tr>";
       }
 
