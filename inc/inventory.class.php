@@ -328,14 +328,20 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          $query.=(!$first?" UNION ":"")
            ."\n SELECT '$os' AS OS, count(*) AS Total, count(*) * 100 / (SELECT count(*)
                                                                         FROM glpi_computers        as c,
-                                                                             glpi_operatingsystems as os
+                                                                             glpi_operatingsystems as os,
+                                                                             glpi_items_operatingsystems as iso
                                                                         WHERE c.`is_deleted`='0' AND c.`is_template`='0'
-                                                                        AND c.`operatingsystems_id` = os.`id`
+                                                                        AND c.`id` = ios.`items_id`
+                                                                        AND ios.`itemtype` = 'Computer'
+                                                                        AND os.`id` = ios.`operatingsystems_id`
                                                                             $sql_entities
                                                                             $sql_states) AS Percent
                FROM glpi_computers        as c,
-                    glpi_operatingsystems as os
-               WHERE c.`operatingsystems_id` = os.`id`
+                    glpi_operatingsystems as os,
+                    glpi_items_operatingsystems as ios
+               WHERE c.`id` = ios.`items_id`
+                     AND ios.`itemtype` = 'Computer'
+                     AND os.`id` = ios.`operatingsystems_id`
                      AND c.`is_deleted`='0'
                      AND c.`is_template`='0'
                      AND os.`name` REGEXP '$search'
@@ -348,15 +354,20 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
         $query .= " UNION
          SELECT '".__("Others")."' AS OS, count(*) Total, count(*) * 100 / (SELECT count(*)
                                     FROM glpi_computers        as c,
-                                         glpi_operatingsystems as os
-                                    WHERE c.`is_deleted`= 0
-                                          AND c.`is_template`=0
-                                          AND c.`operatingsystems_id` = os.`id`
-                                          $sql_entities
-                                          $sql_states) as Percent
+                                         glpi_operatingsystems as os,
+                                     glpi_items_operatingsystems as iso
+                                       WHERE c.`is_deleted`='0' AND c.`is_template`='0'
+                                       AND c.`id` = ios.`items_id`
+                                       AND ios.`itemtype` = 'Computer'
+                                       AND os.`id` = ios.`operatingsystems_id`
+                                           $sql_entities
+                                           $sql_states) AS Percent
          FROM glpi_computers        as c,
-              glpi_operatingsystems as os
-         WHERE c.`operatingsystems_id` = os.`id`
+              glpi_operatingsystems as os,
+              glpi_items_operatingsystems as ios
+         WHERE c.`id` = ios.`items_id`
+                     AND ios.`itemtype` = 'Computer'
+                     AND os.`id` = ios.`operatingsystems_id`
            AND c.`is_deleted` = 0
            AND c.`is_template`=0
            $notlike
