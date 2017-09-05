@@ -302,7 +302,6 @@ class PluginMreportingProfile extends CommonDBTM {
                                'noread'  => 0,
                                'nowrite' => 1]);
 
-
          echo "</td></tr>";
       }
 
