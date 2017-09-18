@@ -35,6 +35,7 @@ class PluginMreportingBaseclass {
              $sql_date_closed,
              $filters,
              $where_entities,
+             $where_entities_array,
              $where_entities_level;
 
    function __construct($config = array()) {
@@ -75,6 +76,7 @@ class PluginMreportingBaseclass {
 
       if (isset( $_SESSION['glpiactiveentities'])) {
          $this->where_entities = "'".implode("', '", $_SESSION['glpiactiveentities'])."'";
+         $this->where_entities_array = $_SESSION['glpiactiveentities'];
       } else { // maybe cron mode
          $entities = array();
          $entity = new Entity;
@@ -83,6 +85,7 @@ class PluginMreportingBaseclass {
             $entities[] = $entities_id;
          }
          $this->where_entities = "'".implode("', '", $entities)."'";
+         $this->where_entities_array = $entities;
       }
 
       // init default value for status selector
