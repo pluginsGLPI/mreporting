@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define ('PLUGIN_MREPORTING_VERSION', '1.3.1');
+define ('PLUGIN_MREPORTING_VERSION', '1.4.0');
 
 if (!defined('PLUGIN_MREPORTING_TEMPLATE_DIR')) {
    define("PLUGIN_MREPORTING_TEMPLATE_DIR", GLPI_ROOT."/plugins/mreporting/templates/");
@@ -155,13 +155,20 @@ function plugin_init_mreporting() {
  * @return array
  */
 function plugin_version_mreporting() {
-   return array('name'           => __('More Reporting', 'mreporting'),
-                'version'        => PLUGIN_MREPORTING_VERSION,
-                'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
+   return [
+      'name'           => __('More Reporting', 'mreporting'),
+      'version'        => PLUGIN_MREPORTING_VERSION,
+      'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
                                        & <a href='http://www.infotel.com'>Infotel</a>",
-                'homepage'       => "https://github.com/pluginsGLPI/mreporting",
-                'license'        => 'GPLv2+',
-                'minGlpiVersion' => "9.1");
+      'homepage'       => "https://github.com/pluginsGLPI/mreporting",
+      'license'        => 'GPLv2+',
+      'requirements'   => [
+         'glpi' => [
+            'min' => '9.2',
+            'dev' => true
+         ]
+      ]
+   ];
 }
 
 function includeAdditionalLanguageFiles() {
@@ -187,14 +194,12 @@ function includeAdditionalLanguageFiles() {
  * @return boolean
  */
 function plugin_mreporting_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.1', 'lt')) {
-      if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.1');
-      } else {
-         echo "This plugin requires GLPI >= 9.1";
-      }
+   $version = rtrim(GLPI_VERSION, '-dev');
+   if (version_compare($version, '9.2', 'lt')) {
+      echo "This plugin requires GLPI 9.2";
       return false;
    }
+
    return true;
 }
 
