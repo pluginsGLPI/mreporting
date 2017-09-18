@@ -67,13 +67,21 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       return $states;
    }
 
-   static function getStateCondition($field) {
-      $sql_states = "";
+   static function getStateCondition($field, $as_array = false) {
+      $sql_states = ($as_array ? [] : "");
       if (isset($_SESSION['mreporting_values']['states_id'])) {
          if (is_array($_SESSION['mreporting_values']['states_id'])) {
-            $sql_states = " AND $field IN (".implode(',', $_SESSION['mreporting_values']['states_id']).")";
+            if ($as_array) {
+               $sql_states[$field] = $_SESSION['mreporting_values']['states_id'];
+            } else {
+               $sql_states = " AND $field IN (".implode(',', $_SESSION['mreporting_values']['states_id']).")";
+            }
          } else if ($_SESSION['mreporting_values']['states_id'] > 0) {
-            $sql_states = " AND $field = ".$_SESSION['mreporting_values']['states_id'];
+            if ($as_array) {
+               $sql_states[$field] = $_SESSION['mreporting_values']['states_id'];
+            } else {
+               $sql_states = " AND $field = ".$_SESSION['mreporting_values']['states_id'];
+            }
          }
       }
       return $sql_states;
@@ -328,14 +336,20 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          $query.=(!$first?" UNION ":"")
            ."\n SELECT '$os' AS OS, count(*) AS Total, count(*) * 100 / (SELECT count(*)
                                                                         FROM glpi_computers        as c,
-                                                                             glpi_operatingsystems as os
+                                                                             glpi_operatingsystems as os,
+                                                                             glpi_items_operatingsystems as ios
                                                                         WHERE c.`is_deleted`='0' AND c.`is_template`='0'
-                                                                        AND c.`operatingsystems_id` = os.`id`
+                                                                        AND ios.`operatingsystems_id` = os.`id`
+                                                                        AND ios.items_id = c.id
+                                                                        AND ios.itemtype = 'Computer'
                                                                             $sql_entities
                                                                             $sql_states) AS Percent
                FROM glpi_computers        as c,
-                    glpi_operatingsystems as os
-               WHERE c.`operatingsystems_id` = os.`id`
+                    glpi_operatingsystems as os,
+                    glpi_items_operatingsystems as ios
+               WHERE ios.`operatingsystems_id` = os.`id`
+                     AND ios.items_id = c.id
+                     AND ios.itemtype = 'Computer'
                      AND c.`is_deleted`='0'
                      AND c.`is_template`='0'
                      AND os.`name` REGEXP '$search'
@@ -348,15 +362,20 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
         $query .= " UNION
          SELECT '".__("Others")."' AS OS, count(*) Total, count(*) * 100 / (SELECT count(*)
                                     FROM glpi_computers        as c,
-                                         glpi_operatingsystems as os
+                                         glpi_operatingsystems as os,
+                                         glpi_items_operatingsystems as ios
                                     WHERE c.`is_deleted`= 0
                                           AND c.`is_template`=0
-                                          AND c.`operatingsystems_id` = os.`id`
+                                          AND ios.`operatingsystems_id` = os.`id`
+                                          AND ios.items_id = c.id
                                           $sql_entities
                                           $sql_states) as Percent
          FROM glpi_computers        as c,
-              glpi_operatingsystems as os
-         WHERE c.`operatingsystems_id` = os.`id`
+              glpi_operatingsystems as os,
+              glpi_items_operatingsystems as ios
+         WHERE ios.`operatingsystems_id` = os.`id`
+           AND ios.items_id = c.id
+           AND ios.itemtype = 'Computer'
            AND c.`is_deleted` = 0
            AND c.`is_template`=0
            $notlike
@@ -383,10 +402,14 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
       $_SESSION['mreporting_selector']['reportHbarWindows'] = array('multiplestates');
 
-      $sql_entities = " AND entities_id IN ({$this->where_entities})";
-      $sql_states   = self::getStateCondition('glpi_computers.states_id');
-      $total_computers = countElementsInTable('glpi_computers',
-                                              "`is_deleted`=0 AND `is_template`=0 $sql_entities");
+      $sql_states   = self::getStateCondition('glpi_computers.states_id', true);
+      $total_computers = countElementsInTable(
+         'glpi_computers', [
+            'is_deleted'   => 0,
+            'is_template'  => 0,
+            'entities_id'  => $this->where_entities_array
+         ]
+      );
 
       $list_windows = array('Windows 3.1', 'Windows 95', 'Windows 98', 'Windows 2000 Pro',
                             'Windows XP', 'Windows 7', 'Windows Vista', 'Windows 8',
@@ -394,16 +417,31 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $data = array();
       foreach ($list_windows as $windows) {
          $oses = array();
-         foreach ($DB->request('glpi_operatingsystems', "name LIKE '%$windows%'") as $os) {
+         $ositerator = $DB->request('glpi_operatingsystems', ['name' => ['LIKE', "%$windows%"]]);
+         while ($os = $ositerator->next()) {
             $oses[] = $os['id'];
          }
          if (!empty($oses)) {
-            $number = countElementsInTable('glpi_computers',
-                                          "`operatingsystems_id` IN (".implode(',', $oses).")
-                                            AND `is_deleted`=0
-                                            AND `is_template`=0
-                                            $sql_entities
-                                            $sql_states");
+            $number = countElementsInTable(
+               'glpi_computers', [
+                  'INNER JOIN' => [
+                     'glpi_items_operatingsystems' => [
+                        'FKEY' => [
+                           'glpi_computers'              => 'id',
+                           'glpi_items_operatingsystems' => 'items_id'
+                        ]
+                     ]
+                  ],
+                  'WHERE' => [
+                     'glpi_items_operatingsystems.operatingsystems_id'  => $oses,
+                     'glpi_items_operatingsystems.itemtype'             => 'Computer',
+                     'glpi_computers.is_deleted'                        => 0,
+                     'glpi_computers.is_template'                       => 0,
+                     'glpi_computers.entities_id'                       => $this->where_entities_array
+                  ] + $sql_states
+               ]
+            );
+
             $percent = round($number * 100 / $total_computers). " % du parc";
             if ($number) {
                $data['datas'][$windows." ($percent)"] = $number;
@@ -420,31 +458,48 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHbarLinux'] = array('multiplestates');
-      $sql_states = self::getStateCondition('glpi_computers.states_id');
-      $sql_states2 = self::getStateCondition('c.states_id');
+      $sql_states = self::getStateCondition('glpi_computers.states_id', true);
+      $sql_states2 = self::getStateCondition('c.states_id', true);
 
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%'") as $os) {
-         $number = countElementsInTable('glpi_computers',
-                                          "`operatingsystems_id`='".$os['id']."'
-                                           AND `is_deleted` = '0'
-                                           AND `is_template` = '0'
-                                           AND `entities_id` IN ({$this->where_entities})
-                                           $sql_states");
-         if ($number) {
-            $query_details = "SELECT count(*) as cpt, s.name as name
-                              FROM `glpi_computers` as c
-                              LEFT JOIN `glpi_operatingsystemversions` as s
-                                 ON s.`id` = c.`operatingsystemversions_id`
-                              WHERE c.`operatingsystems_id` = '".$os['id']."'
-                               AND `c`.`entities_id` IN ({$this->where_entities})
-                               $sql_states2
-                              GROUP BY c.operatingsystemversions_id
-                              ORDER BY s.name ASC";
-            foreach ($DB->request($query_details) as $version) {
-               if ($version['name'] != '' && $version['cpt']) {
-                  $data['datas'][$os['name']. " ".$version['name']] = $version['cpt'];
-               }
+         $iterator = $DB->request(
+            'glpi_computers', [
+               'SELECT' => [
+                  'glpi_operatingsystemversions.name'
+               ],
+               'COUNT' => 'cpt',
+               'INNER JOIN' => [
+                  'glpi_items_operatingsystems' => [
+                     'FKEY' => [
+                        'glpi_computers'              => 'id',
+                        'glpi_items_operatingsystems' => 'items_id'
+                     ]
+                  ]
+               ],
+               'LEFT JOIN' => [
+                  'glpi_operatingsystemversions' => [
+                     'FKEY' => [
+                        'glpi_items_operatingsystems'    => 'operatingsystemversions_id',
+                        'glpi_operatingsystemversions'   => 'id'
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  'glpi_items_operatingsystems.operatingsystems_id'  => $os['id'],
+                  'glpi_items_operatingsystems.itemtype'             => 'Computer',
+                  'glpi_computers.is_deleted'                        => 0,
+                  'glpi_computers.is_template'                       => 0,
+                  'glpi_computers.entities_id'                       => $this->where_entities_array,
+               ] + $sql_states + $sql_states2,
+               'GROUPBY' => ['operatingsystemversions_id'],
+               'ORDER' => ['glpi_operatingsystemversions.name']
+            ]
+         );
+
+         while ($version = $iterator->next()) {
+            if ($version['name'] != '' && $version['cpt']) {
+               $data['datas'][$os['name']. " ".$version['name']] = $version['cpt'];
             }
          }
       }
@@ -458,16 +513,30 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHbarLinuxDistro'] = array('multiplestates');
-      $sql_states = self::getStateCondition('glpi_computers.states_id');
+      $sql_states = self::getStateCondition('glpi_computers.states_id', true);
 
       $data = array();
       foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%'") as $os) {
-         $number = countElementsInTable('glpi_computers',
-                                        "`operatingsystems_id`='".$os['id']."'
-                                         AND `is_deleted` = '0'
-                                         AND `is_template` = '0'
-                                         AND `entities_id` IN ({$this->where_entities})
-                                         $sql_states");
+         $number = countElementsInTable(
+            'glpi_computers', [
+               'INNER JOIN' => [
+                  'glpi_items_operatingsystems' => [
+                     'FKEY' => [
+                        'glpi_computers'              => 'id',
+                        'glpi_items_operatingsystems' => 'items_id'
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  'glpi_items_operatingsystems.operatingsystems_id'  => $os['id'],
+                  'glpi_items_operatingsystems.itemtype'             => 'Computer',
+                  'glpi_computers.is_deleted'                        => 0,
+                  'glpi_computers.is_template'                       => 0,
+                  'glpi_computers.entities_id'                       => $this->where_entities_array
+               ] + $sql_states
+            ]
+         );
+
          if ($number) {
             $data['datas'][$os['name']] = $number;
          }
@@ -482,31 +551,49 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHbarMac'] = array('multiplestates');
-      $sql_states  = self::getStateCondition('glpi_computers.states_id');
-      $sql_states2 = self::getStateCondition('c.states_id');
+      $sql_states  = self::getStateCondition('glpi_computers.states_id', true);
+      $sql_states2 = self::getStateCondition('c.states_id', true);
 
       $data = array();
-      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Mac OS%'") as $os) {
-         $number = countElementsInTable('glpi_computers',
-                                        "`operatingsystems_id`='".$os['id']."'
-                                         AND `is_deleted` = '0'
-                                         AND `is_template` = '0'
-                                         AND `entities_id` IN ({$this->where_entities})
-                                         $sql_states");
-         if ($number) {
-            $query_details = "SELECT count(*) as cpt, s.name as name
-                              FROM `glpi_computers` as c
-                              LEFT JOIN `glpi_operatingsystemversions` as s
-                                 ON s.`id` = c.`operatingsystemversions_id`
-                              WHERE c.`operatingsystems_id` = '".$os['id']."'
-                                 AND `c`.`entities_id` IN ({$this->where_entities})
-                                 $sql_states2
-                              GROUP BY c.operatingsystemversions_id
-                              ORDER BY s.name ASC";
-            foreach ($DB->request($query_details) as $version) {
-               if ($version['name'] != '' && $version['cpt']) {
-                  $data['datas'][$os['name']. " ".$version['name']] = $version['cpt'];
-               }
+      $ositerator = $DB->request('glpi_operatingsystems', ['name' => ['LIKE', '%Mac OS%']]);
+      while ($os = $ositerator->next()) {
+         $iterator = $DB->request(
+            'glpi_computers', [
+               'SELECT' => [
+                  'glpi_operatingsystemversions.name'
+               ],
+               'COUNT' => 'cpt',
+               'INNER JOIN' => [
+                  'glpi_items_operatingsystems' => [
+                     'FKEY' => [
+                        'glpi_computers'              => 'id',
+                        'glpi_items_operatingsystems' => 'items_id'
+                     ]
+                  ]
+               ],
+               'LEFT JOIN' => [
+                  'glpi_operatingsystemversions' => [
+                     'FKEY' => [
+                        'glpi_items_operatingsystems'    => 'operatingsystemversions_id',
+                        'glpi_operatingsystemversions'   => 'id'
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  'glpi_items_operatingsystems.operatingsystems_id'  => $os['id'],
+                  'glpi_items_operatingsystems.itemtype'             => 'Computer',
+                  'glpi_computers.is_deleted'                        => 0,
+                  'glpi_computers.is_template'                       => 0,
+                  'glpi_computers.entities_id'                       => $this->where_entities_array,
+               ] + $sql_states + $sql_states2,
+               'GROUPBY' => ['operatingsystemversions_id'],
+               'ORDER' => ['glpi_operatingsystemversions.name']
+            ]
+         );
+
+         while ($version = $iterator->next()) {
+            if ($version['name'] != '' && $version['cpt']) {
+               $data['datas'][$os['name']. " ".$version['name']] = $version['cpt'];
             }
          }
       }
@@ -517,35 +604,53 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       global $DB;
 
       $_SESSION['mreporting_selector']['reportHbarMacFamily'] = array('multiplestates');
-      $sql_states  = self::getStateCondition('glpi_computers.states_id');
-      $sql_states2 = self::getStateCondition('c.states_id');
+      $sql_states  = self::getStateCondition('glpi_computers.states_id', true);
+      $sql_states2 = self::getStateCondition('c.states_id', true);
 
       $data = array();
-      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Mac OS%'") as $os) {
-         $number = countElementsInTable('glpi_computers',
-                                        "`operatingsystems_id`='".$os['id']."'
-                                         AND `is_deleted` = '0'
-                                         AND `is_template` = '0'
-                                         AND `entities_id` IN ({$this->where_entities})
-                                         $sql_states");
-         if ($number) {
-            $query_details = "SELECT count(*) as cpt, s.name as name
-                              FROM `glpi_computers` as c
-                              LEFT JOIN `glpi_operatingsystemversions` as s
-                                 ON `s`.`id` = `c`.`operatingsystemversions_id`
-                              WHERE c.`operatingsystems_id` = '".$os['id']."'
-                               AND `c`.`entities_id` IN ({$this->where_entities})
-                               $sql_states2
-                              GROUP BY c.operatingsystemversions_id
-                              ORDER BY s.name ASC";
-            foreach ($DB->request($query_details) as $version) {
-               if ($version['name'] != '' && $version['cpt']) {
-                  if (preg_match("/(10.[0-9]+)/", $version['name'], $results)) {
-                     if (!isset($data['datas'][$os['name']. " ".$results[1]])) {
-                        $data['datas'][$os['name']. " ".$results[1]] = $version['cpt'];
-                     } else {
-                        $data['datas'][$os['name']. " ".$results[1]] += $version['cpt'];
-                     }
+      $ositerator = $DB->request('glpi_operatingsystems', ['name' => ['LIKE', '%Mac OS%']]);
+      while ($os = $ositerator->next()) {
+         $iterator = $DB->request(
+            'glpi_computers', [
+               'SELECT' => [
+                  'glpi_operatingsystemversions.name'
+               ],
+               'COUNT' => 'cpt',
+               'INNER JOIN' => [
+                  'glpi_items_operatingsystems' => [
+                     'FKEY' => [
+                        'glpi_computers'              => 'id',
+                        'glpi_items_operatingsystems' => 'items_id'
+                     ]
+                  ]
+               ],
+               'LEFT JOIN' => [
+                  'glpi_operatingsystemversions' => [
+                     'FKEY' => [
+                        'glpi_items_operatingsystems'    => 'operatingsystemversions_id',
+                        'glpi_operatingsystemversions'   => 'id'
+                     ]
+                  ]
+               ],
+               'WHERE' => [
+                  'glpi_items_operatingsystems.operatingsystems_id'  => $os['id'],
+                  'glpi_items_operatingsystems.itemtype'             => 'Computer',
+                  'glpi_computers.is_deleted'                        => 0,
+                  'glpi_computers.is_template'                       => 0,
+                  'glpi_computers.entities_id'                       => $this->where_entities_array,
+               ] + $sql_states + $sql_states2,
+               'GROUPBY' => ['operatingsystemversions_id'],
+               'ORDER' => ['glpi_operatingsystemversions.name']
+            ]
+         );
+
+         while ($version = $iterator->next()) {
+            if ($version['name'] != '' && $version['cpt']) {
+               if (preg_match("/(10.[0-9]+)/", $version['name'], $results)) {
+                  if (!isset($data['datas'][$os['name']. " ".$results[1]])) {
+                     $data['datas'][$os['name']. " ".$results[1]] = $version['cpt'];
+                  } else {
+                     $data['datas'][$os['name']. " ".$results[1]] += $version['cpt'];
                   }
                }
             }
