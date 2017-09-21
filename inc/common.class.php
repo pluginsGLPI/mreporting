@@ -1483,15 +1483,15 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $date1 = $_SESSION['mreporting_values']["date1".$randname];
       echo "<b>".__("Start date")."</b><br />";
-      Html::showDateField("date1", ['value'      => $date1,
-                                    'maybeempty' => false]);
+      Html::showDateField("date1$randname", ['value'      => $date1,
+                                             'maybeempty' => false]);
       echo "</td>";
 
       $date2 = $_SESSION['mreporting_values']["date2".$randname];
       echo "<td>";
       echo "<b>".__("End date")."</b><br />";
-      Html::showDateField("date2", ['value'      => $date2,
-                                    'maybeempty' => false]);
+      Html::showDateField("date2$randname", ['value'      => $date2,
+                                             'maybeempty' => false]);
    }
 
    /**
