@@ -59,7 +59,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       return true;
    }
 
-   function showDashBoard($show_reports_dropdown = true){
+   function showDashBoard($show_reports_dropdown = true) {
       global $LANG, $CFG_GLPI;
 
       $root_ajax = $CFG_GLPI['root_doc']."/plugins/mreporting/ajax/dashboard.php";
@@ -148,7 +148,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       echo "<div class='mreportingwidget-panel'>";
       echo "<div class='m_clear'></div>";
       $i = 0;
-      foreach($widgets as $data) {
+      foreach ($widgets as $data) {
          $i++;
 
          $report = new PluginMreportingConfig();
@@ -159,10 +159,10 @@ class PluginMreportingDashboard extends CommonDBTM {
             || !PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'], $report->getID())) {
             continue;
          }
-         $index = str_replace('PluginMreporting','',$report->fields['classname']);
+         $index = str_replace('PluginMreporting', '', $report->fields['classname']);
          $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
-         $report_script = "Nothing to show" ;
+         $report_script = "Nothing to show";
          //$config = "No configuration";
 
          $f_name = $report->fields["name"];
@@ -295,7 +295,7 @@ class PluginMreportingDashboard extends CommonDBTM {
       $report = new PluginMreportingConfig();
       $report->getFromDB($dashboard->fields['reports_id']);
 
-      $index = str_replace('PluginMreporting','',$report->fields['classname']);
+      $index = str_replace('PluginMreporting', '', $report->fields['classname']);
       $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
       $out = "Nothing to show";
@@ -311,12 +311,12 @@ class PluginMreportingDashboard extends CommonDBTM {
       $short_classname = str_replace('PluginMreporting', '', $report->fields["classname"]);
 
       if (!empty($short_classname) && !empty($f_name)) {
-          if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-              $opt = array('short_classname' => $short_classname , 'f_name' =>$f_name , 'gtype' => $gtype );
-              $dash = new PluginMreportingDashboard();
-              $out = $dash->showGraphOnDashboard($opt);
+         if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
+            $opt = array('short_classname' => $short_classname , 'f_name' =>$f_name , 'gtype' => $gtype );
+            $dash = new PluginMreportingDashboard();
+            $out = $dash->showGraphOnDashboard($opt);
 
-          }
+         }
       }
 
       echo $out;

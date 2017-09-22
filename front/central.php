@@ -30,7 +30,7 @@
 include ("../../../inc/includes.php");
 
 Session::checkLoginUser();
-Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'dashboard_list');
+Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'dashboard_list');
 $common = new PluginMreportingCommon();
 
 /*** Regular Tab ***/
@@ -43,13 +43,13 @@ foreach ($reports as $classname => $report) {
                            'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname");
 }
 
-if (count($tabs) > 0){
+if (count($tabs) > 0) {
    //foreach tabs
-   foreach($tabs as $tab){
+   foreach ($tabs as $tab) {
       global $DB;
       $params = (isset($tab['params'])?$tab['params']:'');
       //we get the classname
-      $classname = str_replace("target=".$_SERVER['PHP_SELF']."&classname=",'',$params);
+      $classname = str_replace("target=".$_SERVER['PHP_SELF']."&classname=", '', $params);
 
       //we found all reports for classname where current profil have right
       $query = "SELECT *
@@ -69,11 +69,11 @@ if (count($tabs) > 0){
    }
 
    //finally if tabs is empty
-   if(empty($tabs)) {
+   if (empty($tabs)) {
       echo "<div class='center'><br>".__("No report is available !", 'mreporting')."</div>";
    } else {
       echo "<div id='tabspanel' class='center-h'></div>";
-      Ajax::createTabs('tabspanel','tabcontent',$tabs,'PluginMreportingCommon');
+      Ajax::createTabs('tabspanel', 'tabcontent', $tabs, 'PluginMreportingCommon');
    }
 
 } else {

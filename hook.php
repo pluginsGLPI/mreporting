@@ -3,9 +3,9 @@
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  Mreporting plugin for GLPI
- Copyright (C) 2003-2011 by the mreporting Development Team.
+ Copyright (C) 2003-2017 by the mreporting Development Team.
 
- https://forge.indepnet.net/projects/mreporting
+ https://github.com/pluginsGLPI/mreporting
  -------------------------------------------------------------------------
 
  LICENSE
@@ -27,6 +27,11 @@
  --------------------------------------------------------------------------
  */
 
+/**
+ * Plugin install process
+ *
+ * @return boolean
+ */
 function plugin_mreporting_install() {
    global $DB;
 
@@ -66,7 +71,6 @@ function plugin_mreporting_install() {
    KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
-
     //create configuration table
     $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_dashboards` (
    `id` int(11) NOT NULL auto_increment,
@@ -75,7 +79,6 @@ function plugin_mreporting_install() {
    `configuration` VARCHAR(500) default NULL,
    PRIMARY KEY  (`id`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-
 
    $queries[] = "CREATE TABLE  IF NOT EXISTS `glpi_plugin_mreporting_preferences` (
    `id` int(11) NOT NULL auto_increment,
@@ -120,7 +123,7 @@ function plugin_mreporting_install() {
       PRIMARY KEY  (`id`)
       ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
-   foreach($queries as $query) {
+   foreach ($queries as $query) {
       $DB->query($query);
    }
 
@@ -142,9 +145,9 @@ function plugin_mreporting_install() {
        //migration of field
       $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
       $migration->changeField('glpi_plugin_mreporting_profiles', 'reports',
-                             'reports','integer');
+                             'reports', 'integer');
       $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id',
-                             'profiles_id','integer');
+                             'profiles_id', 'integer');
       $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
 
       $migration->migrationOneTable('glpi_plugin_mreporting_profiles');
@@ -161,11 +164,13 @@ function plugin_mreporting_install() {
 
    //== Create directories
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
-   if (!is_dir($rep_files_mreporting))
+   if (!is_dir($rep_files_mreporting)) {
       mkdir($rep_files_mreporting);
+   }
    $notifications_folder = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications";
-   if (!is_dir($notifications_folder))
+   if (!is_dir($notifications_folder)) {
       mkdir($notifications_folder);
+   }
 
    // == Install notifications
    require_once "inc/notification.class.php";
@@ -182,17 +187,19 @@ function plugin_mreporting_install() {
    $config = new PluginMreportingConfig();
    $config->createFirstConfig();
 
-
    PluginMreportingProfile::addRightToAllProfiles();
    PluginMreportingProfile::addRightToProfile($_SESSION['glpiactiveprofile']['id']);
 
    return true;
 }
 
-
+/**
+ * Plugin uninstall process
+ *
+ * @return boolean
+ */
 function plugin_mreporting_uninstall() {
    global $DB;
-
 
    $migration = new Migration("2.3.0");
    $tables = array("glpi_plugin_mreporting_profiles",
@@ -202,16 +209,16 @@ function plugin_mreporting_uninstall() {
                    "glpi_plugin_mreporting_dashboards"
    );
 
-   foreach($tables as $table) {
+   foreach ($tables as $table) {
       $migration->dropTable($table);
    }
 
    Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR."/mreporting/notifications");
    Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR."/mreporting");
 
-   $objects = array("DisplayPreference", "Bookmark");
+   $objects = array("DisplayPreference", (class_exists('Bookmark') ? "Bookmark" : "SavedSearch"));
 
-   foreach($objects as $object) {
+   foreach ($objects as $object) {
       $obj = new $object();
       $obj->deleteByCriteria(array('itemtype' => 'PluginMreportingConfig'));
    }
@@ -241,8 +248,9 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
    $field=$searchopt[$ID]["field"];
 
    $output_type=Search::HTML_OUTPUT;
-   if (isset($_GET['display_type']))
+   if (isset($_GET['display_type'])) {
       $output_type=$_GET['display_type'];
+   }
 
    switch ($type) {
 
@@ -267,15 +275,17 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
                   //parse inc dir to search report classes
                   $classes = PluginMreportingCommon::parseAllClasses($inc_dir);
 
-                  foreach($classes as $classname) {
+                  foreach ($classes as $classname) {
                      if (!class_exists($classname)) {
                         continue;
                      }
                      $functions = get_class_methods($classname);
 
-                     foreach($functions as $funct_name) {
+                     foreach ($functions as $funct_name) {
                         $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);
-                        if ($ex_func[0] != 'report') continue;
+                        if ($ex_func[0] != 'report') {
+                           continue;
+                        }
 
                         $gtype = strtolower($ex_func[1]);
 

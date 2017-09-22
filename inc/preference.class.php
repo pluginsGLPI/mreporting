@@ -160,7 +160,7 @@ class PluginMreportingPreference extends CommonDBTM {
                   default:
                      if ($filetype == 'file' && $extension ==$ext) {
                         $array_file[] = array($filename, $filedate, $extension);
-                     } elseif ($filetype == "dir") {
+                     } else if ($filetype == "dir") {
                         $array_dir[] = $filename;
                      }
                   break;

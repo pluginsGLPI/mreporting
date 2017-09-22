@@ -23,6 +23,12 @@ if (isset($_REQUEST['action'])) {
          echo "<body>";
          $dashboard = new PluginMreportingDashboard();
          $dashboard->showDashboard(false);
+
+         //load protovis lib for dashboard render
+         $version = Plugin::getInfo('mreporting', 'version');
+         echo Html::script("/plugins/mreporting/lib/protovis/protovis.min.js", ['version' => $version]);
+         echo Html::script("/plugins/mreporting/lib/protovis-msie/protovis-msie.min.js", ['version' => $version]);
+
          echo "</body>";
          echo "</html>";
          break;

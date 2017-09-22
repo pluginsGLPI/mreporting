@@ -78,13 +78,13 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
       //titles
       $out = $title." - ".$desc."\r\n";
-      foreach($labels as $label) {
+      foreach ($labels as $label) {
          $out.= $label.$CFG_GLPI['csv_delimiter'];
       }
       $out = substr($out, 0, -1)."\r\n";
 
       //values
-      foreach($values as $value) {
+      foreach ($values as $value) {
          $out.= $value." ".$unit.$CFG_GLPI['csv_delimiter'];
       }
       $out = substr($out, 0, -1)."\r\n";
@@ -137,22 +137,26 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
       $out = $title." - ".$desc."\r\n";
 
-      foreach($datas as $label2 => $cols) {
+      foreach ($datas as $label2 => $cols) {
          //title
          $out.= $label2."\r\n";
 
          //subtitle
          $i = 0;
-         foreach($cols as $value) {
+         foreach ($cols as $value) {
             $label = "";
-            if (isset($labels2[$i])) $label = str_replace(",", "-", $labels2[$i]);
+            if (isset($labels2[$i])) {
+               $label = str_replace(",", "-", $labels2[$i]);
+            }
             $out.= $label.$CFG_GLPI['csv_delimiter'];
             $i++;
          }
          $out = substr($out, 0, -1)."\r\n";
 
          //values
-         foreach($cols as $value) $out.= $value." ".$unit.";";
+         foreach ($cols as $value) {
+            $out.= $value." ".$unit.";";
+         }
          $out = substr($out, 0, -1)."\r\n\r\n";
       }
       $out = substr($out, 0, -1)."\r\n";
@@ -189,7 +193,9 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          $datas = array();
       }
 
-      if (count($datas) <= 0) return false;
+      if (count($datas) <= 0) {
+         return false;
+      }
 
       $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
@@ -218,9 +224,11 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $out = "";
 
       $i = 0;
-      foreach($datas as $label => $value) {
+      foreach ($datas as $label => $value) {
          for ($j=0; $j < $level; $j++) {
-           if ($i > 0) $out.= $CFG_GLPI['csv_delimiter'];
+            if ($i > 0) {
+               $out.= $CFG_GLPI['csv_delimiter'];
+            }
          }
 
          if (is_array($value)) {

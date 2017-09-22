@@ -1,11 +1,10 @@
 <?php
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  Mreporting plugin for GLPI
  Copyright (C) 2003-2011 by the mreporting Development Team.
 
- https://forge.indepnet.net/projects/mreporting
+ https://github.com/pluginsGLPI/mreporting
  -------------------------------------------------------------------------
 
  LICENSE
@@ -27,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define ('PLUGIN_MREPORTING_VERSION', '1.3.1');
+define ('PLUGIN_MREPORTING_VERSION', '1.4.0');
 
 if (!defined('PLUGIN_MREPORTING_TEMPLATE_DIR')) {
    define("PLUGIN_MREPORTING_TEMPLATE_DIR", GLPI_ROOT."/plugins/mreporting/templates/");
@@ -43,7 +42,18 @@ if (isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::
    define('DEBUG_MREPORTING', false);
 }
 
-// Init the hooks of the plugins -Needed
+if (!defined('PCLZIP_TEMPORARY_DIR')) {
+   define('PCLZIP_TEMPORARY_DIR', GLPI_DOC_DIR . '/_tmp/pclzip');
+}
+include_once GLPI_ROOT . "/plugins/mreporting/vendor/autoload.php";
+
+
+/**
+ * Init hooks of the plugin.
+ * REQUIRED
+ *
+ * @return void
+ */
 function plugin_init_mreporting() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
@@ -51,7 +61,7 @@ function plugin_init_mreporting() {
 
    $plugin = new Plugin();
    if ($plugin->isInstalled("mreporting")
-       && $plugin->isActivated("mreporting")) {
+      && $plugin->isActivated("mreporting")) {
 
       // *Direct* access to rapport file (from e-mail) :
       if (isset($_GET['redirect']) && strpos($_GET['redirect'], 'plugin_mreporting') !== false) {
@@ -94,8 +104,8 @@ function plugin_init_mreporting() {
             $mreporting_common = new PluginMreportingCommon();
             $reports = $mreporting_common->getAllReports();
             if ($reports !== false) {
-               foreach($reports as $report) {
-                  foreach($report['functions'] as $func) {
+               foreach ($reports as $report) {
+                  foreach ($report['functions'] as $func) {
                      $PLUGIN_HOOKS['stats']['mreporting'][$func['min_url_graph']] = $func['title'];
                   }
                }
@@ -112,7 +122,6 @@ function plugin_init_mreporting() {
 
       }
 
-
       // Add specific files to add to the header : javascript
       $PLUGIN_HOOKS['add_javascript']['mreporting'] = array("lib/protovis/protovis.min.js",
                                                             "lib/protovis-msie/protovis-msie.min.js",
@@ -120,7 +129,7 @@ function plugin_init_mreporting() {
                                                             "lib/jquery.tipsy/tipsy.js");
       if (isset($_SESSION['glpiactiveprofile']['id']) && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
          if (PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
-            $PLUGIN_HOOKS['add_javascript']['mreporting'][] = 'scripts/helpdesk-menu.js'; //This need Ext js lib !
+            $PLUGIN_HOOKS['add_javascript']['mreporting'][] = 'js/helpdesk-menu.js'; //This need Ext js lib !
             $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = false;
          }
       } else {
@@ -128,7 +137,7 @@ function plugin_init_mreporting() {
       }
 
       //Add specific files to add to the header : css
-      $PLUGIN_HOOKS['add_css']['mreporting'] = array("mreporting.css",
+      $PLUGIN_HOOKS['add_css']['mreporting'] = array("css/mreporting.css",
                                                      "lib/font-awesome-4.2.0/css/font-awesome.min.css",
                                                       "lib/jquery.tipsy/jquery.tipsy.css");
 
@@ -139,15 +148,27 @@ function plugin_init_mreporting() {
 
 }
 
-// Get the name and the version of the plugin - Needed
+/**
+ * Get the name and the version of the plugin
+ * REQUIRED
+ *
+ * @return array
+ */
 function plugin_version_mreporting() {
-   return array('name'           => __('More Reporting', 'mreporting'),
-                'version'        => PLUGIN_MREPORTING_VERSION,
-                'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
+   return [
+      'name'           => __('More Reporting', 'mreporting'),
+      'version'        => PLUGIN_MREPORTING_VERSION,
+      'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
                                        & <a href='http://www.infotel.com'>Infotel</a>",
-                'homepage'       => "https://github.com/pluginsGLPI/mreporting",
-                'license'        => 'GPLv2+',
-                'minGlpiVersion' => "9.1");
+      'homepage'       => "https://github.com/pluginsGLPI/mreporting",
+      'license'        => 'GPLv2+',
+      'requirements'   => [
+         'glpi' => [
+            'min' => '9.2',
+            'dev' => true
+         ]
+      ]
+   ];
 }
 
 function includeAdditionalLanguageFiles() {
@@ -166,18 +187,29 @@ function includeAdditionalLanguageFiles() {
    }
 }
 
-// Optional : check prerequisites before install : may print errors or add to message after redirect
+/**
+ * Check pre-requisites before install
+ * OPTIONNAL, but recommanded
+ *
+ * @return boolean
+ */
 function plugin_mreporting_check_prerequisites() {
-   if (version_compare(GLPI_VERSION,'9.1','lt')) {
-      echo "This plugin requires GLPI >= 9.1";
+   $version = rtrim(GLPI_VERSION, '-dev');
+   if (version_compare($version, '9.2', 'lt')) {
+      echo "This plugin requires GLPI 9.2";
       return false;
    }
+
    return true;
 }
 
-
-// Check configuration process for plugin : need to return true if succeeded
-// Can display a message only if failure and $verbose is true
+/**
+ * Check configuration process
+ *
+ * @param boolean $verbose Whether to display message on failure. Defaults to false
+ *
+ * @return boolean
+ */
 function plugin_mreporting_check_config($verbose=false) {
    if (true) { // Your configuration check
       return true;

@@ -31,34 +31,38 @@ include ("../../../inc/includes.php");
 
 Session::checkRight("config", UPDATE);
 
-if (!isset($_GET["id"])) $_GET["id"] = 0;
-if (!isset($_GET["preconfig"])) $_GET["preconfig"] = -1;
+if (!isset($_GET["id"])) {
+   $_GET["id"] = 0;
+}
+if (!isset($_GET["preconfig"])) {
+   $_GET["preconfig"] = -1;
+}
 
 $config= new PluginMreportingConfig();
 
 if (isset($_POST["add"])) {
-	$newID=$config->add($_POST);
-	Html::back();
+    $newID=$config->add($_POST);
+    Html::back();
 
 } else if (isset($_POST["update"])) {
-	$config->update($_POST);
-	Html::back();
+    $config->update($_POST);
+    Html::back();
 
 } else if (isset($_POST["delete"])) {
-	$config->delete($_POST,1);
-	Html::redirect("./config.form.php");
+    $config->delete($_POST, 1);
+    Html::redirect("./config.form.php");
 
 } else {
-	Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'config');
+    Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'config');
 
    //Link from graph
    if (isset($_GET["name"]) && isset($_GET["classname"])) {
-      if ($config->getFromDBByFunctionAndClassname($_GET["name"],$_GET["classname"])) {
+      if ($config->getFromDBByFunctionAndClassname($_GET["name"], $_GET["classname"])) {
          $_GET["id"] = $config->fields['id'];
       }
    }
    $config->display($_GET);
 
-	Html::footer();
+    Html::footer();
 
 }

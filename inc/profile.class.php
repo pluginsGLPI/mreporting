@@ -108,14 +108,14 @@ class PluginMreportingProfile extends CommonDBTM {
    /**
    * @param $right array
    */
-   static function addRightToAllProfiles(){
+   static function addRightToAllProfiles() {
       global $DB;
 
       $myreport = new self();
-      $table_fields = $DB->list_fields($myreport->getTable(),false);
+      $table_fields = $DB->list_fields($myreport->getTable(), false);
       $result_config = $DB->request("SELECT `id` FROM `glpi_plugin_mreporting_configs`");
       foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
-         foreach($result_config as $report){
+         foreach ($result_config as $report) {
             $DB->query("REPLACE INTO `glpi_plugin_mreporting_profiles`
                            (`profiles_id`,`reports`,`right`)
                         VALUES
@@ -125,7 +125,7 @@ class PluginMreportingProfile extends CommonDBTM {
    }
 
 
-   static function getRight(){
+   static function getRight() {
       global $DB;
 
       $query = "SELECT `profiles_id`
@@ -144,7 +144,7 @@ class PluginMreportingProfile extends CommonDBTM {
    * Function to add right on report to a profile
    * @param $idProfile
    */
-   public static function addRightToProfile($idProfile){
+   public static function addRightToProfile($idProfile) {
       global $DB;
 
       //get all reports
@@ -166,7 +166,7 @@ class PluginMreportingProfile extends CommonDBTM {
    * Function to add right of a new report
    * @param $report_id
    */
-   function addRightToReports($report_id){
+   function addRightToReports($report_id) {
       global $DB;
 
       $reportProfile = new self();
@@ -186,8 +186,7 @@ class PluginMreportingProfile extends CommonDBTM {
       $prof = new self();
       if ($prof->getFromDBByProfile($_SESSION['glpiactiveprofile']['id'])) {
          $_SESSION["glpi_plugin_mreporting_profile"] = $prof->fields;
-      }
-      else {
+      } else {
          unset($_SESSION["glpi_plugin_mreporting_profile"]);
       }
    }
@@ -218,15 +217,18 @@ class PluginMreportingProfile extends CommonDBTM {
 
          // If classname doesn't exists, don't display the report
          if (class_exists($mreportingConfig->fields['classname'])) {
-            $profile = $this->findByProfileAndReport($ID,$report['id']);
-            $index = str_replace('PluginMreporting','',$mreportingConfig->fields['classname']);
+            $profile = $this->findByProfileAndReport($ID, $report['id']);
+            $index = str_replace('PluginMreporting', '', $mreportingConfig->fields['classname']);
             $title = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
 
             echo "<tr class='tab_bg_1'>";
             echo "<td>".$mreportingConfig->getLink()."&nbsp(".$title."): </td>";
             echo "<td>";
-            Profile::dropdownNoneReadWrite($report['id'],
-                                           $profile->fields['right'], 1, 1, 0);
+            Profile::dropdownRight($report['id'],
+                                   ['value'   => $profile->fields['right'],
+                                    'nonone'  => 0,
+                                    'noread'  => 0,
+                                    'nowrite' => 1]);
             echo "</td>";
             echo "</tr>\n";
          }
@@ -236,7 +238,7 @@ class PluginMreportingProfile extends CommonDBTM {
       echo "<td colspan='2'>";
 
       echo "<div class='center'>";
-      echo "<input type='submit' name='update' value=\""._sx('button','Save')."\" class='submit'>";
+      echo "<input type='submit' name='update' value=\""._sx('button', 'Save')."\" class='submit'>";
       echo "</div>";
 
       echo "<input type='hidden' name='profile_id' value=".$ID.">";
@@ -266,7 +268,7 @@ class PluginMreportingProfile extends CommonDBTM {
    * Form to manage right on reports
    * @param $items
    */
-   function showFormForManageProfile($items,$options=array()){
+   function showFormForManageProfile($items,$options=array()) {
       global $DB, $CFG_GLPI;
 
       if (!Session::haveRight("config", READ)) {
@@ -285,7 +287,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
       foreach ($DB->request($query) as $profile) {
          $reportProfiles = new self();
-         $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'],$items->fields['id']);
+         $reportProfiles = $reportProfiles->findByProfileAndReport($profile['id'], $items->fields['id']);
 
          $prof = new Profile();
          $prof->getFromDB($profile['id']);
@@ -293,8 +295,11 @@ class PluginMreportingProfile extends CommonDBTM {
          echo "<tr class='tab_bg_1'>";
          echo "<td>".$prof->getLink()."</td>";
          echo "<td>";
-         Profile::dropdownNoneReadWrite($profile['id'],
-                                        $reportProfiles->fields['right'], 1, 1, 0);
+         Profile::dropdownRight($profile['id'],
+                                ['value'   => $reportProfiles->fields['right'],
+                                 'nonone'  => 0,
+                                 'noread'  => 0,
+                                 'nowrite' => 1]);
          echo "</td></tr>";
       }
 
@@ -312,7 +317,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
       echo "<div class='center'>";
       echo "<input type='hidden' name='report_id' value=".$items->fields['id'].">";
-      echo "<input type='submit' name='add' value=\""._sx('button','Save')."\" class='submit'>";
+      echo "<input type='submit' name='add' value=\""._sx('button', 'Save')."\" class='submit'>";
       echo "</div>";
 
       echo "</td></tr>";
@@ -321,24 +326,24 @@ class PluginMreportingProfile extends CommonDBTM {
    }
 
 
-   function findByProfileAndReport($profil_id, $report_id){
+   function findByProfileAndReport($profil_id, $report_id) {
       $prof = new self();
       $prof->getFromDBByQuery(" WHERE `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
       return $prof;
    }
 
-   function findReportByProfiles($profil_id){
+   function findReportByProfiles($profil_id) {
       $prof = new self();
       $prof->getFromDBByQuery(" WHERE `profiles_id` = ".$profil_id);
       return $prof;
    }
 
 
-   static function canViewReports($profil_id, $report_id){
+   static function canViewReports($profil_id, $report_id) {
       $prof = new self();
       $res = $prof->getFromDBByQuery(" WHERE `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
 
-      if($res && $prof->fields['right'] == READ){
+      if ($res && $prof->fields['right'] == READ) {
          return true;
       }
 

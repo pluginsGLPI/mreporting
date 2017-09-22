@@ -43,7 +43,7 @@ class PluginMreportingGraph {
       $width        = $this->width + 100;
       $randname     = $options['randname'];
 
-      if(!$options['showHeader']){
+      if (!$options['showHeader']) {
          echo "<div class='center'><div id='fig' style='width:{$width}px'>";
          //Show global title
          if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
@@ -64,7 +64,7 @@ class PluginMreportingGraph {
             $desc =$options['desc'];
             if (isset($_SESSION['mreporting_values']['date1'.$randname])
                   && isset($_SESSION['mreporting_values']['date1'.$randname])) {
-            $desc.= " - ";
+               $desc.= " - ";
             }
          }
 
@@ -82,7 +82,6 @@ class PluginMreportingGraph {
             $_SESSION['mreporting_values']['date2'.$randname],
             $randname);
          echo "</div>";
-
 
          $ex_func = explode($options['short_classname'], $options['randname']);
          if (!is_numeric($ex_func[0])) {
@@ -126,7 +125,7 @@ class PluginMreportingGraph {
    function showHbar($params, $dashboard = false ,$width = false) {
 
       ob_start();
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
 
@@ -157,7 +156,7 @@ class PluginMreportingGraph {
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end,$dashboard);
+         PluginMreportingCommon::endGraph($end, $dashboard);
          return false;
       }
 
@@ -179,7 +178,7 @@ class PluginMreportingGraph {
       $hover = '';
 
       $left = 240;
-      if($dashboard){
+      if ($dashboard) {
          $left = 180;
          if ($height > 380) {
             $height = 380;
@@ -295,7 +294,7 @@ JAVASCRIPT;
                         "export" => $export,
                         "datas"  => $datas,
                         "unit"   => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
 
       $content = ob_get_clean();
 
@@ -323,7 +322,7 @@ JAVASCRIPT;
     */
    function showPie($params, $dashboard = false ,$width = false) {
       ob_start();
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
 
@@ -356,7 +355,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end,$dashboard);
+         PluginMreportingCommon::endGraph($end, $dashboard);
          return false;
       }
 
@@ -378,7 +377,7 @@ JAVASCRIPT;
       $left = 10;
       $right_legend = 5;
 
-      if($dashboard){
+      if ($dashboard) {
          $left = 40;
       }
 
@@ -483,7 +482,7 @@ JAVASCRIPT;
                         "datas"  => $datas,
                         "unit"   => $unit);
 
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
 
       $content = ob_get_clean();
 
@@ -515,7 +514,7 @@ JAVASCRIPT;
     */
    function showSunburst($params, $dashboard = false ,$width = false) {
       ob_start();
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -540,8 +539,11 @@ JAVASCRIPT;
 
       $this->initGraph($options);
 
-      if (isset($_REQUEST['export'])) $export_txt = "true";
-      else $export_txt =  "false";
+      if (isset($_REQUEST['export'])) {
+         $export_txt = "true";
+      } else {
+         $export_txt =  "false";
+      }
 
       if (!isset($raw_datas['datas'])) {
          echo "}</script>";
@@ -550,7 +552,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end,$dashboard);
+         PluginMreportingCommon::endGraph($end, $dashboard);
          return false;
       }
 
@@ -574,7 +576,7 @@ JAVASCRIPT;
       $width = $this->width;
       $top = 10;
       $left = 10;
-      if($dashboard){
+      if ($dashboard) {
          $top = 25;
          $height = 380;
          $left = 50;
@@ -752,7 +754,7 @@ JAVASCRIPT;
                         "flip_data" => $flip_data,
                         "labels2"   => $labels2,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
 
       $content = ob_get_clean();
 
@@ -780,7 +782,7 @@ JAVASCRIPT;
    function showHgbar($params, $dashboard = false ,$width = false) {
       $criterias = PluginMreportingCommon::initGraphParams($params);
       ob_start();
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
       foreach ($criterias as $key => $val) {
@@ -810,7 +812,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end,$dashboard);
+         PluginMreportingCommon::endGraph($end, $dashboard);
          return false;
       }
 
@@ -831,14 +833,13 @@ JAVASCRIPT;
       PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
       $left = 240;
       $bottomAxis = 5;
-      if($dashboard){
+      if ($dashboard) {
          $left = 100;
          if ($height > 300) {
             $height = 300;
          }
          $bottomAxis = -15;
       }
-
 
       $JS = <<<JAVASCRIPT
    var width_hgbar = {$this->width};
@@ -971,7 +972,7 @@ JAVASCRIPT;
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
 
       $content = ob_get_clean();
 
@@ -999,7 +1000,7 @@ JAVASCRIPT;
     */
    function showVstackbar($params, $dashboard = false ,$width = false) {
       ob_start();
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1031,7 +1032,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end,$dashboard);
+         PluginMreportingCommon::endGraph($end, $dashboard);
          return false;
       }
 
@@ -1055,10 +1056,9 @@ JAVASCRIPT;
          $height = 400;
       }
       $width = $this->width;
-      if($dashboard){
+      if ($dashboard) {
          $height = 250;
       }
-
 
       $JS = <<<JAVASCRIPT
    var w = {$width},
@@ -1196,7 +1196,7 @@ JAVASCRIPT;
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
 
       $content = ob_get_clean();
 
@@ -1223,7 +1223,7 @@ JAVASCRIPT;
     */
    function showArea($params, $dashboard = false ,$width = false ) {
       ob_start();
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
 
@@ -1261,7 +1261,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end,$dashboard);
+         PluginMreportingCommon::endGraph($end, $dashboard);
          return false;
       }
 
@@ -1280,7 +1280,7 @@ JAVASCRIPT;
       $bottom = 80;
       $left = 20;
       $right = 50;
-      if($dashboard){
+      if ($dashboard) {
          $height = 340;
          $width = 395;
          $left = 30;
@@ -1421,7 +1421,7 @@ JAVASCRIPT;
                         "export"    => $export,
                         "datas"     => $datas,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
 
       $content = ob_get_clean();
 
@@ -1449,9 +1449,9 @@ JAVASCRIPT;
    function showLine($params, $dashboard = false ,$width = false) {
       $params['area'] = false;
       if ($dashboard) {
-         return  $this->showArea($params, $dashboard  , $width);
+         return  $this->showArea($params, $dashboard, $width);
       } else {
-         $this->showArea($params, $dashboard  , $width);
+         $this->showArea($params, $dashboard, $width);
       }
    }
 
@@ -1471,7 +1471,7 @@ JAVASCRIPT;
     */
    function showGarea($params, $dashboard = false ,$width = false) {
       ob_start();
-      if ($width !== false){
+      if ($width !== false) {
          $this->width = $width;
       }
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1502,7 +1502,7 @@ JAVASCRIPT;
          $end['opt']["randname"] = false;
          $end['opt']["f_name"] = $opt['f_name'];
          $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end,$dashboard);
+         PluginMreportingCommon::endGraph($end, $dashboard);
          return false;
       }
 
@@ -1528,7 +1528,7 @@ JAVASCRIPT;
       if ($height < 450) {
          $height = 450;
       }
-      if($dashboard){
+      if ($dashboard) {
          $this->width -= 35;
          $height = 350;
       }
@@ -1685,7 +1685,7 @@ JAVASCRIPT;
                         "labels2"   => $labels2,
                         "flip_data" => $flip_data,
                         "unit"      => $unit);
-      PluginMreportingCommon::endGraph($options,$dashboard);
+      PluginMreportingCommon::endGraph($options, $dashboard);
 
       $content = ob_get_clean();
 
@@ -1733,19 +1733,18 @@ JAVASCRIPT;
       $labels = array_keys($datas);
       $values = array_values($datas);
 
-
       $out = "var datas = [\n";
       foreach ($values as $value) {
          $out.= "\t".addslashes($value).",\n";
       }
-      $out = substr($out,0, -2)."\n";
+      $out = substr($out, 0, -2)."\n";
       $out.= "];\n";
 
       $out.= "var labels = [\n";
       foreach ($labels as $label) {
          $out.= "\t'".addslashes($label)."',\n";
       }
-      $out = substr($out,0, -2)."\n";
+      $out = substr($out, 0, -2)."\n";
       $out.= "];\n";
 
       $out.= "var links = [\n";
@@ -1755,9 +1754,14 @@ JAVASCRIPT;
       $out.= "];\n";
 
       echo $out;
-      if (count($values) > 0) $max = (max($values)*1.1);
-      else $max = 1;
-      if ($unit == '%') $max = 110;
+      if (count($values) > 0) {
+         $max = (max($values)*1.1);
+      } else {
+         $max = 1;
+      }
+      if ($unit == '%') {
+         $max = 110;
+      }
 
       echo "var max = $max;";
       echo "var n = ".count($values).";";
@@ -1786,23 +1790,25 @@ JAVASCRIPT;
       if ($stacked) {
 
          $tmp = array();
-         foreach($values as $k => $v) {
+         foreach ($values as $k => $v) {
 
-            foreach($v as $key => $val) {
+            foreach ($v as $key => $val) {
                   $tmp[$key][$k] = $val;
             }
          }
          if (count($tmp) > 0) {
-            foreach($tmp as $date => $nb) {
+            foreach ($tmp as $date => $nb) {
                $count = array_sum(array_values($nb));
-               if ($count > $max) $max = $count;
+               if ($count > $max) {
+                  $max = $count;
+               }
             }
          }
       }
 
       //merge missing keys
       $empty_values = array_fill_keys(array_keys($labels2), 0);
-      foreach($values as $k => $v) {
+      foreach ($values as $k => $v) {
          $values[$k] = array_replace($empty_values, $v);
       }
 
@@ -1811,35 +1817,37 @@ JAVASCRIPT;
          $out.= "\t[";
          foreach ($line as $label2 => $value) {
             $out.= addslashes($value).",";
-            if ($value > $max && !$stacked) $max = $value;
+            if ($value > $max && !$stacked) {
+               $max = $value;
+            }
          }
-         $out = substr($out,0, -1)."";
+         $out = substr($out, 0, -1)."";
          $out.= "],\n";
       }
-      $out = substr($out,0, -2)."\n";
+      $out = substr($out, 0, -2)."\n";
       $out.= "];\n";
-
 
       $out.= "var labels = [\n";
       foreach ($labels as $label) {
          $out.= "\t'".addslashes($label)."',\n";
       }
-      $out = substr($out,0, -2)."\n";
+      $out = substr($out, 0, -2)."\n";
       $out.= "];\n";
-
 
       $out.= "var labels2 = [\n";
       foreach ($labels2 as $label) {
          $out.= "\t'".addslashes($label)."',\n";
       }
-      $out = substr($out,0, -2)."\n";
+      $out = substr($out, 0, -2)."\n";
       $out.= "];\n";
       echo $out;
 
       if (!$stacked) {
          $max = ($max*1.2);
       }
-      if ($unit == '%') $max = 110;
+      if ($unit == '%') {
+         $max = 110;
+      }
 
       echo "var n = ".count($labels).";";
       echo "var m = ".count($labels2).";";

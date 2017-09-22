@@ -36,7 +36,7 @@ include ("../../../inc/includes.php");
 
 Session::checkLoginUser();
 
-Html::header(__("More Reporting", 'mreporting'), '' ,'tools', 'PluginMreportingCommon', 'viewreports');
+Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
 
 $common = new PluginMreportingCommon();
 $common->showGraph($_REQUEST);

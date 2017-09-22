@@ -43,7 +43,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       if (!is_dir($dir)) {
          return false;
       }
-      
+
       setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
       ini_set('memory_limit', '256M');
       set_time_limit(300);
@@ -113,7 +113,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
          $format = '%e';
          if (strftime('%Y', strtotime($graph['start'])) != strftime('%Y', strtotime($graph['end']))) {
             $format .= ' %B %Y';
-         } elseif(strftime('%B', strtotime($graph['start'])) != strftime('%B', strtotime($graph['end']))) {
+         } else if (strftime('%B', strtotime($graph['start'])) != strftime('%B', strtotime($graph['end']))) {
             $format .= ' %B';
          }
 

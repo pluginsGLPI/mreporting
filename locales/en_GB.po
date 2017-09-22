@@ -78,6 +78,10 @@ msgstr "data"
 msgid "No graphic selected"
 msgstr "No graphic selected"
 
+#: inc/common.class.php:1479
+msgid "Max depth entity level"
+msgstr "Max depth entity level"
+
 #: inc/config.class.php:70 inc/config.class.php:607
 msgid "See area"
 msgstr "See area"
