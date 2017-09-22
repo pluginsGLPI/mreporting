@@ -1495,6 +1495,32 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    /**
+    * Show tag from TAG plugin.
+    * @return display selector
+    */
+   static function selectorTag() {
+
+      global $DB;
+
+      $table = getTableForItemType('PluginTagTag');
+
+      $query = "SELECT DISTINCT t.id, t.name FROM $table AS t ORDER BY t.name ASC";
+
+      $result = $DB->query($query);
+
+      $values = array();
+      while ($data = $DB->fetch_assoc($result)) {
+         $values[$data['id']] = $data['name'];
+      }
+
+      $selected_values = isset($_SESSION['mreporting_values']['tag']) ? $_SESSION['mreporting_values']['tag'] : array();
+
+      Dropdown::showFromArray('tag', $values, array('values' => $selected_values,
+                                                   'multiple' => true,
+                                                   'readonly' => false));
+   }
+
+   /**
     * Show entity level selector.
     * @return display selector
     */
