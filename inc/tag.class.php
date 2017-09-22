@@ -44,15 +44,20 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
          return array();
       }
 
-      $_SESSION['mreporting_selector'][__FUNCTION__] = array();
+      $_SESSION['mreporting_selector'][__FUNCTION__] = array('tag');
 
       $datas = array();
+
+      $tag = isset($_SESSION['mreporting_values']['tag']) && count($_SESSION['mreporting_values']['tag']) > 0 ?
+        " WHERE glpi_plugin_tag_tags.id IN (".implode(',',$_SESSION['mreporting_values']['tag']).")" : "";
 
       $result = $DB->query("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name as name
                      FROM glpi_plugin_tag_tagitems
                      LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
+                     {$tag}
                      GROUP BY plugin_tag_tags_id
                      ORDER BY count_tag DESC");
+
       while ($datas_tag = $DB->fetch_assoc($result)) {
          $label = $datas_tag['name'];
          $datas['datas'][$label] = $datas_tag['count_tag'];
@@ -76,10 +81,17 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
          return array();
       }
 
-      $_SESSION['mreporting_selector'][__FUNCTION__] = array('category');
+      $_SESSION['mreporting_selector'][__FUNCTION__] = array('category','dateinterval','tag');
+
+      $this->sql_date = PluginMreportingCommon::getSQLDate("`glpi_tickets`.`date`",
+                                                            $config['delay'],
+                                                            $config['randname']);
 
       $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ?
                      " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
+
+      $tag = isset($_SESSION['mreporting_values']['tag']) && count($_SESSION['mreporting_values']['tag']) > 0 ?
+        " AND glpi_plugin_tag_tags.id IN (".implode(',', $_SESSION['mreporting_values']['tag']).")" : "";
 
       $datas = array();
 
@@ -87,10 +99,11 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
                            FROM glpi_plugin_tag_tagitems
                            LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
                            LEFT JOIN glpi_tickets ON glpi_tickets.id = glpi_plugin_tag_tagitems.items_id
-                           WHERE itemtype = 'Ticket'
+                           WHERE itemtype = 'Ticket' AND {$this->sql_date} {$tag}
                            $sql_itilcat
                            GROUP BY plugin_tag_tags_id
                            ORDER BY count_tag DESC");
+
       while ($datas_tag = $DB->fetch_assoc($result)) {
          $label = $datas_tag['name'];
          $datas['datas'][$label] = $datas_tag['count_tag'];
