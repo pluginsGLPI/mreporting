@@ -1502,6 +1502,8 @@ class PluginMreportingCommon extends CommonDBTM {
 
       global $DB;
 
+      echo "<b>Tag :</b><br />";
+
       $table = getTableForItemType('PluginTagTag');
 
       $query = "SELECT DISTINCT t.id, t.name FROM $table AS t ORDER BY t.name ASC";
