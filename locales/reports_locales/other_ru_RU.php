@@ -6,7 +6,7 @@ $LANG['plugin_mreporting']['Other'] = array(
 
    'reportHbarLogs' => array(
       'title'    => "Информация по логам",
-      'desc'     => "Шкалы",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Логи",
    ),
 );
