@@ -194,18 +194,22 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
          $begin=strftime($this->period_sort_php, $time1);
          $end=strftime($this->period_sort_php, $time2);
-         $sql_date_backlog =  "DATE_FORMAT(list_date.period_l, '{$this->period_sort}') >= '$begin'
-                               AND DATE_FORMAT(list_date.period_l, '{$this->period_sort}') <= '$end'";
-         $sql_list_date2 = str_replace('date', 'solvedate', $this->sql_list_date);
+         $sql_date_backlog =  "list_date.period_l >= '$begin'
+                               AND list_date.period_l <= '$end'";
+         //TODO : Should be done in baseclass.class.php $this->sql_list_date
+		 $DEBUGsql_list_date = "DATE_FORMAT(`date` , '{$this->period_sort}')  as period_l ,
+					DATE_FORMAT(`date`, '$this->period_label') as period_name";
+		 //$sql_list_date2 = str_replace('date', 'solvedate', $this->sql_list_date);
+		 $sql_list_date2 = str_replace('date', 'solvedate', $DEBUGsql_list_date);
          $sql_backlog = "SELECT
-            DISTINCT(DATE_FORMAT(list_date.period_l, '$this->period_sort')) as period,
-            DATE_FORMAT(list_date.period_l, '$this->period_label') as period_name,
+            DISTINCT(list_date.period_l) as period,
+            list_date.period_name as period_name,
             COUNT(DISTINCT(glpi_tickets.id)) as nb
          FROM (
-            SELECT DISTINCT period_l
+            SELECT DISTINCT period_l,period_name
             FROM (
                SELECT
-                  {$this->sql_list_date}
+                  {$DEBUGsql_list_date}
                FROM glpi_tickets
                UNION
                SELECT
@@ -214,8 +218,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             ) as list_date_union
          ) as list_date
          LEFT JOIN glpi_tickets
-            ON glpi_tickets.date <= list_date.period_l
-            AND (glpi_tickets.solvedate > list_date.period_l OR glpi_tickets.solvedate IS NULL)
+            ON DATE_FORMAT(glpi_tickets.date , '{$this->period_sort}') <= list_date.period_l
+            AND (DATE_FORMAT(glpi_tickets.solvedate, '{$this->period_sort}') > list_date.period_l OR glpi_tickets.solvedate IS NULL)
          {$this->sql_join_tu}
          {$this->sql_join_gt}
          {$this->sql_join_gtr}
