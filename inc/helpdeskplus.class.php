@@ -196,11 +196,10 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $end=strftime($this->period_sort_php, $time2);
          $sql_date_backlog =  "list_date.period_l >= '$begin'
                                AND list_date.period_l <= '$end'";
-         //TODO : Should be done in baseclass.class.php $this->sql_list_date
-		 $DEBUGsql_list_date = "DATE_FORMAT(`date` , '{$this->period_sort}')  as period_l ,
+         //TODO : Should be done in baseclass.class.php $this->sql_list_date ? Check inmpact
+		 $sql_list_date = "DATE_FORMAT(`date` , '{$this->period_sort}')  as period_l ,
 					DATE_FORMAT(`date`, '$this->period_label') as period_name";
-		 //$sql_list_date2 = str_replace('date', 'solvedate', $this->sql_list_date);
-		 $sql_list_date2 = str_replace('date', 'solvedate', $DEBUGsql_list_date);
+		 $sql_list_date2 = str_replace('date', 'solvedate', $sql_list_date);
          $sql_backlog = "SELECT
             DISTINCT(list_date.period_l) as period,
             list_date.period_name as period_name,
@@ -209,7 +208,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             SELECT DISTINCT period_l,period_name
             FROM (
                SELECT
-                  {$DEBUGsql_list_date}
+                  {$sql_list_date}
                FROM glpi_tickets
                UNION
                SELECT
