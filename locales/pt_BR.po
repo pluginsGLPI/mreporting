@@ -38,6 +38,8 @@ msgstr "Relatório geral - ODT"
 msgid "No report is available !"
 msgstr "Nenhum relatório disponível!"
 
+#: front/central
+
 #: inc/graphpng.class.php:546 inc/graphpng.class.php:740
 #: inc/graphpng.class.php:940 inc/graphpng.class.php:1249
 #: inc/graphpng.class.php:1486 inc/graphpng.class.php:1791
@@ -95,15 +97,15 @@ msgstr "Gráfico não selecionado"
 
 #: inc/common.class.php:1390
 msgid "Week"
-msgstr ""
+msgstr "Semana"
 
 #: inc/common.class.php:1391
 msgid "Month"
-msgstr ""
+msgstr "Mês"
 
 #: inc/common.class.php:1504
 msgid "Max depth entity level"
-msgstr ""
+msgstr "Nível de profundidade máxima da entidade"
 
 #: inc/profile.class.php:66 inc/profile.class.php:211
 #: inc/profile.class.php:282
