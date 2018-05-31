@@ -49,81 +49,124 @@ class PluginMreportingConfig extends CommonDBTM {
    }
 
 
-   function getSearchOptions() {
-      $tab = array();
+   function rawSearchOptions() {
 
-      $tab['common'] = self::getTypeName();
+      $tab = [];
 
-      $tab[1]['table']          = $this->getTable();
-      $tab[1]['field']          ='name';
-      $tab[1]['name']           = __("Name");
-      $tab[1]['datatype']       ='itemlink';
-      $tab[1]['itemlink_type']  = $this->getType();
+      $tab[] = [
+         'id'                 => 'common',
+         'name'               => self::getTypeName(),
+      ];
 
-      $tab[2]['table']          = $this->getTable();
-      $tab[2]['field']          = 'is_active';
-      $tab[2]['name']           = __("Active");
-      $tab[2]['datatype']       = 'bool';
+      $tab[] = [
+         'id'                 => '1',
+         'table'              => $this->getTable(),
+         'field'              => 'name',
+         'name'               => __('Name'),
+         'datatype'           => 'itemlink',
+         'itemlink_type'       => $this->getType(),
+      ];
 
-      $tab[3]['table']          = $this->getTable();
-      $tab[3]['field']          = 'show_area';
-      $tab[3]['name']           = __("See area", 'mreporting');
-      $tab[3]['datatype']       = 'bool';
-      $tab[3]['massiveaction']  = false;
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this->getTable(),
+         'field'              => 'is_active',
+         'name'               => __('Active'),
+         'datatype'           => 'bool',
+      ];
 
-      $tab[4]['table']          = $this->getTable();
-      $tab[4]['field']          = 'spline';
-      $tab[4]['name']           = __("Curve lines (SVG)", 'mreporting');
-      $tab[4]['datatype']       = 'bool';
-      $tab[4]['massiveaction']  = false;
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this->getTable(),
+         'field'              => 'show_area',
+         'name'               => __('See area', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false,
+      ];
 
-      $tab[5]['table']          = $this->getTable();
-      $tab[5]['field']          = 'show_label';
-      $tab[5]['name']           = __("See values", 'mreporting');
-      $tab[5]['datatype']      = 'specific';
-      $tab[5]['searchtype']    = 'equals';
-      $tab[5]['massiveaction']  = false;
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this->getTable(),
+         'field'              => 'spline',
+         'name'               => __('Curve lines (SVG)', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false,
+      ];
 
-      $tab[6]['table']          = $this->getTable();
-      $tab[6]['field']          = 'flip_data';
-      $tab[6]['name']           = __("Reverse data array", 'mreporting');
-      $tab[6]['datatype']       = 'bool';
-      $tab[6]['massiveaction']  = false;
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this->getTable(),
+         'field'              => 'show_label',
+         'name'               => __('See values', 'mreporting'),
+         'datatype'           => 'specific',
+         'searchtype'         => 'equals',
+         'massiveaction'      => false,
+      ];
 
-      $tab[7]['table']          = $this->getTable();
-      $tab[7]['field']          = 'unit';
-      $tab[7]['name']           = __("Unit", 'mreporting');
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this->getTable(),
+         'field'              => 'flip_data',
+         'name'               => __('Reverse data array', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false,
+      ];
 
-      $tab[8]['table']          = $this->getTable();
-      $tab[8]['field']          = 'default_delay';
-      $tab[8]['name']           = __("Default delay", 'mreporting');
+      $tab[] = [
+         'id'                 => '7',
+         'table'              => $this->getTable(),
+         'field'              => 'unit',
+         'name'               => __('Unit', 'mreporting'),
+      ];
 
-      $tab[9]['table']          = $this->getTable();
-      $tab[9]['field']          = 'condition';
-      $tab[9]['name']           = __("Additional condition for MySQL", 'mreporting');
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => $this->getTable(),
+         'field'              => 'default_delay',
+         'name'               => __('Default delay', 'mreporting'),
+      ];
 
-      $tab[10]['table']         = $this->getTable();
-      $tab[10]['field']         = 'show_graph';
-      $tab[10]['name']          = __("See graphic", 'mreporting');
-      $tab[10]['datatype']      = 'bool';
-      $tab[10]['massiveaction'] = false;
+      $tab[] = [
+         'id'                 => '9',
+         'table'              => $this->getTable(),
+         'field'              => 'condition',
+         'name'               => __('Additional condition for MySQL', 'mreporting'),
+      ];
 
-      $tab[11]['table']         = $this->getTable();
-      $tab[11]['field']         = 'classname';
-      $tab[11]['name']          = __("Class", 'mreporting');
-      $tab[11]['massiveaction'] = false;
+      $tab[] = [
+         'id'                 => '10',
+         'table'              => $this->getTable(),
+         'field'              => 'show_graph',
+         'name'               => __('See graphic', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false,
+      ];
 
-      $tab[12]['table']         = $this->getTable();
-      $tab[12]['field']         = 'graphtype';
-      $tab[12]['searchtype']    = 'equals';
-      $tab[12]['name']          = __("Default chart format");
-      $tab[12]['massiveaction'] = true;
+      $tab[] = [
+         'id'                 => '11',
+         'table'              => $this->getTable(),
+         'field'              => 'classname',
+         'name'               => __('Class', 'mreporting'),
+         'massiveaction'      => false,
+      ];
 
-      $tab[13]['table']         = $this->getTable();
-      $tab[13]['field']         = 'is_notified';
-      $tab[13]['datatype']      = 'bool';
-      $tab[13]['name']          = __("Send this report with the notification", 'mreporting');
-      $tab[13]['massiveaction'] = true;
+      $tab[] = [
+         'id'                 => '12',
+         'table'              => $this->getTable(),
+         'field'              => 'graphtype',
+         'name'               => __('Default chart format', 'mreporting'),
+         'searchtype'         => 'equals',
+         'massiveaction'      => true,
+      ];
+
+      $tab[] = [
+         'id'                 => '13',
+         'table'              => $this->getTable(),
+         'field'              => 'is_notified',
+         'name'               => __('Send this report with the notification', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => true,
+      ];
 
       return $tab;
    }
