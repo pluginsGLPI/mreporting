@@ -133,8 +133,8 @@ function plugin_mreporting_install() {
    $migration->migrationOneTable('glpi_plugin_mreporting_configs');
 
    // == Update to 2.3 ==
-   if (!fieldExists('glpi_plugin_mreporting_profiles', 'right')
-       && fieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
+   if (!$DB->fieldExists('glpi_plugin_mreporting_profiles', 'right')
+       && $DB->fieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
       //save all profile with right READ
       $right = PluginMreportingProfile::getRight();
 
