@@ -164,8 +164,8 @@ class PluginMreportingConfig extends CommonDBTM {
       switch ($field) {
          case 'graphtype':
             return Dropdown::showFromArray($name,
-                                            array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'),
-                                            $options);
+                                           array('PNG'=>'PNG', 'SVG'=>'SVG'),
+                                           $options);
             break;
          case 'show_label':
             return self::dropdownLabel($name, $options);
@@ -295,7 +295,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_graph"]="1";
                $this->fields["spline"]="1";
                $this->fields["default_delay"]="365";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
             case 'line':
             case 'gline':
@@ -306,7 +306,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_area"]="0";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
             case 'vstackbar':
                $this->fields["name"]=$funct_name;
@@ -314,7 +314,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["is_active"]="1";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
             case 'hgbar':
                $this->fields["name"]=$funct_name;
@@ -325,7 +325,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["spline"]="0";
                $this->fields["show_area"]="0";
                $this->fields["default_delay"]="365";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
             default:
                $this->fields["name"]=$funct_name;
@@ -336,7 +336,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_area"]="0";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="30";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
 
          }
@@ -630,7 +630,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "<td>".__("Default chart format")."</td>";
       echo "<td>";
       Dropdown::showFromArray("graphtype",
-         array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'),
+         array('PNG'=>'PNG', 'SVG'=>'SVG'),
          array('value' => $this->fields["graphtype"]));
       echo "</td>";
       echo "</tr>";
@@ -756,7 +756,7 @@ class PluginMreportingConfig extends CommonDBTM {
                      'condition'    => '',
                      'show_graph'   => false,
                      'randname'     => mt_rand(),
-                     'graphtype'    => 'GLPI');
+                     'graphtype'    => 'SVG');
 
       $self = new self();
       if ($self->getFromDBByFunctionAndClassname($name, $classname)) {
