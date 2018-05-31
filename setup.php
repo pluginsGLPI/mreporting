@@ -29,9 +29,9 @@
 define ('PLUGIN_MREPORTING_VERSION', '1.4.1');
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_MREPORTING_MIN_GLPI", "9.2");
+define("PLUGIN_MREPORTING_MIN_GLPI", "9.3");
 // Maximum GLPI version, exclusive
-define("PLUGIN_MREPORTING_MAX_GLPI", "9.3");
+define("PLUGIN_MREPORTING_MAX_GLPI", "9.4");
 
 if (!defined('PLUGIN_MREPORTING_TEMPLATE_DIR')) {
    define("PLUGIN_MREPORTING_TEMPLATE_DIR", GLPI_ROOT."/plugins/mreporting/templates/");
