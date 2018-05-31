@@ -328,20 +328,34 @@ class PluginMreportingProfile extends CommonDBTM {
 
    function findByProfileAndReport($profil_id, $report_id) {
       $prof = new self();
-      $prof->getFromDBByQuery(" WHERE `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
+      $prof->getFromDBByCrit(
+         [
+            'profiles_id' => $profil_id,
+            'reports'     => $report_id,
+         ]
+      );
       return $prof;
    }
 
    function findReportByProfiles($profil_id) {
       $prof = new self();
-      $prof->getFromDBByQuery(" WHERE `profiles_id` = ".$profil_id);
+      $prof->getFromDBByCrit(
+         [
+            'profiles_id' => $profil_id,
+         ]
+      );
       return $prof;
    }
 
 
    static function canViewReports($profil_id, $report_id) {
       $prof = new self();
-      $res = $prof->getFromDBByQuery(" WHERE `reports` = ".$report_id." AND `profiles_id` = ".$profil_id);
+      $res = $prof->getFromDBByCrit(
+         [
+            'profiles_id' => $profil_id,
+            'reports'     => $report_id,
+         ]
+      );
 
       if ($res && $prof->fields['right'] == READ) {
          return true;
