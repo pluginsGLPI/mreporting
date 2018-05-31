@@ -48,8 +48,6 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       ini_set('memory_limit', '256M');
       set_time_limit(300);
 
-      $CFG_GLPI['default_graphtype'] = "png";
-
       $images = array();
 
       $result = $DB->query('SELECT id, name, classname, default_delay
@@ -84,7 +82,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
 
          ob_start();
          $common = new PluginMreportingCommon();
-         $common->showGraph($_REQUEST);
+         $common->showGraph($_REQUEST, false, 'PNG');
          $content = ob_get_clean();
 
          preg_match_all('/<img .*?(?=src)src=\'([^\']+)\'/si', $content, $matches);
