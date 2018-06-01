@@ -5,9 +5,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- *  NotificationMail class extends phpmail and implements the NotificationInterface
+ *  NotificationMailing class extends phpmail and implements the NotificationInterface
 **/
-class PluginMreportingNotificationMail extends NotificationMail {
+class PluginMreportingNotificationMail extends NotificationMailing {
 
    /**
     * @param $options   array

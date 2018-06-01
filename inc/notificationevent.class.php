@@ -21,7 +21,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
       global $CFG_GLPI;
 
       //If notifications are enabled in GLPI's configuration
-      if ($CFG_GLPI["use_mailing"]) {
+      if ($CFG_GLPI["use_notifications"]) {
          $email_processed    = array();
          $email_notprocessed = array();
 
@@ -40,6 +40,9 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
                   as $data) {
             $targets = getAllDatasFromTable('glpi_notificationtargets',
                                             'notifications_id = '.$data['id']);
+            $eventClass = Notification_NotificationTemplate::getModeClass($data['mode'], 'event');
+            $notificationtarget->setMode($data['mode']);
+            $notificationtarget->setEvent($eventClass);
             $notificationtarget->clearAddressesList();
 
             //Process more infos (for example for tickets)
@@ -73,8 +76,16 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
                                                                     $event, $options)) {
                            //Send notification to the user
                            if ($label == '') {
-                              PluginMreportingNotification::send($template->getDataToSend($notificationtarget, $tid,
-                                                                          $users_infos, $options), $notificationtarget->additionalData);
+                              PluginMreportingNotification::send(
+                                 $template->getDataToSend(
+                                    $notificationtarget,
+                                    $tid,
+                                    $users_infos[$eventClass::getTargetFieldName()],
+                                    $users_infos,
+                                    $options
+                                 ),
+                                 $notificationtarget->additionalData
+                              );
                            } else {
                               $notificationtarget->getFromDB($target['id']);
                               echo "<tr class='tab_bg_2'>";
