@@ -50,16 +50,25 @@ class PluginMreportingNotification extends CommonDBTM {
 
          // Création de la notification
          $notification = new Notification();
-         $notification_id = $notification->add(array(
-            'name'                     => __('Notification for "More Reporting"', 'mreporting'),
-            'comment'                  => "",
-            'entities_id'              => 0,
-            'is_recursive'             => 1,
-            'is_active'                => 1,
-            'itemtype'                 => __CLASS__,
-            'notificationtemplates_id' => $template_id,
-            'event'                    => 'sendReporting',
-            'mode'                     => 'mail')
+         $notification_id = $notification->add(
+            [
+               'name'                     => __('Notification for "More Reporting"', 'mreporting'),
+               'comment'                  => "",
+               'entities_id'              => 0,
+               'is_recursive'             => 1,
+               'is_active'                => 1,
+               'itemtype'                 => __CLASS__,
+               'event'                    => 'sendReporting',
+            ]
+         );
+
+         $n_n_template = new Notification_NotificationTemplate();
+         $n_n_template->add(
+            [
+               'notifications_id'         => $notification_id,
+               'mode'                     => Notification_NotificationTemplate::MODE_MAIL,
+               'notificationtemplates_id' => $template_id,
+            ]
          );
 
          $DB->query('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
