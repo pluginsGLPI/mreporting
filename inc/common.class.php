@@ -574,7 +574,7 @@ class PluginMreportingCommon extends CommonDBTM {
     * @params $opt (classname, short_classname, f_name, gtype)
    */
 
-   function showGraph($opt, $export = false) {
+   function showGraph($opt, $export = false, $forceFormat = null) {
       global $LANG, $CFG_GLPI;
 
       if (!isset($opt['hide_title'])) {
@@ -591,11 +591,10 @@ class PluginMreportingCommon extends CommonDBTM {
       $config = PluginMreportingConfig::initConfigParams($opt['f_name'],
          "PluginMreporting".$opt['short_classname']);
 
-      if ($config['graphtype'] == 'PNG' ||
-            $config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'png') {
+      if ('PNG' === $forceFormat || $config['graphtype'] == 'PNG') {
          $graph = new PluginMreportingGraphpng();
-      } else if ($config['graphtype'] == 'SVG' ||
-            $config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'svg') {
+      } else {
+         // Defaults to SVG
          $graph = new PluginMreportingGraph();
       }
 
@@ -719,8 +718,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $config = PluginMreportingConfig::initConfigParams($opt['f_name'],
                                                             "PluginMreporting".$opt['short_classname']);
          if (!$export) {
-            if ($config['graphtype'] == 'GLPI' && $CFG_GLPI['default_graphtype'] == 'svg'
-                || $config['graphtype'] == 'SVG') {
+            if ($config['graphtype'] == 'SVG') {
                echo "}
                   showGraph$randname();
                </script>";
@@ -1571,7 +1569,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $restrict = " `id` = {$_SESSION['glpiactiveentities_string']}";
       }
 
-      $query = "SELECT MAX(level) AS 'maxlevel' 
+      $query = "SELECT MAX(level) AS 'maxlevel'
                   FROM glpi_entities
                   WHERE {$restrict}";
 

@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Alexey Petukhov <lexx015@gmail.com>, 2015
-# Nikolay <techobsl@yandex.ru>, 2016
+# Nikolay <techobsl@yandex.ru>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-22 09:28+0200\n"
-"PO-Revision-Date: 2017-09-22 07:29+0000\n"
-"Last-Translator: Johan Cwiklinski <trasher@x-tnd.be>\n"
+"PO-Revision-Date: 2017-09-28 08:01+0000\n"
+"Last-Translator: Nikolay <techobsl@yandex.ru>\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,11 +66,11 @@ msgstr "Список отчетов"
 
 #: inc/common.class.php:499 ajax/dropdownExport.php:42
 msgid "Without data"
-msgstr "Без информации"
+msgstr "Без данных"
 
 #: inc/common.class.php:500 ajax/dropdownExport.php:41
 msgid "With data"
-msgstr "С информацией"
+msgstr "С данными"
 
 #: inc/common.class.php:923
 msgid "Number"
@@ -79,7 +79,7 @@ msgstr "Номер"
 #: inc/common.class.php:944 inc/common.class.php:1247
 #: inc/common.class.php:1263
 msgid "data"
-msgstr "Информация"
+msgstr "данные"
 
 #: inc/common.class.php:1142 inc/preference.class.php:123
 msgid "Please, select a model in your preferences"
@@ -95,15 +95,15 @@ msgstr "График не выбран"
 
 #: inc/common.class.php:1390
 msgid "Week"
-msgstr ""
+msgstr "Неделя"
 
 #: inc/common.class.php:1391
 msgid "Month"
-msgstr ""
+msgstr "Месяц"
 
 #: inc/common.class.php:1504
 msgid "Max depth entity level"
-msgstr ""
+msgstr "Максимальная глубина уровня организации"
 
 #: inc/profile.class.php:66 inc/profile.class.php:211
 #: inc/profile.class.php:282
@@ -220,23 +220,23 @@ msgstr "Неопределено"
 
 #: inc/other.class.php:70
 msgid "Add/remove software on a computer"
-msgstr "Добавить/удалить ПО у компьютера"
+msgstr "Добавление/удаление ПО компьютера"
 
 #: inc/other.class.php:73
 msgid "Add/remove version on a software"
-msgstr "Добавить/удалить версию у ПО"
+msgstr "Добавление/удаление версии ПО"
 
 #: inc/other.class.php:76
 msgid "Add infocom"
-msgstr "Добавить инфоком"
+msgstr "Добавление инфоком"
 
 #: inc/other.class.php:79
 msgid "Add/remove profile on a user"
-msgstr "Добавить/удалить профиль у пользователя"
+msgstr "Добавление/удаление профиля у пользователя"
 
 #: inc/other.class.php:82
 msgid "Add/remove group on a user"
-msgstr "Добавить/удалить группу у пользователя"
+msgstr "Добавление/удаление группы пользователя"
 
 #: inc/other.class.php:85
 msgid "User deleted from LDAP"
@@ -244,7 +244,7 @@ msgstr "Пользователь удален из LDAP"
 
 #: inc/other.class.php:93
 msgid "Webservice logs"
-msgstr "Логи Webservice"
+msgstr "Логи плагина Webservice"
 
 #: inc/other.class.php:97
 msgid "OCS Infos"
@@ -252,20 +252,20 @@ msgstr "OCS Информация"
 
 #: inc/other.class.php:100
 msgid "Add/update/remove device"
-msgstr "Добавить/Обновить/удалить устройство"
+msgstr "Добавление/обновление/удаление устройства"
 
 #: inc/other.class.php:103
 msgid "Add/remove relation"
-msgstr "Добавить/удалить связь"
+msgstr "Добавление/удаление связи"
 
 #: inc/other.class.php:106
 msgid "Add/remove item"
-msgstr "Добавить/удалить пункт"
+msgstr "Добавление/удаление элемента"
 
 #: inc/other.class.php:109
 msgid "Comments & date_mod changes"
-msgstr "Комментарии & date_mod изменения"
+msgstr "Комментарии & дата правки изменений"
 
 #: inc/other.class.php:117
 msgid "Genericobject plugin logs"
-msgstr "Логи расширения Genericobject"
+msgstr "Логи плагина Genericobject"

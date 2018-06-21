@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Thiago Passamani <thiagopassamani@gmail.com>, 2016
+# Gabriel Fernandez <hotdesc@gmail.com>, 2018
+# Thiago Passamani <thiagopassamani@gmail.com>, 2016-2017
 # Thiago Passamani <thiagopassamani@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-22 09:28+0200\n"
-"PO-Revision-Date: 2017-09-22 07:29+0000\n"
-"Last-Translator: Johan Cwiklinski <trasher@x-tnd.be>\n"
+"PO-Revision-Date: 2018-01-02 12:55+0000\n"
+"Last-Translator: Gabriel Fernandez <hotdesc@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,15 +96,15 @@ msgstr "Gráfico não selecionado"
 
 #: inc/common.class.php:1390
 msgid "Week"
-msgstr ""
+msgstr "Semana"
 
 #: inc/common.class.php:1391
 msgid "Month"
-msgstr ""
+msgstr "Mês"
 
 #: inc/common.class.php:1504
 msgid "Max depth entity level"
-msgstr ""
+msgstr "Nível máximo de entidade"
 
 #: inc/profile.class.php:66 inc/profile.class.php:211
 #: inc/profile.class.php:282
@@ -220,23 +221,23 @@ msgstr "Indefinido"
 
 #: inc/other.class.php:70
 msgid "Add/remove software on a computer"
-msgstr "Add/remover software do computador"
+msgstr "Adicionar/remover software do computador"
 
 #: inc/other.class.php:73
 msgid "Add/remove version on a software"
-msgstr "Add/remover versão do software"
+msgstr "Adicionar/remover versão do software"
 
 #: inc/other.class.php:76
 msgid "Add infocom"
-msgstr "Add infocom"
+msgstr "Adicionar infocom"
 
 #: inc/other.class.php:79
 msgid "Add/remove profile on a user"
-msgstr "Add/remover perfil do usuário"
+msgstr "Adicionar/remover perfil do usuário"
 
 #: inc/other.class.php:82
 msgid "Add/remove group on a user"
-msgstr "Add/remover grupo do usuário"
+msgstr "Adicionar/remover grupo do usuário"
 
 #: inc/other.class.php:85
 msgid "User deleted from LDAP"
@@ -252,15 +253,15 @@ msgstr "Informações do OCS"
 
 #: inc/other.class.php:100
 msgid "Add/update/remove device"
-msgstr "Add/alterar/remover dispositivo"
+msgstr "Adicionar/alterar/remover dispositivo"
 
 #: inc/other.class.php:103
 msgid "Add/remove relation"
-msgstr "Add/remover relação"
+msgstr "Adicionar/remover relação"
 
 #: inc/other.class.php:106
 msgid "Add/remove item"
-msgstr "Add/remover item"
+msgstr "Adicionar/remover item"
 
 #: inc/other.class.php:109
 msgid "Comments & date_mod changes"
@@ -268,4 +269,4 @@ msgstr "Alterar comentários e data de modificação"
 
 #: inc/other.class.php:117
 msgid "Genericobject plugin logs"
-msgstr "Logs do plugin GenericObject"
+msgstr "Logs do complemento Objetos Genéricos"

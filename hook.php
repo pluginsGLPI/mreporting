@@ -66,7 +66,7 @@ function plugin_mreporting_install() {
    `unit` VARCHAR(10) default NULL,
    `default_delay` VARCHAR(10) default NULL,
    `condition` VARCHAR(255) default NULL,
-   `graphtype` VARCHAR(255) default 'GLPI',
+   `graphtype` VARCHAR(255) default 'SVG',
    PRIMARY KEY  (`id`),
    KEY `is_active` (`is_active`)
    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
@@ -133,8 +133,8 @@ function plugin_mreporting_install() {
    $migration->migrationOneTable('glpi_plugin_mreporting_configs');
 
    // == Update to 2.3 ==
-   if (!fieldExists('glpi_plugin_mreporting_profiles', 'right')
-       && fieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
+   if (!$DB->fieldExists('glpi_plugin_mreporting_profiles', 'right')
+       && $DB->fieldExists('glpi_plugin_mreporting_profiles', 'reports')) {
       //save all profile with right READ
       $right = PluginMreportingProfile::getRight();
 
@@ -161,6 +161,10 @@ function plugin_mreporting_install() {
                 ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)";
       $DB->query($query);
    }
+
+   // Remove GLPI graphtype to fix compatibility with GLPI 9.2.2+
+   $query = "UPDATE `glpi_plugin_mreporting_configs` SET `graphtype` = 'SVG' WHERE `graphtype` = 'GLPI'";
+   $DB->query($query);
 
    //== Create directories
    $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR."/mreporting";
@@ -329,7 +333,7 @@ function plugin_mreporting_MassiveActionsFieldsDisplay($options=array()) {
 
          case "glpi_plugin_mreporting_configs.graphtype":
             Dropdown::showFromArray("graphtype",
-               array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'));
+               array('PNG'=>'PNG', 'SVG'=>'SVG'));
             return true;
             break;
       }
@@ -348,7 +352,7 @@ function plugin_mreporting_searchOptionsValues($options = array()) {
    switch ($table.".".$field) {
       case "glpi_plugin_mreporting_configs.graphtype":
          Dropdown::showFromArray("graphtype",
-            array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'));
+            array('PNG'=>'PNG', 'SVG'=>'SVG'));
          return true;
    }
    return false;

@@ -3,16 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# alexandre delaunay <delaunay.alexandre@gmail.com>, 2016
+# Alexandre Delaunay <delaunay.alexandre@gmail.com>, 2016
 # Jérémy MOREAU <jmoreau.dev@gmail.com>, 2015
-# Johan Cwiklinski <trasher@x-tnd.be>, 2017
+# Johan Cwiklinski <jcwiklinski@teclib.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-22 09:28+0200\n"
 "PO-Revision-Date: 2017-09-22 07:33+0000\n"
-"Last-Translator: Johan Cwiklinski <trasher@x-tnd.be>\n"
+"Last-Translator: Johan Cwiklinski <jcwiklinski@teclib.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

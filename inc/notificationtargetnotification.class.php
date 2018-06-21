@@ -16,14 +16,14 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       asort($this->tag_descriptions);
    }
 
-   function getDatasForTemplate($event, $options = array()) {
+   function addDataForTemplate($event, $options = array()) {
       global $CFG_GLPI;
 
       $file_name = $this->_buildPDF(mt_rand().'_');
 
-      $this->datas['##lang.mreporting.file_url##'] = __('Link');
-      $this->datas['##mreporting.file_url##']      = $CFG_GLPI['url_base'].
-                                                      "/index.php?redirect=plugin_mreporting_$file_name";
+      $this->data['##lang.mreporting.file_url##'] = __('Link');
+      $this->data['##mreporting.file_url##']      = $CFG_GLPI['url_base'].
+                                                    "/index.php?redirect=plugin_mreporting_$file_name";
 
       $this->additionalData['attachment']['path'] = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications/".$file_name;
       $this->additionalData['attachment']['name'] = $file_name;
@@ -47,8 +47,6 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
       ini_set('memory_limit', '256M');
       set_time_limit(300);
-
-      $CFG_GLPI['default_graphtype'] = "png";
 
       $images = array();
 
@@ -84,7 +82,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
 
          ob_start();
          $common = new PluginMreportingCommon();
-         $common->showGraph($_REQUEST);
+         $common->showGraph($_REQUEST, false, 'PNG');
          $content = ob_get_clean();
 
          preg_match_all('/<img .*?(?=src)src=\'([^\']+)\'/si', $content, $matches);
