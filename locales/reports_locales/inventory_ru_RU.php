@@ -1,120 +1,120 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Inventory'] = array(
+$LANG['plugin_mreporting']['Inventory'] = [
 
    'title' => "Активы",
 
-   'reportHbarComputersByOS' => array(
+   'reportHbarComputersByOS' => [
       'title'    => "Компьютеры по операционной системе",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportPieComputersByOS' => array(
+   'reportPieComputersByOS' => [
       'title'    => "Компьютеры по операционной системе",
       'desc'     => "Круговой",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarComputersByFabricant' => array(
+   'reportHbarComputersByFabricant' => [
       'title'    => "Компьютеры по производителю",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Производитель",
-   ),
+   ],
 
-   'reportPieComputersByFabricant' => array(
+   'reportPieComputersByFabricant' => [
       'title'    => "Компьютеры по производителю",
       'desc'     => "Пирог",
       'category' => "Производитель",
-   ),
+   ],
 
-   'reportHbarComputersByType' => array(
+   'reportHbarComputersByType' => [
       'title'    => "Компьютеры по типу",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Тип",
-   ),
-   'reportPieComputersByType' => array(
+   ],
+   'reportPieComputersByType' => [
       'title'    => "Компьютеры по типу",
       'desc'     => "Пирог",
       'category' => "Тип",
-   ),
+   ],
 
-   'reportHbarComputersByStatus' => array(
+   'reportHbarComputersByStatus' => [
       'title'    => "Компьютеры по статусу",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Статус",
-   ),
+   ],
 
-   'reportHbarPrintersByStatus' => array(
+   'reportHbarPrintersByStatus' => [
       'title'    => "Принтеры по статусу",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Статус",
-   ),
+   ],
 
-   'reportHbarWindows' => array(
+   'reportHbarWindows' => [
       'title'    => "Распределение Windows",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarLinux' => array(
+   'reportHbarLinux' => [
       'title'    => "Детальное распределение Linux",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarLinuxDistro' => array(
+   'reportHbarLinuxDistro' => [
       'title'    => "Детальное распределение Linux",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarMac' => array(
+   'reportHbarMac' => [
       'title'    => "Детальные версии Mac OS X",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarMacFamily' => array(
+   'reportHbarMacFamily' => [
       'title'    => "Обзор версий MAC OS X",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarComputersByAge' => array(
+   'reportHbarComputersByAge' => [
       'title'    => "Компьютер по возрасту",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Оборудование",
-   ),
+   ],
 
-   'reportPieComputersByAge' => array(
+   'reportPieComputersByAge' => [
       'title'    => "Компьютер по возрасту",
       'desc'     => "Пирог",
       'category' => "Оборудование",
-   ),
+   ],
 
-   'reportHbarFusionInventory' => array(
+   'reportHbarFusionInventory' => [
       'title'    => "Версия агента FusionInventory",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Оборудование",
-   ),
+   ],
 
-   'reportPieFusionInventory' => array(
+   'reportPieFusionInventory' => [
       'title'    => "Версия агента FusionInventory",
       'desc'     => "Пирог",
       'category' => "Агент",
-   ),
+   ],
 
-   'reportHbarMonitors' => array(
+   'reportHbarMonitors' => [
       'title'    => "Распределение количества мониторов на компьютерах",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Активы",
-   ),
+   ],
 
-   'reportHbarComputersByEntity' => array(
+   'reportHbarComputersByEntity' => [
       'title'    => "Компьютеры по организациям",
       'desc'     => "Горизонтальная диаграмма",
       'category' => "Организация",
-    ),
-);
+    ],
+];

@@ -1,7 +1,7 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdeskplus'] = array(
+$LANG['plugin_mreporting']['Helpdeskplus'] = [
    'title'         => 'Služba podpory – pokročilé',
 
    // MISC LOCALES
@@ -16,96 +16,96 @@ $LANG['plugin_mreporting']['Helpdeskplus'] = array(
 
 
    // SELECTOR
-   'selector'      => array(
+   'selector'      => [
       'slas'       => "SLA smlouvy",
       'categories' => "Kategorie",
-   ),
+   ],
 
 
    // GENERAL REPORTS
-   'reportGlineBacklogs' => array(
+   'reportGlineBacklogs' => [
       'title'    => "Nashromážděná nedodělaná práce",
       'desc'     => "",
       'category' => "Celkové",
-   ),
+   ],
 
-   'reportVstackbarLifetime' => array(
+   'reportVstackbarLifetime' => [
       'title'    => "Stáří požadavku",
       'desc'     => "",
       'category' => "Celkové",
-   ),
+   ],
 
-   'reportVstackbarTicketsgroups' => array(
+   'reportVstackbarTicketsgroups' => [
       'title'    => "Požadavky podle skupiny",
       'desc'     => "",
       'category' => "Celkové",
-   ),
+   ],
 
-   'reportVstackbarTicketstech' => array(
+   'reportVstackbarTicketstech' => [
       'title'    => "Požadavky podle technika",
       'desc'     => "",
       'category' => "Celkové",
-   ),
+   ],
 
-   'reportVstackbarWorkflow' => array(
+   'reportVstackbarWorkflow' => [
       'title'    => "Orientační fronty",
       'desc'     => "",
       'category' => "Celkové",
-   ),
+   ],
 
-   'reportHbarTopcategory' => array(
+   'reportHbarTopcategory' => [
       'title'    => "Nejčastější kategorie",
       'desc'     => "",
       'category' => "Celkové",
-   ),
+   ],
 
-   'reportHbarTopapplicant' => array(
+   'reportHbarTopapplicant' => [
       'title'    => "Nejčastější žádající skupiny",
       'desc'     => "",
       'category' => "Celkové",
-   ),
+   ],
 
-   'reportVstackbarGroupChange' => array(
+   'reportVstackbarGroupChange' => [
       'title'    => "Počty skupinových změn",
       'desc'     => "",
       'category' => "Celkové",
-   ),
+   ],
 
-   'reportLineActiontimeVsSolvedelay' => array(
+   'reportLineActiontimeVsSolvedelay' => [
       'title'    => "Porovnání akčních časů úkolu a prodlevy vyřešení",
       'desc'     => "",
       'category' => "Celkové",
-   ),
+   ],
 
 
    // SLA REPORTS
-   'reportVstackbarNbTicketBySla' => array(
+   'reportVstackbarNbTicketBySla' => [
       'title'    => "Počty požadavků podle SLA",
       'desc'     => "",
       'category' => "Podle SLA",
-   ),
+   ],
 
-   'reportGlineNbTicketBySla' => array(
+   'reportGlineNbTicketBySla' => [
       'title'    => "Události v požadavku podle SLA",
       'desc'     => "",
       'category' => "Podle SLA",
-   ),
+   ],
 
-   'reportHgbarRespectedSlasByTopCategory' => array(
+   'reportHgbarRespectedSlasByTopCategory' => [
       'title'    => "Požadavky v jednotlivých SLA seřazené podle kategorií",
       'desc'     => "",
       'category' => "Podle SLA",
-   ),
+   ],
 
-   'reportHgbarRespectedSlasByTechnician' => array(
+   'reportHgbarRespectedSlasByTechnician' => [
       'title'    => "Požadavky v jednotlivých SLA seřazené podle techniků",
       'desc'     => "",
       'category' => "Podle SLA",
-   ),
+   ],
 
-   'reportVstackbarRespectedSlasByGroup' => array(
+   'reportVstackbarRespectedSlasByGroup' => [
       'title'    => "Požadavky v jednotlivých SLA seřazené podle skupin",
       'desc'     => "",
       'category' => "Podle SLA",
-   ),
-);
+   ],
+];

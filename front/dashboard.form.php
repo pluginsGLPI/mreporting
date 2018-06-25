@@ -22,7 +22,7 @@ if (isset($_POST['saveConfig'])) {
 } else if (isset($_POST['addReports'])) {
 
    $dashboard = new PluginMreportingDashboard();
-   $post = array('users_id' => $_SESSION['glpiID'], 'reports_id' => $_POST['report']);
+   $post = ['users_id' => $_SESSION['glpiID'], 'reports_id' => $_POST['report']];
    $dashboard->add($post);
 
    Html::back();

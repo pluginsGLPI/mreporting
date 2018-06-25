@@ -1,20 +1,20 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Tag'] = array(
+$LANG['plugin_mreporting']['Tag'] = [
 
    'title' => "TAG плагина",
 
-   'reportPieTag' => array(
+   'reportPieTag' => [
       'title'    => "Количество использования TAG",
       'desc'     => "Круговая диаграмма",
       'category' => "Для всех объектов GLPi",
-   ),
+   ],
 
-   'reportPieTagOnTicket' => array(
+   'reportPieTagOnTicket' => [
       'title'    => "Количество использования TAG",
       'desc'     => "Круговая диаграмма",
       'category' => "Для заявок",
-   )
+   ]
 
-);
+];

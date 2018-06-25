@@ -38,7 +38,7 @@ class PluginMreportingBaseclass {
              $where_entities_array,
              $where_entities_level;
 
-   function __construct($config = array()) {
+   function __construct($config = []) {
       global $DB, $LANG;
 
       //force MySQL DATE_FORMAT in user locale
@@ -49,36 +49,36 @@ class PluginMreportingBaseclass {
          return true;
       }
 
-      $this->filters = array(
-         'open' => array(
+      $this->filters = [
+         'open' => [
             'label' => $LANG['plugin_mreporting']['Helpdeskplus']['opened'],
-            'status' => array(
+            'status' => [
                CommonITILObject::INCOMING => _x('status', 'New'),
                CommonITILObject::ASSIGNED => _x('status', 'Processing (assigned)'),
                CommonITILObject::PLANNED  => _x('status', 'Processing (planned)'),
                CommonITILObject::WAITING  => __('Pending')
-            )
-         ),
-         'close' => array(
+            ]
+         ],
+         'close' => [
             'label' => _x('status', 'Closed'),
-            'status' => array(
+            'status' => [
                CommonITILObject::SOLVED => _x('status', 'Solved'),
                CommonITILObject::CLOSED => _x('status', 'Closed')
-            )
-         )
-      );
-      $this->status = array(CommonITILObject::INCOMING,
-                            CommonITILObject::ASSIGNED,
-                            CommonITILObject::PLANNED,
-                            CommonITILObject::WAITING,
-                            CommonITILObject::SOLVED,
-                            CommonITILObject::CLOSED);
+            ]
+         ]
+      ];
+      $this->status = [CommonITILObject::INCOMING,
+                       CommonITILObject::ASSIGNED,
+                       CommonITILObject::PLANNED,
+                       CommonITILObject::WAITING,
+                       CommonITILObject::SOLVED,
+                       CommonITILObject::CLOSED];
 
       if (isset( $_SESSION['glpiactiveentities'])) {
          $this->where_entities = "'".implode("', '", $_SESSION['glpiactiveentities'])."'";
          $this->where_entities_array = $_SESSION['glpiactiveentities'];
       } else { // maybe cron mode
-         $entities = array();
+         $entities = [];
          $entity = new Entity;
          $found_entities = $entity->find();
          foreach ($found_entities as $entities_id => $current_entity) {

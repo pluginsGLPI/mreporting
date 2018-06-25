@@ -1,114 +1,114 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdesk'] = array(
+$LANG['plugin_mreporting']['Helpdesk'] = [
    'title' => "Служба поддержки",
 
-   'reportHbarTicketNumberByEntity' => array(
+   'reportHbarTicketNumberByEntity' => [
       'title'    => "Количество заявок по организации",
       'desc'     => "Бары",
       'category' => "По организации",
-   ),
+   ],
 
-   'reportPieTicketNumberByEntity' => array(
+   'reportPieTicketNumberByEntity' => [
       'title'    => "Количество заявок по организации",
       'desc'     => "Пирог",
       'category' => "По организации",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByCatAndEntity' => array(
+   'reportHgbarTicketNumberByCatAndEntity' => [
       'title'    => "Количество заявок по категории и организации",
       'desc'     => "Группированый бар",
       'category' => "По организации",
-   ),
+   ],
 
-   'reportPieTopTenAuthor' => array(
+   'reportPieTopTenAuthor' => [
       'title'    => "Топ 10 инициаторов запроса",
       'desc'     => "Пирог",
       'category' => "По заказчику",
-   ),
+   ],
 
-   'reportHgbarOpenTicketNumberByCategoryAndByType' => array(
+   'reportHgbarOpenTicketNumberByCategoryAndByType' => [
       'title'    => "Количество открытых заявок по категории и типу",
       'desc'     => "Группированый бар",
       'category' => "По категории",
-   ),
+   ],
 
-   'reportHgbarCloseTicketNumberByCategoryAndByType' => array(
+   'reportHgbarCloseTicketNumberByCategoryAndByType' => [
       'title'    => "Количество закрытых заявок по категории и типу",
       'desc'     => "Группированый бар",
       'category' => "По категории",
-   ),
+   ],
 
-   'reportHgbarOpenedTicketNumberByCategory' => array(
+   'reportHgbarOpenedTicketNumberByCategory' => [
       'title'    => "Количество открытых заявок по категории и статусу",
       'desc'     => "Группированый бар",
       'category' => "По категории",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByService' => array(
+   'reportHgbarTicketNumberByService' => [
       'title'    => "Количество открытых и закрытых заявок по сервису",
       'desc'     => "Группированый бар",
       'category' => "По сервису",
-   ),
+   ],
 
-   'reportPieTicketOpenedAndClosed' => array(
+   'reportPieTicketOpenedAndClosed' => [
       'title'    => "Количество открытых и закрытых заявок",
       'desc'     => "Пирог",
       'category' => "По заявке",
-   ),
+   ],
 
-   'reportPieTicketOpenedbyStatus' => array(
+   'reportPieTicketOpenedbyStatus' => [
       'title'    => "Количество развивающихся заявок за период (по статусу)",
       'desc'     => "Пирог",
       'category' => "По заявке",
-   ),
+   ],
 
-   'reportAreaNbTicket' => array(
+   'reportAreaNbTicket' => [
       'title'    => "Количество развивающихся заявок за период",
       'desc'     => "Область",
       'category' => "По заявке",
-   ),
+   ],
 
-   'reportLineNbTicket' => array(
+   'reportLineNbTicket' => [
       'title'    => "Количество развивающихся заявок за период",
       'desc'     => "Линия",
       'category' => "По заявке",
-   ),
+   ],
 
-   'reportGlineNbTicket' => array(
+   'reportGlineNbTicket' => [
       'title'    => "Количество развивающихся заявок за период (по статусу)",
       'desc'     => "Линия",
       'category' => "По заявке",
-   ),
+   ],
 
-   'reportGareaNbTicket' => array(
+   'reportGareaNbTicket' => [
       'title'    => "Количество развивающихся заявок за период (по статусу)",
       'desc'     => "Область",
       'category' => "По заявке",
-   ),
+   ],
 
-   'reportVstackbarNbTicket' => array(
+   'reportVstackbarNbTicket' => [
       'title'    => "Количество развивающихся заявок за период (по статусу)",
       'desc'     => "Многоярусные бары",
       'category' => "По заявке",
-   ),
+   ],
 
-   'reportSunburstTicketByCategories' => array(
+   'reportSunburstTicketByCategories' => [
       'title'    => "Распределение заявок по категориям и подкатегориям",
       'desc'     => "Бублик",
       'category' => "По категории",
-   ),
+   ],
 
-   'reportVstackbarTicketStatusByTechnician' => array(
+   'reportVstackbarTicketStatusByTechnician' => [
       'title'    => "Количество заявок по статусу и специалисту",
       'desc'     => "Многоярусные бары",
       'category' => "По заявке",
-   ),
+   ],
 
-   'reportHbarTicketNumberByLocation' => array(
+   'reportHbarTicketNumberByLocation' => [
       'title'    => "Количество заявок по местоположению заказчика",
       'desc'     => "Бары",
       'category' => "По заказчику",
-   ),
-);
+   ],
+];

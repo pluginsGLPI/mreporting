@@ -37,7 +37,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       }
    }
 
-   function showHbar($params, $dashboard = false , $width = false) {
+   function showHbar($params, $dashboard = false, $width = false) {
       global $CFG_GLPI;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -50,7 +50,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          Toolbox::logdebug($raw_datas);
       }
 
-      $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : array();
+      $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : [];
 
       if (count($datas) <= 0) {
          return false;
@@ -69,10 +69,10 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       $values = array_values($datas);
       $labels = array_keys($datas);
 
-      $options = array("title" => $title,
-                        "desc" => $desc,
-                        "randname" => $randname,
-                        "export" => $export);
+      $options = ["title" => $title,
+                  "desc" => $desc,
+                  "randname" => $randname,
+                  "export" => $export];
 
       $this->initGraph($options);
 
@@ -92,11 +92,11 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       echo $out;
    }
 
-   function showPie($params, $dashboard = false , $width = false) {
+   function showPie($params, $dashboard = false, $width = false) {
       $this->showHbar($params);
    }
 
-   function showHgbar($params, $dashboard = false , $width = false) {
+   function showHgbar($params, $dashboard = false, $width = false) {
       global $CFG_GLPI;
 
       $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -110,7 +110,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          Toolbox::logdebug($raw_datas);
       }
 
-      $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : array();
+      $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : [];
 
       if (count($datas) <= 0) {
          return false;
@@ -128,10 +128,10 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
 
       $labels2 = array_values($raw_datas['labels2']);
 
-      $options = array("title" => $title,
-                        "desc" => $desc,
-                        "randname" => $randname,
-                        "export" => $export);
+      $options = ["title" => $title,
+                  "desc" => $desc,
+                  "randname" => $randname,
+                  "export" => $export];
 
       $this->initGraph($options);
 
@@ -164,19 +164,19 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       echo $out;
    }
 
-   function showVstackbar($params, $dashboard = false , $width = false) {
+   function showVstackbar($params, $dashboard = false, $width = false) {
       $this->showHGbar($params);
    }
 
-   function showArea($params, $dashboard = false , $width = false) {
+   function showArea($params, $dashboard = false, $width = false) {
       $this->showHbar($params);
    }
 
-   function showGarea($params, $dashboard = false , $width = false) {
+   function showGarea($params, $dashboard = false, $width = false) {
       $this->showHGbar($params);
    }
 
-   function showSunburst($params, $dashboard = false , $width = false) {
+   function showSunburst($params, $dashboard = false, $width = false) {
       $criterias = PluginMreportingCommon::initGraphParams($params);
 
       foreach ($criterias as $key => $val) {
@@ -190,7 +190,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
       if (isset($raw_datas['datas'])) {
          $datas = $raw_datas['datas'];
       } else {
-         $datas = array();
+         $datas = [];
       }
 
       if (count($datas) <= 0) {
@@ -207,10 +207,10 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph {
          $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
       }
 
-      $options = array("title" => $title,
-                        "desc" => $desc,
-                        "randname" => $randname,
-                        "export" => $export);
+      $options = ["title" => $title,
+                  "desc" => $desc,
+                  "randname" => $randname,
+                  "export" => $export];
 
       $this->initGraph($options);
 
