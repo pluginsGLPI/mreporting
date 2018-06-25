@@ -477,11 +477,16 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
          $r = $coords;
       }
 
-      list($iPrevX, $iPrevY) = each($r);
+      $iPrevX = key($r);
+      $iPrevY = current($r);
 
-      while (list ($x, $y) = each($r)) {
+      while (false !== next($r)) {
+         $x = key($r);
+         $y = current($r);
+
          $this->imageSmoothAlphaLineLarge(
             $image, round($iPrevX), round($iPrevY), round($x), round($y), $color);
+
          $iPrevX = $x;
          $iPrevY = $y;
       }
