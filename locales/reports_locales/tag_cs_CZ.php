@@ -1,20 +1,20 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Tag'] = array(
+$LANG['plugin_mreporting']['Tag'] = [
 
    'title' => "Zásuvný modul pro štítky",
 
-   'reportPieTag' => array(
+   'reportPieTag' => [
       'title'    => "Počty použitých štítků",
       'desc'     => "Výsečový",
       'category' => "Pro všechny GLPi objekty",
-   ),
+   ],
 
-   'reportPieTagOnTicket' => array(
+   'reportPieTagOnTicket' => [
       'title'    => "Počty použitých štítků",
       'desc'     => "Výsečový",
       'category' => "Pro požadavky",
-   )
+   ]
 
-);
+];

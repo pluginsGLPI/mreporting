@@ -41,8 +41,8 @@ class PluginMreportingConfig extends CommonDBTM {
    /**
     * Définition des onglets
    **/
-   function defineTabs($options=array()) {
-      $ong = array();
+   function defineTabs($options = []) {
+      $ong = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginMreportingProfile', $ong, $options);
       return $ong;
@@ -171,10 +171,10 @@ class PluginMreportingConfig extends CommonDBTM {
       return $tab;
    }
 
-   static function getSpecificValueToDisplay($field, $values, array $options=array()) {
+   static function getSpecificValueToDisplay($field, $values, array $options = []) {
 
       if (!is_array($values)) {
-         $values = array($field => $values);
+         $values = [$field => $values];
       }
       switch ($field) {
          case 'graphtype':
@@ -197,17 +197,17 @@ class PluginMreportingConfig extends CommonDBTM {
     * @param $values          (default '')
     * @param $options   array
     **/
-   static function getSpecificValueToSelect($field, $name='', $values='', array $options=array()) {
+   static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
 
       if (!is_array($values)) {
-         $values = array($field => $values);
+         $values = [$field => $values];
       }
       $options['display'] = false;
       $options['value']   = $values[$field];
       switch ($field) {
          case 'graphtype':
             return Dropdown::showFromArray($name,
-                                           array('PNG'=>'PNG', 'SVG'=>'SVG'),
+                                           ['PNG'=>'PNG', 'SVG'=>'SVG'],
                                            $options);
             break;
          case 'show_label':
@@ -218,7 +218,7 @@ class PluginMreportingConfig extends CommonDBTM {
    }
 
 
-   function getFromDBByFunctionAndClassname($function,$classname) {
+   function getFromDBByFunctionAndClassname($function, $classname) {
       global $DB;
 
       $query = "SELECT *
@@ -245,7 +245,7 @@ class PluginMreportingConfig extends CommonDBTM {
    static function addFirstconfigLink() {
       global $CFG_GLPI;
 
-      $buttons = array();
+      $buttons = [];
       $title = "";
 
       if (Session::haveRight('config', READ)) {
@@ -286,7 +286,7 @@ class PluginMreportingConfig extends CommonDBTM {
          foreach ($functions as $funct_name) {
             if ($funct_name == 'preconfig') { // If a preconfig exists we construct the class
                $classConfig = true;
-               $classObject = new $classname(array());
+               $classObject = new $classname([]);
             }
          }
 
@@ -297,7 +297,7 @@ class PluginMreportingConfig extends CommonDBTM {
                continue;
             }
 
-            $input = array();
+            $input = [];
 
             if ($classConfig) { // If a preconfig exists in class we do it
                $input = $classObject->preconfig($funct_name, $classname, $this);
@@ -393,7 +393,7 @@ class PluginMreportingConfig extends CommonDBTM {
     * @options array example $value
     *@return nothing
     **/
-   static function dropdownGraph($name, $options=array()) {
+   static function dropdownGraph($name, $options = []) {
       $self = new self();
       $common = new PluginMreportingCommon();
       $rand = mt_rand();
@@ -462,9 +462,9 @@ class PluginMreportingConfig extends CommonDBTM {
     * @options array example $value
     *@return nothing
     **/
-   static function dropdownLabel($name, $options=array(),$notall = false) {
+   static function dropdownLabel($name, $options = [], $notall = false) {
       $params['value']       = 0;
-      $params['toadd']       = array();
+      $params['toadd']       = [];
       $params['on_change']   = '';
 
       if (is_array($options) && count($options)) {
@@ -544,13 +544,13 @@ class PluginMreportingConfig extends CommonDBTM {
                "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
             );
          } else {*/
-            $colors = array(
+            $colors = [
                "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
                "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
                "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
                "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
-            );
-         // }
+            ];
+            // }
       }
 
       //fill colors on size index
@@ -572,7 +572,7 @@ class PluginMreportingConfig extends CommonDBTM {
                Session::addMessageAfterRedirect(__("Object already exists", 'mreporting'),
                   false, ERROR);
             }
-            return array();
+            return [];
          }
       }
 
@@ -581,20 +581,20 @@ class PluginMreportingConfig extends CommonDBTM {
 
    function prepareInputForUpdate($input) {
 
-      if (isset($input["classname"]) && method_exists(new $input["classname"](array()), 'checkConfig')) {
-         $object = new $input["classname"](array());
+      if (isset($input["classname"]) && method_exists(new $input["classname"]([]), 'checkConfig')) {
+         $object = new $input["classname"]([]);
          $checkConfig = $object->checkConfig($input);
          if (!$checkConfig['result']) {
             Session::addMessageAfterRedirect($checkConfig['message'], ERROR, true);
 
-            return array();
+            return [];
          }
       }
 
       return $input;
    }
 
-   function showForm($ID, $options=array()) {
+   function showForm($ID, $options = []) {
       global $LANG;
 
       $this->initForm($ID, $options);
@@ -614,9 +614,9 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "<tr>";
       echo "<td class='tab_bg_2 center' colspan='2'>";
       echo __("Preconfiguration")."&nbsp;";
-      $opt = array('value' => $_GET['preconfig']);
+      $opt = ['value' => $_GET['preconfig']];
       $rand = self::dropdownGraph('graphname', $opt);
-      $params = array('graphname' => '__VALUE__');
+      $params = ['graphname' => '__VALUE__'];
       Ajax::updateItemOnSelectEvent("dropdown_graphname$rand", "show_preconfig",
                                           "../ajax/dropdownGraphs.php",
                                           $params);
@@ -673,8 +673,8 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "<td>".__("Default chart format")."</td>";
       echo "<td>";
       Dropdown::showFromArray("graphtype",
-         array('PNG'=>'PNG', 'SVG'=>'SVG'),
-         array('value' => $this->fields["graphtype"]));
+         ['PNG'=>'PNG', 'SVG'=>'SVG'],
+         ['value' => $this->fields["graphtype"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -716,7 +716,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      $opt = array('value' => $this->fields["show_label"]);
+      $opt = ['value' => $this->fields["show_label"]];
       if ($gtype != 'area' && $gtype != 'garea' && $gtype != 'line' && $gtype != 'gline') {
          self::dropdownLabel('show_label', $opt);
       } else {
@@ -742,7 +742,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo __("Unit", 'mreporting');
       echo "</td>";
       echo "<td>";
-      $opt = array('size' => 10);
+      $opt = ['size' => 10];
       Html::autocompletionTextField($this, 'unit', $opt);
       echo "</td>";
       echo "</tr>";
@@ -752,7 +752,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo __("Default delay", 'mreporting');
       echo "</td>";
       echo "<td>";
-      $opt = array('size' => 10);
+      $opt = ['size' => 10];
       Html::autocompletionTextField($this, 'default_delay', $opt);
       echo "</td>";
 
@@ -790,16 +790,16 @@ class PluginMreportingConfig extends CommonDBTM {
    **/
    static function initConfigParams($name, $classname) {
 
-      $crit = array('area'          => false,
-                     'spline'       => false,
-                     'flip_data'    => false,
-                     'unit'         => '',
-                     'show_label'   => 'never',
-                     'delay'        => '30',
-                     'condition'    => '',
-                     'show_graph'   => false,
-                     'randname'     => mt_rand(),
-                     'graphtype'    => 'SVG');
+      $crit = ['area'          => false,
+               'spline'       => false,
+               'flip_data'    => false,
+               'unit'         => '',
+               'show_label'   => 'never',
+               'delay'        => '30',
+               'condition'    => '',
+               'show_graph'   => false,
+               'randname'     => mt_rand(),
+               'graphtype'    => 'SVG'];
 
       $self = new self();
       if ($self->getFromDBByFunctionAndClassname($name, $classname)) {

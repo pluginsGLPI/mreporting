@@ -17,13 +17,13 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
     * @param $options array   of options used
     * @param $label           used for debugEvent() (default '')
    **/
-   static function raiseEvent($event, $item, $options=array(), $label='') {
+   static function raiseEvent($event, $item, $options = [], $label = '') {
       global $CFG_GLPI;
 
       //If notifications are enabled in GLPI's configuration
       if ($CFG_GLPI["use_notifications"]) {
-         $email_processed    = array();
-         $email_notprocessed = array();
+         $email_processed    = [];
+         $email_notprocessed = [];
 
          $options['entities_id'] = 0; //New code
          $notificationtarget = NotificationTarget::getInstance($item, $event, $options);

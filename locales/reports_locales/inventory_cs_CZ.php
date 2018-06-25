@@ -1,121 +1,121 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Inventory'] = array(
+$LANG['plugin_mreporting']['Inventory'] = [
 
    'title' => "Inventura",
 
-   'reportHbarComputersByOS' => array(
+   'reportHbarComputersByOS' => [
       'title'    => "Počítače podle operačních systémů",
       'desc'     => "Pruhový",
       'category' => "Operační systémy",
-   ),
+   ],
 
-   'reportPieComputersByOS' => array(
+   'reportPieComputersByOS' => [
       'title'    => "Počítače podle operačních systémů",
       'desc'     => "Výsečový",
       'category' => "Operační systémy",
-   ),
+   ],
 
-   'reportHbarComputersByFabricant' => array(
+   'reportHbarComputersByFabricant' => [
       'title'    => "Počítače podle výrobců",
       'desc'     => "Pruhový",
       'category' => "Výrobci",
-   ),
+   ],
 
-   'reportPieComputersByFabricant' => array(
+   'reportPieComputersByFabricant' => [
       'title'    => "Počítače podle výrobců",
       'desc'     => "Výsečový",
       'category' => "Výrobci",
-   ),
+   ],
 
-   'reportHbarComputersByType' => array(
+   'reportHbarComputersByType' => [
       'title'    => "Počítače podle typů",
       'desc'     => "Pruhový",
       'category' => "Typy",
-   ),
+   ],
 
-   'reportPieComputersByType' => array(
+   'reportPieComputersByType' => [
       'title'    => "Počítače podle typů",
       'desc'     => "Výsečový",
       'category' => "Typy",
-   ),
+   ],
 
-   'reportHbarComputersByStatus' => array(
+   'reportHbarComputersByStatus' => [
       'title'    => "Počítač podle stavů",
       'desc'     => "Pruhový",
       'category' => "Stavy",
-   ),
+   ],
 
-   'reportHbarPrintersByStatus' => array(
+   'reportHbarPrintersByStatus' => [
       'title'    => "Tiskárny podle stavů",
       'desc'     => "Pruhový",
       'category' => "Stavy",
-   ),
+   ],
 
-   'reportHbarWindows' => array(
+   'reportHbarWindows' => [
       'title'    => "Verze Windows",
       'desc'     => "Pruhový",
       'category' => "Operační systémy",
-   ),
+   ],
 
-   'reportHbarLinux' => array(
+   'reportHbarLinux' => [
       'title'    => "Linuxové distribuce podrobně",
       'desc'     => "Pruhový",
       'category' => "Operační systémy",
-   ),
+   ],
 
-   'reportHbarLinuxDistro' => array(
+   'reportHbarLinuxDistro' => [
       'title'    => "Linuxové distribuce podrobně",
       'desc'     => "Pruhový",
       'category' => "Operační systémy",
-   ),
+   ],
 
-   'reportHbarMac' => array(
+   'reportHbarMac' => [
       'title'    => "Verze macOS podrobně",
       'desc'     => "Pruhový",
       'category' => "Operační systémy",
-   ),
+   ],
 
-   'reportHbarMacFamily' => array(
+   'reportHbarMacFamily' => [
       'title'    => "Přehled verzí macOS",
       'desc'     => "Pruhový",
       'category' => "Operační systémy",
-   ),
+   ],
 
-   'reportHbarComputersByAge' => array(
+   'reportHbarComputersByAge' => [
       'title'    => "Počítače podle stáří",
       'desc'     => "Pruhový",
       'category' => "Inventář",
-   ),
+   ],
 
-   'reportPieComputersByAge' => array(
+   'reportPieComputersByAge' => [
       'title'    => "Počítače podle stáří",
       'desc'     => "Výsečový",
       'category' => "Inventář",
-   ),
+   ],
 
-   'reportHbarFusionInventory' => array(
+   'reportHbarFusionInventory' => [
       'title'    => "Rozložení verzí FusionInventory agentů",
       'desc'     => "Pruhový",
       'category' => "Agenti",
-   ),
+   ],
 
-   'reportPieFusionInventory' => array(
+   'reportPieFusionInventory' => [
       'title'    => "Rozložení verzí FusionInventory agentů",
       'desc'     => "Výsečový",
       'category' => "Agenti",
-   ),
+   ],
 
-   'reportHbarMonitors' => array(
+   'reportHbarMonitors' => [
       'title'    => "Rozložení obrazovek podle počítačů",
       'desc'     => "Pruhový",
       'category' => "Inventář",
-   ),
+   ],
 
-    'reportHbarComputersByEntity' => array(
+    'reportHbarComputersByEntity' => [
       'title'    => "Počítače podle entit",
       'desc'     => "Pruhový",
       'category' => "Entity",
-    ),
-);
+    ],
+];

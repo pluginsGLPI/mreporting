@@ -38,7 +38,7 @@ class PluginMreportingPreference extends CommonDBTM {
       if (!$id) {
          $input["users_id"]  = $users_id;
          $input["template"]  = "";
-         $input["selectors"] = NULL;
+         $input["selectors"] = null;
 
          $id = $this->add($input);
       }
@@ -87,14 +87,14 @@ class PluginMreportingPreference extends CommonDBTM {
     */
    static function dropdownListFiles($name, $extension, $directory, $value = '') {
       $files     = self::getFiles($directory, $extension);
-      $values    = array();
+      $values    = [];
       if (empty($files)) {
          $values[0] = Dropdown::EMPTY_VALUE;
       }
       foreach ($files as $file) {
          $values[$file[0]] = $file[0];
       }
-      return Dropdown::showFromArray($name, $values, array('value' => $value));
+      return Dropdown::showFromArray($name, $values, ['value' => $value]);
    }
 
    /**
@@ -140,8 +140,8 @@ class PluginMreportingPreference extends CommonDBTM {
 
    static function getFiles($directory, $ext) {
 
-      $array_dir  = array();
-      $array_file = array();
+      $array_dir  = [];
+      $array_file = [];
 
       if (is_dir($directory)) {
          if ($dh = opendir($directory)) {
@@ -159,7 +159,7 @@ class PluginMreportingPreference extends CommonDBTM {
 
                   default:
                      if ($filetype == 'file' && $extension ==$ext) {
-                        $array_file[] = array($filename, $filedate, $extension);
+                        $array_file[] = [$filename, $filedate, $extension];
                      } else if ($filetype == "dir") {
                         $array_dir[] = $filename;
                      }
@@ -176,17 +176,17 @@ class PluginMreportingPreference extends CommonDBTM {
    }
 
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch (get_class($item)) {
          case 'Preference':
-            return array(1 => __("More Reporting", 'mreporting'));
+            return [1 => __("More Reporting", 'mreporting')];
          default:
             return '';
       }
    }
 
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       switch (get_class($item)) {
          case 'Preference':
             $pref = new self();

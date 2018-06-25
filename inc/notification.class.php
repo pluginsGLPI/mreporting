@@ -30,22 +30,22 @@ class PluginMreportingNotification extends CommonDBTM {
       $template = new NotificationTemplate();
       $found_template = $template->find("itemtype = 'PluginMreportingNotification'");
       if (empty($found_template)) {
-         $template_id = $template->add(array(
+         $template_id = $template->add([
             'name'                     => __('Notification for "More Reporting"', 'mreporting'),
             'comment'                  => "",
             'itemtype'                 => __CLASS__,
-         ));
+         ]);
 
          $content_html = __("\n<p>Hello,</p>\n\n<p>GLPI reports are available.<br />\nYou will find attached in this email.</p>\n\n", 'mreporting');
 
          // Ajout d'une traduction (texte) en Français
          $translation = new NotificationTemplateTranslation();
-         $translation->add(array(
+         $translation->add([
             'notificationtemplates_id' => $template_id,
             'language'                 => '',
             'subject'                  => __("GLPI statistics reports", 'mreporting'),
             'content_text'             => __("Hello,\n\nGLPI reports are available.\nYou will find attached in this email.\n\n", 'mreporting'),
-            'content_html'             => $content_html)
+            'content_html'             => $content_html]
          );
 
          // Création de la notification
@@ -75,7 +75,7 @@ class PluginMreportingNotification extends CommonDBTM {
               VALUES (1, 1, ' . $notification_id . ');');
       }
 
-      return array('success' => true);
+      return ['success' => true];
    }
 
    /**
@@ -86,7 +86,7 @@ class PluginMreportingNotification extends CommonDBTM {
    static function uninstall() {
       global $DB;
 
-      $queries = array();
+      $queries = [];
 
       // Remove NotificationTargets and Notifications
       $notification = new Notification();
@@ -112,7 +112,7 @@ class PluginMreportingNotification extends CommonDBTM {
          $DB->query($query);
       }
 
-      return array('success' => true);
+      return ['success' => true];
    }
 
    /**
@@ -125,9 +125,9 @@ class PluginMreportingNotification extends CommonDBTM {
    static function cronInfo($name) {
       switch ($name) {
          case 'SendNotifications' :
-            return array('description' => __('Notification for "More Reporting"', 'mreporting'));
+            return ['description' => __('Notification for "More Reporting"', 'mreporting')];
       }
-      return array();
+      return [];
    }
 
    /**

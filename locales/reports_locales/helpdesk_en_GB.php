@@ -1,114 +1,114 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdesk'] = array(
+$LANG['plugin_mreporting']['Helpdesk'] = [
    'title' => "Helpdesk",
 
-   'reportHbarTicketNumberByEntity' => array(
+   'reportHbarTicketNumberByEntity' => [
       'title'    => "Number of ticket per entity",
       'desc'     => "Bars",
       'category' => "Per entity",
-   ),
+   ],
 
-   'reportPieTicketNumberByEntity' => array(
+   'reportPieTicketNumberByEntity' => [
       'title'    => "Number of ticket per entity",
       'desc'     => "Pie",
       'category' => "Per entity",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByCatAndEntity' => array(
+   'reportHgbarTicketNumberByCatAndEntity' => [
       'title'    => "Number of ticket per category and entity",
       'desc'     => "Grouped bar",
       'category' => "Per entity",
-   ),
+   ],
 
-   'reportPieTopTenAuthor' => array(
+   'reportPieTopTenAuthor' => [
       'title'    => "Top 10 requesters",
       'desc'     => "Pie",
       'category' => "By requester",
-   ),
+   ],
 
-   'reportHgbarOpenTicketNumberByCategoryAndByType' => array(
+   'reportHgbarOpenTicketNumberByCategoryAndByType' => [
       'title'    => "Number of opened tickets per category and type",
       'desc'     => "grouped bar",
       'category' => "per category",
-   ),
+   ],
 
-   'reportHgbarCloseTicketNumberByCategoryAndByType' => array(
+   'reportHgbarCloseTicketNumberByCategoryAndByType' => [
       'title'    => "Number of closed tickets per category and type",
       'desc'     => "grouped bar",
       'category' => "per category",
-   ),
+   ],
 
-   'reportHgbarOpenedTicketNumberByCategory' => array(
+   'reportHgbarOpenedTicketNumberByCategory' => [
       'title'    => "Number of openened tickets per category and status",
       'desc'     => "Grouped bar",
       'category' => "per category",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByService' => array(
+   'reportHgbarTicketNumberByService' => [
       'title'    => "Number of opened and closed tickets per service",
       'desc'     => "Grouped bar",
       'category' => "Per service",
-   ),
+   ],
 
-   'reportPieTicketOpenedAndClosed' => array(
+   'reportPieTicketOpenedAndClosed' => [
       'title'    => "Number of opened and closed tickets",
       'desc'     => "Pie",
       'category' => "Per ticket",
-   ),
+   ],
 
-   'reportPieTicketOpenedbyStatus' => array(
+   'reportPieTicketOpenedbyStatus' => [
       'title'    => "Number of opened tickets per status",
       'desc'     => "Pie",
       'category' => "Per ticket",
-   ),
+   ],
 
-   'reportAreaNbTicket' => array(
+   'reportAreaNbTicket' => [
       'title'    => "Number of ticket evolution over the period",
       'desc'     => "Area",
       'category' => "Per ticket",
-   ),
+   ],
 
-   'reportLineNbTicket' => array(
+   'reportLineNbTicket' => [
       'title'    => "Number of ticket evolution over the period",
       'desc'     => "Line",
       'category' => "Per ticket",
-   ),
+   ],
 
-   'reportGlineNbTicket' => array(
+   'reportGlineNbTicket' => [
       'title'    => "Number of ticket evolution over the period (per status)",
       'desc'     => "Lines",
       'category' => "Per ticket",
-   ),
+   ],
 
-   'reportGareaNbTicket' => array(
+   'reportGareaNbTicket' => [
       'title'    => "Number of ticket evolution over the period (per status)",
       'desc'     => "Area",
       'category' => "Per ticket",
-   ),
+   ],
 
-   'reportVstackbarNbTicket' => array(
+   'reportVstackbarNbTicket' => [
       'title'    => "Number of ticket evolution over the period (per status)",
       'desc'     => "Stacked bars",
       'category' => "Per ticket",
-   ),
+   ],
 
-   'reportSunburstTicketByCategories' => array(
+   'reportSunburstTicketByCategories' => [
       'title'    => "Distribution of tickets per category and child categories",
       'desc'     => "Donut",
       'category' => "Per category",
-   ),
+   ],
 
-   'reportVstackbarTicketStatusByTechnician' => array(
+   'reportVstackbarTicketStatusByTechnician' => [
       'title'    => "Number of tickets per status and technician",
       'desc'     => "Stacked bars",
       'category' => "Per ticket",
-   ),
+   ],
 
-   'reportHbarTicketNumberByLocation' => array(
+   'reportHbarTicketNumberByLocation' => [
       'title'    => "Number of ticket per requester location",
       'desc'     => "Bars",
       'category' => "Per requester",
-   ),
-);
+   ],
+];

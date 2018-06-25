@@ -1,12 +1,12 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Other'] = array(
+$LANG['plugin_mreporting']['Other'] = [
    'title' => "Autres",
 
-   'reportHbarLogs' => array(
+   'reportHbarLogs' => [
       'title'    => "Répartition des logs",
       'desc'     => "Barres",
       'category' => "Logs",
-   )
-);
+   ]
+];
