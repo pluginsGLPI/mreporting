@@ -1642,12 +1642,7 @@ class PluginMreportingCommon extends CommonDBTM {
       }
       $_SERVER['REQUEST_URI'] .= "&date1".$randname."=".$date1."&date2".$randname."=".$date2;
 
-      if (class_exists('Bookmark')) {
-         Bookmark::showSaveButton(Bookmark::URI, __CLASS__);
-      } else {
-         //@since GLPI 9.2
-         SavedSearch::showSaveButton(SavedSearch::URI, __CLASS__);
-      }
+      SavedSearch::showSaveButton(SavedSearch::URI, __CLASS__);
 
       //If there's no selector for the report, there's no need for a reset button !
       if ($has_selector) {
