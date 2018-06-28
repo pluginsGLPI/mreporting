@@ -220,7 +220,7 @@ function plugin_mreporting_uninstall() {
    Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR."/mreporting/notifications");
    Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR."/mreporting");
 
-   $objects = ["DisplayPreference", (class_exists('Bookmark') ? "Bookmark" : "SavedSearch")];
+   $objects = ["DisplayPreference", "SavedSearch"];
 
    foreach ($objects as $object) {
       $obj = new $object();
