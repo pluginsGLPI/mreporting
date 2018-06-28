@@ -1,6 +1,6 @@
 <?php
 global $LANG;
-$LANG['plugin_mreporting']['Helpdeskplus'] = array(
+$LANG['plugin_mreporting']['Helpdeskplus'] = [
    'title'         => 'Helpdesk Avançado',
    // MISC LOCALES
    'backlogs'      => "Em espera",
@@ -12,80 +12,80 @@ $LANG['plugin_mreporting']['Helpdeskplus'] = array(
    'observed'      => "observado",
    'notobserved'   => "não observado",
    // SELECTOR
-   'selector'      => array(
+   'selector'      => [
       'slas'       => "SLAS",
       'categories' => "Categorias",
-   ),
+   ],
    // GENERAL REPORTS
-   'reportGlineBacklogs' => array(
+   'reportGlineBacklogs' => [
       'title'    => "Em espera",
       'desc'     => "",
       'category' => "Geral",
-   ),
-   'reportVstackbarLifetime' => array(
+   ],
+   'reportVstackbarLifetime' => [
       'title'    => "Tempo da Incidência",
       'desc'     => "",
       'category' => "Geral",
-   ),
-   'reportVstackbarTicketsgroups' => array(
+   ],
+   'reportVstackbarTicketsgroups' => [
       'title'    => "Incidências por grupo",
       'desc'     => "",
       'category' => "Geral",
-   ),
-   'reportVstackbarTicketstech' => array(
+   ],
+   'reportVstackbarTicketstech' => [
       'title'    => "Incidências por técnico",
       'desc'     => "",
       'category' => "Geral",
-   ),
-   'reportVstackbarWorkflow' => array(
+   ],
+   'reportVstackbarWorkflow' => [
       'title'    => "Filas de orientação",
       'desc'     => "",
       'category' => "Geral",
-   ),
-   'reportHbarTopcategory' => array(
+   ],
+   'reportHbarTopcategory' => [
       'title'    => "TOP categorias",
       'desc'     => "",
       'category' => "Geral",
-   ),
-   'reportHbarTopapplicant' => array(
+   ],
+   'reportHbarTopapplicant' => [
       'title'    => "TOP grupos solicitantes",
       'desc'     => "",
       'category' => "Geral",
-   ),
-   'reportVstackbarGroupChange' => array(
+   ],
+   'reportVstackbarGroupChange' => [
       'title'    => "Number of group changes",
       'desc'     => "",
       'category' => "Geral",
-   ),
-   'reportLineActiontimeVsSolvedelay' => array(
+   ],
+   'reportLineActiontimeVsSolvedelay' => [
       'title'    => "Comparação dos tempos de acção das tarefas e tempo de resolução",
       'desc'     => "",
       'category' => "Geral",
-   ),
+   ],
    // SLA REPORTS
-   'reportVstackbarNbTicketBySla' => array(
+   'reportVstackbarNbTicketBySla' => [
       'title'    => "Número de incidências por SLA",
       'desc'     => "",
       'category' => "Por SLA",
-   ),
-   'reportGlineNbTicketBySla' => array(
+   ],
+   'reportGlineNbTicketBySla' => [
       'title'    => "Evolução das incidências por SLA",
       'desc'     => "",
       'category' => "Por SLA",
-   ),
-   'reportHgbarRespectedSlasByTopCategory' => array(
+   ],
+   'reportHgbarRespectedSlasByTopCategory' => [
       'title'    => "Incidências por SLA ordenadas por categorias",
       'desc'     => "",
       'category' => "Por SLA",
-   ),
-   'reportHgbarRespectedSlasByTechnician' => array(
+   ],
+   'reportHgbarRespectedSlasByTechnician' => [
       'title'    => "Incidências por SLA ordenadas por técnicos",
       'desc'     => "",
       'category' => "Por SLA",
-   ),
-   'reportVstackbarRespectedSlasByGroup' => array(
+   ],
+   'reportVstackbarRespectedSlasByGroup' => [
       'title'    => "Incidências por SLA classificado por grupos",
       'desc'     => "",
       'category' => "Por SLA",
-   ),
-);
+   ],
+];

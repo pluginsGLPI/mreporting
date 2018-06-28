@@ -26,12 +26,12 @@
  --------------------------------------------------------------------------
  */
 
-define ('PLUGIN_MREPORTING_VERSION', '1.4.1');
+define ('PLUGIN_MREPORTING_VERSION', '1.5.0');
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_MREPORTING_MIN_GLPI", "9.2");
+define("PLUGIN_MREPORTING_MIN_GLPI", "9.3");
 // Maximum GLPI version, exclusive
-define("PLUGIN_MREPORTING_MAX_GLPI", "9.3");
+define("PLUGIN_MREPORTING_MAX_GLPI", "9.4");
 
 if (!defined('PLUGIN_MREPORTING_TEMPLATE_DIR')) {
    define("PLUGIN_MREPORTING_TEMPLATE_DIR", GLPI_ROOT."/plugins/mreporting/templates/");
@@ -79,21 +79,21 @@ function plugin_init_mreporting() {
 
       if (Session::getLoginUserID()) {
          /* Profile */
-         $PLUGIN_HOOKS['change_profile']['mreporting'] = array('PluginMreportingProfile',
-                                                               'changeProfile');
+         $PLUGIN_HOOKS['change_profile']['mreporting'] = ['PluginMreportingProfile',
+                                                          'changeProfile'];
          $PLUGIN_HOOKS['redirect_page']['mreporting']  = 'front/download.php';
 
          Plugin::registerClass('PluginMreportingNotification',
-                        array('notificationtemplates_types' => true));
+                        ['notificationtemplates_types' => true]);
 
          Plugin::registerClass('PluginMreportingDashboard',
-                        array('addtabon' => array('Central')));
+                        ['addtabon' => ['Central']]);
 
          Plugin::registerClass('PluginMreportingProfile',
-                         array('addtabon' => 'Profile'));
+                         ['addtabon' => 'Profile']);
 
          Plugin::registerClass('PluginMreportingPreference',
-                        array('addtabon' => 'Preference'));
+                        ['addtabon' => 'Preference']);
 
          $mreporting_profile = new PluginMreportingProfile;
          $reports_profiles = $mreporting_profile->find("`profiles_id` = '".$_SESSION['glpiactiveprofile']['id']."' AND `right` = ".READ);
@@ -101,7 +101,7 @@ function plugin_init_mreporting() {
          /* Menu */
          $PLUGIN_HOOKS['config_page']['mreporting'] = 'front/config.php';
          if (count($reports_profiles) > 0) {
-            $PLUGIN_HOOKS['menu_toadd']['mreporting'] = array('tools' => 'PluginMreportingCommon');
+            $PLUGIN_HOOKS['menu_toadd']['mreporting'] = ['tools' => 'PluginMreportingCommon'];
          }
 
          /* Show Reports in standart stats page */
@@ -118,20 +118,19 @@ function plugin_init_mreporting() {
          }
 
          $PLUGIN_HOOKS['pre_item_purge']['mreporting']
-            = array('Profile'                => array('PluginMreportingProfile', 'purgeProfiles'),
-                    'PluginMreportingConfig' => array('PluginMreportingProfile',
-                                                      'purgeProfilesByReports'));
+            = ['Profile'                => ['PluginMreportingProfile', 'purgeProfiles'],
+               'PluginMreportingConfig' => ['PluginMreportingProfile', 'purgeProfilesByReports']];
          $PLUGIN_HOOKS['item_add']['mreporting']
-            = array('Profile'                => array('PluginMreportingProfile', 'addProfiles'),
-                    'PluginMreportingConfig' => array('PluginMreportingProfile', 'addReport'));
+            = ['Profile'                => ['PluginMreportingProfile', 'addProfiles'],
+               'PluginMreportingConfig' => ['PluginMreportingProfile', 'addReport']];
 
       }
 
       // Add specific files to add to the header : javascript
-      $PLUGIN_HOOKS['add_javascript']['mreporting'] = array("lib/protovis/protovis.min.js",
-                                                            "lib/protovis-msie/protovis-msie.min.js",
-                                                            "lib/jquery.tipsy/jquery.tipsy.min.js",
-                                                            "lib/jquery.tipsy/tipsy.js");
+      $PLUGIN_HOOKS['add_javascript']['mreporting'] = ["lib/protovis/protovis.min.js",
+                                                       "lib/protovis-msie/protovis-msie.min.js",
+                                                       "lib/jquery.tipsy/jquery.tipsy.min.js",
+                                                       "lib/jquery.tipsy/tipsy.js"];
       if (isset($_SESSION['glpiactiveprofile']['id']) && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
          if (PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
             $PLUGIN_HOOKS['add_javascript']['mreporting'][] = 'js/helpdesk-menu.js'; //This need Ext js lib !
@@ -142,9 +141,9 @@ function plugin_init_mreporting() {
       }
 
       //Add specific files to add to the header : css
-      $PLUGIN_HOOKS['add_css']['mreporting'] = array("css/mreporting.css",
-                                                     "lib/font-awesome-4.2.0/css/font-awesome.min.css",
-                                                      "lib/jquery.tipsy/jquery.tipsy.css");
+      $PLUGIN_HOOKS['add_css']['mreporting'] = ["css/mreporting.css",
+                                                "lib/font-awesome-4.2.0/css/font-awesome.min.css",
+                                                "lib/jquery.tipsy/jquery.tipsy.css"];
 
       if (DEBUG_MREPORTING && isset($_SESSION['glpimenu'])) {
          unset($_SESSION['glpimenu']);
@@ -163,8 +162,7 @@ function plugin_version_mreporting() {
    return [
       'name'           => __('More Reporting', 'mreporting'),
       'version'        => PLUGIN_MREPORTING_VERSION,
-      'author'         => "<a href='http://www.teclib.com'>Teclib'</a>
-                                       & <a href='http://www.infotel.com'>Infotel</a>",
+      'author'         => "<a href='http://www.teclib.com'>Teclib'</a> & <a href='http://www.infotel.com'>Infotel</a>",
       'homepage'       => "https://github.com/pluginsGLPI/mreporting",
       'license'        => 'GPLv2+',
       'requirements'   => [
@@ -229,7 +227,7 @@ function plugin_mreporting_check_prerequisites() {
  *
  * @return boolean
  */
-function plugin_mreporting_check_config($verbose=false) {
+function plugin_mreporting_check_config($verbose = false) {
    if (true) { // Your configuration check
       return true;
    }

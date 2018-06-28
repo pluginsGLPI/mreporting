@@ -1,100 +1,100 @@
 <?php
 global $LANG;
-$LANG['plugin_mreporting']['Inventory'] = array(
+$LANG['plugin_mreporting']['Inventory'] = [
    'title' => "Inventário",
-   'reportHbarComputersByOS' => array(
+   'reportHbarComputersByOS' => [
       'title'    => "Computadores por SO",
       'desc'     => "Barras",
       'category' => "SO",
-   ),
-   'reportPieComputersByOS' => array(
+   ],
+   'reportPieComputersByOS' => [
       'title'    => "Computadores por SO",
       'desc'     => "Circular",
       'category' => "SO",
-   ),
-   'reportHbarComputersByFabricant' => array(
+   ],
+   'reportHbarComputersByFabricant' => [
       'title'    => "Computadores por fabricante",
       'desc'     => "Barras",
       'category' => "Fabricante",
-   ),
-   'reportPieComputersByFabricant' => array(
+   ],
+   'reportPieComputersByFabricant' => [
       'title'    => "Computadores por fabricante",
       'desc'     => "Circular",
       'category' => "Fabricante",
-   ),
-   'reportHbarComputersByType' => array(
+   ],
+   'reportHbarComputersByType' => [
       'title'    => "Computadores por tipo",
       'desc'     => "Barras",
       'category' => "Tipo",
-   ),
-   'reportPieComputersByType' => array(
+   ],
+   'reportPieComputersByType' => [
       'title'    => "Computadores por tipo",
       'desc'     => "Circular",
       'category' => "Tipo",
-   ),
-   'reportHbarComputersByStatus' => array(
+   ],
+   'reportHbarComputersByStatus' => [
       'title'    => "Computadores por estado",
       'desc'     => "Barras",
       'category' => "Estado",
-   ),
-   'reportHbarPrintersByStatus' => array(
+   ],
+   'reportHbarPrintersByStatus' => [
       'title'    => "Impressoras por estado",
       'desc'     => "Barras",
       'category' => "Estado",
-   ),
-   'reportHbarWindows' => array(
+   ],
+   'reportHbarWindows' => [
       'title'    => "Distribuição Windows",
       'desc'     => "Barras",
       'category' => "SO",
-   ),
-   'reportHbarLinux' => array(
+   ],
+   'reportHbarLinux' => [
       'title'    => "Distribuição Linux detalhe",
       'desc'     => "Barras",
       'category' => "SO",
-   ),
-   'reportHbarLinuxDistro' => array(
+   ],
+   'reportHbarLinuxDistro' => [
       'title'    => "Distribuição Linux detalhe",
       'desc'     => "Barras",
       'category' => "SO",
-   ),
-   'reportHbarMac' => array(
+   ],
+   'reportHbarMac' => [
       'title'    => "Distribuições Mac OS X detalhes",
       'desc'     => "Barras",
       'category' => "SO",
-   ),
-   'reportHbarMacFamily' => array(
+   ],
+   'reportHbarMacFamily' => [
       'title'    => "Versão MAC OS X visão geral",
       'desc'     => "Barras",
       'category' => "SO",
-   ),
-   'reportHbarComputersByAge' => array(
+   ],
+   'reportHbarComputersByAge' => [
       'title'    => "Computador por idade",
       'desc'     => "Barras",
       'category' => "Inventário",
-   ),
-   'reportPieComputersByAge' => array(
+   ],
+   'reportPieComputersByAge' => [
       'title'    => "Computador por idade",
       'desc'     => "Circular",
       'category' => "Inventário",
-   ),
-   'reportHbarFusionInventory' => array(
+   ],
+   'reportHbarFusionInventory' => [
       'title'    => "Distribuição agente FusionInventory",
       'desc'     => "Barras",
       'category' => "Agent",
-   ),
-   'reportPieFusionInventory' => array(
+   ],
+   'reportPieFusionInventory' => [
       'title'    => "Distribuição agente FusionInventory",
       'desc'     => "Circular",
       'category' => "Agent",
-   ),
-   'reportHbarMonitors' => array(
+   ],
+   'reportHbarMonitors' => [
       'title'    => "Distribuição de monitores por computador",
       'desc'     => "Barras",
       'category' => "Inventário",
-   ),
-    'reportHbarComputersByEntity' => array(
+   ],
+    'reportHbarComputersByEntity' => [
       'title'    => "Computadores por entidade",
       'desc'     => "Barras",
       'category' => "Entidade",
-    ),
-);
+    ],
+];

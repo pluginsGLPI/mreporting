@@ -41,7 +41,7 @@ function plugin_mreporting_install() {
    include_once(GLPI_ROOT."/plugins/mreporting/inc/profile.class.php");
 
    //create profiles table
-   $queries = array();
+   $queries = [];
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
       `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
       `profiles_id` VARCHAR(45) NOT NULL,
@@ -129,7 +129,7 @@ function plugin_mreporting_install() {
 
    // == Update to 2.1 ==
    $migration->addField('glpi_plugin_mreporting_configs', 'is_notified',
-                        'tinyint(1) NOT NULL default "1"', array('after' => 'is_active'));
+                        'tinyint(1) NOT NULL default "1"', ['after' => 'is_active']);
    $migration->migrationOneTable('glpi_plugin_mreporting_configs');
 
    // == Update to 2.3 ==
@@ -206,12 +206,12 @@ function plugin_mreporting_uninstall() {
    global $DB;
 
    $migration = new Migration("2.3.0");
-   $tables = array("glpi_plugin_mreporting_profiles",
-                   "glpi_plugin_mreporting_configs",
-                   "glpi_plugin_mreporting_preferences",
-                   "glpi_plugin_mreporting_notifications",
-                   "glpi_plugin_mreporting_dashboards"
-   );
+   $tables = ["glpi_plugin_mreporting_profiles",
+              "glpi_plugin_mreporting_configs",
+              "glpi_plugin_mreporting_preferences",
+              "glpi_plugin_mreporting_notifications",
+              "glpi_plugin_mreporting_dashboards"
+   ];
 
    foreach ($tables as $table) {
       $migration->dropTable($table);
@@ -220,11 +220,11 @@ function plugin_mreporting_uninstall() {
    Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR."/mreporting/notifications");
    Toolbox::deleteDir(GLPI_PLUGIN_DOC_DIR."/mreporting");
 
-   $objects = array("DisplayPreference", (class_exists('Bookmark') ? "Bookmark" : "SavedSearch"));
+   $objects = ["DisplayPreference", (class_exists('Bookmark') ? "Bookmark" : "SavedSearch")];
 
    foreach ($objects as $object) {
       $obj = new $object();
-      $obj->deleteByCriteria(array('itemtype' => 'PluginMreportingConfig'));
+      $obj->deleteByCriteria(['itemtype' => 'PluginMreportingConfig']);
    }
 
    require_once "inc/notification.class.php";
@@ -238,13 +238,13 @@ function plugin_mreporting_getDatabaseRelations() {
 
    $plugin = new Plugin();
    if ($plugin->isActivated("mreporting")) {
-      return array("glpi_profiles" => array ("glpi_plugin_mreporting_profiles" => "profiles_id"));
+      return ["glpi_profiles" =>  ["glpi_plugin_mreporting_profiles" => "profiles_id"]];
    } else {
-      return array();
+      return [];
    }
 }
 
-function plugin_mreporting_giveItem($type,$ID,$data,$num) {
+function plugin_mreporting_giveItem($type, $ID, $data, $num) {
    global $LANG;
 
    $searchopt=&Search::getOptions($type);
@@ -316,7 +316,7 @@ function plugin_mreporting_giveItem($type,$ID,$data,$num) {
    return "";
 }
 
-function plugin_mreporting_MassiveActionsFieldsDisplay($options=array()) {
+function plugin_mreporting_MassiveActionsFieldsDisplay($options = []) {
 
    $table = $options['options']['table'];
    $field = $options['options']['field'];
@@ -333,7 +333,7 @@ function plugin_mreporting_MassiveActionsFieldsDisplay($options=array()) {
 
          case "glpi_plugin_mreporting_configs.graphtype":
             Dropdown::showFromArray("graphtype",
-               array('PNG'=>'PNG', 'SVG'=>'SVG'));
+               ['PNG'=>'PNG', 'SVG'=>'SVG']);
             return true;
             break;
       }
@@ -344,7 +344,7 @@ function plugin_mreporting_MassiveActionsFieldsDisplay($options=array()) {
 }
 
 
-function plugin_mreporting_searchOptionsValues($options = array()) {
+function plugin_mreporting_searchOptionsValues($options = []) {
 
    $table = $options['searchoption']['table'];
    $field = $options['searchoption']['field'];
@@ -352,7 +352,7 @@ function plugin_mreporting_searchOptionsValues($options = array()) {
    switch ($table.".".$field) {
       case "glpi_plugin_mreporting_configs.graphtype":
          Dropdown::showFromArray("graphtype",
-            array('PNG'=>'PNG', 'SVG'=>'SVG'));
+            ['PNG'=>'PNG', 'SVG'=>'SVG']);
          return true;
    }
    return false;

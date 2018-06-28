@@ -29,7 +29,7 @@
 
 class PluginMreportingOther Extends PluginMreportingBaseclass {
 
-   function reportHbarLogs($configs = array()) {
+   function reportHbarLogs($configs = []) {
       global $DB;
 
       //Init delay value
@@ -64,7 +64,7 @@ class PluginMreportingOther Extends PluginMreportingBaseclass {
       $query_item            = "$prefix `linked_action` IN (13, 14, 17, 18, 19, 20)";
       $query_other           = "$prefix `id_search_option` IN (16, 19)";
 
-      $datas = array();
+      $datas = [];
 
       $result = $DB->query($query_computer_software);
       $datas['datas'][__('Add/remove software on a computer', 'mreporting')] = $DB->result($result, 0, 'cpt');

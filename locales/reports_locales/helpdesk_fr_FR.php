@@ -1,115 +1,115 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdesk'] = array(
+$LANG['plugin_mreporting']['Helpdesk'] = [
    'title' => "Helpdesk",
 
-   'reportHbarTicketNumberByEntity' => array(
+   'reportHbarTicketNumberByEntity' => [
       'title'    => "Nombre de ticket par entités",
       'desc'     => "Barres",
       'category' => "Par entités",
-   ),
+   ],
 
-   'reportPieTicketNumberByEntity' => array(
+   'reportPieTicketNumberByEntity' => [
       'title'    => "Nombre de ticket par entités",
       'desc'     => "Camembert",
       'category' => "Par entités",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByCatAndEntity' => array(
+   'reportHgbarTicketNumberByCatAndEntity' => [
       'title'    => "Nombre de ticket par catégories et entités",
       'desc'     => "Barres groupées",
       'category' => "Par entités",
-   ),
+   ],
 
-   'reportPieTopTenAuthor' => array(
+   'reportPieTopTenAuthor' => [
       'title'    => "Top 10 des demandeurs",
       'desc'     => "Camembert",
       'category' => "Par demandeurs",
-   ),
+   ],
 
-   'reportHgbarOpenTicketNumberByCategoryAndByType' => array(
+   'reportHgbarOpenTicketNumberByCategoryAndByType' => [
       'title'    => "Nombre de tickets ouverts par catégories et par types",
       'desc'     => "Barres groupées",
       'category' => "Par catégories",
-   ),
+   ],
 
-   'reportHgbarCloseTicketNumberByCategoryAndByType' => array(
+   'reportHgbarCloseTicketNumberByCategoryAndByType' => [
       'title'    => "Nombre de tickets clôturés par catégories et par types",
       'desc'     => "Barres groupées",
       'category' => "Par catégories",
-   ),
+   ],
 
-   'reportHgbarOpenedTicketNumberByCategory' => array(
+   'reportHgbarOpenedTicketNumberByCategory' => [
       'title'    => "Nombre de tickets ouverts par catégories et par statuts",
       'desc'     => "Barres groupées",
       'category' => "Par catégories",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByService' => array(
+   'reportHgbarTicketNumberByService' => [
       'title'    => "Nombre de tickets ouverts et clôturés par services",
       'desc'     => "Barres groupées",
       'category' => "Par services",
-   ),
+   ],
 
-   'reportPieTicketOpenedAndClosed' => array(
+   'reportPieTicketOpenedAndClosed' => [
       'title'    => "Nombre de tickets ouverts et clôturés",
       'desc'     => "Camembert",
       'category' => "Par tickets",
-   ),
+   ],
 
-   'reportPieTicketOpenedbyStatus' => array(
+   'reportPieTicketOpenedbyStatus' => [
       'title'    => "Nombre de tickets ouverts par statuts",
       'desc'     => "Camembert",
       'category' => "Par tickets",
-   ),
+   ],
 
-   'reportAreaNbTicket' => array(
+   'reportAreaNbTicket' => [
       'title'    => "Evolution du nombre de ticket sur la période",
       'desc'     => "Aire",
       'category' => "Par tickets",
-   ),
+   ],
 
-   'reportLineNbTicket' => array(
+   'reportLineNbTicket' => [
       'title'    => "Evolution du nombre de ticket sur la période",
       'desc'     => "Ligne",
       'category' => "Par tickets",
-   ),
+   ],
 
-   'reportGlineNbTicket' => array(
+   'reportGlineNbTicket' => [
       'title'    => "Evolution du nombre de ticket sur la période (par Statut)",
       'desc'     => "Lignes",
       'category' => "Par tickets",
-   ),
+   ],
 
-   'reportGareaNbTicket' => array(
+   'reportGareaNbTicket' => [
       'title'    => "Evolution du nombre de ticket sur la période (par Statut)",
       'desc'     => "Aire",
       'category' => "Par tickets",
-   ),
+   ],
 
-   'reportVstackbarNbTicket' => array(
+   'reportVstackbarNbTicket' => [
       'title'    => "Evolution du nombre de ticket sur la période (par Statut)",
       'desc'     => "Barres empilées",
       'category' => "Par tickets",
-   ),
+   ],
 
-   'reportSunburstTicketByCategories' => array(
+   'reportSunburstTicketByCategories' => [
       'title'    => "Repartition des tickets par catégories et sous catégories",
       'desc'     => "Donut",
       'category' => "Par catégories",
-   ),
+   ],
 
-   'reportVstackbarTicketStatusByTechnician' => array(
+   'reportVstackbarTicketStatusByTechnician' => [
       'title'    => "Nombre de tickets par statuts et technicien",
       'desc'     => "Barres empilées",
       'category' => "Par tickets",
-   ),
+   ],
 
-   'reportHbarTicketNumberByLocation' => array(
+   'reportHbarTicketNumberByLocation' => [
       'title'    => "Nombre de ticket par lieu des demandeurs",
       'desc'     => "Barres",
       'category' => "Par demandeurs",
-   ),
+   ],
 
-);
+];

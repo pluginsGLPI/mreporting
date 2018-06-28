@@ -12,7 +12,7 @@ class PluginMreportingNotificationMail extends NotificationMailing {
    /**
     * @param $options   array
    **/
-   function sendNotification($options=array()) {
+   function sendNotification($options = []) {
 
       $mmail = new GLPIMailer();
       $mmail->AddCustomHeader("Auto-Submitted: auto-generated");

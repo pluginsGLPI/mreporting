@@ -36,17 +36,17 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
     * @param array   $config (optionnal)
     * @return array  $datas array of query results (tag => count number)
     */
-   function reportPieTag($config = array()) {
+   function reportPieTag($config = []) {
       global $DB;
 
       $plugin = new Plugin();
       if (!$plugin->isActivated('tag')) {
-         return array();
+         return [];
       }
 
-      $_SESSION['mreporting_selector'][__FUNCTION__] = array();
+      $_SESSION['mreporting_selector'][__FUNCTION__] = [];
 
-      $datas = array();
+      $datas = [];
 
       $result = $DB->query("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name as name
                      FROM glpi_plugin_tag_tagitems
@@ -68,20 +68,20 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
     * @param array   $config (optionnal)
     * @return array  $datas array of query results (tag => count number)
     */
-   function reportPieTagOnTicket($config = array()) {
+   function reportPieTagOnTicket($config = []) {
       global $DB;
 
       $plugin = new Plugin();
       if (!$plugin->isActivated('tag')) {
-         return array();
+         return [];
       }
 
-      $_SESSION['mreporting_selector'][__FUNCTION__] = array('category');
+      $_SESSION['mreporting_selector'][__FUNCTION__] = ['category'];
 
       $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ?
                      " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
 
-      $datas = array();
+      $datas = [];
 
       $result = $DB->query("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name
                            FROM glpi_plugin_tag_tagitems

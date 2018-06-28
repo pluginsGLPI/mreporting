@@ -1,114 +1,114 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdesk'] = array(
+$LANG['plugin_mreporting']['Helpdesk'] = [
    'title' => "Služba podpory",
 
-   'reportHbarTicketNumberByEntity' => array(
+   'reportHbarTicketNumberByEntity' => [
       'title'    => "Počty požadavků podle entity",
       'desc'     => "Pruhový",
       'category' => "Podle entity",
-   ),
+   ],
 
-   'reportPieTicketNumberByEntity' => array(
+   'reportPieTicketNumberByEntity' => [
       'title'    => "Počty požadavků podle entity",
       'desc'     => "Výsečový",
       'category' => "Podle entity",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByCatAndEntity' => array(
+   'reportHgbarTicketNumberByCatAndEntity' => [
       'title'    => "Počty požadavků podle kategorie a entity",
       'desc'     => "Skupinový pruhový",
       'category' => "Podle entity",
-   ),
+   ],
 
-   'reportPieTopTenAuthor' => array(
+   'reportPieTopTenAuthor' => [
       'title'    => "Deset nejčastějších žadatelů",
       'desc'     => "Výsečový",
       'category' => "Podle žadatele",
-   ),
+   ],
 
-   'reportHgbarOpenTicketNumberByCategoryAndByType' => array(
+   'reportHgbarOpenTicketNumberByCategoryAndByType' => [
       'title'    => "Počty otevřených požadavků podle kategorie a typu",
       'desc'     => "Skupinový pruhový",
       'category' => "Podle kategorie",
-   ),
+   ],
 
-   'reportHgbarCloseTicketNumberByCategoryAndByType' => array(
+   'reportHgbarCloseTicketNumberByCategoryAndByType' => [
       'title'    => "Počty uzavřených požadavků podle kategorie a typu",
       'desc'     => "Skupinový pruhový",
       'category' => "Podle kategorie",
-   ),
+   ],
 
-   'reportHgbarOpenedTicketNumberByCategory' => array(
+   'reportHgbarOpenedTicketNumberByCategory' => [
       'title'    => "Počty otevřených požadavků podle kategorie a stavu",
       'desc'     => "Skupinový pruhový",
       'category' => "Podle kategorie",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByService' => array(
+   'reportHgbarTicketNumberByService' => [
       'title'    => "Počty otevřených a uzavřených požadavků podle služby",
       'desc'     => "Skupinový pruhový",
       'category' => "Podle služby",
-   ),
+   ],
 
-   'reportPieTicketOpenedAndClosed' => array(
+   'reportPieTicketOpenedAndClosed' => [
       'title'    => "Počty otevřených a uzavřených požadavků",
       'desc'     => "Výsečový",
       'category' => "Podle požadavku",
-   ),
+   ],
 
-   'reportPieTicketOpenedbyStatus' => array(
+   'reportPieTicketOpenedbyStatus' => [
       'title'    => "Počty otevřených požadavků podle stavu",
       'desc'     => "Výsečový",
       'category' => "Podle požadavku",
-   ),
+   ],
 
-   'reportAreaNbTicket' => array(
+   'reportAreaNbTicket' => [
       'title'    => "Počty událostí v požadavku za období",
       'desc'     => "Plošný",
       'category' => "Podle požadavku",
-   ),
+   ],
 
-   'reportLineNbTicket' => array(
+   'reportLineNbTicket' => [
       'title'    => "Počty událostí v požadavku za období",
       'desc'     => "Spojnicový",
       'category' => "Podle požadavku",
-   ),
+   ],
 
-   'reportGlineNbTicket' => array(
+   'reportGlineNbTicket' => [
       'title'    => "Počty událostí v požadavku za období (podle stavu)",
       'desc'     => "Spojnicový",
       'category' => "Podle požadavku",
-   ),
+   ],
 
-   'reportGareaNbTicket' => array(
+   'reportGareaNbTicket' => [
       'title'    => "Počty událostí v požadavku za období (podle stavu)",
       'desc'     => "Plošný",
       'category' => "Podle požadavku",
-   ),
+   ],
 
-   'reportVstackbarNbTicket' => array(
+   'reportVstackbarNbTicket' => [
       'title'    => "Počty událostí v požadavku za období (podle stavu)",
       'desc'     => "Skládaný pruhový",
       'category' => "Podle požadavku",
-   ),
+   ],
 
-   'reportSunburstTicketByCategories' => array(
+   'reportSunburstTicketByCategories' => [
       'title'    => "Rozložení požadavků podle kategorie a podkategorie",
       'desc'     => "Prstencový",
       'category' => "Podle kategorie",
-   ),
+   ],
 
-   'reportVstackbarTicketStatusByTechnician' => array(
+   'reportVstackbarTicketStatusByTechnician' => [
       'title'    => "Počty požadavků podle stavu a technika",
       'desc'     => "Skládaný pruhový",
       'category' => "Podle požadavku",
-   ),
+   ],
 
-   'reportHbarTicketNumberByLocation' => array(
+   'reportHbarTicketNumberByLocation' => [
       'title'    => "Počty požadavků podle umístění žadatele",
       'desc'     => "Pruhový",
       'category' => "Podle žadatele",
-   ),
-);
+   ],
+];

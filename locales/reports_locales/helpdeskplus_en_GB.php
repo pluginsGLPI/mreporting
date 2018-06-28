@@ -1,7 +1,7 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdeskplus'] = array(
+$LANG['plugin_mreporting']['Helpdeskplus'] = [
    'title'         => 'Helpdesk Avancé',
 
    // MISC LOCALES
@@ -16,96 +16,96 @@ $LANG['plugin_mreporting']['Helpdeskplus'] = array(
 
 
    // SELECTOR
-   'selector'      => array(
+   'selector'      => [
       'slas'       => "SLAS",
       'categories' => "Categories",
-   ),
+   ],
 
 
    // GENERAL REPORTS
-   'reportGlineBacklogs' => array(
+   'reportGlineBacklogs' => [
       'title'    => "Backlog",
       'desc'     => "",
       'category' => "General",
-   ),
+   ],
 
-   'reportVstackbarLifetime' => array(
+   'reportVstackbarLifetime' => [
       'title'    => "Ticket age",
       'desc'     => "",
       'category' => "General",
-   ),
+   ],
 
-   'reportVstackbarTicketsgroups' => array(
+   'reportVstackbarTicketsgroups' => [
       'title'    => "Tickets per group",
       'desc'     => "",
       'category' => "General",
-   ),
+   ],
 
-   'reportVstackbarTicketstech' => array(
+   'reportVstackbarTicketstech' => [
       'title'    => "Tickets per technician",
       'desc'     => "",
       'category' => "General",
-   ),
+   ],
 
-   'reportVstackbarWorkflow' => array(
+   'reportVstackbarWorkflow' => [
       'title'    => "Orientation queues",
       'desc'     => "",
       'category' => "General",
-   ),
+   ],
 
-   'reportHbarTopcategory' => array(
+   'reportHbarTopcategory' => [
       'title'    => "TOP categories",
       'desc'     => "",
       'category' => "General",
-   ),
+   ],
 
-   'reportHbarTopapplicant' => array(
+   'reportHbarTopapplicant' => [
       'title'    => "TOP requester groups",
       'desc'     => "",
       'category' => "General",
-   ),
+   ],
 
-   'reportVstackbarGroupChange' => array(
+   'reportVstackbarGroupChange' => [
       'title'    => "Number of group changes",
       'desc'     => "",
       'category' => "General",
-   ),
+   ],
 
-   'reportLineActiontimeVsSolvedelay' => array(
+   'reportLineActiontimeVsSolvedelay' => [
       'title'    => "Task action times and solve delay comparison",
       'desc'     => "",
       'category' => "General",
-   ),
+   ],
 
 
    // SLA REPORTS
-   'reportVstackbarNbTicketBySla' => array(
+   'reportVstackbarNbTicketBySla' => [
       'title'    => "Number of tickets per SLA",
       'desc'     => "",
       'category' => "Per SLA",
-   ),
+   ],
 
-   'reportGlineNbTicketBySla' => array(
+   'reportGlineNbTicketBySla' => [
       'title'    => "Tickets evolution per SLA",
       'desc'     => "",
       'category' => "Per SLA",
-   ),
+   ],
 
-   'reportHgbarRespectedSlasByTopCategory' => array(
+   'reportHgbarRespectedSlasByTopCategory' => [
       'title'    => "Tickets per SLA ordered by categories",
       'desc'     => "",
       'category' => "Per SLA",
-   ),
+   ],
 
-   'reportHgbarRespectedSlasByTechnician' => array(
+   'reportHgbarRespectedSlasByTechnician' => [
       'title'    => "Tickets per SLA ordered by techicians",
       'desc'     => "",
       'category' => "Per SLA",
-   ),
+   ],
 
-   'reportVstackbarRespectedSlasByGroup' => array(
+   'reportVstackbarRespectedSlasByGroup' => [
       'title'    => "Tickets per SLA sorted by groups",
       'desc'     => "",
       'category' => "Per SLA",
-   ),
-);
+   ],
+];
