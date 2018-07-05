@@ -80,8 +80,7 @@ class PluginMreportingProfile extends CommonDBTM {
          if (!$prof->getFromDBByProfile($item->getField('id'))) {
             $prof->createAccess($item->getField('id'));
          }
-         $prof->showForm($item->getField('id'), ['target' =>
-            $CFG_GLPI["root_doc"]."/plugins/mreporting/front/profile.form.php"]);
+         $prof->showForm($item->getField('id'));
       } else if ($item->getType()=='PluginMreportingConfig') {
          $reportProfile = new self();
          $reportProfile->showFormForManageProfile($item);
@@ -204,10 +203,14 @@ class PluginMreportingProfile extends CommonDBTM {
          return false;
       }
 
-      $this->getFromDB($ID);
-      $this->showFormHeader($options);
+      echo '<form method="post" action="' . self::getFormURL() . '">';
+      echo '<div class="spaced" id="tabsbody">';
+      echo '<table class="tab_cadre_fixe" id="mainformtable">';
 
-      echo "<table class='tab_cadre_fixe'>\n";
+      echo '<tr class="headerRow"><th colspan="3">' . self::getTypeName() . '</th></tr>';
+
+      Plugin::doHook("pre_item_form", ['item' => $this, 'options' => &$options]);
+
       echo "<tr><th colspan='3'>".__("Rights management", 'mreporting')."</th></tr>\n";
 
       $config = new PluginMreportingConfig();
@@ -260,6 +263,7 @@ class PluginMreportingProfile extends CommonDBTM {
 
       echo "</td></tr>";
       echo "</table>";
+      echo "</div>";
       Html::closeForm();
    }
 
