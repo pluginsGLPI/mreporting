@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 08:41+0000\n"
+"POT-Creation-Date: 2018-07-06 09:45+0000\n"
 "PO-Revision-Date: 2018-06-28 08:41+0000\n"
 "Last-Translator: Cédric Anne\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/ru_RU/)\n"
@@ -60,8 +60,8 @@ msgstr "Панель состояния"
 msgid "No data for this date range !"
 msgstr "Нет данных за этот период!"
 
-#: inc/profile.class.php:66 inc/profile.class.php:211
-#: inc/profile.class.php:282
+#: inc/profile.class.php:66 inc/profile.class.php:214
+#: inc/profile.class.php:286
 msgid "Rights management"
 msgstr "Управление правами"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 08:41+0000\n"
+"POT-Creation-Date: 2018-07-06 09:45+0000\n"
 "PO-Revision-Date: 2018-06-28 08:41+0000\n"
 "Last-Translator: Cédric Anne\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/ko_KR/)\n"
@@ -59,8 +59,8 @@ msgstr "대시보드"
 msgid "No data for this date range !"
 msgstr "이 날짜 범위에는 자료가 없습니다!"
 
-#: inc/profile.class.php:66 inc/profile.class.php:211
-#: inc/profile.class.php:282
+#: inc/profile.class.php:66 inc/profile.class.php:214
+#: inc/profile.class.php:286
 msgid "Rights management"
 msgstr "저작권 관리"
 

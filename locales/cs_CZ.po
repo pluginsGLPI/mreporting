@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 08:41+0000\n"
+"POT-Creation-Date: 2018-07-06 09:45+0000\n"
 "PO-Revision-Date: 2018-06-28 11:42+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/cs_CZ/)\n"
@@ -60,8 +60,8 @@ msgstr "Přehled"
 msgid "No data for this date range !"
 msgstr "Nebyla nalezena žádná data pro toto časové rozmezí!"
 
-#: inc/profile.class.php:66 inc/profile.class.php:211
-#: inc/profile.class.php:282
+#: inc/profile.class.php:66 inc/profile.class.php:214
+#: inc/profile.class.php:286
 msgid "Rights management"
 msgstr "Správa práv"
 
