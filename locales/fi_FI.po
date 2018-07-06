@@ -3,21 +3,20 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# David Stepan <stepand@tiscali.cz>, 2016
-# Pavel Borecki <pavel.borecki@gmail.com>, 2018
+# Markku Vepsä, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 08:41+0000\n"
-"PO-Revision-Date: 2018-06-28 11:42+0000\n"
-"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
-"Language-Team: Czech (Czech Republic) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/cs_CZ/)\n"
+"POT-Creation-Date: 2018-07-06 09:45+0000\n"
+"PO-Revision-Date: 2018-06-29 04:53+0000\n"
+"Last-Translator: Markku Vepsä\n"
+"Language-Team: Finnish (Finland) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/fi_FI/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs_CZ\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Language: fi_FI\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: front/config.form.php:56 front/graph.php:39 front/dashboard.form.php:34
 #: front/dashboard.form.php:39 front/central.php:33
@@ -26,30 +25,30 @@ msgstr ""
 #: inc/notificationtargetnotification.class.php:8 inc/preference.class.php:182
 #: setup.php:163 test.php:4
 msgid "More Reporting"
-msgstr "Rozšířené výkazy"
+msgstr "Lisää Raportteja"
 
 #: front/popup.php:38 inc/common.class.php:1139 inc/common.class.php:1146
 #: inc/common.class.php:1154
 msgid "General Report - ODT"
-msgstr "Obecný výkaz – ODT"
+msgstr "Yleisraportti - ODT"
 
 #: front/central.php:73 front/central.php:80 inc/config.class.php:660
 #: inc/common.class.php:321 inc/common.class.php:388
 msgid "No report is available !"
-msgstr "Není k dispozici žádný výkaz!"
+msgstr "Raporttia ei ole saatavilla!"
 
 #: ajax/dropdownExport.php:41 inc/common.class.php:500
 msgid "With data"
-msgstr "S daty"
+msgstr "Tiedoilla"
 
 #: ajax/dropdownExport.php:42 inc/common.class.php:499
 msgid "Without data"
-msgstr "Bez dat"
+msgstr "Ilman tietoja"
 
 #: ajax/homepage_link.php:8 inc/dashboard.class.php:35 inc/common.class.php:60
 #: inc/common.class.php:61 inc/common.class.php:73
 msgid "Dashboard"
-msgstr "Přehled"
+msgstr "Hallintapaneeli"
 
 #: inc/graphpng.class.php:551 inc/graphpng.class.php:745
 #: inc/graphpng.class.php:945 inc/graphpng.class.php:1254
@@ -58,77 +57,77 @@ msgstr "Přehled"
 #: inc/graph.class.php:550 inc/graph.class.php:810 inc/graph.class.php:1030
 #: inc/graph.class.php:1259 inc/graph.class.php:1500
 msgid "No data for this date range !"
-msgstr "Nebyla nalezena žádná data pro toto časové rozmezí!"
+msgstr "Tälle päivämäärävälille ei ole tietoja!"
 
-#: inc/profile.class.php:66 inc/profile.class.php:211
-#: inc/profile.class.php:282
+#: inc/profile.class.php:66 inc/profile.class.php:214
+#: inc/profile.class.php:286
 msgid "Rights management"
-msgstr "Správa práv"
+msgstr "Käyttöoikeuksien hallinta"
 
 #: inc/config.class.php:38
 msgid "Configuration"
-msgstr "Nastavení"
+msgstr "Asetukset"
 
 #: inc/config.class.php:82 inc/config.class.php:688
 msgid "See area"
-msgstr "Zobrazit oblast"
+msgstr "Näytä alue"
 
 #: inc/config.class.php:91 inc/config.class.php:703 inc/config.class.php:715
 msgid "Curve lines (SVG)"
-msgstr "Křivky (SVG)"
+msgstr "Käyrät (SVG)"
 
 #: inc/config.class.php:100
 msgid "See values"
-msgstr "Zobrazit hodnoty"
+msgstr "Näytä arvot"
 
 #: inc/config.class.php:110 inc/config.class.php:730
 msgid "Reverse data array"
-msgstr "Reverzní pole dat"
+msgstr "Käänteinen tietorakenne"
 
 #: inc/config.class.php:119 inc/config.class.php:742
 msgid "Unit"
-msgstr "Jednotka"
+msgstr "Yksikkö esim. kpl"
 
 #: inc/config.class.php:126 inc/config.class.php:752
 msgid "Default delay"
-msgstr "Výchozí prodleva"
+msgstr "Oletusviive"
 
 #: inc/config.class.php:133 inc/config.class.php:760
 msgid "Additional condition for MySQL"
-msgstr "Dodatečná podmínka pro MySQL"
+msgstr "MySQL lisäehdot"
 
 #: inc/config.class.php:140 inc/config.class.php:668
 msgid "See graphic"
-msgstr "Zobrazit grafiku"
+msgstr "Näytä kuva"
 
 #: inc/config.class.php:149
 msgid "Class"
-msgstr "Třída"
+msgstr "Luokka"
 
 #: inc/config.class.php:157
 msgid "Default chart format"
-msgstr "Výchozí formát grafu"
+msgstr "Oletuskaavion muoto"
 
 #: inc/config.class.php:166 inc/config.class.php:769
 msgid "Send this report with the notification"
-msgstr "Odeslat tento výkaz s oznámením"
+msgstr "Lähetä tämä raportti ilmoituksessa"
 
 #: inc/config.class.php:252
 msgid "Initialize graphics configuration"
-msgstr "Inicializovat nastavení grafiky"
+msgstr "Alusta grafiikka-asetukset"
 
 #: inc/config.class.php:489 inc/config.class.php:504
 msgid "On mouse over"
-msgstr "Při najetí kurzorem"
+msgstr "Hiirellä"
 
 #: inc/config.class.php:572
 msgid "Object already exists"
-msgstr "Objekt už existuje"
+msgstr "Kohde on jo olemassa"
 
 #: inc/notification.class.php:34 inc/notification.class.php:55
 #: inc/notification.class.php:128
 msgid "Notification for \"More Reporting\""
-msgstr "Oznámení pro „Rozšířené výkazy“"
+msgstr "\"Lisää Raportteja\" -ilmoitukset"
 
 #: inc/notification.class.php:39
 msgid ""
@@ -138,11 +137,11 @@ msgid ""
 "<p>GLPI reports are available.<br />\n"
 "You will find attached in this email.</p>\n"
 "\n"
-msgstr "\n<p>Dobrý den,</p>\n\n<p>Jsou k dispozici výkazy z GLPI.<br />\nNaleznete je v příloze tohoto e-mailu.</p>\n\n"
+msgstr "\n<p> Hei,</p>\n\n<p> GLPI raportteja on saatavilla.<br />\nLöydät ne tämän sähköpostiviestin liitteinä.</p>\n\n"
 
 #: inc/notification.class.php:46 inc/pdf.class.php:15
 msgid "GLPI statistics reports"
-msgstr "Statistické výkazy z GLPI"
+msgstr "GLPI tilastoraportit"
 
 #: inc/notification.class.php:47
 msgid ""
@@ -151,125 +150,125 @@ msgid ""
 "GLPI reports are available.\n"
 "You will find attached in this email.\n"
 "\n"
-msgstr "Dobrý den,\n\nJsou k dispozici výkazy z GLPI.\nNaleznete je v příloze tohoto e-mailu.\n\n"
+msgstr "Hei,\n\nGLPI raportteja on saatavilla.\nLöydät ne tämän sähköpostiviestin liitteinä.\n\n"
 
 #: inc/notification.class.php:153
 msgid "Notification(s) sent !"
-msgstr "Oznámení odeslána!"
+msgstr "Ilmoitus/ilmoitukset lähetetty!"
 
 #: inc/dashboard.class.php:85
 msgid "Select a report to display"
-msgstr "Vyberte výkaz, který chcete zobrazit"
+msgstr "Valitse näytettävä raportti"
 
 #: inc/dashboard.class.php:96
 msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "Přehled je prázdný. Přidejte výkaz kliknutím na ikonu"
+msgstr "Hallintapaneeli on tyhjä. Lisää raportteja klikkaamalla kuvaketta"
 
 #: inc/dashboard.class.php:105
 msgid "Add a report"
-msgstr "Přidat výkaz"
+msgstr "Lisää raportti"
 
 #: inc/dashboard.class.php:134
 msgid "Select a report to add"
-msgstr "Vyberte výkaz, který chcete přidat"
+msgstr "Valitse lisättävä raportti"
 
 #: inc/dashboard.class.php:223
 msgid "Configure report"
-msgstr "Nastavit výkaz"
+msgstr "Määritä raportti"
 
 #: inc/helpdesk.class.php:284 inc/helpdesk.class.php:343
 msgid "Undefined"
-msgstr "Neurčeno"
+msgstr "Määrittelemätön"
 
 #: inc/common.class.php:63 inc/common.class.php:64 inc/common.class.php:82
 msgid "Reports list"
-msgstr "Seznam výkazů"
+msgstr "Raporttiluettelo"
 
 #: inc/common.class.php:921
 msgid "Number"
-msgstr "Počet"
+msgstr "Määrä"
 
 #: inc/common.class.php:942 inc/common.class.php:1245
 #: inc/common.class.php:1261
 msgid "data"
-msgstr "data"
+msgstr "tiedot"
 
 #: inc/common.class.php:1140 inc/preference.class.php:123
 msgid "Please, select a model in your preferences"
-msgstr "Ve svých předvolbách vyberte model"
+msgstr "Valitse malli \"Omissa asetuksissa\""
 
 #: inc/common.class.php:1147
 msgid "No model available"
-msgstr "Není k dispozici žádný model"
+msgstr "Mallia ei ole saatavilla"
 
 #: inc/common.class.php:1155
 msgid "No graphic selected"
-msgstr "Nebyl vybrán žádný obrázek"
+msgstr "Kuvaa ei ole valittu"
 
 #: inc/common.class.php:1388
 msgid "Week"
-msgstr "Týden"
+msgstr "Viikko"
 
 #: inc/common.class.php:1389
 msgid "Month"
-msgstr "Měsíc"
+msgstr "Kuukausi"
 
 #: inc/common.class.php:1502
 msgid "Max depth entity level"
-msgstr "Maximální hloubka ve stromu entit"
+msgstr "Suurin yksikkösyvyys"
 
 #: inc/pdf.class.php:16
 msgid "Automaticaly generated by GLPI"
-msgstr "Automaticky vytvořeno systémem GLPI"
+msgstr "GLPI:n automaattisesti luoma"
 
 #: inc/other.class.php:70
 msgid "Add/remove software on a computer"
-msgstr "Přidat/odebrat software v počítači"
+msgstr "Lisää/poista ohjelmisto tietokoneesta"
 
 #: inc/other.class.php:73
 msgid "Add/remove version on a software"
-msgstr "Přidat/odebrat verzi software"
+msgstr "Lisää/poista versio ohjelmistosta"
 
 #: inc/other.class.php:76
 msgid "Add infocom"
-msgstr "Přidat finanční informace"
+msgstr "Lisää \"infocom\" tietoja"
 
 #: inc/other.class.php:79
 msgid "Add/remove profile on a user"
-msgstr "Přidat/odebrat profil uživatele"
+msgstr "Lisää/poista profiili käyttäjältä"
 
 #: inc/other.class.php:82
 msgid "Add/remove group on a user"
-msgstr "Přidat/odebrat skupinu uživatele"
+msgstr "Lisää/poista ryhmä käyttäjältä"
 
 #: inc/other.class.php:85
 msgid "User deleted from LDAP"
-msgstr "Uživatel smazán z LDAP adresáře"
+msgstr "Käyttäjä poistettu LDAP:stä"
 
 #: inc/other.class.php:93
 msgid "Webservice logs"
-msgstr "Záznam událostí (log) z webových služeb"
+msgstr "WWW-sovelluspalvelun lokit"
 
 #: inc/other.class.php:97
 msgid "OCS Infos"
-msgstr "Informace z OCS"
+msgstr "OCS tiedot"
 
 #: inc/other.class.php:100
 msgid "Add/update/remove device"
-msgstr "Přidat/aktualizovat/odebrat zařízení"
+msgstr "Lisää/päivitä/poista laite"
 
 #: inc/other.class.php:103
 msgid "Add/remove relation"
-msgstr "Přidat/odebrat sezení"
+msgstr "Lisää/poista yhteys"
 
 #: inc/other.class.php:106
 msgid "Add/remove item"
-msgstr "Přidat/odebrat položku"
+msgstr "Lisää/poista kohde"
 
 #: inc/other.class.php:109
 msgid "Comments & date_mod changes"
-msgstr "Komentáře a date_mod změny"
+msgstr "Kommentit & date_mod muutokset"
 
 #: inc/other.class.php:117
 msgid "Genericobject plugin logs"
-msgstr "Záznamy (log) zásuvného modulu Obecný objekt"
+msgstr "Genericobject liitännäisen lokit"

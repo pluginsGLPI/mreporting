@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 08:41+0000\n"
+"POT-Creation-Date: 2018-07-06 09:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,7 +58,7 @@ msgstr ""
 msgid "No data for this date range !"
 msgstr ""
 
-#: inc/profile.class.php:66 inc/profile.class.php:211 inc/profile.class.php:282
+#: inc/profile.class.php:66 inc/profile.class.php:214 inc/profile.class.php:286
 msgid "Rights management"
 msgstr ""
 
