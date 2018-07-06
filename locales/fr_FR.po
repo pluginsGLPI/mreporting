@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 08:41+0000\n"
-"PO-Revision-Date: 2018-06-28 08:41+0000\n"
+"POT-Creation-Date: 2018-07-06 09:45+0000\n"
+"PO-Revision-Date: 2018-06-28 09:31+0000\n"
 "Last-Translator: Cédric Anne\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -62,8 +62,8 @@ msgstr "Tableau de bord"
 msgid "No data for this date range !"
 msgstr "Aucune données pour cette plage de date !"
 
-#: inc/profile.class.php:66 inc/profile.class.php:211
-#: inc/profile.class.php:282
+#: inc/profile.class.php:66 inc/profile.class.php:214
+#: inc/profile.class.php:286
 msgid "Rights management"
 msgstr "Gestion des droits"
 
@@ -109,7 +109,7 @@ msgstr "Classe"
 
 #: inc/config.class.php:157
 msgid "Default chart format"
-msgstr ""
+msgstr "Format de graphique par défaut"
 
 #: inc/config.class.php:166 inc/config.class.php:769
 msgid "Send this report with the notification"
