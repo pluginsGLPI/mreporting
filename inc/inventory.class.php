@@ -30,10 +30,10 @@
 class PluginMreportingInventory Extends PluginMreportingBaseclass {
    /* ==== SPECIFIC SELECTORS FOR INVENTORY ==== */
    static function selectorMultipleStates() {
-      self::selectorForMultipleStates('states_id', '', _sx("item", "State"));
+      self::selectorForMultipleStates('states_id', [], _sx("item", "State"));
    }
 
-   static function selectorForMultipleStates($field, $condition = '', $label = '') {
+   static function selectorForMultipleStates($field, $condition = [], $label = '') {
       global $DB;
 
       $selected_states = [];
@@ -681,12 +681,15 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       if (!$plugin->isActivated('fusioninventory')) {
          return [];
       }
-      $sql_states = self::getStateCondition('glpi_computers.states_id');
-      $total_computers = countElementsInTable('glpi_computers',
-                                              "`is_deleted`=0
-                                               AND `is_template`=0
-                                               AND entities_id IN ({$this->where_entities})
-                                               $sql_states");
+      $sql_states = self::getStateCondition('glpi_computers.states_id', true);
+      $total_computers = countElementsInTable(
+         'glpi_computers',
+         [
+            'is_deleted'  => 0,
+            'is_template' => 0,
+            'entities_id' => $this->where_entities_array,
+         ] + $sql_states
+      );
 
       $query = "SELECT count(*) AS cpt, `useragent`
                 FROM `glpi_plugin_fusioninventory_agents`
