@@ -1275,7 +1275,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
    // === SELECTOR FUNCTIONS ====
 
-   static function selectorForMultipleGroups($field, $condition = '', $label = '') {
+   static function selectorForMultipleGroups($field, $condition = [], $label = '') {
       global $DB;
 
       echo "<br /><b>".$label." : </b><br />";
@@ -1289,12 +1289,8 @@ class PluginMreportingCommon extends CommonDBTM {
          }
       }
 
-      if (strstr($condition, "ORDER BY") == false) { // Security
-         $condition .= " ORDER BY name";
-      }
-
       $datas = [];
-      foreach (getAllDatasFromTable('glpi_groups', $condition) as $data) {
+      foreach (getAllDatasFromTable('glpi_groups', $condition, false, 'name') as $data) {
          $datas[$data['id']] = $data['completename'];
       }
 
@@ -1328,12 +1324,19 @@ class PluginMreportingCommon extends CommonDBTM {
    }
 
    static function selectorMultipleGrouprequest() {
-      self::selectorForMultipleGroups('groups_request_id', "`is_requester`='1'", __("Requester group"));
+      self::selectorForMultipleGroups(
+         'groups_request_id',
+         ['is_requester' => '1'],
+         __("Requester group")
+      );
    }
 
    static function selectorMultipleGroupassign() {
-      self::selectorForMultipleGroups('groups_assign_id', "`is_assign`='1'",
-                                      __("Group in charge of the ticket"));
+      self::selectorForMultipleGroups(
+         'groups_assign_id',
+         ['is_assign' => '1'],
+         __("Group in charge of the ticket")
+      );
    }
 
    static function selectorUserassign() {
@@ -1583,7 +1586,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
    static function canAccessAtLeastOneReport($profiles_id) {
       return countElementsInTable("glpi_plugin_mreporting_profiles",
-                                  "`profiles_id`='$profiles_id' AND `right`= ".READ);
+                                  ['profiles_id' => $profiles_id, 'right' => READ]);
    }
 
    static function showNavigation() {
