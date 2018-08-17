@@ -7,6 +7,7 @@
       <short>
          <en>Add (and develop) new graphical reports for glpi</en>
          <fr>Ajouter (et développer) de nouveaux rapports graphiques pour glpi</fr>
+         <cs>Přidat (a vytvořit) fýkazy s grafy pro glpi</cs>
       </short>
       <long>
          <en>Add (and develop) new graphical reports for glpi.   
@@ -59,6 +60,31 @@ Ce plugin contient un ensemble de nouveaux rapports statistiques.
 Vous pouvez aussi ajouter vos propre rapports en utilisant le "framework" fourni par le plugin
 Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
          </fr>
+         <cs>Přidat (a vytvořit) nové výkazy s grafy pro glpi.   
+
+Tento zásuvný modul obsahuje sadu nových statistických výkazů: 
+
+* Služba podpory
+  * Nahromaděné požadavky
+  * Stáří požadavku
+  * Požadavky podle skupiny nebo technika
+  * Nejčastější kategorie nebo skupiny žadatelů
+  * Počet změn skupin
+  * 5 SLA výkazů
+
+* Inventory
+  * Verze operačních systémů a distribuce
+  * Nejčastější výrobci
+  * Nejčastější typy (server, notebook, …)
+  * Nejčastější stavy
+  * Stáří počítačů
+  * FusionInventory agenti
+
+* Rozložení záznamů o událostech
+
+Můžete si také vytvořit nový výkaz pomocí kostry zásuvného modulu.  
+Viz dokumentace: https://github.com/PluginsGLPI/mreporting/wiki
+         </cs>
       </long>
    </description>
    <homepage>https://github.com/pluginsGLPI/mreporting/</homepage>
@@ -128,6 +154,7 @@ Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
       </version>
    </versions>
    <langs>
+      <lang>cs_CZ</lang>
       <lang>en_GB</lang>
       <lang>fr_FR</lang>
    </langs>
@@ -140,6 +167,10 @@ Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
       <fr>
          <tag>Graphiques</tag>
       </fr>
+      <en>
+         <tag>Hlášení</tag>
+         <tag>Výkazy</tag>
+      </en>
    </tags>
    <screenshots>
       <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/dashboard.png</screenshot>
