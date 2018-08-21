@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2015-2017
+# Kaya Zeren <kayazeren@gmail.com>, 2015-2018
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-06 09:45+0000\n"
-"PO-Revision-Date: 2018-06-28 08:41+0000\n"
-"Last-Translator: Cédric Anne\n"
+"POT-Creation-Date: 2018-08-21 15:08+0000\n"
+"PO-Revision-Date: 2018-07-12 13:34+0000\n"
+"Last-Translator: Kaya Zeren <kayazeren@gmail.com>\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,7 @@ msgstr "Sınıf"
 
 #: inc/config.class.php:157
 msgid "Default chart format"
-msgstr ""
+msgstr "Varsayılan çizelge biçimi"
 
 #: inc/config.class.php:166 inc/config.class.php:769
 msgid "Send this report with the notification"
@@ -205,15 +205,15 @@ msgstr "Kullanılabilecek bir model yok"
 msgid "No graphic selected"
 msgstr "Seçilmiş bir çizelge yok"
 
-#: inc/common.class.php:1388
+#: inc/common.class.php:1391
 msgid "Week"
 msgstr "Hafta"
 
-#: inc/common.class.php:1389
+#: inc/common.class.php:1392
 msgid "Month"
 msgstr "Ay"
 
-#: inc/common.class.php:1502
+#: inc/common.class.php:1505
 msgid "Max depth entity level"
 msgstr "En yüksek varlık düzeyi"
 

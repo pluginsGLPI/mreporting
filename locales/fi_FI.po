@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-06 09:45+0000\n"
-"PO-Revision-Date: 2018-06-29 04:53+0000\n"
+"POT-Creation-Date: 2018-08-21 15:08+0000\n"
+"PO-Revision-Date: 2018-08-19 06:25+0000\n"
 "Last-Translator: Markku Vepsä\n"
 "Language-Team: Finnish (Finland) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/fi_FI/)\n"
 "MIME-Version: 1.0\n"
@@ -57,7 +57,7 @@ msgstr "Hallintapaneeli"
 #: inc/graph.class.php:550 inc/graph.class.php:810 inc/graph.class.php:1030
 #: inc/graph.class.php:1259 inc/graph.class.php:1500
 msgid "No data for this date range !"
-msgstr "Tälle päivämäärävälille ei ole tietoja!"
+msgstr "Tälle ajanjaksolle ei ole tietoja!"
 
 #: inc/profile.class.php:66 inc/profile.class.php:214
 #: inc/profile.class.php:286
@@ -205,15 +205,15 @@ msgstr "Mallia ei ole saatavilla"
 msgid "No graphic selected"
 msgstr "Kuvaa ei ole valittu"
 
-#: inc/common.class.php:1388
+#: inc/common.class.php:1391
 msgid "Week"
 msgstr "Viikko"
 
-#: inc/common.class.php:1389
+#: inc/common.class.php:1392
 msgid "Month"
 msgstr "Kuukausi"
 
-#: inc/common.class.php:1502
+#: inc/common.class.php:1505
 msgid "Max depth entity level"
 msgstr "Suurin yksikkösyvyys"
 

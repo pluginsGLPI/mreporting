@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-06 09:45+0000\n"
+"POT-Creation-Date: 2018-08-21 15:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,15 +202,15 @@ msgstr ""
 msgid "No graphic selected"
 msgstr ""
 
-#: inc/common.class.php:1388
+#: inc/common.class.php:1391
 msgid "Week"
 msgstr ""
 
-#: inc/common.class.php:1389
+#: inc/common.class.php:1392
 msgid "Month"
 msgstr ""
 
-#: inc/common.class.php:1502
+#: inc/common.class.php:1505
 msgid "Max depth entity level"
 msgstr ""
 

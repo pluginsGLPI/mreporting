@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-06 09:45+0000\n"
+"POT-Creation-Date: 2018-08-21 15:08+0000\n"
 "PO-Revision-Date: 2018-06-28 11:42+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/cs_CZ/)\n"
@@ -206,15 +206,15 @@ msgstr "Není k dispozici žádný model"
 msgid "No graphic selected"
 msgstr "Nebyl vybrán žádný obrázek"
 
-#: inc/common.class.php:1388
+#: inc/common.class.php:1391
 msgid "Week"
 msgstr "Týden"
 
-#: inc/common.class.php:1389
+#: inc/common.class.php:1392
 msgid "Month"
 msgstr "Měsíc"
 
-#: inc/common.class.php:1502
+#: inc/common.class.php:1505
 msgid "Max depth entity level"
 msgstr "Maximální hloubka ve stromu entit"
 
