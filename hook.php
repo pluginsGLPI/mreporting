@@ -49,7 +49,7 @@ function plugin_mreporting_install() {
       PRIMARY KEY (`id`),
       UNIQUE `profiles_id_reports` (`profiles_id`, `reports`)
       )
-      ENGINE = MyISAM;";
+      ENGINE = InnoDB;";
 
     //create configuration table
     $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
@@ -69,7 +69,7 @@ function plugin_mreporting_install() {
    `graphtype` VARCHAR(255) default 'SVG',
    PRIMARY KEY  (`id`),
    KEY `is_active` (`is_active`)
-   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
     //create configuration table
     $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_dashboards` (
@@ -78,7 +78,7 @@ function plugin_mreporting_install() {
    `reports_id`int(11) NOT NULL,
    `configuration` VARCHAR(500) default NULL,
    PRIMARY KEY  (`id`)
-   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
    $queries[] = "CREATE TABLE  IF NOT EXISTS `glpi_plugin_mreporting_preferences` (
    `id` int(11) NOT NULL auto_increment,
@@ -86,7 +86,7 @@ function plugin_mreporting_install() {
    `template` varchar(255) collate utf8_unicode_ci default NULL,
    PRIMARY KEY  (`id`),
    KEY `users_id` (`users_id`)
-   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
    // add display preferences
    $query_display_pref = "SELECT id
@@ -121,7 +121,7 @@ function plugin_mreporting_install() {
       `date_mod` datetime default NULL,
       `is_deleted` tinyint(1) NOT NULL default '0',
       PRIMARY KEY  (`id`)
-      ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+      ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
    foreach ($queries as $query) {
       $DB->query($query);
