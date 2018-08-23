@@ -412,7 +412,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       );
 
       $list_windows = ['Windows 3.1', 'Windows 95', 'Windows 98', 'Windows 2000 Pro',
-                       'Windows XP', 'Windows 7', 'Windows Vista', 'Windows 8',
+                       'Windows XP', 'Windows 7', 'Windows Vista', 'Windows 8', 'Windows 10',
                        'Windows 2000 Server', 'Server 2003', 'Server 2008', 'Server 2012'];
       $data = [];
       foreach ($list_windows as $windows) {
