@@ -5,11 +5,38 @@
    <logo>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/pics/chart-garea.png</logo>
    <description>
       <short>
+         <cs>Přidání (a vytváření) nových výkazů s grafy pro glpi</cs>
          <en>Add (and develop) new graphical reports for glpi</en>
          <fr>Ajouter (et développer) de nouveaux rapports graphiques pour glpi</fr>
-         <cs>Přidat (a vytvořit) fýkazy s grafy pro glpi</cs>
+
       </short>
       <long>
+         <cs>Přidání (a vytváření) nových výkazů s grafy pro glpi.   
+
+Tento zásuvný modul obsahuje sadu nových statistických výkazů: 
+
+* Služba podpory
+  * Nahromaděné požadavky
+  * Stáří požadavku
+  * Požadavky podle skupiny nebo technika
+  * Nejčastější kategorie nebo skupiny žadatelů
+  * Počet změn skupin
+  * 5 SLA výkazů
+
+* Inventory
+  * Verze operačních systémů a distribuce
+  * Nejčastější výrobci
+  * Nejčastější typy (server, notebook, …)
+  * Nejčastější stavy
+  * Stáří počítačů
+  * FusionInventory agenti
+
+* Distribuce záznamů o událostech
+
+Můžete si také vytvořit nový výkaz pomocí kostry zásuvného modulu.  
+Viz dokumentace: https://github.com/PluginsGLPI/mreporting/wiki
+         </cs>
+
          <en>Add (and develop) new graphical reports for glpi.   
 
 This plugins embed a set of new statistics reports : 
@@ -60,31 +87,6 @@ Ce plugin contient un ensemble de nouveaux rapports statistiques.
 Vous pouvez aussi ajouter vos propre rapports en utilisant le "framework" fourni par le plugin
 Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
          </fr>
-         <cs>Přidat (a vytvořit) nové výkazy s grafy pro glpi.   
-
-Tento zásuvný modul obsahuje sadu nových statistických výkazů: 
-
-* Služba podpory
-  * Nahromaděné požadavky
-  * Stáří požadavku
-  * Požadavky podle skupiny nebo technika
-  * Nejčastější kategorie nebo skupiny žadatelů
-  * Počet změn skupin
-  * 5 SLA výkazů
-
-* Inventory
-  * Verze operačních systémů a distribuce
-  * Nejčastější výrobci
-  * Nejčastější typy (server, notebook, …)
-  * Nejčastější stavy
-  * Stáří počítačů
-  * FusionInventory agenti
-
-* Rozložení záznamů o událostech
-
-Můžete si také vytvořit nový výkaz pomocí kostry zásuvného modulu.  
-Viz dokumentace: https://github.com/PluginsGLPI/mreporting/wiki
-         </cs>
       </long>
    </description>
    <homepage>https://github.com/pluginsGLPI/mreporting/</homepage>
@@ -155,11 +157,27 @@ Viz dokumentace: https://github.com/PluginsGLPI/mreporting/wiki
    </versions>
    <langs>
       <lang>cs_CZ</lang>
+      <lang>de_DE</lang>
       <lang>en_GB</lang>
+      <lang>en_US</lang>
+      <lang>es_CO</lang>
+      <lang>es_ES</lang>
+      <lang>fi_FI</lang>
       <lang>fr_FR</lang>
+      <lang>ko_KR</lang>
+      <lang>lv_LV</lang>
+      <lang>pl_PL</lang>
+      <lang>pt_BR</lang>
+      <lang>pt_PT</lang>
+      <lang>ru_RU</lang>
+      <lang>tr_TR</lang>
    </langs>
    <license>GPL v2+</license>
    <tags>
+      <cs>
+         <tag>hlášení</tag>
+         <tag>výkazy</tag>
+      </cs>
       <en>
          <tag>Reporting</tag>
          <tag>Reports</tag>
@@ -167,10 +185,6 @@ Viz dokumentace: https://github.com/PluginsGLPI/mreporting/wiki
       <fr>
          <tag>Graphiques</tag>
       </fr>
-      <en>
-         <tag>Hlášení</tag>
-         <tag>Výkazy</tag>
-      </en>
    </tags>
    <screenshots>
       <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/dashboard.png</screenshot>
