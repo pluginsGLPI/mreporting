@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Alexandre Delaunay <delaunay.alexandre@gmail.com>, 2016
+# alexandre delaunay <delaunay.alexandre@gmail.com>, 2016
 # Cédric Anne, 2018
-# Jérémy MOREAU <jmoreau.dev@gmail.com>, 2015
+# 06c8e5f1ec78ded2ceb41498ec52b068, 2015
 # Johan Cwiklinski <jcwiklinski@teclib.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-06 09:45+0000\n"
+"POT-Creation-Date: 2018-08-21 15:08+0000\n"
 "PO-Revision-Date: 2018-06-28 09:31+0000\n"
 "Last-Translator: Cédric Anne\n"
 "Language-Team: French (France) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/fr_FR/)\n"
@@ -208,15 +208,15 @@ msgstr "Aucun modèle n'existe"
 msgid "No graphic selected"
 msgstr "aucun graphique sélectionné"
 
-#: inc/common.class.php:1388
+#: inc/common.class.php:1391
 msgid "Week"
 msgstr "Semaine"
 
-#: inc/common.class.php:1389
+#: inc/common.class.php:1392
 msgid "Month"
 msgstr "Mois"
 
-#: inc/common.class.php:1502
+#: inc/common.class.php:1505
 msgid "Max depth entity level"
 msgstr "Profondeur maxi dans l'arborescence d'entités"
 

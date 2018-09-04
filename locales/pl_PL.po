@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-06 09:45+0000\n"
+"POT-Creation-Date: 2018-08-21 15:08+0000\n"
 "PO-Revision-Date: 2018-06-28 08:41+0000\n"
 "Last-Translator: Cédric Anne\n"
 "Language-Team: Polish (Poland) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/pl_PL/)\n"
@@ -206,15 +206,15 @@ msgstr "Brak dostępnego modelu"
 msgid "No graphic selected"
 msgstr "Brak wybranej grafiki"
 
-#: inc/common.class.php:1388
+#: inc/common.class.php:1391
 msgid "Week"
 msgstr "Tydzień"
 
-#: inc/common.class.php:1389
+#: inc/common.class.php:1392
 msgid "Month"
 msgstr "Miesiąc"
 
-#: inc/common.class.php:1502
+#: inc/common.class.php:1505
 msgid "Max depth entity level"
 msgstr "Maksymalna głębokość w drzewie encji"
 
