@@ -77,7 +77,7 @@ function plugin_init_mreporting() {
       //Load additionnal language files in needed
       includeAdditionalLanguageFiles();
 
-      if (Session::getLoginUserID()) {
+      if (Session::getCurrentInterface()) {
          /* Profile */
          $PLUGIN_HOOKS['change_profile']['mreporting'] = ['PluginMreportingProfile',
                                                           'changeProfile'];
