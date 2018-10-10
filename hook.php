@@ -157,7 +157,7 @@ function plugin_mreporting_install() {
    $query = "UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ".READ." WHERE pr.right = 'r'";
    $DB->query($query);
    if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
-      $query = "ALTER IGNORE TABLE glpi_plugin_mreporting_profiles
+      $query = "ALTER TABLE glpi_plugin_mreporting_profiles
                 ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)";
       $DB->query($query);
    }
