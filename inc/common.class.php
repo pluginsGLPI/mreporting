@@ -272,7 +272,15 @@ class PluginMreportingCommon extends CommonDBTM {
                if (count($graph) > 0) {
                   $select.= "<optgroup label=\"&nbsp;&nbsp;&nbsp;$cat\">";
 
-                  $tests = [];
+                  usort(
+                     $graph,
+                     function ($a, $b) {
+                        $a_title = $a['title'];
+                        $b_title = $b['title'];
+                        return strcmp($a_title, $b_title);
+                     }
+                  );
+
                   foreach ($graph as $key => $value) {
                      if ($value['right']) {
                         if ($value['is_active']) {
@@ -285,16 +293,12 @@ class PluginMreportingCommon extends CommonDBTM {
                               $option_value = $value['id'];
                            }
                            $icon = self::getIcon($value['function']);
-                           $tests[$value['title']] = "<option value='$option_value' title=\"". Html::cleanInputText($comment).
+                           $select .= "<option value='$option_value' title=\"".
+                                     Html::cleanInputText($comment).
                                      "\">&nbsp;&nbsp;&nbsp;".$icon."&nbsp;".
                                      $value["title"]."</option>";
                         }
                      }
-                  }
-
-                  ksort($tests);
-                  foreach ($tests as $test) {
-                     $select.= $test;
                   }
 
                   $select.= "</optgroup>";

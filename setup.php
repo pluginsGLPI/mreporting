@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define ('PLUGIN_MREPORTING_VERSION', '1.5.2');
+define ('PLUGIN_MREPORTING_VERSION', '1.5.3');
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_MREPORTING_MIN_GLPI", "9.3");
@@ -77,7 +77,7 @@ function plugin_init_mreporting() {
       //Load additionnal language files in needed
       includeAdditionalLanguageFiles();
 
-      if (Session::getLoginUserID()) {
+      if (Session::getCurrentInterface()) {
          /* Profile */
          $PLUGIN_HOOKS['change_profile']['mreporting'] = ['PluginMreportingProfile',
                                                           'changeProfile'];

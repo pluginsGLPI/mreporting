@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-21 15:08+0000\n"
-"PO-Revision-Date: 2018-06-28 08:41+0000\n"
-"Last-Translator: Cédric Anne\n"
+"POT-Creation-Date: 2018-10-26 13:22+0000\n"
+"PO-Revision-Date: 2018-10-22 07:04+0000\n"
+"Last-Translator: Stephan <stephan.rennert@web.de>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,21 +27,21 @@ msgstr ""
 msgid "More Reporting"
 msgstr "More Reporting"
 
-#: front/popup.php:38 inc/common.class.php:1139 inc/common.class.php:1146
-#: inc/common.class.php:1154
+#: front/popup.php:38 inc/common.class.php:1143 inc/common.class.php:1150
+#: inc/common.class.php:1158
 msgid "General Report - ODT"
 msgstr "Allgemeiner Bericht - ODT"
 
 #: front/central.php:73 front/central.php:80 inc/config.class.php:660
-#: inc/common.class.php:321 inc/common.class.php:388
+#: inc/common.class.php:325 inc/common.class.php:392
 msgid "No report is available !"
 msgstr "Kein Report verfügbar!"
 
-#: ajax/dropdownExport.php:41 inc/common.class.php:500
+#: ajax/dropdownExport.php:41 inc/common.class.php:504
 msgid "With data"
 msgstr "Mit Daten"
 
-#: ajax/dropdownExport.php:42 inc/common.class.php:499
+#: ajax/dropdownExport.php:42 inc/common.class.php:503
 msgid "Without data"
 msgstr "Ohne Daten"
 
@@ -59,8 +59,8 @@ msgstr "Dashboard"
 msgid "No data for this date range !"
 msgstr "Keine Daten für diesen Bereich verfügbar!"
 
-#: inc/profile.class.php:66 inc/profile.class.php:214
-#: inc/profile.class.php:286
+#: inc/profile.class.php:70 inc/profile.class.php:218
+#: inc/profile.class.php:290
 msgid "Rights management"
 msgstr "Rechteverwaltung"
 
@@ -106,7 +106,7 @@ msgstr "Klasse"
 
 #: inc/config.class.php:157
 msgid "Default chart format"
-msgstr ""
+msgstr "Standarddiagrammformat"
 
 #: inc/config.class.php:166 inc/config.class.php:769
 msgid "Send this report with the notification"
@@ -184,36 +184,36 @@ msgstr "Nicht definiert"
 msgid "Reports list"
 msgstr "Liste aller Berichte"
 
-#: inc/common.class.php:921
+#: inc/common.class.php:925
 msgid "Number"
 msgstr "Anzahl"
 
-#: inc/common.class.php:942 inc/common.class.php:1245
-#: inc/common.class.php:1261
+#: inc/common.class.php:946 inc/common.class.php:1249
+#: inc/common.class.php:1265
 msgid "data"
 msgstr "Daten"
 
-#: inc/common.class.php:1140 inc/preference.class.php:123
+#: inc/common.class.php:1144 inc/preference.class.php:123
 msgid "Please, select a model in your preferences"
 msgstr "Bitte wählen Sie ein Modell in den Einstellungen aus"
 
-#: inc/common.class.php:1147
+#: inc/common.class.php:1151
 msgid "No model available"
 msgstr "Kein Modell verfügbar"
 
-#: inc/common.class.php:1155
+#: inc/common.class.php:1159
 msgid "No graphic selected"
 msgstr "Keine Grafik ausgewählt"
 
-#: inc/common.class.php:1391
+#: inc/common.class.php:1395
 msgid "Week"
 msgstr "Woche"
 
-#: inc/common.class.php:1392
+#: inc/common.class.php:1396
 msgid "Month"
 msgstr "Monat"
 
-#: inc/common.class.php:1505
+#: inc/common.class.php:1509
 msgid "Max depth entity level"
 msgstr "Max. Tiefe der Einheiten"
 

@@ -59,6 +59,10 @@ class PluginMreportingProfile extends CommonDBTM {
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+      if ($item->getField('interface') == 'helpdesk') {
+         return false;
+      }
+
       switch ($item->getType()) {
          case 'Profile':
             return self::getTypeName();
@@ -73,7 +77,7 @@ class PluginMreportingProfile extends CommonDBTM {
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
-      if ($item->getType()=='Profile') {
+      if ($item->getType()=='Profile' && $item->getField('interface') != 'helpdesk') {
          $ID = $item->getField('id');
          $prof = new self();
 
