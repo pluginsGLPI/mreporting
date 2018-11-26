@@ -637,7 +637,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             DATE_FORMAT(`glpi_tickets`.`date`, '{$this->period_label}') AS period_name
          FROM `glpi_tickets`
          INNER JOIN `glpi_slas`
-            ON `glpi_tickets`.slas_ttr_id = `glpi_slas`.id
+            ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          WHERE {$this->sql_date_create}
             AND `glpi_tickets`.status IN (" . implode(
                   ',',
@@ -667,7 +667,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             {$this->sql_select_sla}
          FROM `glpi_tickets`
          INNER JOIN `glpi_slas`
-            ON `glpi_tickets`.slas_ttr_id = `glpi_slas`.id
+            ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          WHERE {$this->sql_date_create}
          AND `glpi_tickets`.status IN (" . implode(
                ',',
@@ -729,7 +729,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             `glpi_itilcategories`.id
          FROM `glpi_tickets`
          INNER JOIN `glpi_slas`
-            ON `glpi_tickets`.slas_ttr_id = `glpi_slas`.id
+            ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          INNER JOIN `glpi_itilcategories`
             ON `glpi_tickets`.itilcategories_id = `glpi_itilcategories`.id
          WHERE " . $this->sql_date_create . "
@@ -751,7 +751,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             `glpi_itilcategories`.name
          FROM `glpi_tickets`
          INNER JOIN `glpi_slas`
-            ON `glpi_tickets`.slas_ttr_id = `glpi_slas`.id
+            ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          INNER JOIN `glpi_itilcategories`
             ON `glpi_tickets`.itilcategories_id = `glpi_itilcategories`.id
          WHERE " . $this->sql_date_create . "
@@ -798,7 +798,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             {$this->sql_select_sla}
          FROM `glpi_tickets`
          INNER JOIN `glpi_slas`
-            ON `glpi_tickets`.slas_ttr_id = `glpi_slas`.id
+            ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          INNER JOIN `glpi_tickets_users`
             ON `glpi_tickets_users`.tickets_id = `glpi_tickets`.id
             AND `glpi_tickets_users`.type = " . Ticket_User::ASSIGN . "
@@ -928,7 +928,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                ON `glpi_groups_tickets`.tickets_id = `glpi_tickets`.id
                AND `glpi_groups_tickets`.type = ".CommonITILActor::ASSIGN."
             INNER JOIN `glpi_slas`
-               ON `glpi_tickets`.slas_ttr_id = `glpi_slas`.id
+               ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
             WHERE {$this->sql_date_create}
                AND `glpi_tickets`.status IN (" . implode(
                            ',',
@@ -956,7 +956,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
          // Ajout des '0' manquants :
          $gp = new Group();
-         $gp_found = $gp->find("", "name"); //Tri précose qui n'est pas utile
+         $gp_found = $gp->find([], "name"); //Tri précose qui n'est pas utile
 
          foreach ($gp_found as $group) {
              $group_name = $group['name'];
@@ -1007,7 +1007,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                      {$this->sql_select_sla}
                      FROM `glpi_tickets`
                      INNER JOIN `glpi_slas`
-                        ON `glpi_tickets`.slas_ttr_id = `glpi_slas`.id
+                        ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
                      WHERE {$this->sql_date_create}
                      AND `glpi_tickets`.status IN (" . implode(',',
                               array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())

@@ -28,7 +28,7 @@ class PluginMreportingNotification extends CommonDBTM {
 
       // Création du template de la notification
       $template = new NotificationTemplate();
-      $found_template = $template->find("itemtype = 'PluginMreportingNotification'");
+      $found_template = $template->find(['itemtype' => 'PluginMreportingNotification']);
       if (empty($found_template)) {
          $template_id = $template->add([
             'name'                     => __('Notification for "More Reporting"', 'mreporting'),
@@ -90,7 +90,7 @@ class PluginMreportingNotification extends CommonDBTM {
 
       // Remove NotificationTargets and Notifications
       $notification = new Notification();
-      $result = $notification->find("itemtype = 'PluginMreportingNotification'");
+      $result = $notification->find(['itemtype' => 'PluginMreportingNotification']);
       foreach ($result as $row) {
          $notification_id = $row['id'];
          $queries[] = "DELETE FROM glpi_notificationtargets WHERE notifications_id = " . $notification_id;
@@ -99,7 +99,7 @@ class PluginMreportingNotification extends CommonDBTM {
 
       // Remove NotificationTemplateTranslations and NotificationTemplates
       $template = new NotificationTemplate();
-      $result = $template->find("itemtype = 'PluginMreportingNotification'");
+      $result = $template->find(['itemtype' => 'PluginMreportingNotification']);
       foreach ($result as $row) {
          $template_id = $row['id'];
          $queries[] = "DELETE FROM glpi_notificationtemplatetranslations
