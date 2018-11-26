@@ -75,7 +75,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       //retrieve dashboard widgets;
       $dashboard = new PluginMreportingDashboard();
-      $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID'], 'id');
+      $widgets = $dashboard->find(['users_id' => $_SESSION['glpiID']], 'id');
 
       //show dashboard
       echo "<div id='dashboard'>";
@@ -268,7 +268,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
    public static function CurrentUserHaveDashboard() {
       $dashboard = new PluginMreportingDashboard();
-      return (count($dashboard->find("users_id = ".$_SESSION['glpiID'])) > 0);
+      return (count($dashboard->find(['users_id' => $_SESSION['glpiID']])) > 0);
    }
 
    function getFormForColumn() {
