@@ -99,6 +99,10 @@ Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
    </authors>
    <versions>
       <version>
+         <num>1.6.0</num>
+         <compatibility>9.4</compatibility>
+      </version>
+      <version>
          <num>1.5.3</num>
          <compatibility>9.3</compatibility>
       </version>

@@ -26,12 +26,12 @@
  --------------------------------------------------------------------------
  */
 
-define ('PLUGIN_MREPORTING_VERSION', '1.5.3');
+define ('PLUGIN_MREPORTING_VERSION', '1.6.0');
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_MREPORTING_MIN_GLPI", "9.3");
+define("PLUGIN_MREPORTING_MIN_GLPI", "9.4");
 // Maximum GLPI version, exclusive
-define("PLUGIN_MREPORTING_MAX_GLPI", "9.4");
+define("PLUGIN_MREPORTING_MAX_GLPI", "9.5");
 
 if (!defined('PLUGIN_MREPORTING_TEMPLATE_DIR')) {
    define("PLUGIN_MREPORTING_TEMPLATE_DIR", GLPI_ROOT."/plugins/mreporting/templates/");
@@ -96,7 +96,12 @@ function plugin_init_mreporting() {
                         ['addtabon' => 'Preference']);
 
          $mreporting_profile = new PluginMreportingProfile;
-         $reports_profiles = $mreporting_profile->find("`profiles_id` = '".$_SESSION['glpiactiveprofile']['id']."' AND `right` = ".READ);
+         $reports_profiles = $mreporting_profile->find(
+            [
+               'profiles_id' => $_SESSION['glpiactiveprofile']['id'],
+               'right' => READ,
+            ]
+         );
 
          /* Menu */
          $PLUGIN_HOOKS['config_page']['mreporting'] = 'front/config.php';

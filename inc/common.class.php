@@ -1306,7 +1306,7 @@ class PluginMreportingCommon extends CommonDBTM {
       Dropdown::showFromArray($field, $datas, $param);
    }
 
-   static function selectorForSingleGroup($field, $condition = '', $label = '') {
+   static function selectorForSingleGroup($field, $condition = [], $label = '') {
       echo "<br /><b>".$label." : </b><br />";
 
       $value = isset($_SESSION['mreporting_values'][$field]) ? $_SESSION['mreporting_values'][$field] : 0;
@@ -1319,12 +1319,19 @@ class PluginMreportingCommon extends CommonDBTM {
 
 
    static function selectorGrouprequest() {
-      self::selectorForSingleGroup('groups_request_id', 'is_requester = 1', __("Requester group"));
+      self::selectorForSingleGroup(
+         'groups_request_id',
+         ['is_requester' => 1],
+         __("Requester group")
+      );
    }
 
    static function selectorGroupassign() {
-      self::selectorForSingleGroup('groups_assign_id', 'is_assign = 1',
-                                   __("Group in charge of the ticket"));
+      self::selectorForSingleGroup(
+         'groups_assign_id',
+         ['is_assign' => 1],
+         __("Group in charge of the ticket")
+      );
    }
 
    static function selectorMultipleGrouprequest() {
@@ -1364,7 +1371,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $query = "SELECT DISTINCT s.id,
          s.name
       FROM glpi_slas s
-      INNER JOIN glpi_tickets t ON s.id = t.slas_ttr_id
+      INNER JOIN glpi_tickets t ON s.id = t.slas_id_ttr
       WHERE t.status IN (" . implode(
             ',',
             array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
@@ -1422,7 +1429,7 @@ class PluginMreportingCommon extends CommonDBTM {
          $params = ['type'            => '__VALUE__',
                     'currenttype'     => Ticket::INCIDENT_TYPE,
                     'entity_restrict' => -1,
-                    'condition'       => "`is_incident`='1'",
+                    'condition'       => ['is_incident' => 1],
                     'value'           => isset($_SESSION['mreporting_values']['itilcategories_id'])
                                          ? $_SESSION['mreporting_values']['itilcategories_id']
                                          : 0];
