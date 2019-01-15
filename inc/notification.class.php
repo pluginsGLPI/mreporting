@@ -28,45 +28,54 @@ class PluginMreportingNotification extends CommonDBTM {
 
       // Création du template de la notification
       $template = new NotificationTemplate();
-      $found_template = $template->find("itemtype = 'PluginMreportingNotification'");
+      $found_template = $template->find(['itemtype' => 'PluginMreportingNotification']);
       if (empty($found_template)) {
-         $template_id = $template->add(array(
+         $template_id = $template->add([
             'name'                     => __('Notification for "More Reporting"', 'mreporting'),
             'comment'                  => "",
             'itemtype'                 => __CLASS__,
-         ));
+         ]);
 
          $content_html = __("\n<p>Hello,</p>\n\n<p>GLPI reports are available.<br />\nYou will find attached in this email.</p>\n\n", 'mreporting');
 
          // Ajout d'une traduction (texte) en Français
          $translation = new NotificationTemplateTranslation();
-         $translation->add(array(
+         $translation->add([
             'notificationtemplates_id' => $template_id,
             'language'                 => '',
             'subject'                  => __("GLPI statistics reports", 'mreporting'),
             'content_text'             => __("Hello,\n\nGLPI reports are available.\nYou will find attached in this email.\n\n", 'mreporting'),
-            'content_html'             => $content_html)
+            'content_html'             => $content_html]
          );
 
          // Création de la notification
          $notification = new Notification();
-         $notification_id = $notification->add(array(
-            'name'                     => __('Notification for "More Reporting"', 'mreporting'),
-            'comment'                  => "",
-            'entities_id'              => 0,
-            'is_recursive'             => 1,
-            'is_active'                => 1,
-            'itemtype'                 => __CLASS__,
-            'notificationtemplates_id' => $template_id,
-            'event'                    => 'sendReporting',
-            'mode'                     => 'mail')
+         $notification_id = $notification->add(
+            [
+               'name'                     => __('Notification for "More Reporting"', 'mreporting'),
+               'comment'                  => "",
+               'entities_id'              => 0,
+               'is_recursive'             => 1,
+               'is_active'                => 1,
+               'itemtype'                 => __CLASS__,
+               'event'                    => 'sendReporting',
+            ]
+         );
+
+         $n_n_template = new Notification_NotificationTemplate();
+         $n_n_template->add(
+            [
+               'notifications_id'         => $notification_id,
+               'mode'                     => Notification_NotificationTemplate::MODE_MAIL,
+               'notificationtemplates_id' => $template_id,
+            ]
          );
 
          $DB->query('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
               VALUES (1, 1, ' . $notification_id . ');');
       }
 
-      return array('success' => true);
+      return ['success' => true];
    }
 
    /**
@@ -77,11 +86,11 @@ class PluginMreportingNotification extends CommonDBTM {
    static function uninstall() {
       global $DB;
 
-      $queries = array();
+      $queries = [];
 
       // Remove NotificationTargets and Notifications
       $notification = new Notification();
-      $result = $notification->find("itemtype = 'PluginMreportingNotification'");
+      $result = $notification->find(['itemtype' => 'PluginMreportingNotification']);
       foreach ($result as $row) {
          $notification_id = $row['id'];
          $queries[] = "DELETE FROM glpi_notificationtargets WHERE notifications_id = " . $notification_id;
@@ -90,7 +99,7 @@ class PluginMreportingNotification extends CommonDBTM {
 
       // Remove NotificationTemplateTranslations and NotificationTemplates
       $template = new NotificationTemplate();
-      $result = $template->find("itemtype = 'PluginMreportingNotification'");
+      $result = $template->find(['itemtype' => 'PluginMreportingNotification']);
       foreach ($result as $row) {
          $template_id = $row['id'];
          $queries[] = "DELETE FROM glpi_notificationtemplatetranslations
@@ -103,7 +112,7 @@ class PluginMreportingNotification extends CommonDBTM {
          $DB->query($query);
       }
 
-      return array('success' => true);
+      return ['success' => true];
    }
 
    /**
@@ -116,9 +125,9 @@ class PluginMreportingNotification extends CommonDBTM {
    static function cronInfo($name) {
       switch ($name) {
          case 'SendNotifications' :
-            return array('description' => __('Notification for "More Reporting"', 'mreporting'));
+            return ['description' => __('Notification for "More Reporting"', 'mreporting')];
       }
-      return array();
+      return [];
    }
 
    /**

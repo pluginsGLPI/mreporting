@@ -1,108 +1,120 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Inventory'] = array(
-   'title' => "Отчеты по оборудованию",
+$LANG['plugin_mreporting']['Inventory'] = [
 
-   'reportHbarComputersByOS' => array(
+   'title' => "Активы",
+
+   'reportHbarComputersByOS' => [
       'title'    => "Компьютеры по операционной системе",
-      'desc'     => "Шкалы",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportPieComputersByOS' => array(
+   'reportPieComputersByOS' => [
       'title'    => "Компьютеры по операционной системе",
       'desc'     => "Круговой",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarComputersByFabricant' => array(
+   'reportHbarComputersByFabricant' => [
       'title'    => "Компьютеры по производителю",
-      'desc'     => "Шкалы",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Производитель",
-   ),
+   ],
 
-   'reportPieComputersByFabricant' => array(
+   'reportPieComputersByFabricant' => [
       'title'    => "Компьютеры по производителю",
-      'desc'     => "Круговой",
+      'desc'     => "Пирог",
       'category' => "Производитель",
-   ),
+   ],
 
-   'reportHbarComputersByType' => array(
+   'reportHbarComputersByType' => [
       'title'    => "Компьютеры по типу",
-      'desc'     => "Bars",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Тип",
-   ),
+   ],
+   'reportPieComputersByType' => [
+      'title'    => "Компьютеры по типу",
+      'desc'     => "Пирог",
+      'category' => "Тип",
+   ],
 
-   'reportHbarComputersByStatus' => array(
+   'reportHbarComputersByStatus' => [
       'title'    => "Компьютеры по статусу",
-      'desc'     => "Шкалы",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Статус",
-   ),
+   ],
 
-   'reportPieComputersByType' => array(
-      'title'    => "Компьютеры по типу",
-      'desc'     => "Pie",
-      'category' => "Тип",
-   ),
+   'reportHbarPrintersByStatus' => [
+      'title'    => "Принтеры по статусу",
+      'desc'     => "Горизонтальная диаграмма",
+      'category' => "Статус",
+   ],
 
-   'reportHbarWindows' => array(
-      'title'    => "Windows",
-      'desc'     => "Шкалы",
+   'reportHbarWindows' => [
+      'title'    => "Распределение Windows",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarLinux' => array(
-      'title'    => "Дистрибутивы GNU/Linux",
-      'desc'     => "Шкалы",
+   'reportHbarLinux' => [
+      'title'    => "Детальное распределение Linux",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarLinuxDistro' => array(
-      'title'    => "Дистрибутивы GNU/Linux",
-      'desc'     => "Шкалы",
+   'reportHbarLinuxDistro' => [
+      'title'    => "Детальное распределение Linux",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarMac' => array(
-      'title'    => "Версии Mac OS X",
-      'desc'     => "Шкалы",
+   'reportHbarMac' => [
+      'title'    => "Детальные версии Mac OS X",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarMacFamily' => array(
+   'reportHbarMacFamily' => [
       'title'    => "Обзор версий MAC OS X",
-      'desc'     => "Шкалы",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Операционная система",
-   ),
+   ],
 
-   'reportHbarComputersByAge' => array(
+   'reportHbarComputersByAge' => [
       'title'    => "Компьютер по возрасту",
-      'desc'     => "Шкалы",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Оборудование",
-   ),
+   ],
 
-   'reportPieComputersByAge' => array(
-      'title'    => "компьютер по возрасту",
-      'desc'     => "Круговой",
+   'reportPieComputersByAge' => [
+      'title'    => "Компьютер по возрасту",
+      'desc'     => "Пирог",
       'category' => "Оборудование",
-   ),
+   ],
 
-   'reportHbarFusionInventory' => array(
+   'reportHbarFusionInventory' => [
       'title'    => "Версия агента FusionInventory",
-      'desc'     => "Шкалы",
+      'desc'     => "Горизонтальная диаграмма",
       'category' => "Оборудование",
-   ),
+   ],
 
-   'reportPieFusionInventory' => array(
+   'reportPieFusionInventory' => [
       'title'    => "Версия агента FusionInventory",
-      'desc'     => "Круговой",
-      'category' => "Оборудование",
-   ),
+      'desc'     => "Пирог",
+      'category' => "Агент",
+   ],
 
-   'reportHbarMonitors' => array(
-      'title'    => "Screens per computer distribution",
-      'desc'     => "Шкалы",
-      'category' => "Оборудование",
-   ),
-);
+   'reportHbarMonitors' => [
+      'title'    => "Распределение количества мониторов на компьютерах",
+      'desc'     => "Горизонтальная диаграмма",
+      'category' => "Активы",
+   ],
+
+   'reportHbarComputersByEntity' => [
+      'title'    => "Компьютеры по организациям",
+      'desc'     => "Горизонтальная диаграмма",
+      'category' => "Организация",
+    ],
+];

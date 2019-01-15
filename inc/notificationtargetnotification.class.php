@@ -5,25 +5,25 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
    var $additionalData;
 
    function getEvents() {
-      return array('sendReporting' => __('More Reporting', 'mreporting'));
+      return ['sendReporting' => __('More Reporting', 'mreporting')];
    }
 
    function getTags() {
-      $this->addTagToList(array('tag'   => 'mreporting.file_url',
-                                'label' => __('Link'),
-                                'value' => true));
+      $this->addTagToList(['tag'   => 'mreporting.file_url',
+                           'label' => __('Link'),
+                           'value' => true]);
 
       asort($this->tag_descriptions);
    }
 
-   function getDatasForTemplate($event, $options = array()) {
+   function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI;
 
       $file_name = $this->_buildPDF(mt_rand().'_');
 
-      $this->datas['##lang.mreporting.file_url##'] = __('Link');
-      $this->datas['##mreporting.file_url##']      = $CFG_GLPI['url_base'].
-                                                      "/index.php?redirect=plugin_mreporting_$file_name";
+      $this->data['##lang.mreporting.file_url##'] = __('Link');
+      $this->data['##mreporting.file_url##']      = $CFG_GLPI['url_base'].
+                                                    "/index.php?redirect=plugin_mreporting_$file_name";
 
       $this->additionalData['attachment']['path'] = GLPI_PLUGIN_DOC_DIR."/mreporting/notifications/".$file_name;
       $this->additionalData['attachment']['name'] = $file_name;
@@ -48,20 +48,18 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
       ini_set('memory_limit', '256M');
       set_time_limit(300);
 
-      $CFG_GLPI['default_graphtype'] = "png";
-
-      $images = array();
+      $images = [];
 
       $result = $DB->query('SELECT id, name, classname, default_delay
                            FROM glpi_plugin_mreporting_configs
                            WHERE is_notified = 1
                               AND is_active = 1');
 
-      $graphs = array();
+      $graphs = [];
       while ($graph = $result->fetch_array()) {
          $type = preg_split('/(?<=\\w)(?=[A-Z])/', $graph['name']);
 
-         $graphs[] = array(
+         $graphs[] = [
             'class'     => substr($graph['classname'], 16),
             'classname' => $graph['classname'],
             'method'    => $graph['name'],
@@ -69,22 +67,22 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
             'start'     => date('Y-m-d', strtotime(date('Y-m-d 00:00:00').
                            ' -'.$graph['default_delay'].' day')),
             'end'       => date('Y-m-d', strtotime(date('Y-m-d 00:00:00').' -1 day')),
-         );
+         ];
       }
 
       foreach ($graphs as $graph) {
-         $_REQUEST = array('switchto'        => 'png',
-                           'short_classname' => $graph['class'],
-                           'f_name'          => $graph['method'],
-                           'gtype'           => $graph['type'],
-                           'date1PluginMreporting'.$graph['class'].$graph['method'] => $graph['start'],
-                           'date2PluginMreporting'.$graph['class'].$graph['method'] => $graph['end'],
-                           'randname'        => 'PluginMreporting'.$graph['class'].$graph['method'],
-                           'hide_title'      => false); //New code
+         $_REQUEST = ['switchto'        => 'png',
+                      'short_classname' => $graph['class'],
+                      'f_name'          => $graph['method'],
+                      'gtype'           => $graph['type'],
+                      'date1PluginMreporting'.$graph['class'].$graph['method'] => $graph['start'],
+                      'date2PluginMreporting'.$graph['class'].$graph['method'] => $graph['end'],
+                      'randname'        => 'PluginMreporting'.$graph['class'].$graph['method'],
+                      'hide_title'      => false]; //New code
 
          ob_start();
          $common = new PluginMreportingCommon();
-         $common->showGraph($_REQUEST);
+         $common->showGraph($_REQUEST, false, 'PNG');
          $content = ob_get_clean();
 
          preg_match_all('/<img .*?(?=src)src=\'([^\']+)\'/si', $content, $matches);
@@ -121,10 +119,10 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget 
          $image_title .= " du ".strftime($format, strtotime($graph['start']));
          $image_title .= " au ".strftime('%e %B %Y', strtotime($graph['end']));
 
-         array_push($images, array('title'  => $image_title,
-                                   'base64' => $image_base64,
-                                   'width'  => $image_width,
-                                   'height' => $image_height));
+         array_push($images, ['title'  => $image_title,
+                              'base64' => $image_base64,
+                              'width'  => $image_width,
+                              'height' => $image_height]);
       }
 
       $file_name = 'glpi_report_'.$user_name.date('d-m-Y').'.pdf';

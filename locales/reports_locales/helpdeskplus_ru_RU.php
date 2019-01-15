@@ -1,66 +1,111 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdeskplus']['title'] = 'Advanced Helpdesk reporting';
+$LANG['plugin_mreporting']['Helpdeskplus'] = [
+   'title'         => 'Служба поддержки расширенная',
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['title']            = 'Backlog';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['desc']             = '';
+   // MISC LOCALES
+   'backlogs'      => "Задержки",
+   'opened'        => "Открытые",
+   'period'        => "Период",
+   'backlogstatus' => "Отображаемый статус",
+   'slaobserved'   => "SLA отмечен",
+   'slanotobserved'=> "SLA не отмечен",
+   'observed'      => "отмечен",
+   'notobserved'   => "не отмечен",
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['title']        = 'Возраст заявки';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['desc']         = '';
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketsgroups']['title']   = 'Заявок по группе';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketsgroups']['desc']    = '';
+   // SELECTOR
+   'selector'      => [
+      'slas'       => "SLAS",
+      'categories' => "Категории",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketstech']['title']     = 'Заявок по специалисту';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketstech']['desc']      = '';
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['title']        = 'Orientation des files';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['desc']         = 'Nombre de tickets pour chaque groupe d\'arrivée en fonction d\'un groupe de départ.<br />
-                                                                                       - Sélectionnez un groupe demandeur pour afficher le nombre de ticket pour les groupes attribués.<br />
-                                                                                       - Sélectionnez un groupe chargé du ticket pour afficher le nombre de ticket pour les groupes demandeurs.<br />
-                                                                                       <b>Vous ne pouvez sélectionner qu\'un critère à la fois !</b>';
+   // GENERAL REPORTS
+   'reportGlineBacklogs' => [
+      'title'    => "Задержки",
+      'desc'     => "",
+      'category' => "Общие",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['title']          = 'ТОП категорий';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['desc']           = '';
+   'reportVstackbarLifetime' => [
+      'title'    => "Возраст заявки",
+      'desc'     => "",
+      'category' => "Общие",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['title']         = 'ТОП групп заказчика';
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['desc']          = '';
+   'reportVstackbarTicketsgroups' => [
+      'title'    => "Заявки по группам",
+      'desc'     => "",
+      'category' => "Общие",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['backlogs']        = 'Backlogs';
-$LANG['plugin_mreporting']['Helpdeskplus']['opened']          = 'Открыто';
-$LANG['plugin_mreporting']['Helpdeskplus']['period']          = 'Период';
-$LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']   = 'Status to display';
+   'reportVstackbarTicketstech' => [
+      'title'    => "Заявки по специалисту",
+      'desc'     => "",
+      'category' => "Общие",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['title'] = "Number of group changes";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['desc'] = "";
+   'reportVstackbarWorkflow' => [
+      'title'    => "Ориентированные очереди",
+      'desc'     => "",
+      'category' => "Общие",
+   ],
 
-$LANG['plugin_mreporting']['selector']["slas"] = "SLAS";
+   'reportHbarTopcategory' => [
+      'title'    => "ТОП категорий",
+      'desc'     => "",
+      'category' => "Общие",
+   ],
 
-$LANG['plugin_mreporting']['selector']["categories"] = "Категории";
+   'reportHbarTopapplicant' => [
+      'title'    => "ТОП групп заказчиков",
+      'desc'     => "",
+      'category' => "Общие",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'] = "SLA observed";
-$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved'] = "SLA not observed";
+   'reportVstackbarGroupChange' => [
+      'title'    => "Количество групп изменений",
+      'desc'     => "",
+      'category' => "Общие",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['observed'] = "observed";
-$LANG['plugin_mreporting']['Helpdeskplus']['notobserved'] = "not observed";
+   'reportLineActiontimeVsSolvedelay' => [
+      'title'    => "Сравнение задержки активного времени заявки и решения",
+      'desc'     => "",
+      'category' => "Общие",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['title'] = "Число заявок по SLA";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarNbTicketBySla']['category'] = "по SLA";
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['title'] = "Tickets evolution per SLA";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['category'] = "Per SLA";
+   // SLA REPORTS
+   'reportVstackbarNbTicketBySla' => [
+      'title'    => "Количество заявок по SLA",
+      'desc'     => "",
+      'category' => "Согласно SLA",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['title'] = "Заявок по SLA, сортировка по категории";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['category'] = "По SLA";
+   'reportGlineNbTicketBySla' => [
+      'title'    => "Динамика заявки согласно SLA",
+      'desc'     => "",
+      'category' => "Согласно SLA",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['title'] = "Заявок по SLA, сортировка по специалисту";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTechnician']['category'] = "По SLA";
+   'reportHgbarRespectedSlasByTopCategory' => [
+      'title'    => "Заявки согласно SLA по категориям",
+      'desc'     => "",
+      'category' => "Согласно SLA",
+   ],
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['title'] = "Заявок по SLA, сотрировка по группе";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['desc'] = "";
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarRespectedSlasByGroup']['category'] = "По SLA";
+   'reportHgbarRespectedSlasByTechnician' => [
+      'title'    => "Заявки согласно SLA по специалистам",
+      'desc'     => "",
+      'category' => "Согласно SLA",
+   ],
+
+   'reportVstackbarRespectedSlasByGroup' => [
+      'title'    => "Заявки согласно SLA отобранные по группам",
+      'desc'     => "",
+      'category' => "Согласно SLA",
+   ],
+];

@@ -1,114 +1,114 @@
 <?php
 global $LANG;
 
-$LANG['plugin_mreporting']['Helpdesk'] = array(
+$LANG['plugin_mreporting']['Helpdesk'] = [
    'title' => "Helpdesk",
 
-   'reportHbarTicketNumberByEntity' => array(
+   'reportHbarTicketNumberByEntity' => [
       'title'    => "Anzahl Tickets pro Einheit",
       'desc'     => "Bars",
       'category' => "Pro Einheit",
-   ),
+   ],
 
-   'reportPieTicketNumberByEntity' => array(
+   'reportPieTicketNumberByEntity' => [
       'title'    => "Anzahl Tickets pro Einheit",
       'desc'     => "Pie",
       'category' => "Pro Einheit",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByCatAndEntity' => array(
+   'reportHgbarTicketNumberByCatAndEntity' => [
       'title'    => "Anzahl Tickets pro Kategorie und Einheit",
       'desc'     => "Stacked bars",
       'category' => "Pro Einheit",
-   ),
+   ],
 
-   'reportPieTopTenAuthor' => array(
+   'reportPieTopTenAuthor' => [
       'title'    => "Top 10 Anforderer",
       'desc'     => "Pie",
       'category' => "Pro Anforderer",
-   ),
+   ],
 
-   'reportHgbarOpenTicketNumberByCategoryAndByType' => array(
+   'reportHgbarOpenTicketNumberByCategoryAndByType' => [
       'title'    => "Anzahl erstellter Tickets pro Kategorie und Typ",
       'desc'     => "Stacked bars",
       'category' => "Pro Kategorie",
-   ),
+   ],
 
-   'reportHgbarCloseTicketNumberByCategoryAndByType' => array(
+   'reportHgbarCloseTicketNumberByCategoryAndByType' => [
       'title'    => "Anzahl erstellter Tickets pro Kategorie und Typ",
       'desc'     => "Stacked bars",
       'category' => "Pro Kategorie",
-   ),
+   ],
 
-   'reportHgbarOpenedTicketNumberByCategory' => array(
+   'reportHgbarOpenedTicketNumberByCategory' => [
       'title'    => "Anzahl erstellter Tickets pro Kategorie und Status",
       'desc'     => "Stacked bars",
       'category' => "Pro Kategorie",
-   ),
+   ],
 
-   'reportHgbarTicketNumberByService' => array(
+   'reportHgbarTicketNumberByService' => [
       'title'    => "Anzahl erstellter und geschlossener Tickets pro Service",
       'desc'     => "Stacked bars",
       'category' => "Pro Service",
-   ),
+   ],
 
-   'reportPieTicketOpenedAndClosed' => array(
+   'reportPieTicketOpenedAndClosed' => [
       'title'    => "Anzahl erstellter und geschlossener Tickets",
       'desc'     => "Pie",
       'category' => "Pro Ticket",
-   ),
+   ],
 
-   'reportPieTicketOpenedbyStatus' => array(
+   'reportPieTicketOpenedbyStatus' => [
       'title'    => "Anzahl erstellter Tickets pro Status",
       'desc'     => "Pie",
       'category' => "Pro Ticket",
-   ),
+   ],
 
-   'reportAreaNbTicket' => array(
+   'reportAreaNbTicket' => [
       'title'    => "Entwicklung der Tickets über einen Zeitraum",
       'desc'     => "Area",
       'category' => "Pro Ticket",
-   ),
+   ],
 
-   'reportLineNbTicket' => array(
+   'reportLineNbTicket' => [
       'title'    => "Entwicklung der Tickets über einen Zeitraum",
       'desc'     => "Linie",
       'category' => "Pro Ticket",
-   ),
+   ],
 
-   'reportGlineNbTicket' => array(
+   'reportGlineNbTicket' => [
       'title'    => "Entwicklung der Tickets über einen Zeitraum (nach Status)",
       'desc'     => "Linien",
       'category' => "Pro Ticket",
-   ),
+   ],
 
-   'reportGareaNbTicket' => array(
+   'reportGareaNbTicket' => [
       'title'    => "Entwicklung der Tickets über einen Zeitraum (nach Status)",
       'desc'     => "Area",
       'category' => "Pro Ticket",
-   ),
+   ],
 
-   'reportVstackbarNbTicket' => array(
+   'reportVstackbarNbTicket' => [
       'title'    => "Entwicklung der Tickets über einen Zeitraum (nach Status)",
       'desc'     => "Stacked bars",
       'category' => "Pro Ticket",
-   ),
+   ],
 
-   'reportSunburstTicketByCategories' => array(
+   'reportSunburstTicketByCategories' => [
       'title'    => "Verteilung der Tickets nach Kategorie und Unterkategorie",
       'desc'     => "Donut",
       'category' => "Pro Kategorie",
-   ),
+   ],
 
-   'reportVstackbarTicketStatusByTechnician' => array(
+   'reportVstackbarTicketStatusByTechnician' => [
       'title'    => "Anzahl Tickets pro Status und Techniker",
       'desc'     => "Stacked bars",
       'category' => "Pro Ticket",
-   ),
+   ],
 
-   'reportHbarTicketNumberByLocation' => array(
+   'reportHbarTicketNumberByLocation' => [
       'title'    => "Anzahl Tickets pro Anforderer-Standort",
       'desc'     => "Bars",
       'category' => "Pro Anforderer",
-   ),
-);
+   ],
+];

@@ -41,97 +41,140 @@ class PluginMreportingConfig extends CommonDBTM {
    /**
     * Définition des onglets
    **/
-   function defineTabs($options=array()) {
-      $ong = array();
+   function defineTabs($options = []) {
+      $ong = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginMreportingProfile', $ong, $options);
       return $ong;
    }
 
 
-   function getSearchOptions() {
-      $tab = array();
+   function rawSearchOptions() {
 
-      $tab['common'] = self::getTypeName();
+      $tab = [];
 
-      $tab[1]['table']          = $this->getTable();
-      $tab[1]['field']          ='name';
-      $tab[1]['name']           = __("Name");
-      $tab[1]['datatype']       ='itemlink';
-      $tab[1]['itemlink_type']  = $this->getType();
+      $tab[] = [
+         'id'                 => 'common',
+         'name'               => self::getTypeName(),
+      ];
 
-      $tab[2]['table']          = $this->getTable();
-      $tab[2]['field']          = 'is_active';
-      $tab[2]['name']           = __("Active");
-      $tab[2]['datatype']       = 'bool';
+      $tab[] = [
+         'id'                 => '1',
+         'table'              => $this->getTable(),
+         'field'              => 'name',
+         'name'               => __('Name'),
+         'datatype'           => 'itemlink',
+         'itemlink_type'       => $this->getType(),
+      ];
 
-      $tab[3]['table']          = $this->getTable();
-      $tab[3]['field']          = 'show_area';
-      $tab[3]['name']           = __("See area", 'mreporting');
-      $tab[3]['datatype']       = 'bool';
-      $tab[3]['massiveaction']  = false;
+      $tab[] = [
+         'id'                 => '2',
+         'table'              => $this->getTable(),
+         'field'              => 'is_active',
+         'name'               => __('Active'),
+         'datatype'           => 'bool',
+      ];
 
-      $tab[4]['table']          = $this->getTable();
-      $tab[4]['field']          = 'spline';
-      $tab[4]['name']           = __("Curve lines (SVG)", 'mreporting');
-      $tab[4]['datatype']       = 'bool';
-      $tab[4]['massiveaction']  = false;
+      $tab[] = [
+         'id'                 => '3',
+         'table'              => $this->getTable(),
+         'field'              => 'show_area',
+         'name'               => __('See area', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false,
+      ];
 
-      $tab[5]['table']          = $this->getTable();
-      $tab[5]['field']          = 'show_label';
-      $tab[5]['name']           = __("See values", 'mreporting');
-      $tab[5]['datatype']      = 'specific';
-      $tab[5]['searchtype']    = 'equals';
-      $tab[5]['massiveaction']  = false;
+      $tab[] = [
+         'id'                 => '4',
+         'table'              => $this->getTable(),
+         'field'              => 'spline',
+         'name'               => __('Curve lines (SVG)', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false,
+      ];
 
-      $tab[6]['table']          = $this->getTable();
-      $tab[6]['field']          = 'flip_data';
-      $tab[6]['name']           = __("Reverse data array", 'mreporting');
-      $tab[6]['datatype']       = 'bool';
-      $tab[6]['massiveaction']  = false;
+      $tab[] = [
+         'id'                 => '5',
+         'table'              => $this->getTable(),
+         'field'              => 'show_label',
+         'name'               => __('See values', 'mreporting'),
+         'datatype'           => 'specific',
+         'searchtype'         => 'equals',
+         'massiveaction'      => false,
+      ];
 
-      $tab[7]['table']          = $this->getTable();
-      $tab[7]['field']          = 'unit';
-      $tab[7]['name']           = __("Unit", 'mreporting');
+      $tab[] = [
+         'id'                 => '6',
+         'table'              => $this->getTable(),
+         'field'              => 'flip_data',
+         'name'               => __('Reverse data array', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false,
+      ];
 
-      $tab[8]['table']          = $this->getTable();
-      $tab[8]['field']          = 'default_delay';
-      $tab[8]['name']           = __("Default delay", 'mreporting');
+      $tab[] = [
+         'id'                 => '7',
+         'table'              => $this->getTable(),
+         'field'              => 'unit',
+         'name'               => __('Unit', 'mreporting'),
+      ];
 
-      $tab[9]['table']          = $this->getTable();
-      $tab[9]['field']          = 'condition';
-      $tab[9]['name']           = __("Additional condition for MySQL", 'mreporting');
+      $tab[] = [
+         'id'                 => '8',
+         'table'              => $this->getTable(),
+         'field'              => 'default_delay',
+         'name'               => __('Default delay', 'mreporting'),
+      ];
 
-      $tab[10]['table']         = $this->getTable();
-      $tab[10]['field']         = 'show_graph';
-      $tab[10]['name']          = __("See graphic", 'mreporting');
-      $tab[10]['datatype']      = 'bool';
-      $tab[10]['massiveaction'] = false;
+      $tab[] = [
+         'id'                 => '9',
+         'table'              => $this->getTable(),
+         'field'              => 'condition',
+         'name'               => __('Additional condition for MySQL', 'mreporting'),
+      ];
 
-      $tab[11]['table']         = $this->getTable();
-      $tab[11]['field']         = 'classname';
-      $tab[11]['name']          = __("Class", 'mreporting');
-      $tab[11]['massiveaction'] = false;
+      $tab[] = [
+         'id'                 => '10',
+         'table'              => $this->getTable(),
+         'field'              => 'show_graph',
+         'name'               => __('See graphic', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => false,
+      ];
 
-      $tab[12]['table']         = $this->getTable();
-      $tab[12]['field']         = 'graphtype';
-      $tab[12]['searchtype']    = 'equals';
-      $tab[12]['name']          = __("Default chart format");
-      $tab[12]['massiveaction'] = true;
+      $tab[] = [
+         'id'                 => '11',
+         'table'              => $this->getTable(),
+         'field'              => 'classname',
+         'name'               => __('Class', 'mreporting'),
+         'massiveaction'      => false,
+      ];
 
-      $tab[13]['table']         = $this->getTable();
-      $tab[13]['field']         = 'is_notified';
-      $tab[13]['datatype']      = 'bool';
-      $tab[13]['name']          = __("Send this report with the notification", 'mreporting');
-      $tab[13]['massiveaction'] = true;
+      $tab[] = [
+         'id'                 => '12',
+         'table'              => $this->getTable(),
+         'field'              => 'graphtype',
+         'name'               => __('Default chart format', 'mreporting'),
+         'searchtype'         => 'equals',
+         'massiveaction'      => true,
+      ];
+
+      $tab[] = [
+         'id'                 => '13',
+         'table'              => $this->getTable(),
+         'field'              => 'is_notified',
+         'name'               => __('Send this report with the notification', 'mreporting'),
+         'datatype'           => 'bool',
+         'massiveaction'      => true,
+      ];
 
       return $tab;
    }
 
-   static function getSpecificValueToDisplay($field, $values, array $options=array()) {
+   static function getSpecificValueToDisplay($field, $values, array $options = []) {
 
       if (!is_array($values)) {
-         $values = array($field => $values);
+         $values = [$field => $values];
       }
       switch ($field) {
          case 'graphtype':
@@ -154,18 +197,18 @@ class PluginMreportingConfig extends CommonDBTM {
     * @param $values          (default '')
     * @param $options   array
     **/
-   static function getSpecificValueToSelect($field, $name='', $values='', array $options=array()) {
+   static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []) {
 
       if (!is_array($values)) {
-         $values = array($field => $values);
+         $values = [$field => $values];
       }
       $options['display'] = false;
       $options['value']   = $values[$field];
       switch ($field) {
          case 'graphtype':
             return Dropdown::showFromArray($name,
-                                            array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'),
-                                            $options);
+                                           ['PNG'=>'PNG', 'SVG'=>'SVG'],
+                                           $options);
             break;
          case 'show_label':
             return self::dropdownLabel($name, $options);
@@ -175,7 +218,7 @@ class PluginMreportingConfig extends CommonDBTM {
    }
 
 
-   function getFromDBByFunctionAndClassname($function,$classname) {
+   function getFromDBByFunctionAndClassname($function, $classname) {
       global $DB;
 
       $query = "SELECT *
@@ -202,7 +245,7 @@ class PluginMreportingConfig extends CommonDBTM {
    static function addFirstconfigLink() {
       global $CFG_GLPI;
 
-      $buttons = array();
+      $buttons = [];
       $title = "";
 
       if (Session::haveRight('config', READ)) {
@@ -243,7 +286,7 @@ class PluginMreportingConfig extends CommonDBTM {
          foreach ($functions as $funct_name) {
             if ($funct_name == 'preconfig') { // If a preconfig exists we construct the class
                $classConfig = true;
-               $classObject = new $classname(array());
+               $classObject = new $classname([]);
             }
          }
 
@@ -254,7 +297,7 @@ class PluginMreportingConfig extends CommonDBTM {
                continue;
             }
 
-            $input = array();
+            $input = [];
 
             if ($classConfig) { // If a preconfig exists in class we do it
                $input = $classObject->preconfig($funct_name, $classname, $this);
@@ -295,7 +338,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_graph"]="1";
                $this->fields["spline"]="1";
                $this->fields["default_delay"]="365";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
             case 'line':
             case 'gline':
@@ -306,7 +349,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_area"]="0";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
             case 'vstackbar':
                $this->fields["name"]=$funct_name;
@@ -314,7 +357,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["is_active"]="1";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="365";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
             case 'hgbar':
                $this->fields["name"]=$funct_name;
@@ -325,7 +368,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["spline"]="0";
                $this->fields["show_area"]="0";
                $this->fields["default_delay"]="365";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
             default:
                $this->fields["name"]=$funct_name;
@@ -336,7 +379,7 @@ class PluginMreportingConfig extends CommonDBTM {
                $this->fields["show_area"]="0";
                $this->fields["show_graph"]="1";
                $this->fields["default_delay"]="30";
-               $this->fields["graphtype"]="GLPI";
+               $this->fields["graphtype"]="SVG";
                break;
 
          }
@@ -350,7 +393,7 @@ class PluginMreportingConfig extends CommonDBTM {
     * @options array example $value
     *@return nothing
     **/
-   static function dropdownGraph($name, $options=array()) {
+   static function dropdownGraph($name, $options = []) {
       $self = new self();
       $common = new PluginMreportingCommon();
       $rand = mt_rand();
@@ -419,9 +462,9 @@ class PluginMreportingConfig extends CommonDBTM {
     * @options array example $value
     *@return nothing
     **/
-   static function dropdownLabel($name, $options=array(),$notall = false) {
+   static function dropdownLabel($name, $options = [], $notall = false) {
       $params['value']       = 0;
-      $params['toadd']       = array();
+      $params['toadd']       = [];
       $params['on_change']   = '';
 
       if (is_array($options) && count($options)) {
@@ -501,13 +544,13 @@ class PluginMreportingConfig extends CommonDBTM {
                "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
             );
          } else {*/
-            $colors = array(
+            $colors = [
                "#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
                "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5",
                "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f",
                "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"
-            );
-         // }
+            ];
+            // }
       }
 
       //fill colors on size index
@@ -529,7 +572,7 @@ class PluginMreportingConfig extends CommonDBTM {
                Session::addMessageAfterRedirect(__("Object already exists", 'mreporting'),
                   false, ERROR);
             }
-            return array();
+            return [];
          }
       }
 
@@ -538,20 +581,20 @@ class PluginMreportingConfig extends CommonDBTM {
 
    function prepareInputForUpdate($input) {
 
-      if (isset($input["classname"]) && method_exists(new $input["classname"](array()), 'checkConfig')) {
-         $object = new $input["classname"](array());
+      if (isset($input["classname"]) && method_exists(new $input["classname"]([]), 'checkConfig')) {
+         $object = new $input["classname"]([]);
          $checkConfig = $object->checkConfig($input);
          if (!$checkConfig['result']) {
             Session::addMessageAfterRedirect($checkConfig['message'], ERROR, true);
 
-            return array();
+            return [];
          }
       }
 
       return $input;
    }
 
-   function showForm($ID, $options=array()) {
+   function showForm($ID, $options = []) {
       global $LANG;
 
       $this->initForm($ID, $options);
@@ -571,9 +614,9 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "<tr>";
       echo "<td class='tab_bg_2 center' colspan='2'>";
       echo __("Preconfiguration")."&nbsp;";
-      $opt = array('value' => $_GET['preconfig']);
+      $opt = ['value' => $_GET['preconfig']];
       $rand = self::dropdownGraph('graphname', $opt);
-      $params = array('graphname' => '__VALUE__');
+      $params = ['graphname' => '__VALUE__'];
       Ajax::updateItemOnSelectEvent("dropdown_graphname$rand", "show_preconfig",
                                           "../ajax/dropdownGraphs.php",
                                           $params);
@@ -630,8 +673,8 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "<td>".__("Default chart format")."</td>";
       echo "<td>";
       Dropdown::showFromArray("graphtype",
-         array('GLPI'=>'GLPI', 'PNG'=>'PNG', 'SVG'=>'SVG'),
-         array('value' => $this->fields["graphtype"]));
+         ['PNG'=>'PNG', 'SVG'=>'SVG'],
+         ['value' => $this->fields["graphtype"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -673,7 +716,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      $opt = array('value' => $this->fields["show_label"]);
+      $opt = ['value' => $this->fields["show_label"]];
       if ($gtype != 'area' && $gtype != 'garea' && $gtype != 'line' && $gtype != 'gline') {
          self::dropdownLabel('show_label', $opt);
       } else {
@@ -699,7 +742,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo __("Unit", 'mreporting');
       echo "</td>";
       echo "<td>";
-      $opt = array('size' => 10);
+      $opt = ['size' => 10];
       Html::autocompletionTextField($this, 'unit', $opt);
       echo "</td>";
       echo "</tr>";
@@ -709,7 +752,7 @@ class PluginMreportingConfig extends CommonDBTM {
       echo __("Default delay", 'mreporting');
       echo "</td>";
       echo "<td>";
-      $opt = array('size' => 10);
+      $opt = ['size' => 10];
       Html::autocompletionTextField($this, 'default_delay', $opt);
       echo "</td>";
 
@@ -747,16 +790,16 @@ class PluginMreportingConfig extends CommonDBTM {
    **/
    static function initConfigParams($name, $classname) {
 
-      $crit = array('area'          => false,
-                     'spline'       => false,
-                     'flip_data'    => false,
-                     'unit'         => '',
-                     'show_label'   => 'never',
-                     'delay'        => '30',
-                     'condition'    => '',
-                     'show_graph'   => false,
-                     'randname'     => mt_rand(),
-                     'graphtype'    => 'GLPI');
+      $crit = ['area'          => false,
+               'spline'       => false,
+               'flip_data'    => false,
+               'unit'         => '',
+               'show_label'   => 'never',
+               'delay'        => '30',
+               'condition'    => '',
+               'show_graph'   => false,
+               'randname'     => mt_rand(),
+               'graphtype'    => 'SVG'];
 
       $self = new self();
       if ($self->getFromDBByFunctionAndClassname($name, $classname)) {

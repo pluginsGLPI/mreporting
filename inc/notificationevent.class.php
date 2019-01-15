@@ -17,13 +17,13 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
     * @param $options array   of options used
     * @param $label           used for debugEvent() (default '')
    **/
-   static function raiseEvent($event, $item, $options=array(), $label='') {
+   static function raiseEvent($event, $item, $options = [], $label = '') {
       global $CFG_GLPI;
 
       //If notifications are enabled in GLPI's configuration
-      if ($CFG_GLPI["use_mailing"]) {
-         $email_processed    = array();
-         $email_notprocessed = array();
+      if ($CFG_GLPI["use_notifications"]) {
+         $email_processed    = [];
+         $email_notprocessed = [];
 
          $options['entities_id'] = 0; //New code
          $notificationtarget = NotificationTarget::getInstance($item, $event, $options);
@@ -38,8 +38,13 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
          //Foreach notification
          foreach (Notification::getNotificationsByEventAndType($event, $item->getType(), $entity)
                   as $data) {
-            $targets = getAllDatasFromTable('glpi_notificationtargets',
-                                            'notifications_id = '.$data['id']);
+            $targets = getAllDatasFromTable(
+               'glpi_notificationtargets',
+               ['notifications_id' => $data['id']]
+            );
+            $eventClass = Notification_NotificationTemplate::getModeClass($data['mode'], 'event');
+            $notificationtarget->setMode($data['mode']);
+            $notificationtarget->setEvent($eventClass);
             $notificationtarget->clearAddressesList();
 
             //Process more infos (for example for tickets)
@@ -56,7 +61,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
             //Foreach notification targets
             foreach ($targets as $target) {
                //Get all users affected by this notification
-               $notificationtarget->getAddressesByTarget($target, $options);
+               $notificationtarget->addForTarget($target, $options);
 
                foreach ($notificationtarget->getTargets() as $user_email => $users_infos) {
                   if ($label
@@ -73,8 +78,16 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
                                                                     $event, $options)) {
                            //Send notification to the user
                            if ($label == '') {
-                              PluginMreportingNotification::send($template->getDataToSend($notificationtarget, $tid,
-                                                                          $users_infos, $options), $notificationtarget->additionalData);
+                              PluginMreportingNotification::send(
+                                 $template->getDataToSend(
+                                    $notificationtarget,
+                                    $tid,
+                                    $users_infos[$eventClass::getTargetFieldName()],
+                                    $users_infos,
+                                    $options
+                                 ),
+                                 $notificationtarget->additionalData
+                              );
                            } else {
                               $notificationtarget->getFromDB($target['id']);
                               echo "<tr class='tab_bg_2'>";

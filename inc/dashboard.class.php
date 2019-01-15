@@ -29,16 +29,16 @@
 
 class PluginMreportingDashboard extends CommonDBTM {
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       if (get_class($item) == 'Central'
          && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
-         return array(1 => __("Dashboard", 'mreporting'));
+         return [1 => __("Dashboard", 'mreporting')];
       }
       return '';
    }
 
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
       if (get_class($item) == 'Central'
@@ -75,7 +75,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       //retrieve dashboard widgets;
       $dashboard = new PluginMreportingDashboard();
-      $widgets = $dashboard->find("users_id = ".$_SESSION['glpiID'], 'id');
+      $widgets = $dashboard->find(['users_id' => $_SESSION['glpiID']], 'id');
 
       //show dashboard
       echo "<div id='dashboard'>";
@@ -181,11 +181,11 @@ class PluginMreportingDashboard extends CommonDBTM {
 
          if (!empty($short_classname) && !empty($f_name)) {
             if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-               $opt = array('short_classname' => $short_classname,
-                            'f_name'          => $f_name,
-                            'gtype'           => $gtype,
-                            'width'           => 410,
-                            'hide_title'      => true);
+               $opt = ['short_classname' => $short_classname,
+                       'f_name'          => $f_name,
+                       'gtype'           => $gtype,
+                       'width'           => 410,
+                       'hide_title'      => true];
                $common = new PluginMreportingCommon();
                ob_start();
                $report_script = $common->showGraph($opt);
@@ -268,7 +268,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
    public static function CurrentUserHaveDashboard() {
       $dashboard = new PluginMreportingDashboard();
-      return (count($dashboard->find("users_id = ".$_SESSION['glpiID'])) > 0);
+      return (count($dashboard->find(['users_id' => $_SESSION['glpiID']])) > 0);
    }
 
    function getFormForColumn() {
@@ -283,7 +283,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
    static function removeReportFromDashboard($id) {
       $report = new PluginMreportingDashboard();
-      return $report->delete(array("id" => $id));
+      return $report->delete(["id" => $id]);
    }
 
    static function updateWidget($idreport) {
@@ -312,7 +312,7 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       if (!empty($short_classname) && !empty($f_name)) {
          if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-            $opt = array('short_classname' => $short_classname , 'f_name' =>$f_name , 'gtype' => $gtype );
+            $opt = ['short_classname' => $short_classname , 'f_name' =>$f_name , 'gtype' => $gtype ];
             $dash = new PluginMreportingDashboard();
             $out = $dash->showGraphOnDashboard($opt);
 
