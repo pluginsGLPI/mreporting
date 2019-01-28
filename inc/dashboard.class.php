@@ -100,10 +100,10 @@ class PluginMreportingDashboard extends CommonDBTM {
 
       //echo "<button id='addReport_button' class='m_right'></button>";
       echo "<div class='m_dashboard_controls'>";
-      echo "<div class='add_report' id='addReport_button'><span>&nbsp;</span></div>";
+      echo "<div class='add_report' id='addReport_button'><i class='fa fa-plus'></i></div>";
       if (!empty($widgets)) {
          echo "<span class='add_report_helptext'>".__("Add a report", 'mreporting').
-              " &#xf061;</span>";
+              " <i class='fa fa-arrow-right'></i></span>";
       }
       echo "</div>";
       echo "<div id='addReport_dialog'>".$this->getFormForColumn()."</div>

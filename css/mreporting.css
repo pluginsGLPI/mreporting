@@ -180,16 +180,14 @@ select[name=graphmenu] option {
    display: inline-block;
 }
 
-.add_report span:before {
+.add_report i.fa {
    text-align: center;
    font-size: 2em;
-   content: "\f067";
    padding-top: 4px;
    width: 100%;
-   display: block;
 }
 
-.add_report:hover span:before {
+.add_report:hover i.fa {
    color: white;
 }
 
