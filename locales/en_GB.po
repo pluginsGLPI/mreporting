@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2018 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2019 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2018.
+# Automatically generated, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 13:22+0000\n"
-"PO-Revision-Date: 2018-10-26 13:22+0000\n"
+"POT-Creation-Date: 2019-02-15 10:17+0000\n"
+"PO-Revision-Date: 2019-02-15 10:17+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: front/preference.form.php:45 front/config.php:45 inc/profile.class.php:38
 #: inc/notification.class.php:18 inc/common.class.php:49
 #: inc/notificationtargetnotification.class.php:8 inc/preference.class.php:182
-#: setup.php:163 test.php:4
+#: setup.php:168 test.php:4
 msgid "More Reporting"
 msgstr "More Reporting"
 
@@ -213,15 +213,15 @@ msgstr "No model available"
 msgid "No graphic selected"
 msgstr "No graphic selected"
 
-#: inc/common.class.php:1395
+#: inc/common.class.php:1402
 msgid "Week"
 msgstr "Week"
 
-#: inc/common.class.php:1396
+#: inc/common.class.php:1403
 msgid "Month"
 msgstr "Month"
 
-#: inc/common.class.php:1509
+#: inc/common.class.php:1516
 msgid "Max depth entity level"
 msgstr "Max depth entity level"
 
