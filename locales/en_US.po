@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Shawn Long <webaccounts@kkg.org>, 2017-2018
+# Shawn Long <webaccounts@kkg.org>, 2017-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 13:22+0000\n"
-"PO-Revision-Date: 2018-06-28 08:41+0000\n"
-"Last-Translator: Cédric Anne\n"
+"POT-Creation-Date: 2019-02-15 10:17+0000\n"
+"PO-Revision-Date: 2019-02-07 13:56+0000\n"
+"Last-Translator: Shawn Long <webaccounts@kkg.org>\n"
 "Language-Team: English (United States) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/en_US/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: front/preference.form.php:45 front/config.php:45 inc/profile.class.php:38
 #: inc/notification.class.php:18 inc/common.class.php:49
 #: inc/notificationtargetnotification.class.php:8 inc/preference.class.php:182
-#: setup.php:163 test.php:4
+#: setup.php:168 test.php:4
 msgid "More Reporting"
 msgstr "More Reporting"
 
@@ -39,11 +39,11 @@ msgstr "No report is available !"
 
 #: ajax/dropdownExport.php:41 inc/common.class.php:504
 msgid "With data"
-msgstr "With data"
+msgstr "With Data"
 
 #: ajax/dropdownExport.php:42 inc/common.class.php:503
 msgid "Without data"
-msgstr "Without data"
+msgstr "Without Data"
 
 #: ajax/homepage_link.php:8 inc/dashboard.class.php:35 inc/common.class.php:60
 #: inc/common.class.php:61 inc/common.class.php:73
@@ -62,7 +62,7 @@ msgstr "No data for this date range !"
 #: inc/profile.class.php:70 inc/profile.class.php:218
 #: inc/profile.class.php:290
 msgid "Rights management"
-msgstr "Rights management"
+msgstr "Rights Management"
 
 #: inc/config.class.php:38
 msgid "Configuration"
@@ -70,15 +70,15 @@ msgstr "Configuration"
 
 #: inc/config.class.php:82 inc/config.class.php:688
 msgid "See area"
-msgstr "See area"
+msgstr "See Area"
 
 #: inc/config.class.php:91 inc/config.class.php:703 inc/config.class.php:715
 msgid "Curve lines (SVG)"
-msgstr "Curve lines (SVG)"
+msgstr "Curve Lines (SVG)"
 
 #: inc/config.class.php:100
 msgid "See values"
-msgstr "See values"
+msgstr "See Values"
 
 #: inc/config.class.php:110 inc/config.class.php:730
 msgid "Reverse data array"
@@ -90,11 +90,11 @@ msgstr "Unit"
 
 #: inc/config.class.php:126 inc/config.class.php:752
 msgid "Default delay"
-msgstr "Default delay"
+msgstr "Default Delay"
 
 #: inc/config.class.php:133 inc/config.class.php:760
 msgid "Additional condition for MySQL"
-msgstr "Additional condition for MySQL"
+msgstr "Additional Condition for MySQL/MariaDB"
 
 #: inc/config.class.php:140 inc/config.class.php:668
 msgid "See graphic"
@@ -106,7 +106,7 @@ msgstr "Class"
 
 #: inc/config.class.php:157
 msgid "Default chart format"
-msgstr ""
+msgstr "Default Chart Format"
 
 #: inc/config.class.php:166 inc/config.class.php:769
 msgid "Send this report with the notification"
@@ -141,7 +141,7 @@ msgstr "\n<p>Hello,</p>\n\n<p>GLPI reports are available.<br />\nYou will find a
 
 #: inc/notification.class.php:46 inc/pdf.class.php:15
 msgid "GLPI statistics reports"
-msgstr "GLPI statistics reports"
+msgstr "GLPI Statistics Reports"
 
 #: inc/notification.class.php:47
 msgid ""
@@ -205,15 +205,15 @@ msgstr "No model available"
 msgid "No graphic selected"
 msgstr "No graphic selected"
 
-#: inc/common.class.php:1395
+#: inc/common.class.php:1402
 msgid "Week"
 msgstr "Week"
 
-#: inc/common.class.php:1396
+#: inc/common.class.php:1403
 msgid "Month"
 msgstr "Month"
 
-#: inc/common.class.php:1509
+#: inc/common.class.php:1516
 msgid "Max depth entity level"
 msgstr "Max depth entity level"
 
