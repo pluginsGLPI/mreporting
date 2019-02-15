@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-26 13:22+0000\n"
+"POT-Creation-Date: 2019-02-15 10:17+0000\n"
 "PO-Revision-Date: 2018-06-28 08:41+0000\n"
 "Last-Translator: Cédric Anne\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/pt_BR/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: front/preference.form.php:45 front/config.php:45 inc/profile.class.php:38
 #: inc/notification.class.php:18 inc/common.class.php:49
 #: inc/notificationtargetnotification.class.php:8 inc/preference.class.php:182
-#: setup.php:163 test.php:4
+#: setup.php:168 test.php:4
 msgid "More Reporting"
 msgstr "Mais Relatórios"
 
@@ -207,15 +207,15 @@ msgstr "Nenhum modelo disponível!"
 msgid "No graphic selected"
 msgstr "Gráfico não selecionado"
 
-#: inc/common.class.php:1395
+#: inc/common.class.php:1402
 msgid "Week"
 msgstr "Semana"
 
-#: inc/common.class.php:1396
+#: inc/common.class.php:1403
 msgid "Month"
 msgstr "Mês"
 
-#: inc/common.class.php:1509
+#: inc/common.class.php:1516
 msgid "Max depth entity level"
 msgstr "Nível máximo de entidade"
 
