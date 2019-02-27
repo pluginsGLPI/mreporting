@@ -131,11 +131,6 @@ function plugin_init_mreporting() {
 
       }
 
-      // Add specific files to add to the header : javascript
-      $PLUGIN_HOOKS['add_javascript']['mreporting'] = ["lib/protovis/protovis.min.js",
-                                                       "lib/protovis-msie/protovis-msie.min.js",
-                                                       "lib/jquery.tipsy/jquery.tipsy.min.js",
-                                                       "lib/jquery.tipsy/tipsy.js"];
       if (isset($_SESSION['glpiactiveprofile']['id']) && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
          if (PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
             $PLUGIN_HOOKS['add_javascript']['mreporting'][] = 'js/helpdesk-menu.js'; //This need Ext js lib !
@@ -145,9 +140,21 @@ function plugin_init_mreporting() {
          $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
       }
 
-      //Add specific files to add to the header : css
-      $PLUGIN_HOOKS['add_css']['mreporting'] = ["css/mreporting.css",
-                                                "lib/jquery.tipsy/jquery.tipsy.css"];
+      if (strpos($_SERVER['REQUEST_URI'], "plugins/mreporting") !== false) {
+         // Add specific files to add to the header : javascript
+         $PLUGIN_HOOKS['add_javascript']['mreporting'] = [
+            "lib/protovis/protovis.min.js",
+            "lib/protovis-msie/protovis-msie.min.js",
+            "lib/jquery.tipsy/jquery.tipsy.min.js",
+            "lib/jquery.tipsy/tipsy.js"
+         ];
+
+         //Add specific files to add to the header : css
+         $PLUGIN_HOOKS['add_css']['mreporting'] = [
+            "css/mreporting.css",
+            "lib/jquery.tipsy/jquery.tipsy.css"
+         ];
+      }
 
       if (DEBUG_MREPORTING && isset($_SESSION['glpimenu'])) {
          unset($_SESSION['glpimenu']);
