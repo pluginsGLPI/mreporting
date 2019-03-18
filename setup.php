@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define ('PLUGIN_MREPORTING_VERSION', '1.6.0');
+define ('PLUGIN_MREPORTING_VERSION', '1.6.1');
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_MREPORTING_MIN_GLPI", "9.4");
@@ -147,7 +147,6 @@ function plugin_init_mreporting() {
 
       //Add specific files to add to the header : css
       $PLUGIN_HOOKS['add_css']['mreporting'] = ["css/mreporting.css",
-                                                "lib/font-awesome-4.2.0/css/font-awesome.min.css",
                                                 "lib/jquery.tipsy/jquery.tipsy.css"];
 
       if (DEBUG_MREPORTING && isset($_SESSION['glpimenu'])) {
