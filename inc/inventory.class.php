@@ -822,8 +822,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
 
        $query = "SELECT `id`, `name`
                   FROM `glpi_entities`
-                  WHERE `entities_id` = '".$_SESSION['glpiactive_entity']."'
-                  AND {$this->where_entities_level}
+                  WHERE {$this->where_entities_level}
                   ORDER BY `name`";
        $result = $DB->query($query);
 
