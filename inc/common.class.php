@@ -1682,8 +1682,9 @@ class PluginMreportingCommon extends CommonDBTM {
    static function getReportSelectors($export = false) {
       ob_start();
       self::addToSelector();
-      $graphname = $_REQUEST['f_name'];
-      if (!isset($_SESSION['mreporting_selector'][$graphname])
+      $graphname = isset($_REQUEST['f_name']) ? $_REQUEST['f_name'] : false;
+      if (!$graphname
+         || !isset($_SESSION['mreporting_selector'][$graphname])
          || empty($_SESSION['mreporting_selector'][$graphname])) {
          return;
       }
