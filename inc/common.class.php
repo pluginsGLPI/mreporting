@@ -1796,7 +1796,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', Session::getLoginUserID());
       if ($selectors) {
          $values = json_decode(stripslashes($selectors), true);
-         if (isset($values[$_REQUEST['f_name']])) {
+         if (isset($_REQUEST['f_name']) && isset($values[$_REQUEST['f_name']])) {
             foreach ($values[$_REQUEST['f_name']] as $key => $value) {
                $myvalues[$key] = $value;
             }
