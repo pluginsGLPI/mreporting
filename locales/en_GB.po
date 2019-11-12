@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-15 10:17+0000\n"
-"PO-Revision-Date: 2019-02-15 10:17+0000\n"
+"POT-Creation-Date: 2019-11-12 10:01+0000\n"
+"PO-Revision-Date: 2019-11-12 10:01+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: front/preference.form.php:45 front/config.php:45 inc/profile.class.php:38
 #: inc/notification.class.php:18 inc/common.class.php:49
 #: inc/notificationtargetnotification.class.php:8 inc/preference.class.php:182
-#: setup.php:168 test.php:4
+#: setup.php:174 test.php:4
 msgid "More Reporting"
 msgstr "More Reporting"
 

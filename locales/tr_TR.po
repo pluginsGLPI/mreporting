@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2015-2018
+# Kaya Zeren <kayazeren@gmail.com>, 2015-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-15 10:17+0000\n"
-"PO-Revision-Date: 2018-07-12 13:34+0000\n"
+"POT-Creation-Date: 2019-11-12 10:01+0000\n"
+"PO-Revision-Date: 2019-07-30 23:48+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/tr_TR/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: front/preference.form.php:45 front/config.php:45 inc/profile.class.php:38
 #: inc/notification.class.php:18 inc/common.class.php:49
 #: inc/notificationtargetnotification.class.php:8 inc/preference.class.php:182
-#: setup.php:168 test.php:4
+#: setup.php:174 test.php:4
 msgid "More Reporting"
 msgstr "Diğer Raporlar"
 
@@ -66,7 +66,7 @@ msgstr "İzin yönetimi"
 
 #: inc/config.class.php:38
 msgid "Configuration"
-msgstr "Ayarlar"
+msgstr "Yapılandırma"
 
 #: inc/config.class.php:82 inc/config.class.php:688
 msgid "See area"
@@ -114,7 +114,7 @@ msgstr "Bu raporu bildirim ile gönder"
 
 #: inc/config.class.php:252
 msgid "Initialize graphics configuration"
-msgstr "Çizelge ayarlarını yap"
+msgstr "Çizelge yapılandırmasını başlat"
 
 #: inc/config.class.php:489 inc/config.class.php:504
 msgid "On mouse over"
@@ -174,7 +174,7 @@ msgstr "Eklenecek bir rapor seçin"
 
 #: inc/dashboard.class.php:223
 msgid "Configure report"
-msgstr "Rapor ayarları"
+msgstr "Rapor yapılandırması"
 
 #: inc/helpdesk.class.php:284 inc/helpdesk.class.php:343
 msgid "Undefined"
