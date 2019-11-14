@@ -318,7 +318,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   GROUP BY period
                   ORDER BY period";
             $res = $DB->query($sql_status);
-            while ($data = $DB->fetch_assoc($res)) {
+            while ($data = $DB->fetchAssoc($res)) {
                $tab[$data['period']][$status_name] = $data['nb'];
                $labels2[$data['period']] = $data['period_name'];
             }
@@ -368,7 +368,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   GROUP BY group_name
                   ORDER BY group_name";
             $res = $DB->query($sql_status);
-            while ($data = $DB->fetch_assoc($res)) {
+            while ($data = $DB->fetchAssoc($res)) {
                if (empty($data['group_name'])) {
                   $data['group_name'] = __("None");
                }
@@ -426,7 +426,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   GROUP BY name
                   ORDER BY name";
             $res = $DB->query($sql_create);
-            while ($data = $DB->fetch_assoc($res)) {
+            while ($data = $DB->fetchAssoc($res)) {
                $data['name'] = empty($data['completename']) ? __("None") : $data['completename'];
 
                if (!isset($tab[$data['name']][$status_name])) {
@@ -478,7 +478,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                      ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
 
       $res = $DB->query($sql_create);
-      while ($data = $DB->fetch_assoc($res)) {
+      while ($data = $DB->fetchAssoc($res)) {
          if (empty($data['completename'])) {
             $data['completename'] = __("None");
          }
@@ -513,7 +513,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                      ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
 
       $res = $DB->query($sql_create);
-      while ($data = $DB->fetch_assoc($res)) {
+      while ($data = $DB->fetchAssoc($res)) {
          if (empty($data['completename'])) {
             $data['completename'] = __("None");
          }
@@ -564,7 +564,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $result = $DB->query($query);
 
       $datas['datas'] = [];
-      while ($ticket = $DB->fetch_assoc($result)) {
+      while ($ticket = $DB->fetchAssoc($result)) {
          $datas['labels2'][$ticket['nb_add_group']] = $ticket['nb_add_group'];
          $datas['datas'][__("Number of tickets")][$ticket['nb_add_group']] = $ticket['nb_ticket'];
       }
@@ -650,7 +650,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $res_date = $DB->query($query_date);
 
          $dates = [];
-         while ($data = $DB->fetch_assoc($res_date)) {
+         while ($data = $DB->fetchAssoc($res_date)) {
             $dates[$data['period']] = $data['period'];
          }
 
@@ -681,7 +681,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $query .= "GROUP BY `glpi_slas`.name, period, respected_sla";
 
          $result = $DB->query($query);
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $datas['labels2'][$data['period']] = $data['period_name'];
             if ($data['respected_sla'] == 'ok') {
                $value = $this->lcl_slaok;
@@ -740,7 +740,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          LIMIT " . $category_limit;
 
          $result_categories = $DB->query($query_categories);
-         while ($data = $DB->fetch_assoc($result_categories)) {
+         while ($data = $DB->fetchAssoc($result_categories)) {
             $categories[] = $data['id'];
          }
       }
@@ -766,7 +766,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          ORDER BY nb DESC";
 
       $result = $DB->query($query);
-      while ($data = $DB->fetch_assoc($result)) {
+      while ($data = $DB->fetchAssoc($result)) {
          $value = ($data['respected_sla'] == 'ok') ? $this->lcl_slaok
                                                    : $this->lcl_slako;
          $datas['datas'][$data['name']][$value] = $data['nb'];
@@ -811,7 +811,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          ORDER BY nb DESC";
 
       $result = $DB->query($query);
-      while ($data = $DB->fetch_assoc($result)) {
+      while ($data = $DB->fetchAssoc($result)) {
          if ($data['respected_sla'] == 'ok') {
             $value = $this->lcl_slaok;
          } else {
@@ -940,7 +940,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             GROUP BY `glpi_groups_tickets`.groups_id, respected_sla;";
          $result = $DB->query($query);
 
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $gp = new Group();
             $gp->getFromDB($data['groups_id']);
 
@@ -1018,7 +1018,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                      GROUP BY `glpi_slas`.name, respected_sla;";
 
          $result = $DB->query($query);
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $tmp_datas[$data['name']][$data['respected_sla']] = $data['nb'];
          }
 

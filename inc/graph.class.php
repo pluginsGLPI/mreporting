@@ -55,7 +55,7 @@ class PluginMreportingGraph {
          echo "<div class='graph_title'>";
          $gtype = $_REQUEST['gtype'];
 
-         echo "<img src='".$CFG_GLPI['root_doc']."/plugins/mreporting/pics/chart-$gtype.png' class='title_pics' />";
+         echo "<img src='".Plugin::getWebDir('mreporting')."/pics/chart-$gtype.png' class='title_pics' />";
          echo $options['title'];
          echo "</div>";
 
