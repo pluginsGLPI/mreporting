@@ -117,6 +117,7 @@ class PluginMreportingConfig extends CommonDBTM {
          'table'              => $this->getTable(),
          'field'              => 'unit',
          'name'               => __('Unit', 'mreporting'),
+         'autocomplete'       => true,
       ];
 
       $tab[] = [
@@ -124,6 +125,7 @@ class PluginMreportingConfig extends CommonDBTM {
          'table'              => $this->getTable(),
          'field'              => 'default_delay',
          'name'               => __('Default delay', 'mreporting'),
+         'autocomplete'       => true,
       ];
 
       $tab[] = [
@@ -131,6 +133,7 @@ class PluginMreportingConfig extends CommonDBTM {
          'table'              => $this->getTable(),
          'field'              => 'condition',
          'name'               => __('Additional condition for MySQL', 'mreporting'),
+         'autocomplete'       => true,
       ];
 
       $tab[] = [
