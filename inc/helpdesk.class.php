@@ -66,7 +66,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $result = $DB->query($query);
 
-      while ($ticket = $DB->fetch_assoc($result)) {
+      while ($ticket = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          if (empty($ticket['name'])) {
             $label = __("Root entity");
          } else {
@@ -111,7 +111,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $res_cat = $DB->query($query_cat);
 
       $categories = [];
-      while ($data = $DB->fetch_assoc($res_cat)) {
+      while ($data = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($res_cat) : $DB->fetch_assoc($res_cat))) {
          if (empty($data['category'])) {
             $data['category'] = __("None");
          }
@@ -145,7 +145,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       GROUP BY glpi_entities.name, glpi_tickets.itilcategories_id
       ORDER BY glpi_entities.name ASC, glpi_tickets.itilcategories_id ASC";
       $res = $DB->query($query);
-      while ($data = $DB->fetch_assoc($res)) {
+      while ($data = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($res) : $DB->fetch_assoc($res))) {
          if (empty($data['entity'])) {
             $data['entity'] = __("Root entity");
          }
@@ -243,7 +243,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
                   AND glpi_tickets.status ='{$key}'";
             $result = $DB->query($query);
 
-            while ($ticket = $DB->fetch_assoc($result)) {
+            while ($ticket = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
                $datas['datas'][$val] = $ticket['count'];
             }
          }
@@ -279,7 +279,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ORDER BY count DESC
          LIMIT 10";
       $result = $DB->query($query);
-      while ($ticket = $DB->fetch_assoc($result)) {
+      while ($ticket = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          if ($ticket['users_id']==0) {
             $label = __("Undefined", 'mreporting');
          } else {
@@ -334,7 +334,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       $result = $DB->query($query);
 
       $datas['datas'] = [];
-      while ($ticket = $DB->fetch_assoc($result)) {
+      while ($ticket = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          if (is_null($ticket['category_id'])) {
             $ticket['category_id'] = 0;
             $ticket['category_name'] = __("None");
@@ -395,7 +395,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
             ORDER BY glpi_groups.name";
          $result = $DB->query($query);
 
-         while ($ticket = $DB->fetch_assoc($result)) {
+         while ($ticket = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
             $datas['datas'][$ticket['group_name']][$filter['label']] = $ticket['count'];
          }
 
@@ -446,7 +446,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ORDER BY glpi_itilcategories.name";
       $result = $DB->query($query);
 
-      while ($ticket = $DB->fetch_assoc($result)) {
+      while ($ticket = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          if (is_null($ticket['category_name'])) {
             $ticket['category_name'] = __("None");
          }
@@ -501,7 +501,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       GROUP BY period
       ORDER BY period";
       $res = $DB->query($query);
-      while ($data = $DB->fetch_assoc($res)) {
+      while ($data = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($res) : $DB->fetch_assoc($res))) {
          $datas['datas'][$data['period_name']] = $data['nb'];
       }
 
@@ -555,7 +555,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       ORDER BY `date` ASC";
       $res_date = $DB->query($query_date);
       $dates = [];
-      while ($data = $DB->fetch_assoc($res_date)) {
+      while ($data = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($res_date) : $DB->fetch_assoc($res_date))) {
          $dates[$data['period']] = $data['period'];
       }
 
@@ -577,7 +577,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
       GROUP BY period, status
       ORDER BY period, status";
       $res = $DB->query($query);
-      while ($data = $DB->fetch_assoc($res)) {
+      while ($data = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($res) : $DB->fetch_assoc($res))) {
          $status =Ticket::getStatus($data['status']);
          $datas['labels2'][$data['period']] = $data['period_name'];
          $datas['datas'][$status][$data['period']] = $data['nb'];
@@ -625,7 +625,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          GROUP BY glpi_itilcategories.id
          ORDER BY glpi_itilcategories.name";
       $res = $DB->query($query);
-      while ($data = $DB->fetch_assoc($res)) {
+      while ($data = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($res) : $DB->fetch_assoc($res))) {
          $flat_datas[$data['id']] = $data;
       }
 
@@ -684,7 +684,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ORDER BY fullname, username";
       $result = $DB->query($query);
 
-      while ($technician = $DB->fetch_assoc($result)) {
+      while ($technician = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($$result))) {
          $technicians[] = ['username' => $technician['username'],
                            'fullname' => $technician['fullname'],
                            ];
@@ -721,7 +721,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
          ORDER BY technician, username";
       $result = $DB->query($query);
 
-      while ($ticket = $DB->fetch_assoc($result)) {
+      while ($ticket = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($$result))) {
          if (is_null($ticket['technician'])) {
             $ticket['technician'] = __("None");
          }
@@ -763,7 +763,7 @@ class PluginMreportingHelpdesk Extends PluginMreportingBaseclass {
 
       $result = $DB->query($query);
 
-      while ($ticket = $DB->fetch_assoc($result)) {
+      while ($ticket = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($$result))) {
          if (empty($ticket['name'])) {
             $label = __("None");
          } else {

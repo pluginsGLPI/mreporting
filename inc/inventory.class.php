@@ -127,7 +127,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $result = $DB->query($query);
 
       $datas = [];
-      while ($computer = $DB->fetch_assoc($result)) {
+      while ($computer = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          if ($computer['Total']) {
             $percent = round($computer['Percent'], 2);
             $datas['datas'][$computer['Manufacturer']." ($percent %)"] = $computer['Total'];
@@ -174,7 +174,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          ORDER BY Total DESC";
       $result = $DB->query($query);
       $datas = [];
-      while ($computer = $DB->fetch_assoc($result)) {
+      while ($computer = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          $percent = round($computer['Percent'], 2);
          $datas['datas'][$computer['Type']." ($percent %)"] = $computer['Total'];
       }
@@ -294,7 +294,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
             $sql_states";
       $result = $DB->query($query);
 
-      while ($computer = $DB->fetch_assoc($result)) {
+      while ($computer = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          $percent = round($computer['Percent'], 2);
 
          $datas['datas'][__($computer['Age'], 'mreporting')." ($percent %)"] = $computer['Total'];
@@ -387,7 +387,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
         $result = $DB->query($query);
 
         $datas = [];
-      while ($computer = $DB->fetch_assoc($result)) {
+      while ($computer = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
           $percent = round($computer['Percent'], 2);
          if ($computer['Total']) {
             $datas['datas'][$computer['OS']." ($percent %)"] = $computer['Total'];
@@ -762,7 +762,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          GROUP BY t.`name`";
       $result = $DB->query($query);
       $datas = [];
-      while ($computer = $DB->fetch_assoc($result)) {
+      while ($computer = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          $percent = round($computer['Percent'], 2);
          $datas['datas'][$computer['status']." ($percent %)"] = $computer['Total'];
       }
@@ -787,7 +787,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                 GROUP BY t.name";
       $result = $DB->query($query);
 
-      while ($printer = $DB->fetch_assoc($result)) {
+      while ($printer = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          $pourcentage = round($printer['Pourcentage'], 2);
          $datas['datas'][$printer['status']." ($pourcentage %)"] = $printer['Total'];
       }
@@ -818,7 +818,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                   ORDER BY `name`";
        $result = $DB->query($query);
 
-      while ($data = $DB->fetch_assoc($result)) {
+      while ($data = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          $entities_first_level[$data['id']] = $data['name'];
       }
         $entities = [];
@@ -835,7 +835,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
                      AND `is_template` = 0";
             $result = $DB->query($query);
 
-         while ($computer = $DB->fetch_assoc($result)) {
+         while ($computer = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
             $datas['tmp'][$entities_name." (pourcentage %)"] = $computer['Total'];
             $entities[$entities_name." (pourcentage %)"] = $entities_id;
          }

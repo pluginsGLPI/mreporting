@@ -1382,7 +1382,8 @@ class PluginMreportingCommon extends CommonDBTM {
       $result = $DB->query($query);
 
       $values = [];
-      while ($data = $DB->fetch_assoc($result)) {
+
+      while ($data = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          $values[$data['id']] = $data['name'];
       }
 

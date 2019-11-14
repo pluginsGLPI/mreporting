@@ -53,7 +53,7 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
                      LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
                      GROUP BY plugin_tag_tags_id
                      ORDER BY count_tag DESC");
-      while ($datas_tag = $DB->fetch_assoc($result)) {
+      while ($datas_tag = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          $label = $datas_tag['name'];
          $datas['datas'][$label] = $datas_tag['count_tag'];
       }
@@ -91,7 +91,7 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
                            $sql_itilcat
                            GROUP BY plugin_tag_tags_id
                            ORDER BY count_tag DESC");
-      while ($datas_tag = $DB->fetch_assoc($result)) {
+      while ($datas_tag = (method_exists($DB, 'fetchAssoc') ? $DB->fetchAssoc($result) : $DB->fetch_assoc($result))) {
          $label = $datas_tag['name'];
          $datas['datas'][$label] = $datas_tag['count_tag'];
       }
