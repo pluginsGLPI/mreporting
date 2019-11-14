@@ -53,7 +53,8 @@ class PluginMreportingPreference extends CommonDBTM {
     * @return preference value or 0
     */
    static function checkPreferenceValue($field, $users_id = 0) {
-      $data = getAllDatasFromTable(getTableForItemType(__CLASS__), ['users_id' => $users_id]);
+      $getAllFct = function_exists('getAllDataFromTable') ? 'getAllDataFromTable' : 'getAllDatasFromTable';
+      $data = $getAllFct(getTableForItemType(__CLASS__), ['users_id' => $users_id]);
       if (!empty($data)) {
          $first = array_pop($data);
          return $first[$field];
