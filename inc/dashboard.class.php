@@ -51,8 +51,8 @@ class PluginMreportingDashboard extends CommonDBTM {
             }
          </script>";
 
-         echo "<iframe src='".$CFG_GLPI['root_doc'].
-              "/plugins/mreporting/ajax/dashboard.php?action=centralDashboard' ".
+         echo "<iframe src='".Plugin::getWebDir('mreporting').
+              "/ajax/dashboard.php?action=centralDashboard' ".
               "frameborder='0' scrolling='no' onload='javascript:resizeIframe(this);'></iframe>";
          echo "</div>";
       }
@@ -62,7 +62,7 @@ class PluginMreportingDashboard extends CommonDBTM {
    function showDashBoard($show_reports_dropdown = true) {
       global $LANG, $CFG_GLPI;
 
-      $root_ajax = $CFG_GLPI['root_doc']."/plugins/mreporting/ajax/dashboard.php";
+      $root_ajax = Plugin::getWebDir('mreporting')."/ajax/dashboard.php";
 
       if (isset($options['target'])) {
          $target = $options['target'];
@@ -250,7 +250,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                <button id='closeWidget_button$rand_widget' class='m_right'></button>
                <button id='configWidget_button$rand_widget' class='m_right'></button>
                <span class='mreportingwidget-header-text'>
-                  <a href='".$CFG_GLPI['root_doc']."/plugins/mreporting/front/graph.php?short_classname=".
+                  <a href='".Plugin::getWebDir('mreporting')."/front/graph.php?short_classname=".
                   $short_classname."&amp;f_name=".$f_name."&amp;gtype=".$gtype."' target='_top'>
                      &nbsp;$title
                   </a>

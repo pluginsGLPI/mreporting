@@ -38,7 +38,7 @@ function plugin_mreporting_install() {
    $version   = plugin_version_mreporting();
    $migration = new Migration($version['version']);
 
-   include_once(GLPI_ROOT."/plugins/mreporting/inc/profile.class.php");
+   include_once(Plugin::getPhpDir('mreporting')."/inc/profile.class.php");
 
    //create profiles table
    $queries = [];
@@ -118,7 +118,7 @@ function plugin_mreporting_install() {
       `notice`INT(11) NOT NULL DEFAULT 0,
       `alert` INT(11) NOT NULL DEFAULT 0,
       `comment` text collate utf8_unicode_ci,
-      `date_mod` datetime default NULL,
+      `date_mod` timestamp NULL default NULL,
       `is_deleted` tinyint(1) NOT NULL default '0',
       PRIMARY KEY  (`id`)
       ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
@@ -275,7 +275,7 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num) {
                   $short_classname = '';
                   $f_name = '';
 
-                  $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
+                  $inc_dir = Plugin::getPhpDir('mreporting')."/inc";
                   //parse inc dir to search report classes
                   $classes = PluginMreportingCommon::parseAllClasses($inc_dir);
 
