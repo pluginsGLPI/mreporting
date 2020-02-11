@@ -292,7 +292,7 @@ class PluginMreportingCommon extends CommonDBTM {
                            if ($setIdInOptionsValues) {
                               $option_value = $value['id'];
                            }
-                           $icon = self::getIcon($value['function']);
+                           $icon = self::getReportIcon($value['function']);
                            $select .= "<option value='$option_value' title=\"".
                                      Html::cleanInputText($comment).
                                      "\">&nbsp;&nbsp;&nbsp;".$icon."&nbsp;".
@@ -1994,7 +1994,7 @@ class PluginMreportingCommon extends CommonDBTM {
       return $tree;
    }
 
-   static function getIcon($report_name) {
+   static function getReportIcon($report_name) {
       //see font-awesome : http://fortawesome.github.io/Font-Awesome/cheatsheet/
       $icons = [
          'pie'       => "&#xf200",
