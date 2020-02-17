@@ -9,6 +9,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    protected   $sql_group_assign,
                $sql_group_request,
                $sql_user_assign,
+			   $sql_user_assign_sla,
                $sql_type,
                $sql_itilcat,
                $sql_join_cat,
@@ -26,6 +27,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $this->sql_group_assign  = "1=1";
       $this->sql_group_request = "1=1";
       $this->sql_user_assign   = "1=1";
+	  $this->sql_user_assign_sla   = "1=1";
       $this->sql_type          = "glpi_tickets.type IN (".Ticket::INCIDENT_TYPE.", ".Ticket::DEMAND_TYPE.")";
       $this->sql_itilcat       = "1=1";
       $this->sql_join_cat      = "LEFT JOIN glpi_itilcategories cat
@@ -85,6 +87,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       if (isset($mr_values['users_assign_id'])
           && $mr_values['users_assign_id'] > 0) {
          $this->sql_user_assign = "tu.users_id = ".$mr_values['users_assign_id'];
+		 $this->sql_user_assign_sla = "glpi_users.id= ".$mr_values['users_assign_id'];
+		 
       }
 
       if (isset($mr_values['type'])
@@ -500,14 +504,14 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
    function reportHbarTopapplicant($config = []) {
       global $DB;
 
-      $_SESSION['mreporting_selector']['reportHbarTopapplicant'] = ['dateinterval', 'limit', 'type'];
+      $_SESSION['mreporting_selector']['reportHbarTopapplicant'] = ['dateinterval', 'type'];
 
       $tab = [];
       $datas = [];
 
       $sql_create = "SELECT DISTINCT gt.groups_id,
                   COUNT(DISTINCT glpi_tickets.id) AS nb,
-                  g.completename
+                  RIGHT(g.completename, LENGTH(g.completename) - INSTR(g.completename, '>')) AS COMPN
                FROM glpi_tickets
                {$this->sql_join_gt}
                {$this->sql_join_g}
@@ -515,18 +519,19 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                   AND {$this->sql_type}
                   AND glpi_tickets.entities_id IN ({$this->where_entities})
                   AND glpi_tickets.is_deleted = '0'
+				  AND g.completename like '%SOPORTE NIVEL 2 >%'
                GROUP BY g.completename
-               ORDER BY nb DESC
-               LIMIT 0, ";
-      $sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit']))
-                     ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
+               ORDER BY nb DESC";
+      /*$sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit']))
+                     ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;*/
+					 
 
       $res = $DB->query($sql_create);
       while ($data = $DB->fetch_assoc($res)) {
-         if (empty($data['completename'])) {
-            $data['completename'] = __("None");
+         if (empty($data['COMPN'])) {
+            $data['COMPN'] = __("None");
          }
-         $datas['datas'][$data['completename']] = $data['nb'];
+         $datas['datas'][$data['COMPN']] = $data['nb'];
       }
 
       return $datas;
@@ -798,7 +803,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $area = false;
       $datas = [];
 
-      $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTechnician'] = ['dateinterval'];
+      $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTechnician'] = ['dateinterval','userassign'];
 
       $query = "SELECT
             CONCAT(`glpi_users`.firstname, ' ', `glpi_users`.realname) as fullname,
@@ -816,6 +821,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          WHERE " . $this->sql_date_create . "
          AND `glpi_tickets`.entities_id IN ({$this->where_entities})
          AND `glpi_tickets`.is_deleted = '0'
+		 AND {$this->sql_user_assign_sla}
          GROUP BY respected_sla, `glpi_users`.id
          ORDER BY nb DESC";
 
