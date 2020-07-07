@@ -26,15 +26,19 @@
  --------------------------------------------------------------------------
  */
 
-define ('PLUGIN_MREPORTING_VERSION', '1.6.1');
+define ('PLUGIN_MREPORTING_VERSION', '1.7.0');
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_MREPORTING_MIN_GLPI", "9.4");
+define("PLUGIN_MREPORTING_MIN_GLPI", "9.5");
 // Maximum GLPI version, exclusive
-define("PLUGIN_MREPORTING_MAX_GLPI", "9.5");
+define("PLUGIN_MREPORTING_MAX_GLPI", "9.6");
+
+if (!defined('PLUGIN_MREPORTING_DIR')) {
+   define("PLUGIN_MREPORTING_DIR", __DIR__ );
+}
 
 if (!defined('PLUGIN_MREPORTING_TEMPLATE_DIR')) {
-   define("PLUGIN_MREPORTING_TEMPLATE_DIR", GLPI_ROOT."/plugins/mreporting/templates/");
+   define("PLUGIN_MREPORTING_TEMPLATE_DIR", PLUGIN_MREPORTING_DIR . "/templates/");
 }
 
 if (!defined('PLUGIN_MREPORTING_TEMPLATE_EXTENSION')) {
@@ -50,7 +54,7 @@ if (isset($_SESSION['glpi_use_mode']) && $_SESSION['glpi_use_mode'] == Session::
 if (!defined('PCLZIP_TEMPORARY_DIR')) {
    define('PCLZIP_TEMPORARY_DIR', GLPI_DOC_DIR . '/_tmp/pclzip');
 }
-include_once GLPI_ROOT . "/plugins/mreporting/vendor/autoload.php";
+include_once __DIR__ . "/vendor/autoload.php";
 
 
 /**
@@ -131,11 +135,6 @@ function plugin_init_mreporting() {
 
       }
 
-      // Add specific files to add to the header : javascript
-      $PLUGIN_HOOKS['add_javascript']['mreporting'] = ["lib/protovis/protovis.min.js",
-                                                       "lib/protovis-msie/protovis-msie.min.js",
-                                                       "lib/jquery.tipsy/jquery.tipsy.min.js",
-                                                       "lib/jquery.tipsy/tipsy.js"];
       if (isset($_SESSION['glpiactiveprofile']['id']) && $_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
          if (PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])) {
             $PLUGIN_HOOKS['add_javascript']['mreporting'][] = 'js/helpdesk-menu.js'; //This need Ext js lib !
@@ -145,9 +144,21 @@ function plugin_init_mreporting() {
          $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
       }
 
-      //Add specific files to add to the header : css
-      $PLUGIN_HOOKS['add_css']['mreporting'] = ["css/mreporting.css",
-                                                "lib/jquery.tipsy/jquery.tipsy.css"];
+      if (strpos($_SERVER['REQUEST_URI'], "/mreporting/") !== false) {
+         // Add specific files to add to the header : javascript
+         $PLUGIN_HOOKS['add_javascript']['mreporting'] = [
+            "lib/protovis/protovis.min.js",
+            "lib/protovis-msie/protovis-msie.min.js",
+            "lib/jquery.tipsy/jquery.tipsy.min.js",
+            "lib/jquery.tipsy/tipsy.js"
+         ];
+
+         //Add specific files to add to the header : css
+         $PLUGIN_HOOKS['add_css']['mreporting'] = [
+            "css/mreporting.css",
+            "lib/jquery.tipsy/jquery.tipsy.css"
+         ];
+      }
 
       if (DEBUG_MREPORTING && isset($_SESSION['glpimenu'])) {
          unset($_SESSION['glpimenu']);
@@ -173,14 +184,13 @@ function plugin_version_mreporting() {
          'glpi' => [
             'min' => PLUGIN_MREPORTING_MIN_GLPI,
             'max' => PLUGIN_MREPORTING_MAX_GLPI,
-            'dev' => true, //Required to allow 9.2-dev
          ]
       ]
    ];
 }
 
 function includeAdditionalLanguageFiles() {
-   $translations_path = GLPI_ROOT . "/plugins/mreporting/locales/reports_locales/";
+   $translations_path = __DIR__ . "/locales/reports_locales/";
 
    // Load default translations
    foreach (glob($translations_path . "*_en_GB.php") as $path) {
@@ -193,50 +203,4 @@ function includeAdditionalLanguageFiles() {
           include_once($path);
       }
    }
-}
-
-/**
- * Check pre-requisites before install
- * OPTIONNAL, but recommanded
- *
- * @return boolean
- */
-function plugin_mreporting_check_prerequisites() {
-
-   //Version check is not done by core in GLPI < 9.2 but has to be delegated to core in GLPI >= 9.2.
-   if (!method_exists('Plugin', 'checkGlpiVersion')) {
-      $version = preg_replace('/^((\d+\.?)+).*$/', '$1', GLPI_VERSION);
-      $matchMinGlpiReq = version_compare($version, PLUGIN_MREPORTING_MIN_GLPI, '>=');
-      $matchMaxGlpiReq = version_compare($version, PLUGIN_MREPORTING_MAX_GLPI, '<');
-
-      if (!$matchMinGlpiReq || !$matchMaxGlpiReq) {
-         echo vsprintf(
-            'This plugin requires GLPI >= %1$s and < %2$s.',
-            [
-               PLUGIN_MREPORTING_MIN_GLPI,
-               PLUGIN_MREPORTING_MAX_GLPI,
-            ]
-         );
-         return false;
-      }
-   }
-
-   return true;
-}
-
-/**
- * Check configuration process
- *
- * @param boolean $verbose Whether to display message on failure. Defaults to false
- *
- * @return boolean
- */
-function plugin_mreporting_check_config($verbose = false) {
-   if (true) { // Your configuration check
-      return true;
-   }
-   if ($verbose) {
-      echo _x('plugin', 'Installed / not configured');
-   }
-   return false;
 }

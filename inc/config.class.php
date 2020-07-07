@@ -117,6 +117,7 @@ class PluginMreportingConfig extends CommonDBTM {
          'table'              => $this->getTable(),
          'field'              => 'unit',
          'name'               => __('Unit', 'mreporting'),
+         'autocomplete'       => true,
       ];
 
       $tab[] = [
@@ -124,6 +125,7 @@ class PluginMreportingConfig extends CommonDBTM {
          'table'              => $this->getTable(),
          'field'              => 'default_delay',
          'name'               => __('Default delay', 'mreporting'),
+         'autocomplete'       => true,
       ];
 
       $tab[] = [
@@ -131,6 +133,7 @@ class PluginMreportingConfig extends CommonDBTM {
          'table'              => $this->getTable(),
          'field'              => 'condition',
          'name'               => __('Additional condition for MySQL', 'mreporting'),
+         'autocomplete'       => true,
       ];
 
       $tab[] = [
@@ -230,7 +233,7 @@ class PluginMreportingConfig extends CommonDBTM {
          if ($DB->numrows($result) != 1) {
             return false;
          }
-         $this->fields = $DB->fetch_assoc($result);
+         $this->fields = $DB->fetchAssoc($result);
          if (is_array($this->fields) && count($this->fields)) {
             return true;
          }
@@ -251,7 +254,7 @@ class PluginMreportingConfig extends CommonDBTM {
       if (Session::haveRight('config', READ)) {
          $buttons["config.php?new=1"] = __("Initialize graphics configuration", 'mreporting');
       }
-      Html::displayTitle($CFG_GLPI["root_doc"] . "/plugins/mreporting/pics/config2.png",
+      Html::displayTitle(Plugin::getWebDir('mreporting') . "/pics/config2.png",
                         $title, $title, $buttons);
 
    }
@@ -264,14 +267,14 @@ class PluginMreportingConfig extends CommonDBTM {
       //$reports = array();
       $classConfig = false;
 
-      $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
+      $inc_dir = Plugin::getPhpDir('mreporting') . "/inc";
       //parse inc dir to search report classes
       $classes = PluginMreportingCommon::parseAllClasses($inc_dir);
 
       foreach ($classes as $classname) {
 
          if (!class_exists($classname)) {
-            $class_filedir = GLPI_ROOT."/plugins/mreporting/inc/".
+            $class_filedir = $inc_dir.
                              strtolower(str_replace('PluginMreporting', '', $classname)).".class.php";
             if (file_exists($class_filedir)) {
                require_once $class_filedir;

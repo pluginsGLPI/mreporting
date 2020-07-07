@@ -38,7 +38,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent {
          //Foreach notification
          foreach (Notification::getNotificationsByEventAndType($event, $item->getType(), $entity)
                   as $data) {
-            $targets = getAllDatasFromTable(
+            $targets = getAllDataFromTable(
                'glpi_notificationtargets',
                ['notifications_id' => $data['id']]
             );

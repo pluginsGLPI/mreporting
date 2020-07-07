@@ -26,8 +26,8 @@
  along with mreporting. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
-require_once GLPI_ROOT . '/plugins/mreporting/lib/imagesmootharc/imageSmoothArc.php';
-require_once GLPI_ROOT . '/plugins/mreporting/lib/cubic_splines/classes/CubicSplines.php';
+require_once PLUGIN_MREPORTING_DIR . '/lib/imagesmootharc/imageSmoothArc.php';
+require_once PLUGIN_MREPORTING_DIR . '/lib/cubic_splines/classes/CubicSplines.php';
 
 class PluginMreportingGraphpng extends PluginMreportingGraph {
 
@@ -45,7 +45,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
    private $fontangle = 0;
 
    function __construct() {
-      $this->font = GLPI_ROOT . '/plugins/mreporting/fonts/FreeSans.ttf';
+      $this->font = PLUGIN_MREPORTING_DIR . '/fonts/FreeSans.ttf';
    }
 
 
@@ -81,7 +81,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
             echo "</div>";
          }
          echo "<div class='graph_title'>";
-         echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/mreporting/pics/chart-$prev_function.png' class='title_pics' />";
+         echo "<img src='" . Plugin::getWebDir('mreporting') . "/pics/chart-$prev_function.png' class='title_pics' />";
          echo $options['title'];
          echo "</div>";
 
@@ -293,9 +293,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $new_hex = '';
 
-      $base['R'] = hexdec($color{0}.$color{1});
-      $base['G'] = hexdec($color{2}.$color{3});
-      $base['B'] = hexdec($color{4}.$color{5});
+      $base['R'] = hexdec($color[0].$color[1]);
+      $base['G'] = hexdec($color[2].$color[3]);
+      $base['B'] = hexdec($color[4].$color[5]);
 
       foreach ($base as $k => $v) {
          $amount = $v / 100;
@@ -320,9 +320,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph {
 
       $new_hex = '';
 
-      $base['R'] = hexdec($color{0}.$color{1});
-      $base['G'] = hexdec($color{2}.$color{3});
-      $base['B'] = hexdec($color{4}.$color{5});
+      $base['R'] = hexdec($color[0].$color[1]);
+      $base['G'] = hexdec($color[2].$color[3]);
+      $base['B'] = hexdec($color[4].$color[5]);
 
       foreach ($base as $k => $v) {
          $amount = 255 - $v;
