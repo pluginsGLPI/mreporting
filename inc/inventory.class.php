@@ -321,8 +321,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
       $sql_states   = self::getStateCondition('c.states_id');
       $oses = ['Windows' => 'Windows',
-               'Linux'   => 'Linux|Ubuntu',
-               'openSUSE'  => 'openSUSE',
+               'Linux'   => 'Linux|Ubuntu|openSUSE',
                'Solaris' => 'Solaris',
                'AIX'     => 'AIX',
                'BSD'     => 'BSD',
