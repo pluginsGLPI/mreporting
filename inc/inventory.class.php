@@ -321,7 +321,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
       $sql_states   = self::getStateCondition('c.states_id');
       $oses = ['Windows' => 'Windows',
-               'Linux'   => 'Linux|Ubuntu',
+               'Linux'   => 'Linux|Ubuntu|openSUSE',
                'Solaris' => 'Solaris',
                'AIX'     => 'AIX',
                'BSD'     => 'BSD',
@@ -462,7 +462,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $sql_states2 = self::getStateCondition('c.states_id', true);
 
       $data = [];
-      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%'") as $os) {
+      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%' OR name LIKE '%openSUSE%'") as $os) {
          $iterator = $DB->request(
             'glpi_computers', [
                'SELECT' => [
@@ -516,7 +516,7 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
       $sql_states = self::getStateCondition('glpi_computers.states_id', true);
 
       $data = [];
-      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%'") as $os) {
+      foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%' OR name LIKE '%openSUSE%'") as $os) {
          $number = countElementsInTable(
             'glpi_computers', [
                'INNER JOIN' => [
