@@ -28,7 +28,6 @@ if (isset($_REQUEST['action'])) {
          $version = Plugin::getInfo('mreporting', 'version');
          $php_dir = Plugin::getPhpDir('mreporting', false);
          echo Html::script($php_dir . "/lib/protovis/protovis.min.js", ['version' => $version]);
-         echo Html::script($php_dir . "/lib/protovis-msie/protovis-msie.min.js", ['version' => $version]);
 
          Html::popFooter();
          break;
