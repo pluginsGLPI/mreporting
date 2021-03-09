@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define ('PLUGIN_MREPORTING_VERSION', '1.7.1');
+define ('PLUGIN_MREPORTING_VERSION', '1.7.2');
 
 // Minimal GLPI version, inclusive
 define("PLUGIN_MREPORTING_MIN_GLPI", "9.5");
@@ -147,9 +147,8 @@ function plugin_init_mreporting() {
       if (strpos($_SERVER['REQUEST_URI'], "/mreporting/") !== false) {
          // Add specific files to add to the header : javascript
          $PLUGIN_HOOKS['add_javascript']['mreporting'] = [
-            "lib/protovis/protovis.min.js",
-            "lib/protovis-msie/protovis-msie.min.js",
-            "lib/jquery.tipsy/jquery.tipsy.min.js",
+            "lib/protovis/protovis.js",
+            "lib/jquery.tipsy/jquery.tipsy.js",
             "lib/jquery.tipsy/tipsy.js"
          ];
 

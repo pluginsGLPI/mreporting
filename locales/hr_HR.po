@@ -4,12 +4,13 @@
 # 
 # Translators:
 # milotype <mail@milotype.de>, 2020
+# milotype <mail@milotype.de>, 2020
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-03 19:30+0000\n"
-"PO-Revision-Date: 2020-02-12 16:09+0000\n"
+"POT-Creation-Date: 2021-03-09 15:12+0000\n"
+"PO-Revision-Date: 2020-11-10 12:43+0000\n"
 "Last-Translator: milotype <mail@milotype.de>\n"
 "Language-Team: Croatian (Croatia) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/hr_HR/)\n"
 "MIME-Version: 1.0\n"
@@ -20,9 +21,9 @@ msgstr ""
 
 #: front/dashboard.form.php:34 front/dashboard.form.php:39 front/config.php:45
 #: front/preference.form.php:45 front/graph.php:39 front/central.php:33
-#: front/config.form.php:56 test.php:4 inc/profile.class.php:38
+#: front/config.form.php:56 inc/profile.class.php:38
 #: inc/preference.class.php:182 inc/notificationtargetnotification.class.php:8
-#: inc/common.class.php:49 inc/notification.class.php:18 setup.php:178
+#: inc/common.class.php:49 inc/notification.class.php:18 setup.php:177
 msgid "More Reporting"
 msgstr "Prošireni izvještaji"
 
@@ -100,7 +101,7 @@ msgstr "Odaberi jedan model u svojim postavkama"
 #: inc/common.class.php:61 inc/common.class.php:62 inc/common.class.php:77
 #: inc/dashboard.class.php:35 ajax/homepage_link.php:8
 msgid "Dashboard"
-msgstr "Pregledna ploča"
+msgstr "Nadzorna ploča"
 
 #: inc/common.class.php:64 inc/common.class.php:65 inc/common.class.php:86
 msgid "Reports list"
@@ -254,7 +255,7 @@ msgstr "Odaberi izvještaj koji želiš prikazati"
 
 #: inc/dashboard.class.php:96
 msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "Pregledna ploča je prazna. Dodaj izvještaje klikom na ikonu"
+msgstr "Nadzorna ploča je prazna. Dodaj izvještaje klikom na ikonu"
 
 #: inc/dashboard.class.php:105
 msgid "Add a report"
