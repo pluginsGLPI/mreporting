@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-03 19:30+0000\n"
+"POT-Creation-Date: 2021-03-09 15:12+0000\n"
 "PO-Revision-Date: 2018-06-28 11:42+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/cs_CZ/)\n"
@@ -21,9 +21,9 @@ msgstr ""
 
 #: front/dashboard.form.php:34 front/dashboard.form.php:39 front/config.php:45
 #: front/preference.form.php:45 front/graph.php:39 front/central.php:33
-#: front/config.form.php:56 test.php:4 inc/profile.class.php:38
+#: front/config.form.php:56 inc/profile.class.php:38
 #: inc/preference.class.php:182 inc/notificationtargetnotification.class.php:8
-#: inc/common.class.php:49 inc/notification.class.php:18 setup.php:178
+#: inc/common.class.php:49 inc/notification.class.php:18 setup.php:177
 msgid "More Reporting"
 msgstr "Rozšířené výkazy"
 
