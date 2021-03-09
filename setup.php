@@ -148,7 +148,6 @@ function plugin_init_mreporting() {
          // Add specific files to add to the header : javascript
          $PLUGIN_HOOKS['add_javascript']['mreporting'] = [
             "lib/protovis/protovis.min.js",
-            "lib/protovis-msie/protovis-msie.min.js",
             "lib/jquery.tipsy/jquery.tipsy.min.js",
             "lib/jquery.tipsy/tipsy.js"
          ];
