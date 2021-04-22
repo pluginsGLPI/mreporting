@@ -1298,7 +1298,8 @@ class PluginMreportingCommon extends CommonDBTM {
       }
 
       $datas = [];
-      foreach (getAllDataFromTable('glpi_groups', $condition, false, 'name') as $data) {
+      $condition['ORDER'] = 'name';
+      foreach (getAllDataFromTable('glpi_groups', $condition, false) as $data) {
          $datas[$data['id']] = $data['completename'];
       }
 
