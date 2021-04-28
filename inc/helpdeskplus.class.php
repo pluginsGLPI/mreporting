@@ -94,7 +94,13 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
 
       if (isset($mr_values['itilcategories_id'])
           && $mr_values['itilcategories_id'] > 0) {
-         $this->sql_itilcat = "glpi_tickets.itilcategories_id = ".$mr_values['itilcategories_id'];
+		//TODO : add a beautifull checkBox in interface 
+		if (true) {
+			$subCat=$this->_getSubcategories($mr_values['itilcategories_id']);
+			$this->sql_itilcat = "glpi_tickets.itilcategories_id IN (".$subCat." )";
+		} else {
+			$this->sql_itilcat = "glpi_tickets.itilcategories_id = ".$mr_values['itilcategories_id'];
+		}
       }
    }
 
@@ -1063,5 +1069,35 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
          $this->_period_sort = '%y%m';
          $this->_period_label = '%b %Y';
       }
+   }
+   
+   /**
+   * Get a list of Subcategories of glpi_itilcategories from one glpi_itilcategories.id
+   *
+   * @param $parentID The Id of the glpi_itilcategories
+   * @return String in format "id,itilcategories_id,itilcategories_id,itilcategories_id,itilcategories_id,..."
+   */
+    private function _getSubcategories($parentID) {
+	   global $DB, $LANG;
+	  
+	//Query With Parent included
+	//See https://stackoverflow.com/questions/20215744/how-to-create-a-mysql-hierarchical-recursive-query
+	 $query = "select GROUP_CONCAT(concat (id )SEPARATOR ',') as LISTID from 
+	(select  id,
+        name,
+        itilcategories_id 
+	from    (select * from glpi_itilcategories
+			 order by itilcategories_id, id) products_sorted,
+			(select @pv := '".$parentID."') initialisation
+	where   
+		(find_in_set(itilcategories_id, @pv) > 0
+			and     @pv := concat(@pv, ',', id)
+		) OR (id = ".$parentID.")
+	) as subCatID";
+	
+	   $result = $DB->query($query);
+	   $data = $DB->fetch_assoc($result);
+
+	   return $data['LISTID'];
    }
 }
