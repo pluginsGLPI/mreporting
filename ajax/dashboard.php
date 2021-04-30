@@ -26,8 +26,8 @@ if (isset($_REQUEST['action'])) {
 
          //load protovis lib for dashboard render
          $version = Plugin::getInfo('mreporting', 'version');
-         echo Html::script("/plugins/mreporting/lib/protovis/protovis.min.js", ['version' => $version]);
-         echo Html::script("/plugins/mreporting/lib/protovis-msie/protovis-msie.min.js", ['version' => $version]);
+         $php_dir = Plugin::getPhpDir('mreporting', false);
+         echo Html::script($php_dir . "/lib/protovis/protovis.js", ['version' => $version]);
 
          Html::popFooter();
          break;

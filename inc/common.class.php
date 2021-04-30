@@ -56,18 +56,22 @@ class PluginMreportingCommon extends CommonDBTM {
    static function getMenuContent() {
       global $CFG_GLPI;
 
-      $img_db = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/dashboard.png'
+      $web_full_dir = Plugin::getWebDir('mreporting');
+      $img_db = "<img src='".$web_full_dir."/pics/dashboard.png'
                            title='".__("Dashboard", 'mreporting')."'
                            alt='".__("Dashboard", 'mreporting')."'>";
-      $img_ct   = "<img src='".$CFG_GLPI["root_doc"]."/plugins/mreporting/pics/list_dashboard.png'
+      $img_ct   = "<img src='".$web_full_dir."/pics/list_dashboard.png'
                            title='".__("Reports list", 'mreporting')."'
                            alt='".__("Reports list", 'mreporting')."'>";
-      $url_central   = "/plugins/mreporting/front/central.php";
-      $url_dashboard = "/plugins/mreporting/front/dashboard.php";
+
+      $web_rel_dir   = Plugin::getWebDir('mreporting', false);
+      $url_central   = "/$web_rel_dir/front/central.php";
+      $url_dashboard = "/$web_rel_dir/front/dashboard.php";
 
       $menu = parent::getMenuContent();
 
       $menu['page'] = PluginMreportingDashboard::CurrentUserHaveDashboard() ? $url_dashboard : $url_central;
+      $menu['icon'] = self::getIcon();
 
       $menu['options']['dashboard']['page']            = $url_dashboard;
       $menu['options']['dashboard']['title']           = __("Dashboard", 'mreporting');
@@ -127,7 +131,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $reports = [];
 
-      $inc_dir = GLPI_ROOT."/plugins/mreporting/inc";
+      $inc_dir = Plugin::getPhpDir('mreporting') . "/inc";
       $pics_dir = "../pics";
 
       if (isset($params['classname'])
@@ -292,7 +296,7 @@ class PluginMreportingCommon extends CommonDBTM {
                            if ($setIdInOptionsValues) {
                               $option_value = $value['id'];
                            }
-                           $icon = self::getIcon($value['function']);
+                           $icon = self::getReportIcon($value['function']);
                            $select .= "<option value='$option_value' title=\"".
                                      Html::cleanInputText($comment).
                                      "\">&nbsp;&nbsp;&nbsp;".$icon."&nbsp;".
@@ -763,7 +767,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
                      echo "<b>".__("Export")."</b> : ";
                      $params = ['myname'   => 'ext',
-                        'ajax_page'               => $CFG_GLPI["root_doc"]."/plugins/mreporting/ajax/dropdownExport.php",
+                        'ajax_page'               => Plugin::getWebDir('mreporting')."/ajax/dropdownExport.php",
                         'class'                   => __CLASS__,
                         'span'                    => 'show_ext',
                         'gtype'                   => $_REQUEST['gtype'],
@@ -1294,7 +1298,8 @@ class PluginMreportingCommon extends CommonDBTM {
       }
 
       $datas = [];
-      foreach (getAllDatasFromTable('glpi_groups', $condition, false, 'name') as $data) {
+      $condition['ORDER'] = 'name';
+      foreach (getAllDataFromTable('glpi_groups', $condition, false) as $data) {
          $datas[$data['id']] = $data['completename'];
       }
 
@@ -1381,7 +1386,7 @@ class PluginMreportingCommon extends CommonDBTM {
       $result = $DB->query($query);
 
       $values = [];
-      while ($data = $DB->fetch_assoc($result)) {
+      while ($data = $DB->fetchAssoc($result)) {
          $values[$data['id']] = $data['name'];
       }
 
@@ -1992,7 +1997,7 @@ class PluginMreportingCommon extends CommonDBTM {
       return $tree;
    }
 
-   static function getIcon($report_name) {
+   static function getReportIcon($report_name) {
       //see font-awesome : http://fortawesome.github.io/Font-Awesome/cheatsheet/
       $icons = [
          'pie'       => "&#xf200",
@@ -2010,5 +2015,9 @@ class PluginMreportingCommon extends CommonDBTM {
       $chart_type = strtolower($extract[1]);
 
       return $icons[$chart_type];
+   }
+
+   static function getIcon() {
+      return 'fa fa-chart-pie';
    }
 }

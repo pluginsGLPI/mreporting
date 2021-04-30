@@ -39,8 +39,8 @@ $tabs = [];
 foreach ($reports as $classname => $report) {
 
    $tabs[$classname]=['title'=>$report['title'],
-                           'url'=>$CFG_GLPI['root_doc']."/plugins/mreporting/ajax/common.tabs.php",
-                           'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname"];
+                      'url'=>Plugin::getWebDir('mreporting')."/ajax/common.tabs.php",
+                      'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname"];
 }
 
 if (count($tabs) > 0) {

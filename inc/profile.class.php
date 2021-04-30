@@ -101,7 +101,7 @@ class PluginMreportingProfile extends CommonDBTM {
          if ($DB->numrows($result) != 1) {
             return false;
          }
-         $this->fields = $DB->fetch_assoc($result);
+         $this->fields = $DB->fetchAssoc($result);
          return (is_array($this->fields) && count($this->fields));
       }
       return false;
@@ -114,8 +114,6 @@ class PluginMreportingProfile extends CommonDBTM {
    static function addRightToAllProfiles() {
       global $DB;
 
-      $myreport = new self();
-      $table_fields = $DB->list_fields($myreport->getTable(), false);
       $result_config = $DB->request("SELECT `id` FROM `glpi_plugin_mreporting_configs`");
       foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
          foreach ($result_config as $report) {
