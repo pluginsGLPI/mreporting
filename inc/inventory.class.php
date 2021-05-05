@@ -416,44 +416,43 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
               'glpi_items_operatingsystems', [
                'SELECT' => [
                   'glpi_operatingsystems' => 'name AS os_name',
-				  'glpi_operatingsystemversions' => 'name AS os_version',
+                  'glpi_operatingsystemversions' => 'name AS os_version',
                 ],
                 'COUNT' => 'os_qty',
                  'INNER JOIN' => [
                     'glpi_computers' => [
                      'FKEY' => [
-                        'glpi_items_operatingsystems' 	  => 'items_id',
-						                  'glpi_computers'              => 'id'
+                        'glpi_items_operatingsystems'         => 'items_id',
+                        'glpi_computers'                      => 'id'
                       ]
-                   ],
-				   'glpi_operatingsystems' => [
+                    ],
+                    'glpi_operatingsystems' => [
                      'FKEY' => [
-                        'glpi_operatingsystems'              => 'id',
-                        'glpi_items_operatingsystems' 		 => 'operatingsystems_id'
+                        'glpi_operatingsystems'               => 'id',
+                        'glpi_items_operatingsystems'         => 'operatingsystems_id'
                       ]
-                   ]
-				   
+                    ]
                 ],
                'LEFT JOIN' => [
                   'glpi_operatingsystemversions' => [
                      'FKEY' => [
-                        'glpi_operatingsystemversions'   => 'id',
-                        'glpi_items_operatingsystems'    => 'operatingsystemversions_id'
+                        'glpi_operatingsystemversions'        => 'id',
+                        'glpi_items_operatingsystems'         => 'operatingsystemversions_id'
                      ]
                   ]
                ],
                 'WHERE' => [
-                   'glpi_operatingsystems.name'  					  => ['LIKE', '%windows%'],
-                   'glpi_items_operatingsystems.itemtype'             => 'Computer',
-                   'glpi_computers.is_deleted'                        => 0,
-                   'glpi_computers.is_template'                       => 0,
-                   'glpi_computers.entities_id'                       => $this->where_entities_array,
+                   'glpi_operatingsystems.name'               => ['LIKE', '%windows%'],
+                   'glpi_items_operatingsystems.itemtype'     => 'Computer',
+                   'glpi_computers.is_deleted'                => 0,
+                   'glpi_computers.is_template'               => 0,
+                   'glpi_computers.entities_id'               => $this->where_entities_array,
                  ] + $sql_states,
                'GROUPBY' => ['os_name', 'os_version'],
                'ORDER' => ['os_name', 'os_version']
-             ]
+              ]
          ) as $version) {
-        $data['datas'][$version['os_name'].' '.$version['os_version'].' ('.round($version['os_qty']/$total_computers*100).'%)']=$version['os_qty'];
+         $data['datas'][$version['os_name'].' '.$version['os_version'].' ('.round($version['os_qty']/$total_computers*100).'%)']=$version['os_qty'];
       }
       if (isset($data['datas']) && !empty($data['datas'])) {
          arsort($data['datas']);
