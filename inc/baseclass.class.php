@@ -107,7 +107,7 @@ class PluginMreportingBaseclass {
          switch ($_SESSION['mreporting_values']['period']) {
             case 'day':
                $this->period_sort = '%y%m%d';
-               $this->period_sort_php = $this->period_sort = '%y%m%d';
+               $this->period_sort_php = 'ymd';
                $this->period_datetime = '%Y-%m-%d 23:59:59';
                $this->period_label = '%d %b';
                $this->period_interval = 'DAY';
@@ -115,7 +115,7 @@ class PluginMreportingBaseclass {
                break;
             case 'week':
                $this->period_sort = '%x%v';
-               $this->period_sort_php = '%Y%V';
+               $this->period_sort_php = 'YV';
                $this->period_datetime = "%Y-%m-%d 23:59:59";
                $this->period_label = 'S%v %x';
                $this->period_interval = 'WEEK';
@@ -123,7 +123,7 @@ class PluginMreportingBaseclass {
                break;
             case 'month':
                $this->period_sort = '%y%m';
-               $this->period_sort_php = $this->period_sort = '%y%m';
+               $this->period_sort_php = 'ym';
                $this->period_datetime = '%Y-%m-01 23:59:59';
                $this->period_label = '%b %Y';
                $this->period_interval = 'MONTH';
@@ -131,7 +131,7 @@ class PluginMreportingBaseclass {
                break;
             case 'year':
                $this->period_sort = '%Y';
-               $this->period_sort_php = $this->period_sort = '%Y';
+               $this->period_sort_php = 'Y';
                $this->period_datetime = '%Y-12-31 23:59:59';
                $this->period_label = '%Y';
                $this->period_interval = 'YEAR';

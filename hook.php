@@ -41,10 +41,14 @@ function plugin_mreporting_install() {
 
    include_once(Plugin::getPhpDir('mreporting')."/inc/profile.class.php");
 
+   $default_charset = DBConnection::getDefaultCharset();
+   $default_collation = DBConnection::getDefaultCollation();
+   $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+
    //create profiles table
    $queries = [];
    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
-      `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+      `id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
       `profiles_id` VARCHAR(45) NOT NULL,
       `reports` CHAR(1),
       PRIMARY KEY (`id`),
@@ -54,40 +58,40 @@ function plugin_mreporting_install() {
 
     //create configuration table
     $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
-   `id` int(11) NOT NULL auto_increment,
-   `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `classname` varchar(255) collate utf8_unicode_ci default NULL,
-   `is_active` tinyint(1) NOT NULL default '0',
-   `is_notified` tinyint(1) NOT NULL default '1',
-   `show_graph` tinyint(1) NOT NULL default '0',
-   `show_area` tinyint(1) NOT NULL default '0',
-   `spline` tinyint(1) NOT NULL default '0',
+   `id` int {$default_key_sign} NOT NULL auto_increment,
+   `name` varchar(255) default NULL,
+   `classname` varchar(255) default NULL,
+   `is_active` tinyint NOT NULL default '0',
+   `is_notified` tinyint NOT NULL default '1',
+   `show_graph` tinyint NOT NULL default '0',
+   `show_area` tinyint NOT NULL default '0',
+   `spline` tinyint NOT NULL default '0',
    `show_label` VARCHAR(10) default NULL,
-   `flip_data` tinyint(1) NOT NULL default '0',
+   `flip_data` tinyint NOT NULL default '0',
    `unit` VARCHAR(10) default NULL,
    `default_delay` VARCHAR(10) default NULL,
    `condition` VARCHAR(255) default NULL,
    `graphtype` VARCHAR(255) default 'SVG',
    PRIMARY KEY  (`id`),
    KEY `is_active` (`is_active`)
-   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+   ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
     //create configuration table
     $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_dashboards` (
-   `id` int(11) NOT NULL auto_increment,
-   `users_id` int(11) NOT NULL,
-   `reports_id`int(11) NOT NULL,
+   `id` int {$default_key_sign} NOT NULL auto_increment,
+   `users_id` int {$default_key_sign} NOT NULL,
+   `reports_id`int {$default_key_sign} NOT NULL,
    `configuration` VARCHAR(500) default NULL,
    PRIMARY KEY  (`id`)
-   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+   ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
    $queries[] = "CREATE TABLE  IF NOT EXISTS `glpi_plugin_mreporting_preferences` (
-   `id` int(11) NOT NULL auto_increment,
-   `users_id` int(11) NOT NULL default 0,
-   `template` varchar(255) collate utf8_unicode_ci default NULL,
+   `id` int {$default_key_sign} NOT NULL auto_increment,
+   `users_id` int {$default_key_sign} NOT NULL default 0,
+   `template` varchar(255) default NULL,
    PRIMARY KEY  (`id`),
    KEY `users_id` (`users_id`)
-   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+   ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
    // add display preferences
    $query_display_pref = "SELECT id
@@ -110,19 +114,19 @@ function plugin_mreporting_install() {
    }
 
     $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_notifications` (
-      `id` int(11) NOT NULL auto_increment,
-      `entities_id` int(11) NOT NULL default '0',
-      `is_recursive` tinyint(1) NOT NULL default '0',
-      `name` varchar(255) collate utf8_unicode_ci default NULL,
-      `notepad` longtext collate utf8_unicode_ci,
+      `id` int {$default_key_sign} NOT NULL auto_increment,
+      `entities_id` int {$default_key_sign} NOT NULL default '0',
+      `is_recursive` tinyint NOT NULL default '0',
+      `name` varchar(255) default NULL,
+      `notepad` longtext,
       `date_envoie` DATE DEFAULT NULL,
-      `notice`INT(11) NOT NULL DEFAULT 0,
-      `alert` INT(11) NOT NULL DEFAULT 0,
-      `comment` text collate utf8_unicode_ci,
+      `notice` INT {$default_key_sign} NOT NULL DEFAULT 0,
+      `alert` INT {$default_key_sign} NOT NULL DEFAULT 0,
+      `comment` text,
       `date_mod` timestamp NULL default NULL,
-      `is_deleted` tinyint(1) NOT NULL default '0',
+      `is_deleted` tinyint NOT NULL default '0',
       PRIMARY KEY  (`id`)
-      ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+      ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
    foreach ($queries as $query) {
       $DB->query($query);
@@ -130,7 +134,7 @@ function plugin_mreporting_install() {
 
    // == Update to 2.1 ==
    $migration->addField('glpi_plugin_mreporting_configs', 'is_notified',
-                        'tinyint(1) NOT NULL default "1"', ['after' => 'is_active']);
+                        'tinyint NOT NULL default "1"', ['after' => 'is_active']);
    $migration->migrationOneTable('glpi_plugin_mreporting_configs');
 
    // == Update to 2.3 ==
@@ -148,7 +152,7 @@ function plugin_mreporting_install() {
       $migration->changeField('glpi_plugin_mreporting_profiles', 'reports',
                              'reports', 'integer');
       $migration->changeField('glpi_plugin_mreporting_profiles', 'profiles_id',
-                             'profiles_id', 'integer');
+                             'profiles_id', "int {$default_key_sign} NOT NULL default 0");
       $migration->dropField('glpi_plugin_mreporting_profiles', 'config');
 
       $migration->migrationOneTable('glpi_plugin_mreporting_profiles');

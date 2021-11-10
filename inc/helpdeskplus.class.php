@@ -220,8 +220,8 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
                                 ? " AND tic.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id']
                                 : "";
 
-         $begin=strftime($this->period_sort_php, $time1);
-         $end=strftime($this->period_sort_php, $time2);
+         $begin = date($this->period_sort_php, $time1);
+         $end = date($this->period_sort_php, $time2);
          $sql_date_backlog =  "DATE_FORMAT(list_date.period_l, '{$this->period_sort}') >= '$begin'
                                AND DATE_FORMAT(list_date.period_l, '{$this->period_sort}') <= '$end'";
          $sql_list_date2 = str_replace('date', 'solvedate', $this->sql_list_date);
@@ -320,7 +320,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             'multiplegroupassign', 'userassign', 'category'];
 
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']])) {
-         $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
+         $_SESSION['mreporting_values']['date2'.$config['randname']] = date("Y-m-d");
       }
 
       foreach ($this->status as $current_status) {
@@ -374,7 +374,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $datas = [];
 
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']])) {
-         $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
+         $_SESSION['mreporting_values']['date2'.$config['randname']] = date("Y-m-d");
       }
 
       foreach ($this->status as $current_status) {
@@ -426,7 +426,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
       $datas = [];
 
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']])) {
-         $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
+         $_SESSION['mreporting_values']['date2'.$config['randname']] = date("Y-m-d");
       }
 
       foreach ($this->status as $current_status) {
@@ -587,7 +587,7 @@ class PluginMreportingHelpdeskplus Extends PluginMreportingBaseclass {
             GROUP BY glpi_tickets.id
             HAVING nb_add_group > 0
          ) as ticc
-         GROUP BY nb_add_group";
+         GROUP BY ticc.nb_add_group";
 
       $result = $DB->query($query);
 

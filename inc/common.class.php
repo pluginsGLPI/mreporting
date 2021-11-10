@@ -248,7 +248,7 @@ class PluginMreportingCommon extends CommonDBTM {
 
       $js_onchange = $onchange ? " onchange='window.location.href=this.options[this.selectedIndex].value'" : "";
 
-      $select  = "<select name='report' $js_onchange>";
+      $select  = "<select class='form-select' name='report' $js_onchange>";
       $select .= "<option value='-1' selected>".Dropdown::EMPTY_VALUE."</option>";
 
       foreach ($reports as $classname => $report) {
@@ -485,13 +485,13 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "<tr class='tab_bg_2'>";
          echo "<td>".__("Begin date")."</td>";
          echo "<td>";
-         $date1 =  strftime("%Y-%m-%d", time() - (30 * 24 * 60 * 60));
+         $date1 =  date("Y-m-d", time() - (30 * 24 * 60 * 60));
          Html::showDateField("date1", ['value'      => $date1,
                                        'maybeempty' => true]);
          echo "</td>";
          echo "<td>".__("End date")."</td>";
          echo "<td>";
-         $date2 = strftime("%Y-%m-%d");
+         $date2 = date("Y-m-d");
          Html::showDateField("date2", ['value'      => $date2,
                                        'maybeempty' => true]);
          echo "</td>";
@@ -609,11 +609,11 @@ class PluginMreportingCommon extends CommonDBTM {
 
       //generate default date
       if (!isset($_SESSION['mreporting_values']['date1'.$config['randname']])) {
-         $_SESSION['mreporting_values']['date1'.$config['randname']] = strftime("%Y-%m-%d",
+         $_SESSION['mreporting_values']['date1'.$config['randname']] = date("Y-m-d",
             time() - ($config['delay'] * 24 * 60 * 60));
       }
       if (!isset($_SESSION['mreporting_values']['date2'.$config['randname']])) {
-         $_SESSION['mreporting_values']['date2'.$config['randname']] = strftime("%Y-%m-%d");
+         $_SESSION['mreporting_values']['date2'.$config['randname']] = date("Y-m-d");
       }
 
       // save/clear selectors
@@ -1493,10 +1493,10 @@ class PluginMreportingCommon extends CommonDBTM {
       $randname = 'PluginMreporting'.$_REQUEST['short_classname'].$_REQUEST['f_name'];
 
       if (!isset($_SESSION['mreporting_values']['date1'.$randname])) {
-         $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d", time() - (365 * 24 * 60 * 60));
+         $_SESSION['mreporting_values']['date1'.$randname] = date("Y-m-d", time() - (365 * 24 * 60 * 60));
       }
       if (!isset($_SESSION['mreporting_values']['date2'.$randname])) {
-         $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
+         $_SESSION['mreporting_values']['date2'.$randname] = date("Y-m-d");
       }
 
       $date1 = $_SESSION['mreporting_values']["date1".$randname];
@@ -1833,10 +1833,10 @@ class PluginMreportingCommon extends CommonDBTM {
    static function getSQLDate($field = "`glpi_tickets`.`date`", $delay = 365, $randname = '') {
 
       if (empty($_SESSION['mreporting_values']['date1'.$randname])) {
-         $_SESSION['mreporting_values']['date1'.$randname] = strftime("%Y-%m-%d", time() - ($delay * 24 * 60 * 60));
+         $_SESSION['mreporting_values']['date1'.$randname] = date("Y-m-d", time() - ($delay * 24 * 60 * 60));
       }
       if (empty($_SESSION['mreporting_values']['date2'.$randname])) {
-         $_SESSION['mreporting_values']['date2'.$randname] = strftime("%Y-%m-%d");
+         $_SESSION['mreporting_values']['date2'.$randname] = date("Y-m-d");
       }
 
       $date_array1=explode("-", $_SESSION['mreporting_values']['date1'.$randname]);
