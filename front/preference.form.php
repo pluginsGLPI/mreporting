@@ -46,7 +46,7 @@ if (isset($_POST["update"])) {
 } else {
    Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
 
-   $pref->showForm("./preference.form.php", $_GET["id"]);
+   $pref->showForm($_GET["id"]);
 
    Html::footer();
 }

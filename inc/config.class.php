@@ -746,8 +746,13 @@ class PluginMreportingConfig extends CommonDBTM {
       echo __("Unit", 'mreporting');
       echo "</td>";
       echo "<td>";
-      $opt = ['size' => 10];
-      Html::autocompletionTextField($this, 'unit', $opt);
+      echo Html::input(
+         'unit',
+         [
+            'value' => $this->fields['unit'],
+            'size'  => 10
+         ]
+      );
       echo "</td>";
       echo "</tr>";
 
@@ -756,15 +761,25 @@ class PluginMreportingConfig extends CommonDBTM {
       echo __("Default delay", 'mreporting');
       echo "</td>";
       echo "<td>";
-      $opt = ['size' => 10];
-      Html::autocompletionTextField($this, 'default_delay', $opt);
+      echo Html::input(
+         'default_delay',
+         [
+            'value' => $this->fields['default_delay'],
+            'size'  => 10
+         ]
+      );
       echo "</td>";
 
       echo "<td>";
       echo __("Additional condition for MySQL", 'mreporting');
       echo "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, 'condition');
+      echo Html::input(
+         'condition',
+         [
+            'value' => $this->fields['condition'],
+         ]
+      );
       echo "</td>";
       echo "</tr>";
 

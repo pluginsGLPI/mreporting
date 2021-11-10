@@ -101,32 +101,14 @@
    width: auto;
    height: auto;
    min-height: 500px;
-   background: white;
+   display: flex;
+   flex-wrap: wrap;
 }
 
 .mreportingwidget {
    height: 441px;
-   width:461px;
-   border-color: #DDD;
-   border-style: solid;
-   border-width: 1px;
-   display:inline-block;
-   vertical-align: top;
-   margin: 2px 0 0 0;
-}
-
-.mreportingwidget-header {
-   background-color: #EEE;
-   padding: 10px 0;
-}
-
-.mreportingwidget-body {
-   bottom: 0px;
-   top: 0px;
-   left: 0px;
-   overflow-y: auto;
-   width: 461px;
-   height: 408px;
+   width: 561px;
+   margin: 30px 20px 0 0;
 }
 
 .m_left {
@@ -139,14 +121,6 @@
 
 .m_clear {
    clear: both;
-}
-
-#dashboard button {
-   width: 20px;
-   height: 20px;
-}
-.mreportingwidget-header  button {
-   margin-top: -5px;
 }
 
 #mreporting_central_dashboard iframe {
@@ -177,52 +151,10 @@ select[name=graphmenu] option {
    z-index: 100;
 }
 
-.add_report {
-   border: 3px solid #999;
-   float: right;
-   border-radius: 6px;
-   cursor: pointer;
-   height: 30px;
-   width: 30px;
-   background: #eeeeee; /* Old browsers */
-   background: -moz-linear-gradient(top,  #eeeeee 0%, #cccccc 100%); /* FF3.6+ */
-   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
-   background: -webkit-linear-gradient(top,  #eeeeee 0%,#cccccc 100%); /* Chrome10+,Safari5.1+ */
-   background: -o-linear-gradient(top,  #eeeeee 0%,#cccccc 100%); /* Opera 11.10+ */
-   background: -ms-linear-gradient(top,  #eeeeee 0%,#cccccc 100%); /* IE10+ */
-   background: linear-gradient(to bottom,  #eeeeee 0%,#cccccc 100%); /* W3C */
-   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
-}
-
-.add_report:hover {
-   background: #999;
-}
-
-.add_report_helptext {
-   line-height: 30px;
-   margin-right: 5px;
-   display: none;
-}
-
-.m_dashboard_controls:hover .add_report_helptext {
-   display: inline-block;
-}
-
-.add_report i.fa {
-   text-align: center;
-   font-size: 2em;
-   padding-top: 4px;
-   width: 100%;
-}
-
-.add_report:hover i.fa {
-   color: white;
-}
-
 .empty_dashboard {
    position: absolute;
-   right: 40px;
-   background: url(pics/howto_arrow.png) no-repeat right top;
+   right: 70px;
+   background: url("../pics/howto_arrow.png") no-repeat right top;
    z-index: 50;
 }
 

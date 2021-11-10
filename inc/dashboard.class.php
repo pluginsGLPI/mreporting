@@ -61,7 +61,7 @@ class PluginMreportingDashboard extends CommonDBTM {
    }
 
    function showDashBoard($show_reports_dropdown = true) {
-      global $LANG, $CFG_GLPI;
+      global $LANG;
 
       $root_ajax = Plugin::getWebDir('mreporting')."/ajax/dashboard.php";
 
@@ -99,15 +99,14 @@ class PluginMreportingDashboard extends CommonDBTM {
          echo "</div>";
       }
 
-      //echo "<button id='addReport_button' class='m_right'></button>";
       echo "<div class='m_dashboard_controls'>";
-      echo "<div class='add_report' id='addReport_button'><i class='fa fa-plus'></i></div>";
-      if (!empty($widgets)) {
-         echo "<span class='add_report_helptext'>".__("Add a report", 'mreporting').
-              " <i class='fa fa-arrow-right'></i></span>";
-      }
+      echo "<button type='button' class='add_report btn btn-ghost-secondary me-3 mt-2' id='addReport_button'
+                    title='".__("Add a report", 'mreporting')."' data-bs-toggle='tooltip'>
+        <i class='ti ti-square-plus'></i>
+      </button>";
       echo "</div>";
-      echo "<div id='addReport_dialog'>".$this->getFormForColumn()."</div>
+      $modal_html = json_encode($this->getFormForColumn());
+      echo "
       <script type='text/javascript'>
          $(function() {
             removeWidget = function(id){
@@ -126,17 +125,11 @@ class PluginMreportingDashboard extends CommonDBTM {
                })
             }
 
-            addReport = $('#addReport_dialog').dialog({
-               autoOpen: false,
-               modal: true,
-               width: 'auto',
-               height: 'auto',
-               resizable: false,
-               title: '".__("Select a report to add", 'mreporting')."'
-            });
-
-            $('#addReport_button').click(function( event ) {
-               addReport.dialog('open');
+            $('#addReport_button').on('click', function( event ) {
+               glpi_html_dialog({
+                  title: '".__("Select a report to add", 'mreporting')."',
+                  body: {$modal_html}
+               })
             });
          });
       </script>";
@@ -202,54 +195,36 @@ class PluginMreportingDashboard extends CommonDBTM {
          echo "<script type='text/javascript'>
          $(function() {
             configWidget$rand_widget =  null;
-            $.ajax({
-               url: '$root_ajax',
-               data: {
-                  action: 'getConfig',
-                  target: '$target',
-                  f_name:'$f_name',
-                  short_classname:'$short_classname',
-                  gtype:'$gtype'
-               },
-               success: function(content){
-                  configWidget$rand_widget =
-                     $(\"<div id='configWidget$rand_widget' style='display:none' class='loading'>\"+content+\"</div>\")
-                     .appendTo('body')
-                     .dialog({
-                        autoOpen: false,
-                        modal: true,
-                        width: 'auto',
-                        height: 'auto',
-                        resizable: false,
-                        title: '".__("Configure report", 'mreporting')."'
-                     });
-               }
+
+            $('#configWidget_button$rand_widget').on('click', function( event ) {
+               glpi_ajax_dialog({
+                  title: '".__("Configure report", 'mreporting')."',
+                  dialogclass: 'modal-lg',
+                  url: '$root_ajax',
+                  params: {
+                     action: 'getConfig',
+                     target: '$target',
+                     f_name:'$f_name',
+                     short_classname:'$short_classname',
+                     gtype:'$gtype'
+                  },
+               });
             });
 
-            $('#configWidget_button$rand_widget').button({
-               icons: {
-                 primary: 'ui-icon-gear'
-               },
-               text: false
-            }).click(function( event ) {
-               configWidget$rand_widget.dialog('open');
-            });
-
-            $('#closeWidget_button$rand_widget').button({
-               icons: {
-                 primary: 'ui-icon-closethick'
-               },
-               text: false
-            }).click(function( event ) {
+            $('#closeWidget_button$rand_widget').on('click', function( event ) {
                removeWidget(".$data['id'].");
             });
 
          });
          </script>
-         <div class='mreportingwidget' id='mreportingwidget".$data['id']."'>
-            <div class='mreportingwidget-header'>
-               <button id='closeWidget_button$rand_widget' class='m_right'></button>
-               <button id='configWidget_button$rand_widget' class='m_right'></button>
+         <div class='card mreportingwidget' id='mreportingwidget".$data['id']."'>
+            <div class='card-header d-inline-block'>
+               <button id='closeWidget_button$rand_widget' class='m_right me-1 btn btn-sm btn-outline-secondary'>
+                    <i class='ti ti-x'></i>
+               </button>
+               <button id='configWidget_button$rand_widget' class='m_right me-1 btn btn-sm btn-outline-secondary'>
+                    <i class='ti ti-tool'></i>
+               </button>
                <span class='mreportingwidget-header-text'>
                   <a href='".Plugin::getWebDir('mreporting')."/front/graph.php?short_classname=".
                   $short_classname."&amp;f_name=".$f_name."&amp;gtype=".$gtype."' target='_top'>
@@ -257,7 +232,7 @@ class PluginMreportingDashboard extends CommonDBTM {
                   </a>
                </span>
             </div>
-            <div class='mreportingwidget-body'>
+            <div class='card-body mreportingwidget-body'>
                $report_script
             </div>
          </div>";
@@ -275,7 +250,7 @@ class PluginMreportingDashboard extends CommonDBTM {
    function getFormForColumn() {
       $out  = "<form method='post' action='".$this->getFormURL()."'>";
       $out .= PluginMreportingCommon::getSelectAllReports(false, true);
-      $out .= "&nbsp;<input type='submit' name='addReports' value='".__('Add')."' class='submit'>";
+      $out .= "<input type='submit' class='mt-2 btn btn-primary' name='addReports' value='".__('Add')."' class='submit'>";
       $out .= Html::closeForm(false);
       $out .= "</div>";
 

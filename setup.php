@@ -31,9 +31,9 @@
 define ('PLUGIN_MREPORTING_VERSION', '1.7.4');
 
 // Minimal GLPI version, inclusive
-define("PLUGIN_MREPORTING_MIN_GLPI", "9.5");
+define("PLUGIN_MREPORTING_MIN_GLPI", "10.0.0");
 // Maximum GLPI version, exclusive
-define("PLUGIN_MREPORTING_MAX_GLPI", "9.6");
+define("PLUGIN_MREPORTING_MAX_GLPI", "10.0.99");
 
 if (!defined('PLUGIN_MREPORTING_DIR')) {
    define("PLUGIN_MREPORTING_DIR", __DIR__ );
@@ -146,7 +146,7 @@ function plugin_init_mreporting() {
          $PLUGIN_HOOKS["helpdesk_menu_entry"]['mreporting'] = true;
       }
 
-      if (strpos($_SERVER['REQUEST_URI'], "/mreporting/") !== false) {
+      if (strpos($_SERVER['REQUEST_URI'] ?? '', "/mreporting/") !== false) {
          // Add specific files to add to the header : javascript
          $PLUGIN_HOOKS['add_javascript']['mreporting'] = [
             "lib/protovis/protovis.js",

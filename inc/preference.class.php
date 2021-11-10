@@ -108,7 +108,7 @@ class PluginMreportingPreference extends CommonDBTM {
       return (!empty($files));
    }
 
-   function showForm($ID) {
+   function showForm($ID, array $options = []) {
       $this->getFromDB($ID);
 
       $version = plugin_version_mreporting();
