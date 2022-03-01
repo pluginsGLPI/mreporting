@@ -6,7 +6,7 @@
 # alexandre delaunay <delaunay.alexandre@gmail.com>, 2016
 # Cédric Anne, 2018
 # 06c8e5f1ec78ded2ceb41498ec52b068, 2015
-# Johan Cwiklinski <jcwiklinski@teclib.com>, 2017
+# Johan Cwiklinski, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"

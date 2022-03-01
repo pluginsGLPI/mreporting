@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2015-2019
+# Kaya Zeren <kayazeren@gmail.com>, 2015-2019,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-09 15:12+0000\n"
-"PO-Revision-Date: 2019-07-30 23:48+0000\n"
+"PO-Revision-Date: 2021-12-20 08:44+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>\n"
 "Language-Team: Turkish (Turkey) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/tr_TR/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: inc/preference.class.php:182 inc/notificationtargetnotification.class.php:8
 #: inc/common.class.php:49 inc/notification.class.php:18 setup.php:177
 msgid "More Reporting"
-msgstr "Diğer Raporlar"
+msgstr "Diğer raporlar"
 
 #: front/central.php:73 front/central.php:80 inc/common.class.php:329
 #: inc/common.class.php:396 inc/config.class.php:663
@@ -34,27 +34,27 @@ msgstr "Kullanılabilecek bir rapor yok !"
 #: front/popup.php:38 inc/common.class.php:1147 inc/common.class.php:1154
 #: inc/common.class.php:1162
 msgid "General Report - ODT"
-msgstr "Genel Rapor - ODT"
+msgstr "Genel rapor - ODT"
 
 #: inc/other.class.php:70
 msgid "Add/remove software on a computer"
-msgstr "Bir bilgisayara yazılım yükleyin ya da kaldırın"
+msgstr "Bir bilgisayara yazılım kur ya da kaldır"
 
 #: inc/other.class.php:73
 msgid "Add/remove version on a software"
-msgstr "Bir yazılıma sürüm yükleyin ya da kaldırın"
+msgstr "Bir yazılıma sürüm kur ya da kaldır"
 
 #: inc/other.class.php:76
 msgid "Add infocom"
-msgstr "Infocom ekleyin"
+msgstr "Infocom ekle"
 
 #: inc/other.class.php:79
 msgid "Add/remove profile on a user"
-msgstr "Bir kullanıcıya profil ekleyin ya da kaldırın"
+msgstr "Bir kullanıcıya profil ekle ya da kaldır"
 
 #: inc/other.class.php:82
 msgid "Add/remove group on a user"
-msgstr "Bir kullanıcıyı bir gruba ekleyin ya da çıkarın"
+msgstr "Bir kullanıcıyı bir gruba ekle ya da çıkar"
 
 #: inc/other.class.php:85
 msgid "User deleted from LDAP"
@@ -66,11 +66,11 @@ msgstr "Web hizmeti günlükleri"
 
 #: inc/other.class.php:97
 msgid "OCS Infos"
-msgstr "OCS Bilgileri"
+msgstr "OCS bilgileri"
 
 #: inc/other.class.php:100
 msgid "Add/update/remove device"
-msgstr "Aygır ekleme/güncelleme/silme"
+msgstr "Aygıt ekleme/güncelleme/silme"
 
 #: inc/other.class.php:103
 msgid "Add/remove relation"
@@ -82,7 +82,7 @@ msgstr "Öge ekleme ya da kaldırma"
 
 #: inc/other.class.php:109
 msgid "Comments & date_mod changes"
-msgstr "Yorumlar ve date_mod değişiklikler"
+msgstr "Açıklamalar ve date_mod değişiklikleri"
 
 #: inc/other.class.php:117
 msgid "Genericobject plugin logs"
@@ -146,7 +146,7 @@ msgstr "En yüksek varlık düzeyi"
 #: inc/notification.class.php:34 inc/notification.class.php:55
 #: inc/notification.class.php:128
 msgid "Notification for \"More Reporting\""
-msgstr "\"Diğer Raporlar\" bildirimi"
+msgstr "\"Diğer raporlar\" bildirimi"
 
 #: inc/notification.class.php:39
 msgid ""
