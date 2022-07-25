@@ -70,9 +70,7 @@ function plugin_init_mreporting() {
 
    $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
-   $plugin = new Plugin();
-   if ($plugin->isInstalled("mreporting")
-      && $plugin->isActivated("mreporting")) {
+   if (Plugin::isPluginActive("mreporting")) {
 
       // *Direct* access to rapport file (from e-mail) :
       if (isset($_GET['redirect']) && strpos($_GET['redirect'], 'plugin_mreporting') !== false) {

@@ -40,8 +40,7 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
    function reportPieTag($config = []) {
       global $DB;
 
-      $plugin = new Plugin();
-      if (!$plugin->isActivated('tag')) {
+      if (!Plugin::isPluginActive('tag')) {
          return [];
       }
 
@@ -72,8 +71,7 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
    function reportPieTagOnTicket($config = []) {
       global $DB;
 
-      $plugin = new Plugin();
-      if (!$plugin->isActivated('tag')) {
+      if (!Plugin::isPluginActive('tag')) {
          return [];
       }
 
