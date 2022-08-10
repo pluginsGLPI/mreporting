@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 13:41+0000\n"
+"POT-Creation-Date: 2022-08-10 12:27+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>, 2020\n"
 "Language-Team: Croatian (Croatia) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/hr_HR/)\n"
@@ -93,7 +93,7 @@ msgstr "Konfiguriraj izvještaj"
 msgid "Curve lines (SVG)"
 msgstr "Krivulje (SVG)"
 
-#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:78
+#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:79
 #: inc/dashboard.class.php:36 ajax/homepage_link.php:37
 msgid "Dashboard"
 msgstr "Nadzorna ploča"
@@ -114,8 +114,8 @@ msgstr "Standardno kašnjenje"
 msgid "GLPI statistics reports"
 msgstr "Izvještaji o GLPI statistici"
 
-#: front/popup.php:39 inc/common.class.php:1148 inc/common.class.php:1155
-#: inc/common.class.php:1163
+#: front/popup.php:39 inc/common.class.php:1149 inc/common.class.php:1156
+#: inc/common.class.php:1164
 msgid "General Report - ODT"
 msgstr "Opći izvještaj – ODT"
 
@@ -136,11 +136,11 @@ msgstr "Pozdrav,\n\ndostupni su GLPI izvještaji.\nNalaze se u privitku ovog e-m
 msgid "Initialize graphics configuration"
 msgstr "Pokreni konfiguraciju grafika"
 
-#: inc/common.class.php:1522
+#: inc/common.class.php:1523
 msgid "Max depth entity level"
 msgstr "Maksimalna dubina razine entiteta"
 
-#: inc/common.class.php:1409
+#: inc/common.class.php:1410
 msgid "Month"
 msgstr "Mjesec"
 
@@ -149,7 +149,7 @@ msgstr "Mjesec"
 #: front/config.form.php:57 inc/profile.class.php:39
 #: inc/preference.class.php:183
 #: inc/notificationtargetnotification.class.php:36 inc/common.class.php:50
-#: inc/notification.class.php:46 setup.php:179
+#: inc/notification.class.php:46 setup.php:177
 msgid "More Reporting"
 msgstr "Prošireni izvještaji"
 
@@ -162,16 +162,16 @@ msgstr "Prošireni izvještaji"
 msgid "No data for this date range !"
 msgstr "Nema podataka za ovaj raspon datuma!"
 
-#: inc/common.class.php:1164
+#: inc/common.class.php:1165
 msgid "No graphic selected"
 msgstr "Nijedna grafika nije odabrana"
 
-#: inc/common.class.php:1156
+#: inc/common.class.php:1157
 msgid "No model available"
 msgstr "Nema modela"
 
-#: front/central.php:74 front/central.php:81 inc/common.class.php:330
-#: inc/common.class.php:397 inc/config.class.php:664
+#: front/central.php:74 front/central.php:81 inc/common.class.php:331
+#: inc/common.class.php:398 inc/config.class.php:664
 msgid "No report is available !"
 msgstr "Nema izvještaja!"
 
@@ -184,7 +184,7 @@ msgstr "Obavijest za „Prošireni izvještaji”"
 msgid "Notification(s) sent !"
 msgstr "Obavijesti su poslane!"
 
-#: inc/common.class.php:930
+#: inc/common.class.php:931
 msgid "Number"
 msgstr "Broj"
 
@@ -200,11 +200,11 @@ msgstr "Objekt već postoji"
 msgid "On mouse over"
 msgstr "Kad se miš nalazi iznad"
 
-#: inc/preference.class.php:124 inc/common.class.php:1149
+#: inc/preference.class.php:124 inc/common.class.php:1150
 msgid "Please, select a model in your preferences"
 msgstr "Odaberi jedan model u svojim postavkama"
 
-#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:87
+#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:88
 msgid "Reports list"
 msgstr "Popis izvještaja"
 
@@ -257,19 +257,19 @@ msgstr "Korisnik izbrisan iz LDAP-a"
 msgid "Webservice logs"
 msgstr "Log-zapisi web-usluge"
 
-#: inc/common.class.php:1408
+#: inc/common.class.php:1409
 msgid "Week"
 msgstr "Tjedan"
 
-#: inc/common.class.php:509 ajax/dropdownExport.php:42
+#: inc/common.class.php:510 ajax/dropdownExport.php:42
 msgid "With data"
 msgstr "S podacima"
 
-#: inc/common.class.php:508 ajax/dropdownExport.php:43
+#: inc/common.class.php:509 ajax/dropdownExport.php:43
 msgid "Without data"
 msgstr "Bez podataka"
 
-#: inc/common.class.php:951 inc/common.class.php:1254
-#: inc/common.class.php:1270
+#: inc/common.class.php:952 inc/common.class.php:1255
+#: inc/common.class.php:1271
 msgid "data"
 msgstr "podaci"

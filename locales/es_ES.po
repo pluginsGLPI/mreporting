@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 13:41+0000\n"
+"POT-Creation-Date: 2022-08-10 12:27+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: 5b63a00e0726b96d7ef35c99d5553cd0_b787b5f <8bb2d0f7e8927228f17fba8639d787be_31711>, 2016\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/es_ES/)\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: inc/notification.class.php:67
 msgid ""
@@ -92,7 +92,7 @@ msgstr "Configurar reporte"
 msgid "Curve lines (SVG)"
 msgstr ""
 
-#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:78
+#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:79
 #: inc/dashboard.class.php:36 ajax/homepage_link.php:37
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -113,8 +113,8 @@ msgstr "Retraso predeterminado"
 msgid "GLPI statistics reports"
 msgstr "reportes de estadísticas GLPI"
 
-#: front/popup.php:39 inc/common.class.php:1148 inc/common.class.php:1155
-#: inc/common.class.php:1163
+#: front/popup.php:39 inc/common.class.php:1149 inc/common.class.php:1156
+#: inc/common.class.php:1164
 msgid "General Report - ODT"
 msgstr "Reporte General - ODT"
 
@@ -135,11 +135,11 @@ msgstr "Hola,\n\nLos reportes GLPI están disponibles.\nTu puedes buscar los adj
 msgid "Initialize graphics configuration"
 msgstr "Inicializar configuración de gráficos"
 
-#: inc/common.class.php:1522
+#: inc/common.class.php:1523
 msgid "Max depth entity level"
 msgstr ""
 
-#: inc/common.class.php:1409
+#: inc/common.class.php:1410
 msgid "Month"
 msgstr ""
 
@@ -148,7 +148,7 @@ msgstr ""
 #: front/config.form.php:57 inc/profile.class.php:39
 #: inc/preference.class.php:183
 #: inc/notificationtargetnotification.class.php:36 inc/common.class.php:50
-#: inc/notification.class.php:46 setup.php:179
+#: inc/notification.class.php:46 setup.php:177
 msgid "More Reporting"
 msgstr "Más Informes"
 
@@ -161,16 +161,16 @@ msgstr "Más Informes"
 msgid "No data for this date range !"
 msgstr "No hay data para este rango"
 
-#: inc/common.class.php:1164
+#: inc/common.class.php:1165
 msgid "No graphic selected"
 msgstr "No hay gráfico seleccionado"
 
-#: inc/common.class.php:1156
+#: inc/common.class.php:1157
 msgid "No model available"
 msgstr "No modelo disponible"
 
-#: front/central.php:74 front/central.php:81 inc/common.class.php:330
-#: inc/common.class.php:397 inc/config.class.php:664
+#: front/central.php:74 front/central.php:81 inc/common.class.php:331
+#: inc/common.class.php:398 inc/config.class.php:664
 msgid "No report is available !"
 msgstr "¡No hay reporte disponible!"
 
@@ -183,7 +183,7 @@ msgstr "Notificación para \"Más informes\""
 msgid "Notification(s) sent !"
 msgstr "¡Notificacion(es) enviada(s)!"
 
-#: inc/common.class.php:930
+#: inc/common.class.php:931
 msgid "Number"
 msgstr "Números"
 
@@ -199,11 +199,11 @@ msgstr "Ya existe el objeto"
 msgid "On mouse over"
 msgstr "Cuando el ratón esté por encima"
 
-#: inc/preference.class.php:124 inc/common.class.php:1149
+#: inc/preference.class.php:124 inc/common.class.php:1150
 msgid "Please, select a model in your preferences"
 msgstr "Por favor, seleccione un modelo en tus preferencias"
 
-#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:87
+#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:88
 msgid "Reports list"
 msgstr "Lista de reportes"
 
@@ -256,19 +256,19 @@ msgstr "Usuario borrado desde LDAP"
 msgid "Webservice logs"
 msgstr "Registros del servicio Web"
 
-#: inc/common.class.php:1408
+#: inc/common.class.php:1409
 msgid "Week"
 msgstr ""
 
-#: inc/common.class.php:509 ajax/dropdownExport.php:42
+#: inc/common.class.php:510 ajax/dropdownExport.php:42
 msgid "With data"
 msgstr "Con data"
 
-#: inc/common.class.php:508 ajax/dropdownExport.php:43
+#: inc/common.class.php:509 ajax/dropdownExport.php:43
 msgid "Without data"
 msgstr "Sin data"
 
-#: inc/common.class.php:951 inc/common.class.php:1254
-#: inc/common.class.php:1270
+#: inc/common.class.php:952 inc/common.class.php:1255
+#: inc/common.class.php:1271
 msgid "data"
 msgstr "data"

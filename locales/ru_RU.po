@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 13:41+0000\n"
+"POT-Creation-Date: 2022-08-10 12:27+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: Denis Arkhipov <arhipovdv@mtgroup-it.ru>, 2019\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/ru_RU/)\n"
@@ -94,7 +94,7 @@ msgstr "Настроить отчет"
 msgid "Curve lines (SVG)"
 msgstr "Кривые линии (SVG)"
 
-#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:78
+#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:79
 #: inc/dashboard.class.php:36 ajax/homepage_link.php:37
 msgid "Dashboard"
 msgstr "Панель состояния"
@@ -115,8 +115,8 @@ msgstr "Задержка по умолчанию"
 msgid "GLPI statistics reports"
 msgstr "Отчеты GLPI статистики"
 
-#: front/popup.php:39 inc/common.class.php:1148 inc/common.class.php:1155
-#: inc/common.class.php:1163
+#: front/popup.php:39 inc/common.class.php:1149 inc/common.class.php:1156
+#: inc/common.class.php:1164
 msgid "General Report - ODT"
 msgstr "Общий отчет - ODT"
 
@@ -137,11 +137,11 @@ msgstr "Привет,\nОтчет из GLPI доступен.\nВы найдет
 msgid "Initialize graphics configuration"
 msgstr "Инициализировать графическую настройку"
 
-#: inc/common.class.php:1522
+#: inc/common.class.php:1523
 msgid "Max depth entity level"
 msgstr "Максимальная глубина уровня организации"
 
-#: inc/common.class.php:1409
+#: inc/common.class.php:1410
 msgid "Month"
 msgstr "Месяц"
 
@@ -150,7 +150,7 @@ msgstr "Месяц"
 #: front/config.form.php:57 inc/profile.class.php:39
 #: inc/preference.class.php:183
 #: inc/notificationtargetnotification.class.php:36 inc/common.class.php:50
-#: inc/notification.class.php:46 setup.php:179
+#: inc/notification.class.php:46 setup.php:177
 msgid "More Reporting"
 msgstr "Подробные отчеты"
 
@@ -163,16 +163,16 @@ msgstr "Подробные отчеты"
 msgid "No data for this date range !"
 msgstr "Нет данных за этот период!"
 
-#: inc/common.class.php:1164
+#: inc/common.class.php:1165
 msgid "No graphic selected"
 msgstr "График не выбран"
 
-#: inc/common.class.php:1156
+#: inc/common.class.php:1157
 msgid "No model available"
 msgstr "Нет доступных моделей"
 
-#: front/central.php:74 front/central.php:81 inc/common.class.php:330
-#: inc/common.class.php:397 inc/config.class.php:664
+#: front/central.php:74 front/central.php:81 inc/common.class.php:331
+#: inc/common.class.php:398 inc/config.class.php:664
 msgid "No report is available !"
 msgstr "Нет доступных отчетов!"
 
@@ -185,7 +185,7 @@ msgstr "Уведомления для \"More Reporting\""
 msgid "Notification(s) sent !"
 msgstr "Уведомление(я) отправлено(ы)!"
 
-#: inc/common.class.php:930
+#: inc/common.class.php:931
 msgid "Number"
 msgstr "Номер"
 
@@ -201,11 +201,11 @@ msgstr "Объект уже существует"
 msgid "On mouse over"
 msgstr "При наведении курсора"
 
-#: inc/preference.class.php:124 inc/common.class.php:1149
+#: inc/preference.class.php:124 inc/common.class.php:1150
 msgid "Please, select a model in your preferences"
 msgstr "Выберите, пожалуйста, модель в свойствах"
 
-#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:87
+#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:88
 msgid "Reports list"
 msgstr "Список отчетов"
 
@@ -258,19 +258,19 @@ msgstr "Пользователь удален из LDAP"
 msgid "Webservice logs"
 msgstr "Логи плагина Webservice"
 
-#: inc/common.class.php:1408
+#: inc/common.class.php:1409
 msgid "Week"
 msgstr "Неделя"
 
-#: inc/common.class.php:509 ajax/dropdownExport.php:42
+#: inc/common.class.php:510 ajax/dropdownExport.php:42
 msgid "With data"
 msgstr "С данными"
 
-#: inc/common.class.php:508 ajax/dropdownExport.php:43
+#: inc/common.class.php:509 ajax/dropdownExport.php:43
 msgid "Without data"
 msgstr "Без данных"
 
-#: inc/common.class.php:951 inc/common.class.php:1254
-#: inc/common.class.php:1270
+#: inc/common.class.php:952 inc/common.class.php:1255
+#: inc/common.class.php:1271
 msgid "data"
 msgstr "данные"

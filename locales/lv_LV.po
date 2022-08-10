@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 13:41+0000\n"
+"POT-Creation-Date: 2022-08-10 12:27+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: Andrejs <andrew.k2@gmail.com>, 2016\n"
 "Language-Team: Latvian (Latvia) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/lv_LV/)\n"
@@ -92,7 +92,7 @@ msgstr "Nokonfigurēt pārskatu"
 msgid "Curve lines (SVG)"
 msgstr ""
 
-#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:78
+#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:79
 #: inc/dashboard.class.php:36 ajax/homepage_link.php:37
 msgid "Dashboard"
 msgstr "Informācijas panelis"
@@ -113,8 +113,8 @@ msgstr "Noklusēta aizkave"
 msgid "GLPI statistics reports"
 msgstr "GLPI statistikas pārskati"
 
-#: front/popup.php:39 inc/common.class.php:1148 inc/common.class.php:1155
-#: inc/common.class.php:1163
+#: front/popup.php:39 inc/common.class.php:1149 inc/common.class.php:1156
+#: inc/common.class.php:1164
 msgid "General Report - ODT"
 msgstr "Vispārīgs Pārskats - ODT"
 
@@ -135,11 +135,11 @@ msgstr "Sveicināti,\n\nGLPI pārskati sagatavoti.\nJūs atradīsiet tos epasta 
 msgid "Initialize graphics configuration"
 msgstr "Inicializēt grafisko konfigurāciju"
 
-#: inc/common.class.php:1522
+#: inc/common.class.php:1523
 msgid "Max depth entity level"
 msgstr ""
 
-#: inc/common.class.php:1409
+#: inc/common.class.php:1410
 msgid "Month"
 msgstr ""
 
@@ -148,7 +148,7 @@ msgstr ""
 #: front/config.form.php:57 inc/profile.class.php:39
 #: inc/preference.class.php:183
 #: inc/notificationtargetnotification.class.php:36 inc/common.class.php:50
-#: inc/notification.class.php:46 setup.php:179
+#: inc/notification.class.php:46 setup.php:177
 msgid "More Reporting"
 msgstr "More Reporting"
 
@@ -161,16 +161,16 @@ msgstr "More Reporting"
 msgid "No data for this date range !"
 msgstr "Nav datu par šo laika periodu !"
 
-#: inc/common.class.php:1164
+#: inc/common.class.php:1165
 msgid "No graphic selected"
 msgstr "Nav izvēlēts grafiks"
 
-#: inc/common.class.php:1156
+#: inc/common.class.php:1157
 msgid "No model available"
 msgstr "Nav pieejamu modeļu"
 
-#: front/central.php:74 front/central.php:81 inc/common.class.php:330
-#: inc/common.class.php:397 inc/config.class.php:664
+#: front/central.php:74 front/central.php:81 inc/common.class.php:331
+#: inc/common.class.php:398 inc/config.class.php:664
 msgid "No report is available !"
 msgstr "Nav pieejami pārskati !"
 
@@ -183,7 +183,7 @@ msgstr "Paziņojums par \"More Reporting\""
 msgid "Notification(s) sent !"
 msgstr "Paziņojums(i) nosūtīti !"
 
-#: inc/common.class.php:930
+#: inc/common.class.php:931
 msgid "Number"
 msgstr "Skaits"
 
@@ -199,11 +199,11 @@ msgstr "Objekts jau eksistē"
 msgid "On mouse over"
 msgstr "Uz peles pāri"
 
-#: inc/preference.class.php:124 inc/common.class.php:1149
+#: inc/preference.class.php:124 inc/common.class.php:1150
 msgid "Please, select a model in your preferences"
 msgstr "Lūdzu, izvelieties modeli savos iestatījumos"
 
-#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:87
+#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:88
 msgid "Reports list"
 msgstr "Pārskatu saraksts"
 
@@ -256,19 +256,19 @@ msgstr "Lietotājs izdzēsts no LDAP"
 msgid "Webservice logs"
 msgstr "Web servisu žurnāls"
 
-#: inc/common.class.php:1408
+#: inc/common.class.php:1409
 msgid "Week"
 msgstr ""
 
-#: inc/common.class.php:509 ajax/dropdownExport.php:42
+#: inc/common.class.php:510 ajax/dropdownExport.php:42
 msgid "With data"
 msgstr "Ar datiem"
 
-#: inc/common.class.php:508 ajax/dropdownExport.php:43
+#: inc/common.class.php:509 ajax/dropdownExport.php:43
 msgid "Without data"
 msgstr "Bez datiem"
 
-#: inc/common.class.php:951 inc/common.class.php:1254
-#: inc/common.class.php:1270
+#: inc/common.class.php:952 inc/common.class.php:1255
+#: inc/common.class.php:1271
 msgid "data"
 msgstr "dati"

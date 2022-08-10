@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-20 13:41+0000\n"
+"POT-Creation-Date: 2022-08-10 12:27+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2018\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/teclib/glpi-project-plugin-mreporting/language/cs_CZ/)\n"
@@ -93,7 +93,7 @@ msgstr "Nastavit výkaz"
 msgid "Curve lines (SVG)"
 msgstr "Křivky (SVG)"
 
-#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:78
+#: inc/common.class.php:62 inc/common.class.php:63 inc/common.class.php:79
 #: inc/dashboard.class.php:36 ajax/homepage_link.php:37
 msgid "Dashboard"
 msgstr "Přehled"
@@ -114,8 +114,8 @@ msgstr "Výchozí prodleva"
 msgid "GLPI statistics reports"
 msgstr "Statistické výkazy z GLPI"
 
-#: front/popup.php:39 inc/common.class.php:1148 inc/common.class.php:1155
-#: inc/common.class.php:1163
+#: front/popup.php:39 inc/common.class.php:1149 inc/common.class.php:1156
+#: inc/common.class.php:1164
 msgid "General Report - ODT"
 msgstr "Obecný výkaz – ODT"
 
@@ -136,11 +136,11 @@ msgstr "Dobrý den,\n\nJsou k dispozici výkazy z GLPI.\nNaleznete je v příloz
 msgid "Initialize graphics configuration"
 msgstr "Inicializovat nastavení grafiky"
 
-#: inc/common.class.php:1522
+#: inc/common.class.php:1523
 msgid "Max depth entity level"
 msgstr "Maximální hloubka ve stromu entit"
 
-#: inc/common.class.php:1409
+#: inc/common.class.php:1410
 msgid "Month"
 msgstr "Měsíc"
 
@@ -149,7 +149,7 @@ msgstr "Měsíc"
 #: front/config.form.php:57 inc/profile.class.php:39
 #: inc/preference.class.php:183
 #: inc/notificationtargetnotification.class.php:36 inc/common.class.php:50
-#: inc/notification.class.php:46 setup.php:179
+#: inc/notification.class.php:46 setup.php:177
 msgid "More Reporting"
 msgstr "Rozšířené výkazy"
 
@@ -162,16 +162,16 @@ msgstr "Rozšířené výkazy"
 msgid "No data for this date range !"
 msgstr "Nebyla nalezena žádná data pro toto časové rozmezí!"
 
-#: inc/common.class.php:1164
+#: inc/common.class.php:1165
 msgid "No graphic selected"
 msgstr "Nebyl vybrán žádný obrázek"
 
-#: inc/common.class.php:1156
+#: inc/common.class.php:1157
 msgid "No model available"
 msgstr "Není k dispozici žádný model"
 
-#: front/central.php:74 front/central.php:81 inc/common.class.php:330
-#: inc/common.class.php:397 inc/config.class.php:664
+#: front/central.php:74 front/central.php:81 inc/common.class.php:331
+#: inc/common.class.php:398 inc/config.class.php:664
 msgid "No report is available !"
 msgstr "Není k dispozici žádný výkaz!"
 
@@ -184,7 +184,7 @@ msgstr "Oznámení pro „Rozšířené výkazy“"
 msgid "Notification(s) sent !"
 msgstr "Oznámení odeslána!"
 
-#: inc/common.class.php:930
+#: inc/common.class.php:931
 msgid "Number"
 msgstr "Počet"
 
@@ -200,11 +200,11 @@ msgstr "Objekt už existuje"
 msgid "On mouse over"
 msgstr "Při najetí kurzorem"
 
-#: inc/preference.class.php:124 inc/common.class.php:1149
+#: inc/preference.class.php:124 inc/common.class.php:1150
 msgid "Please, select a model in your preferences"
 msgstr "Ve svých předvolbách vyberte model"
 
-#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:87
+#: inc/common.class.php:65 inc/common.class.php:66 inc/common.class.php:88
 msgid "Reports list"
 msgstr "Seznam výkazů"
 
@@ -257,19 +257,19 @@ msgstr "Uživatel smazán z LDAP adresáře"
 msgid "Webservice logs"
 msgstr "Záznam událostí (log) z webových služeb"
 
-#: inc/common.class.php:1408
+#: inc/common.class.php:1409
 msgid "Week"
 msgstr "Týden"
 
-#: inc/common.class.php:509 ajax/dropdownExport.php:42
+#: inc/common.class.php:510 ajax/dropdownExport.php:42
 msgid "With data"
 msgstr "S daty"
 
-#: inc/common.class.php:508 ajax/dropdownExport.php:43
+#: inc/common.class.php:509 ajax/dropdownExport.php:43
 msgid "Without data"
 msgstr "Bez dat"
 
-#: inc/common.class.php:951 inc/common.class.php:1254
-#: inc/common.class.php:1270
+#: inc/common.class.php:952 inc/common.class.php:1255
+#: inc/common.class.php:1271
 msgid "data"
 msgstr "data"
