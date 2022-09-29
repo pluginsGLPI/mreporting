@@ -412,42 +412,51 @@ class PluginMreportingInventory Extends PluginMreportingBaseclass {
          ]
       );
 
-      $list_windows = ['Windows 3.1', 'Windows 95', 'Windows 98', 'Windows 2000 Pro',
-                       'Windows XP', 'Windows 7', 'Windows Vista', 'Windows 8', 'Windows 10',
-                       'Windows 2000 Server', 'Server 2003', 'Server 2008', 'Server 2012'];
-      $data = [];
-      foreach ($list_windows as $windows) {
-         $oses = [];
-         $ositerator = $DB->request('glpi_operatingsystems', ['name' => ['LIKE', "%$windows%"]]);
-         foreach ($ositerator as $os) {
-            $oses[] = $os['id'];
-         }
-         if (!empty($oses)) {
-            $number = countElementsInTable(
-               'glpi_computers', [
-                  'INNER JOIN' => [
-                     'glpi_items_operatingsystems' => [
-                        'FKEY' => [
-                           'glpi_computers'              => 'id',
-                           'glpi_items_operatingsystems' => 'items_id'
-                        ]
-                     ]
-                  ],
-                  'WHERE' => [
-                     'glpi_items_operatingsystems.operatingsystems_id'  => $oses,
-                     'glpi_items_operatingsystems.itemtype'             => 'Computer',
-                     'glpi_computers.is_deleted'                        => 0,
-                     'glpi_computers.is_template'                       => 0,
-                     'glpi_computers.entities_id'                       => $this->where_entities_array
-                  ] + $sql_states
+      $oses = $DB->request(
+         [
+            'SELECT' => [
+               'glpi_operatingsystems' => 'name AS os_name',
+               'glpi_operatingsystemversions' => 'name AS os_version',
+            ],
+            'FROM' => 'glpi_items_operatingsystems',
+            'COUNT' => 'os_qty',
+            'INNER JOIN' => [
+               'glpi_computers' => [
+                  'FKEY' => [
+                     'glpi_items_operatingsystems' => 'items_id',
+                     'glpi_computers'               => 'id'
+                  ]
+               ],
+               'glpi_operatingsystems' => [
+                  'FKEY' => [
+                     'glpi_operatingsystems'       => 'id',
+                     'glpi_items_operatingsystems' => 'operatingsystems_id'
+                  ]
                ]
-            );
-
-            $percent = round($number * 100 / $total_computers). " % du parc";
-            if ($number) {
-               $data['datas'][$windows." ($percent)"] = $number;
-            }
-         }
+            ],
+            'LEFT JOIN' => [
+               'glpi_operatingsystemversions' => [
+                  'FKEY' => [
+                     'glpi_operatingsystemversions' => 'id',
+                     'glpi_items_operatingsystems'  => 'operatingsystemversions_id'
+                  ]
+               ]
+            ],
+            'WHERE' => [
+               'glpi_operatingsystems.name'           => ['LIKE', '%windows%'],
+               'glpi_items_operatingsystems.itemtype' => 'Computer',
+               'glpi_computers.is_deleted'            => 0,
+               'glpi_computers.is_template'           => 0,
+               'glpi_computers.entities_id'           => $this->where_entities_array,
+            ] + $sql_states,
+            'GROUPBY' => ['os_name', 'os_version'],
+            'ORDER' => ['os_name', 'os_version']
+         ]
+      );
+      $data = [];
+      foreach ($oses as $version) {
+         $key = $version['os_name'] . ' ' . $version['os_version'] . ' (' . round($version['os_qty'] / $total_computers * 100) . '%)';
+         $data['datas'][$key] = $version['os_qty'];
       }
       if (isset($data['datas']) && !empty($data['datas'])) {
          arsort($data['datas']);
