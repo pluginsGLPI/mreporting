@@ -118,10 +118,14 @@ class PluginMreportingProfile extends CommonDBTM {
       $result_config = $DB->request("SELECT `id` FROM `glpi_plugin_mreporting_configs`");
       foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
          foreach ($result_config as $report) {
-            $DB->query("REPLACE INTO `glpi_plugin_mreporting_profiles`
-                           (`profiles_id`,`reports`,`right`)
-                        VALUES
-                           ('".$prof['id']."','".$report['id']."',NULL)");
+            $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
+               'profiles_id' => $prof['id'],
+               'reports'     => $report['id'],
+               'rights'      => null
+            ], [
+               'profiles_id' => $prof['id'],
+               'reports'     => $report['id'],
+            ]);
          }
       }
    }
@@ -154,13 +158,15 @@ class PluginMreportingProfile extends CommonDBTM {
       foreach ($config->find() as $report) {
          // add right for any reports for profile
          // Add manual request because Add function get error : right is set to NULL
-         $query = "REPLACE INTO `glpi_plugin_mreporting_profiles` SET
-                     `profiles_id` = $idProfile,
-                     `reports` = {$report['id']},
-                     `right` = " . READ;
-         $DB->query($query) or die('An error occurs during profile initialisation.');
+          $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
+             'profiles_id' => $idProfile,
+             'reports'     => $report['id'],
+             'rights'      => READ
+          ], [
+             'profiles_id' => $idProfile,
+             'reports'     => $report['id'],
+          ]) or die('An error occurs during profile initialisation.');
       }
-
    }
 
 
