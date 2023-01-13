@@ -504,7 +504,17 @@ class PluginMreportingCommon extends CommonDBTM {
          echo "</tr>";
 
          echo "</table>";
-         Html::openArrowMassives("exportform", true);
+         $formname = 'exportform';
+         echo "<table width='950px'>";
+         $arrow = "fas fa-level-up-alt";
+
+         echo "<tr>";
+         echo "<td><i class='$arrow fa-flip-horizontal fa-lg mx-2'></i></td>";
+         echo "<td class='center' style='white-space:nowrap;'>";
+         echo "<a onclick= \"if ( markCheckboxes('$formname') ) return false;\" href='#'>" . __('Check all') . "</a></td>";
+         echo "<td>/</td>";
+         echo "<td class='center' style='white-space:nowrap;'>";
+         echo "<a onclick= \"if ( unMarkCheckboxes('$formname') ) return false;\" href='#'>" . __('Uncheck all') . "</a></td>";
 
          $option[0] = __("Without data", 'mreporting');
          $option[1] = __("With data", 'mreporting');
