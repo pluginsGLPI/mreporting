@@ -122,7 +122,7 @@ class PluginMreportingProfile extends CommonDBTM {
             $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
                'profiles_id' => $prof['id'],
                'reports'     => $report['id'],
-               'rights'      => null
+               'right'      => null
             ], [
                'profiles_id' => $prof['id'],
                'reports'     => $report['id'],
@@ -162,7 +162,7 @@ class PluginMreportingProfile extends CommonDBTM {
           $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
              'profiles_id' => $idProfile,
              'reports'     => $report['id'],
-             'rights'      => READ
+             'right'      => READ
           ], [
              'profiles_id' => $idProfile,
              'reports'     => $report['id'],
