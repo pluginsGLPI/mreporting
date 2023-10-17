@@ -116,7 +116,7 @@ class PluginMreportingBaseclass {
                break;
             case 'week':
                $this->period_sort = '%x%v';
-               $this->period_sort_php = 'YV';
+               $this->period_sort_php = 'oW';
                $this->period_datetime = "%Y-%m-%d 23:59:59";
                $this->period_label = 'S%v %x';
                $this->period_interval = 'WEEK';
