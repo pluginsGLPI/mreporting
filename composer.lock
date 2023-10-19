@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66d01baa802dd28beabccad6bb34d3d7",
+    "content-hash": "b488d0e70ac699ce76aa20fb5b7f9007",
     "packages": [
         {
             "name": "masnathan/odtphp",
@@ -68,21 +68,25 @@
     "packages-dev": [
         {
             "name": "glpi-project/tools",
-            "version": "0.6.4",
+            "version": "0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/glpi-project/tools.git",
-                "reference": "8ef917fa2967e716eaed198bb803f418a80cd621"
+                "reference": "4bc5a725d9f4da0ee946ad3cbdd54a782d2f40fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/glpi-project/tools/zipball/8ef917fa2967e716eaed198bb803f418a80cd621",
-                "reference": "8ef917fa2967e716eaed198bb803f418a80cd621",
+                "url": "https://api.github.com/repos/glpi-project/tools/zipball/4bc5a725d9f4da0ee946ad3cbdd54a782d2f40fb",
+                "reference": "4bc5a725d9f4da0ee946ad3cbdd54a782d2f40fb",
                 "shasum": ""
             },
             "require": {
                 "symfony/console": "^5.4 || ^6.0",
                 "twig/twig": "^3.3"
+            },
+            "require-dev": {
+                "nikic/php-parser": "^4.13",
+                "phpstan/phpstan-src": "^1.10"
             },
             "bin": [
                 "bin/extract-locales",
@@ -92,7 +96,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Glpi\\": "src/"
+                    "GlpiProject\\Tools\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -116,7 +120,7 @@
                 "issues": "https://github.com/glpi-project/tools/issues",
                 "source": "https://github.com/glpi-project/tools"
             },
-            "time": "2023-07-27T12:32:25+00:00"
+            "time": "2023-10-16T11:40:35+00:00"
         },
         {
             "name": "psr/container",
@@ -909,16 +913,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v5.4.26",
+            "version": "v5.4.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "1181fe9270e373537475e826873b5867b863883c"
+                "reference": "e41bdc93def20eaf3bfc1537c4e0a2b0680a152d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/1181fe9270e373537475e826873b5867b863883c",
-                "reference": "1181fe9270e373537475e826873b5867b863883c",
+                "url": "https://api.github.com/repos/symfony/string/zipball/e41bdc93def20eaf3bfc1537c4e0a2b0680a152d",
+                "reference": "e41bdc93def20eaf3bfc1537c4e0a2b0680a152d",
                 "shasum": ""
             },
             "require": {
@@ -975,7 +979,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v5.4.26"
+                "source": "https://github.com/symfony/string/tree/v5.4.29"
             },
             "funding": [
                 {
@@ -991,7 +995,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-28T12:46:07+00:00"
+            "time": "2023-09-13T11:47:41+00:00"
         },
         {
             "name": "twig/twig",
