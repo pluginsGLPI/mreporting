@@ -31,7 +31,7 @@
 
 class PluginMreportingDashboard extends CommonDBTM
 {
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if (
             get_class($item) == 'Central'
@@ -43,7 +43,7 @@ class PluginMreportingDashboard extends CommonDBTM
     }
 
 
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         global $CFG_GLPI;
 
@@ -67,7 +67,7 @@ class PluginMreportingDashboard extends CommonDBTM
         return true;
     }
 
-    function showDashBoard($show_reports_dropdown = true)
+    public function showDashBoard($show_reports_dropdown = true)
     {
         global $LANG;
 
@@ -253,13 +253,13 @@ class PluginMreportingDashboard extends CommonDBTM
         echo "</div>";
     }
 
-    public static function CurrentUserHaveDashboard()
+    public static function currentUserHaveDashboard()
     {
         $dashboard = new PluginMreportingDashboard();
         return (count($dashboard->find(['users_id' => $_SESSION['glpiID']])) > 0);
     }
 
-    function getFormForColumn()
+    public function getFormForColumn()
     {
         $out  = "<form method='post' action='" . $this->getFormURL() . "'>";
         $out .= PluginMreportingCommon::getSelectAllReports(false, true);
@@ -270,13 +270,13 @@ class PluginMreportingDashboard extends CommonDBTM
         return $out;
     }
 
-    static function removeReportFromDashboard($id)
+    public static function removeReportFromDashboard($id)
     {
         $report = new PluginMreportingDashboard();
         return $report->delete(["id" => $id]);
     }
 
-    static function updateWidget($idreport)
+    public static function updateWidget($idreport)
     {
         global $LANG;
 
@@ -312,7 +312,7 @@ class PluginMreportingDashboard extends CommonDBTM
         echo $out;
     }
 
-    static function getConfig()
+    public static function getConfig()
     {
         PluginMreportingCommon::getSelectorValuesByUser();
 

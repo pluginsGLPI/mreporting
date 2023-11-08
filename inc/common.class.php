@@ -76,7 +76,7 @@ class PluginMreportingCommon extends CommonDBTM
 
         $menu = parent::getMenuContent();
 
-        $menu['page'] = PluginMreportingDashboard::CurrentUserHaveDashboard() ? $url_dashboard : $url_central;
+        $menu['page'] = PluginMreportingDashboard::currentUserHaveDashboard() ? $url_dashboard : $url_central;
         $menu['icon'] = self::getIcon();
         $menu['title'] = self::getTypeName(Session::getPluralNumber());
 

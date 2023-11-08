@@ -36,18 +36,18 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 {
     const DEBUG_GRAPH = false;
 
-   //define common colors
+    //define common colors
     private $black    = "0x00000000";
     private $white    = "0x00FFFFFF";
     private $grey     = "0x00F2F2F2";
     private $darkgrey = "0x00B4B4B4";
 
-   //define font
+    //define font
     private $font      =  '';
     private $fontsize  = 8;
     private $fontangle = 0;
 
-    function __construct()
+    public function __construct()
     {
         $this->font = PLUGIN_MREPORTING_DIR . '/fonts/FreeSans.ttf';
     }
@@ -58,7 +58,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     *
     * @params $options ($rand, short_classname, title, desc, delay)
    */
-    function initGraph($options)
+    public function initGraph($options)
     {
         global $LANG, $CFG_GLPI;
 
@@ -123,7 +123,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     }
 
 
-    function showImage($contents, $export = "png")
+    public function showImage($contents, $export = "png")
     {
         global $CFG_GLPI;
 
@@ -154,7 +154,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     }
 
 
-    function generateImage($params)
+    public function generateImage($params)
     {
 
        // Default values of parameters
@@ -215,7 +215,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     }
 
 
-    static function getColors($index = 20)
+    public static function getColors($index = 20)
     {
         $colors = PluginMreportingConfig::getColors($index);
         foreach ($colors as &$color) {
@@ -228,7 +228,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
    /**
      * returns an array with the rgb values
      **/
-    static function colorHexToRGB($color)
+    public static function colorHexToRGB($color)
     {
         $hex = substr($color, 4);
 
@@ -248,7 +248,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
 
 
-    static function getPalette($nb_index = 20, $alpha = "00")
+    public static function getPalette($nb_index = 20, $alpha = "00")
     {
         $palette = [];
         foreach (self::getColors($nb_index) as $color) {
@@ -267,7 +267,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
 
 
-    static function getDarkerPalette($nb_index = 20, $alpha = "00")
+    public static function getDarkerPalette($nb_index = 20, $alpha = "00")
     {
         $palette = [];
         foreach (self::getColors($nb_index) as $color) {
@@ -284,7 +284,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     }
 
 
-    static function getLighterPalette($nb_index = 20, $alpha = "00")
+    public static function getLighterPalette($nb_index = 20, $alpha = "00")
     {
         $palette = [];
         foreach (self::getColors($nb_index) as $color) {
@@ -300,7 +300,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         return $palette;
     }
 
-    static function darker($color, $factor = 50)
+    public static function darker($color, $factor = 50)
     {
         if (strlen($color) == 10) {
             $color = substr($color, 4);
@@ -328,7 +328,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     }
 
 
-    static function lighter($color, $factor = 50)
+    public static function lighter($color, $factor = 50)
     {
         if (strlen($color) == 10) {
             $color = substr($color, 4);
@@ -372,7 +372,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     *
     * @author  DASPRiD <d@sprid.de>
     */
-    function imageSmoothAlphaLine($image, $x1, $y1, $x2, $y2, $dcol)
+    public function imageSmoothAlphaLine($image, $x1, $y1, $x2, $y2, $dcol)
     {
 
         $height  = imagesy($image) - 1;
@@ -496,10 +496,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 $y++;
             }
         }
-    } // end of 'imageSmoothAlphaLine()' function
+    }
 
 
-    function imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $color)
+    public function imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $color)
     {
         imageline($image, $x1, $y1, $x2, $y2, hexdec($color));
         $this->imageSmoothAlphaLine($image, $x1 - 1, $y1 - 1, $x2 - 1, $y2 - 1, $color);
@@ -520,7 +520,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param   coords   array with points coordinates (x1 => y1, x2 => y2, etc)
     *
     */
-    function imageCubicSmoothLine($image, $color, $coords)
+    public function imageCubicSmoothLine($image, $color, $coords)
     {
 
         $oCurve = new CubicSplines();
@@ -567,7 +567,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showHbar($params, $dashboard = false, $width = false)
+    public function showHbar($params, $dashboard = false, $width = false)
     {
         if ($width !== false) {
             $this->width = $width + 50;
@@ -765,7 +765,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showPie($params, $dashboard = false, $width = false)
+    public function showPie($params, $dashboard = false, $width = false)
     {
 
         $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -1008,7 +1008,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showSunburst($params, $dashboard = false, $width = false)
+    public function showSunburst($params, $dashboard = false, $width = false)
     {
         $criterias = PluginMreportingCommon::initGraphParams($params);
         foreach ($criterias as $key => $val) {
@@ -1139,7 +1139,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         PluginMreportingCommon::endGraph($options, $dashboard);
     }
 
-    function drawSunburstLevel($image, $datas, $params = [])
+    public function drawSunburstLevel($image, $datas, $params = [])
     {
         $width  = $params['width'] - 70;
         $height = $params['height'] - 120;
@@ -1336,7 +1336,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showHgbar($params, $dashboard = false, $width = false)
+    public function showHgbar($params, $dashboard = false, $width = false)
     {
         if ($width !== false) {
             $this->width = $width;
@@ -1584,7 +1584,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showVstackbar($params, $dashboard = false, $width = false)
+    public function showVstackbar($params, $dashboard = false, $width = false)
     {
         if ($width !== false) {
             $this->width = $width;
@@ -1922,7 +1922,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $area : show plain chart instead only a line (optionnal)
     * @return nothing
     */
-    function showArea($params, $dashboard = false, $width = false)
+    public function showArea($params, $dashboard = false, $width = false)
     {
         if ($width !== false) {
             $this->width = $width;
@@ -2223,7 +2223,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             "unit"      => $unit
         ];
         PluginMreportingCommon::endGraph($options, $dashboard);
-    } // end Area
+    }
 
 
    /**
@@ -2240,7 +2240,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showGArea($params, $dashboard = false, $width = false)
+    public function showGArea($params, $dashboard = false, $width = false)
     {
         if ($width !== false) {
             $this->width = $width;
@@ -2589,5 +2589,5 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             "unit"      => $unit
         ];
         PluginMreportingCommon::endGraph($options, $dashboard);
-    }// End Garea
-}// End Class
+    }
+}

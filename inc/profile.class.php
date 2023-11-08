@@ -35,15 +35,15 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginMreportingProfile extends CommonDBTM
 {
-    static $rightname = 'profile';
+    public static $rightname = 'profile';
 
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __("More Reporting", 'mreporting');
     }
 
    //if profile deleted
-    static function purgeProfiles(Profile $prof)
+    public static function purgeProfiles(Profile $prof)
     {
         $plugprof = new self();
         $plugprof->deleteByCriteria(['profiles_id' => $prof->getField("id")]);
@@ -51,7 +51,7 @@ class PluginMreportingProfile extends CommonDBTM
 
 
    //if reports add
-    static function addReport(PluginMreportingConfig $config)
+    public static function addReport(PluginMreportingConfig $config)
     {
         $plugprof = new self();
         $plugprof->addRightToReports($config->getField("id"));
@@ -59,13 +59,13 @@ class PluginMreportingProfile extends CommonDBTM
 
 
    //if reports  deleted
-    static function purgeProfilesByReports(PluginMreportingConfig $config)
+    public static function purgeProfilesByReports(PluginMreportingConfig $config)
     {
         $plugprof = new self();
         $plugprof->deleteByCriteria(['reports' => $config->getField("id")]);
     }
 
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if ($item->getField('interface') == 'helpdesk') {
             return false;
@@ -82,7 +82,7 @@ class PluginMreportingProfile extends CommonDBTM
     }
 
 
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         global $CFG_GLPI;
 
@@ -101,7 +101,7 @@ class PluginMreportingProfile extends CommonDBTM
         return true;
     }
 
-    function getFromDBByProfile($profiles_id)
+    public function getFromDBByProfile($profiles_id)
     {
         global $DB;
 
@@ -121,7 +121,7 @@ class PluginMreportingProfile extends CommonDBTM
    /**
    * @param $right array
    */
-    static function addRightToAllProfiles()
+    public static function addRightToAllProfiles()
     {
         global $DB;
 
@@ -141,7 +141,7 @@ class PluginMreportingProfile extends CommonDBTM
     }
 
 
-    static function getRight()
+    public static function getRight()
     {
         global $DB;
 
@@ -186,7 +186,7 @@ class PluginMreportingProfile extends CommonDBTM
    * Function to add right of a new report
    * @param $report_id
    */
-    function addRightToReports($report_id)
+    public function addRightToReports($report_id)
     {
         global $DB;
 
@@ -200,12 +200,12 @@ class PluginMreportingProfile extends CommonDBTM
         }
     }
 
-    function createAccess($ID)
+    public function createAccess($ID)
     {
         $this->add(['profiles_id' => $ID]);
     }
 
-    static function changeProfile()
+    public static function changeProfile()
     {
         $prof = new self();
         if ($prof->getFromDBByProfile($_SESSION['glpiactiveprofile']['id'])) {
@@ -221,7 +221,7 @@ class PluginMreportingProfile extends CommonDBTM
    * @param array $options
    * @return bool
    */
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         global $LANG, $CFG_GLPI;
 
@@ -301,7 +301,7 @@ class PluginMreportingProfile extends CommonDBTM
    * Form to manage right on reports
    * @param $items
    */
-    function showFormForManageProfile($items, $options = [])
+    public function showFormForManageProfile($items, $options = [])
     {
         global $DB, $CFG_GLPI;
 
@@ -363,7 +363,7 @@ class PluginMreportingProfile extends CommonDBTM
     }
 
 
-    function findByProfileAndReport($profil_id, $report_id)
+    public function findByProfileAndReport($profil_id, $report_id)
     {
         $prof = new self();
         $prof->getFromDBByCrit(
@@ -375,7 +375,7 @@ class PluginMreportingProfile extends CommonDBTM
         return $prof;
     }
 
-    function findReportByProfiles($profil_id)
+    public function findReportByProfiles($profil_id)
     {
         $prof = new self();
         $prof->getFromDBByCrit(
@@ -387,7 +387,7 @@ class PluginMreportingProfile extends CommonDBTM
     }
 
 
-    static function canViewReports($profil_id, $report_id)
+    public static function canViewReports($profil_id, $report_id)
     {
         $prof = new self();
         $res = $prof->getFromDBByCrit(
@@ -405,7 +405,7 @@ class PluginMreportingProfile extends CommonDBTM
     }
 
    // Hook done on add item case
-    static function addProfiles(Profile $item)
+    public static function addProfiles(Profile $item)
     {
         if ($item->getType() == 'Profile' && $item->getField('interface') != 'helpdesk') {
             PluginMreportingProfile::addRightToProfile($item->getID());

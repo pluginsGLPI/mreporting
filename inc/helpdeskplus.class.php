@@ -50,7 +50,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     protected $sql_select_sla;
 
 
-    function __construct($config = [])
+    public function __construct($config = [])
     {
         /** @var array $LANG */
         global $LANG;
@@ -135,7 +135,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         }
     }
 
-    function reportGlineBacklogs($config = [])
+    public function reportGlineBacklogs($config = [])
     {
         global $DB, $LANG;
 
@@ -321,7 +321,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
 
 
-    function reportVstackbarLifetime($config = [])
+    public function reportVstackbarLifetime($config = [])
     {
         global $DB;
 
@@ -376,7 +376,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
 
 
-    function reportVstackbarTicketsgroups($config = [])
+    public function reportVstackbarTicketsgroups($config = [])
     {
         global $DB;
 
@@ -429,7 +429,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
 
 
-    function reportVstackbarTicketstech($config = [])
+    public function reportVstackbarTicketstech($config = [])
     {
         global $DB;
 
@@ -489,7 +489,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportHbarTopcategory($config = [])
+    public function reportHbarTopcategory($config = [])
     {
         global $DB;
 
@@ -531,7 +531,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportHbarTopapplicant($config = [])
+    public function reportHbarTopapplicant($config = [])
     {
         global $DB;
 
@@ -567,7 +567,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportVstackbarGroupChange($config = [])
+    public function reportVstackbarGroupChange($config = [])
     {
         global $DB;
 
@@ -619,7 +619,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     }
 
 
-    function reportLineActiontimeVsSolvedelay($config = [])
+    public function reportLineActiontimeVsSolvedelay($config = [])
     {
         global $DB;
 
@@ -668,8 +668,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     }
 
 
-
-    function reportGlineNbTicketBySla($config = [])
+    public function reportGlineNbTicketBySla($config = [])
     {
         global $DB;
 
@@ -690,10 +689,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
          INNER JOIN `glpi_slas`
             ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          WHERE {$this->sql_date_create}
-            AND `glpi_tickets`.status IN (" . implode(
-            ',',
-            array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
+            AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ")
             AND `glpi_tickets`.`entities_id` IN (" . $this->where_entities . ")
             AND `glpi_tickets`.`is_deleted` = '0'
             AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ")
@@ -720,10 +716,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
          INNER JOIN `glpi_slas`
             ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          WHERE {$this->sql_date_create}
-         AND `glpi_tickets`.status IN (" . implode(
-            ',',
-            array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
+         AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ")
          AND `glpi_tickets`.entities_id IN (" . $this->where_entities . ")
          AND `glpi_tickets`.is_deleted = '0'";
             if (isset($_SESSION['mreporting_values']['slas'])) {
@@ -886,7 +879,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function fillStatusMissingValues($tab, $labels2 = [])
+    public function fillStatusMissingValues($tab, $labels2 = [])
     {
         $datas = [];
         foreach ($tab as $name => $data) {
@@ -912,7 +905,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         return $datas;
     }
 
-    static function selectorBacklogstates()
+    public static function selectorBacklogstates()
     {
         global $LANG;
 
@@ -962,7 +955,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     }
 
 
-    function reportVstackbarRespectedSlasByGroup($config = [])
+    public function reportVstackbarRespectedSlasByGroup($config = [])
     {
         global $DB, $LANG;
 
@@ -992,10 +985,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             INNER JOIN `glpi_slas`
                ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
             WHERE {$this->sql_date_create}
-               AND `glpi_tickets`.status IN (" . implode(
-            ',',
-            array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
+               AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ")
                AND `glpi_tickets`.entities_id IN ({$this->where_entities})
                AND `glpi_tickets`.is_deleted = '0'
                AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ")
@@ -1047,7 +1037,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportVstackbarNbTicketBySla($config = [])
+    public function reportVstackbarNbTicketBySla($config = [])
     {
         global $DB, $LANG;
 
@@ -1074,10 +1064,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                      INNER JOIN `glpi_slas`
                         ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
                      WHERE {$this->sql_date_create}
-                     AND `glpi_tickets`.status IN (" . implode(
-            ',',
-            array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())
-            ) . ")
+                     AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ")
                      AND `glpi_tickets`.entities_id IN ({$this->where_entities})
                      AND `glpi_tickets`.is_deleted = '0'
                      AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ")
@@ -1098,37 +1085,5 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         }
 
         return $datas;
-    }
-
-
-    private function _getPeriod()
-    {
-        if (isset($_REQUEST['period']) && !empty($_REQUEST['period'])) {
-            switch ($_REQUEST['period']) {
-                case 'day':
-                    $this->_period_sort = '%y%m%d';
-                    $this->_period_label = '%d %b %Y';
-                    break;
-                case 'week':
-                    $this->_period_sort = '%y%u';
-                    $this->_period_label = 'S-%u %Y';
-                    break;
-                case 'month':
-                    $this->_period_sort = '%y%m';
-                    $this->_period_label = '%b %Y';
-                    break;
-                case 'year':
-                    $this->_period_sort = '%Y';
-                    $this->_period_label = '%Y';
-                    break;
-                default:
-                    $this->_period_sort = '%y%m';
-                    $this->_period_label = '%b %Y';
-                    break;
-            }
-        } else {
-            $this->_period_sort = '%y%m';
-            $this->_period_label = '%b %Y';
-        }
     }
 }

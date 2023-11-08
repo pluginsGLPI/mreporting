@@ -31,14 +31,14 @@
 
 class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 {
-    function reportPieTicketNumberByEntity($config = [])
+    public function reportPieTicketNumberByEntity($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieTicketNumberByEntity'] = ['dateinterval'];
 
         return $this->reportHbarTicketNumberByEntity($config);
     }
 
-    function reportHbarTicketNumberByEntity($config = [])
+    public function reportHbarTicketNumberByEntity($config = [])
     {
         global $DB;
 
@@ -85,7 +85,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportHgbarTicketNumberByCatAndEntity($config = [])
+    public function reportHgbarTicketNumberByCatAndEntity($config = [])
     {
         global $DB;
 
@@ -187,7 +187,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportPieTicketOpenedAndClosed($config = [])
+    public function reportPieTicketOpenedAndClosed($config = [])
     {
         global $DB;
 
@@ -220,7 +220,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return ['datas' => $datas];
     }
 
-    function reportPieTicketOpenedbyStatus($config = [])
+    public function reportPieTicketOpenedbyStatus($config = [])
     {
         global $DB;
 
@@ -266,7 +266,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportPieTopTenAuthor($config = [])
+    public function reportPieTopTenAuthor($config = [])
     {
         global $DB;
 
@@ -311,14 +311,14 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
     }
 
 
-    function reportHgbarOpenTicketNumberByCategoryAndByType($config = [])
+    public function reportHgbarOpenTicketNumberByCategoryAndByType($config = [])
     {
         $_SESSION['mreporting_selector']['reportHgbarOpenTicketNumberByCategoryAndByType']
          = ['dateinterval'];
         return $this->reportHgbarTicketNumberByCategoryAndByType($config, 'open');
     }
 
-    function reportHgbarCloseTicketNumberByCategoryAndByType($config = [])
+    public function reportHgbarCloseTicketNumberByCategoryAndByType($config = [])
     {
         $_SESSION['mreporting_selector']['reportHgbarCloseTicketNumberByCategoryAndByType']
          = ['dateinterval'];
@@ -350,10 +350,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             ON glpi_itilcategories.id = glpi_tickets.itilcategories_id
          WHERE {$this->sql_date}
             AND glpi_tickets.entities_id IN ({$this->where_entities})
-            AND glpi_tickets.status IN('" . implode(
-    "', '",
-    array_keys($this->filters[$filter]['status'])
-) . "')
+            AND glpi_tickets.status IN('" . implode("', '", array_keys($this->filters[$filter]['status'])) . "')
             AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_itilcategories.id, glpi_tickets.type
          ORDER BY glpi_itilcategories.name";
@@ -377,7 +374,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportHgbarTicketNumberByService($config = [])
+    public function reportHgbarTicketNumberByService($config = [])
     {
         global $DB;
 
@@ -431,7 +428,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportHgbarOpenedTicketNumberByCategory($config = [])
+    public function reportHgbarOpenedTicketNumberByCategory($config = [])
     {
         global $DB;
 
@@ -502,14 +499,14 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportLineNbTicket($config = [])
+    public function reportLineNbTicket($config = [])
     {
         $_SESSION['mreporting_selector']['reportLineNbTicket'] = ['dateinterval'];
 
         return $this->reportAreaNbTicket($config, false);
     }
 
-    function reportAreaNbTicket($config = [], $area = true)
+    public function reportAreaNbTicket($config = [], $area = true)
     {
         global $DB;
 
@@ -542,19 +539,19 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportVstackbarNbTicket($config = [])
+    public function reportVstackbarNbTicket($config = [])
     {
         $_SESSION['mreporting_selector']['reportVstackbarNbTicket'] = ['dateinterval'];
         return $this->reportGlineNbTicket($config, false);
     }
 
-    function reportGareaNbTicket($config = [])
+    public function reportGareaNbTicket($config = [])
     {
         $_SESSION['mreporting_selector']['reportGareaNbTicket'] = ['dateinterval'];
         return $this->reportGlineNbTicket($config, true);
     }
 
-    function reportGlineNbTicket($config = [], $area = false)
+    public function reportGlineNbTicket($config = [], $area = false)
     {
         global $DB;
 
@@ -638,7 +635,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportSunburstTicketByCategories($config = [])
+    public function reportSunburstTicketByCategories($config = [])
     {
         global $DB;
 
@@ -696,7 +693,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
     }
 
 
-    function reportVstackbarTicketStatusByTechnician($config = [])
+    public function reportVstackbarTicketStatusByTechnician($config = [])
     {
         global $DB;
 
@@ -777,7 +774,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportHbarTicketNumberByLocation($config = [])
+    public function reportHbarTicketNumberByLocation($config = [])
     {
         global $DB;
 
@@ -833,7 +830,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
    * @param type $functionname
    * @return $opt
    */
-    function customExportDates(array $opt, $functionname)
+    public function customExportDates(array $opt, $functionname)
     {
         $config = PluginMreportingConfig::initConfigParams($functionname, __CLASS__);
 
@@ -850,7 +847,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
    * @param PluginMreportingConfig $config
    * @return $config
    */
-    function preconfig($funct_name, $classname, PluginMreportingConfig $config)
+    public function preconfig($funct_name, $classname, PluginMreportingConfig $config)
     {
 
         if ($funct_name != -1 && $classname) {
