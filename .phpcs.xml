@@ -3,6 +3,8 @@
     <file>.</file>
     <exclude-pattern>/.git/</exclude-pattern>
     <exclude-pattern type="relative">^vendor/</exclude-pattern>
+    <exclude-pattern type="relative">^lib/</exclude-pattern>
+    <exclude-pattern type="relative">^locales/</exclude-pattern>
 
     <arg name="colors" />
     <arg name="extensions" value="php" />
