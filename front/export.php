@@ -32,7 +32,7 @@
 $USEDBREPLICATE         = 1;
 $DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 

@@ -29,12 +29,12 @@
  * -------------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 
 if (isset($_GET["classname"])) {
-   $_POST["classname"] = $_GET["classname"];
+    $_POST["classname"] = $_GET["classname"];
 }
 
 Html::popHeader(__("General Report - ODT", 'mreporting'), $_SERVER['PHP_SELF']);
@@ -44,6 +44,6 @@ $common->showExportForm($_POST);
 
 echo "<div class='center'>";
 echo "<br>";
-echo "<a href='javascript:window.close()'>".__("Back")."</a>";
+echo "<a href='javascript:window.close()'>" . __("Back") . "</a>";
 echo "</div>";
 Html::popFooter();

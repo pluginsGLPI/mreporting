@@ -29,33 +29,28 @@
  * -------------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkRight("config", UPDATE);
 
 $plugin = new Plugin();
 if ($plugin->isActivated("mreporting")) {
-
    //Create first config for graphs
-   if (isset($_GET["new"])) {
+    if (isset($_GET["new"])) {
+        $config = new PluginMreportingConfig();
+        $config->createFirstConfig();
+        Html::back();
+    } else {
+        Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'config');
 
-      $config= new PluginMreportingConfig();
-      $config->createFirstConfig();
-      Html::back();
-
-   } else {
-
-      Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'config');
-
-      PluginMreportingConfig::addFirstconfigLink();
-      Search::show("PluginMreportingConfig");
-   }
-
+        PluginMreportingConfig::addFirstconfigLink();
+        Search::show("PluginMreportingConfig");
+    }
 } else {
     Html::header(__("Setup"), '', "config", "plugins");
     echo "<div align='center'>";
     echo "<br><br>";
-    echo "<img src=\"".$CFG_GLPI["root_doc"]."/pics/warning.png\" alt=\"warning\">";
+    echo "<img src=\"" . $CFG_GLPI["root_doc"] . "/pics/warning.png\" alt=\"warning\">";
     echo "<br><br>";
     echo "<b>Please activate the plugin</b></div>";
 }

@@ -29,35 +29,36 @@
  * -------------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 
-if (isset($_POST['ext'])
-      && !empty($_POST['ext'])) {
-   if ($_POST['ext'] == "odt") {
-      echo "&nbsp;";
-      $option = [];
-      $option[1] = __("With data", 'mreporting');
-      $option[0] = __("Without data", 'mreporting');
-      Dropdown::showFromArray("withdata", $option, []);
+if (
+    isset($_POST['ext'])
+      && !empty($_POST['ext'])
+) {
+    if ($_POST['ext'] == "odt") {
+        echo "&nbsp;";
+        $option = [];
+        $option[1] = __("With data", 'mreporting');
+        $option[0] = __("Without data", 'mreporting');
+        Dropdown::showFromArray("withdata", $option, []);
+    }
 
-   }
+    if ($_POST['ext'] == "svg") {
+       //close previous form
+        Html::Closeform();
 
-   if ($_POST['ext'] == "svg") {
-      //close previous form
-      Html::Closeform();
-
-      $randname = $_POST['randname'];
-      echo "<form method='post' action='export_svg.php' id='export_svg_form' ".
+        $randname = $_POST['randname'];
+        echo "<form method='post' action='export_svg.php' id='export_svg_form' " .
          "style='margin: 0; padding: 0' target='_blank'>";
-      echo "<input type='hidden' name='svg_content' value='none' />";
-      echo "<input type='button' class='submit' id='export_svg_link' target='_blank' href='#' ".
-                        "onClick='return false;' value='"._sx('button', 'Post')."' />";
-      Html::Closeform();
-      echo "<script type='text/javascript'>
+        echo "<input type='hidden' name='svg_content' value='none' />";
+        echo "<input type='button' class='submit' id='export_svg_link' target='_blank' href='#' " .
+                        "onClick='return false;' value='" . _sx('button', 'Post') . "' />";
+        Html::Closeform();
+        echo "<script type='text/javascript'>
             $('#export_svg_link').on('click', function () {
                var svg_content = vis{$randname}.scene[0].canvas.innerHTML;
 
@@ -81,12 +82,11 @@ if (isset($_POST['ext'])
 
             });
          </script>";
-   } else {
+    } else {
+        echo "&nbsp;<input type='submit' id='export_submit' name='export' value=\"" .
+        _sx('button', 'Post') . "\" class='submit'>";
 
-      echo "&nbsp;<input type='submit' id='export_submit' name='export' value=\"".
-      _sx('button', 'Post')."\" class='submit'>";
-
-      echo "<script type='text/javascript'>
+        echo "<script type='text/javascript'>
          $('#export_submit').on('click', function () {
             $.ajax({
                url: '../ajax/get_new_crsf_token.php'
@@ -96,6 +96,5 @@ if (isset($_POST['ext'])
          });
 
       </script>";
-   }
-
+    }
 }

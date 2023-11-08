@@ -29,7 +29,7 @@
  * -------------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 header("Expires: Mon, 26 Nov 1962 00:00:00 GMT");
 header('Pragma: private'); /// IE BUG + SSL
