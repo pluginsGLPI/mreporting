@@ -32,12 +32,12 @@
 class PluginMreportingInventory extends PluginMreportingBaseclass
 {
    /* ==== SPECIFIC SELECTORS FOR INVENTORY ==== */
-    static function selectorMultipleStates()
+    public static function selectorMultipleStates()
     {
         self::selectorForMultipleStates('states_id', [], _sx("item", "State"));
     }
 
-    static function selectorForMultipleStates($field, $condition = [], $label = '')
+    public static function selectorForMultipleStates($field, $condition = [], $label = '')
     {
         global $DB;
 
@@ -62,7 +62,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         Dropdown::showFromArray($field, $datas, $param);
     }
 
-    static function getDefaultState()
+    public static function getDefaultState()
     {
         global $DB;
 
@@ -74,7 +74,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $states;
     }
 
-    static function getStateCondition($field, $as_array = false)
+    public static function getStateCondition($field, $as_array = false)
     {
         $sql_states = ($as_array ? [] : "");
         if (isset($_SESSION['mreporting_values']['states_id'])) {
@@ -96,19 +96,19 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     }
 
    /* ==== MANUFACTURERS REPORTS ==== */
-    function reportPieComputersByFabricant($config = [])
+    public function reportPieComputersByFabricant($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieComputersByFabricant'] = ['multiplestates'];
         return $this->computersByFabricant($config);
     }
 
-    function reportHbarComputersByFabricant($config = [])
+    public function reportHbarComputersByFabricant($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarComputersByFabricant'] = ['multiplestates'];
         return $this->computersByFabricant($config);
     }
 
-    function computersByFabricant($config = [])
+    public function computersByFabricant($config = [])
     {
         global $DB;
 
@@ -148,19 +148,19 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     }
 
    /* ==== COMPUTER'S TYPE REPORTS ==== */
-    function reportPieComputersByType($config = [])
+    public function reportPieComputersByType($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieComputersByType'] = ['multiplestates'];
         return $this->computersByType($config);
     }
 
-    function reportHbarComputersByType($config = [])
+    public function reportHbarComputersByType($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarComputersByType'] = ['multiplestates'];
         return $this->computersByType($config);
     }
 
-    function computersByType($config = [])
+    public function computersByType($config = [])
     {
         global $DB;
 
@@ -196,19 +196,19 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     }
 
    /* ==== COMPUTER'S AGE REPORTS ==== */
-    function reportPieComputersByAge($config = [])
+    public function reportPieComputersByAge($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieComputersByAge'] = ['multiplestates'];
         return $this->computersByAge($config);
     }
 
-    function reportHbarComputersByAge($config = [])
+    public function reportHbarComputersByAge($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarComputersByAge'] = ['multiplestates'];
         return $this->computersByAge($config);
     }
 
-    function computersByAge($config = [])
+    public function computersByAge($config = [])
     {
         global $DB;
 
@@ -321,19 +321,19 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
 
    /* === OS REPORTS === */
-    function reportPieComputersByOS($config = [])
+    public function reportPieComputersByOS($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieComputersByOS'] = ['multiplestates'];
         return $this->computersByOS($config);
     }
 
-    function reportHbarComputersByOS($config = [])
+    public function reportHbarComputersByOS($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarComputersByOS'] = ['multiplestates'];
         return $this->computersByOS($config);
     }
 
-    function computersByOS($config = [])
+    public function computersByOS($config = [])
     {
         global $DB;
 
@@ -417,7 +417,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     }
 
 
-    function reportHbarWindows($config = [])
+    public function reportHbarWindows($config = [])
     {
         global $DB;
 
@@ -485,7 +485,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $data;
     }
 
-    function reportHbarLinux($config = [])
+    public function reportHbarLinux($config = [])
     {
         global $DB;
 
@@ -542,7 +542,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $data;
     }
 
-    function reportHbarLinuxDistro($config = [])
+    public function reportHbarLinuxDistro($config = [])
     {
         global $DB;
 
@@ -582,7 +582,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $data;
     }
 
-    function reportHbarMac($config = [])
+    public function reportHbarMac($config = [])
     {
         global $DB;
 
@@ -637,7 +637,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $data;
     }
 
-    function reportHbarMacFamily($config = [])
+    public function reportHbarMacFamily($config = [])
     {
         global $DB;
 
@@ -703,19 +703,19 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
 
    /* ==== FUSIONINVENTORY REPORTS ==== */
-    function reportPieFusionInventory($config = [])
+    public function reportPieFusionInventory($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieFusionInventory'] = ['multiplestates'];
         return $this->fusionInventory($config);
     }
 
-    function reportHbarFusionInventory($config = [])
+    public function reportHbarFusionInventory($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarFusionInventory'] = ['multiplestates'];
         return $this->fusionInventory($config);
     }
 
-    function fusionInventory($config = [])
+    public function fusionInventory($config = [])
     {
         global $DB;
 
@@ -753,7 +753,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     }
 
    /* ==== MONITOR REPORST ==== */
-    function reportHbarMonitors($config = [])
+    public function reportHbarMonitors($config = [])
     {
         global $DB;
 
@@ -784,7 +784,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     }
 
    /* ==== COMPUTER'S STATE REPORTS ==== */
-    function reportHbarComputersByStatus($config = [])
+    public function reportHbarComputersByStatus($config = [])
     {
         global $DB;
 
@@ -812,7 +812,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $datas;
     }
 
-    function reportHbarPrintersByStatus($config = [])
+    public function reportHbarPrintersByStatus($config = [])
     {
         global $DB;
 
@@ -839,7 +839,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     }
 
    /* ==== COMPUTER'S ENTITIES REPORTS ==== */
-    function reportHbarComputersByEntity($config = [])
+    public function reportHbarComputersByEntity($config = [])
     {
         global $DB, $CFG_GLPI;
 

@@ -43,7 +43,7 @@ class PluginMreportingNotification extends CommonDBTM
     * @param string $nb
     * @return string name of the plugin
     */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __("More Reporting", 'mreporting');
     }
@@ -53,7 +53,7 @@ class PluginMreportingNotification extends CommonDBTM
     *
     * @return array 'success' => true on success
     */
-    static function install($migration)
+    public static function install($migration)
     {
         global $DB;
 
@@ -114,7 +114,7 @@ class PluginMreportingNotification extends CommonDBTM
     *
     * @return array 'success' => true on success
     */
-    static function uninstall()
+    public static function uninstall()
     {
         global $DB;
 
@@ -154,7 +154,7 @@ class PluginMreportingNotification extends CommonDBTM
     *
     * @return array of strings
     */
-    static function cronInfo($name)
+    public static function cronInfo($name)
     {
         switch ($name) {
             case 'SendNotifications':
@@ -166,7 +166,7 @@ class PluginMreportingNotification extends CommonDBTM
    /**
     * @param $mailing_options
    **/
-    static function send($mailing_options, $additional_options)
+    public static function send($mailing_options, $additional_options)
     {
 
         $mail = new PluginMreportingNotificationMail();
@@ -183,7 +183,7 @@ class PluginMreportingNotification extends CommonDBTM
     *    <0 : to be run again (not finished)
     *     0 : nothing to do
     */
-    static function cronSendNotifications($task)
+    public static function cronSendNotifications($task)
     {
         $task->log(__("Notification(s) sent !", 'mreporting'));
         PluginMreportingNotificationEvent::raiseEvent('sendReporting', new self(), $task->fields);

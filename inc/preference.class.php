@@ -31,12 +31,12 @@
 
 class PluginMreportingPreference extends CommonDBTM
 {
-    static function checkIfPreferenceExists($users_id)
+    public static function checkIfPreferenceExists($users_id)
     {
         return self::checkPreferenceValue('id', $users_id);
     }
 
-    function addDefaultPreference($users_id)
+    public function addDefaultPreference($users_id)
     {
         $id = self::checkIfPreferenceExists($users_id);
         if (!$id) {
@@ -56,7 +56,7 @@ class PluginMreportingPreference extends CommonDBTM
     * @param unknown_type user ID
     * @return preference value or 0
     */
-    static function checkPreferenceValue($field, $users_id = 0)
+    public static function checkPreferenceValue($field, $users_id = 0)
     {
         $data = getAllDataFromTable(getTableForItemType(__CLASS__), ['users_id' => $users_id]);
         if (!empty($data)) {
@@ -67,7 +67,7 @@ class PluginMreportingPreference extends CommonDBTM
         }
     }
 
-    static function checkPreferenceTemplateValue($users_id)
+    public static function checkPreferenceTemplateValue($users_id)
     {
         return self::checkPreferenceValue('template', $users_id);
     }
@@ -77,7 +77,7 @@ class PluginMreportingPreference extends CommonDBTM
     * Display a dropdown of all ODT template files available
     * @param $value default value
     */
-    static function dropdownFileTemplates($value = '')
+    public static function dropdownFileTemplates($value = '')
     {
         return self::dropdownListFiles(
             'template',
@@ -96,7 +96,7 @@ class PluginMreportingPreference extends CommonDBTM
     * @param $directory directory in which to look for files
     * @param $value default value
     */
-    static function dropdownListFiles($name, $extension, $directory, $value = '')
+    public static function dropdownListFiles($name, $extension, $directory, $value = '')
     {
         $files     = self::getFiles($directory, $extension);
         $values    = [];
@@ -114,13 +114,13 @@ class PluginMreportingPreference extends CommonDBTM
     * Check if at least one template exists
     * @return true if at least one template exists, false otherwise
     */
-    static function atLeastOneTemplateExists()
+    public static function atLeastOneTemplateExists()
     {
         $files = self::getFiles(PLUGIN_MREPORTING_TEMPLATE_DIR, PLUGIN_MREPORTING_TEMPLATE_EXTENSION);
         return (!empty($files));
     }
 
-    function showForm($ID, array $options = [])
+    public function showForm($ID, array $options = [])
     {
         $this->getFromDB($ID);
 
@@ -153,7 +153,7 @@ class PluginMreportingPreference extends CommonDBTM
         Html::closeForm();
     }
 
-    static function getFiles($directory, $ext)
+    public static function getFiles($directory, $ext)
     {
 
         $array_dir  = [];
@@ -192,7 +192,7 @@ class PluginMreportingPreference extends CommonDBTM
     }
 
 
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         switch (get_class($item)) {
             case 'Preference':
@@ -203,7 +203,7 @@ class PluginMreportingPreference extends CommonDBTM
     }
 
 
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         switch (get_class($item)) {
             case 'Preference':

@@ -39,7 +39,7 @@ class PluginMreportingGraph
     *
     * @params $options ($rand, short_classname, title, desc, delay)
    */
-    function initGraph($options)
+    public function initGraph($options)
     {
         global $LANG, $CFG_GLPI;
 
@@ -130,7 +130,7 @@ class PluginMreportingGraph
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showHbar($params, $dashboard = false, $width = false)
+    public function showHbar($params, $dashboard = false, $width = false)
     {
 
         ob_start();
@@ -331,7 +331,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showPie($params, $dashboard = false, $width = false)
+    public function showPie($params, $dashboard = false, $width = false)
     {
         ob_start();
         if ($width !== false) {
@@ -526,7 +526,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showSunburst($params, $dashboard = false, $width = false)
+    public function showSunburst($params, $dashboard = false, $width = false)
     {
         ob_start();
         if ($width !== false) {
@@ -796,7 +796,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showHgbar($params, $dashboard = false, $width = false)
+    public function showHgbar($params, $dashboard = false, $width = false)
     {
         $criterias = PluginMreportingCommon::initGraphParams($params);
         ob_start();
@@ -1018,7 +1018,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showVstackbar($params, $dashboard = false, $width = false)
+    public function showVstackbar($params, $dashboard = false, $width = false)
     {
         ob_start();
         if ($width !== false) {
@@ -1229,6 +1229,7 @@ JAVASCRIPT;
             echo $content;
         }
     }
+
    /**
     * Show a Area chart
     *
@@ -1244,7 +1245,7 @@ JAVASCRIPT;
     * @param $area : show plain chart instead only a line (optionnal)
     * @return nothing
     */
-    function showArea($params, $dashboard = false, $width = false)
+    public function showArea($params, $dashboard = false, $width = false)
     {
         ob_start();
         if ($width !== false) {
@@ -1472,7 +1473,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showLine($params, $dashboard = false, $width = false)
+    public function showLine($params, $dashboard = false, $width = false)
     {
         $params['area'] = false;
         if ($dashboard) {
@@ -1496,7 +1497,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showGarea($params, $dashboard = false, $width = false)
+    public function showGarea($params, $dashboard = false, $width = false)
     {
         ob_start();
         if ($width !== false) {
@@ -1739,7 +1740,7 @@ JAVASCRIPT;
     * @param $export : keep only svg to export (optionnal)
     * @return nothing
     */
-    function showGline($params, $dashboard = false, $width = false)
+    public function showGline($params, $dashboard = false, $width = false)
     {
         $params['area'] = false;
         if ($dashboard) {
@@ -1756,8 +1757,7 @@ JAVASCRIPT;
     * @param $unit, ex : '%', 'Kg' (optionnal)
     * @return nothing
     */
-
-    function initDatasSimple($datas, $unit = '', $links = [])
+    public function initDatasSimple($datas, $unit = '', $links = [])
     {
 
         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
@@ -1810,8 +1810,7 @@ JAVASCRIPT;
     * @param $stacked : if stacked graph, option to compile the max value
     * @return nothing
     */
-
-    function initDatasMultiple($datas, $labels2, $unit = '', $stacked = false)
+    public function initDatasMultiple($datas, $labels2, $unit = '', $stacked = false)
     {
 
         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
@@ -1899,8 +1898,7 @@ JAVASCRIPT;
     * @param $unit, ex : '%', 'Kg' (optionnal)
     * @return nothing
     */
-
-    function initDatasTree($datas, $unit = '')
+    public function initDatasTree($datas, $unit = '')
     {
 
         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
@@ -1913,7 +1911,7 @@ JAVASCRIPT;
 
 
 
-    function legend($datas)
+    public function legend($datas)
     {
     }
 }
