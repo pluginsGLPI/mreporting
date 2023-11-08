@@ -33,7 +33,7 @@ use Odtphp\Odf;
 
 class PluginMreportingCommon extends CommonDBTM
 {
-    static $rightname = 'statistic';
+    public static $rightname = 'statistic';
 
     const MNBSP = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -58,7 +58,7 @@ class PluginMreportingCommon extends CommonDBTM
         return false;
     }
 
-    static function getMenuContent()
+    public static function getMenuContent()
     {
         global $CFG_GLPI;
 
@@ -107,7 +107,7 @@ class PluginMreportingCommon extends CommonDBTM
     * Parsing all classes
     * Search all class into inc folder
    */
-    static function parseAllClasses($inc_dir)
+    public static function parseAllClasses($inc_dir)
     {
 
         $classes = [];
@@ -139,7 +139,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @params
    */
 
-    function getAllReports($with_url = true, $params = [])
+    public function getAllReports($with_url = true, $params = [])
     {
         global $LANG;
 
@@ -241,7 +241,7 @@ class PluginMreportingCommon extends CommonDBTM
     *
     * @param array $opt : short_classname,f_name,gtype,rand
    */
-    static function title($opt)
+    public static function title($opt)
     {
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr><th>" . __("Select statistics to be displayed") . "&nbsp;:</th></tr>";
@@ -252,7 +252,7 @@ class PluginMreportingCommon extends CommonDBTM
         echo "</table>";
     }
 
-    static function getSelectAllReports($onchange = false, $setIdInOptionsValues = false)
+    public static function getSelectAllReports($onchange = false, $setIdInOptionsValues = false)
     {
 
         $common = new self();
@@ -338,7 +338,7 @@ class PluginMreportingCommon extends CommonDBTM
     * and display list
    */
 
-    function showCentral($params)
+    public function showCentral($params)
     {
 
         $reports = $this->getAllReports(true, $params);
@@ -420,7 +420,7 @@ class PluginMreportingCommon extends CommonDBTM
         echo "</table>";
     }
 
-    static function haveSomeThingToShow($graph)
+    public static function haveSomeThingToShow($graph)
     {
         foreach ($graph as $k => $v) {
             if ($v['right']) {
@@ -435,7 +435,7 @@ class PluginMreportingCommon extends CommonDBTM
     * for odt export
    */
 
-    function showExportForm($opt)
+    public function showExportForm($opt)
     {
         $classname = $opt["classname"];
         if ($classname) {
@@ -565,7 +565,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @params
    */
 
-    function initParams($params, $export = false)
+    public function initParams($params, $export = false)
     {
         if (!isset($params['classname'])) {
             if (!isset($params['short_classname'])) {
@@ -588,7 +588,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @params
    */
 
-    static function initGraphParams($params)
+    public static function initGraphParams($params)
     {
         $crit        = [];
 
@@ -615,7 +615,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @params $opt (classname, short_classname, f_name, gtype)
    */
 
-    function showGraph($opt, $export = false, $forceFormat = null)
+    public function showGraph($opt, $export = false, $forceFormat = null)
     {
         global $LANG, $CFG_GLPI;
 
@@ -687,7 +687,7 @@ class PluginMreportingCommon extends CommonDBTM
     }
 
 
-    static function dropdownExt($options = [])
+    public static function dropdownExt($options = [])
     {
         global $DB;
 
@@ -742,7 +742,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @params $options ($opt, export, datas, unit, labels2, flip_data)
    */
 
-    static function endGraph($options, $dashboard = false)
+    public static function endGraph($options, $dashboard = false)
     {
         global $CFG_GLPI;
 
@@ -855,7 +855,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @if percent, return new datas
     */
 
-    static function compileDatasForUnit($values, $unit = '')
+    public static function compileDatasForUnit($values, $unit = '')
     {
 
         $datas = $values;
@@ -927,7 +927,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param $flip_data, flip array if necessary
    */
 
-    static function showGraphDatas(
+    public static function showGraphDatas(
         $datas = [],
         $unit = '',
         $labels2 = [],
@@ -1042,7 +1042,7 @@ class PluginMreportingCommon extends CommonDBTM
         echo "</div><br>";
     }
 
-    static function showGraphTreeDatas($cols, $flip_data = false)
+    public static function showGraphTreeDatas($cols, $flip_data = false)
     {
         if ($flip_data != true) {
             arsort($cols);
@@ -1081,7 +1081,7 @@ class PluginMreportingCommon extends CommonDBTM
     *
     * @param $opt
    */
-    function export($opt)
+    public function export($opt)
     {
         global $LANG;
 
@@ -1270,7 +1270,7 @@ class PluginMreportingCommon extends CommonDBTM
         }
     }
 
-    static function generateOdt($params)
+    public static function generateOdt($params)
     {
         global $LANG;
 
@@ -1343,7 +1343,7 @@ class PluginMreportingCommon extends CommonDBTM
 
    // === SELECTOR FUNCTIONS ====
 
-    static function selectorForMultipleGroups($field, $condition = [], $label = '')
+    public static function selectorForMultipleGroups($field, $condition = [], $label = '')
     {
         global $DB;
 
@@ -1373,7 +1373,7 @@ class PluginMreportingCommon extends CommonDBTM
         Dropdown::showFromArray($field, $datas, $param);
     }
 
-    static function selectorForSingleGroup($field, $condition = [], $label = '')
+    public static function selectorForSingleGroup($field, $condition = [], $label = '')
     {
         echo "<br /><b>" . $label . " : </b><br />";
 
@@ -1387,7 +1387,7 @@ class PluginMreportingCommon extends CommonDBTM
     }
 
 
-    static function selectorGrouprequest()
+    public static function selectorGrouprequest()
     {
         self::selectorForSingleGroup(
             'groups_request_id',
@@ -1396,7 +1396,7 @@ class PluginMreportingCommon extends CommonDBTM
         );
     }
 
-    static function selectorGroupassign()
+    public static function selectorGroupassign()
     {
         self::selectorForSingleGroup(
             'groups_assign_id',
@@ -1405,7 +1405,7 @@ class PluginMreportingCommon extends CommonDBTM
         );
     }
 
-    static function selectorMultipleGrouprequest()
+    public static function selectorMultipleGrouprequest()
     {
         self::selectorForMultipleGroups(
             'groups_request_id',
@@ -1414,7 +1414,7 @@ class PluginMreportingCommon extends CommonDBTM
         );
     }
 
-    static function selectorMultipleGroupassign()
+    public static function selectorMultipleGroupassign()
     {
         self::selectorForMultipleGroups(
             'groups_assign_id',
@@ -1423,7 +1423,7 @@ class PluginMreportingCommon extends CommonDBTM
         );
     }
 
-    static function selectorUserassign()
+    public static function selectorUserassign()
     {
         echo "<br /><b>" . __("Technician in charge of the ticket") . " : </b><br />";
         $options = ['name'        => 'users_assign_id',
@@ -1438,7 +1438,7 @@ class PluginMreportingCommon extends CommonDBTM
    /**
     * Show the selector for tickets status (new, open, solved, closed...)
     */
-    static function selectorAllSlasWithTicket()
+    public static function selectorAllSlasWithTicket()
     {
         global $LANG, $DB;
 
@@ -1469,7 +1469,7 @@ class PluginMreportingCommon extends CommonDBTM
         ]);
     }
 
-    static function selectorPeriod($period = "day")
+    public static function selectorPeriod($period = "day")
     {
         global $LANG;
 
@@ -1491,7 +1491,7 @@ class PluginMreportingCommon extends CommonDBTM
         );
     }
 
-    static function selectorType()
+    public static function selectorType()
     {
         echo "<br /><b>" . _n("Type", "Types", 1) . " : </b><br />";
         Ticket::dropdownType(
@@ -1502,7 +1502,7 @@ class PluginMreportingCommon extends CommonDBTM
         );
     }
 
-    static function selectorCategory($type = true)
+    public static function selectorCategory($type = true)
     {
         global $CFG_GLPI;
 
@@ -1542,7 +1542,7 @@ class PluginMreportingCommon extends CommonDBTM
         }
     }
 
-    static function selectorLimit()
+    public static function selectorLimit()
     {
         echo "<b>" . __("Maximal count") . " :</b><br />";
 
@@ -1550,7 +1550,7 @@ class PluginMreportingCommon extends CommonDBTM
     }
 
 
-    static function selectorAllstates()
+    public static function selectorAllstates()
     {
         echo "<br><b>" . _n('Status', 'Statuses', 2) . " : </b><br />";
         $default = [CommonITILObject::INCOMING,
@@ -1582,7 +1582,7 @@ class PluginMreportingCommon extends CommonDBTM
         }
     }
 
-    static function selectorDateinterval()
+    public static function selectorDateinterval()
     {
         $randname = 'PluginMreporting' . $_REQUEST['short_classname'] . $_REQUEST['f_name'];
 
@@ -1612,7 +1612,7 @@ class PluginMreportingCommon extends CommonDBTM
     * Show entity level selector.
     * @return display selector
     */
-    static function selectorEntityLevel()
+    public static function selectorEntityLevel()
     {
         global $DB;
 
@@ -1639,7 +1639,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  string  $field     the sql table field to compare
     * @return string sql condition
     */
-    static function getSQLEntityLevel($field = "`glpi_entities`.`level`")
+    public static function getSQLEntityLevel($field = "`glpi_entities`.`level`")
     {
 
         if (isset($_SESSION['mreporting_values']['entitylevel'])) {
@@ -1663,7 +1663,7 @@ class PluginMreportingCommon extends CommonDBTM
     * Get active entity level according to GLPi SESSION
     * @return integer default entity level
     */
-    static function getActiveEntityLevel()
+    public static function getActiveEntityLevel()
     {
 
         if (isset($_SESSION['glpiactive_entity'])) {
@@ -1679,7 +1679,7 @@ class PluginMreportingCommon extends CommonDBTM
     * Get max entity level according to GLPi SESSION current active entity
     * @return integer max entity level
     */
-    static function getMaxEntityLevel()
+    public static function getMaxEntityLevel()
     {
         global $DB;
 
@@ -1701,7 +1701,7 @@ class PluginMreportingCommon extends CommonDBTM
         }
     }
 
-    static function canAccessAtLeastOneReport($profiles_id)
+    public static function canAccessAtLeastOneReport($profiles_id)
     {
         return countElementsInTable(
             "glpi_plugin_mreporting_profiles",
@@ -1709,7 +1709,7 @@ class PluginMreportingCommon extends CommonDBTM
         );
     }
 
-    static function showNavigation()
+    public static function showNavigation()
     {
         echo "<div class='center'>";
         echo "<a href='central.php'>" . __("Back") . "</a>";
@@ -1721,7 +1721,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  array $var the request string ($_REQUEST, $_POST, $_GET)
     * @return string the imploded array. Format : $key=$value&$key2=$value2...
     */
-    static function getRequestString($var)
+    public static function getRequestString($var)
     {
         unset($var['submit']);
 
@@ -1741,7 +1741,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  string $randname random string (to prevent conflict in js selection)
     * @return nothing
     */
-    static function showSelector($date1, $date2, $randname)
+    public static function showSelector($date1, $date2, $randname)
     {
         global $CFG_GLPI;
 
@@ -1791,7 +1791,7 @@ class PluginMreportingCommon extends CommonDBTM
    /**
     * Parse and include selectors functions
     */
-    static function getReportSelectors($export = false)
+    public static function getReportSelectors($export = false)
     {
         ob_start();
         self::addToSelector();
@@ -1841,7 +1841,7 @@ class PluginMreportingCommon extends CommonDBTM
         echo $content;
     }
 
-    static function saveSelectors($graphname, $config = [])
+    public static function saveSelectors($graphname, $config = [])
     {
         $remove = ['short_classname', 'f_name', 'gtype', 'submit'];
         $values = [];
@@ -1893,7 +1893,7 @@ class PluginMreportingCommon extends CommonDBTM
         $_SESSION['mreporting_values'] = $values;
     }
 
-    static function getSelectorValuesByUser()
+    public static function getSelectorValuesByUser()
     {
         global $DB;
 
@@ -1910,7 +1910,7 @@ class PluginMreportingCommon extends CommonDBTM
         $_SESSION['mreporting_values'] = $myvalues;
     }
 
-    static function addToSelector()
+    public static function addToSelector()
     {
         foreach ($_REQUEST as $key => $value) {
             if (!isset($_SESSION['mreporting_values'][$key])) {
@@ -1919,7 +1919,7 @@ class PluginMreportingCommon extends CommonDBTM
         }
     }
 
-    static function resetSelectorsForReport($report_name)
+    public static function resetSelectorsForReport($report_name)
     {
         global $DB;
 
@@ -1948,7 +1948,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  string $randname   random string (to prevent conflict in js selection)
     * @return string             The sql test to insert in your query
     */
-    static function getSQLDate($field = "`glpi_tickets`.`date`", $delay = 365, $randname = '')
+    public static function getSQLDate($field = "`glpi_tickets`.`date`", $delay = 365, $randname = '')
     {
 
         if (empty($_SESSION['mreporting_values']['date1' . $randname])) {
@@ -1986,7 +1986,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  array() $array the array to compute
     * @return number the sum
     */
-    static function getArrayMaxValue($array)
+    public static function getArrayMaxValue($array)
     {
         $max = 0;
 
@@ -2016,7 +2016,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  array() $array the array where to seek
     * @return number the sum
     */
-    static function getArraySum($array)
+    public static function getArraySum($array)
     {
         $sum = 0;
 
@@ -2041,7 +2041,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  array() $array the array where to seek
     * @return number the sum
     */
-    static function getArrayDepth($array)
+    public static function getArrayDepth($array)
     {
         $max_depth = 1;
 
@@ -2064,7 +2064,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  array $flat_array the flat array. Format : array('id', 'parent', 'name', 'count')
     * @return array the tree array. Format : array(name => array(name2 => array(count), ...)
     */
-    static function buildTree($flat_array)
+    public static function buildTree($flat_array)
     {
         $raw_tree = self::mapTree($flat_array);
         $tree = self::cleanTree($raw_tree);
@@ -2077,7 +2077,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  array $flat_array the flat array. Format : array('id', 'parent', 'name', 'count')
     * @return array the tree array. Format : array(orginal_keys, children => array(...)
     */
-    static function mapTree(array &$elements, $parentId = 0)
+    public static function mapTree(array &$elements, $parentId = 0)
     {
         $branch = [];
 
@@ -2101,7 +2101,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @return array the tree array.
     *               Format : array(name => array(name2 => array(count), ...)
     */
-    static function cleanTree($raw_tree)
+    public static function cleanTree($raw_tree)
     {
         $tree = [];
 
@@ -2123,7 +2123,7 @@ class PluginMreportingCommon extends CommonDBTM
         return $tree;
     }
 
-    static function getReportIcon($report_name)
+    public static function getReportIcon($report_name)
     {
        //see font-awesome : http://fortawesome.github.io/Font-Awesome/cheatsheet/
         $icons = [
@@ -2144,7 +2144,7 @@ class PluginMreportingCommon extends CommonDBTM
         return $icons[$chart_type];
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return 'fa fa-chart-pie';
     }

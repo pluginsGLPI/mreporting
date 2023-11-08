@@ -31,14 +31,14 @@
 
 class PluginMreportingNotificationTargetNotification extends NotificationTarget
 {
-    var $additionalData;
+    public $additionalData;
 
-    function getEvents()
+    public function getEvents()
     {
         return ['sendReporting' => __('More Reporting', 'mreporting')];
     }
 
-    function getTags()
+    public function getTags()
     {
         $this->addTagToList(['tag'   => 'mreporting.file_url',
             'label' => __('Link'),
@@ -48,11 +48,11 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
         asort($this->tag_descriptions);
     }
 
-    function addDataForTemplate($event, $options = [])
+    public function addDataForTemplate($event, $options = [])
     {
         global $CFG_GLPI;
 
-        $file_name = $this->_buildPDF(mt_rand() . '_');
+        $file_name = $this->buildPDF(mt_rand() . '_');
 
         $this->data['##lang.mreporting.file_url##'] = __('Link');
         $this->data['##mreporting.file_url##']      = $CFG_GLPI['url_base'] .
@@ -68,7 +68,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
     *
     * @return string hash Name of the created file
     */
-    private function _buildPDF($user_name = '')
+    private function buildPDF($user_name = '')
     {
         global $CFG_GLPI, $DB, $LANG;
 

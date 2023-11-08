@@ -31,7 +31,7 @@
 
 class PluginMreportingOther extends PluginMreportingBaseclass
 {
-    function reportHbarLogs($configs = [])
+    public function reportHbarLogs($configs = [])
     {
         global $DB;
 
@@ -134,7 +134,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
    * @param PluginMreportingConfig $config
    * @return $config
    */
-    function preconfig($funct_name, $classname, PluginMreportingConfig $config)
+    public function preconfig($funct_name, $classname, PluginMreportingConfig $config)
     {
 
         if ($funct_name != -1 && $classname) {

@@ -31,16 +31,16 @@
 
 class PluginMreportingBaseclass
 {
-    protected $sql_date,
-             $sql_date_create,
-             $sql_date_solve,
-             $sql_date_closed,
-             $filters,
-             $where_entities,
-             $where_entities_array,
-             $where_entities_level;
+    protected $sql_date;
+    protected $sql_date_create;
+    protected $sql_date_solve;
+    protected $sql_date_closed;
+    protected $filters;
+    protected $where_entities;
+    protected $where_entities_array;
+    protected $where_entities_level;
 
-    function __construct($config = [])
+    public function __construct($config = [])
     {
         global $DB, $LANG;
 

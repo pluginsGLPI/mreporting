@@ -33,7 +33,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 {
     const DEBUG_CSV = false;
 
-    function initGraph($options)
+    public function initGraph($options)
     {
         if (!self::DEBUG_CSV) {
             header("Content-type: application/csv");
@@ -41,7 +41,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         }
     }
 
-    function showHbar($params, $dashboard = false, $width = false)
+    public function showHbar($params, $dashboard = false, $width = false)
     {
         global $CFG_GLPI;
 
@@ -98,12 +98,12 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         echo $out;
     }
 
-    function showPie($params, $dashboard = false, $width = false)
+    public function showPie($params, $dashboard = false, $width = false)
     {
         $this->showHbar($params);
     }
 
-    function showHgbar($params, $dashboard = false, $width = false)
+    public function showHgbar($params, $dashboard = false, $width = false)
     {
         global $CFG_GLPI;
 
@@ -173,22 +173,22 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         echo $out;
     }
 
-    function showVstackbar($params, $dashboard = false, $width = false)
+    public function showVstackbar($params, $dashboard = false, $width = false)
     {
         $this->showHGbar($params);
     }
 
-    function showArea($params, $dashboard = false, $width = false)
+    public function showArea($params, $dashboard = false, $width = false)
     {
         $this->showHbar($params);
     }
 
-    function showGarea($params, $dashboard = false, $width = false)
+    public function showGarea($params, $dashboard = false, $width = false)
     {
         $this->showHGbar($params);
     }
 
-    function showSunburst($params, $dashboard = false, $width = false)
+    public function showSunburst($params, $dashboard = false, $width = false)
     {
         $criterias = PluginMreportingCommon::initGraphParams($params);
 
@@ -234,7 +234,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         echo $out;
     }
 
-    function sunburstLevel($datas, $level = 0)
+    public function sunburstLevel($datas, $level = 0)
     {
         $out = "";
 

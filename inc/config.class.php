@@ -35,9 +35,9 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginMreportingConfig extends CommonDBTM
 {
-    static $rightname = 'config';
+    public static $rightname = 'config';
 
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return __("Configuration", 'mreporting');
     }
@@ -45,7 +45,7 @@ class PluginMreportingConfig extends CommonDBTM
    /**
     * Définition des onglets
    **/
-    function defineTabs($options = [])
+    public function defineTabs($options = [])
     {
         $ong = [];
         $this->addDefaultFormTab($ong);
@@ -54,7 +54,7 @@ class PluginMreportingConfig extends CommonDBTM
     }
 
 
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
 
         $tab = [];
@@ -180,7 +180,7 @@ class PluginMreportingConfig extends CommonDBTM
         return $tab;
     }
 
-    static function getSpecificValueToDisplay($field, $values, array $options = [])
+    public static function getSpecificValueToDisplay($field, $values, array $options = [])
     {
 
         if (!is_array($values)) {
@@ -207,7 +207,7 @@ class PluginMreportingConfig extends CommonDBTM
     * @param $values          (default '')
     * @param $options   array
     **/
-    static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = [])
+    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = [])
     {
 
         if (!is_array($values)) {
@@ -231,7 +231,7 @@ class PluginMreportingConfig extends CommonDBTM
     }
 
 
-    function getFromDBByFunctionAndClassname($function, $classname)
+    public function getFromDBByFunctionAndClassname($function, $classname)
     {
         global $DB;
 
@@ -256,7 +256,7 @@ class PluginMreportingConfig extends CommonDBTM
     * add First config Link
     *@return nothing
     **/
-    static function addFirstconfigLink()
+    public static function addFirstconfigLink()
     {
         global $CFG_GLPI;
 
@@ -278,7 +278,7 @@ class PluginMreportingConfig extends CommonDBTM
     * create First Config for all graphs
     *@return nothing
     **/
-    function createFirstConfig()
+    public function createFirstConfig()
     {
        //$reports = array();
         $classConfig = false;
@@ -334,7 +334,7 @@ class PluginMreportingConfig extends CommonDBTM
     * @graphname internal name of graph
     *@return nothing
     **/
-    function preconfig($funct_name, $classname)
+    public function preconfig($funct_name, $classname)
     {
 
         if ($funct_name != -1 && $classname) {
@@ -408,7 +408,7 @@ class PluginMreportingConfig extends CommonDBTM
     * @options array example $value
     *@return nothing
     **/
-    static function dropdownGraph($name, $options = [])
+    public static function dropdownGraph($name, $options = [])
     {
         $self = new self();
         $common = new PluginMreportingCommon();
@@ -473,7 +473,7 @@ class PluginMreportingConfig extends CommonDBTM
     * @options array example $value
     *@return nothing
     **/
-    static function dropdownLabel($name, $options = [], $notall = false)
+    public static function dropdownLabel($name, $options = [], $notall = false)
     {
         $params['value']       = 0;
         $params['toadd']       = [];
@@ -496,7 +496,7 @@ class PluginMreportingConfig extends CommonDBTM
     *
     * @return array of types
    **/
-    static function getLabelTypes($notall = false)
+    public static function getLabelTypes($notall = false)
     {
         $options['never']     = __("Never");
         $options['hover']     = __("On mouse over", 'mreporting');
@@ -511,7 +511,7 @@ class PluginMreportingConfig extends CommonDBTM
     *
     * @param $value type ID
    **/
-    static function getLabelTypeName($value)
+    public static function getLabelTypeName($value)
     {
         switch ($value) {
             case 'hover':
@@ -530,7 +530,7 @@ class PluginMreportingConfig extends CommonDBTM
     * @param $always
     * @param $hover
    **/
-    static function checkVisibility($show_label, &$always, &$hover)
+    public static function checkVisibility($show_label, &$always, &$hover)
     {
         switch ($show_label) {
             case 'hover':
@@ -548,7 +548,7 @@ class PluginMreportingConfig extends CommonDBTM
         }
     }
 
-    static function getColors($index = 20)
+    public static function getColors($index = 20)
     {
         if (isset($_SESSION['mreporting']['colors'])) {
             $colors = $_SESSION['mreporting']['colors'];
@@ -579,7 +579,7 @@ class PluginMreportingConfig extends CommonDBTM
     }
 
 
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         if (isset($input["name"])) {
             if ($this->getFromDBByFunctionAndClassname($input["name"], $input["classname"])) {
@@ -597,7 +597,7 @@ class PluginMreportingConfig extends CommonDBTM
         return $input;
     }
 
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
 
         if (isset($input["classname"]) && method_exists(new $input["classname"]([]), 'checkConfig')) {
@@ -613,7 +613,7 @@ class PluginMreportingConfig extends CommonDBTM
         return $input;
     }
 
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         global $LANG;
 
@@ -830,7 +830,7 @@ class PluginMreportingConfig extends CommonDBTM
     * @param $name of graph
     * @param $classname of graph
    **/
-    static function initConfigParams($name, $classname)
+    public static function initConfigParams($name, $classname)
     {
 
         $crit = ['area'          => false,
@@ -873,7 +873,7 @@ class PluginMreportingConfig extends CommonDBTM
     * @param $classname of graph
    **/
 
-    static function showGraphConfigValue($name, $classname)
+    public static function showGraphConfigValue($name, $classname)
     {
         if (DEBUG_MREPORTING) {
             return true;

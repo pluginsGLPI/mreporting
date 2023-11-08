@@ -38,7 +38,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
     * @param array   $config (optionnal)
     * @return array  $datas array of query results (tag => count number)
     */
-    function reportPieTag($config = [])
+    public function reportPieTag($config = [])
     {
         global $DB;
 
@@ -70,7 +70,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
     * @param array   $config (optionnal)
     * @return array  $datas array of query results (tag => count number)
     */
-    function reportPieTagOnTicket($config = [])
+    public function reportPieTagOnTicket($config = [])
     {
         global $DB;
 

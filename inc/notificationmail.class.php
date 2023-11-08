@@ -41,7 +41,7 @@ class PluginMreportingNotificationMail extends NotificationMailing
    /**
     * @param $options   array
    **/
-    function sendNotification($options = [])
+    public function sendNotification($options = [])
     {
 
         $mmail = new GLPIMailer();
