@@ -23,31 +23,28 @@
  * along with Mreporting. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @copyright Copyright (C) 2003-2023 by Mreporting plugin team.
- * @copyright Copyright (C) 2003-2022 by Mreporting plugin team.
  * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 
-if (!isset ($_GET["id"])) {
-   $_GET["id"] = "";
+if (!isset($_GET["id"])) {
+    $_GET["id"] = "";
 }
 
 $pref = new PluginMreportingPreference();
 
 if (isset($_POST["update"])) {
-
-   $pref->update($_POST);
-   Html::back();
-
+    $pref->update($_POST);
+    Html::back();
 } else {
-   Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
+    Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
 
-   $pref->showForm($_GET["id"]);
+    $pref->showForm($_GET["id"]);
 
-   Html::footer();
+    Html::footer();
 }

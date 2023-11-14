@@ -23,48 +23,43 @@
  * along with Mreporting. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @copyright Copyright (C) 2003-2023 by Mreporting plugin team.
- * @copyright Copyright (C) 2003-2022 by Mreporting plugin team.
  * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkRight("config", UPDATE);
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = 0;
+    $_GET["id"] = 0;
 }
 if (!isset($_GET["preconfig"])) {
-   $_GET["preconfig"] = -1;
+    $_GET["preconfig"] = -1;
 }
 
-$config= new PluginMreportingConfig();
+$config = new PluginMreportingConfig();
 
 if (isset($_POST["add"])) {
-    $newID=$config->add($_POST);
+    $newID = $config->add($_POST);
     Html::back();
-
 } else if (isset($_POST["update"])) {
     $config->update($_POST);
     Html::back();
-
 } else if (isset($_POST["delete"])) {
     $config->delete($_POST, 1);
     Html::redirect("./config.form.php");
-
 } else {
     Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'config');
 
    //Link from graph
-   if (isset($_GET["name"]) && isset($_GET["classname"])) {
-      if ($config->getFromDBByFunctionAndClassname($_GET["name"], $_GET["classname"])) {
-         $_GET["id"] = $config->fields['id'];
-      }
-   }
-   $config->display($_GET);
+    if (isset($_GET["name"]) && isset($_GET["classname"])) {
+        if ($config->getFromDBByFunctionAndClassname($_GET["name"], $_GET["classname"])) {
+            $_GET["id"] = $config->fields['id'];
+        }
+    }
+    $config->display($_GET);
 
     Html::footer();
-
 }

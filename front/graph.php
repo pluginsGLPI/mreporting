@@ -23,18 +23,17 @@
  * along with Mreporting. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @copyright Copyright (C) 2003-2023 by Mreporting plugin team.
- * @copyright Copyright (C) 2003-2022 by Mreporting plugin team.
  * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
 
 if (!isset($_REQUEST['submit']) && !isset($_REQUEST['reset'])) {
-   $USEDBREPLICATE = 1;
+    $USEDBREPLICATE = 1;
 }
 $DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 

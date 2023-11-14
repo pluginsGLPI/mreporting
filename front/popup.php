@@ -23,18 +23,17 @@
  * along with Mreporting. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @copyright Copyright (C) 2003-2023 by Mreporting plugin team.
- * @copyright Copyright (C) 2003-2022 by Mreporting plugin team.
  * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 
 if (isset($_GET["classname"])) {
-   $_POST["classname"] = $_GET["classname"];
+    $_POST["classname"] = $_GET["classname"];
 }
 
 Html::popHeader(__("General Report - ODT", 'mreporting'), $_SERVER['PHP_SELF']);
@@ -44,6 +43,6 @@ $common->showExportForm($_POST);
 
 echo "<div class='center'>";
 echo "<br>";
-echo "<a href='javascript:window.close()'>".__("Back")."</a>";
+echo "<a href='javascript:window.close()'>" . __("Back") . "</a>";
 echo "</div>";
 Html::popFooter();

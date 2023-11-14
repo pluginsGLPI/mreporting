@@ -23,93 +23,98 @@
  * along with Mreporting. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @copyright Copyright (C) 2003-2023 by Mreporting plugin team.
- * @copyright Copyright (C) 2003-2022 by Mreporting plugin team.
  * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
 
-class PluginMreportingGraph {
-
-   const DEBUG_GRAPH = false;
-   protected $width  = 850;
+class PluginMreportingGraph
+{
+    const DEBUG_GRAPH = false;
+    protected $width  = 850;
 
    /**
     * init Graph : Show Titles / Date selector
     *
     * @params $options ($rand, short_classname, title, desc, delay)
    */
-   function initGraph($options) {
-      global $LANG, $CFG_GLPI;
+    public function initGraph($options)
+    {
+        global $LANG, $CFG_GLPI;
 
-      $width        = $this->width + 100;
-      $randname     = $options['randname'];
+        $width        = $this->width + 100;
+        $randname     = $options['randname'];
 
-      if (!$options['showHeader']) {
-         echo "<div class='center'><div id='fig' style='width:{$width}px'>";
-         //Show global title
-         if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
+        if (!$options['showHeader']) {
+            echo "<div class='center'><div id='fig' style='width:{$width}px'>";
+           //Show global title
+            if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
+                echo "<div class='graph_title'>";
+                echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+                echo "</div>";
+            }
+           //Show graph title
             echo "<div class='graph_title'>";
-            echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+            $gtype = $_REQUEST['gtype'];
+
+            echo "<img src='" . Plugin::getWebDir('mreporting') . "/pics/chart-$gtype.png' class='title_pics' />";
+            echo $options['title'];
             echo "</div>";
-         }
-         //Show graph title
-         echo "<div class='graph_title'>";
-         $gtype = $_REQUEST['gtype'];
 
-         echo "<img src='".Plugin::getWebDir('mreporting')."/pics/chart-$gtype.png' class='title_pics' />";
-         echo $options['title'];
-         echo "</div>";
-
-         $desc = '';
-         if (!empty($options['desc'])) {
-            $desc =$options['desc'];
-            if (isset($_SESSION['mreporting_values']['date1'.$randname])
-                  && isset($_SESSION['mreporting_values']['date1'.$randname])) {
-               $desc.= " - ";
+            $desc = '';
+            if (!empty($options['desc'])) {
+                $desc = $options['desc'];
+                if (
+                    isset($_SESSION['mreporting_values']['date1' . $randname])
+                    && isset($_SESSION['mreporting_values']['date1' . $randname])
+                ) {
+                    $desc .= " - ";
+                }
             }
-         }
 
-         if (isset($_SESSION['mreporting_values']['date1'.$randname])
-               && isset($_SESSION['mreporting_values']['date1'.$randname])) {
-            $desc.= Html::convdate($_SESSION['mreporting_values']['date1'.$randname])." / ".
-               Html::convdate($_SESSION['mreporting_values']['date2'.$randname]);
-         }
-         echo "<div class='graph_desc'>".$desc."</div>";
-
-         //Show date selector
-         echo "<div class='graph_navigation'>";
-         PluginMreportingCommon::showSelector(
-            $_SESSION['mreporting_values']['date1'.$randname],
-            $_SESSION['mreporting_values']['date2'.$randname],
-            $randname);
-         echo "</div>";
-
-         $ex_func = explode($options['short_classname'], $options['randname']);
-         if (!is_numeric($ex_func[0])) {
-            $classname = $ex_func[0].$options['short_classname'];
-            $functionname = $ex_func[1];
-
-            $config = PluginMreportingConfig::initConfigParams($functionname, $classname);
-
-            // We check if a configuration is needed for the graph
-            if (method_exists(new $classname($config), 'needConfig')) {
-               $object = new $classname();
-               $object->needConfig($config);
+            if (
+                isset($_SESSION['mreporting_values']['date1' . $randname])
+                && isset($_SESSION['mreporting_values']['date1' . $randname])
+            ) {
+                $desc .= Html::convdate($_SESSION['mreporting_values']['date1' . $randname]) . " / " .
+                Html::convdate($_SESSION['mreporting_values']['date2' . $randname]);
             }
-         }
-      }
+            echo "<div class='graph_desc'>" . $desc . "</div>";
 
-      //Script for graph display
-      if ($randname !== false) {
-         echo "<div class='graph' id='graph_content$randname'>";
+           //Show date selector
+            echo "<div class='graph_navigation'>";
+            PluginMreportingCommon::showSelector(
+                $_SESSION['mreporting_values']['date1' . $randname],
+                $_SESSION['mreporting_values']['date2' . $randname],
+                $randname
+            );
+            echo "</div>";
 
-         $colors = "'".implode ("', '", PluginMreportingConfig::getColors())."'";
-         echo "<script type='text/javascript+protovis'>
+            $ex_func = explode($options['short_classname'], $options['randname']);
+            if (!is_numeric($ex_func[0])) {
+                 $classname = $ex_func[0] . $options['short_classname'];
+                 $functionname = $ex_func[1];
+
+                 $config = PluginMreportingConfig::initConfigParams($functionname, $classname);
+
+                 // We check if a configuration is needed for the graph
+                if (method_exists(new $classname($config), 'needConfig')) {
+                    $object = new $classname();
+                    $object->needConfig($config);
+                }
+            }
+        }
+
+       //Script for graph display
+        if ($randname !== false) {
+            echo "<div class='graph' id='graph_content$randname'>";
+
+            $colors = "'" . implode("', '", PluginMreportingConfig::getColors()) . "'";
+            echo "<script type='text/javascript+protovis'>
             showGraph$randname = function() {
                colors = pv.colors($colors);";
-      }
-   }
+        }
+    }
 
    /**
     * Show an horizontal bar chart
@@ -122,76 +127,78 @@ class PluginMreportingGraph {
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
-   function showHbar($params, $dashboard = false, $width = false) {
+    public function showHbar($params, $dashboard = false, $width = false)
+    {
 
-      ob_start();
-      if ($width !== false) {
-         $this->width = $width;
-      }
+        ob_start();
+        if ($width !== false) {
+            $this->width = $width;
+        }
 
-      $criterias = PluginMreportingCommon::initGraphParams($params);
-      foreach ($criterias as $key => $val) {
-         $$key=$val;
-      }
+        $criterias = PluginMreportingCommon::initGraphParams($params);
+        foreach ($criterias as $key => $val) {
+            $$key = $val;
+        }
 
-      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
+        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
+        foreach ($configs as $k => $v) {
+            $$k = $v;
+        }
 
-      $options = ["title" => $title,
-                  "desc" => $desc,
-                  "randname" => $randname,
-                  "delay" => $delay,
-                  "export" => $export,
-                  "short_classname" => $opt["short_classname"],
-                  "showHeader" => $dashboard];
+        $options = ["title" => $title,
+            "desc" => $desc,
+            "randname" => $randname,
+            "delay" => $delay,
+            "export" => $export,
+            "short_classname" => $opt["short_classname"],
+            "showHeader" => $dashboard
+        ];
 
-      $this->initGraph($options);
+        $this->initGraph($options);
 
-      if (!isset($raw_datas['datas'])) {
-         echo "}</script>";
-         echo __("No data for this date range !", 'mreporting');
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end, $dashboard);
-         return false;
-      }
+        if (!isset($raw_datas['datas'])) {
+            echo "}</script>";
+            echo __("No data for this date range !", 'mreporting');
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end, $dashboard);
+            return false;
+        }
 
-      if (empty($unit) && !empty($raw_datas['unit'])) {
-         $unit = $raw_datas['unit'];
-      }
+        if (empty($unit) && !empty($raw_datas['unit'])) {
+            $unit = $raw_datas['unit'];
+        }
 
-      $datas = $raw_datas['datas'];
-      $links = [];
-      if (isset($raw_datas['links'])) {
-         $links = $raw_datas['links'];
-      }
-      $datas = $this->initDatasSimple($datas, $unit, $links);
+        $datas = $raw_datas['datas'];
+        $links = [];
+        if (isset($raw_datas['links'])) {
+            $links = $raw_datas['links'];
+        }
+        $datas = $this->initDatasSimple($datas, $unit, $links);
 
-      $nb_bar = count($datas);
-      $height = 25 * $nb_bar + 50;
+        $nb_bar = count($datas);
+        $height = 25 * $nb_bar + 50;
 
-      $always = '';
-      $hover = '';
+        $always = '';
+        $hover = '';
 
-      $left = 240;
-      if ($dashboard) {
-         $left = 180;
-         if ($height > 380) {
-            $height = 380;
-         }
-      }
+        $left = 240;
+        if ($dashboard) {
+            $left = 180;
+            if ($height > 380) {
+                $height = 380;
+            }
+        }
 
-      $always = '';
-      $hover = '';
-      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+        $always = '';
+        $hover = '';
+        PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-      $JS = <<<JAVASCRIPT
+        $JS = <<<JAVASCRIPT
    var width_hbar = {$this->width};
    var height_hbar = {$height};
    var x = pv.Scale.linear(0, max).range(0, .67 * width_hbar);
@@ -287,25 +294,26 @@ class PluginMreportingGraph {
 
 JAVASCRIPT;
 
-      if ($show_graph) {
-         echo $JS;
-      }
+        if ($show_graph) {
+            echo $JS;
+        }
 
-      $opt['randname'] = $randname;
-      $options = ["opt"     => $opt,
-                  "export" => $export,
-                  "datas"  => $datas,
-                  "unit"   => $unit];
-      PluginMreportingCommon::endGraph($options, $dashboard);
+        $opt['randname'] = $randname;
+        $options = ["opt"     => $opt,
+            "export" => $export,
+            "datas"  => $datas,
+            "unit"   => $unit
+        ];
+        PluginMreportingCommon::endGraph($options, $dashboard);
 
-      $content = ob_get_clean();
+        $content = ob_get_clean();
 
-      if ($dashboard) {
-         return $content;
-      } else {
-         echo $content;
-      }
-   }
+        if ($dashboard) {
+            return $content;
+        } else {
+            echo $content;
+        }
+    }
 
 
    /**
@@ -320,72 +328,74 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
-   function showPie($params, $dashboard = false, $width = false) {
-      ob_start();
-      if ($width !== false) {
-         $this->width = $width;
-      }
+    public function showPie($params, $dashboard = false, $width = false)
+    {
+        ob_start();
+        if ($width !== false) {
+            $this->width = $width;
+        }
 
-      $criterias = PluginMreportingCommon::initGraphParams($params);
+        $criterias = PluginMreportingCommon::initGraphParams($params);
 
-      foreach ($criterias as $key => $val) {
-         $$key=$val;
-      }
+        foreach ($criterias as $key => $val) {
+            $$key = $val;
+        }
 
-      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
+        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
+        foreach ($configs as $k => $v) {
+            $$k = $v;
+        }
 
-      $options = ["title" => $title,
-                  "desc" => $desc,
-                  "randname" => $randname,
-                  "export" => $export,
-                  "delay" => $delay,
-                  "short_classname" => $opt["short_classname"],
-                  "showHeader" => $dashboard];
+        $options = ["title" => $title,
+            "desc" => $desc,
+            "randname" => $randname,
+            "export" => $export,
+            "delay" => $delay,
+            "short_classname" => $opt["short_classname"],
+            "showHeader" => $dashboard
+        ];
 
-      $this->initGraph($options);
+        $this->initGraph($options);
 
-      if (!isset($raw_datas['datas'])) {
-         echo "}</script>";
-         echo __("No data for this date range !", 'mreporting');
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end, $dashboard);
-         return false;
-      }
+        if (!isset($raw_datas['datas'])) {
+            echo "}</script>";
+            echo __("No data for this date range !", 'mreporting');
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end, $dashboard);
+            return false;
+        }
 
-      if (empty($unit) && !empty($raw_datas['unit'])) {
-         $unit = $raw_datas['unit'];
-      }
+        if (empty($unit) && !empty($raw_datas['unit'])) {
+            $unit = $raw_datas['unit'];
+        }
 
-      $datas = $raw_datas['datas'];
-      $datas = $this->initDatasSimple($datas, $unit);
+        $datas = $raw_datas['datas'];
+        $datas = $this->initDatasSimple($datas, $unit);
 
-      $nb_bar = count($datas);
-      $height = 15 * $nb_bar + 50;
-      if ($height < 300) {
-         $height = 300;
-      }
-      $always = '';
-      $hover = '';
-      $radius = 150;
-      $left = 10;
-      $right_legend = 5;
+        $nb_bar = count($datas);
+        $height = 15 * $nb_bar + 50;
+        if ($height < 300) {
+            $height = 300;
+        }
+        $always = '';
+        $hover = '';
+        $radius = 150;
+        $left = 10;
+        $right_legend = 5;
 
-      if ($dashboard) {
-         $left = 40;
-      }
+        if ($dashboard) {
+            $left = 40;
+        }
 
-      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+        PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-      $JS = <<<JAVASCRIPT
+        $JS = <<<JAVASCRIPT
    var width_pie = {$this->width};
    var height_pie = {$height};
    var radius = {$radius};
@@ -474,26 +484,27 @@ JAVASCRIPT;
    }, 20);
 JAVASCRIPT;
 
-      if ($show_graph) {
-         echo $JS;
-      }
+        if ($show_graph) {
+            echo $JS;
+        }
 
-      $opt['randname'] = $randname;
-      $options = ["opt"     => $opt,
-                  "export" => $export,
-                  "datas"  => $datas,
-                  "unit"   => $unit];
+        $opt['randname'] = $randname;
+        $options = ["opt"     => $opt,
+            "export" => $export,
+            "datas"  => $datas,
+            "unit"   => $unit
+        ];
 
-      PluginMreportingCommon::endGraph($options, $dashboard);
+        PluginMreportingCommon::endGraph($options, $dashboard);
 
-      $content = ob_get_clean();
+        $content = ob_get_clean();
 
-      if ($dashboard) {
-         return $content;
-      } else {
-         echo $content;
-      }
-   }
+        if ($dashboard) {
+            return $content;
+        } else {
+            echo $content;
+        }
+    }
 
    /**
     * Show a sunburst chart (see : http://mbostock.github.com/protovis/ex/sunburst.html)
@@ -512,79 +523,81 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
-   function showSunburst($params, $dashboard = false, $width = false) {
-      ob_start();
-      if ($width !== false) {
-         $this->width = $width;
-      }
-      $criterias = PluginMreportingCommon::initGraphParams($params);
+    public function showSunburst($params, $dashboard = false, $width = false)
+    {
+        ob_start();
+        if ($width !== false) {
+            $this->width = $width;
+        }
+        $criterias = PluginMreportingCommon::initGraphParams($params);
 
-      foreach ($criterias as $key => $val) {
-         $$key=$val;
-      }
+        foreach ($criterias as $key => $val) {
+            $$key = $val;
+        }
 
-      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
+        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
+        foreach ($configs as $k => $v) {
+            $$k = $v;
+        }
 
-      $options = ["title" => $title,
-                  "desc" => $desc,
-                  "randname" => $randname,
-                  "export" => $export,
-                  "delay" => $delay,
-                  "short_classname" => $opt["short_classname"],
-                  "showHeader" => $dashboard];
+        $options = ["title" => $title,
+            "desc" => $desc,
+            "randname" => $randname,
+            "export" => $export,
+            "delay" => $delay,
+            "short_classname" => $opt["short_classname"],
+            "showHeader" => $dashboard
+        ];
 
-      $this->initGraph($options);
+        $this->initGraph($options);
 
-      if (isset($_REQUEST['export'])) {
-         $export_txt = "true";
-      } else {
-         $export_txt =  "false";
-      }
+        if (isset($_REQUEST['export'])) {
+            $export_txt = "true";
+        } else {
+            $export_txt =  "false";
+        }
 
-      if (!isset($raw_datas['datas'])) {
-         echo "}</script>";
-         echo __("No data for this date range !", 'mreporting');
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end, $dashboard);
-         return false;
-      }
+        if (!isset($raw_datas['datas'])) {
+            echo "}</script>";
+            echo __("No data for this date range !", 'mreporting');
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end, $dashboard);
+            return false;
+        }
 
-      $datas = $raw_datas['datas'];
+        $datas = $raw_datas['datas'];
 
-      $labels2 = [];
-      if (isset($raw_datas['labels2'])) {
-         $labels2 = $raw_datas['labels2'];
-      }
+        $labels2 = [];
+        if (isset($raw_datas['labels2'])) {
+            $labels2 = $raw_datas['labels2'];
+        }
 
-      if (empty($unit) && !empty($raw_datas['unit'])) {
-         $unit = $raw_datas['unit'];
-      }
+        if (empty($unit) && !empty($raw_datas['unit'])) {
+            $unit = $raw_datas['unit'];
+        }
 
-      $datas = $this->initDatasTree($datas, $unit);
+        $datas = $this->initDatasTree($datas, $unit);
 
-      $always = '';
-      $hover = '';
-      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-      $height = 450;
-      $width = $this->width;
-      $top = 10;
-      $left = 10;
-      if ($dashboard) {
-         $top = 25;
-         $height = 380;
-         $left = 50;
-      }
+        $always = '';
+        $hover = '';
+        PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+        $height = 450;
+        $width = $this->width;
+        $top = 10;
+        $left = 10;
+        if ($dashboard) {
+            $top = 25;
+            $height = 380;
+            $left = 50;
+        }
 
-      $JS = <<<JAVASCRIPT
+        $JS = <<<JAVASCRIPT
 
    function getLevelIndex(node) {
       var levelIndex = -1;
@@ -745,27 +758,28 @@ JAVASCRIPT;
    }, 20);
 JAVASCRIPT;
 
-      if ($show_graph) {
-         echo $JS;
-      }
+        if ($show_graph) {
+            echo $JS;
+        }
 
-      $opt['randname'] = $randname;
-      $options = ["opt"        => $opt,
-                  "export"    => $export,
-                  "datas"     => $datas,
-                  "flip_data" => $flip_data,
-                  "labels2"   => $labels2,
-                  "unit"      => $unit];
-      PluginMreportingCommon::endGraph($options, $dashboard);
+        $opt['randname'] = $randname;
+        $options = ["opt"        => $opt,
+            "export"    => $export,
+            "datas"     => $datas,
+            "flip_data" => $flip_data,
+            "labels2"   => $labels2,
+            "unit"      => $unit
+        ];
+        PluginMreportingCommon::endGraph($options, $dashboard);
 
-      $content = ob_get_clean();
+        $content = ob_get_clean();
 
-      if ($dashboard) {
-         return $content;
-      } else {
-         echo $content;
-      }
-   }
+        if ($dashboard) {
+            return $content;
+        } else {
+            echo $content;
+        }
+    }
 
    /**
     * Show a horizontal grouped bar chart
@@ -779,71 +793,73 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
-   function showHgbar($params, $dashboard = false, $width = false) {
-      $criterias = PluginMreportingCommon::initGraphParams($params);
-      ob_start();
-      if ($width !== false) {
-         $this->width = $width;
-      }
-      foreach ($criterias as $key => $val) {
-         $$key=$val;
-      }
+    public function showHgbar($params, $dashboard = false, $width = false)
+    {
+        $criterias = PluginMreportingCommon::initGraphParams($params);
+        ob_start();
+        if ($width !== false) {
+            $this->width = $width;
+        }
+        foreach ($criterias as $key => $val) {
+            $$key = $val;
+        }
 
-      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
+        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
+        foreach ($configs as $k => $v) {
+            $$k = $v;
+        }
 
-      $options = ["title" => $title,
-                  "desc" => $desc,
-                  "randname" => $randname,
-                  "export" => $export,
-                  "delay" => $delay,
-                  "short_classname" => $opt["short_classname"],
-                  "showHeader" => $dashboard];
+        $options = ["title" => $title,
+            "desc" => $desc,
+            "randname" => $randname,
+            "export" => $export,
+            "delay" => $delay,
+            "short_classname" => $opt["short_classname"],
+            "showHeader" => $dashboard
+        ];
 
-      $this->initGraph($options);
+        $this->initGraph($options);
 
-      if (!isset($raw_datas['datas'])) {
-         echo "}</script>";
-         echo __("No data for this date range !", 'mreporting');
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end, $dashboard);
-         return false;
-      }
+        if (!isset($raw_datas['datas'])) {
+            echo "}</script>";
+            echo __("No data for this date range !", 'mreporting');
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end, $dashboard);
+            return false;
+        }
 
-      if (empty($unit) && !empty($raw_datas['unit'])) {
-         $unit = $raw_datas['unit'];
-      }
+        if (empty($unit) && !empty($raw_datas['unit'])) {
+            $unit = $raw_datas['unit'];
+        }
 
-      $datas = $raw_datas['datas'];
-      $labels2 = $raw_datas['labels2'];
-      $datas = $this->initDatasMultiple($datas, $labels2, $unit);
+        $datas = $raw_datas['datas'];
+        $labels2 = $raw_datas['labels2'];
+        $datas = $this->initDatasMultiple($datas, $labels2, $unit);
 
-      $nb_bar = count($datas);
-      $nb_bar2 = count($labels2);
-      $height = 28 * $nb_bar * $nb_bar2 + 50;
+        $nb_bar = count($datas);
+        $nb_bar2 = count($labels2);
+        $height = 28 * $nb_bar * $nb_bar2 + 50;
 
-      $always = '';
-      $hover = '';
-      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-      $left = 240;
-      $bottomAxis = 5;
-      if ($dashboard) {
-         $left = 100;
-         if ($height > 300) {
-            $height = 300;
-         }
-         $bottomAxis = -15;
-      }
+        $always = '';
+        $hover = '';
+        PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+        $left = 240;
+        $bottomAxis = 5;
+        if ($dashboard) {
+            $left = 100;
+            if ($height > 300) {
+                $height = 300;
+            }
+            $bottomAxis = -15;
+        }
 
-      $JS = <<<JAVASCRIPT
+        $JS = <<<JAVASCRIPT
    var width_hgbar = {$this->width};
    var height_hgbar = {$height};
    var x = pv.Scale.linear(0, max).range(0, .7 * width_hgbar);
@@ -963,27 +979,28 @@ JAVASCRIPT;
    }, 20);
 JAVASCRIPT;
 
-      if ($show_graph) {
-         echo $JS;
-      }
+        if ($show_graph) {
+            echo $JS;
+        }
 
-      $opt['randname'] = $randname;
-      $options = ["opt"        => $opt,
-                  "export"    => $export,
-                  "datas"     => $datas,
-                  "labels2"   => $labels2,
-                  "flip_data" => $flip_data,
-                  "unit"      => $unit];
-      PluginMreportingCommon::endGraph($options, $dashboard);
+        $opt['randname'] = $randname;
+        $options = ["opt"        => $opt,
+            "export"    => $export,
+            "datas"     => $datas,
+            "labels2"   => $labels2,
+            "flip_data" => $flip_data,
+            "unit"      => $unit
+        ];
+        PluginMreportingCommon::endGraph($options, $dashboard);
 
-      $content = ob_get_clean();
+        $content = ob_get_clean();
 
-      if ($dashboard) {
-         return $content;
-      } else {
-         echo $content;
-      }
-   }
+        if ($dashboard) {
+            return $content;
+        } else {
+            echo $content;
+        }
+    }
 
 
    /**
@@ -998,71 +1015,73 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
-   function showVstackbar($params, $dashboard = false, $width = false) {
-      ob_start();
-      if ($width !== false) {
-         $this->width = $width;
-      }
-      $criterias = PluginMreportingCommon::initGraphParams($params);
+    public function showVstackbar($params, $dashboard = false, $width = false)
+    {
+        ob_start();
+        if ($width !== false) {
+            $this->width = $width;
+        }
+        $criterias = PluginMreportingCommon::initGraphParams($params);
 
-      foreach ($criterias as $key => $val) {
-         $$key=$val;
-      }
+        foreach ($criterias as $key => $val) {
+            $$key = $val;
+        }
 
-      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
+        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
+        foreach ($configs as $k => $v) {
+            $$k = $v;
+        }
 
-      $options = ["title" => $title,
-                  "desc" => $desc,
-                  "randname" => $randname,
-                  "export" => $export,
-                  "delay" => $delay,
-                  "short_classname" => $opt["short_classname"],
-                  "showHeader" => $dashboard];
+        $options = ["title" => $title,
+            "desc" => $desc,
+            "randname" => $randname,
+            "export" => $export,
+            "delay" => $delay,
+            "short_classname" => $opt["short_classname"],
+            "showHeader" => $dashboard
+        ];
 
-      $this->initGraph($options);
+        $this->initGraph($options);
 
-      if (!isset($raw_datas['datas'])) {
-         echo "}</script>";
-         echo __("No data for this date range !", 'mreporting');
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end, $dashboard);
-         return false;
-      }
+        if (!isset($raw_datas['datas'])) {
+            echo "}</script>";
+            echo __("No data for this date range !", 'mreporting');
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end, $dashboard);
+            return false;
+        }
 
-      if (empty($unit) && !empty($raw_datas['unit'])) {
-         $unit = $raw_datas['unit'];
-      }
+        if (empty($unit) && !empty($raw_datas['unit'])) {
+            $unit = $raw_datas['unit'];
+        }
 
-      $datas = $raw_datas['datas'];
-      $labels2 = $raw_datas['labels2'];
-      $datas = $this->initDatasMultiple($datas, $labels2, $unit, true);
+        $datas = $raw_datas['datas'];
+        $labels2 = $raw_datas['labels2'];
+        $datas = $this->initDatasMultiple($datas, $labels2, $unit, true);
 
-      $nb_bar = count($datas);
-      $nb_bar2 = count($labels2);
+        $nb_bar = count($datas);
+        $nb_bar2 = count($labels2);
 
-      $always = '';
-      $hover = '';
-      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+        $always = '';
+        $hover = '';
+        PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-      $height = 20 * $nb_bar + 50;
-      if ($height < 400) {
-         $height = 400;
-      }
-      $width = $this->width;
-      if ($dashboard) {
-         $height = 250;
-      }
+        $height = 20 * $nb_bar + 50;
+        if ($height < 400) {
+            $height = 400;
+        }
+        $width = $this->width;
+        if ($dashboard) {
+            $height = 250;
+        }
 
-      $JS = <<<JAVASCRIPT
+        $JS = <<<JAVASCRIPT
    var w = {$width},
        h = {$height},
        x = pv.Scale.ordinal(pv.range(m)).splitBanded(0, .8 * w, 4/5),
@@ -1187,27 +1206,29 @@ JAVASCRIPT;
 
 JAVASCRIPT;
 
-      if ($show_graph) {
-         echo $JS;
-      }
+        if ($show_graph) {
+            echo $JS;
+        }
 
-      $opt['randname'] = $randname;
-      $options = ["opt"        => $opt,
-                  "export"    => $export,
-                  "datas"     => $datas,
-                  "labels2"   => $labels2,
-                  "flip_data" => $flip_data,
-                  "unit"      => $unit];
-      PluginMreportingCommon::endGraph($options, $dashboard);
+        $opt['randname'] = $randname;
+        $options = ["opt"        => $opt,
+            "export"    => $export,
+            "datas"     => $datas,
+            "labels2"   => $labels2,
+            "flip_data" => $flip_data,
+            "unit"      => $unit
+        ];
+        PluginMreportingCommon::endGraph($options, $dashboard);
 
-      $content = ob_get_clean();
+        $content = ob_get_clean();
 
-      if ($dashboard) {
-         return $content;
-      } else {
-         echo $content;
-      }
-   }
+        if ($dashboard) {
+            return $content;
+        } else {
+            echo $content;
+        }
+    }
+
    /**
     * Show a Area chart
     *
@@ -1221,74 +1242,76 @@ JAVASCRIPT;
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
     * @param $area : show plain chart instead only a line (optionnal)
-    * @return nothing
+    * @return void
     */
-   function showArea($params, $dashboard = false, $width = false) {
-      ob_start();
-      if ($width !== false) {
-         $this->width = $width;
-      }
+    public function showArea($params, $dashboard = false, $width = false)
+    {
+        ob_start();
+        if ($width !== false) {
+            $this->width = $width;
+        }
 
-      $criterias = PluginMreportingCommon::initGraphParams($params);
+        $criterias = PluginMreportingCommon::initGraphParams($params);
 
-      foreach ($criterias as $key => $val) {
-         $$key=$val;
-      }
+        foreach ($criterias as $key => $val) {
+            $$key = $val;
+        }
 
-      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
+        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
+        foreach ($configs as $k => $v) {
+            $$k = $v;
+        }
 
-      $area = true;
-      if (isset($params['area'])) {
-         $area = $params['area'];
-      }
+        $area = true;
+        if (isset($params['area'])) {
+            $area = $params['area'];
+        }
 
-      $options = ["title" => $title,
-                  "desc" => $desc,
-                  "randname" => $randname,
-                  "export" => $export,
-                  "delay" => $delay,
-                  "short_classname" => $opt["short_classname"],
-                  "showHeader" => $dashboard];
+        $options = ["title" => $title,
+            "desc" => $desc,
+            "randname" => $randname,
+            "export" => $export,
+            "delay" => $delay,
+            "short_classname" => $opt["short_classname"],
+            "showHeader" => $dashboard
+        ];
 
-      $this->initGraph($options);
+        $this->initGraph($options);
 
-      if (!isset($raw_datas['datas'])) {
-         echo "}</script>";
-         echo __("No data for this date range !", 'mreporting');
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end, $dashboard);
-         return false;
-      }
+        if (!isset($raw_datas['datas'])) {
+            echo "}</script>";
+            echo __("No data for this date range !", 'mreporting');
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end, $dashboard);
+            return false;
+        }
 
-      if (empty($unit) && !empty($raw_datas['unit'])) {
-         $unit = $raw_datas['unit'];
-      }
+        if (empty($unit) && !empty($raw_datas['unit'])) {
+            $unit = $raw_datas['unit'];
+        }
 
-      $datas = $raw_datas['datas'];
-      $datas = $this->initDatasSimple($datas, $unit);
+        $datas = $raw_datas['datas'];
+        $datas = $this->initDatasSimple($datas, $unit);
 
-      $always = '';
-      $hover = '';
-      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-      $height = 350;
-      $width = $this->width;
-      $bottom = 80;
-      $left = 20;
-      $right = 50;
-      if ($dashboard) {
-         $height = 340;
-         $width = 395;
-         $left = 30;
-      }
+        $always = '';
+        $hover = '';
+        PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+        $height = 350;
+        $width = $this->width;
+        $bottom = 80;
+        $left = 20;
+        $right = 50;
+        if ($dashboard) {
+            $height = 340;
+            $width = 395;
+            $left = 30;
+        }
 
-      $JS = <<<JAVASCRIPT
+        $JS = <<<JAVASCRIPT
    var width_area = {$width};
    var height_area = {$height};
    var offset = 0;
@@ -1414,25 +1437,26 @@ JAVASCRIPT;
    }, 20);
 JAVASCRIPT;
 
-      if ($show_graph) {
-         echo $JS;
-      }
+        if ($show_graph) {
+            echo $JS;
+        }
 
-      $opt['randname'] = $randname;
-      $options = ["opt"        => $opt,
-                        "export"    => $export,
-                        "datas"     => $datas,
-                        "unit"      => $unit];
-      PluginMreportingCommon::endGraph($options, $dashboard);
+        $opt['randname'] = $randname;
+        $options = ["opt"        => $opt,
+            "export"    => $export,
+            "datas"     => $datas,
+            "unit"      => $unit
+        ];
+        PluginMreportingCommon::endGraph($options, $dashboard);
 
-      $content = ob_get_clean();
+        $content = ob_get_clean();
 
-      if ($dashboard) {
-         return $content;
-      } else {
-         echo $content;
-      }
-   }
+        if ($dashboard) {
+            return $content;
+        } else {
+            echo $content;
+        }
+    }
 
    /**
     * Show a Line chart
@@ -1446,16 +1470,17 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
-   function showLine($params, $dashboard = false, $width = false) {
-      $params['area'] = false;
-      if ($dashboard) {
-         return  $this->showArea($params, $dashboard, $width);
-      } else {
-         $this->showArea($params, $dashboard, $width);
-      }
-   }
+    public function showLine($params, $dashboard = false, $width = false)
+    {
+        $params['area'] = false;
+        if ($dashboard) {
+            return  $this->showArea($params, $dashboard, $width);
+        } else {
+            $this->showArea($params, $dashboard, $width);
+        }
+    }
 
     /**
     * Show a multi-area chart
@@ -1469,73 +1494,75 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
-   function showGarea($params, $dashboard = false, $width = false) {
-      ob_start();
-      if ($width !== false) {
-         $this->width = $width;
-      }
-      $criterias = PluginMreportingCommon::initGraphParams($params);
+    public function showGarea($params, $dashboard = false, $width = false)
+    {
+        ob_start();
+        if ($width !== false) {
+            $this->width = $width;
+        }
+        $criterias = PluginMreportingCommon::initGraphParams($params);
 
-      foreach ($criterias as $key => $val) {
-         $$key=$val;
-      }
+        foreach ($criterias as $key => $val) {
+            $$key = $val;
+        }
 
-      $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-      foreach ($configs as $k => $v) {
-         $$k=$v;
-      }
+        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
+        foreach ($configs as $k => $v) {
+            $$k = $v;
+        }
 
-      $options = ["title" => $title,
-                        "desc" => $desc,
-                        "randname" => $randname,
-                        "export" => $export,
-                        "delay" => $delay,
-                        "short_classname" => $opt["short_classname"],
-          "showHeader" => $dashboard];
+        $options = ["title" => $title,
+            "desc" => $desc,
+            "randname" => $randname,
+            "export" => $export,
+            "delay" => $delay,
+            "short_classname" => $opt["short_classname"],
+            "showHeader" => $dashboard
+        ];
 
-      $this->initGraph($options);
+        $this->initGraph($options);
 
-      if (!isset($raw_datas['datas'])) {
-         echo "}</script>";
-         echo __("No data for this date range !", 'mreporting');
-         $end['opt']["export"] = false;
-         $end['opt']["randname"] = false;
-         $end['opt']["f_name"] = $opt['f_name'];
-         $end['opt']["class"] = $opt['class'];
-         PluginMreportingCommon::endGraph($end, $dashboard);
-         return false;
-      }
+        if (!isset($raw_datas['datas'])) {
+            echo "}</script>";
+            echo __("No data for this date range !", 'mreporting');
+            $end['opt']["export"] = false;
+            $end['opt']["randname"] = false;
+            $end['opt']["f_name"] = $opt['f_name'];
+            $end['opt']["class"] = $opt['class'];
+            PluginMreportingCommon::endGraph($end, $dashboard);
+            return false;
+        }
 
-      $area = true;
-      if (isset($params['area'])) {
-         $area = $params['area'];
-      }
+        $area = true;
+        if (isset($params['area'])) {
+            $area = $params['area'];
+        }
 
-      if (empty($unit) && !empty($raw_datas['unit'])) {
-         $unit = $raw_datas['unit'];
-      }
+        if (empty($unit) && !empty($raw_datas['unit'])) {
+            $unit = $raw_datas['unit'];
+        }
 
-      $datas = $raw_datas['datas'];
-      $labels2 = $raw_datas['labels2'];
-      $datas = $this->initDatasMultiple($datas, $labels2, $unit);
+        $datas = $raw_datas['datas'];
+        $labels2 = $raw_datas['labels2'];
+        $datas = $this->initDatasMultiple($datas, $labels2, $unit);
 
-      $always = '';
-      $hover = '';
-      PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
+        $always = '';
+        $hover = '';
+        PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
-      $nb_bar = count($datas);
-      $height = 20 * $nb_bar + 250;
-      if ($height < 450) {
-         $height = 450;
-      }
-      if ($dashboard) {
-         $this->width -= 35;
-         $height = 350;
-      }
+        $nb_bar = count($datas);
+        $height = 20 * $nb_bar + 250;
+        if ($height < 450) {
+            $height = 450;
+        }
+        if ($dashboard) {
+            $this->width -= 35;
+            $height = 350;
+        }
 
-      $JS = <<<JAVASCRIPT
+        $JS = <<<JAVASCRIPT
    var width_area = {$this->width};
    var height_area = {$height};
    var offset = 0;
@@ -1676,27 +1703,28 @@ JAVASCRIPT;
 
 JAVASCRIPT;
 
-      if ($show_graph) {
-         echo $JS;
-      }
+        if ($show_graph) {
+            echo $JS;
+        }
 
-      $opt['randname'] = $randname;
-      $options = ["opt"        => $opt,
-                        "export"    => $export,
-                        "datas"     => $datas,
-                        "labels2"   => $labels2,
-                        "flip_data" => $flip_data,
-                        "unit"      => $unit];
-      PluginMreportingCommon::endGraph($options, $dashboard);
+        $opt['randname'] = $randname;
+        $options = ["opt"        => $opt,
+            "export"    => $export,
+            "datas"     => $datas,
+            "labels2"   => $labels2,
+            "flip_data" => $flip_data,
+            "unit"      => $unit
+        ];
+        PluginMreportingCommon::endGraph($options, $dashboard);
 
-      $content = ob_get_clean();
+        $content = ob_get_clean();
 
-      if ($dashboard) {
-         return $content;
-      } else {
-         echo $content;
-      }
-   }
+        if ($dashboard) {
+            return $content;
+        } else {
+            echo $content;
+        }
+    }
 
    /**
     * Show a multi-line charts
@@ -1709,67 +1737,68 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
-   function showGline($params, $dashboard = false, $width = false) {
-      $params['area'] = false;
-      if ($dashboard) {
-         return $this->showGarea($params, $dashboard, $width);
-      } else {
-         $this->showGarea($params, $dashboard, $width);
-      }
-   }
+    public function showGline($params, $dashboard = false, $width = false)
+    {
+        $params['area'] = false;
+        if ($dashboard) {
+            return $this->showGarea($params, $dashboard, $width);
+        } else {
+            $this->showGarea($params, $dashboard, $width);
+        }
+    }
 
    /**
     * Compile simple datas
     *
     * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
     * @param $unit, ex : '%', 'Kg' (optionnal)
-    * @return nothing
+    * @return void
     */
+    public function initDatasSimple($datas, $unit = '', $links = [])
+    {
 
-   function initDatasSimple($datas, $unit = '', $links = []) {
+        $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
 
-      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+        $labels = array_keys($datas);
+        $values = array_values($datas);
 
-      $labels = array_keys($datas);
-      $values = array_values($datas);
+        $out = "var datas = [\n";
+        foreach ($values as $value) {
+            $out .= "\t" . addslashes($value) . ",\n";
+        }
+        $out = substr($out, 0, -2) . "\n";
+        $out .= "];\n";
 
-      $out = "var datas = [\n";
-      foreach ($values as $value) {
-         $out.= "\t".addslashes($value).",\n";
-      }
-      $out = substr($out, 0, -2)."\n";
-      $out.= "];\n";
+        $out .= "var labels = [\n";
+        foreach ($labels as $label) {
+            $out .= "\t'" . addslashes($label) . "',\n";
+        }
+        $out = substr($out, 0, -2) . "\n";
+        $out .= "];\n";
 
-      $out.= "var labels = [\n";
-      foreach ($labels as $label) {
-         $out.= "\t'".addslashes($label)."',\n";
-      }
-      $out = substr($out, 0, -2)."\n";
-      $out.= "];\n";
+        $out .= "var links = [\n";
+        foreach ($links as $link) {
+            $out .= "\t'" . addslashes($link) . "',\n";
+        }
+        $out .= "];\n";
 
-      $out.= "var links = [\n";
-      foreach ($links as $link) {
-         $out.= "\t'".addslashes($link)."',\n";
-      }
-      $out.= "];\n";
+        echo $out;
+        if (count($values) > 0) {
+            $max = (max($values) * 1.1);
+        } else {
+            $max = 1;
+        }
+        if ($unit == '%') {
+            $max = 110;
+        }
 
-      echo $out;
-      if (count($values) > 0) {
-         $max = (max($values)*1.1);
-      } else {
-         $max = 1;
-      }
-      if ($unit == '%') {
-         $max = 110;
-      }
+        echo "var max = $max;";
+        echo "var n = " . count($values) . ";";
 
-      echo "var max = $max;";
-      echo "var n = ".count($values).";";
-
-      return $datas;
-   }
+        return $datas;
+    }
 
    /**
     * Compile multiple datas
@@ -1778,86 +1807,83 @@ JAVASCRIPT;
     * @param $labels2
     * @param $unit, ex : '%', 'Kg' (optionnal)
     * @param $stacked : if stacked graph, option to compile the max value
-    * @return nothing
+    * @return void
     */
+    public function initDatasMultiple($datas, $labels2, $unit = '', $stacked = false)
+    {
 
-   function initDatasMultiple($datas, $labels2, $unit = '', $stacked = false) {
+        $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
 
-      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+        $labels = array_keys($datas);
+        $values = array_values($datas);
+        $max = 0;
 
-      $labels = array_keys($datas);
-      $values = array_values($datas);
-      $max = 0;
-
-      if ($stacked) {
-
-         $tmp = [];
-         foreach ($values as $k => $v) {
-
-            foreach ($v as $key => $val) {
-                  $tmp[$key][$k] = $val;
+        if ($stacked) {
+            $tmp = [];
+            foreach ($values as $k => $v) {
+                foreach ($v as $key => $val) {
+                    $tmp[$key][$k] = $val;
+                }
             }
-         }
-         if (count($tmp) > 0) {
-            foreach ($tmp as $date => $nb) {
-               $count = array_sum(array_values($nb));
-               if ($count > $max) {
-                  $max = $count;
-               }
+            if (count($tmp) > 0) {
+                foreach ($tmp as $date => $nb) {
+                    $count = array_sum(array_values($nb));
+                    if ($count > $max) {
+                        $max = $count;
+                    }
+                }
             }
-         }
-      }
+        }
 
-      //merge missing keys
-      $empty_values = array_fill_keys(array_keys($labels2), 0);
-      foreach ($values as $k => $v) {
-         $values[$k] = array_replace($empty_values, $v);
-      }
+       //merge missing keys
+        $empty_values = array_fill_keys(array_keys($labels2), 0);
+        foreach ($values as $k => $v) {
+            $values[$k] = array_replace($empty_values, $v);
+        }
 
-      $out = "var datas = [\n";
-      foreach ($values as $line) {
-         $out.= "\t[";
-         foreach ($line as $label2 => $value) {
-            $out.= addslashes($value).",";
-            if ($value > $max && !$stacked) {
-               $max = $value;
+        $out = "var datas = [\n";
+        foreach ($values as $line) {
+            $out .= "\t[";
+            foreach ($line as $label2 => $value) {
+                $out .= addslashes($value) . ",";
+                if ($value > $max && !$stacked) {
+                    $max = $value;
+                }
             }
-         }
-         $out = substr($out, 0, -1)."";
-         $out.= "],\n";
-      }
-      $out = substr($out, 0, -2)."\n";
-      $out.= "];\n";
+            $out = substr($out, 0, -1) . "";
+            $out .= "],\n";
+        }
+        $out = substr($out, 0, -2) . "\n";
+        $out .= "];\n";
 
-      $out.= "var labels = [\n";
-      foreach ($labels as $label) {
-         $out.= "\t'".addslashes($label)."',\n";
-      }
-      $out = substr($out, 0, -2)."\n";
-      $out.= "];\n";
+        $out .= "var labels = [\n";
+        foreach ($labels as $label) {
+            $out .= "\t'" . addslashes($label) . "',\n";
+        }
+        $out = substr($out, 0, -2) . "\n";
+        $out .= "];\n";
 
-      $out.= "var labels2 = [\n";
-      foreach ($labels2 as $label) {
-         $out.= "\t'".addslashes($label)."',\n";
-      }
-      $out = substr($out, 0, -2)."\n";
-      $out.= "];\n";
-      echo $out;
+        $out .= "var labels2 = [\n";
+        foreach ($labels2 as $label) {
+            $out .= "\t'" . addslashes($label) . "',\n";
+        }
+        $out = substr($out, 0, -2) . "\n";
+        $out .= "];\n";
+        echo $out;
 
-      if (!$stacked) {
-         $max = ($max*1.2);
-      }
-      if ($unit == '%') {
-         $max = 110;
-      }
+        if (!$stacked) {
+            $max = ($max * 1.2);
+        }
+        if ($unit == '%') {
+            $max = 110;
+        }
 
-      echo "var n = ".count($labels).";";
-      echo "var m = ".count($labels2).";";
-      echo "var max = $max;";
+        echo "var n = " . count($labels) . ";";
+        echo "var m = " . count($labels2) . ";";
+        echo "var max = $max;";
 
-      return $datas;
-
-   }
+        return $datas;
+    }
 
 
    /**
@@ -1869,22 +1895,22 @@ JAVASCRIPT;
     *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
     *          )
     * @param $unit, ex : '%', 'Kg' (optionnal)
-    * @return nothing
+    * @return void
     */
+    public function initDatasTree($datas, $unit = '')
+    {
 
-   function initDatasTree($datas, $unit = '') {
+        $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
 
-      $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
+        echo "var datas = " . json_encode($datas) . ";";
+        echo "var sum = " . PluginMreportingCommon::getArraySum($datas) . ";";
 
-      echo "var datas = ".json_encode($datas).";";
-      echo "var sum = ".PluginMreportingCommon::getArraySum($datas).";";
-
-      return $datas;
-   }
+        return $datas;
+    }
 
 
 
-   function legend($datas) {
-
-   }
+    public function legend($datas)
+    {
+    }
 }

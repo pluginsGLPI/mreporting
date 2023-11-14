@@ -23,13 +23,12 @@
  * along with Mreporting. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @copyright Copyright (C) 2003-2023 by Mreporting plugin team.
- * @copyright Copyright (C) 2003-2022 by Mreporting plugin team.
  * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
 
-include ("../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 Session::checkLoginUser();
 Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'dashboard_list');
@@ -39,47 +38,46 @@ $common = new PluginMreportingCommon();
 $reports = $common->getAllReports();
 $tabs = [];
 foreach ($reports as $classname => $report) {
-
-   $tabs[$classname]=['title'=>$report['title'],
-                      'url'=>Plugin::getWebDir('mreporting')."/ajax/common.tabs.php",
-                      'params'=>"target=".$_SERVER['PHP_SELF']."&classname=$classname"];
+    $tabs[$classname] = ['title' => $report['title'],
+        'url' => Plugin::getWebDir('mreporting') . "/ajax/common.tabs.php",
+        'params' => "target=" . $_SERVER['PHP_SELF'] . "&classname=$classname"
+    ];
 }
 
 if (count($tabs) > 0) {
    //foreach tabs
-   foreach ($tabs as $tab) {
-      global $DB;
-      $params = (isset($tab['params'])?$tab['params']:'');
-      //we get the classname
-      $classname = str_replace("target=".$_SERVER['PHP_SELF']."&classname=", '', $params);
+    foreach ($tabs as $tab) {
+        global $DB;
+        $params = (isset($tab['params']) ? $tab['params'] : '');
+       //we get the classname
+        $classname = str_replace("target=" . $_SERVER['PHP_SELF'] . "&classname=", '', $params);
 
-      //we found all reports for classname where current profil have right
-      $query = "SELECT *
+       //we found all reports for classname where current profil have right
+        $query = "SELECT *
             FROM `glpi_plugin_mreporting_configs`,`glpi_plugin_mreporting_profiles`
             WHERE `glpi_plugin_mreporting_configs`.`id` = `glpi_plugin_mreporting_profiles`.`reports`
             AND `glpi_plugin_mreporting_configs`.`classname` = '$classname'
-            AND `glpi_plugin_mreporting_profiles`.`right` = ".READ."
-            AND `glpi_plugin_mreporting_profiles`.`profiles_id` = ".$_SESSION['glpiactiveprofile']['id'];
+            AND `glpi_plugin_mreporting_profiles`.`right` = " . READ . "
+            AND `glpi_plugin_mreporting_profiles`.`profiles_id` = " . $_SESSION['glpiactiveprofile']['id'];
 
-      //for this classname if current user have no right on any reports
-      if ($result = $DB->query($query)) {
-         if ($DB->numrows($result) == 0) {
-            //we unset the index
-            unset($tabs[$classname]);
-         }
-      }
-   }
+       //for this classname if current user have no right on any reports
+        if ($result = $DB->query($query)) {
+            if ($DB->numrows($result) == 0) {
+                //we unset the index
+                unset($tabs[$classname]);
+            }
+        }
+    }
 
    //finally if tabs is empty
-   if (empty($tabs)) {
-      echo "<div class='center'><br>".__("No report is available !", 'mreporting')."</div>";
-   } else {
-      echo "<div id='tabspanel' class='center-h'></div>";
-      Ajax::createTabs('tabspanel', 'tabcontent', $tabs, 'PluginMreportingCommon');
-   }
-
+    if (empty($tabs)) {
+        echo "<div class='center'><br>" . __("No report is available !", 'mreporting') . "</div>";
+    } else {
+        echo "<div id='tabspanel' class='center-h'></div>";
+        Ajax::createTabs('tabspanel', 'tabcontent', $tabs, 'PluginMreportingCommon');
+    }
 } else {
-   echo "<div class='center'><br>".__("No report is available !", 'mreporting')."</div>";
+    echo "<div class='center'><br>" . __("No report is available !", 'mreporting') . "</div>";
 }
 
 Html::footer();

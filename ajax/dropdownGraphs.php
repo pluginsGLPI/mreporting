@@ -23,27 +23,26 @@
  * along with Mreporting. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @copyright Copyright (C) 2003-2023 by Mreporting plugin team.
- * @copyright Copyright (C) 2003-2022 by Mreporting plugin team.
  * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownGraphs.php")) {
-   include ("../../../inc/includes.php");
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    include("../../../inc/includes.php");
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 
 Session::checkLoginUser();
 
 if ($_POST['graphname'] != -1) {
-   $test = explode(";", $_POST['graphname']);
-   if (isset($test[0])) {
-      $_POST['classname']  = $test[0];
-      $_POST['name']       = $test[1];
+    $test = explode(";", $_POST['graphname']);
+    if (isset($test[0])) {
+        $_POST['classname']  = $test[0];
+        $_POST['name']       = $test[1];
 
-      $config= new PluginMreportingConfig();
-      echo "&nbsp;<a href='".$config->getFormURL()."?name=".$_POST['name']."&classname=".$_POST['classname']."'>".__('Send')."</a>";
-   }
+        $config = new PluginMreportingConfig();
+        echo "&nbsp;<a href='" . $config->getFormURL() . "?name=" . $_POST['name'] . "&classname=" . $_POST['classname'] . "'>" . __('Send') . "</a>";
+    }
 }

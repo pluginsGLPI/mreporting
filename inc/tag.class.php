@@ -23,14 +23,13 @@
  * along with Mreporting. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @copyright Copyright (C) 2003-2023 by Mreporting plugin team.
- * @copyright Copyright (C) 2003-2022 by Mreporting plugin team.
  * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
 
-class PluginMreportingTag Extends PluginMreportingBaseclass {
-
+class PluginMreportingTag extends PluginMreportingBaseclass
+{
    /**
     * Default pie graph for the use of tags.
     * For all linked itemtypes without filter.
@@ -38,29 +37,30 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
     * @param array   $config (optionnal)
     * @return array  $datas array of query results (tag => count number)
     */
-   function reportPieTag($config = []) {
-      global $DB;
+    public function reportPieTag($config = [])
+    {
+        global $DB;
 
-      if (!Plugin::isPluginActive('tag')) {
-         return [];
-      }
+        if (!Plugin::isPluginActive('tag')) {
+            return [];
+        }
 
-      $_SESSION['mreporting_selector'][__FUNCTION__] = [];
+        $_SESSION['mreporting_selector'][__FUNCTION__] = [];
 
-      $datas = [];
+        $datas = [];
 
-      $result = $DB->query("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name as name
+        $result = $DB->query("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name as name
                      FROM glpi_plugin_tag_tagitems
                      LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
                      GROUP BY plugin_tag_tags_id
                      ORDER BY count_tag DESC");
-      while ($datas_tag = $DB->fetchAssoc($result)) {
-         $label = $datas_tag['name'];
-         $datas['datas'][$label] = $datas_tag['count_tag'];
-      }
+        while ($datas_tag = $DB->fetchAssoc($result)) {
+            $label = $datas_tag['name'];
+            $datas['datas'][$label] = $datas_tag['count_tag'];
+        }
 
-      return $datas;
-   }
+        return $datas;
+    }
 
    /**
     * Pie graph for the use of tags in Ticket,
@@ -69,21 +69,22 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
     * @param array   $config (optionnal)
     * @return array  $datas array of query results (tag => count number)
     */
-   function reportPieTagOnTicket($config = []) {
-      global $DB;
+    public function reportPieTagOnTicket($config = [])
+    {
+        global $DB;
 
-      if (!Plugin::isPluginActive('tag')) {
-         return [];
-      }
+        if (!Plugin::isPluginActive('tag')) {
+            return [];
+        }
 
-      $_SESSION['mreporting_selector'][__FUNCTION__] = ['category'];
+        $_SESSION['mreporting_selector'][__FUNCTION__] = ['category'];
 
-      $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ?
-                     " AND glpi_tickets.itilcategories_id = ".$_SESSION['mreporting_values']['itilcategories_id'] : "";
+        $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ?
+                     " AND glpi_tickets.itilcategories_id = " . $_SESSION['mreporting_values']['itilcategories_id'] : "";
 
-      $datas = [];
+        $datas = [];
 
-      $result = $DB->query("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name
+        $result = $DB->query("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name
                            FROM glpi_plugin_tag_tagitems
                            LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
                            LEFT JOIN glpi_tickets ON glpi_tickets.id = glpi_plugin_tag_tagitems.items_id
@@ -91,12 +92,11 @@ class PluginMreportingTag Extends PluginMreportingBaseclass {
                            $sql_itilcat
                            GROUP BY plugin_tag_tags_id
                            ORDER BY count_tag DESC");
-      while ($datas_tag = $DB->fetchAssoc($result)) {
-         $label = $datas_tag['name'];
-         $datas['datas'][$label] = $datas_tag['count_tag'];
-      }
+        while ($datas_tag = $DB->fetchAssoc($result)) {
+            $label = $datas_tag['name'];
+            $datas['datas'][$label] = $datas_tag['count_tag'];
+        }
 
-      return $datas;
-   }
-
+        return $datas;
+    }
 }

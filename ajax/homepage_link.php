@@ -23,16 +23,15 @@
  * along with Mreporting. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
  * @copyright Copyright (C) 2003-2023 by Mreporting plugin team.
- * @copyright Copyright (C) 2003-2022 by Mreporting plugin team.
  * @license   GPLv2 https://www.gnu.org/licenses/gpl-2.0.html
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
 echo '<li id="menu99"><a href="' . Plugin::getWebDir('mreporting') .
-     '/front/dashboard.form.php" class="itemP">&nbsp;&nbsp;'.
-     __("Dashboard", 'mreporting'). '&nbsp;&nbsp;</a></li>';
+     '/front/dashboard.form.php" class="itemP">&nbsp;&nbsp;' .
+     __("Dashboard", 'mreporting') . '&nbsp;&nbsp;</a></li>';
