@@ -253,7 +253,7 @@ class PluginMreportingConfig extends CommonDBTM
 
    /**
     * add First config Link
-    *@return nothing
+    *@return void
     **/
     public static function addFirstconfigLink()
     {
@@ -275,7 +275,7 @@ class PluginMreportingConfig extends CommonDBTM
 
    /**
     * create First Config for all graphs
-    *@return nothing
+    *@return void
     **/
     public function createFirstConfig()
     {
@@ -331,7 +331,7 @@ class PluginMreportingConfig extends CommonDBTM
    /**
     * Preconfig datas for standard system
     * @graphname internal name of graph
-    *@return nothing
+    *@return void
     **/
     public function preconfig($funct_name, $classname)
     {
@@ -405,7 +405,7 @@ class PluginMreportingConfig extends CommonDBTM
     * show not used Graphs dropdown
     * @name name of dropdown
     * @options array example $value
-    *@return nothing
+    *@return void
     **/
     public static function dropdownGraph($name, $options = [])
     {
@@ -470,7 +470,7 @@ class PluginMreportingConfig extends CommonDBTM
     * show Label dropdown
     * @name name of dropdown
     * @options array example $value
-    *@return nothing
+    *@return void
     **/
     public static function dropdownLabel($name, $options = [], $notall = false)
     {

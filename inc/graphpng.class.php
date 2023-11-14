@@ -564,7 +564,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showHbar($params, $dashboard = false, $width = false)
     {
@@ -762,7 +762,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showPie($params, $dashboard = false, $width = false)
     {
@@ -1005,7 +1005,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showSunburst($params, $dashboard = false, $width = false)
     {
@@ -1333,7 +1333,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showHgbar($params, $dashboard = false, $width = false)
     {
@@ -1581,7 +1581,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showVstackbar($params, $dashboard = false, $width = false)
     {
@@ -1919,7 +1919,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
     * @param $area : show plain chart instead only a line (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showArea($params, $dashboard = false, $width = false)
     {
@@ -2237,7 +2237,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showGArea($params, $dashboard = false, $width = false)
     {

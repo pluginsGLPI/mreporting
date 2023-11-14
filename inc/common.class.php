@@ -1738,7 +1738,7 @@ class PluginMreportingCommon extends CommonDBTM
     * @param  datetime $date1    date of start
     * @param  datetime $date2    date of ending
     * @param  string $randname random string (to prevent conflict in js selection)
-    * @return nothing
+    * @return void
     */
     public static function showSelector($date1, $date2, $randname)
     {

@@ -127,7 +127,7 @@ class PluginMreportingGraph
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showHbar($params, $dashboard = false, $width = false)
     {
@@ -328,7 +328,7 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showPie($params, $dashboard = false, $width = false)
     {
@@ -523,7 +523,7 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showSunburst($params, $dashboard = false, $width = false)
     {
@@ -793,7 +793,7 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showHgbar($params, $dashboard = false, $width = false)
     {
@@ -1015,7 +1015,7 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showVstackbar($params, $dashboard = false, $width = false)
     {
@@ -1242,7 +1242,7 @@ JAVASCRIPT;
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
     * @param $area : show plain chart instead only a line (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showArea($params, $dashboard = false, $width = false)
     {
@@ -1470,7 +1470,7 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showLine($params, $dashboard = false, $width = false)
     {
@@ -1494,7 +1494,7 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showGarea($params, $dashboard = false, $width = false)
     {
@@ -1737,7 +1737,7 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return nothing
+    * @return void
     */
     public function showGline($params, $dashboard = false, $width = false)
     {
@@ -1754,7 +1754,7 @@ JAVASCRIPT;
     *
     * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
     * @param $unit, ex : '%', 'Kg' (optionnal)
-    * @return nothing
+    * @return void
     */
     public function initDatasSimple($datas, $unit = '', $links = [])
     {
@@ -1807,7 +1807,7 @@ JAVASCRIPT;
     * @param $labels2
     * @param $unit, ex : '%', 'Kg' (optionnal)
     * @param $stacked : if stacked graph, option to compile the max value
-    * @return nothing
+    * @return void
     */
     public function initDatasMultiple($datas, $labels2, $unit = '', $stacked = false)
     {
@@ -1895,7 +1895,7 @@ JAVASCRIPT;
     *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
     *          )
     * @param $unit, ex : '%', 'Kg' (optionnal)
-    * @return nothing
+    * @return void
     */
     public function initDatasTree($datas, $unit = '')
     {
