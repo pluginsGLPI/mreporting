@@ -2,7 +2,7 @@
    <name>More Reporting</name>
    <key>mreporting</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/pics/chart-garea.png</logo>
+   <logo>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/pics/chart-garea.png</logo>
    <description>
       <short>
          <cs>Přidání (a vytváření) nových výkazů s grafy pro glpi</cs>
@@ -92,7 +92,7 @@ Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
    <homepage>https://github.com/pluginsGLPI/mreporting/</homepage>
    <download>https://github.com/pluginsGLPI/mreporting/releases</download>
    <issues>https://github.com/pluginsGLPI/mreporting/issues</issues>
-   <readme>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/README.md</readme>
+   <readme>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/README.md</readme>
    <authors>
       <author>Teclib'</author>
       <author>Infotel</author>
@@ -258,13 +258,13 @@ Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
       </fr>
    </tags>
    <screenshots>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/dashboard.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/mreporting_area.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/mreporting_garea.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/mreporting_gline.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/mreporting_hbar.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/mreporting_hgbar.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/mreporting_line.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/master/screenshots/mreporting_pie.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/screenshots/dashboard.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/screenshots/mreporting_area.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/screenshots/mreporting_garea.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/screenshots/mreporting_gline.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/screenshots/mreporting_hbar.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/screenshots/mreporting_hgbar.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/screenshots/mreporting_line.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/screenshots/mreporting_pie.png</screenshot>
    </screenshots>
 </root>

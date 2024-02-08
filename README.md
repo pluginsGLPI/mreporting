@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/TECLIB/mreporting](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TECLIB/mreporting?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-![Dashboard](https://raw.githubusercontent.com/PluginsGLPI/mreporting/master/screenshots/dashboard.png)
+![Dashboard](https://raw.githubusercontent.com/PluginsGLPI/mreporting/main/screenshots/dashboard.png)
 
 * Download : https://github.com/PluginsGLPI/mreporting/releases
 * WIKI (Develop new reports) : https://github.com/PluginsGLPI/mreporting/wiki
