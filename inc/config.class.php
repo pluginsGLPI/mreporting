@@ -694,7 +694,7 @@ class PluginMreportingConfig extends CommonDBTM
         Dropdown::showYesNo("show_graph", $this->fields["show_graph"]);
         echo "</td>";
 
-        echo "<td>" . __("Default chart format") . "</td>";
+        echo "<td>" . __("Default chart format", 'mreporting') . "</td>";
         echo "<td>";
         Dropdown::showFromArray(
             "graphtype",
@@ -738,7 +738,7 @@ class PluginMreportingConfig extends CommonDBTM
         echo "</td>";
 
         echo "<td>";
-        echo __("Curve lines (SVG)", 'mreporting');
+        echo __("See values", 'mreporting');
         echo "</td>";
 
         echo "<td>";
