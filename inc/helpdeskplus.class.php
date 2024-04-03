@@ -479,6 +479,66 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         return $datas;
     }
 
+    public function reportVstackbarTicketstechtime($config = [])
+    {
+        global $DB;
+
+        $_SESSION['mreporting_selector']['reportVstackbarTicketstechtime']
+         = ['dateinterval', 'multiplegroupassign', 'allstates', 'category'];
+
+        $tab = [];
+        $datas = [];
+
+        if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
+            $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
+        }
+
+        foreach ($this->status as $current_status) {
+            if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
+                $status_name = Ticket::getStatus($current_status);
+
+                $sql_create = "SELECT
+                     DISTINCT CONCAT(u.firstname, ' ', u.realname) AS completename,
+                     u.name as name,
+                     u.id as u_id,
+                     COUNT(DISTINCT glpi_tickets.id) AS nb
+                  FROM glpi_tickets
+                  {$this->sql_join_tu}
+                  {$this->sql_join_gt}
+                  {$this->sql_join_gtr}
+                  {$this->sql_join_u}
+                  WHERE {$this->sql_date_create}
+                     AND glpi_tickets.entities_id IN ({$this->where_entities})
+                     AND glpi_tickets.is_deleted = '0'
+                     AND glpi_tickets.status = $current_status
+                     AND {$this->sql_group_assign}
+                     AND {$this->sql_group_request}
+                     AND {$this->sql_type}
+                     AND {$this->sql_itilcat}
+                  GROUP BY name
+                  ORDER BY name";
+                $res = $DB->query($sql_create);
+                while ($data = $DB->fetchAssoc($res)) {
+                    $data['name'] = empty($data['completename']) ? __("None") : $data['completename'];
+
+                    if (!isset($tab[$data['name']][$status_name])) {
+                        $tab[$data['name']][$status_name] = 0;
+                    }
+
+                    $tab[$data['name']][$status_name] += $data['nb'];
+                }
+            }
+        }
+
+       //ascending order of datas by date
+        ksort($tab);
+
+       //fill missing datas with zeros
+        $datas = $this->fillStatusMissingValues($tab);
+
+        return $datas;
+    }
+
     public function reportHbarTopcategory($config = [])
     {
         global $DB;
