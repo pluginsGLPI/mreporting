@@ -42,6 +42,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     protected $sql_join_cat;
     protected $sql_join_g;
     protected $sql_join_u;
+    protected $sql_join_tasku;
     protected $sql_join_tt;
     protected $sql_join_tu;
     protected $sql_join_gt;
@@ -68,6 +69,8 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $this->sql_join_tu = 'LEFT JOIN glpi_tickets_users tu
                               ON tu.tickets_id = glpi_tickets.id
                               AND tu.type = ' . Ticket_User::ASSIGN;
+        $this->sql_join_tasku = "LEFT JOIN glpi_users u
+                              ON tt.users_id = u.id";
         $this->sql_join_gt = 'LEFT JOIN glpi_groups_tickets gt
                               ON gt.tickets_id  = glpi_tickets.id
                               AND gt.type = ' . Group_Ticket::ASSIGN;
@@ -486,6 +489,12 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $_SESSION['mreporting_selector']['reportVstackbarTicketstechtime']
          = ['dateinterval', 'multiplegroupassign', 'allstates', 'category'];
 
+        $this->sql_date_create = PluginMreportingCommon::getSQLDate(
+            "`tt`.date",
+            $config['delay'],
+            $config['randname']
+        );
+
         $tab = [];
         $datas = [];
 
@@ -493,20 +502,43 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
         }
 
+        $date1 = (new DateTime($_SESSION['mreporting_values']['date1' . $config['randname']]))
+                    ->modify('first day of this month');
+        $date2 = (new DateTime($_SESSION['mreporting_values']['date2' . $config['randname']]))
+                    ->modify('first day of next month');
+        $period = new DatePeriod($date1, DateInterval::createFromDateString('1 month'), $date2);
+
+        $sql_users = "SELECT DISTINCT CONCAT(u.firstname, ' ', u.realname) as name
+        FROM glpi_tickettasks tt
+        JOIN glpi_users u on tt.users_id = u.id";
+        $res = $DB->query($sql_users);
+        $users = [];
+        while ($data = $DB->fetchAssoc($res)) {
+            array_push($users, $data['name']);
+        }
+
+        foreach($period as $date) {
+            foreach ($users as $user) {
+                $tab[$date->format("m Y").' | '.$user] = [];
+            }
+        }
+
         foreach ($this->status as $current_status) {
             if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
                 $status_name = Ticket::getStatus($current_status);
 
                 $sql_create = "SELECT
-                     DISTINCT CONCAT(u.firstname, ' ', u.realname) AS completename,
+                     DISTINCT CONCAT(LPAD(MONTH(tt.date), 2, '0'), ' ', YEAR(tt.date)) AS month,
+                     CONCAT(u.firstname, ' ', u.realname) AS completename,
                      u.name as name,
                      u.id as u_id,
-                     COUNT(DISTINCT glpi_tickets.id) AS nb
+                     IFNULL(SUM(tt.actiontime), 0)/3600 AS nb
                   FROM glpi_tickets
                   {$this->sql_join_tu}
+                  {$this->sql_join_tt}
                   {$this->sql_join_gt}
                   {$this->sql_join_gtr}
-                  {$this->sql_join_u}
+                  {$this->sql_join_tasku}
                   WHERE {$this->sql_date_create}
                      AND glpi_tickets.entities_id IN ({$this->where_entities})
                      AND glpi_tickets.is_deleted = '0'
@@ -515,23 +547,24 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                      AND {$this->sql_group_request}
                      AND {$this->sql_type}
                      AND {$this->sql_itilcat}
-                  GROUP BY name
-                  ORDER BY name";
+                     AND u.id IS NOT NULL
+                  GROUP BY name, month
+                  ORDER BY tt.date, name";
                 $res = $DB->query($sql_create);
                 while ($data = $DB->fetchAssoc($res)) {
                     $data['name'] = empty($data['completename']) ? __("None") : $data['completename'];
-
-                    if (!isset($tab[$data['name']][$status_name])) {
-                        $tab[$data['name']][$status_name] = 0;
+                    $column = $data['month'].' | '.$data['name'];
+                    echo $column;
+                    if (!isset($tab[$column][$status_name])) {
+                        $tab[$column][$status_name] = 0;
                     }
 
-                    $tab[$data['name']][$status_name] += $data['nb'];
+                    $tab[$column][$status_name] += $data['nb'];
                 }
             }
         }
 
        //ascending order of datas by date
-        ksort($tab);
 
        //fill missing datas with zeros
         $datas = $this->fillStatusMissingValues($tab);
