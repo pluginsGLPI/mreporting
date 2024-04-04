@@ -70,7 +70,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                               ON tu.tickets_id = glpi_tickets.id
                               AND tu.type = ' . Ticket_User::ASSIGN;
         $this->sql_join_tasku = "LEFT JOIN glpi_users u
-                              ON tt.users_id = u.id";
+                              ON tt.users_id_tech = u.id";
         $this->sql_join_gt = 'LEFT JOIN glpi_groups_tickets gt
                               ON gt.tickets_id  = glpi_tickets.id
                               AND gt.type = ' . Group_Ticket::ASSIGN;
@@ -487,7 +487,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         global $DB;
 
         $_SESSION['mreporting_selector']['reportVstackbarTicketstechtime']
-         = ['dateinterval', 'multiplegroupassign', 'allstates', 'category'];
+         = ['dateinterval', 'multiplegroupassign', 'category'];
 
         $this->sql_date_create = PluginMreportingCommon::getSQLDate(
             "`tt`.date",
@@ -510,64 +510,72 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $sql_users = "SELECT DISTINCT CONCAT(u.firstname, ' ', u.realname) as name
         FROM glpi_tickettasks tt
-        JOIN glpi_users u on tt.users_id = u.id";
+        JOIN glpi_users u on tt.users_id_tech = u.id";
         $res = $DB->query($sql_users);
         $users = [];
         while ($data = $DB->fetchAssoc($res)) {
             array_push($users, $data['name']);
         }
 
+        // Work-around to get names multiple times for each month
         foreach($period as $date) {
+            $num_spaces = ($date->format('Y') % 3)*12 + $date->format('m');
             foreach ($users as $user) {
-                $tab[$date->format("m Y").' | '.$user] = [];
+                $tab[$user.str_repeat(" ", $num_spaces)] = [];
             }
         }
 
-        foreach ($this->status as $current_status) {
-            if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
-                $status_name = Ticket::getStatus($current_status);
 
-                $sql_create = "SELECT
-                     DISTINCT CONCAT(LPAD(MONTH(tt.date), 2, '0'), ' ', YEAR(tt.date)) AS month,
-                     CONCAT(u.firstname, ' ', u.realname) AS completename,
-                     u.name as name,
-                     u.id as u_id,
-                     IFNULL(SUM(tt.actiontime), 0)/3600 AS nb
-                  FROM glpi_tickets
-                  {$this->sql_join_tu}
-                  {$this->sql_join_tt}
-                  {$this->sql_join_gt}
-                  {$this->sql_join_gtr}
-                  {$this->sql_join_tasku}
-                  WHERE {$this->sql_date_create}
-                     AND glpi_tickets.entities_id IN ({$this->where_entities})
-                     AND glpi_tickets.is_deleted = '0'
-                     AND glpi_tickets.status = $current_status
-                     AND {$this->sql_group_assign}
-                     AND {$this->sql_group_request}
-                     AND {$this->sql_type}
-                     AND {$this->sql_itilcat}
-                     AND u.id IS NOT NULL
-                  GROUP BY name, month
-                  ORDER BY tt.date, name";
-                $res = $DB->query($sql_create);
-                while ($data = $DB->fetchAssoc($res)) {
-                    $data['name'] = empty($data['completename']) ? __("None") : $data['completename'];
-                    $column = $data['month'].' | '.$data['name'];
-                    echo $column;
-                    if (!isset($tab[$column][$status_name])) {
-                        $tab[$column][$status_name] = 0;
-                    }
+        $DB->query("SET lc_time_names = 'en_US'");
+        $sql_create = "SELECT
+                DISTINCT MONTH(tt.date) as month,
+                YEAR(tt.date) as year,
+                CONCAT(MONTHNAME(tt.date), ' ', YEAR(tt.date)) AS fulldate,
+                CONCAT(u.firstname, ' ', u.realname) AS completename,
+                u.name as name,
+                u.id as u_id,
+                IFNULL(SUM(tt.actiontime), 0)/3600 AS nb
+            FROM glpi_tickets
+            {$this->sql_join_tu}
+            {$this->sql_join_tt}
+            {$this->sql_join_gt}
+            {$this->sql_join_gtr}
+            {$this->sql_join_tasku}
+            WHERE {$this->sql_date_create}
+                AND glpi_tickets.entities_id IN ({$this->where_entities})
+                AND glpi_tickets.is_deleted = '0'
+                AND {$this->sql_group_assign}
+                AND {$this->sql_group_request}
+                AND {$this->sql_type}
+                AND {$this->sql_itilcat}
+                AND u.id IS NOT NULL
+            GROUP BY name, fulldate
+            ORDER BY tt.date, name";
+        $res = $DB->query($sql_create);
+        while ($data = $DB->fetchAssoc($res)) {
+            $num_spaces = ($data['year'] % 3)*12 + $data['month'];
+            $column = $data['completename'].str_repeat(" ", $num_spaces);
+            $month_name = $data['fulldate'];
+            if (!isset($tab[$column][$month_name])) {
+                $tab[$column][$month_name] = 0;
+            }
 
-                    $tab[$column][$status_name] += $data['nb'];
+            $tab[$column][$month_name] += $data['nb'];
+        }
+        $DB->query("SET lc_time_names = 'fr_FR'");
+
+        $datas = [];
+        foreach ($tab as $name => $data) {
+            foreach ($period as $date) {
+                $date_name = $date->format('F Y');
+                if (isset($data[$date_name])) {
+                    $datas['datas'][$date_name][] = $data[$date_name];
+                } else {
+                    $datas['datas'][$date_name][] = 0;
                 }
             }
+            $datas['labels2'][] = $name;
         }
-
-       //ascending order of datas by date
-
-       //fill missing datas with zeros
-        $datas = $this->fillStatusMissingValues($tab);
 
         return $datas;
     }
