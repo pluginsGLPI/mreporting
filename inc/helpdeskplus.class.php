@@ -501,7 +501,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
             $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
         }
-
+        
         $date1 = (new DateTime($_SESSION['mreporting_values']['date1' . $config['randname']]))
                     ->modify('first day of this month');
         $date2 = (new DateTime($_SESSION['mreporting_values']['date2' . $config['randname']]))
@@ -516,15 +516,6 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         while ($data = $DB->fetchAssoc($res)) {
             array_push($users, $data['name']);
         }
-
-        // Work-around to get names multiple times for each month
-        foreach($period as $date) {
-            $num_spaces = ($date->format('Y') % 3)*12 + $date->format('m');
-            foreach ($users as $user) {
-                $tab[$user.str_repeat(" ", $num_spaces)] = [];
-            }
-        }
-
 
         $DB->query("SET lc_time_names = 'en_US'");
         $sql_create = "SELECT
@@ -554,7 +545,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $res = $DB->query($sql_create);
         while ($data = $DB->fetchAssoc($res)) {
             $num_spaces = ($data['year'] % 3)*12 + $data['month'];
-            $column = $data['completename'].str_repeat(" ", $num_spaces);
+            $column = $data['completename'];
             $month_name = $data['fulldate'];
             if (!isset($tab[$column][$month_name])) {
                 $tab[$column][$month_name] = 0;
