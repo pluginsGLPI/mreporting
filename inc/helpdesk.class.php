@@ -591,7 +591,6 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 ksort($data);
             }
         }
-        print_r($datas["datas"]);
         return $datas;
     }
 
