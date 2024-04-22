@@ -539,6 +539,62 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
+    public function reportGlineNbTicketYear($config = [])
+    {
+        $_SESSION['mreporting_selector']['reportGlineNbTicketYear'] = ['dateinterval'];
+
+        return $this->reportGareaNbTicketYear($config, false);
+    }
+
+    public function reportGareaNbTicketYear($config = [], $area = true)
+    {
+        global $DB;
+
+        $_SESSION['mreporting_selector']['reportGareaNbTicketYear'] = ['dateinterval', 'period'];
+
+        $datas = [];
+
+        //Init delay value
+        $this->sql_date = PluginMreportingCommon::getSQLDate(
+            "glpi_tickets.date",
+            $config['delay'],
+            $config['randname']
+        );
+
+        $query = "SELECT DISTINCT
+        date_format(date, '%Y-%m') as period,
+        COUNT(id) as nb
+        FROM glpi_tickets
+        WHERE " . $this->sql_date . "
+            AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
+            AND glpi_tickets.is_deleted = '0'
+        GROUP BY period
+        ORDER BY period";
+        $res = $DB->query($query);
+        for ($m=1; $m<=12; $m++) {
+            $datas['labels2'][$m] = $this->format_date('MMMM', new DateTime("2024-$m"));
+        }
+        while ($data = $DB->fetchAssoc($res)) {
+            $date = new DateTime($data['period']);
+            $month = $this->format_date('M', $date);
+            $datas['datas'][$this->format_date('Y', $date)][$month] = $data['nb'];
+        }
+
+        foreach (array_keys($datas['datas']) as $key) {
+            for ($m=1; $m<=12; $m++) {
+                if (!isset($datas['datas'][$key][$m]))
+                    $datas['datas'][$key][$m] = 0;
+            }
+        }
+        if (count($datas) > 0) {
+            foreach ($datas['datas'] as &$data) {
+                ksort($data);
+            }
+        }
+        print_r($datas["datas"]);
+        return $datas;
+    }
+
     public function reportVstackbarNbTicket($config = [])
     {
         $_SESSION['mreporting_selector']['reportVstackbarNbTicket'] = ['dateinterval'];
@@ -876,5 +932,11 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         }
 
         return $config->fields;
+    }
+
+    public function format_date($format, $date) {
+        $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::SHORT, IntlDateFormatter::SHORT);
+        $formatter->setPattern($format);
+        return ucwords($formatter->format($date));
     }
 }

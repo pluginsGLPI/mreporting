@@ -395,6 +395,10 @@ class PluginMreportingConfig extends CommonDBTM
                     $this->fields['graphtype']     = 'SVG';
                     break;
             }
+
+            if (str_contains($funct_name, 'Year')) {
+                $this->fields["default_delay"] = "1826"; // 5 Years
+            }
         }
 
         return $this->fields;

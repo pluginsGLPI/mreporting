@@ -105,6 +105,18 @@ $LANG['plugin_mreporting']['Helpdesk'] = [
         'category' => 'Par tickets',
     ],
 
+    'reportGareaNbTicketYear' => [
+        'title'    => 'Evolution du nombre de ticket sur la période (par Année)',
+        'desc'     => 'Aire',
+        'category' => 'Par tickets',
+    ],
+
+    'reportGlineNbTicketYear' => [
+        'title'    => 'Evolution du nombre de ticket sur la période (par Année)',
+        'desc'     => 'Ligne',
+        'category' => 'Par tickets',
+    ],
+
     'reportGlineNbTicket' => [
         'title'    => 'Evolution du nombre de ticket sur la période (par Statut)',
         'desc'     => 'Lignes',
