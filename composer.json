@@ -4,10 +4,10 @@
         "masnathan/odtphp": "dev-teclib"
     },
     "require-dev": {
-        "glpi-project/tools": "^0.7.2",
+        "glpi-project/tools": "^0.7",
         "php-parallel-lint/php-parallel-lint": "^1.4",
-        "phpstan/extension-installer": "^1.3.1",
-        "phpstan/phpstan": "^1.11.1",
+        "phpstan/extension-installer": "^1.3",
+        "phpstan/phpstan": "^1.11",
         "squizlabs/php_codesniffer": "^3.10"
     },
     "config": {
