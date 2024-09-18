@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-13 08:02+0000\n"
+"POT-Creation-Date: 2024-09-18 07:01+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: 조성현 (jaymz9634) <jaymz9634@gmail.com>, 2017,2020\n"
 "Language-Team: Korean (Korea) (http://app.transifex.com/teclib/glpi-project-plugin-mreporting/language/ko_KR/)\n"
@@ -88,7 +88,7 @@ msgstr "구성"
 msgid "Configure report"
 msgstr "구성 보고서"
 
-#: inc/config.class.php:96 inc/config.class.php:729 inc/config.class.php:741
+#: inc/config.class.php:96 inc/config.class.php:729
 msgid "Curve lines (SVG)"
 msgstr "곡선 (SVG)"
 
@@ -101,7 +101,7 @@ msgstr "대시보드"
 msgid "Dashboard is empty. Please add reports by clicking on the icon"
 msgstr "대시보드가 비었습니다. 아이콘 위를 클릭하여 보고서를 추가하세요"
 
-#: inc/config.class.php:165
+#: inc/config.class.php:165 inc/config.class.php:697
 msgid "Default chart format"
 msgstr "기본 도표 형식"
 
@@ -143,21 +143,21 @@ msgstr "최대 심도 개체 수준"
 msgid "Month"
 msgstr "월"
 
-#: inc/profile.class.php:41 inc/preference.class.php:198
-#: inc/notification.class.php:47 inc/common.class.php:52
-#: inc/notificationtargetnotification.class.php:37 front/config.php:43
-#: front/config.form.php:54 front/central.php:34 front/graph.php:40
-#: front/preference.form.php:45 front/dashboard.form.php:57
-#: front/dashboard.form.php:62 setup.php:187
+#: inc/preference.class.php:198 inc/notification.class.php:47
+#: inc/common.class.php:52 inc/profile.class.php:41
+#: inc/notificationtargetnotification.class.php:37 setup.php:187
+#: front/preference.form.php:45 front/config.php:43 front/config.form.php:54
+#: front/dashboard.form.php:57 front/dashboard.form.php:62 front/graph.php:40
+#: front/central.php:34
 msgid "More Reporting"
 msgstr "보고서 더 보기"
 
-#: inc/graphpng.class.php:612 inc/graphpng.class.php:809
-#: inc/graphpng.class.php:1044 inc/graphpng.class.php:1381
-#: inc/graphpng.class.php:1629 inc/graphpng.class.php:1967
-#: inc/graphpng.class.php:2285 inc/graph.class.php:163 inc/graph.class.php:365
-#: inc/graph.class.php:565 inc/graph.class.php:828 inc/graph.class.php:1051
-#: inc/graph.class.php:1284 inc/graph.class.php:1529
+#: inc/graph.class.php:163 inc/graph.class.php:365 inc/graph.class.php:565
+#: inc/graph.class.php:828 inc/graph.class.php:1051 inc/graph.class.php:1284
+#: inc/graph.class.php:1529 inc/graphpng.class.php:612
+#: inc/graphpng.class.php:809 inc/graphpng.class.php:1044
+#: inc/graphpng.class.php:1381 inc/graphpng.class.php:1629
+#: inc/graphpng.class.php:1967 inc/graphpng.class.php:2285
 msgid "No data for this date range !"
 msgstr "이 날짜 범위에는 자료가 없습니다!"
 
@@ -224,7 +224,7 @@ msgstr "영역 보기"
 msgid "See graphic"
 msgstr "시각화 보기"
 
-#: inc/config.class.php:105
+#: inc/config.class.php:105 inc/config.class.php:741
 msgid "See values"
 msgstr "가치 보기"
 

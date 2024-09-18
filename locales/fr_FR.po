@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-13 08:02+0000\n"
+"POT-Creation-Date: 2024-09-18 07:01+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: Cédric Anne, 2018\n"
 "Language-Team: French (France) (http://app.transifex.com/teclib/glpi-project-plugin-mreporting/language/fr_FR/)\n"
@@ -91,7 +91,7 @@ msgstr "Configuration"
 msgid "Configure report"
 msgstr "Configurer le rapport"
 
-#: inc/config.class.php:96 inc/config.class.php:729 inc/config.class.php:741
+#: inc/config.class.php:96 inc/config.class.php:729
 msgid "Curve lines (SVG)"
 msgstr "Incurver les lignes (SVG)"
 
@@ -104,7 +104,7 @@ msgstr "Tableau de bord"
 msgid "Dashboard is empty. Please add reports by clicking on the icon"
 msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur l'icône"
 
-#: inc/config.class.php:165
+#: inc/config.class.php:165 inc/config.class.php:697
 msgid "Default chart format"
 msgstr "Format de graphique par défaut"
 
@@ -146,21 +146,21 @@ msgstr "Profondeur maxi dans l'arborescence d'entités"
 msgid "Month"
 msgstr "Mois"
 
-#: inc/profile.class.php:41 inc/preference.class.php:198
-#: inc/notification.class.php:47 inc/common.class.php:52
-#: inc/notificationtargetnotification.class.php:37 front/config.php:43
-#: front/config.form.php:54 front/central.php:34 front/graph.php:40
-#: front/preference.form.php:45 front/dashboard.form.php:57
-#: front/dashboard.form.php:62 setup.php:187
+#: inc/preference.class.php:198 inc/notification.class.php:47
+#: inc/common.class.php:52 inc/profile.class.php:41
+#: inc/notificationtargetnotification.class.php:37 setup.php:187
+#: front/preference.form.php:45 front/config.php:43 front/config.form.php:54
+#: front/dashboard.form.php:57 front/dashboard.form.php:62 front/graph.php:40
+#: front/central.php:34
 msgid "More Reporting"
 msgstr "Plus de rapports"
 
-#: inc/graphpng.class.php:612 inc/graphpng.class.php:809
-#: inc/graphpng.class.php:1044 inc/graphpng.class.php:1381
-#: inc/graphpng.class.php:1629 inc/graphpng.class.php:1967
-#: inc/graphpng.class.php:2285 inc/graph.class.php:163 inc/graph.class.php:365
-#: inc/graph.class.php:565 inc/graph.class.php:828 inc/graph.class.php:1051
-#: inc/graph.class.php:1284 inc/graph.class.php:1529
+#: inc/graph.class.php:163 inc/graph.class.php:365 inc/graph.class.php:565
+#: inc/graph.class.php:828 inc/graph.class.php:1051 inc/graph.class.php:1284
+#: inc/graph.class.php:1529 inc/graphpng.class.php:612
+#: inc/graphpng.class.php:809 inc/graphpng.class.php:1044
+#: inc/graphpng.class.php:1381 inc/graphpng.class.php:1629
+#: inc/graphpng.class.php:1967 inc/graphpng.class.php:2285
 msgid "No data for this date range !"
 msgstr "Aucune données pour cette plage de date !"
 
@@ -227,7 +227,7 @@ msgstr "Voir l'aire"
 msgid "See graphic"
 msgstr "Voir le graphique"
 
-#: inc/config.class.php:105
+#: inc/config.class.php:105 inc/config.class.php:741
 msgid "See values"
 msgstr "Voir les valeurs"
 

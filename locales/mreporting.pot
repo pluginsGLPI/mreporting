@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-13 08:02+0000\n"
+"POT-Creation-Date: 2024-09-18 07:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Configure report"
 msgstr ""
 
-#: inc/config.class.php:96 inc/config.class.php:729 inc/config.class.php:741
+#: inc/config.class.php:96 inc/config.class.php:729
 msgid "Curve lines (SVG)"
 msgstr ""
 
@@ -100,7 +100,7 @@ msgstr ""
 msgid "Dashboard is empty. Please add reports by clicking on the icon"
 msgstr ""
 
-#: inc/config.class.php:165
+#: inc/config.class.php:165 inc/config.class.php:697
 msgid "Default chart format"
 msgstr ""
 
@@ -142,21 +142,21 @@ msgstr ""
 msgid "Month"
 msgstr ""
 
-#: inc/profile.class.php:41 inc/preference.class.php:198
-#: inc/notification.class.php:47 inc/common.class.php:52
-#: inc/notificationtargetnotification.class.php:37 front/config.php:43
-#: front/config.form.php:54 front/central.php:34 front/graph.php:40
-#: front/preference.form.php:45 front/dashboard.form.php:57
-#: front/dashboard.form.php:62 setup.php:187
+#: inc/preference.class.php:198 inc/notification.class.php:47
+#: inc/common.class.php:52 inc/profile.class.php:41
+#: inc/notificationtargetnotification.class.php:37 setup.php:187
+#: front/preference.form.php:45 front/config.php:43 front/config.form.php:54
+#: front/dashboard.form.php:57 front/dashboard.form.php:62 front/graph.php:40
+#: front/central.php:34
 msgid "More Reporting"
 msgstr ""
 
-#: inc/graphpng.class.php:612 inc/graphpng.class.php:809
-#: inc/graphpng.class.php:1044 inc/graphpng.class.php:1381
-#: inc/graphpng.class.php:1629 inc/graphpng.class.php:1967
-#: inc/graphpng.class.php:2285 inc/graph.class.php:163 inc/graph.class.php:365
-#: inc/graph.class.php:565 inc/graph.class.php:828 inc/graph.class.php:1051
-#: inc/graph.class.php:1284 inc/graph.class.php:1529
+#: inc/graph.class.php:163 inc/graph.class.php:365 inc/graph.class.php:565
+#: inc/graph.class.php:828 inc/graph.class.php:1051 inc/graph.class.php:1284
+#: inc/graph.class.php:1529 inc/graphpng.class.php:612
+#: inc/graphpng.class.php:809 inc/graphpng.class.php:1044
+#: inc/graphpng.class.php:1381 inc/graphpng.class.php:1629
+#: inc/graphpng.class.php:1967 inc/graphpng.class.php:2285
 msgid "No data for this date range !"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgstr ""
 msgid "See graphic"
 msgstr ""
 
-#: inc/config.class.php:105
+#: inc/config.class.php:105 inc/config.class.php:741
 msgid "See values"
 msgstr ""
 
