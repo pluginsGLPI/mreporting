@@ -55,7 +55,7 @@ $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['desc']   
                                                                                        <b>Você não pode selecionar ambos os critérios!</b>';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['category']     = 'Geral';
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['title']          = 'TOP categorias';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['title']          = 'TOP Categorias';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['desc']           = '';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['category']       = 'Geral';
 
