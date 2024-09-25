@@ -72,7 +72,7 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['title'] = "Distribui
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['title'] = "Distribuições Linux";
+$LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['title'] = "Distribuições Linux (geral)";
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['category'] = "Sistema Operacional";
 
