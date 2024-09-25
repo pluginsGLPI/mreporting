@@ -84,11 +84,11 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['title'] = "Vers�
 $LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['title'] = "Computador por período";
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['title'] = "Computadores por período";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['category'] = "Inventário";
 
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['title'] = "Computador por período";
+$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['title'] = "Computadores por período";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['desc'] = "Pizza";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['category'] = "Inventário";
 
