@@ -104,6 +104,6 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['title'] = "Comput
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['category'] = "Inventário";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['title'] = "Computadores por entidades";
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['title'] = "Computadores por entidade";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['category'] = "Entidade";

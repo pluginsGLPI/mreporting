@@ -55,11 +55,11 @@ $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['desc']   
                                                                                        <b>Você não pode selecionar ambos os critérios!</b>';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['category']     = 'Geral';
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['title']          = 'TOP Categorias';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['title']          = 'Top Categorias';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['desc']           = '';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['category']       = 'Geral';
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['title']         = 'TOP Grupo requerente';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['title']         = 'Top Grupos requerentes';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['desc']          = '';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['category']      = 'Geral';
 

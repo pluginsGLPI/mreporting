@@ -71,7 +71,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['title']
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['desc'] = "Pizza";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['category'] = "Por chamado";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Nº de evolução de chamados ao longo do período";
+$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Nº de evolução dos chamados ao longo do período";
 $LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['desc'] = "Analítico";
 $LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['category'] = "Por chamado";
 
