@@ -80,7 +80,7 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarMac']['title'] = "Versões do
 $LANG['plugin_mreporting']['Inventory']['reportHbarMac']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMac']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['title'] = "Versões MAC OS X (geral)";
+$LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['title'] = "Versões do macOS (geral)";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['category'] = "Sistema Operacional";
 

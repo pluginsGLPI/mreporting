@@ -91,7 +91,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['title'] = "N�
 $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['desc'] = "Barras empilhadas";
 $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['category'] = "Por chamado";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['title'] = "Distribuição de chamados por categoria e sub-categorias";
+$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['title'] = "Distribuição de chamados por categoria e subcategorias";
 $LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['desc'] = "Donut";
 $LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['category'] = "Por categoria";
 

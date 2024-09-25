@@ -36,7 +36,7 @@ $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['title']      
 $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['desc']             = '';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['category']         = 'Geral';
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['title']        = 'Chamados por período';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['title']        = 'Chamados por Período';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['desc']         = '';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['category']     = 'Geral';
 
@@ -93,7 +93,7 @@ $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['title'] 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['desc'] = "";
 $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineNbTicketBySla']['category'] = "Por SLA";
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['title'] = "Chamados por SLA ordenados por categorias";
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['title'] = "Chamados por SLA classificados por categorias";
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['desc'] = "";
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHgbarRespectedSlasByTopCategory']['category'] = "Por SLA";
 
