@@ -32,11 +32,11 @@ global $LANG;
 
 $LANG['plugin_mreporting']['Inventory']['title'] = "Inventário";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['title'] = "Computadores por Sistema Operacional";
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['title'] = "Computadores por sistema operacional";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['title'] = "Computadores por Sistema Operacional";
+$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['title'] = "Computadores por sistema operacional";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['desc'] = "Pizza";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['category'] = "Sistema Operacional";
 
