@@ -64,7 +64,7 @@ $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['title'] = "
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['desc'] = "Pizza";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['category'] = "Tipo";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['title'] = "Distribuições Windows";
+$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['title'] = "Versões do Windows";
 $LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['category'] = "Sistema Operacional";
 
@@ -76,7 +76,7 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['title'] = "Dis
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['title'] = "Versões Mac OS X (detalhes)";
+$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['title'] = "Versões do macOS (detalhes)";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMac']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMac']['category'] = "Sistema Operacional";
 
@@ -103,3 +103,7 @@ $LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['category'] 
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['title'] = "Computadores por resolução";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['category'] = "Inventário";
+
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['title'] = "Computadores por entidades";
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['desc'] = "Barras";
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['category'] = "Entidade";

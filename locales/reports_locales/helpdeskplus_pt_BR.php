@@ -34,27 +34,34 @@ $LANG['plugin_mreporting']['Helpdeskplus']['title'] = 'Helpdesk Avançado';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['title']            = 'Histórico';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['desc']             = '';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportGlineBacklogs']['category']         = 'Geral';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['title']        = 'Chamados por período';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['desc']         = '';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarLifetime']['category']     = 'Geral';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketsgroups']['title']   = 'Chamados por Grupo';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketsgroups']['desc']    = '';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketsgroups']['category'] = 'Geral';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketstech']['title']     = 'Chamados por Técnico';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketstech']['desc']      = '';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarTicketstech']['category']  = 'Geral';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['title']        = 'Orientação dos arquivos';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['desc']         = 'Nº de chamados para cada grupo chegada com base em um grupo de partida.<br />
                                                                                        - Selecione um grupo requerente para exibir o Nº de chamados atribuídos aos grupos.<br />
                                                                                        - Selecione um grupo para exibir o número de chamados por grupos.<br />
-                                                                                       <b>Você não pode selecionar  ambos os critérios!</b>';
+                                                                                       <b>Você não pode selecionar ambos os critérios!</b>';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarWorkflow']['category']     = 'Geral';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['title']          = 'TOP categorias';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['desc']           = '';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopcategory']['category']       = 'Geral';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['title']         = 'TOP Grupo requerente';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['desc']          = '';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportHbarTopapplicant']['category']      = 'Geral';
 
 $LANG['plugin_mreporting']['Helpdeskplus']['backlogs']        = 'Backlogs';
 $LANG['plugin_mreporting']['Helpdeskplus']['opened']          = 'Aberto';
@@ -64,9 +71,13 @@ $LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']   = 'Status para exi
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['title'] = "Nº de mudanças por grupo";
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['desc'] = "";
 
+$LANG['plugin_mreporting']['Helpdeskplus']['reportLineActiontimeVsSolvedelay']['title'] = 'Tempos de ação de tarefas e comparação de atrasos de resolução';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportLineActiontimeVsSolvedelay']['desc'] = '';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportLineActiontimeVsSolvedelay']['category'] = 'Geral';
+
 $LANG['plugin_mreporting']['selector']["slas"] = "SLAs";
 
-$LANG['plugin_mreporting']['selector']["categories"] = "Categories";
+$LANG['plugin_mreporting']['selector']["categories"] = "Categorias";
 
 $LANG['plugin_mreporting']['Helpdeskplus']['slaobserved'] = "SLA observada";
 $LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved'] = "SLA não observada";
