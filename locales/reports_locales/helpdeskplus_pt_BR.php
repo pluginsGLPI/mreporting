@@ -71,7 +71,7 @@ $LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']   = 'Status para exi
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['title'] = "Nº de mudanças por grupo";
 $LANG['plugin_mreporting']['Helpdeskplus']['reportVstackbarGroupChange']['desc'] = "";
 
-$LANG['plugin_mreporting']['Helpdeskplus']['reportLineActiontimeVsSolvedelay']['title'] = 'Tempos de ação de tarefas e comparação de atrasos de resolução';
+$LANG['plugin_mreporting']['Helpdeskplus']['reportLineActiontimeVsSolvedelay']['title'] = 'Comparação dos tempos de ação de tarefas e de atrasos de resolução';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportLineActiontimeVsSolvedelay']['desc'] = '';
 $LANG['plugin_mreporting']['Helpdeskplus']['reportLineActiontimeVsSolvedelay']['category'] = 'Geral';
 
