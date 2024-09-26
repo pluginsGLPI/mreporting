@@ -5,6 +5,7 @@
 ![Dashboard](https://raw.githubusercontent.com/PluginsGLPI/mreporting/main/screenshots/dashboard.png)
 
 * Download : https://github.com/PluginsGLPI/mreporting/releases
+* Translations on Transifex service : https://explore.transifex.com/teclib/glpi-project-plugin-mreporting/
 * WIKI (Develop new reports) : https://github.com/PluginsGLPI/mreporting/wiki
 
 ## Contributing
