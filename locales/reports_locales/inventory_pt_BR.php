@@ -32,11 +32,11 @@ global $LANG;
 
 $LANG['plugin_mreporting']['Inventory']['title'] = "Inventário";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['title'] = "Computadores por Sistema Operacional";
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['title'] = "Computadores por sistema operacional";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByOS']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['title'] = "Computadores por Sistema Operacional";
+$LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['title'] = "Computadores por sistema operacional";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['desc'] = "Pizza";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByOS']['category'] = "Sistema Operacional";
 
@@ -64,7 +64,7 @@ $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['title'] = "
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['desc'] = "Pizza";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByType']['category'] = "Tipo";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['title'] = "Distribuições Windows";
+$LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['title'] = "Versões do Windows";
 $LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarWindows']['category'] = "Sistema Operacional";
 
@@ -72,23 +72,23 @@ $LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['title'] = "Distribui
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinux']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['title'] = "Distribuições Linux";
+$LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['title'] = "Distribuições Linux (geral)";
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarLinuxDistro']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['title'] = "Versões Mac OS X (detalhes)";
+$LANG['plugin_mreporting']['Inventory']['reportHbarMac']['title'] = "Versões do macOS (detalhes)";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMac']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMac']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['title'] = "Versões MAC OS X (geral)";
+$LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['title'] = "Versões do macOS (geral)";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMacFamily']['category'] = "Sistema Operacional";
 
-$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['title'] = "Computador por período";
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['title'] = "Computadores por período";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarComputersByAge']['category'] = "Inventário";
 
-$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['title'] = "Computador por período";
+$LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['title'] = "Computadores por período";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['desc'] = "Pizza";
 $LANG['plugin_mreporting']['Inventory']['reportPieComputersByAge']['category'] = "Inventário";
 
@@ -103,3 +103,7 @@ $LANG['plugin_mreporting']['Inventory']['reportPieFusionInventory']['category'] 
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['title'] = "Computadores por resolução";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['desc'] = "Barras";
 $LANG['plugin_mreporting']['Inventory']['reportHbarMonitors']['category'] = "Inventário";
+
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['title'] = "Computadores por entidade";
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['desc'] = "Barras";
+$LANG['plugin_mreporting']['Inventory']['reportHbarComputersByEntity']['category'] = "Entidade";

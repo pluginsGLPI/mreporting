@@ -31,17 +31,17 @@
 global $LANG;
 
 $LANG['plugin_mreporting']['Helpdesk']['title'] = "Helpdesk";
-$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Nº de chamados por Entidade";
+$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['title'] = "Nº de chamados por entidade";
 $LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['desc'] = "Barras";
-$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['category'] = "Por Entidade";
+$LANG['plugin_mreporting']['Helpdesk']['reportHbarTicketNumberByEntity']['category'] = "Por entidade";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['title'] = "Nº de chamados por Entidade";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['title'] = "Nº de chamados por entidade";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['desc'] = "Pizza";
-$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['category'] = "Por Entidade";
+$LANG['plugin_mreporting']['Helpdesk']['reportPieTicketNumberByEntity']['category'] = "Por entidade";
 
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['title'] = "Nº de chamados por categoria e entidade";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['desc'] = "Barras agrupadas";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['category'] = "Por Entidade";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarTicketNumberByCatAndEntity']['category'] = "Por entidade";
 
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTopTenAuthor']['title'] = "Top 10 requerentes";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTopTenAuthor']['desc'] = "Pizza";
@@ -49,7 +49,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportPieTopTenAuthor']['category'] = "P
 
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['title'] = "Nº de chamados abertos por categoria e tipo";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['desc'] = "Barras agrupadas";
-$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['category'] = "por categoria";
+$LANG['plugin_mreporting']['Helpdesk']['reportHgbarOpenTicketNumberByCategoryAndByType']['category'] = "Por categoria";
 
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['title'] = "Nº de chamados fechados por categoria e tipo";
 $LANG['plugin_mreporting']['Helpdesk']['reportHgbarCloseTicketNumberByCategoryAndByType']['desc'] = "Barras agrupadas";
@@ -71,7 +71,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['title']
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['desc'] = "Pizza";
 $LANG['plugin_mreporting']['Helpdesk']['reportPieTicketOpenedbyStatus']['category'] = "Por chamado";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Nº de evolução de chamados ao longo do período";
+$LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['title'] = "Nº de evolução dos chamados ao longo do período";
 $LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['desc'] = "Analítico";
 $LANG['plugin_mreporting']['Helpdesk']['reportAreaNbTicket']['category'] = "Por chamado";
 
@@ -91,7 +91,7 @@ $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['title'] = "N�
 $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['desc'] = "Barras empilhadas";
 $LANG['plugin_mreporting']['Helpdesk']['reportVstackbarNbTicket']['category'] = "Por chamado";
 
-$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['title'] = "Distribuição de chamados por categoria e sub-categorias";
+$LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['title'] = "Distribuição de chamados por categoria e subcategorias";
 $LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['desc'] = "Donut";
 $LANG['plugin_mreporting']['Helpdesk']['reportSunburstTicketByCategories']['category'] = "Por categoria";
 
