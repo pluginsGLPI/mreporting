@@ -31,110 +31,110 @@
 global $LANG;
 
 $LANG['plugin_mreporting']['Helpdeskplus'] = [
-   'title'         => 'Helpdesk - pokročilé',
+    'title' => 'Helpdesk - pokročilé',
 
-   // MISC LOCALES
-   'backlogs'      => "Nedokončené",
-   'opened'        => "Otvorené",
-   'period'        => "Obdobie",
-   'backlogstatus' => "Stav, ktorý sa má zobraziť",
-   'slaobserved'   => "SLA sledované",
-   'slanotobserved'=> "SLA nesledované",
-   'observed'      => "sledované",
-   'notobserved'   => "nesledované",
-
-
-   // SELECTOR
-   'selector'      => [
-      'slas'       => "SLA",
-      'categories' => "Kategórie",
-   ],
+    // MISC LOCALES
+    'backlogs'       => 'Nedokončené',
+    'opened'         => 'Otvorené',
+    'period'         => 'Obdobie',
+    'backlogstatus'  => 'Stav, ktorý sa má zobraziť',
+    'slaobserved'    => 'SLA sledované',
+    'slanotobserved' => 'SLA nesledované',
+    'observed'       => 'sledované',
+    'notobserved'    => 'nesledované',
 
 
-   // GENERAL REPORTS
-   'reportGlineBacklogs' => [
-      'title'    => "Nedokončené položky",
-      'desc'     => "",
-      'category' => "Všeobecné",
-   ],
-
-   'reportVstackbarLifetime' => [
-      'title'    => "Vek požiadavky",
-      'desc'     => "",
-      'category' => "Všeobecné",
-   ],
-
-   'reportVstackbarTicketsgroups' => [
-      'title'    => "Požiadavky podľa skupiny",
-      'desc'     => "",
-      'category' => "Všeobecné",
-   ],
-
-   'reportVstackbarTicketstech' => [
-      'title'    => "Požiadavky podľa technika",
-      'desc'     => "",
-      'category' => "Všeobecné",
-   ],
-
-   'reportVstackbarWorkflow' => [
-      'title'    => "Orientačné fronty",
-      'desc'     => "",
-      'category' => "Všeobecné",
-   ],
-
-   'reportHbarTopcategory' => [
-      'title'    => "TOP kategórie",
-      'desc'     => "",
-      'category' => "Všeobecné",
-   ],
-
-   'reportHbarTopapplicant' => [
-      'title'    => "TOP skupiny žiadateľov",
-      'desc'     => "",
-      'category' => "Všeobecné",
-   ],
-
-   'reportVstackbarGroupChange' => [
-      'title'    => "Počet skupinových zmien",
-      'desc'     => "",
-      'category' => "Všeobecné",
-   ],
-
-   'reportLineActiontimeVsSolvedelay' => [
-      'title'    => "Porovnanie akčných časov úloh a oneskorenia vyriešenia",
-      'desc'     => "",
-      'category' => "Všeobecné",
-   ],
+    // SELECTOR
+    'selector' => [
+        'slas'       => 'SLA',
+        'categories' => 'Kategórie',
+    ],
 
 
-   // SLA REPORTS
-   'reportVstackbarNbTicketBySla' => [
-      'title'    => "Počet požiadaviek podľa SLA",
-      'desc'     => "",
-      'category' => "Podľa SLA",
-   ],
+    // GENERAL REPORTS
+    'reportGlineBacklogs' => [
+        'title'    => 'Nedokončené položky',
+        'desc'     => '',
+        'category' => 'Všeobecné',
+    ],
 
-   'reportGlineNbTicketBySla' => [
-      'title'    => "Vývoj požiadaviek podľa SLA",
-      'desc'     => "",
-      'category' => "Podľa SLA",
-   ],
+    'reportVstackbarLifetime' => [
+        'title'    => 'Vek požiadavky',
+        'desc'     => '',
+        'category' => 'Všeobecné',
+    ],
 
-   'reportHgbarRespectedSlasByTopCategory' => [
-      'title'    => "Požiadavky za SLA zoradené podľa kategórií",
-      'desc'     => "",
-      'category' => "Podľa SLA",
-   ],
+    'reportVstackbarTicketsgroups' => [
+        'title'    => 'Požiadavky podľa skupiny',
+        'desc'     => '',
+        'category' => 'Všeobecné',
+    ],
 
-   'reportHgbarRespectedSlasByTechnician' => [
-      'title'    => "Požiadavky za SLA zoradené podľa technikov",
-      'desc'     => "",
-      'category' => "Podľa SLA",
-   ],
+    'reportVstackbarTicketstech' => [
+        'title'    => 'Požiadavky podľa technika',
+        'desc'     => '',
+        'category' => 'Všeobecné',
+    ],
 
-   'reportVstackbarRespectedSlasByGroup' => [
-      'title'    => "Požiadavky za SLA zoradené podľa skupín",
-      'desc'     => "",
-      'category' => "Podľa SLA",
-   ],
+    'reportVstackbarWorkflow' => [
+        'title'    => 'Orientačné fronty',
+        'desc'     => '',
+        'category' => 'Všeobecné',
+    ],
+
+    'reportHbarTopcategory' => [
+        'title'    => 'TOP kategórie',
+        'desc'     => '',
+        'category' => 'Všeobecné',
+    ],
+
+    'reportHbarTopapplicant' => [
+        'title'    => 'TOP skupiny žiadateľov',
+        'desc'     => '',
+        'category' => 'Všeobecné',
+    ],
+
+    'reportVstackbarGroupChange' => [
+        'title'    => 'Počet skupinových zmien',
+        'desc'     => '',
+        'category' => 'Všeobecné',
+    ],
+
+    'reportLineActiontimeVsSolvedelay' => [
+        'title'    => 'Porovnanie akčných časov úloh a oneskorenia vyriešenia',
+        'desc'     => '',
+        'category' => 'Všeobecné',
+    ],
+
+
+    // SLA REPORTS
+    'reportVstackbarNbTicketBySla' => [
+        'title'    => 'Počet požiadaviek podľa SLA',
+        'desc'     => '',
+        'category' => 'Podľa SLA',
+    ],
+
+    'reportGlineNbTicketBySla' => [
+        'title'    => 'Vývoj požiadaviek podľa SLA',
+        'desc'     => '',
+        'category' => 'Podľa SLA',
+    ],
+
+    'reportHgbarRespectedSlasByTopCategory' => [
+        'title'    => 'Požiadavky za SLA zoradené podľa kategórií',
+        'desc'     => '',
+        'category' => 'Podľa SLA',
+    ],
+
+    'reportHgbarRespectedSlasByTechnician' => [
+        'title'    => 'Požiadavky za SLA zoradené podľa technikov',
+        'desc'     => '',
+        'category' => 'Podľa SLA',
+    ],
+
+    'reportVstackbarRespectedSlasByGroup' => [
+        'title'    => 'Požiadavky za SLA zoradené podľa skupín',
+        'desc'     => '',
+        'category' => 'Podľa SLA',
+    ],
 ];

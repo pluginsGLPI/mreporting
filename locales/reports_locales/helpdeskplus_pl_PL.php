@@ -31,110 +31,110 @@
 global $LANG;
 
 $LANG['plugin_mreporting']['Helpdeskplus'] = [
-   'title'         => 'Zgłoszenia - rozszerzone',
+    'title' => 'Zgłoszenia - rozszerzone',
 
-   // MISC LOCALES
-   'backlogs'      => "Backlogs",
-   'opened'        => "Otwarte",
-   'period'        => "Period",
-   'backlogstatus' => "Status to display",
-   'slaobserved'   => "SLA observed",
-   'slanotobserved'=> "SLA not observed",
-   'observed'      => "observed",
-   'notobserved'   => "not observed",
-
-
-   // SELECTOR
-   'selector'      => [
-      'slas'       => "SLAS",
-      'categories' => "Categories",
-   ],
+    // MISC LOCALES
+    'backlogs'       => 'Backlogs',
+    'opened'         => 'Otwarte',
+    'period'         => 'Period',
+    'backlogstatus'  => 'Status to display',
+    'slaobserved'    => 'SLA observed',
+    'slanotobserved' => 'SLA not observed',
+    'observed'       => 'observed',
+    'notobserved'    => 'not observed',
 
 
-   // GENERAL REPORTS
-   'reportGlineBacklogs' => [
-      'title'    => "Backlog",
-      'desc'     => "",
-      'category' => "General",
-   ],
-
-   'reportVstackbarLifetime' => [
-      'title'    => "Wiek nierozwiązanych zgłoszeń",
-      'desc'     => "",
-      'category' => "General",
-   ],
-
-   'reportVstackbarTicketsgroups' => [
-      'title'    => "Zgłoszenia nierozwiązane wg grup",
-      'desc'     => "",
-      'category' => "General",
-   ],
-
-   'reportVstackbarTicketstech' => [
-      'title'    => "Zgłoszenia nierozwiązane wg przypisanego technika",
-      'desc'     => "",
-      'category' => "General",
-   ],
-
-   'reportVstackbarWorkflow' => [
-      'title'    => "Orientation queues",
-      'desc'     => "",
-      'category' => "General",
-   ],
-
-   'reportHbarTopcategory' => [
-      'title'    => "Najbardziej popularne kategorie",
-      'desc'     => "",
-      'category' => "General",
-   ],
-
-   'reportHbarTopapplicant' => [
-      'title'    => "Najbardziej popularne grupy techników",
-      'desc'     => "",
-      'category' => "General",
-   ],
-
-   'reportVstackbarGroupChange' => [
-      'title'    => "Number of group changes",
-      'desc'     => "",
-      'category' => "General",
-   ],
-
-   'reportLineActiontimeVsSolvedelay' => [
-      'title'    => "Task action times and solve delay comparison",
-      'desc'     => "",
-      'category' => "General",
-   ],
+    // SELECTOR
+    'selector' => [
+        'slas'       => 'SLAS',
+        'categories' => 'Categories',
+    ],
 
 
-   // SLA REPORTS
-   'reportVstackbarNbTicketBySla' => [
-      'title'    => "Zgłoszenia wg SLA",
-      'desc'     => "",
-      'category' => "Per SLA",
-   ],
+    // GENERAL REPORTS
+    'reportGlineBacklogs' => [
+        'title'    => 'Backlog',
+        'desc'     => '',
+        'category' => 'General',
+    ],
 
-   'reportGlineNbTicketBySla' => [
-      'title'    => "Zmiana zgłoszeń wg SLA",
-      'desc'     => "",
-      'category' => "Per SLA",
-   ],
+    'reportVstackbarLifetime' => [
+        'title'    => 'Wiek nierozwiązanych zgłoszeń',
+        'desc'     => '',
+        'category' => 'General',
+    ],
 
-   'reportHgbarRespectedSlasByTopCategory' => [
-      'title'    => "Zgłoszenia wg SLA uporządkowane po kategorii",
-      'desc'     => "",
-      'category' => "Per SLA",
-   ],
+    'reportVstackbarTicketsgroups' => [
+        'title'    => 'Zgłoszenia nierozwiązane wg grup',
+        'desc'     => '',
+        'category' => 'General',
+    ],
 
-   'reportHgbarRespectedSlasByTechnician' => [
-      'title'    => "Zgłoszenia wg SLA uporządkowane po przypisanym techniku",
-      'desc'     => "",
-      'category' => "Per SLA",
-   ],
+    'reportVstackbarTicketstech' => [
+        'title'    => 'Zgłoszenia nierozwiązane wg przypisanego technika',
+        'desc'     => '',
+        'category' => 'General',
+    ],
 
-   'reportVstackbarRespectedSlasByGroup' => [
-      'title'    => "Zgłoszenia wg SLA uporządkowane po grupach",
-      'desc'     => "",
-      'category' => "Per SLA",
-   ],
+    'reportVstackbarWorkflow' => [
+        'title'    => 'Orientation queues',
+        'desc'     => '',
+        'category' => 'General',
+    ],
+
+    'reportHbarTopcategory' => [
+        'title'    => 'Najbardziej popularne kategorie',
+        'desc'     => '',
+        'category' => 'General',
+    ],
+
+    'reportHbarTopapplicant' => [
+        'title'    => 'Najbardziej popularne grupy techników',
+        'desc'     => '',
+        'category' => 'General',
+    ],
+
+    'reportVstackbarGroupChange' => [
+        'title'    => 'Number of group changes',
+        'desc'     => '',
+        'category' => 'General',
+    ],
+
+    'reportLineActiontimeVsSolvedelay' => [
+        'title'    => 'Task action times and solve delay comparison',
+        'desc'     => '',
+        'category' => 'General',
+    ],
+
+
+    // SLA REPORTS
+    'reportVstackbarNbTicketBySla' => [
+        'title'    => 'Zgłoszenia wg SLA',
+        'desc'     => '',
+        'category' => 'Per SLA',
+    ],
+
+    'reportGlineNbTicketBySla' => [
+        'title'    => 'Zmiana zgłoszeń wg SLA',
+        'desc'     => '',
+        'category' => 'Per SLA',
+    ],
+
+    'reportHgbarRespectedSlasByTopCategory' => [
+        'title'    => 'Zgłoszenia wg SLA uporządkowane po kategorii',
+        'desc'     => '',
+        'category' => 'Per SLA',
+    ],
+
+    'reportHgbarRespectedSlasByTechnician' => [
+        'title'    => 'Zgłoszenia wg SLA uporządkowane po przypisanym techniku',
+        'desc'     => '',
+        'category' => 'Per SLA',
+    ],
+
+    'reportVstackbarRespectedSlasByGroup' => [
+        'title'    => 'Zgłoszenia wg SLA uporządkowane po grupach',
+        'desc'     => '',
+        'category' => 'Per SLA',
+    ],
 ];

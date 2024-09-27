@@ -28,23 +28,23 @@
  * -------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-if (!isset($_GET["id"])) {
-    $_GET["id"] = "";
+if (!isset($_GET['id'])) {
+    $_GET['id'] = '';
 }
 
 $pref = new PluginMreportingPreference();
 
-if (isset($_POST["update"])) {
+if (isset($_POST['update'])) {
     $pref->update($_POST);
     Html::back();
 } else {
-    Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
+    Html::header(__('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
 
-    $pref->showForm($_GET["id"]);
+    $pref->showForm($_GET['id']);
 
     Html::footer();
 }

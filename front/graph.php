@@ -31,13 +31,13 @@
 if (!isset($_REQUEST['submit']) && !isset($_REQUEST['reset'])) {
     $USEDBREPLICATE = 1;
 }
-$DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
+$DBCONNECTION_REQUIRED = 0; // Not really a big SQL request
 
-include("../../../inc/includes.php");
+include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-Html::header(__("More Reporting", 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
+Html::header(__('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
 
 $common = new PluginMreportingCommon();
 $common->showGraph($_REQUEST);

@@ -30,13 +30,13 @@
 
 class PluginMreportingGraphcsv extends PluginMreportingGraph
 {
-    const DEBUG_CSV = false;
+    public const DEBUG_CSV = false;
 
     public function initGraph($options)
     {
         if (!self::DEBUG_CSV) {
-            header("Content-type: application/csv");
-            header("Content-Disposition: inline; filename=export.csv");
+            header('Content-type: application/csv');
+            header('Content-Disposition: inline; filename=export.csv');
         }
     }
 
@@ -49,7 +49,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             $$key = $val;
         }
 
-       // Write in Log
+        // Write in Log
         if (self::DEBUG_CSV && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
         }
@@ -73,24 +73,24 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         $values = array_values($datas);
         $labels = array_keys($datas);
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "export" => $export
+        $options = ['title' => $title,
+            'desc'          => $desc,
+            'randname'      => $randname,
+            'export'        => $export,
         ];
 
         $this->initGraph($options);
 
-       //titles
-        $out = $title . " - " . $desc . "\r\n";
+        //titles
+        $out = $title . ' - ' . $desc . "\r\n";
         foreach ($labels as $label) {
             $out .= $label . $CFG_GLPI['csv_delimiter'];
         }
         $out = substr($out, 0, -1) . "\r\n";
 
-       //values
+        //values
         foreach ($values as $value) {
-            $out .= $value . " " . $unit . $CFG_GLPI['csv_delimiter'];
+            $out .= $value . ' ' . $unit . $CFG_GLPI['csv_delimiter'];
         }
         $out = substr($out, 0, -1) . "\r\n";
 
@@ -112,7 +112,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             $$key = $val;
         }
 
-       // Write in log
+        // Write in log
         if (self::DEBUG_CSV && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
         }
@@ -135,35 +135,35 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
         $labels2 = array_values($raw_datas['labels2']);
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "export" => $export
+        $options = ['title' => $title,
+            'desc'          => $desc,
+            'randname'      => $randname,
+            'export'        => $export,
         ];
 
         $this->initGraph($options);
 
-        $out = $title . " - " . $desc . "\r\n";
+        $out = $title . ' - ' . $desc . "\r\n";
 
         foreach ($datas as $label2 => $cols) {
-           //title
+            //title
             $out .= $label2 . "\r\n";
 
-           //subtitle
+            //subtitle
             $i = 0;
             foreach ($cols as $value) {
-                $label = "";
+                $label = '';
                 if (isset($labels2[$i])) {
-                    $label = str_replace(",", "-", $labels2[$i]);
+                    $label = str_replace(',', '-', $labels2[$i]);
                 }
                 $out .= $label . $CFG_GLPI['csv_delimiter'];
                 $i++;
             }
             $out = substr($out, 0, -1) . "\r\n";
 
-           //values
+            //values
             foreach ($cols as $value) {
-                $out .= $value . " " . $unit . ";";
+                $out .= $value . ' ' . $unit . ';';
             }
             $out = substr($out, 0, -1) . "\r\n\r\n";
         }
@@ -219,15 +219,15 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
         }
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "export" => $export
+        $options = ['title' => $title,
+            'desc'          => $desc,
+            'randname'      => $randname,
+            'export'        => $export,
         ];
 
         $this->initGraph($options);
 
-        $out = $title . " - " . $desc . "\r\n";
+        $out = $title . ' - ' . $desc . "\r\n";
         $out .= $this->sunburstLevel($datas);
 
         echo $out;
@@ -235,7 +235,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
     public function sunburstLevel($datas, $level = 0)
     {
-        $out = "";
+        $out = '';
 
         $i = 0;
         foreach ($datas as $label => $value) {

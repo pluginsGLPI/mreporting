@@ -32,18 +32,18 @@ global $LANG;
 
 $LANG['plugin_mreporting']['Tag'] = [
 
-   'title' => "Complemento Etiqueta",
+    'title' => 'Complemento Etiqueta',
 
-   'reportPieTag' => [
-      'title'    => "Numero de Etiquetas usadas",
-      'desc'     => "Torta",
-      'category' => "Para todos los objetos GLPI",
-   ],
+    'reportPieTag' => [
+        'title'    => 'Numero de Etiquetas usadas',
+        'desc'     => 'Torta',
+        'category' => 'Para todos los objetos GLPI',
+    ],
 
-   'reportPieTagOnTicket' => [
-      'title'    => "Numero de Etiquetas usadas",
-      'desc'     => "Torta",
-      'category' => "Por casos",
-   ]
+    'reportPieTagOnTicket' => [
+        'title'    => 'Numero de Etiquetas usadas',
+        'desc'     => 'Torta',
+        'category' => 'Por casos',
+    ],
 
 ];

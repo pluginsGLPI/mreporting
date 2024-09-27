@@ -32,119 +32,119 @@ global $LANG;
 
 $LANG['plugin_mreporting']['Inventory'] = [
 
-   'title' => "Zasoby",
+    'title' => 'Zasoby',
 
-   'reportHbarComputersByOS' => [
-      'title'    => "Komputery wg OS",
-      'desc'     => "wykres słupkowy",
-      'category' => "OS",
-   ],
+    'reportHbarComputersByOS' => [
+        'title'    => 'Komputery wg OS',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'OS',
+    ],
 
-   'reportPieComputersByOS' => [
-      'title'    => "Komputery wg OS",
-      'desc'     => "wykres kołowy",
-      'category' => "OS",
-   ],
+    'reportPieComputersByOS' => [
+        'title'    => 'Komputery wg OS',
+        'desc'     => 'wykres kołowy',
+        'category' => 'OS',
+    ],
 
-   'reportHbarComputersByFabricant' => [
-      'title'    => "Komputery wg producenta",
-      'desc'     => "wykres słupkowy",
-      'category' => "Producent",
-   ],
+    'reportHbarComputersByFabricant' => [
+        'title'    => 'Komputery wg producenta',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'Producent',
+    ],
 
-   'reportPieComputersByFabricant' => [
-      'title'    => "Komputery wg producenta",
-      'desc'     => "wykres kołowy",
-      'category' => "Producent",
-   ],
+    'reportPieComputersByFabricant' => [
+        'title'    => 'Komputery wg producenta',
+        'desc'     => 'wykres kołowy',
+        'category' => 'Producent',
+    ],
 
-   'reportHbarComputersByType' => [
-      'title'    => "Komputery wg typu",
-      'desc'     => "wykres słupkowy",
-      'category' => "Typ",
-   ],
+    'reportHbarComputersByType' => [
+        'title'    => 'Komputery wg typu',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'Typ',
+    ],
 
-   'reportPieComputersByType' => [
-      'title'    => "Komputery wg typu",
-      'desc'     => "wykres kołowy",
-      'category' => "Typ",
-   ],
+    'reportPieComputersByType' => [
+        'title'    => 'Komputery wg typu',
+        'desc'     => 'wykres kołowy',
+        'category' => 'Typ',
+    ],
 
-   'reportHbarComputersByStatus' => [
-      'title'    => "Komputery wg statusu",
-      'desc'     => "wykres słupkowy",
-      'category' => "Status",
-   ],
+    'reportHbarComputersByStatus' => [
+        'title'    => 'Komputery wg statusu',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'Status',
+    ],
 
-   'reportHbarPrintersByStatus' => [
-      'title'    => "Komputery wg statusu",
-      'desc'     => "wykres słupkowy",
-      'category' => "Status",
-   ],
+    'reportHbarPrintersByStatus' => [
+        'title'    => 'Komputery wg statusu',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'Status',
+    ],
 
-   'reportHbarWindows' => [
-      'title'    => "Windows - wersje",
-      'desc'     => "wykres słupkowy",
-      'category' => "OS",
-   ],
+    'reportHbarWindows' => [
+        'title'    => 'Windows - wersje',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'OS',
+    ],
 
-   'reportHbarLinux' => [
-      'title'    => "Linux - wersje",
-      'desc'     => "wykres słupkowy",
-      'category' => "OS",
-   ],
+    'reportHbarLinux' => [
+        'title'    => 'Linux - wersje',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'OS',
+    ],
 
-   'reportHbarLinuxDistro' => [
-      'title'    => "Linux - wersje",
-      'desc'     => "wykres słupkowy",
-      'category' => "OS",
-   ],
+    'reportHbarLinuxDistro' => [
+        'title'    => 'Linux - wersje',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'OS',
+    ],
 
-   'reportHbarMac' => [
-      'title'    => "Mac OS X versions details",
-      'desc'     => "wykres słupkowy",
-      'category' => "OS",
-   ],
+    'reportHbarMac' => [
+        'title'    => 'Mac OS X versions details',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'OS',
+    ],
 
-   'reportHbarMacFamily' => [
-      'title'    => "MAC OS X version overview",
-      'desc'     => "wykres słupkowy",
-      'category' => "OS",
-   ],
+    'reportHbarMacFamily' => [
+        'title'    => 'MAC OS X version overview',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'OS',
+    ],
 
-   'reportHbarComputersByAge' => [
-      'title'    => "Komputery wg wieku",
-      'desc'     => "wykres słupkowy",
-      'category' => "Inne",
-   ],
+    'reportHbarComputersByAge' => [
+        'title'    => 'Komputery wg wieku',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'Inne',
+    ],
 
-   'reportPieComputersByAge' => [
-      'title'    => "Komputery wg wieku",
-      'desc'     => "wykres kołowy",
-      'category' => "Inne",
-   ],
+    'reportPieComputersByAge' => [
+        'title'    => 'Komputery wg wieku',
+        'desc'     => 'wykres kołowy',
+        'category' => 'Inne',
+    ],
 
-   'reportHbarFusionInventory' => [
-      'title'    => "FusionInventory agent - wersje",
-      'desc'     => "wykres słupkowy",
-      'category' => "Agent",
-   ],
+    'reportHbarFusionInventory' => [
+        'title'    => 'FusionInventory agent - wersje',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'Agent',
+    ],
 
-   'reportPieFusionInventory' => [
-      'title'    => "FusionInventory agent - wersje",
-      'desc'     => "wykres kołowy",
-      'category' => "Agent",
-   ],
+    'reportPieFusionInventory' => [
+        'title'    => 'FusionInventory agent - wersje',
+        'desc'     => 'wykres kołowy',
+        'category' => 'Agent',
+    ],
 
-   'reportHbarMonitors' => [
-      'title'    => "Ilość monitorów na komputer",
-      'desc'     => "wykres słupkowy",
-      'category' => "Inne",
-   ],
+    'reportHbarMonitors' => [
+        'title'    => 'Ilość monitorów na komputer',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'Inne',
+    ],
 
     'reportHbarComputersByEntity' => [
-      'title'    => "Komputery wg jednostki",
-      'desc'     => "wykres słupkowy",
-      'category' => "Entity",
+        'title'    => 'Komputery wg jednostki',
+        'desc'     => 'wykres słupkowy',
+        'category' => 'Entity',
     ],
 ];

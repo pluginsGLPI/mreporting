@@ -32,119 +32,119 @@ global $LANG;
 
 $LANG['plugin_mreporting']['Inventory'] = [
 
-   'title' => "Inventár",
+    'title' => 'Inventár',
 
-   'reportHbarComputersByOS' => [
-      'title'    => "Počítače podľa OS",
-      'desc'     => "Pruhový",
-      'category' => "OS",
-   ],
+    'reportHbarComputersByOS' => [
+        'title'    => 'Počítače podľa OS',
+        'desc'     => 'Pruhový',
+        'category' => 'OS',
+    ],
 
-   'reportPieComputersByOS' => [
-      'title'    => "Počítače podľa OS",
-      'desc'     => "Koláčový",
-      'category' => "OS",
-   ],
+    'reportPieComputersByOS' => [
+        'title'    => 'Počítače podľa OS',
+        'desc'     => 'Koláčový',
+        'category' => 'OS',
+    ],
 
-   'reportHbarComputersByFabricant' => [
-      'title'    => "Počítače podľa výrobcu",
-      'desc'     => "Pruhový",
-      'category' => "Výrobca",
-   ],
+    'reportHbarComputersByFabricant' => [
+        'title'    => 'Počítače podľa výrobcu',
+        'desc'     => 'Pruhový',
+        'category' => 'Výrobca',
+    ],
 
-   'reportPieComputersByFabricant' => [
-      'title'    => "Počítače podľa výrobcu",
-      'desc'     => "Koláčový",
-      'category' => "Výrobca",
-   ],
+    'reportPieComputersByFabricant' => [
+        'title'    => 'Počítače podľa výrobcu',
+        'desc'     => 'Koláčový',
+        'category' => 'Výrobca',
+    ],
 
-   'reportHbarComputersByType' => [
-      'title'    => "Počítače podľa typu",
-      'desc'     => "Pruhový",
-      'category' => "Typ",
-   ],
+    'reportHbarComputersByType' => [
+        'title'    => 'Počítače podľa typu',
+        'desc'     => 'Pruhový',
+        'category' => 'Typ',
+    ],
 
-   'reportPieComputersByType' => [
-      'title'    => "Počítače podľa typu",
-      'desc'     => "Koláčový",
-      'category' => "Typ",
-   ],
+    'reportPieComputersByType' => [
+        'title'    => 'Počítače podľa typu',
+        'desc'     => 'Koláčový',
+        'category' => 'Typ',
+    ],
 
-   'reportHbarComputersByStatus' => [
-      'title'    => "Počítače podľa stavu",
-      'desc'     => "Pruhový",
-      'category' => "Stav",
-   ],
+    'reportHbarComputersByStatus' => [
+        'title'    => 'Počítače podľa stavu',
+        'desc'     => 'Pruhový',
+        'category' => 'Stav',
+    ],
 
-   'reportHbarPrintersByStatus' => [
-      'title'    => "Tlačiarne podľa stavu",
-      'desc'     => "Pruhový",
-      'category' => "Stav",
-   ],
+    'reportHbarPrintersByStatus' => [
+        'title'    => 'Tlačiarne podľa stavu',
+        'desc'     => 'Pruhový',
+        'category' => 'Stav',
+    ],
 
-   'reportHbarWindows' => [
-      'title'    => "Windows verzie",
-      'desc'     => "Pruhový",
-      'category' => "OS",
-   ],
+    'reportHbarWindows' => [
+        'title'    => 'Windows verzie',
+        'desc'     => 'Pruhový',
+        'category' => 'OS',
+    ],
 
-   'reportHbarLinux' => [
-      'title'    => "Linux distribúcie - podrobnosti",
-      'desc'     => "Pruhový",
-      'category' => "OS",
-   ],
+    'reportHbarLinux' => [
+        'title'    => 'Linux distribúcie - podrobnosti',
+        'desc'     => 'Pruhový',
+        'category' => 'OS',
+    ],
 
-   'reportHbarLinuxDistro' => [
-      'title'    => "Linux distribúcie - podrobnosti",
-      'desc'     => "Pruhový",
-      'category' => "OS",
-   ],
+    'reportHbarLinuxDistro' => [
+        'title'    => 'Linux distribúcie - podrobnosti',
+        'desc'     => 'Pruhový',
+        'category' => 'OS',
+    ],
 
-   'reportHbarMac' => [
-      'title'    => "MacOS verzie - podrobnosti",
-      'desc'     => "Pruhový",
-      'category' => "OS",
-   ],
+    'reportHbarMac' => [
+        'title'    => 'MacOS verzie - podrobnosti',
+        'desc'     => 'Pruhový',
+        'category' => 'OS',
+    ],
 
-   'reportHbarMacFamily' => [
-      'title'    => "MacOS verzie - prehľad",
-      'desc'     => "Pruhový",
-      'category' => "OS",
-   ],
+    'reportHbarMacFamily' => [
+        'title'    => 'MacOS verzie - prehľad',
+        'desc'     => 'Pruhový',
+        'category' => 'OS',
+    ],
 
-   'reportHbarComputersByAge' => [
-      'title'    => "Počítače podľa veku",
-      'desc'     => "Pruhový",
-      'category' => "Inventár",
-   ],
+    'reportHbarComputersByAge' => [
+        'title'    => 'Počítače podľa veku',
+        'desc'     => 'Pruhový',
+        'category' => 'Inventár',
+    ],
 
-   'reportPieComputersByAge' => [
-      'title'    => "Počítače podľa veku",
-      'desc'     => "Koláčový",
-      'category' => "Inventár",
-   ],
+    'reportPieComputersByAge' => [
+        'title'    => 'Počítače podľa veku',
+        'desc'     => 'Koláčový',
+        'category' => 'Inventár',
+    ],
 
-   'reportHbarFusionInventory' => [
-      'title'    => "FusionInventory agent",
-      'desc'     => "Pruhový",
-      'category' => "Agent",
-   ],
+    'reportHbarFusionInventory' => [
+        'title'    => 'FusionInventory agent',
+        'desc'     => 'Pruhový',
+        'category' => 'Agent',
+    ],
 
-   'reportPieFusionInventory' => [
-      'title'    => "FusionInventory agent",
-      'desc'     => "Koláčový",
-      'category' => "Agent",
-   ],
+    'reportPieFusionInventory' => [
+        'title'    => 'FusionInventory agent',
+        'desc'     => 'Koláčový',
+        'category' => 'Agent',
+    ],
 
-   'reportHbarMonitors' => [
-      'title'    => "Obrazovky podľa počítačov",
-      'desc'     => "Pruhový",
-      'category' => "Inventár",
-   ],
+    'reportHbarMonitors' => [
+        'title'    => 'Obrazovky podľa počítačov',
+        'desc'     => 'Pruhový',
+        'category' => 'Inventár',
+    ],
 
     'reportHbarComputersByEntity' => [
-      'title'    => "Počítače podľa entít",
-      'desc'     => "Pruhový",
-      'category' => "Entita",
+        'title'    => 'Počítače podľa entít',
+        'desc'     => 'Pruhový',
+        'category' => 'Entita',
     ],
 ];

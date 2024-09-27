@@ -31,11 +31,11 @@
 global $LANG;
 
 $LANG['plugin_mreporting']['Other'] = [
-   'title' => "Ostalo",
+    'title' => 'Ostalo',
 
-   'reportHbarLogs' => [
-      'title'    => "Log-zapisi",
-      'desc'     => "Stupci",
-      'category' => "Log-zapisi",
-   ]
+    'reportHbarLogs' => [
+        'title'    => 'Log-zapisi',
+        'desc'     => 'Stupci',
+        'category' => 'Log-zapisi',
+    ],
 ];

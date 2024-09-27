@@ -39,27 +39,29 @@ class PluginMreportingPreference extends CommonDBTM
     {
         $id = self::checkIfPreferenceExists($users_id);
         if (!$id) {
-            $input["users_id"]  = $users_id;
-            $input["template"]  = "";
-            $input["selectors"] = null;
+            $input['users_id']  = $users_id;
+            $input['template']  = '';
+            $input['selectors'] = null;
 
             $id = $this->add($input);
         }
+
         return $id;
     }
 
-   /**
-    *
-    * Get a preference for an user
-    * @param unknown_type preference field to get
-    * @param unknown_type user ID
-    * @return preference value or 0
-    */
+    /**
+     *
+     * Get a preference for an user
+     * @param unknown_type preference field to get
+     * @param unknown_type user ID
+     * @return preference value or 0
+     */
     public static function checkPreferenceValue($field, $users_id = 0)
     {
         $data = getAllDataFromTable(getTableForItemType(__CLASS__), ['users_id' => $users_id]);
         if (!empty($data)) {
             $first = array_pop($data);
+
             return $first[$field];
         } else {
             return 0;
@@ -71,51 +73,52 @@ class PluginMreportingPreference extends CommonDBTM
         return self::checkPreferenceValue('template', $users_id);
     }
 
-   /**
-    *
-    * Display a dropdown of all ODT template files available
-    * @param $value default value
-    */
+    /**
+     *
+     * Display a dropdown of all ODT template files available
+     * @param $value default value
+     */
     public static function dropdownFileTemplates($value = '')
     {
         return self::dropdownListFiles(
             'template',
             PLUGIN_MREPORTING_TEMPLATE_EXTENSION,
             PLUGIN_MREPORTING_TEMPLATE_DIR,
-            $value
+            $value,
         );
     }
 
-
-   /**
-    *
-    * Display a dropdown which contains all files of a certain type in a directory
-    * @param $name dropdown name
-    * @param $extension list files of this extension only
-    * @param $directory directory in which to look for files
-    * @param $value default value
-    */
+    /**
+     *
+     * Display a dropdown which contains all files of a certain type in a directory
+     * @param $name dropdown name
+     * @param $extension list files of this extension only
+     * @param $directory directory in which to look for files
+     * @param $value default value
+     */
     public static function dropdownListFiles($name, $extension, $directory, $value = '')
     {
-        $files     = self::getFiles($directory, $extension);
-        $values    = [];
+        $files  = self::getFiles($directory, $extension);
+        $values = [];
         if (empty($files)) {
             $values[0] = Dropdown::EMPTY_VALUE;
         }
         foreach ($files as $file) {
             $values[$file[0]] = $file[0];
         }
+
         return Dropdown::showFromArray($name, $values, ['value' => $value]);
     }
 
-   /**
-    *
-    * Check if at least one template exists
-    * @return true if at least one template exists, false otherwise
-    */
+    /**
+     *
+     * Check if at least one template exists
+     * @return true if at least one template exists, false otherwise
+     */
     public static function atLeastOneTemplateExists()
     {
         $files = self::getFiles(PLUGIN_MREPORTING_TEMPLATE_DIR, PLUGIN_MREPORTING_TEMPLATE_EXTENSION);
+
         return (!empty($files));
     }
 
@@ -130,31 +133,30 @@ class PluginMreportingPreference extends CommonDBTM
 
         echo "<table class='tab_cadre_fixe' cellpadding='5'>";
 
-        echo "<tr><th colspan='2'>" . $version['name'] . " - " . $version['version'] . "</th></tr>";
+        echo "<tr><th colspan='2'>" . $version['name'] . ' - ' . $version['version'] . '</th></tr>';
 
         echo "<tr class='tab_bg_2'>";
         echo "<td align='center'>";
-        __("Please, select a model in your preferences", 'mreporting') . "</td>";
+        __('Please, select a model in your preferences', 'mreporting') . '</td>';
         echo "<td align='center'>";
-        self::dropdownFileTemplates($this->fields["template"]);
-        echo "</td></tr>";
+        self::dropdownFileTemplates($this->fields['template']);
+        echo '</td></tr>';
 
         echo "<tr class='tab_bg_2'>";
         echo "<td align='center' colspan='2'>";
         echo "<input type='hidden' name='id' value='" . $ID . "'>";
         echo "<input type='hidden' name='users_id' value='" . $this->fields['users_id'] . "'>";
         echo "<input type='submit' name='update' value='" . _sx('button', 'Post') . "' class='submit'>";
-        echo "</td>";
-        echo "</tr>";
+        echo '</td>';
+        echo '</tr>';
 
-        echo "</table>";
-        echo "</div>";
+        echo '</table>';
+        echo '</div>';
         Html::closeForm();
     }
 
     public static function getFiles($directory, $ext)
     {
-
         $array_dir  = [];
         $array_file = [];
 
@@ -163,19 +165,19 @@ class PluginMreportingPreference extends CommonDBTM
                 while (($file = readdir($dh)) !== false) {
                     $filename  = $file;
                     $filetype  = filetype($directory . $file);
-                    $filedate  = Html::convDate(date("Y-m-d", filemtime($directory . $file)));
+                    $filedate  = Html::convDate(date('Y-m-d', filemtime($directory . $file)));
                     $basename  = explode('.', basename($filename));
                     $extension = array_pop($basename);
                     switch ($filename) {
                         case '..':
                         case '.':
-                            echo "";
+                            echo '';
                             break;
 
                         default:
                             if ($filetype == 'file' && $extension == $ext) {
                                 $array_file[] = [$filename, $filedate, $extension];
-                            } else if ($filetype == "dir") {
+                            } elseif ($filetype == 'dir') {
                                 $array_dir[] = $filename;
                             }
                             break;
@@ -190,27 +192,26 @@ class PluginMreportingPreference extends CommonDBTM
         return $array_file;
     }
 
-
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         switch (get_class($item)) {
             case 'Preference':
-                return [1 => __("More Reporting", 'mreporting')];
+                return [1 => __('More Reporting', 'mreporting')];
             default:
                 return '';
         }
     }
-
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         switch (get_class($item)) {
             case 'Preference':
                 $pref = new self();
-                $id = $pref->addDefaultPreference(Session::getLoginUserID());
+                $id   = $pref->addDefaultPreference(Session::getLoginUserID());
                 $pref->showForm($id);
                 break;
         }
+
         return true;
     }
 }

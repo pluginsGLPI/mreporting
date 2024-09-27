@@ -49,14 +49,14 @@ if (isset($_REQUEST['action'])) {
 
         case 'centralDashboard':
             Html::includeHeader();
-            echo "<body>";
+            echo '<body>';
             $dashboard = new PluginMreportingDashboard();
             $dashboard->showDashboard(false);
 
-           //load protovis lib for dashboard render
+            //load protovis lib for dashboard render
             $version = Plugin::getInfo('mreporting', 'version');
             $php_dir = Plugin::getPhpDir('mreporting', false);
-            echo Html::script($php_dir . "/lib/protovis/protovis.js", ['version' => $version]);
+            echo Html::script($php_dir . '/lib/protovis/protovis.js', ['version' => $version]);
 
             Html::popFooter();
             break;
