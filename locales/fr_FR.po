@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-18 07:01+0000\n"
+"POT-Creation-Date: 2024-09-19 01:18+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: Cédric Anne, 2018\n"
 "Language-Team: French (France) (http://app.transifex.com/teclib/glpi-project-plugin-mreporting/language/fr_FR/)\n"
@@ -95,8 +95,8 @@ msgstr "Configurer le rapport"
 msgid "Curve lines (SVG)"
 msgstr "Incurver les lignes (SVG)"
 
-#: inc/dashboard.class.php:39 inc/common.class.php:66 inc/common.class.php:67
-#: inc/common.class.php:83 ajax/homepage_link.php:37
+#: ajax/homepage_link.php:37 inc/common.class.php:66 inc/common.class.php:67
+#: inc/common.class.php:83 inc/dashboard.class.php:39
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
@@ -146,12 +146,11 @@ msgstr "Profondeur maxi dans l'arborescence d'entités"
 msgid "Month"
 msgstr "Mois"
 
-#: inc/preference.class.php:198 inc/notification.class.php:47
-#: inc/common.class.php:52 inc/profile.class.php:41
-#: inc/notificationtargetnotification.class.php:37 setup.php:187
-#: front/preference.form.php:45 front/config.php:43 front/config.form.php:54
-#: front/dashboard.form.php:57 front/dashboard.form.php:62 front/graph.php:40
-#: front/central.php:34
+#: inc/preference.class.php:198 inc/profile.class.php:41
+#: inc/common.class.php:52 inc/notificationtargetnotification.class.php:37
+#: inc/notification.class.php:47 setup.php:187 front/config.form.php:54
+#: front/central.php:34 front/preference.form.php:45 front/graph.php:40
+#: front/config.php:43 front/dashboard.form.php:57 front/dashboard.form.php:62
 msgid "More Reporting"
 msgstr "Plus de rapports"
 
@@ -172,7 +171,7 @@ msgstr "aucun graphique sélectionné"
 msgid "No model available"
 msgstr "Aucun modèle n'existe"
 
-#: inc/config.class.php:684 inc/common.class.php:346 inc/common.class.php:413
+#: inc/common.class.php:346 inc/common.class.php:413 inc/config.class.php:684
 #: front/central.php:74 front/central.php:80
 msgid "No report is available !"
 msgstr "Aucun rapport disponible !"
@@ -263,11 +262,11 @@ msgstr "Logs Webservices"
 msgid "Week"
 msgstr "Semaine"
 
-#: inc/common.class.php:538 ajax/dropdownExport.php:44
+#: ajax/dropdownExport.php:44 inc/common.class.php:538
 msgid "With data"
 msgstr "Avec les données"
 
-#: inc/common.class.php:537 ajax/dropdownExport.php:45
+#: ajax/dropdownExport.php:45 inc/common.class.php:537
 msgid "Without data"
 msgstr "Sans les données"
 
