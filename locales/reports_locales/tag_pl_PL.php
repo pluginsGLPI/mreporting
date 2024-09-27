@@ -32,18 +32,18 @@ global $LANG;
 
 $LANG['plugin_mreporting']['Tag'] = [
 
-   'title' => "Wtyczka TAG",
+    'title' => 'Wtyczka TAG',
 
-   'reportPieTag' => [
-      'title'    => "Liczba użytych tagów",
-      'desc'     => "wykres kołowy",
-      'category' => "Dla wszystkich obiektów w GLPI",
-   ],
+    'reportPieTag' => [
+        'title'    => 'Liczba użytych tagów',
+        'desc'     => 'wykres kołowy',
+        'category' => 'Dla wszystkich obiektów w GLPI',
+    ],
 
-   'reportPieTagOnTicket' => [
-      'title'    => "Liczba użytych tagów",
-      'desc'     => "wykres kołowy",
-      'category' => "Dla zgłoszeń",
-   ]
+    'reportPieTagOnTicket' => [
+        'title'    => 'Liczba użytych tagów',
+        'desc'     => 'wykres kołowy',
+        'category' => 'Dla zgłoszeń',
+    ],
 
 ];

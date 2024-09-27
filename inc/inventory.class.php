@@ -30,10 +30,10 @@
 
 class PluginMreportingInventory extends PluginMreportingBaseclass
 {
-   /* ==== SPECIFIC SELECTORS FOR INVENTORY ==== */
+    /* ==== SPECIFIC SELECTORS FOR INVENTORY ==== */
     public static function selectorMultipleStates()
     {
-        self::selectorForMultipleStates('states_id', [], _sx("item", "State"));
+        self::selectorForMultipleStates('states_id', [], _sx('item', 'State'));
     }
 
     public static function selectorForMultipleStates($field, $condition = [], $label = '')
@@ -52,12 +52,12 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         }
 
         $param = ['multiple' => true,
-            'display'  => true,
-            'size'     => count($selected_states),
-            'values'   => $selected_states
+            'display'        => true,
+            'size'           => count($selected_states),
+            'values'         => $selected_states,
         ];
 
-        echo "<br /><b>" . $label . " : </b><br />";
+        echo '<br /><b>' . $label . ' : </b><br />';
         Dropdown::showFromArray($field, $datas, $param);
     }
 
@@ -70,20 +70,21 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         foreach ($DB->request($query) as $data) {
             $states[] = $data['id'];
         }
+
         return $states;
     }
 
     public static function getStateCondition($field, $as_array = false)
     {
-        $sql_states = ($as_array ? [] : "");
+        $sql_states = ($as_array ? [] : '');
         if (isset($_SESSION['mreporting_values']['states_id'])) {
             if (is_array($_SESSION['mreporting_values']['states_id'])) {
                 if ($as_array) {
                     $sql_states[$field] = $_SESSION['mreporting_values']['states_id'];
                 } else {
-                    $sql_states = " AND $field IN (" . implode(',', $_SESSION['mreporting_values']['states_id']) . ")";
+                    $sql_states = " AND $field IN (" . implode(',', $_SESSION['mreporting_values']['states_id']) . ')';
                 }
-            } else if ($_SESSION['mreporting_values']['states_id'] > 0) {
+            } elseif ($_SESSION['mreporting_values']['states_id'] > 0) {
                 if ($as_array) {
                     $sql_states[$field] = $_SESSION['mreporting_values']['states_id'];
                 } else {
@@ -91,19 +92,22 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 }
             }
         }
+
         return $sql_states;
     }
 
-   /* ==== MANUFACTURERS REPORTS ==== */
+    /* ==== MANUFACTURERS REPORTS ==== */
     public function reportPieComputersByFabricant($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieComputersByFabricant'] = ['multiplestates'];
+
         return $this->computersByFabricant($config);
     }
 
     public function reportHbarComputersByFabricant($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarComputersByFabricant'] = ['multiplestates'];
+
         return $this->computersByFabricant($config);
     }
 
@@ -138,7 +142,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $datas = [];
         while ($computer = $DB->fetchAssoc($result)) {
             if ($computer['Total']) {
-                $percent = round($computer['Percent'], 2);
+                $percent                                                     = round($computer['Percent'], 2);
                 $datas['datas'][$computer['Manufacturer'] . " ($percent %)"] = $computer['Total'];
             }
         }
@@ -146,16 +150,18 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $datas;
     }
 
-   /* ==== COMPUTER'S TYPE REPORTS ==== */
+    /* ==== COMPUTER'S TYPE REPORTS ==== */
     public function reportPieComputersByType($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieComputersByType'] = ['multiplestates'];
+
         return $this->computersByType($config);
     }
 
     public function reportHbarComputersByType($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarComputersByType'] = ['multiplestates'];
+
         return $this->computersByType($config);
     }
 
@@ -165,7 +171,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
         $sql_states   = self::getStateCondition('c.states_id');
-        $query = "SELECT t.`name`   as Type,
+        $query        = "SELECT t.`name`   as Type,
                        count(*) as Total,
                        count(*) * 100 / (SELECT count(*)
                            FROM glpi_computers     as c,
@@ -185,25 +191,27 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
          GROUP BY t.`name`
          ORDER BY Total DESC";
         $result = $DB->query($query);
-        $datas = [];
+        $datas  = [];
         while ($computer = $DB->fetchAssoc($result)) {
-            $percent = round($computer['Percent'], 2);
+            $percent                                             = round($computer['Percent'], 2);
             $datas['datas'][$computer['Type'] . " ($percent %)"] = $computer['Total'];
         }
 
         return $datas;
     }
 
-   /* ==== COMPUTER'S AGE REPORTS ==== */
+    /* ==== COMPUTER'S AGE REPORTS ==== */
     public function reportPieComputersByAge($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieComputersByAge'] = ['multiplestates'];
+
         return $this->computersByAge($config);
     }
 
     public function reportHbarComputersByAge($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarComputersByAge'] = ['multiplestates'];
+
         return $this->computersByAge($config);
     }
 
@@ -213,7 +221,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
         $sql_states   = self::getStateCondition('c.states_id');
-        $datas = [];
+        $datas        = [];
 
         $query = "SELECT '< 1 year' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
                            FROM glpi_computers as c,
@@ -318,17 +326,18 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $datas;
     }
 
-
-   /* === OS REPORTS === */
+    /* === OS REPORTS === */
     public function reportPieComputersByOS($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieComputersByOS'] = ['multiplestates'];
+
         return $this->computersByOS($config);
     }
 
     public function reportHbarComputersByOS($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarComputersByOS'] = ['multiplestates'];
+
         return $this->computersByOS($config);
     }
 
@@ -338,21 +347,21 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
         $sql_states   = self::getStateCondition('c.states_id');
-        $oses = ['Windows' => 'Windows',
-            'Linux'   => 'Linux|Ubuntu|openSUSE',
-            'Solaris' => 'Solaris',
-            'AIX'     => 'AIX',
-            'BSD'     => 'BSD',
-            'VMWare'  => 'VMWare',
-            'MAC'     => 'MAC',
-            'Android' => 'Android',
-            'HP-UX'   => 'HP-UX'
+        $oses         = ['Windows' => 'Windows',
+            'Linux'                => 'Linux|Ubuntu|openSUSE',
+            'Solaris'              => 'Solaris',
+            'AIX'                  => 'AIX',
+            'BSD'                  => 'BSD',
+            'VMWare'               => 'VMWare',
+            'MAC'                  => 'MAC',
+            'Android'              => 'Android',
+            'HP-UX'                => 'HP-UX',
         ];
-        $query = "";
-        $first = true;
-        $notlike = "";
+        $query   = '';
+        $first   = true;
+        $notlike = '';
         foreach ($oses as $os => $search) {
-            $query .= (!$first ? " UNION " : "")
+            $query .= (!$first ? ' UNION ' : '')
             . "\n SELECT '$os' AS OS, count(*) AS Total, count(*) * 100 / (SELECT count(*)
                                                                         FROM glpi_computers        as c,
                                                                              glpi_operatingsystems as os,
@@ -379,7 +388,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             $first = false;
         }
         $query .= " UNION
-         SELECT '" . __("Others") . "' AS OS, count(*) Total, count(*) * 100 / (SELECT count(*)
+         SELECT '" . __('Others') . "' AS OS, count(*) Total, count(*) * 100 / (SELECT count(*)
                                     FROM glpi_computers        as c,
                                          glpi_operatingsystems as os,
                                          glpi_items_operatingsystems as ios
@@ -401,7 +410,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
            $sql_entities
            $sql_states";
 
-        $query .= " ORDER BY Total DESC";
+        $query .= ' ORDER BY Total DESC';
         $result = $DB->query($query);
 
         $datas = [];
@@ -415,52 +424,51 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $datas;
     }
 
-
     public function reportHbarWindows($config = [])
     {
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarWindows'] = ['multiplestates'];
 
-        $sql_states   = self::getStateCondition('glpi_computers.states_id', true);
+        $sql_states      = self::getStateCondition('glpi_computers.states_id', true);
         $total_computers = countElementsInTable(
             'glpi_computers',
             [
-                'is_deleted'   => 0,
-                'is_template'  => 0,
-                'entities_id'  => $this->where_entities_array
-            ]
+                'is_deleted'  => 0,
+                'is_template' => 0,
+                'entities_id' => $this->where_entities_array,
+            ],
         );
 
         $oses = $DB->request(
             [
                 'SELECT' => [
-                    'glpi_operatingsystems' => 'name AS os_name',
+                    'glpi_operatingsystems'        => 'name AS os_name',
                     'glpi_operatingsystemversions' => 'name AS os_version',
                 ],
-                'FROM' => 'glpi_items_operatingsystems',
-                'COUNT' => 'os_qty',
+                'FROM'       => 'glpi_items_operatingsystems',
+                'COUNT'      => 'os_qty',
                 'INNER JOIN' => [
                     'glpi_computers' => [
                         'FKEY' => [
                             'glpi_items_operatingsystems' => 'items_id',
-                            'glpi_computers'               => 'id'
-                        ]
+                            'glpi_computers'              => 'id',
+                        ],
                     ],
                     'glpi_operatingsystems' => [
                         'FKEY' => [
                             'glpi_operatingsystems'       => 'id',
-                            'glpi_items_operatingsystems' => 'operatingsystems_id'
-                        ]
-                    ]
+                            'glpi_items_operatingsystems' => 'operatingsystems_id',
+                        ],
+                    ],
                 ],
                 'LEFT JOIN' => [
                     'glpi_operatingsystemversions' => [
                         'FKEY' => [
                             'glpi_operatingsystemversions' => 'id',
-                            'glpi_items_operatingsystems'  => 'operatingsystemversions_id'
-                        ]
-                    ]
+                            'glpi_items_operatingsystems'  => 'operatingsystemversions_id',
+                        ],
+                    ],
                 ],
                 'WHERE' => [
                     'glpi_operatingsystems.name'           => ['LIKE', '%windows%'],
@@ -470,17 +478,18 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'glpi_computers.entities_id'           => $this->where_entities_array,
                 ] + $sql_states,
                 'GROUPBY' => ['os_name', 'os_version'],
-                'ORDER' => ['os_name', 'os_version']
-            ]
+                'ORDER'   => ['os_name', 'os_version'],
+            ],
         );
         $data = [];
         foreach ($oses as $version) {
-            $key = $version['os_name'] . ' ' . $version['os_version'] . ' (' . round($version['os_qty'] / $total_computers * 100) . '%)';
+            $key                 = $version['os_name'] . ' ' . $version['os_version'] . ' (' . round($version['os_qty'] / $total_computers * 100) . '%)';
             $data['datas'][$key] = $version['os_qty'];
         }
         if (isset($data['datas']) && !empty($data['datas'])) {
             arsort($data['datas']);
         }
+
         return $data;
     }
 
@@ -489,8 +498,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarLinux'] = ['multiplestates'];
-        $sql_states = self::getStateCondition('glpi_computers.states_id', true);
-        $sql_states2 = self::getStateCondition('c.states_id', true);
+        $sql_states                                         = self::getStateCondition('glpi_computers.states_id', true);
+        $sql_states2                                        = self::getStateCondition('c.states_id', true);
 
         $data = [];
         foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%' OR name LIKE '%openSUSE%'") as $os) {
@@ -498,46 +507,47 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 'glpi_computers',
                 [
                     'SELECT' => [
-                        'glpi_operatingsystemversions.name'
+                        'glpi_operatingsystemversions.name',
                     ],
-                    'COUNT' => 'cpt',
+                    'COUNT'      => 'cpt',
                     'INNER JOIN' => [
                         'glpi_items_operatingsystems' => [
                             'FKEY' => [
                                 'glpi_computers'              => 'id',
-                                'glpi_items_operatingsystems' => 'items_id'
-                            ]
-                        ]
+                                'glpi_items_operatingsystems' => 'items_id',
+                            ],
+                        ],
                     ],
                     'LEFT JOIN' => [
                         'glpi_operatingsystemversions' => [
                             'FKEY' => [
-                                'glpi_items_operatingsystems'    => 'operatingsystemversions_id',
-                                'glpi_operatingsystemversions'   => 'id'
-                            ]
-                        ]
+                                'glpi_items_operatingsystems'  => 'operatingsystemversions_id',
+                                'glpi_operatingsystemversions' => 'id',
+                            ],
+                        ],
                     ],
                     'WHERE' => [
-                        'glpi_items_operatingsystems.operatingsystems_id'  => $os['id'],
-                        'glpi_items_operatingsystems.itemtype'             => 'Computer',
-                        'glpi_computers.is_deleted'                        => 0,
-                        'glpi_computers.is_template'                       => 0,
-                        'glpi_computers.entities_id'                       => $this->where_entities_array,
+                        'glpi_items_operatingsystems.operatingsystems_id' => $os['id'],
+                        'glpi_items_operatingsystems.itemtype'            => 'Computer',
+                        'glpi_computers.is_deleted'                       => 0,
+                        'glpi_computers.is_template'                      => 0,
+                        'glpi_computers.entities_id'                      => $this->where_entities_array,
                     ] + $sql_states + $sql_states2,
                     'GROUPBY' => ['operatingsystemversions_id'],
-                    'ORDER' => ['glpi_operatingsystemversions.name']
-                ]
+                    'ORDER'   => ['glpi_operatingsystemversions.name'],
+                ],
             );
 
             foreach ($iterator as $version) {
                 if ($version['name'] != '' && $version['cpt']) {
-                    $data['datas'][$os['name'] . " " . $version['name']] = $version['cpt'];
+                    $data['datas'][$os['name'] . ' ' . $version['name']] = $version['cpt'];
                 }
             }
         }
         if (isset($data['datas']) && !empty($data['datas'])) {
             arsort($data['datas']);
         }
+
         return $data;
     }
 
@@ -546,7 +556,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarLinuxDistro'] = ['multiplestates'];
-        $sql_states = self::getStateCondition('glpi_computers.states_id', true);
+        $sql_states                                               = self::getStateCondition('glpi_computers.states_id', true);
 
         $data = [];
         foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%' OR name LIKE '%openSUSE%'") as $os) {
@@ -557,27 +567,28 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                         'glpi_items_operatingsystems' => [
                             'FKEY' => [
                                 'glpi_computers'              => 'id',
-                                'glpi_items_operatingsystems' => 'items_id'
-                            ]
-                        ]
+                                'glpi_items_operatingsystems' => 'items_id',
+                            ],
+                        ],
                     ],
                     'WHERE' => [
-                        'glpi_items_operatingsystems.operatingsystems_id'  => $os['id'],
-                        'glpi_items_operatingsystems.itemtype'             => 'Computer',
-                        'glpi_computers.is_deleted'                        => 0,
-                        'glpi_computers.is_template'                       => 0,
-                        'glpi_computers.entities_id'                       => $this->where_entities_array
-                    ] + $sql_states
-                ]
+                        'glpi_items_operatingsystems.operatingsystems_id' => $os['id'],
+                        'glpi_items_operatingsystems.itemtype'            => 'Computer',
+                        'glpi_computers.is_deleted'                       => 0,
+                        'glpi_computers.is_template'                      => 0,
+                        'glpi_computers.entities_id'                      => $this->where_entities_array,
+                    ] + $sql_states,
+                ],
             );
 
             if ($number) {
-                 $data['datas'][$os['name']] = $number;
+                $data['datas'][$os['name']] = $number;
             }
         }
         if (isset($data['datas']) && !empty($data['datas'])) {
             arsort($data['datas']);
         }
+
         return $data;
     }
 
@@ -586,53 +597,54 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMac'] = ['multiplestates'];
-        $sql_states  = self::getStateCondition('glpi_computers.states_id', true);
-        $sql_states2 = self::getStateCondition('c.states_id', true);
+        $sql_states                                       = self::getStateCondition('glpi_computers.states_id', true);
+        $sql_states2                                      = self::getStateCondition('c.states_id', true);
 
-        $data = [];
+        $data       = [];
         $ositerator = $DB->request('glpi_operatingsystems', ['name' => ['LIKE', '%Mac OS%']]);
         foreach ($ositerator as $os) {
             $iterator = $DB->request(
                 'glpi_computers',
                 [
                     'SELECT' => [
-                        'glpi_operatingsystemversions.name'
+                        'glpi_operatingsystemversions.name',
                     ],
-                    'COUNT' => 'cpt',
+                    'COUNT'      => 'cpt',
                     'INNER JOIN' => [
                         'glpi_items_operatingsystems' => [
                             'FKEY' => [
                                 'glpi_computers'              => 'id',
-                                'glpi_items_operatingsystems' => 'items_id'
-                            ]
-                        ]
+                                'glpi_items_operatingsystems' => 'items_id',
+                            ],
+                        ],
                     ],
                     'LEFT JOIN' => [
                         'glpi_operatingsystemversions' => [
                             'FKEY' => [
-                                'glpi_items_operatingsystems'    => 'operatingsystemversions_id',
-                                'glpi_operatingsystemversions'   => 'id'
-                            ]
-                        ]
+                                'glpi_items_operatingsystems'  => 'operatingsystemversions_id',
+                                'glpi_operatingsystemversions' => 'id',
+                            ],
+                        ],
                     ],
                     'WHERE' => [
-                        'glpi_items_operatingsystems.operatingsystems_id'  => $os['id'],
-                        'glpi_items_operatingsystems.itemtype'             => 'Computer',
-                        'glpi_computers.is_deleted'                        => 0,
-                        'glpi_computers.is_template'                       => 0,
-                        'glpi_computers.entities_id'                       => $this->where_entities_array,
+                        'glpi_items_operatingsystems.operatingsystems_id' => $os['id'],
+                        'glpi_items_operatingsystems.itemtype'            => 'Computer',
+                        'glpi_computers.is_deleted'                       => 0,
+                        'glpi_computers.is_template'                      => 0,
+                        'glpi_computers.entities_id'                      => $this->where_entities_array,
                     ] + $sql_states + $sql_states2,
                     'GROUPBY' => ['operatingsystemversions_id'],
-                    'ORDER' => ['glpi_operatingsystemversions.name']
-                ]
+                    'ORDER'   => ['glpi_operatingsystemversions.name'],
+                ],
             );
 
             foreach ($iterator as $version) {
                 if ($version['name'] != '' && $version['cpt']) {
-                    $data['datas'][$os['name'] . " " . $version['name']] = $version['cpt'];
+                    $data['datas'][$os['name'] . ' ' . $version['name']] = $version['cpt'];
                 }
             }
         }
+
         return $data;
     }
 
@@ -641,54 +653,54 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMacFamily'] = ['multiplestates'];
-        $sql_states  = self::getStateCondition('glpi_computers.states_id', true);
-        $sql_states2 = self::getStateCondition('c.states_id', true);
+        $sql_states                                             = self::getStateCondition('glpi_computers.states_id', true);
+        $sql_states2                                            = self::getStateCondition('c.states_id', true);
 
-        $data = [];
+        $data       = [];
         $ositerator = $DB->request('glpi_operatingsystems', ['name' => ['LIKE', '%Mac OS%']]);
         foreach ($ositerator as $os) {
             $iterator = $DB->request(
                 'glpi_computers',
                 [
                     'SELECT' => [
-                        'glpi_operatingsystemversions.name'
+                        'glpi_operatingsystemversions.name',
                     ],
-                    'COUNT' => 'cpt',
+                    'COUNT'      => 'cpt',
                     'INNER JOIN' => [
                         'glpi_items_operatingsystems' => [
                             'FKEY' => [
                                 'glpi_computers'              => 'id',
-                                'glpi_items_operatingsystems' => 'items_id'
-                            ]
-                        ]
+                                'glpi_items_operatingsystems' => 'items_id',
+                            ],
+                        ],
                     ],
                     'LEFT JOIN' => [
                         'glpi_operatingsystemversions' => [
                             'FKEY' => [
-                                'glpi_items_operatingsystems'    => 'operatingsystemversions_id',
-                                'glpi_operatingsystemversions'   => 'id'
-                            ]
-                        ]
+                                'glpi_items_operatingsystems'  => 'operatingsystemversions_id',
+                                'glpi_operatingsystemversions' => 'id',
+                            ],
+                        ],
                     ],
                     'WHERE' => [
-                        'glpi_items_operatingsystems.operatingsystems_id'  => $os['id'],
-                        'glpi_items_operatingsystems.itemtype'             => 'Computer',
-                        'glpi_computers.is_deleted'                        => 0,
-                        'glpi_computers.is_template'                       => 0,
-                        'glpi_computers.entities_id'                       => $this->where_entities_array,
+                        'glpi_items_operatingsystems.operatingsystems_id' => $os['id'],
+                        'glpi_items_operatingsystems.itemtype'            => 'Computer',
+                        'glpi_computers.is_deleted'                       => 0,
+                        'glpi_computers.is_template'                      => 0,
+                        'glpi_computers.entities_id'                      => $this->where_entities_array,
                     ] + $sql_states + $sql_states2,
                     'GROUPBY' => ['operatingsystemversions_id'],
-                    'ORDER' => ['glpi_operatingsystemversions.name']
-                ]
+                    'ORDER'   => ['glpi_operatingsystemversions.name'],
+                ],
             );
 
             foreach ($iterator as $version) {
                 if ($version['name'] != '' && $version['cpt']) {
-                    if (preg_match("/(10.[0-9]+)/", $version['name'], $results)) {
-                        if (!isset($data['datas'][$os['name'] . " " . $results[1]])) {
-                            $data['datas'][$os['name'] . " " . $results[1]] = $version['cpt'];
+                    if (preg_match('/(10.[0-9]+)/', $version['name'], $results)) {
+                        if (!isset($data['datas'][$os['name'] . ' ' . $results[1]])) {
+                            $data['datas'][$os['name'] . ' ' . $results[1]] = $version['cpt'];
                         } else {
-                            $data['datas'][$os['name'] . " " . $results[1]] += $version['cpt'];
+                            $data['datas'][$os['name'] . ' ' . $results[1]] += $version['cpt'];
                         }
                     }
                 }
@@ -697,20 +709,22 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         if (isset($data['datas']) && count($data['datas'])) {
             arsort($data['datas']);
         }
+
         return $data;
     }
 
-
-   /* ==== FUSIONINVENTORY REPORTS ==== */
+    /* ==== FUSIONINVENTORY REPORTS ==== */
     public function reportPieFusionInventory($config = [])
     {
         $_SESSION['mreporting_selector']['reportPieFusionInventory'] = ['multiplestates'];
+
         return $this->fusionInventory($config);
     }
 
     public function reportHbarFusionInventory($config = [])
     {
         $_SESSION['mreporting_selector']['reportHbarFusionInventory'] = ['multiplestates'];
+
         return $this->fusionInventory($config);
     }
 
@@ -722,21 +736,21 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         if (!$plugin->isActivated('fusioninventory')) {
             return [];
         }
-        $sql_states = self::getStateCondition('glpi_computers.states_id', true);
+        $sql_states      = self::getStateCondition('glpi_computers.states_id', true);
         $total_computers = countElementsInTable(
             'glpi_computers',
             [
                 'is_deleted'  => 0,
                 'is_template' => 0,
                 'entities_id' => $this->where_entities_array,
-            ] + $sql_states
+            ] + $sql_states,
         );
 
-        $query = "SELECT count(*) AS cpt, `useragent`
+        $query = 'SELECT count(*) AS cpt, `useragent`
                 FROM `glpi_plugin_fusioninventory_agents`
                 WHERE `computers_id` > 0
                 GROUP BY `useragent`
-                ORDER BY cpt DESC";
+                ORDER BY cpt DESC';
 
         $data = [];
         foreach ($DB->request($query) as $agent) {
@@ -748,16 +762,17 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             }
             $data['datas'][$useragent] = $agent['cpt'];
         }
+
         return $data;
     }
 
-   /* ==== MONITOR REPORST ==== */
+    /* ==== MONITOR REPORST ==== */
     public function reportHbarMonitors($config = [])
     {
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMonitors'] = ['multiplestates'];
-        $sql_states = self::getStateCondition('c.`states_id`');
+        $sql_states                                            = self::getStateCondition('c.`states_id`');
 
         $query = "SELECT COUNT(*) AS cpt
                 FROM `glpi_computers_items` AS ci,
@@ -772,7 +787,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 ORDER BY `cpt`";
         $data = [];
         foreach ($DB->request($query) as $result) {
-            $label = $result['cpt'] . " " . _n('Monitor', 'Monitors', $result['cpt']);
+            $label = $result['cpt'] . ' ' . _n('Monitor', 'Monitors', $result['cpt']);
             if (!isset($data['datas'][$label])) {
                 $data['datas'][$label] = 0;
             }
@@ -782,7 +797,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $data;
     }
 
-   /* ==== COMPUTER'S STATE REPORTS ==== */
+    /* ==== COMPUTER'S STATE REPORTS ==== */
     public function reportHbarComputersByStatus($config = [])
     {
         global $DB;
@@ -802,9 +817,9 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
            AND c.`is_template` = 0
          GROUP BY t.`name`";
         $result = $DB->query($query);
-        $datas = [];
+        $datas  = [];
         while ($computer = $DB->fetchAssoc($result)) {
-            $percent = round($computer['Percent'], 2);
+            $percent                                               = round($computer['Percent'], 2);
             $datas['datas'][$computer['status'] . " ($percent %)"] = $computer['Total'];
         }
 
@@ -817,7 +832,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $datas = [];
 
-        $condition = " AND c.entities_id IN (" . $this->where_entities . ")";
+        $condition = ' AND c.entities_id IN (' . $this->where_entities . ')';
 
         $query = "SELECT t.name status, count(*) Total, count(*)*100/(
                      SELECT count(*)
@@ -830,23 +845,23 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $result = $DB->query($query);
 
         while ($printer = $DB->fetchAssoc($result)) {
-            $pourcentage = round($printer['Pourcentage'], 2);
+            $pourcentage                                              = round($printer['Pourcentage'], 2);
             $datas['datas'][$printer['status'] . " ($pourcentage %)"] = $printer['Total'];
         }
 
         return $datas;
     }
 
-   /* ==== COMPUTER'S ENTITIES REPORTS ==== */
+    /* ==== COMPUTER'S ENTITIES REPORTS ==== */
     public function reportHbarComputersByEntity($config = [])
     {
         global $DB, $CFG_GLPI;
 
         $_SESSION['mreporting_selector']['reportHbarComputersByEntity'] = ['multiplestates',
-            'entityLevel'
+            'entityLevel',
         ];
 
-        $this->where_entities_level = PluginMreportingCommon::getSQLEntityLevel("`glpi_entities`.`level`");
+        $this->where_entities_level = PluginMreportingCommon::getSQLEntityLevel('`glpi_entities`.`level`');
 
         $datas = [];
 
@@ -868,18 +883,18 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             if ($entities_id == $_SESSION['glpiactive_entity']) {
                 $restrict = " = '" . $entities_id . "'";
             } else {
-                $restrict = "IN (" . implode(',', getSonsOf('glpi_entities', $entities_id)) . ")";
+                $restrict = 'IN (' . implode(',', getSonsOf('glpi_entities', $entities_id)) . ')';
             }
-            $query = "SELECT count(*) Total
+            $query = 'SELECT count(*) Total
                      FROM `glpi_computers`
-                     WHERE `entities_id` " . $restrict . "
+                     WHERE `entities_id` ' . $restrict . '
                      AND `is_deleted` = 0
-                     AND `is_template` = 0";
+                     AND `is_template` = 0';
             $result = $DB->query($query);
 
             while ($computer = $DB->fetchAssoc($result)) {
-                $datas['tmp'][$entities_name . " (pourcentage %)"] = $computer['Total'];
-                $entities[$entities_name . " (pourcentage %)"] = $entities_id;
+                $datas['tmp'][$entities_name . ' (pourcentage %)'] = $computer['Total'];
+                $entities[$entities_name . ' (pourcentage %)']     = $entities_id;
             }
         }
         $total = array_sum($datas['tmp']);
@@ -889,14 +904,14 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             } else {
                 $percent = round((100 * $value) / $total);
             }
-            $ent_id = $entities[$key];
-            $key = str_replace('pourcentage', $percent, $key);
+            $ent_id               = $entities[$key];
+            $key                  = str_replace('pourcentage', $percent, $key);
             $datas['datas'][$key] = $value;
-            $type = 'under';
+            $type                 = 'under';
             if ($ent_id == $_SESSION['glpiactive_entity']) {
                 $type = 'equals';
             }
-            $datas['links'][$key] = $CFG_GLPI["root_doc"] . '/front/computer.php?is_deleted=0&criteria[0][field]=80&criteria[0][searchtype]=' . $type . '&criteria[0][value]=' . $ent_id . '&itemtype=Computer&start=0';
+            $datas['links'][$key] = $CFG_GLPI['root_doc'] . '/front/computer.php?is_deleted=0&criteria[0][field]=80&criteria[0][searchtype]=' . $type . '&criteria[0][value]=' . $ent_id . '&itemtype=Computer&start=0';
         }
         unset($datas['tmp']);
 

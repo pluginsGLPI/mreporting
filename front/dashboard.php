@@ -28,4 +28,4 @@
  * -------------------------------------------------------------------------
  */
 
-require_once "dashboard.form.php";
+require_once 'dashboard.form.php';

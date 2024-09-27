@@ -48,34 +48,33 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     protected $sql_join_gtr;
     protected $sql_select_sla;
 
-
     public function __construct($config = [])
     {
         /** @var array $LANG */
         global $LANG;
-        $this->sql_group_assign  = "1=1";
-        $this->sql_group_request = "1=1";
-        $this->sql_user_assign   = "1=1";
-        $this->sql_type          = "glpi_tickets.type IN (" . Ticket::INCIDENT_TYPE . ", " . Ticket::DEMAND_TYPE . ")";
-        $this->sql_itilcat       = "1=1";
-        $this->sql_join_cat      = "LEFT JOIN glpi_itilcategories cat
-                              ON glpi_tickets.itilcategories_id = cat.id";
-        $this->sql_join_g        = "LEFT JOIN glpi_groups g
-                              ON gt.groups_id = g.id";
-        $this->sql_join_u        = "LEFT JOIN glpi_users u
-                              ON tu.users_id = u.id";
-        $this->sql_join_tt       = "LEFT JOIN glpi_tickettasks tt
-                              ON tt.tickets_id  = glpi_tickets.id";
-        $this->sql_join_tu       = "LEFT JOIN glpi_tickets_users tu
+        $this->sql_group_assign  = '1=1';
+        $this->sql_group_request = '1=1';
+        $this->sql_user_assign   = '1=1';
+        $this->sql_type          = 'glpi_tickets.type IN (' . Ticket::INCIDENT_TYPE . ', ' . Ticket::DEMAND_TYPE . ')';
+        $this->sql_itilcat       = '1=1';
+        $this->sql_join_cat      = 'LEFT JOIN glpi_itilcategories cat
+                              ON glpi_tickets.itilcategories_id = cat.id';
+        $this->sql_join_g = 'LEFT JOIN glpi_groups g
+                              ON gt.groups_id = g.id';
+        $this->sql_join_u = 'LEFT JOIN glpi_users u
+                              ON tu.users_id = u.id';
+        $this->sql_join_tt = 'LEFT JOIN glpi_tickettasks tt
+                              ON tt.tickets_id  = glpi_tickets.id';
+        $this->sql_join_tu = 'LEFT JOIN glpi_tickets_users tu
                               ON tu.tickets_id = glpi_tickets.id
-                              AND tu.type = " . Ticket_User::ASSIGN;
-        $this->sql_join_gt       = "LEFT JOIN glpi_groups_tickets gt
+                              AND tu.type = ' . Ticket_User::ASSIGN;
+        $this->sql_join_gt = 'LEFT JOIN glpi_groups_tickets gt
                               ON gt.tickets_id  = glpi_tickets.id
-                              AND gt.type = " . Group_Ticket::ASSIGN;
-        $this->sql_join_gtr      = "LEFT JOIN glpi_groups_tickets gtr
+                              AND gt.type = ' . Group_Ticket::ASSIGN;
+        $this->sql_join_gtr = 'LEFT JOIN glpi_groups_tickets gtr
                               ON gtr.tickets_id = glpi_tickets.id
-                              AND gtr.type = " . Group_Ticket::REQUESTER;
-        $this->sql_select_sla    = "CASE WHEN glpi_slas.definition_time = 'day'
+                              AND gtr.type = ' . Group_Ticket::REQUESTER;
+        $this->sql_select_sla = "CASE WHEN glpi_slas.definition_time = 'day'
                                              AND glpi_tickets.solve_delay_stat <= glpi_slas.number_time * 86400
                                        THEN 'ok'
                                        WHEN glpi_slas.definition_time = 'hour'
@@ -96,19 +95,19 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         if (isset($mr_values['groups_assign_id'])) {
             if (is_array($mr_values['groups_assign_id'])) {
-                $this->sql_group_assign = "gt.groups_id IN (" .
-                                       implode(',', $mr_values['groups_assign_id']) . ")";
-            } else if ($mr_values['groups_assign_id'] > 0) {
-                $this->sql_group_assign = "gt.groups_id = " . $mr_values['groups_assign_id'];
+                $this->sql_group_assign = 'gt.groups_id IN (' .
+                                       implode(',', $mr_values['groups_assign_id']) . ')';
+            } elseif ($mr_values['groups_assign_id'] > 0) {
+                $this->sql_group_assign = 'gt.groups_id = ' . $mr_values['groups_assign_id'];
             }
         }
 
         if (isset($mr_values['groups_request_id'])) {
             if (is_array($mr_values['groups_request_id'])) {
-                $this->sql_group_request = "gtr.groups_id IN (" .
-                                          implode(',', $mr_values['groups_request_id']) . ")";
-            } else if ($mr_values['groups_request_id'] > 0) {
-                $this->sql_group_request = "gt.groups_id = " . $mr_values['groups_request_id'];
+                $this->sql_group_request = 'gtr.groups_id IN (' .
+                                          implode(',', $mr_values['groups_request_id']) . ')';
+            } elseif ($mr_values['groups_request_id'] > 0) {
+                $this->sql_group_request = 'gt.groups_id = ' . $mr_values['groups_request_id'];
             }
         }
 
@@ -116,21 +115,21 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             isset($mr_values['users_assign_id'])
             && $mr_values['users_assign_id'] > 0
         ) {
-            $this->sql_user_assign = "tu.users_id = " . $mr_values['users_assign_id'];
+            $this->sql_user_assign = 'tu.users_id = ' . $mr_values['users_assign_id'];
         }
 
         if (
             isset($mr_values['type'])
             && $mr_values['type'] > 0
         ) {
-            $this->sql_type = "glpi_tickets.type = " . $mr_values['type'];
+            $this->sql_type = 'glpi_tickets.type = ' . $mr_values['type'];
         }
 
         if (
             isset($mr_values['itilcategories_id'])
             && $mr_values['itilcategories_id'] > 0
         ) {
-            $this->sql_itilcat = "glpi_tickets.itilcategories_id = " . $mr_values['itilcategories_id'];
+            $this->sql_itilcat = 'glpi_tickets.itilcategories_id = ' . $mr_values['itilcategories_id'];
         }
     }
 
@@ -138,22 +137,21 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     {
         global $DB, $LANG;
 
-        $_SESSION['mreporting_selector']['reportGlineBacklogs'] =
-         ['dateinterval', 'period', 'backlogstates', 'multiplegrouprequest',
-             'userassign', 'category', 'multiplegroupassign'
-         ];
+        $_SESSION['mreporting_selector']['reportGlineBacklogs'] = ['dateinterval', 'period', 'backlogstates', 'multiplegrouprequest',
+            'userassign', 'category', 'multiplegroupassign',
+        ];
 
         $tab   = [];
         $datas = [];
 
-        $search_new       = (!isset($_SESSION['mreporting_values']['show_new'])
-                           || ($_SESSION['mreporting_values']['show_new'] == '1'))     ? true : false;
-        $search_solved    = (!isset($_SESSION['mreporting_values']['show_solved'])
-                           || ($_SESSION['mreporting_values']['show_solved'] == '1'))  ? true : false;
-        $search_backlogs  = (!isset($_SESSION['mreporting_values']['show_backlog'])
+        $search_new = (!isset($_SESSION['mreporting_values']['show_new'])
+                           || ($_SESSION['mreporting_values']['show_new'] == '1')) ? true : false;
+        $search_solved = (!isset($_SESSION['mreporting_values']['show_solved'])
+                           || ($_SESSION['mreporting_values']['show_solved'] == '1')) ? true : false;
+        $search_backlogs = (!isset($_SESSION['mreporting_values']['show_backlog'])
                            || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? true : false;
-        $search_closed    = (isset($_SESSION['mreporting_values']['show_closed'])
-                           && ($_SESSION['mreporting_values']['show_closed'] == '1'))  ? true : false;
+        $search_closed = (isset($_SESSION['mreporting_values']['show_closed'])
+                           && ($_SESSION['mreporting_values']['show_closed'] == '1')) ? true : false;
 
         if ($search_new) {
             $sql_create = "SELECT
@@ -176,7 +174,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                GROUP BY period
                ORDER BY period";
             foreach ($DB->request($sql_create) as $data) {
-                $tab[$data['period']]['open'] = $data['nb'];
+                $tab[$data['period']]['open']        = $data['nb'];
                 $tab[$data['period']]['period_name'] = $data['period_name'];
             }
         }
@@ -201,41 +199,41 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                GROUP BY period
                ORDER BY period";
             foreach ($DB->request($sql_solved) as $data) {
-                $tab[$data['period']]['solved'] = $data['nb'];
+                $tab[$data['period']]['solved']      = $data['nb'];
                 $tab[$data['period']]['period_name'] = $data['period_name'];
             }
         }
 
-      /**
-       * Backlog : Tickets Ouverts à la date en cours...
-       */
+        /**
+         * Backlog : Tickets Ouverts à la date en cours...
+         */
         if ($search_backlogs) {
-            $date_array1 = explode("-", $_SESSION['mreporting_values']['date1' . $config['randname']]);
-            $time1 = mktime(0, 0, 0, $date_array1[1], $date_array1[2], $date_array1[0]);
+            $date_array1 = explode('-', $_SESSION['mreporting_values']['date1' . $config['randname']]);
+            $time1       = mktime(0, 0, 0, $date_array1[1], $date_array1[2], $date_array1[0]);
 
-            $date_array2 = explode("-", $_SESSION['mreporting_values']['date2' . $config['randname']]);
-            $time2 = mktime(0, 0, 0, $date_array2[1], $date_array2[2], $date_array2[0]);
+            $date_array2 = explode('-', $_SESSION['mreporting_values']['date2' . $config['randname']]);
+            $time2       = mktime(0, 0, 0, $date_array2[1], $date_array2[2], $date_array2[0]);
 
-           //if data inverted, reverse it
+            //if data inverted, reverse it
             if ($time1 > $time2) {
-                list($time1, $time2) = [$time2, $time1];
+                list($time1, $time2)                                                                                                               = [$time2, $time1];
                 list($_SESSION['mreporting_values']['date1' . $config['randname']], $_SESSION['mreporting_values']['date2' . $config['randname']]) = [
                     $_SESSION['mreporting_values']['date2' . $config['randname']],
-                    $_SESSION['mreporting_values']['date1' . $config['randname']]
+                    $_SESSION['mreporting_values']['date1' . $config['randname']],
                 ];
             }
 
             $sql_itilcat_backlog = isset($_SESSION['mreporting_values']['itilcategories_id'])
                                 && $_SESSION['mreporting_values']['itilcategories_id'] > 0
-                                ? " AND tic.itilcategories_id = " . $_SESSION['mreporting_values']['itilcategories_id']
-                                : "";
+                                ? ' AND tic.itilcategories_id = ' . $_SESSION['mreporting_values']['itilcategories_id']
+                                : '';
 
-            $begin = date($this->period_sort_php, $time1);
-            $end = date($this->period_sort_php, $time2);
-            $sql_date_backlog =  "DATE_FORMAT(list_date.period_l, '{$this->period_sort}') >= '$begin'
+            $begin            = date($this->period_sort_php, $time1);
+            $end              = date($this->period_sort_php, $time2);
+            $sql_date_backlog = "DATE_FORMAT(list_date.period_l, '{$this->period_sort}') >= '$begin'
                                AND DATE_FORMAT(list_date.period_l, '{$this->period_sort}') <= '$end'";
             $sql_list_date2 = str_replace('date', 'solvedate', $this->sql_list_date);
-            $sql_backlog = "SELECT
+            $sql_backlog    = "SELECT
             DISTINCT(DATE_FORMAT(list_date.period_l, '$this->period_sort')) as period,
             DATE_FORMAT(list_date.period_l, '$this->period_label') as period_name,
             COUNT(DISTINCT(glpi_tickets.id)) as nb
@@ -267,7 +265,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                AND $sql_date_backlog
          GROUP BY period";
             foreach ($DB->request($sql_backlog) as $data) {
-                $tab[$data['period']]['backlog'] = $data['nb'];
+                $tab[$data['period']]['backlog']     = $data['nb'];
                 $tab[$data['period']]['period_name'] = $data['period_name'];
             }
         }
@@ -292,7 +290,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                GROUP BY period
                ORDER BY period";
             foreach ($DB->request($sql_closed) as $data) {
-                $tab[$data['period']]['closed'] = $data['nb'];
+                $tab[$data['period']]['closed']      = $data['nb'];
                 $tab[$data['period']]['period_name'] = $data['period_name'];
             }
         }
@@ -318,8 +316,6 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         return $datas;
     }
 
-
-
     public function reportVstackbarLifetime($config = [])
     {
         global $DB;
@@ -327,17 +323,17 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $tab = $datas = $labels2 = [];
         $_SESSION['mreporting_selector']['reportVstackbarLifetime']
          = ['dateinterval', 'period', 'allstates', 'multiplegrouprequest',
-             'multiplegroupassign', 'userassign', 'category'
+             'multiplegroupassign', 'userassign', 'category',
          ];
 
         if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
-            $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
+            $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
         }
 
         foreach ($this->status as $current_status) {
             if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
                 $status_name = Ticket::getStatus($current_status);
-                $sql_status = "SELECT
+                $sql_status  = "SELECT
                      DISTINCT DATE_FORMAT(date, '{$this->period_sort}') as period,
                      DATE_FORMAT(date, '{$this->period_label}') as period_name,
                      COUNT(DISTINCT glpi_tickets.id) as nb
@@ -359,40 +355,37 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                 $res = $DB->query($sql_status);
                 while ($data = $DB->fetchAssoc($res)) {
                     $tab[$data['period']][$status_name] = $data['nb'];
-                    $labels2[$data['period']] = $data['period_name'];
+                    $labels2[$data['period']]           = $data['period_name'];
                 }
             }
         }
 
-       //ascending order of datas by date
+        //ascending order of datas by date
         ksort($tab);
 
-       //fill missing datas with zeros
+        //fill missing datas with zeros
         $datas = $this->fillStatusMissingValues($tab, $labels2);
 
         return $datas;
     }
 
-
-
     public function reportVstackbarTicketsgroups($config = [])
     {
         global $DB;
 
-        $_SESSION['mreporting_selector']['reportVstackbarTicketsgroups'] =
-         ['dateinterval', 'allstates', 'multiplegroupassign', 'category'];
+        $_SESSION['mreporting_selector']['reportVstackbarTicketsgroups'] = ['dateinterval', 'allstates', 'multiplegroupassign', 'category'];
 
-        $tab = [];
+        $tab   = [];
         $datas = [];
 
         if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
-            $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
+            $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
         }
 
         foreach ($this->status as $current_status) {
             if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
                 $status_name = Ticket::getStatus($current_status);
-                $sql_status = "SELECT
+                $sql_status  = "SELECT
                      DISTINCT g.completename AS group_name,
                      COUNT(DISTINCT glpi_tickets.id) AS nb
                   FROM glpi_tickets
@@ -410,23 +403,21 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                 $res = $DB->query($sql_status);
                 while ($data = $DB->fetchAssoc($res)) {
                     if (empty($data['group_name'])) {
-                        $data['group_name'] = __("None");
+                        $data['group_name'] = __('None');
                     }
                     $tab[$data['group_name']][$status_name] = $data['nb'];
                 }
             }
         }
 
-       //ascending order of datas by date
+        //ascending order of datas by date
         ksort($tab);
 
-       //fill missing datas with zeros
+        //fill missing datas with zeros
         $datas = $this->fillStatusMissingValues($tab);
 
         return $datas;
     }
-
-
 
     public function reportVstackbarTicketstech($config = [])
     {
@@ -435,11 +426,11 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $_SESSION['mreporting_selector']['reportVstackbarTicketstech']
          = ['dateinterval', 'multiplegroupassign', 'allstates', 'category'];
 
-        $tab = [];
+        $tab   = [];
         $datas = [];
 
         if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
-            $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
+            $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
         }
 
         foreach ($this->status as $current_status) {
@@ -468,7 +459,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                   ORDER BY name";
                 $res = $DB->query($sql_create);
                 while ($data = $DB->fetchAssoc($res)) {
-                    $data['name'] = empty($data['completename']) ? __("None") : $data['completename'];
+                    $data['name'] = empty($data['completename']) ? __('None') : $data['completename'];
 
                     if (!isset($tab[$data['name']][$status_name])) {
                         $tab[$data['name']][$status_name] = 0;
@@ -479,10 +470,10 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             }
         }
 
-       //ascending order of datas by date
+        //ascending order of datas by date
         ksort($tab);
 
-       //fill missing datas with zeros
+        //fill missing datas with zeros
         $datas = $this->fillStatusMissingValues($tab);
 
         return $datas;
@@ -495,7 +486,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $_SESSION['mreporting_selector']['reportHbarTopcategory']
          = ['dateinterval', 'limit', 'userassign', 'multiplegrouprequest', 'multiplegroupassign', 'type'];
 
-        $tab = [];
+        $tab   = [];
         $datas = [];
 
         $sql_create = "SELECT DISTINCT glpi_tickets.itilcategories_id,
@@ -522,7 +513,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $res = $DB->query($sql_create);
         while ($data = $DB->fetchAssoc($res)) {
             if (empty($data['completename'])) {
-                $data['completename'] = __("None");
+                $data['completename'] = __('None');
             }
             $datas['datas'][$data['completename']] = $data['nb'];
         }
@@ -536,7 +527,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $_SESSION['mreporting_selector']['reportHbarTopapplicant'] = ['dateinterval', 'limit', 'type'];
 
-        $tab = [];
+        $tab   = [];
         $datas = [];
 
         $sql_create = "SELECT DISTINCT gt.groups_id,
@@ -558,7 +549,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $res = $DB->query($sql_create);
         while ($data = $DB->fetchAssoc($res)) {
             if (empty($data['completename'])) {
-                $data['completename'] = __("None");
+                $data['completename'] = __('None');
             }
             $datas['datas'][$data['completename']] = $data['nb'];
         }
@@ -572,7 +563,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $_SESSION['mreporting_selector']['reportVstackbarGroupChange']
          = ['dateinterval', 'userassign', 'category',
-             'multiplegrouprequest', 'multiplegroupassign'
+             'multiplegrouprequest', 'multiplegroupassign',
          ];
 
         $datas = [];
@@ -610,22 +601,20 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $datas['datas'] = [];
         while ($ticket = $DB->fetchAssoc($result)) {
-            $datas['labels2'][$ticket['nb_add_group']] = $ticket['nb_add_group'];
-            $datas['datas'][__("Number of tickets")][$ticket['nb_add_group']] = $ticket['nb_ticket'];
+            $datas['labels2'][$ticket['nb_add_group']]                        = $ticket['nb_add_group'];
+            $datas['datas'][__('Number of tickets')][$ticket['nb_add_group']] = $ticket['nb_ticket'];
         }
 
         return $datas;
     }
 
-
     public function reportLineActiontimeVsSolvedelay($config = [])
     {
         global $DB;
 
-        $_SESSION['mreporting_selector']['reportLineActiontimeVsSolvedelay'] =
-         ['dateinterval', 'period', 'multiplegrouprequest',
-             'userassign', 'category', 'multiplegroupassign'
-         ];
+        $_SESSION['mreporting_selector']['reportLineActiontimeVsSolvedelay'] = ['dateinterval', 'period', 'multiplegrouprequest',
+            'userassign', 'category', 'multiplegroupassign',
+        ];
 
         $query = "SELECT
          DATE_FORMAT(glpi_tickets.date, '{$this->period_sort}')  as period,
@@ -659,19 +648,18 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
          ORDER BY period";
         $data = [];
         foreach ($DB->request($query) as $result) {
-            $data['datas'][$result['period_name']] = floatval($result['time_percent']);
+            $data['datas'][$result['period_name']]   = floatval($result['time_percent']);
             $data['labels2'][$result['period_name']] = $result['period_name'];
         }
 
         return $data;
     }
 
-
     public function reportGlineNbTicketBySla($config = [])
     {
         global $DB;
 
-        $area = false;
+        $area  = false;
         $datas = [];
 
         $_SESSION['mreporting_selector']['reportGlineNbTicketBySla']
@@ -681,18 +669,18 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             isset($_SESSION['mreporting_values']['slas'])
             && !empty($_SESSION['mreporting_values']['slas'])
         ) {
-           //get dates used in this period
+            //get dates used in this period
             $query_date = "SELECT DISTINCT DATE_FORMAT(`glpi_tickets`.`date`, '{$this->period_sort}') AS period,
             DATE_FORMAT(`glpi_tickets`.`date`, '{$this->period_label}') AS period_name
          FROM `glpi_tickets`
          INNER JOIN `glpi_slas`
             ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          WHERE {$this->sql_date_create}
-            AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ")
-            AND `glpi_tickets`.`entities_id` IN (" . $this->where_entities . ")
+            AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ')
+            AND `glpi_tickets`.`entities_id` IN (' . $this->where_entities . ")
             AND `glpi_tickets`.`is_deleted` = '0'
-            AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ")
-         ORDER BY `glpi_tickets`.`date` ASC";
+            AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ')
+         ORDER BY `glpi_tickets`.`date` ASC';
             $res_date = $DB->query($query_date);
 
             $dates = [];
@@ -715,13 +703,13 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
          INNER JOIN `glpi_slas`
             ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          WHERE {$this->sql_date_create}
-         AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ")
-         AND `glpi_tickets`.entities_id IN (" . $this->where_entities . ")
+         AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ')
+         AND `glpi_tickets`.entities_id IN (' . $this->where_entities . ")
          AND `glpi_tickets`.is_deleted = '0'";
             if (isset($_SESSION['mreporting_values']['slas'])) {
-                $query .= " AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ") ";
+                $query .= ' AND `glpi_slas`.id IN (' . implode(',', $_SESSION['mreporting_values']['slas']) . ') ';
             }
-            $query .= "GROUP BY `glpi_slas`.name, period, respected_sla";
+            $query .= 'GROUP BY `glpi_slas`.name, period, respected_sla';
 
             $result = $DB->query($query);
             while ($data = $DB->fetchAssoc($result)) {
@@ -744,7 +732,6 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         return $datas;
     }
 
-
     public function reportHgbarRespectedSlasByTopCategory($config = [])
     {
         global $DB;
@@ -754,7 +741,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTopCategory']
          = ['dateinterval', 'limit', 'categories'];
 
-        $datas = [];
+        $datas      = [];
         $categories = [];
 
         if (isset($_POST['categories']) && $_POST['categories'] > 0) {
@@ -768,7 +755,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $_SESSION['glpilist_limit'] = $category_limit;
 
         if (!$category) {
-            $query_categories = "SELECT
+            $query_categories = 'SELECT
             count(`glpi_tickets`.id) as nb,
             `glpi_itilcategories`.id
          FROM `glpi_tickets`
@@ -776,8 +763,8 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          INNER JOIN `glpi_itilcategories`
             ON `glpi_tickets`.itilcategories_id = `glpi_itilcategories`.id
-         WHERE " . $this->sql_date_create . "
-         AND `glpi_tickets`.entities_id IN (" . $this->where_entities . ")
+         WHERE ' . $this->sql_date_create . '
+         AND `glpi_tickets`.entities_id IN (' . $this->where_entities . ")
          AND `glpi_tickets`.is_deleted = '0'
          GROUP BY `glpi_itilcategories`.id
          ORDER BY nb DESC
@@ -798,16 +785,16 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          INNER JOIN `glpi_itilcategories`
             ON `glpi_tickets`.itilcategories_id = `glpi_itilcategories`.id
-         WHERE " . $this->sql_date_create . "
-         AND `glpi_tickets`.entities_id IN (" . $this->where_entities . ")
+         WHERE " . $this->sql_date_create . '
+         AND `glpi_tickets`.entities_id IN (' . $this->where_entities . ")
          AND `glpi_tickets`.is_deleted = '0'";
         if ($category) {
-            $query .= " AND `glpi_itilcategories`.id = " . $category;
-        } else if (!empty($categories)) {
-            $query .= " AND `glpi_itilcategories`.id IN (" . implode(',', $categories) . ")";
+            $query .= ' AND `glpi_itilcategories`.id = ' . $category;
+        } elseif (!empty($categories)) {
+            $query .= ' AND `glpi_itilcategories`.id IN (' . implode(',', $categories) . ')';
         }
-         $query .= " GROUP BY respected_sla, `glpi_itilcategories`.id
-         ORDER BY nb DESC";
+        $query .= ' GROUP BY respected_sla, `glpi_itilcategories`.id
+         ORDER BY nb DESC';
 
         $result = $DB->query($query);
         while ($data = $DB->fetchAssoc($result)) {
@@ -816,7 +803,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             $datas['datas'][$data['name']][$value] = $data['nb'];
         }
         $datas['labels2'] = [$this->lcl_slaok => $this->lcl_slaok,
-            $this->lcl_slako => $this->lcl_slako
+            $this->lcl_slako                  => $this->lcl_slako,
         ];
 
         if (isset($datas['datas'])) {
@@ -832,7 +819,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     {
         global $DB;
 
-        $area = false;
+        $area  = false;
         $datas = [];
 
         $_SESSION['mreporting_selector']['reportHgbarRespectedSlasByTechnician'] = ['dateinterval'];
@@ -847,10 +834,10 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             ON `glpi_tickets`.slas_id_ttr = `glpi_slas`.id
          INNER JOIN `glpi_tickets_users`
             ON `glpi_tickets_users`.tickets_id = `glpi_tickets`.id
-            AND `glpi_tickets_users`.type = " . Ticket_User::ASSIGN . "
+            AND `glpi_tickets_users`.type = " . Ticket_User::ASSIGN . '
          INNER JOIN `glpi_users`
             ON `glpi_users`.id = `glpi_tickets_users`.users_id
-         WHERE " . $this->sql_date_create . "
+         WHERE ' . $this->sql_date_create . "
          AND `glpi_tickets`.entities_id IN ({$this->where_entities})
          AND `glpi_tickets`.is_deleted = '0'
          GROUP BY respected_sla, `glpi_users`.id
@@ -866,7 +853,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             $datas['datas'][$data['fullname']][$value] = $data['nb'];
         }
         $datas['labels2'] = [$this->lcl_slaok => $this->lcl_slaok,
-            $this->lcl_slako => $this->lcl_slako
+            $this->lcl_slako                  => $this->lcl_slako,
         ];
 
         if (isset($datas['datas'])) {
@@ -901,6 +888,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                 $datas['labels2'][] = $labels2[$name];
             }
         }
+
         return $datas;
     }
 
@@ -908,9 +896,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     {
         global $LANG;
 
-        echo "<br /><b>" . $LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus'] . " : </b><br />";
+        echo '<br /><b>' . $LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus'] . ' : </b><br />';
 
-       // Opened
+        // Opened
         echo '<label>';
         echo '<input type="hidden" name="show_new" value="0" /> ';
         echo '<input type="checkbox" name="show_new" value="1"';
@@ -920,7 +908,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         echo $LANG['plugin_mreporting']['Helpdeskplus']['opened'];
         echo '</label>';
 
-       // Solved
+        // Solved
         echo '<label>';
         echo '<input type="hidden" name="show_solved" value="0" /> ';
         echo '<input type="checkbox" name="show_solved" value="1"';
@@ -930,9 +918,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         echo _x('status', 'Solved');
         echo '</label>';
 
-        echo "<br />";
+        echo '<br />';
 
-       // Backlog
+        // Backlog
         echo '<label>';
         echo '<input type="hidden" name="show_backlog" value="0" /> ';
         echo '<input type="checkbox" name="show_backlog" value="1"';
@@ -942,7 +930,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         echo $LANG['plugin_mreporting']['Helpdeskplus']['backlogs'];
         echo '</label>';
 
-       // Closed
+        // Closed
         echo '<label>';
         echo '<input type="hidden" name="show_closed" value="0" /> ';
         echo '<input type="checkbox" name="show_closed" value="1"';
@@ -952,7 +940,6 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         echo _x('status', 'Closed');
         echo '</label>';
     }
-
 
     public function reportVstackbarRespectedSlasByGroup($config = [])
     {
@@ -964,9 +951,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
          = ['dateinterval', 'allSlasWithTicket'];
 
         $this->sql_date_create = PluginMreportingCommon::getSQLDate(
-            "`glpi_tickets`.date",
+            '`glpi_tickets`.date',
             $config['delay'],
-            $config['randname']
+            $config['randname'],
         );
 
         if (
@@ -987,8 +974,8 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ")
                AND `glpi_tickets`.entities_id IN ({$this->where_entities})
                AND `glpi_tickets`.is_deleted = '0'
-               AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ")
-            GROUP BY `glpi_groups_tickets`.groups_id, respected_sla;";
+               AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ')
+            GROUP BY `glpi_groups_tickets`.groups_id, respected_sla;';
             $result = $DB->query($query);
 
             while ($data = $DB->fetchAssoc($result)) {
@@ -1005,13 +992,13 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             }
 
             // Ajout des '0' manquants :
-            $gp = new Group();
-            $gp_found = $gp->find([], "name"); //Tri précose qui n'est pas utile
+            $gp       = new Group();
+            $gp_found = $gp->find([], 'name'); //Tri précose qui n'est pas utile
 
             foreach ($gp_found as $group) {
                 $group_name = $group['name'];
                 if (!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name])) {
-                    $datas['labels2'][$group_name] = $group_name;
+                    $datas['labels2'][$group_name]                                                          = $group_name;
                     $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name] = 0;
                 }
                 if (!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name])) {
@@ -1044,13 +1031,13 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $_SESSION['mreporting_selector']['reportVstackbarNbTicketBySla'] = ['dateinterval', 'allSlasWithTicket'];
 
-        $datas = [];
+        $datas     = [];
         $tmp_datas = [];
 
         $this->sql_date_create = PluginMreportingCommon::getSQLDate(
-            "`glpi_tickets`.date",
+            '`glpi_tickets`.date',
             $config['delay'],
-            $config['randname']
+            $config['randname'],
         );
 
         if (
@@ -1066,8 +1053,8 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                      AND `glpi_tickets`.status IN (" . implode(',', array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray())) . ")
                      AND `glpi_tickets`.entities_id IN ({$this->where_entities})
                      AND `glpi_tickets`.is_deleted = '0'
-                     AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ")
-                     GROUP BY `glpi_slas`.name, respected_sla;";
+                     AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ')
+                     GROUP BY `glpi_slas`.name, respected_sla;';
 
             $result = $DB->query($query);
             while ($data = $DB->fetchAssoc($result)) {

@@ -30,36 +30,36 @@
 
 class PluginMreportingGraph
 {
-    const DEBUG_GRAPH = false;
-    protected $width  = 850;
+    public const DEBUG_GRAPH = false;
+    protected $width         = 850;
 
-   /**
-    * init Graph : Show Titles / Date selector
-    *
-    * @params $options ($rand, short_classname, title, desc, delay)
-   */
+    /**
+     * init Graph : Show Titles / Date selector
+     *
+     * @params $options ($rand, short_classname, title, desc, delay)
+    */
     public function initGraph($options)
     {
         global $LANG, $CFG_GLPI;
 
-        $width        = $this->width + 100;
-        $randname     = $options['randname'];
+        $width    = $this->width + 100;
+        $randname = $options['randname'];
 
         if (!$options['showHeader']) {
             echo "<div class='center'><div id='fig' style='width:{$width}px'>";
-           //Show global title
+            //Show global title
             if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
                 echo "<div class='graph_title'>";
                 echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
-                echo "</div>";
+                echo '</div>';
             }
-           //Show graph title
+            //Show graph title
             echo "<div class='graph_title'>";
             $gtype = $_REQUEST['gtype'];
 
             echo "<img src='" . Plugin::getWebDir('mreporting') . "/pics/chart-$gtype.png' class='title_pics' />";
             echo $options['title'];
-            echo "</div>";
+            echo '</div>';
 
             $desc = '';
             if (!empty($options['desc'])) {
@@ -68,7 +68,7 @@ class PluginMreportingGraph
                     isset($_SESSION['mreporting_values']['date1' . $randname])
                     && isset($_SESSION['mreporting_values']['date1' . $randname])
                 ) {
-                    $desc .= " - ";
+                    $desc .= ' - ';
                 }
             }
 
@@ -76,28 +76,28 @@ class PluginMreportingGraph
                 isset($_SESSION['mreporting_values']['date1' . $randname])
                 && isset($_SESSION['mreporting_values']['date1' . $randname])
             ) {
-                $desc .= Html::convdate($_SESSION['mreporting_values']['date1' . $randname]) . " / " .
+                $desc .= Html::convdate($_SESSION['mreporting_values']['date1' . $randname]) . ' / ' .
                 Html::convdate($_SESSION['mreporting_values']['date2' . $randname]);
             }
-            echo "<div class='graph_desc'>" . $desc . "</div>";
+            echo "<div class='graph_desc'>" . $desc . '</div>';
 
-           //Show date selector
+            //Show date selector
             echo "<div class='graph_navigation'>";
             PluginMreportingCommon::showSelector(
                 $_SESSION['mreporting_values']['date1' . $randname],
                 $_SESSION['mreporting_values']['date2' . $randname],
-                $randname
+                $randname,
             );
-            echo "</div>";
+            echo '</div>';
 
             $ex_func = explode($options['short_classname'], $options['randname']);
             if (!is_numeric($ex_func[0])) {
-                 $classname = $ex_func[0] . $options['short_classname'];
-                 $functionname = $ex_func[1];
+                $classname    = $ex_func[0] . $options['short_classname'];
+                $functionname = $ex_func[1];
 
-                 $config = PluginMreportingConfig::initConfigParams($functionname, $classname);
+                $config = PluginMreportingConfig::initConfigParams($functionname, $classname);
 
-                 // We check if a configuration is needed for the graph
+                // We check if a configuration is needed for the graph
                 if (method_exists(new $classname($config), 'needConfig')) {
                     $object = new $classname();
                     $object->needConfig($config);
@@ -105,7 +105,7 @@ class PluginMreportingGraph
             }
         }
 
-       //Script for graph display
+        //Script for graph display
         if ($randname !== false) {
             echo "<div class='graph' id='graph_content$randname'>";
 
@@ -116,22 +116,21 @@ class PluginMreportingGraph
         }
     }
 
-   /**
-    * Show an horizontal bar chart
-    *
-    * @param $raw_datas : an array with :
-    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
-    *    - key 'unit', ex : '%', 'Kg' (optionnal)
-    * @param $title : title of the chart
-    * @param $desc : description of the chart (optionnal)
-    * @param $show_label : behavior of the graph labels,
-    *                      values : 'hover', 'never', 'always' (optionnal)
-    * @param $export : keep only svg to export (optionnal)
-    * @return void
-    */
+    /**
+     * Show an horizontal bar chart
+     *
+     * @param $raw_datas : an array with :
+     *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
+     *    - key 'unit', ex : '%', 'Kg' (optionnal)
+     * @param $title : title of the chart
+     * @param $desc : description of the chart (optionnal)
+     * @param $show_label : behavior of the graph labels,
+     *                      values : 'hover', 'never', 'always' (optionnal)
+     * @param $export : keep only svg to export (optionnal)
+     * @return void
+     */
     public function showHbar($params, $dashboard = false, $width = false)
     {
-
         ob_start();
         if ($width !== false) {
             $this->width = $width;
@@ -147,25 +146,26 @@ class PluginMreportingGraph
             $$k = $v;
         }
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "delay" => $delay,
-            "export" => $export,
-            "short_classname" => $opt["short_classname"],
-            "showHeader" => $dashboard
+        $options = ['title'   => $title,
+            'desc'            => $desc,
+            'randname'        => $randname,
+            'delay'           => $delay,
+            'export'          => $export,
+            'short_classname' => $opt['short_classname'],
+            'showHeader'      => $dashboard,
         ];
 
         $this->initGraph($options);
 
         if (!isset($raw_datas['datas'])) {
-            echo "}</script>";
-            echo __("No data for this date range !", 'mreporting');
-            $end['opt']["export"] = false;
-            $end['opt']["randname"] = false;
-            $end['opt']["f_name"] = $opt['f_name'];
-            $end['opt']["class"] = $opt['class'];
+            echo '}</script>';
+            echo __('No data for this date range !', 'mreporting');
+            $end['opt']['export']   = false;
+            $end['opt']['randname'] = false;
+            $end['opt']['f_name']   = $opt['f_name'];
+            $end['opt']['class']    = $opt['class'];
             PluginMreportingCommon::endGraph($end, $dashboard);
+
             return false;
         }
 
@@ -184,7 +184,7 @@ class PluginMreportingGraph
         $height = 25 * $nb_bar + 50;
 
         $always = '';
-        $hover = '';
+        $hover  = '';
 
         $left = 240;
         if ($dashboard) {
@@ -195,7 +195,7 @@ class PluginMreportingGraph
         }
 
         $always = '';
-        $hover = '';
+        $hover  = '';
         PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
         $JS = <<<JAVASCRIPT
@@ -299,10 +299,10 @@ JAVASCRIPT;
         }
 
         $opt['randname'] = $randname;
-        $options = ["opt"     => $opt,
-            "export" => $export,
-            "datas"  => $datas,
-            "unit"   => $unit
+        $options         = ['opt' => $opt,
+            'export'              => $export,
+            'datas'               => $datas,
+            'unit'                => $unit,
         ];
         PluginMreportingCommon::endGraph($options, $dashboard);
 
@@ -315,21 +315,20 @@ JAVASCRIPT;
         }
     }
 
-
-   /**
-    * Show a pie chart
-    *
-    * @params :
-    * $raw_datas : an array with :
-    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
-    *    - key 'unit', ex : '%', 'Kg' (optionnal)
-    * @param $title : title of the chart
-    * @param $desc : description of the chart (optionnal)
-    * @param $show_label : behavior of the graph labels,
-    *                      values : 'hover', 'never', 'always' (optionnal)
-    * @param $export : keep only svg to export (optionnal)
-    * @return void
-    */
+    /**
+     * Show a pie chart
+     *
+     * @params :
+     * $raw_datas : an array with :
+     *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
+     *    - key 'unit', ex : '%', 'Kg' (optionnal)
+     * @param $title : title of the chart
+     * @param $desc : description of the chart (optionnal)
+     * @param $show_label : behavior of the graph labels,
+     *                      values : 'hover', 'never', 'always' (optionnal)
+     * @param $export : keep only svg to export (optionnal)
+     * @return void
+     */
     public function showPie($params, $dashboard = false, $width = false)
     {
         ob_start();
@@ -349,25 +348,26 @@ JAVASCRIPT;
             $$k = $v;
         }
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "export" => $export,
-            "delay" => $delay,
-            "short_classname" => $opt["short_classname"],
-            "showHeader" => $dashboard
+        $options = ['title'   => $title,
+            'desc'            => $desc,
+            'randname'        => $randname,
+            'export'          => $export,
+            'delay'           => $delay,
+            'short_classname' => $opt['short_classname'],
+            'showHeader'      => $dashboard,
         ];
 
         $this->initGraph($options);
 
         if (!isset($raw_datas['datas'])) {
-            echo "}</script>";
-            echo __("No data for this date range !", 'mreporting');
-            $end['opt']["export"] = false;
-            $end['opt']["randname"] = false;
-            $end['opt']["f_name"] = $opt['f_name'];
-            $end['opt']["class"] = $opt['class'];
+            echo '}</script>';
+            echo __('No data for this date range !', 'mreporting');
+            $end['opt']['export']   = false;
+            $end['opt']['randname'] = false;
+            $end['opt']['f_name']   = $opt['f_name'];
+            $end['opt']['class']    = $opt['class'];
             PluginMreportingCommon::endGraph($end, $dashboard);
+
             return false;
         }
 
@@ -383,10 +383,10 @@ JAVASCRIPT;
         if ($height < 300) {
             $height = 300;
         }
-        $always = '';
-        $hover = '';
-        $radius = 150;
-        $left = 10;
+        $always       = '';
+        $hover        = '';
+        $radius       = 150;
+        $left         = 10;
         $right_legend = 5;
 
         if ($dashboard) {
@@ -489,10 +489,10 @@ JAVASCRIPT;
         }
 
         $opt['randname'] = $randname;
-        $options = ["opt"     => $opt,
-            "export" => $export,
-            "datas"  => $datas,
-            "unit"   => $unit
+        $options         = ['opt' => $opt,
+            'export'              => $export,
+            'datas'               => $datas,
+            'unit'                => $unit,
         ];
 
         PluginMreportingCommon::endGraph($options, $dashboard);
@@ -506,25 +506,25 @@ JAVASCRIPT;
         }
     }
 
-   /**
-    * Show a sunburst chart (see : http://mbostock.github.com/protovis/ex/sunburst.html)
-    *
-    * @params :
-    * @param $raw_datas : an array with :
-    *    - key 'datas', ex :
-    *          array(
-    *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val),
-    *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
-    *          )
-    *    - key 'root', root label in graph center
-    *    - key 'unit', ex : '%', 'Kg' (optionnal)
-    * @param $title : title of the chart
-    * @param $desc : description of the chart (optionnal)
-    * @param $show_label : behavior of the graph labels,
-    *                      values : 'hover', 'never', 'always' (optionnal)
-    * @param $export : keep only svg to export (optionnal)
-    * @return void
-    */
+    /**
+     * Show a sunburst chart (see : http://mbostock.github.com/protovis/ex/sunburst.html)
+     *
+     * @params :
+     * @param $raw_datas : an array with :
+     *    - key 'datas', ex :
+     *          array(
+     *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val),
+     *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
+     *          )
+     *    - key 'root', root label in graph center
+     *    - key 'unit', ex : '%', 'Kg' (optionnal)
+     * @param $title : title of the chart
+     * @param $desc : description of the chart (optionnal)
+     * @param $show_label : behavior of the graph labels,
+     *                      values : 'hover', 'never', 'always' (optionnal)
+     * @param $export : keep only svg to export (optionnal)
+     * @return void
+     */
     public function showSunburst($params, $dashboard = false, $width = false)
     {
         ob_start();
@@ -543,31 +543,32 @@ JAVASCRIPT;
             $$k = $v;
         }
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "export" => $export,
-            "delay" => $delay,
-            "short_classname" => $opt["short_classname"],
-            "showHeader" => $dashboard
+        $options = ['title'   => $title,
+            'desc'            => $desc,
+            'randname'        => $randname,
+            'export'          => $export,
+            'delay'           => $delay,
+            'short_classname' => $opt['short_classname'],
+            'showHeader'      => $dashboard,
         ];
 
         $this->initGraph($options);
 
         if (isset($_REQUEST['export'])) {
-            $export_txt = "true";
+            $export_txt = 'true';
         } else {
-            $export_txt =  "false";
+            $export_txt = 'false';
         }
 
         if (!isset($raw_datas['datas'])) {
-            echo "}</script>";
-            echo __("No data for this date range !", 'mreporting');
-            $end['opt']["export"] = false;
-            $end['opt']["randname"] = false;
-            $end['opt']["f_name"] = $opt['f_name'];
-            $end['opt']["class"] = $opt['class'];
+            echo '}</script>';
+            echo __('No data for this date range !', 'mreporting');
+            $end['opt']['export']   = false;
+            $end['opt']['randname'] = false;
+            $end['opt']['f_name']   = $opt['f_name'];
+            $end['opt']['class']    = $opt['class'];
             PluginMreportingCommon::endGraph($end, $dashboard);
+
             return false;
         }
 
@@ -585,16 +586,16 @@ JAVASCRIPT;
         $datas = $this->initDatasTree($datas, $unit);
 
         $always = '';
-        $hover = '';
+        $hover  = '';
         PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
         $height = 450;
-        $width = $this->width;
-        $top = 10;
-        $left = 10;
+        $width  = $this->width;
+        $top    = 10;
+        $left   = 10;
         if ($dashboard) {
-            $top = 25;
+            $top    = 25;
             $height = 380;
-            $left = 50;
+            $left   = 50;
         }
 
         $JS = <<<JAVASCRIPT
@@ -763,12 +764,12 @@ JAVASCRIPT;
         }
 
         $opt['randname'] = $randname;
-        $options = ["opt"        => $opt,
-            "export"    => $export,
-            "datas"     => $datas,
-            "flip_data" => $flip_data,
-            "labels2"   => $labels2,
-            "unit"      => $unit
+        $options         = ['opt' => $opt,
+            'export'              => $export,
+            'datas'               => $datas,
+            'flip_data'           => $flip_data,
+            'labels2'             => $labels2,
+            'unit'                => $unit,
         ];
         PluginMreportingCommon::endGraph($options, $dashboard);
 
@@ -781,20 +782,20 @@ JAVASCRIPT;
         }
     }
 
-   /**
-    * Show a horizontal grouped bar chart
-    *
-    * @param $raw_datas : an array with :
-    *    - key 'datas', ex : array( 'test1' => array(15,20,50), 'test2' => array(36,15,22))
-    *    - key 'labels2', ex : array('label 1', 'label 2', 'label 3')
-    *    - key 'unit', ex : '%', 'Kg' (optionnal)
-    * @param $title : title of the chart
-    * @param $desc : description of the chart (optionnal)
-    * @param $show_label : behavior of the graph labels,
-    *                      values : 'hover', 'never', 'always' (optionnal)
-    * @param $export : keep only svg to export (optionnal)
-    * @return void
-    */
+    /**
+     * Show a horizontal grouped bar chart
+     *
+     * @param $raw_datas : an array with :
+     *    - key 'datas', ex : array( 'test1' => array(15,20,50), 'test2' => array(36,15,22))
+     *    - key 'labels2', ex : array('label 1', 'label 2', 'label 3')
+     *    - key 'unit', ex : '%', 'Kg' (optionnal)
+     * @param $title : title of the chart
+     * @param $desc : description of the chart (optionnal)
+     * @param $show_label : behavior of the graph labels,
+     *                      values : 'hover', 'never', 'always' (optionnal)
+     * @param $export : keep only svg to export (optionnal)
+     * @return void
+     */
     public function showHgbar($params, $dashboard = false, $width = false)
     {
         $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -812,25 +813,26 @@ JAVASCRIPT;
             $$k = $v;
         }
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "export" => $export,
-            "delay" => $delay,
-            "short_classname" => $opt["short_classname"],
-            "showHeader" => $dashboard
+        $options = ['title'   => $title,
+            'desc'            => $desc,
+            'randname'        => $randname,
+            'export'          => $export,
+            'delay'           => $delay,
+            'short_classname' => $opt['short_classname'],
+            'showHeader'      => $dashboard,
         ];
 
         $this->initGraph($options);
 
         if (!isset($raw_datas['datas'])) {
-            echo "}</script>";
-            echo __("No data for this date range !", 'mreporting');
-            $end['opt']["export"] = false;
-            $end['opt']["randname"] = false;
-            $end['opt']["f_name"] = $opt['f_name'];
-            $end['opt']["class"] = $opt['class'];
+            echo '}</script>';
+            echo __('No data for this date range !', 'mreporting');
+            $end['opt']['export']   = false;
+            $end['opt']['randname'] = false;
+            $end['opt']['f_name']   = $opt['f_name'];
+            $end['opt']['class']    = $opt['class'];
             PluginMreportingCommon::endGraph($end, $dashboard);
+
             return false;
         }
 
@@ -838,18 +840,18 @@ JAVASCRIPT;
             $unit = $raw_datas['unit'];
         }
 
-        $datas = $raw_datas['datas'];
+        $datas   = $raw_datas['datas'];
         $labels2 = $raw_datas['labels2'];
-        $datas = $this->initDatasMultiple($datas, $labels2, $unit);
+        $datas   = $this->initDatasMultiple($datas, $labels2, $unit);
 
-        $nb_bar = count($datas);
+        $nb_bar  = count($datas);
         $nb_bar2 = count($labels2);
-        $height = 28 * $nb_bar * $nb_bar2 + 50;
+        $height  = 28 * $nb_bar * $nb_bar2 + 50;
 
         $always = '';
-        $hover = '';
+        $hover  = '';
         PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
-        $left = 240;
+        $left       = 240;
         $bottomAxis = 5;
         if ($dashboard) {
             $left = 100;
@@ -984,12 +986,12 @@ JAVASCRIPT;
         }
 
         $opt['randname'] = $randname;
-        $options = ["opt"        => $opt,
-            "export"    => $export,
-            "datas"     => $datas,
-            "labels2"   => $labels2,
-            "flip_data" => $flip_data,
-            "unit"      => $unit
+        $options         = ['opt' => $opt,
+            'export'              => $export,
+            'datas'               => $datas,
+            'labels2'             => $labels2,
+            'flip_data'           => $flip_data,
+            'unit'                => $unit,
         ];
         PluginMreportingCommon::endGraph($options, $dashboard);
 
@@ -1002,21 +1004,20 @@ JAVASCRIPT;
         }
     }
 
-
-   /**
-    * Show a horizontal grouped bar chart
-    *
-    * @param $raw_datas : an array with :
-    *    - key 'datas', ex : array( 'test1' => array(15,20,50), 'test2' => array(36,15,22))
-    *    - key 'labels2', ex : array('label 1', 'label 2', 'label 3')
-    *    - key 'unit', ex : '%', 'Kg' (optionnal)
-    * @param $title : title of the chart
-    * @param $desc : description of the chart (optionnal)
-    * @param $show_label : behavior of the graph labels,
-    *                      values : 'hover', 'never', 'always' (optionnal)
-    * @param $export : keep only svg to export (optionnal)
-    * @return void
-    */
+    /**
+     * Show a horizontal grouped bar chart
+     *
+     * @param $raw_datas : an array with :
+     *    - key 'datas', ex : array( 'test1' => array(15,20,50), 'test2' => array(36,15,22))
+     *    - key 'labels2', ex : array('label 1', 'label 2', 'label 3')
+     *    - key 'unit', ex : '%', 'Kg' (optionnal)
+     * @param $title : title of the chart
+     * @param $desc : description of the chart (optionnal)
+     * @param $show_label : behavior of the graph labels,
+     *                      values : 'hover', 'never', 'always' (optionnal)
+     * @param $export : keep only svg to export (optionnal)
+     * @return void
+     */
     public function showVstackbar($params, $dashboard = false, $width = false)
     {
         ob_start();
@@ -1035,25 +1036,26 @@ JAVASCRIPT;
             $$k = $v;
         }
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "export" => $export,
-            "delay" => $delay,
-            "short_classname" => $opt["short_classname"],
-            "showHeader" => $dashboard
+        $options = ['title'   => $title,
+            'desc'            => $desc,
+            'randname'        => $randname,
+            'export'          => $export,
+            'delay'           => $delay,
+            'short_classname' => $opt['short_classname'],
+            'showHeader'      => $dashboard,
         ];
 
         $this->initGraph($options);
 
         if (!isset($raw_datas['datas'])) {
-            echo "}</script>";
-            echo __("No data for this date range !", 'mreporting');
-            $end['opt']["export"] = false;
-            $end['opt']["randname"] = false;
-            $end['opt']["f_name"] = $opt['f_name'];
-            $end['opt']["class"] = $opt['class'];
+            echo '}</script>';
+            echo __('No data for this date range !', 'mreporting');
+            $end['opt']['export']   = false;
+            $end['opt']['randname'] = false;
+            $end['opt']['f_name']   = $opt['f_name'];
+            $end['opt']['class']    = $opt['class'];
             PluginMreportingCommon::endGraph($end, $dashboard);
+
             return false;
         }
 
@@ -1061,15 +1063,15 @@ JAVASCRIPT;
             $unit = $raw_datas['unit'];
         }
 
-        $datas = $raw_datas['datas'];
+        $datas   = $raw_datas['datas'];
         $labels2 = $raw_datas['labels2'];
-        $datas = $this->initDatasMultiple($datas, $labels2, $unit, true);
+        $datas   = $this->initDatasMultiple($datas, $labels2, $unit, true);
 
-        $nb_bar = count($datas);
+        $nb_bar  = count($datas);
         $nb_bar2 = count($labels2);
 
         $always = '';
-        $hover = '';
+        $hover  = '';
         PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
         $height = 20 * $nb_bar + 50;
@@ -1211,12 +1213,12 @@ JAVASCRIPT;
         }
 
         $opt['randname'] = $randname;
-        $options = ["opt"        => $opt,
-            "export"    => $export,
-            "datas"     => $datas,
-            "labels2"   => $labels2,
-            "flip_data" => $flip_data,
-            "unit"      => $unit
+        $options         = ['opt' => $opt,
+            'export'              => $export,
+            'datas'               => $datas,
+            'labels2'             => $labels2,
+            'flip_data'           => $flip_data,
+            'unit'                => $unit,
         ];
         PluginMreportingCommon::endGraph($options, $dashboard);
 
@@ -1229,21 +1231,21 @@ JAVASCRIPT;
         }
     }
 
-   /**
-    * Show a Area chart
-    *
-    * @param $raw_datas : an array with :
-    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
-    *    - key 'unit', ex : '%', 'Kg' (optionnal)
-    *    - key 'spline', curves line (boolean - optionnal)
-    * @param $title : title of the chart
-    * @param $desc : description of the chart (optionnal)
-    * @param $show_label : behavior of the graph labels,
-    *                      values : 'hover', 'never', 'always' (optionnal)
-    * @param $export : keep only svg to export (optionnal)
-    * @param $area : show plain chart instead only a line (optionnal)
-    * @return void
-    */
+    /**
+     * Show a Area chart
+     *
+     * @param $raw_datas : an array with :
+     *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
+     *    - key 'unit', ex : '%', 'Kg' (optionnal)
+     *    - key 'spline', curves line (boolean - optionnal)
+     * @param $title : title of the chart
+     * @param $desc : description of the chart (optionnal)
+     * @param $show_label : behavior of the graph labels,
+     *                      values : 'hover', 'never', 'always' (optionnal)
+     * @param $export : keep only svg to export (optionnal)
+     * @param $area : show plain chart instead only a line (optionnal)
+     * @return void
+     */
     public function showArea($params, $dashboard = false, $width = false)
     {
         ob_start();
@@ -1268,25 +1270,26 @@ JAVASCRIPT;
             $area = $params['area'];
         }
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "export" => $export,
-            "delay" => $delay,
-            "short_classname" => $opt["short_classname"],
-            "showHeader" => $dashboard
+        $options = ['title'   => $title,
+            'desc'            => $desc,
+            'randname'        => $randname,
+            'export'          => $export,
+            'delay'           => $delay,
+            'short_classname' => $opt['short_classname'],
+            'showHeader'      => $dashboard,
         ];
 
         $this->initGraph($options);
 
         if (!isset($raw_datas['datas'])) {
-            echo "}</script>";
-            echo __("No data for this date range !", 'mreporting');
-            $end['opt']["export"] = false;
-            $end['opt']["randname"] = false;
-            $end['opt']["f_name"] = $opt['f_name'];
-            $end['opt']["class"] = $opt['class'];
+            echo '}</script>';
+            echo __('No data for this date range !', 'mreporting');
+            $end['opt']['export']   = false;
+            $end['opt']['randname'] = false;
+            $end['opt']['f_name']   = $opt['f_name'];
+            $end['opt']['class']    = $opt['class'];
             PluginMreportingCommon::endGraph($end, $dashboard);
+
             return false;
         }
 
@@ -1298,17 +1301,17 @@ JAVASCRIPT;
         $datas = $this->initDatasSimple($datas, $unit);
 
         $always = '';
-        $hover = '';
+        $hover  = '';
         PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
         $height = 350;
-        $width = $this->width;
+        $width  = $this->width;
         $bottom = 80;
-        $left = 20;
-        $right = 50;
+        $left   = 20;
+        $right  = 50;
         if ($dashboard) {
             $height = 340;
-            $width = 395;
-            $left = 30;
+            $width  = 395;
+            $left   = 30;
         }
 
         $JS = <<<JAVASCRIPT
@@ -1442,10 +1445,10 @@ JAVASCRIPT;
         }
 
         $opt['randname'] = $randname;
-        $options = ["opt"        => $opt,
-            "export"    => $export,
-            "datas"     => $datas,
-            "unit"      => $unit
+        $options         = ['opt' => $opt,
+            'export'              => $export,
+            'datas'               => $datas,
+            'unit'                => $unit,
         ];
         PluginMreportingCommon::endGraph($options, $dashboard);
 
@@ -1458,20 +1461,20 @@ JAVASCRIPT;
         }
     }
 
-   /**
-    * Show a Line chart
-    *
-    * @param $raw_datas : an array with :
-    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
-    *    - key 'unit', ex : '%', 'Kg' (optionnal)
-    *    - key 'spline', curves line (boolean - optionnal)
-    * @param $title : title of the chart
-    * @param $desc : description of the chart (optionnal)
-    * @param $show_label : behavior of the graph labels,
-    *                      values : 'hover', 'never', 'always' (optionnal)
-    * @param $export : keep only svg to export (optionnal)
-    * @return void
-    */
+    /**
+     * Show a Line chart
+     *
+     * @param $raw_datas : an array with :
+     *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
+     *    - key 'unit', ex : '%', 'Kg' (optionnal)
+     *    - key 'spline', curves line (boolean - optionnal)
+     * @param $title : title of the chart
+     * @param $desc : description of the chart (optionnal)
+     * @param $show_label : behavior of the graph labels,
+     *                      values : 'hover', 'never', 'always' (optionnal)
+     * @param $export : keep only svg to export (optionnal)
+     * @return void
+     */
     public function showLine($params, $dashboard = false, $width = false)
     {
         $params['area'] = false;
@@ -1513,25 +1516,26 @@ JAVASCRIPT;
             $$k = $v;
         }
 
-        $options = ["title" => $title,
-            "desc" => $desc,
-            "randname" => $randname,
-            "export" => $export,
-            "delay" => $delay,
-            "short_classname" => $opt["short_classname"],
-            "showHeader" => $dashboard
+        $options = ['title'   => $title,
+            'desc'            => $desc,
+            'randname'        => $randname,
+            'export'          => $export,
+            'delay'           => $delay,
+            'short_classname' => $opt['short_classname'],
+            'showHeader'      => $dashboard,
         ];
 
         $this->initGraph($options);
 
         if (!isset($raw_datas['datas'])) {
-            echo "}</script>";
-            echo __("No data for this date range !", 'mreporting');
-            $end['opt']["export"] = false;
-            $end['opt']["randname"] = false;
-            $end['opt']["f_name"] = $opt['f_name'];
-            $end['opt']["class"] = $opt['class'];
+            echo '}</script>';
+            echo __('No data for this date range !', 'mreporting');
+            $end['opt']['export']   = false;
+            $end['opt']['randname'] = false;
+            $end['opt']['f_name']   = $opt['f_name'];
+            $end['opt']['class']    = $opt['class'];
             PluginMreportingCommon::endGraph($end, $dashboard);
+
             return false;
         }
 
@@ -1544,12 +1548,12 @@ JAVASCRIPT;
             $unit = $raw_datas['unit'];
         }
 
-        $datas = $raw_datas['datas'];
+        $datas   = $raw_datas['datas'];
         $labels2 = $raw_datas['labels2'];
-        $datas = $this->initDatasMultiple($datas, $labels2, $unit);
+        $datas   = $this->initDatasMultiple($datas, $labels2, $unit);
 
         $always = '';
-        $hover = '';
+        $hover  = '';
         PluginMreportingConfig::checkVisibility($show_label, $always, $hover);
 
         $nb_bar = count($datas);
@@ -1708,12 +1712,12 @@ JAVASCRIPT;
         }
 
         $opt['randname'] = $randname;
-        $options = ["opt"        => $opt,
-            "export"    => $export,
-            "datas"     => $datas,
-            "labels2"   => $labels2,
-            "flip_data" => $flip_data,
-            "unit"      => $unit
+        $options         = ['opt' => $opt,
+            'export'              => $export,
+            'datas'               => $datas,
+            'labels2'             => $labels2,
+            'flip_data'           => $flip_data,
+            'unit'                => $unit,
         ];
         PluginMreportingCommon::endGraph($options, $dashboard);
 
@@ -1726,19 +1730,19 @@ JAVASCRIPT;
         }
     }
 
-   /**
-    * Show a multi-line charts
-    *
-    * @param $raw_datas : an array with :
-    *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
-    *    - key 'unit', ex : '%', 'Kg' (optionnal)
-    * @param $title : title of the chart
-    * @param $desc : description of the chart (optionnal)
-    * @param $show_label : behavior of the graph labels,
-    *                      values : 'hover', 'never', 'always' (optionnal)
-    * @param $export : keep only svg to export (optionnal)
-    * @return void
-    */
+    /**
+     * Show a multi-line charts
+     *
+     * @param $raw_datas : an array with :
+     *    - key 'datas', ex : array( 'test1' => 15, 'test2' => 25)
+     *    - key 'unit', ex : '%', 'Kg' (optionnal)
+     * @param $title : title of the chart
+     * @param $desc : description of the chart (optionnal)
+     * @param $show_label : behavior of the graph labels,
+     *                      values : 'hover', 'never', 'always' (optionnal)
+     * @param $export : keep only svg to export (optionnal)
+     * @return void
+     */
     public function showGline($params, $dashboard = false, $width = false)
     {
         $params['area'] = false;
@@ -1749,16 +1753,15 @@ JAVASCRIPT;
         }
     }
 
-   /**
-    * Compile simple datas
-    *
-    * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
-    * @param $unit, ex : '%', 'Kg' (optionnal)
-    * @return void
-    */
+    /**
+     * Compile simple datas
+     *
+     * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
+     * @param $unit, ex : '%', 'Kg' (optionnal)
+     * @return void
+     */
     public function initDatasSimple($datas, $unit = '', $links = [])
     {
-
         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
 
         $labels = array_keys($datas);
@@ -1795,28 +1798,27 @@ JAVASCRIPT;
         }
 
         echo "var max = $max;";
-        echo "var n = " . count($values) . ";";
+        echo 'var n = ' . count($values) . ';';
 
         return $datas;
     }
 
-   /**
-    * Compile multiple datas
-    *
-    * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
-    * @param $labels2
-    * @param $unit, ex : '%', 'Kg' (optionnal)
-    * @param $stacked : if stacked graph, option to compile the max value
-    * @return void
-    */
+    /**
+     * Compile multiple datas
+     *
+     * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
+     * @param $labels2
+     * @param $unit, ex : '%', 'Kg' (optionnal)
+     * @param $stacked : if stacked graph, option to compile the max value
+     * @return void
+     */
     public function initDatasMultiple($datas, $labels2, $unit = '', $stacked = false)
     {
-
         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
 
         $labels = array_keys($datas);
         $values = array_values($datas);
-        $max = 0;
+        $max    = 0;
 
         if ($stacked) {
             $tmp = [];
@@ -1835,7 +1837,7 @@ JAVASCRIPT;
             }
         }
 
-       //merge missing keys
+        //merge missing keys
         $empty_values = array_fill_keys(array_keys($labels2), 0);
         foreach ($values as $k => $v) {
             $values[$k] = array_replace($empty_values, $v);
@@ -1845,12 +1847,12 @@ JAVASCRIPT;
         foreach ($values as $line) {
             $out .= "\t[";
             foreach ($line as $label2 => $value) {
-                $out .= addslashes($value) . ",";
+                $out .= addslashes($value) . ',';
                 if ($value > $max && !$stacked) {
                     $max = $value;
                 }
             }
-            $out = substr($out, 0, -1) . "";
+            $out = substr($out, 0, -1) . '';
             $out .= "],\n";
         }
         $out = substr($out, 0, -2) . "\n";
@@ -1878,39 +1880,33 @@ JAVASCRIPT;
             $max = 110;
         }
 
-        echo "var n = " . count($labels) . ";";
-        echo "var m = " . count($labels2) . ";";
+        echo 'var n = ' . count($labels) . ';';
+        echo 'var m = ' . count($labels2) . ';';
         echo "var max = $max;";
 
         return $datas;
     }
 
-
-   /**
-    * Compile Tree datas
-    *
-    * @param $datas, ex :
-    *          array(
-    *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val),
-    *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
-    *          )
-    * @param $unit, ex : '%', 'Kg' (optionnal)
-    * @return void
-    */
+    /**
+     * Compile Tree datas
+     *
+     * @param $datas, ex :
+     *          array(
+     *             'key1' => array('key1.1' => val, 'key1.2' => val, 'key1.3' => val),
+     *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
+     *          )
+     * @param $unit, ex : '%', 'Kg' (optionnal)
+     * @return void
+     */
     public function initDatasTree($datas, $unit = '')
     {
-
         $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
 
-        echo "var datas = " . json_encode($datas) . ";";
-        echo "var sum = " . PluginMreportingCommon::getArraySum($datas) . ";";
+        echo 'var datas = ' . json_encode($datas) . ';';
+        echo 'var sum = ' . PluginMreportingCommon::getArraySum($datas) . ';';
 
         return $datas;
     }
 
-
-
-    public function legend($datas)
-    {
-    }
+    public function legend($datas) {}
 }

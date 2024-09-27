@@ -28,21 +28,21 @@
  * -------------------------------------------------------------------------
  */
 
-$USEDBREPLICATE         = 1;
-$DBCONNECTION_REQUIRED  = 0; // Not really a big SQL request
+$USEDBREPLICATE        = 1;
+$DBCONNECTION_REQUIRED = 0; // Not really a big SQL request
 
-include("../../../inc/includes.php");
+include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-header("Content-Type: text/html; charset=UTF-8");
+header('Content-Type: text/html; charset=UTF-8');
 Html::header_nocache();
 
 //if (PluginMreportingPreference::atLeastOneTemplateExists()) {
 //      $template = PluginMreportingPreference::checkPreferenceTemplateValue(Session::getLoginUserID());
 //   if ($template) {
-      $common = new PluginMreportingCommon();
-      $common->export($_REQUEST);
+$common = new PluginMreportingCommon();
+$common->export($_REQUEST);
 //   } else {
 //      Session::addMessageAfterRedirect(__("Please, select a model in your preferences", 'mreporting'), false, ERROR);
 //      Html::redirect("../../../front/preference.php");

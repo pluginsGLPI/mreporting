@@ -30,13 +30,13 @@
 
 class PluginMreportingTag extends PluginMreportingBaseclass
 {
-   /**
-    * Default pie graph for the use of tags.
-    * For all linked itemtypes without filter.
-    *
-    * @param array   $config (optionnal)
-    * @return array  $datas array of query results (tag => count number)
-    */
+    /**
+     * Default pie graph for the use of tags.
+     * For all linked itemtypes without filter.
+     *
+     * @param array   $config (optionnal)
+     * @return array  $datas array of query results (tag => count number)
+     */
     public function reportPieTag($config = [])
     {
         global $DB;
@@ -49,26 +49,26 @@ class PluginMreportingTag extends PluginMreportingBaseclass
 
         $datas = [];
 
-        $result = $DB->query("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name as name
+        $result = $DB->query('SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name as name
                      FROM glpi_plugin_tag_tagitems
                      LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
                      GROUP BY plugin_tag_tags_id
-                     ORDER BY count_tag DESC");
+                     ORDER BY count_tag DESC');
         while ($datas_tag = $DB->fetchAssoc($result)) {
-            $label = $datas_tag['name'];
+            $label                  = $datas_tag['name'];
             $datas['datas'][$label] = $datas_tag['count_tag'];
         }
 
         return $datas;
     }
 
-   /**
-    * Pie graph for the use of tags in Ticket,
-    * with itilcategory filter.
-    *
-    * @param array   $config (optionnal)
-    * @return array  $datas array of query results (tag => count number)
-    */
+    /**
+     * Pie graph for the use of tags in Ticket,
+     * with itilcategory filter.
+     *
+     * @param array   $config (optionnal)
+     * @return array  $datas array of query results (tag => count number)
+     */
     public function reportPieTagOnTicket($config = [])
     {
         global $DB;
@@ -80,7 +80,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
         $_SESSION['mreporting_selector'][__FUNCTION__] = ['category'];
 
         $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ?
-                     " AND glpi_tickets.itilcategories_id = " . $_SESSION['mreporting_values']['itilcategories_id'] : "";
+                     ' AND glpi_tickets.itilcategories_id = ' . $_SESSION['mreporting_values']['itilcategories_id'] : '';
 
         $datas = [];
 
@@ -93,7 +93,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
                            GROUP BY plugin_tag_tags_id
                            ORDER BY count_tag DESC");
         while ($datas_tag = $DB->fetchAssoc($result)) {
-            $label = $datas_tag['name'];
+            $label                  = $datas_tag['name'];
             $datas['datas'][$label] = $datas_tag['count_tag'];
         }
 

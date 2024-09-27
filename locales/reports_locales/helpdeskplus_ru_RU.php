@@ -31,110 +31,110 @@
 global $LANG;
 
 $LANG['plugin_mreporting']['Helpdeskplus'] = [
-   'title'         => 'Служба поддержки расширенная',
+    'title' => 'Служба поддержки расширенная',
 
-   // MISC LOCALES
-   'backlogs'      => "Задержки",
-   'opened'        => "Открытые",
-   'period'        => "Период",
-   'backlogstatus' => "Отображаемый статус",
-   'slaobserved'   => "SLA отмечен",
-   'slanotobserved'=> "SLA не отмечен",
-   'observed'      => "отмечен",
-   'notobserved'   => "не отмечен",
-
-
-   // SELECTOR
-   'selector'      => [
-      'slas'       => "SLAS",
-      'categories' => "Категории",
-   ],
+    // MISC LOCALES
+    'backlogs'       => 'Задержки',
+    'opened'         => 'Открытые',
+    'period'         => 'Период',
+    'backlogstatus'  => 'Отображаемый статус',
+    'slaobserved'    => 'SLA отмечен',
+    'slanotobserved' => 'SLA не отмечен',
+    'observed'       => 'отмечен',
+    'notobserved'    => 'не отмечен',
 
 
-   // GENERAL REPORTS
-   'reportGlineBacklogs' => [
-      'title'    => "Задержки",
-      'desc'     => "",
-      'category' => "Общие",
-   ],
-
-   'reportVstackbarLifetime' => [
-      'title'    => "Возраст заявки",
-      'desc'     => "",
-      'category' => "Общие",
-   ],
-
-   'reportVstackbarTicketsgroups' => [
-      'title'    => "Заявки по группам",
-      'desc'     => "",
-      'category' => "Общие",
-   ],
-
-   'reportVstackbarTicketstech' => [
-      'title'    => "Заявки по специалисту",
-      'desc'     => "",
-      'category' => "Общие",
-   ],
-
-   'reportVstackbarWorkflow' => [
-      'title'    => "Ориентированные очереди",
-      'desc'     => "",
-      'category' => "Общие",
-   ],
-
-   'reportHbarTopcategory' => [
-      'title'    => "ТОП категорий",
-      'desc'     => "",
-      'category' => "Общие",
-   ],
-
-   'reportHbarTopapplicant' => [
-      'title'    => "ТОП групп заказчиков",
-      'desc'     => "",
-      'category' => "Общие",
-   ],
-
-   'reportVstackbarGroupChange' => [
-      'title'    => "Количество групп изменений",
-      'desc'     => "",
-      'category' => "Общие",
-   ],
-
-   'reportLineActiontimeVsSolvedelay' => [
-      'title'    => "Сравнение задержки активного времени заявки и решения",
-      'desc'     => "",
-      'category' => "Общие",
-   ],
+    // SELECTOR
+    'selector' => [
+        'slas'       => 'SLAS',
+        'categories' => 'Категории',
+    ],
 
 
-   // SLA REPORTS
-   'reportVstackbarNbTicketBySla' => [
-      'title'    => "Количество заявок по SLA",
-      'desc'     => "",
-      'category' => "Согласно SLA",
-   ],
+    // GENERAL REPORTS
+    'reportGlineBacklogs' => [
+        'title'    => 'Задержки',
+        'desc'     => '',
+        'category' => 'Общие',
+    ],
 
-   'reportGlineNbTicketBySla' => [
-      'title'    => "Динамика заявки согласно SLA",
-      'desc'     => "",
-      'category' => "Согласно SLA",
-   ],
+    'reportVstackbarLifetime' => [
+        'title'    => 'Возраст заявки',
+        'desc'     => '',
+        'category' => 'Общие',
+    ],
 
-   'reportHgbarRespectedSlasByTopCategory' => [
-      'title'    => "Заявки согласно SLA по категориям",
-      'desc'     => "",
-      'category' => "Согласно SLA",
-   ],
+    'reportVstackbarTicketsgroups' => [
+        'title'    => 'Заявки по группам',
+        'desc'     => '',
+        'category' => 'Общие',
+    ],
 
-   'reportHgbarRespectedSlasByTechnician' => [
-      'title'    => "Заявки согласно SLA по специалистам",
-      'desc'     => "",
-      'category' => "Согласно SLA",
-   ],
+    'reportVstackbarTicketstech' => [
+        'title'    => 'Заявки по специалисту',
+        'desc'     => '',
+        'category' => 'Общие',
+    ],
 
-   'reportVstackbarRespectedSlasByGroup' => [
-      'title'    => "Заявки согласно SLA отобранные по группам",
-      'desc'     => "",
-      'category' => "Согласно SLA",
-   ],
+    'reportVstackbarWorkflow' => [
+        'title'    => 'Ориентированные очереди',
+        'desc'     => '',
+        'category' => 'Общие',
+    ],
+
+    'reportHbarTopcategory' => [
+        'title'    => 'ТОП категорий',
+        'desc'     => '',
+        'category' => 'Общие',
+    ],
+
+    'reportHbarTopapplicant' => [
+        'title'    => 'ТОП групп заказчиков',
+        'desc'     => '',
+        'category' => 'Общие',
+    ],
+
+    'reportVstackbarGroupChange' => [
+        'title'    => 'Количество групп изменений',
+        'desc'     => '',
+        'category' => 'Общие',
+    ],
+
+    'reportLineActiontimeVsSolvedelay' => [
+        'title'    => 'Сравнение задержки активного времени заявки и решения',
+        'desc'     => '',
+        'category' => 'Общие',
+    ],
+
+
+    // SLA REPORTS
+    'reportVstackbarNbTicketBySla' => [
+        'title'    => 'Количество заявок по SLA',
+        'desc'     => '',
+        'category' => 'Согласно SLA',
+    ],
+
+    'reportGlineNbTicketBySla' => [
+        'title'    => 'Динамика заявки согласно SLA',
+        'desc'     => '',
+        'category' => 'Согласно SLA',
+    ],
+
+    'reportHgbarRespectedSlasByTopCategory' => [
+        'title'    => 'Заявки согласно SLA по категориям',
+        'desc'     => '',
+        'category' => 'Согласно SLA',
+    ],
+
+    'reportHgbarRespectedSlasByTechnician' => [
+        'title'    => 'Заявки согласно SLA по специалистам',
+        'desc'     => '',
+        'category' => 'Согласно SLA',
+    ],
+
+    'reportVstackbarRespectedSlasByGroup' => [
+        'title'    => 'Заявки согласно SLA отобранные по группам',
+        'desc'     => '',
+        'category' => 'Согласно SLA',
+    ],
 ];

@@ -28,8 +28,8 @@
  * -------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
-header("Content-Type: text/html; charset=UTF-8");
+include('../../../inc/includes.php');
+header('Content-Type: text/html; charset=UTF-8');
 Html::header_nocache();
 
 Session::checkLoginUser();
@@ -38,16 +38,16 @@ if (
     isset($_POST['ext'])
       && !empty($_POST['ext'])
 ) {
-    if ($_POST['ext'] == "odt") {
-        echo "&nbsp;";
-        $option = [];
-        $option[1] = __("With data", 'mreporting');
-        $option[0] = __("Without data", 'mreporting');
-        Dropdown::showFromArray("withdata", $option, []);
+    if ($_POST['ext'] == 'odt') {
+        echo '&nbsp;';
+        $option    = [];
+        $option[1] = __('With data', 'mreporting');
+        $option[0] = __('Without data', 'mreporting');
+        Dropdown::showFromArray('withdata', $option, []);
     }
 
-    if ($_POST['ext'] == "svg") {
-       //close previous form
+    if ($_POST['ext'] == 'svg') {
+        //close previous form
         Html::Closeform();
 
         $randname = $_POST['randname'];
