@@ -501,7 +501,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
             $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
         }
-
+    
         $date1 = (new DateTime($_SESSION['mreporting_values']['date1' . $config['randname']]))
                     ->modify('first day of this month');
         $date2 = (new DateTime($_SESSION['mreporting_values']['date2' . $config['randname']]))
@@ -520,7 +520,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $sql_create = "SELECT
                 DISTINCT MONTH(tt.date) as month,
                 YEAR(tt.date) as year,
-                CONCAT(MONTHNAME(tt.date), ' ', YEAR(tt.date)) AS fulldate,
+                CONCAT(YEAR(tt.date), '-', MONTH(tt.date)) AS fulldate,
                 CONCAT(u.firstname, ' ', u.realname) AS completename,
                 u.name as name,
                 u.id as u_id,
@@ -542,9 +542,10 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             GROUP BY name, fulldate
             ORDER BY tt.date, name";
         $res = $DB->query($sql_create);
+        $lang = $_SESSION['glpilanguage'] ?? 'en_GB';
         while ($data = $DB->fetchAssoc($res)) {
             $column = $data['completename'];
-            $month_name = $data['fulldate'];
+            $month_name = IntlDateFormatter::formatObject(new Datetime($data['fulldate']), 'MMMM yyyy', $lang);
             if (!isset($tab[$column][$month_name])) {
                 $tab[$column][$month_name] = 0;
             }
@@ -555,7 +556,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $datas = [];
         foreach ($tab as $name => $data) {
             foreach ($period as $date) {
-                $date_name = $date->format('F Y');
+                $date_name = IntlDateFormatter::formatObject($date, 'MMMM yyyy', $lang);
                 $datas['datas'][$date_name][] = $data[$date_name] ?? 0;
             }
             $datas['labels2'][] = $name;
