@@ -501,7 +501,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
             $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
         }
-        
+    
         $date1 = (new DateTime($_SESSION['mreporting_values']['date1' . $config['randname']]))
                     ->modify('first day of this month');
         $date2 = (new DateTime($_SESSION['mreporting_values']['date2' . $config['randname']]))
@@ -509,8 +509,8 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $period = new DatePeriod($date1, DateInterval::createFromDateString('1 month'), $date2);
 
         $sql_users = "SELECT DISTINCT CONCAT(u.firstname, ' ', u.realname) as name
-        FROM glpi_tickettasks tt
-        JOIN glpi_users u on tt.users_id_tech = u.id";
+                      FROM glpi_tickettasks tt
+                      JOIN glpi_users u on tt.users_id_tech = u.id";
         $res = $DB->query($sql_users);
         $users = [];
         while ($data = $DB->fetchAssoc($res)) {
@@ -544,7 +544,6 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             ORDER BY tt.date, name";
         $res = $DB->query($sql_create);
         while ($data = $DB->fetchAssoc($res)) {
-            $num_spaces = ($data['year'] % 3)*12 + $data['month'];
             $column = $data['completename'];
             $month_name = $data['fulldate'];
             if (!isset($tab[$column][$month_name])) {
@@ -553,17 +552,12 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
             $tab[$column][$month_name] += $data['nb'];
         }
-        $DB->query("SET lc_time_names = 'fr_FR'");
 
         $datas = [];
         foreach ($tab as $name => $data) {
             foreach ($period as $date) {
                 $date_name = $date->format('F Y');
-                if (isset($data[$date_name])) {
-                    $datas['datas'][$date_name][] = $data[$date_name];
-                } else {
-                    $datas['datas'][$date_name][] = 0;
-                }
+                $datas['datas'][$date_name][] = $data[$date_name] ?? 0;
             }
             $datas['labels2'][] = $name;
         }

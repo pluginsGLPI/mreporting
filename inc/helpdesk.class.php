@@ -543,14 +543,14 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
     {
         $_SESSION['mreporting_selector']['reportGlineNbTicketYear'] = ['dateinterval'];
 
-        return $this->reportGareaNbTicketYear($config, false);
+        return $this->reportGareaNbTicketYear($config);
     }
 
-    public function reportGareaNbTicketYear($config = [], $area = true)
+    public function reportGareaNbTicketYear($config = [])
     {
         global $DB;
 
-        $_SESSION['mreporting_selector']['reportGareaNbTicketYear'] = ['dateinterval', 'period'];
+        $_SESSION['mreporting_selector']['reportGareaNbTicketYear'] = ['dateinterval'];
 
         $datas = [];
 
@@ -571,26 +571,31 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         GROUP BY period
         ORDER BY period";
         $res = $DB->query($query);
-        for ($m=1; $m<=12; $m++) {
-            $datas['labels2'][$m] = $this->format_date('MMMM', new DateTime("2024-$m"));
+        $lang = $_SESSION['glpilanguage'] ?? 'en_GB';
+
+        for ($m = 1; $m <= 12; $m++) {
+            $datas['labels2'][$m] = IntlDateFormatter::formatObject(new DateTime("2024-$m"), 'MMMM', $lang);
         }
+
         while ($data = $DB->fetchAssoc($res)) {
             $date = new DateTime($data['period']);
-            $month = $this->format_date('M', $date);
-            $datas['datas'][$this->format_date('Y', $date)][$month] = $data['nb'];
+            $month = IntlDateFormatter::formatObject($date, 'M', $lang);
+            $datas['datas'][IntlDateFormatter::formatObject($date, 'Y', $lang)][$month] = $data['nb'];
         }
 
         foreach (array_keys($datas['datas']) as $key) {
-            for ($m=1; $m<=12; $m++) {
+            for ($m = 1; $m <= 12; $m++) {
                 if (!isset($datas['datas'][$key][$m]))
                     $datas['datas'][$key][$m] = 0;
             }
         }
+
         if (count($datas) > 0) {
             foreach ($datas['datas'] as &$data) {
                 ksort($data);
             }
         }
+
         return $datas;
     }
 
