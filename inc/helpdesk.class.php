@@ -937,10 +937,4 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
         return $config->fields;
     }
-
-    public function format_date($format, $date) {
-        $formatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::SHORT, IntlDateFormatter::SHORT);
-        $formatter->setPattern($format);
-        return ucwords($formatter->format($date));
-    }
 }

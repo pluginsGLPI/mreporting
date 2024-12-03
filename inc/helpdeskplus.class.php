@@ -501,7 +501,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
             $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
         }
-    
+
         $date1 = (new DateTime($_SESSION['mreporting_values']['date1' . $config['randname']]))
                     ->modify('first day of this month');
         $date2 = (new DateTime($_SESSION['mreporting_values']['date2' . $config['randname']]))
@@ -517,7 +517,6 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             array_push($users, $data['name']);
         }
 
-        $DB->query("SET lc_time_names = 'en_US'");
         $sql_create = "SELECT
                 DISTINCT MONTH(tt.date) as month,
                 YEAR(tt.date) as year,
