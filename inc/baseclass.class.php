@@ -38,6 +38,13 @@ class PluginMreportingBaseclass
     protected $where_entities;
     protected $where_entities_array;
     protected $where_entities_level;
+	protected $period_sort;
+    protected $period_sort_php;
+    protected $period_datetime;
+    protected $period_label;
+    protected $period_interval;
+    protected $sql_list_date;
+    protected $status;
 
     public function __construct($config = [])
     {
@@ -69,7 +76,8 @@ class PluginMreportingBaseclass
                 ],
             ],
         ];
-        $this->status = [CommonITILObject::INCOMING,
+        $this->status = [
+            CommonITILObject::INCOMING,
             CommonITILObject::ASSIGNED,
             CommonITILObject::PLANNED,
             CommonITILObject::WAITING,
