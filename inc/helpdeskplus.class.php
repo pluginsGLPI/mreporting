@@ -42,6 +42,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     protected $sql_join_cat;
     protected $sql_join_g;
     protected $sql_join_u;
+    protected $sql_join_tasku;
     protected $sql_join_tt;
     protected $sql_join_tu;
     protected $sql_join_gt;
@@ -68,6 +69,8 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $this->sql_join_tu = 'LEFT JOIN glpi_tickets_users tu
                               ON tu.tickets_id = glpi_tickets.id
                               AND tu.type = ' . Ticket_User::ASSIGN;
+        $this->sql_join_tasku = "LEFT JOIN glpi_users u
+                              ON tt.users_id_tech = u.id";
         $this->sql_join_gt = 'LEFT JOIN glpi_groups_tickets gt
                               ON gt.tickets_id  = glpi_tickets.id
                               AND gt.type = ' . Group_Ticket::ASSIGN;
@@ -475,6 +478,89 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         //fill missing datas with zeros
         $datas = $this->fillStatusMissingValues($tab);
+
+        return $datas;
+    }
+
+    public function reportVstackbarTicketstechtime($config = [])
+    {
+        global $DB;
+
+        $_SESSION['mreporting_selector']['reportVstackbarTicketstechtime']
+         = ['dateinterval', 'multiplegroupassign', 'category'];
+
+        $this->sql_date_create = PluginMreportingCommon::getSQLDate(
+            "`tt`.date",
+            $config['delay'],
+            $config['randname']
+        );
+
+        $tab = [];
+        $datas = [];
+
+        if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
+            $_SESSION['mreporting_values']['date2' . $config['randname']] = date("Y-m-d");
+        }
+    
+        $date1 = (new DateTime($_SESSION['mreporting_values']['date1' . $config['randname']]))
+                    ->modify('first day of this month');
+        $date2 = (new DateTime($_SESSION['mreporting_values']['date2' . $config['randname']]))
+                    ->modify('first day of next month');
+        $period = new DatePeriod($date1, DateInterval::createFromDateString('1 month'), $date2);
+
+        $sql_users = "SELECT DISTINCT CONCAT(u.firstname, ' ', u.realname) as name
+                      FROM glpi_tickettasks tt
+                      JOIN glpi_users u on tt.users_id_tech = u.id";
+        $res = $DB->query($sql_users);
+        $users = [];
+        while ($data = $DB->fetchAssoc($res)) {
+            array_push($users, $data['name']);
+        }
+
+        $sql_create = "SELECT
+                DISTINCT MONTH(tt.date) as month,
+                YEAR(tt.date) as year,
+                CONCAT(YEAR(tt.date), '-', MONTH(tt.date)) AS fulldate,
+                CONCAT(u.firstname, ' ', u.realname) AS completename,
+                u.name as name,
+                u.id as u_id,
+                IFNULL(SUM(tt.actiontime), 0)/3600 AS nb
+            FROM glpi_tickets
+            {$this->sql_join_tu}
+            {$this->sql_join_tt}
+            {$this->sql_join_gt}
+            {$this->sql_join_gtr}
+            {$this->sql_join_tasku}
+            WHERE {$this->sql_date_create}
+                AND glpi_tickets.entities_id IN ({$this->where_entities})
+                AND glpi_tickets.is_deleted = '0'
+                AND {$this->sql_group_assign}
+                AND {$this->sql_group_request}
+                AND {$this->sql_type}
+                AND {$this->sql_itilcat}
+                AND u.id IS NOT NULL
+            GROUP BY name, fulldate
+            ORDER BY tt.date, name";
+        $res = $DB->query($sql_create);
+        $lang = $_SESSION['glpilanguage'] ?? 'en_GB';
+        while ($data = $DB->fetchAssoc($res)) {
+            $column = $data['completename'];
+            $month_name = IntlDateFormatter::formatObject(new Datetime($data['fulldate']), 'MMMM yyyy', $lang);
+            if (!isset($tab[$column][$month_name])) {
+                $tab[$column][$month_name] = 0;
+            }
+
+            $tab[$column][$month_name] += $data['nb'];
+        }
+
+        $datas = [];
+        foreach ($tab as $name => $data) {
+            foreach ($period as $date) {
+                $date_name = IntlDateFormatter::formatObject($date, 'MMMM yyyy', $lang);
+                $datas['datas'][$date_name][] = $data[$date_name] ?? 0;
+            }
+            $datas['labels2'][] = $name;
+        }
 
         return $datas;
     }

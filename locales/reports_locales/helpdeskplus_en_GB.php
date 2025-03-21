@@ -82,6 +82,12 @@ $LANG['plugin_mreporting']['Helpdeskplus'] = [
         'category' => 'General',
     ],
 
+    'reportVstackbarTicketstechtime' => [
+        'title'    => 'Time taken mensually per technicien',
+        'desc'     => '',
+        'category' => 'Général',
+    ],
+
     'reportHbarTopcategory' => [
         'title'    => 'TOP categories',
         'desc'     => '',
