@@ -47,8 +47,10 @@ foreach ($reports as $classname => $report) {
 if (count($tabs) > 0) {
     //foreach tabs
     foreach ($tabs as $tab) {
+        /** @var \DBmysql $DB */
         global $DB;
-        $params = (isset($tab['params']) ? $tab['params'] : '');
+
+        $params = $tab['params'];
         //we get the classname
         $classname = str_replace('target=' . $_SERVER['PHP_SELF'] . '&classname=', '', $params);
 
@@ -61,7 +63,7 @@ if (count($tabs) > 0) {
             AND `glpi_plugin_mreporting_profiles`.`profiles_id` = ' . $_SESSION['glpiactiveprofile']['id'];
 
         //for this classname if current user have no right on any reports
-        if ($result = $DB->query($query)) {
+        if ($result = $DB->doQuery($query)) {
             if ($DB->numrows($result) == 0) {
                 //we unset the index
                 unset($tabs[$classname]);

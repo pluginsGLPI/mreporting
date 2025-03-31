@@ -38,8 +38,6 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public static function selectorForMultipleStates($field, $condition = [], $label = '')
     {
-        global $DB;
-
         $selected_states = [];
         if (isset($_SESSION['mreporting_values'][$field])) {
             $selected_states = $_SESSION['mreporting_values'][$field];
@@ -63,6 +61,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public static function getDefaultState()
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $states = [];
@@ -113,6 +112,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function computersByFabricant($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
@@ -137,7 +137,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                AND c.`is_template` = 0
          GROUP BY m.`name`
          ORDER BY Total DESC";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         $datas = [];
         while ($computer = $DB->fetchAssoc($result)) {
@@ -167,6 +167,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function computersByType($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
@@ -190,7 +191,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                AND c.`is_template` = 0
          GROUP BY t.`name`
          ORDER BY Total DESC";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $datas  = [];
         while ($computer = $DB->fetchAssoc($result)) {
             $percent                                             = round($computer['Percent'], 2);
@@ -217,6 +218,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function computersByAge($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
@@ -315,7 +317,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             AND i.`warranty_date` IS NULL
             $sql_entities
             $sql_states";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($computer = $DB->fetchAssoc($result)) {
             $percent = round($computer['Percent'], 2);
@@ -343,6 +345,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function computersByOS($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
@@ -411,7 +414,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
            $sql_states";
 
         $query .= ' ORDER BY Total DESC';
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         $datas = [];
         while ($computer = $DB->fetchAssoc($result)) {
@@ -426,6 +429,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarWindows($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarWindows'] = ['multiplestates'];
@@ -495,6 +499,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarLinux($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarLinux'] = ['multiplestates'];
@@ -553,6 +558,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarLinuxDistro($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarLinuxDistro'] = ['multiplestates'];
@@ -594,6 +600,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarMac($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMac'] = ['multiplestates'];
@@ -650,6 +657,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarMacFamily($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMacFamily'] = ['multiplestates'];
@@ -730,6 +738,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function fusionInventory($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $plugin = new Plugin();
@@ -769,6 +778,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     /* ==== MONITOR REPORST ==== */
     public function reportHbarMonitors($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMonitors'] = ['multiplestates'];
@@ -800,6 +810,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     /* ==== COMPUTER'S STATE REPORTS ==== */
     public function reportHbarComputersByStatus($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $query = "SELECT t.`name` status, count(*) Total, count(*) * 100 / (SELECT count(*)
@@ -816,7 +827,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
            AND c.`is_deleted` = 0
            AND c.`is_template` = 0
          GROUP BY t.`name`";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         $datas  = [];
         while ($computer = $DB->fetchAssoc($result)) {
             $percent                                               = round($computer['Percent'], 2);
@@ -828,6 +839,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarPrintersByStatus($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $datas = [];
@@ -842,7 +854,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 FROM glpi_printers c, glpi_states t
                 WHERE c.states_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
                 GROUP BY t.name";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($printer = $DB->fetchAssoc($result)) {
             $pourcentage                                              = round($printer['Pourcentage'], 2);
@@ -855,6 +867,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     /* ==== COMPUTER'S ENTITIES REPORTS ==== */
     public function reportHbarComputersByEntity($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB, $CFG_GLPI;
 
         $_SESSION['mreporting_selector']['reportHbarComputersByEntity'] = ['multiplestates',
@@ -873,7 +886,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                   FROM `glpi_entities`
                   WHERE {$this->where_entities_level}
                   ORDER BY `name`";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($data = $DB->fetchAssoc($result)) {
             $entities_first_level[$data['id']] = $data['name'];
@@ -890,7 +903,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                      WHERE `entities_id` ' . $restrict . '
                      AND `is_deleted` = 0
                      AND `is_template` = 0';
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
 
             while ($computer = $DB->fetchAssoc($result)) {
                 $datas['tmp'][$entities_name . ' (pourcentage %)'] = $computer['Total'];

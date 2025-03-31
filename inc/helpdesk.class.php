@@ -39,6 +39,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHbarTicketNumberByEntity($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarTicketNumberByEntity'] = ['dateinterval',
@@ -70,7 +71,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
       LIMIT 0, ";
         $query .= (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($ticket = $DB->fetchAssoc($result)) {
             if (empty($ticket['name'])) {
@@ -86,6 +87,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHgbarTicketNumberByCatAndEntity($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCatAndEntity']
@@ -116,7 +118,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $query_cat .= "AND glpi_tickets.is_deleted = '0'
       ORDER BY glpi_itilcategories.id ASC";
 
-        $res_cat = $DB->query($query_cat);
+        $res_cat = $DB->doQuery($query_cat);
 
         $categories = [];
         while ($data = $DB->fetchAssoc($res_cat)) {
@@ -152,7 +154,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
          AND glpi_tickets.is_deleted = '0'
       GROUP BY glpi_entities.name, glpi_tickets.itilcategories_id
       ORDER BY glpi_entities.name ASC, glpi_tickets.itilcategories_id ASC";
-        $res = $DB->query($query);
+        $res = $DB->doQuery($query);
         while ($data = $DB->fetchAssoc($res)) {
             if (empty($data['entity'])) {
                 $data['entity'] = __('Root entity');
@@ -188,6 +190,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportPieTicketOpenedAndClosed($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportPieTicketOpenedAndClosed']
@@ -212,8 +215,8 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
             $query .= "AND glpi_tickets.is_deleted = '0'
             AND glpi_tickets.status IN('" . implode("', '", array_keys($filter['status'])) . "')";
-            $result                  = $DB->query($query);
-            $datas[$filter['label']] = $DB->result($result, 0, 0);
+            $result                  = $DB->doQuery($query);
+            $datas[$filter['label']] = $DB->result($result, 0, "0");
         }
 
         return ['datas' => $datas];
@@ -221,7 +224,10 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportPieTicketOpenedbyStatus($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
+
+        $status_to_show = [];
 
         $_SESSION['mreporting_selector']['reportPieTicketOpenedbyStatus']
          = ['dateinterval', 'allstates'];
@@ -254,7 +260,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                   AND glpi_tickets.is_deleted = '0'
                   AND glpi_tickets.entities_id IN ({$this->where_entities})
                   AND glpi_tickets.status ='{$key}'";
-                $result = $DB->query($query);
+                $result = $DB->doQuery($query);
 
                 while ($ticket = $DB->fetchAssoc($result)) {
                     $datas['datas'][$val] = $ticket['count'];
@@ -267,6 +273,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportPieTopTenAuthor($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportPieTopTenAuthor']
@@ -278,7 +285,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             $config['delay'],
             $config['randname'],
         );
-        $this->sql_closedate = PluginMreportingCommon::getSQLDate(
+        $this->sql_date_closed = PluginMreportingCommon::getSQLDate(
             'glpi_tickets.closedate',
             $config['delay'],
             $config['randname'],
@@ -290,13 +297,13 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
          LEFT JOIN glpi_tickets_users
             ON (glpi_tickets_users.tickets_id = glpi_tickets.id AND glpi_tickets_users.type =1)
          WHERE {$this->sql_date}
-            AND {$this->sql_closedate}
+            AND {$this->sql_date_closed}
             AND glpi_tickets.entities_id IN ({$this->where_entities})
             AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_tickets_users.users_id
          ORDER BY count DESC
          LIMIT 10";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         while ($ticket = $DB->fetchAssoc($result)) {
             if ($ticket['users_id'] == 0) {
                 $label = __('Undefined', 'mreporting');
@@ -327,6 +334,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     private function reportHgbarTicketNumberByCategoryAndByType(array $config, $filter)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCategoryAndByType']
@@ -354,11 +362,11 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_itilcategories.id, glpi_tickets.type
          ORDER BY glpi_itilcategories.name";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         $datas['datas'] = [];
         while ($ticket = $DB->fetchAssoc($result)) {
-            if (is_null($ticket['category_id'])) {
+            if (is_empty($ticket['category_id'])) {
                 $ticket['category_id']   = 0;
                 $ticket['category_name'] = __('None');
             }
@@ -376,6 +384,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHgbarTicketNumberByService($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHgbarTicketNumberByService']
@@ -402,9 +411,9 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                AND glpi_tickets.entities_id IN (' . $this->where_entities . ")
                AND {$this->sql_date}
                AND status IN('" . implode("', '", array_keys($filter['status'])) . "')";
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
 
-            $datas['datas'][__('None')][$filter['label']] = $DB->result($result, 0, 0);
+            $datas['datas'][__('None')][$filter['label']] = $DB->result($result, 0, "0");
 
             $query = "SELECT glpi_groups.name as group_name,
                COUNT(glpi_tickets.id) as count
@@ -418,7 +427,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                AND glpi_tickets.status IN('" . implode("', '", array_keys($filter['status'])) . "')
             GROUP BY glpi_groups.id
             ORDER BY glpi_groups.name";
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
 
             while ($ticket = $DB->fetchAssoc($result)) {
                 $datas['datas'][$ticket['group_name']][$filter['label']] = $ticket['count'];
@@ -430,12 +439,14 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHgbarOpenedTicketNumberByCategory($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHgbarOpenedTicketNumberByCategory']
          = ['dateinterval', 'allstates'];
 
         $datas = [];
+        $status_to_show = [];
 
         //Init delay value
         $this->sql_date = PluginMreportingCommon::getSQLDate(
@@ -471,7 +482,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             AND status IN (" . implode(',', $status_to_show) . ')
          GROUP BY glpi_itilcategories.id, glpi_tickets.status
          ORDER BY glpi_itilcategories.name';
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($ticket = $DB->fetchAssoc($result)) {
             if (is_null($ticket['category_name'])) {
@@ -508,6 +519,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportAreaNbTicket($config = [], $area = true)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportAreaNbTicket'] = ['dateinterval', 'period'];
@@ -531,7 +543,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
          AND glpi_tickets.is_deleted = '0'
       GROUP BY period
       ORDER BY period";
-        $res = $DB->query($query);
+        $res = $DB->doQuery($query);
         while ($data = $DB->fetchAssoc($res)) {
             $datas['datas'][$data['period_name']] = $data['nb'];
         }
@@ -555,6 +567,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportGlineNbTicket($config = [], $area = false)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportGlineNbTicket']
@@ -591,7 +604,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
       AND `glpi_tickets`.`is_deleted` = '0'
       AND status IN(" . implode(',', $status_to_show) . ')
       ORDER BY `date` ASC';
-        $res_date = $DB->query($query_date);
+        $res_date = $DB->doQuery($query_date);
         $dates    = [];
         while ($data = $DB->fetchAssoc($res_date)) {
             $dates[$data['period']] = $data['period'];
@@ -614,7 +627,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
          AND status IN(" . implode(',', $status_to_show) . ')
       GROUP BY period, status
       ORDER BY period, status';
-        $res = $DB->query($query);
+        $res = $DB->doQuery($query);
         while ($data = $DB->fetchAssoc($res)) {
             $status                                   = Ticket::getStatus($data['status']);
             $datas['labels2'][$data['period']]        = $data['period_name'];
@@ -640,6 +653,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportSunburstTicketByCategories($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportSunburstTicketByCategories'] = ['dateinterval'];
@@ -666,7 +680,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             AND glpi_tickets.is_deleted = '0'
          GROUP BY glpi_itilcategories.id
          ORDER BY glpi_itilcategories.name";
-        $res = $DB->query($query);
+        $res = $DB->doQuery($query);
         while ($data = $DB->fetchAssoc($res)) {
             $flat_datas[$data['id']] = $data;
         }
@@ -697,6 +711,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportVstackbarTicketStatusByTechnician($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportVstackbarTicketStatusByTechnician'] = ['dateinterval'];
@@ -727,7 +742,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
          AND glpi_tickets.entities_id IN ({$this->where_entities})
          AND glpi_tickets.is_deleted = '0'
          ORDER BY fullname, username";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($technician = $DB->fetchAssoc($result)) {
             $technicians[] = ['username' => $technician['username'],
@@ -764,7 +779,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             AND glpi_tickets.is_deleted = '0'
          GROUP BY status, technician
          ORDER BY technician, username";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($ticket = $DB->fetchAssoc($result)) {
             if (is_null($ticket['technician'])) {
@@ -778,6 +793,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHbarTicketNumberByLocation($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarTicketNumberByLocation']
@@ -809,7 +825,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
       LIMIT 0, ";
         $query .= (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         while ($ticket = $DB->fetchAssoc($result)) {
             if (empty($ticket['name'])) {

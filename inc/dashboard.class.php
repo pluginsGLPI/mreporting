@@ -44,8 +44,6 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        global $CFG_GLPI;
-
         if (
             get_class($item) == 'Central'
             && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])

@@ -39,6 +39,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
      */
     public function reportPieTag($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         if (!Plugin::isPluginActive('tag')) {
@@ -49,7 +50,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
 
         $datas = [];
 
-        $result = $DB->query('SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name as name
+        $result = $DB->doQuery('SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name as name
                      FROM glpi_plugin_tag_tagitems
                      LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
                      GROUP BY plugin_tag_tags_id
@@ -71,6 +72,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
      */
     public function reportPieTagOnTicket($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         if (!Plugin::isPluginActive('tag')) {
@@ -84,7 +86,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
 
         $datas = [];
 
-        $result = $DB->query("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name
+        $result = $DB->doQuery("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name
                            FROM glpi_plugin_tag_tagitems
                            LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
                            LEFT JOIN glpi_tickets ON glpi_tickets.id = glpi_plugin_tag_tagitems.items_id

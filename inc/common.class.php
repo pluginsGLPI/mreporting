@@ -59,8 +59,6 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function getMenuContent()
     {
-        global $CFG_GLPI;
-
         $web_full_dir = Plugin::getWebDir('mreporting');
         $img_db       = "<img src='" . $web_full_dir . "/pics/dashboard.png'
                            title='" . __('Dashboard', 'mreporting') . "'
@@ -138,6 +136,7 @@ class PluginMreportingCommon extends CommonDBTM
     */
     public function getAllReports($with_url = true, $params = [])
     {
+        /** @var array $LANG */
         global $LANG;
 
         $reports = [];
@@ -285,41 +284,39 @@ class PluginMreportingCommon extends CommonDBTM
             if (count($graphs) > 0) {
                 $select .= '<optgroup label="' . $report['title'] . '">';
                 foreach ($graphs as $cat => $graph) {
-                    if (count($graph) > 0) {
-                        $select .= "<optgroup label=\"&nbsp;&nbsp;&nbsp;$cat\">";
+                    $select .= "<optgroup label=\"&nbsp;&nbsp;&nbsp;$cat\">";
 
-                        usort(
-                            $graph,
-                            function ($a, $b) {
-                                $a_title = $a['title'];
-                                $b_title = $b['title'];
+                    usort(
+                        $graph,
+                        function ($a, $b) {
+                            $a_title = $a['title'];
+                            $b_title = $b['title'];
 
-                                return strcmp($a_title, $b_title);
-                            },
-                        );
+                            return strcmp($a_title, $b_title);
+                        },
+                    );
 
-                        foreach ($graph as $key => $value) {
-                            if ($value['right']) {
-                                if ($value['is_active']) {
-                                    $comment = '';
-                                    if (isset($value['desc'])) {
-                                        $comment = $value['desc'];
-                                    }
-                                    $option_value = $value['url_graph'];
-                                    if ($setIdInOptionsValues) {
-                                        $option_value = $value['id'];
-                                    }
-                                    $icon = self::getReportIcon($value['function']);
-                                    $select .= "<option value='$option_value' title=\"" .
-                                    Html::cleanInputText($comment) .
-                                    '">&nbsp;&nbsp;&nbsp;' . $icon . '&nbsp;' .
-                                    $value['title'] . '</option>';
+                    foreach ($graph as $key => $value) {
+                        if ($value['right']) {
+                            if ($value['is_active']) {
+                                $comment = '';
+                                if (isset($value['desc'])) {
+                                    $comment = $value['desc'];
                                 }
+                                $option_value = $value['url_graph'];
+                                if ($setIdInOptionsValues) {
+                                    $option_value = $value['id'];
+                                }
+                                $icon = self::getReportIcon($value['function']);
+                                $select .= "<option value='$option_value' title=\"" .
+                                Html::cleanInputText($comment) .
+                                '">&nbsp;&nbsp;&nbsp;' . $icon . '&nbsp;' .
+                                $value['title'] . '</option>';
                             }
                         }
-
-                        $select .= '</optgroup>';
                     }
+
+                    $select .= '</optgroup>';
                 }
                 $select .= '</optgroup>';
             }
@@ -609,7 +606,8 @@ class PluginMreportingCommon extends CommonDBTM
     */
     public function showGraph($opt, $export = false, $forceFormat = null)
     {
-        global $LANG, $CFG_GLPI;
+        /** @var array $LANG */
+        global $LANG;
 
         if (!isset($opt['hide_title'])) {
             self::title($opt);
@@ -681,8 +679,6 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function dropdownExt($options = [])
     {
-        global $DB;
-
         $p['myname']      = '';
         $p['value']       = '';
         $p['ajax_page']   = '';
@@ -735,102 +731,35 @@ class PluginMreportingCommon extends CommonDBTM
     */
     public static function endGraph($options, $dashboard = false)
     {
-        global $CFG_GLPI;
-
-        $opt       = [];
-        $export    = false;
-        $datas     = [];
-        $unit      = '';
-        $labels2   = [];
-        $flip_data = false;
-
         foreach ($options as $k => $v) {
             $$k = $v;
         }
 
         $randname = false;
-        if (isset($opt['randname']) && $opt['randname'] !== false) {
-            $randname                    = $opt['randname'];
-            $_REQUEST['short_classname'] = $opt['short_classname'];
-            $_REQUEST['f_name']          = $opt['f_name'];
-            $_REQUEST['gtype']           = $opt['gtype'];
-            $_REQUEST['randname']        = $opt['randname'];
-
-            //End Script for graph display
-            //if $randname exists
-
-            $config = PluginMreportingConfig::initConfigParams(
-                $opt['f_name'],
-                'PluginMreporting' . $opt['short_classname'],
-            );
-            if (!$export) {
-                if ($config['graphtype'] == 'SVG') {
-                    echo "}
-                  showGraph$randname();
-               </script>";
-                }
-                echo '</div>';
-            }
-        }
 
         if (!$dashboard) {
-            $request_string = self::getRequestString($_REQUEST);
-
-            if ($export != 'odtall') {
-                if ($randname !== false && !$export) {
-                    $show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'], $opt['class']);
-                    self::showGraphDatas($datas, $unit, $labels2, $flip_data, $show_graph);
+            if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != 'test') {
+                echo "<div class='graph_bottom'>";
+                echo "<span style='float:left'>";
+                echo '<br><br>';
+                self::showNavigation();
+                echo '</span>';
+                echo "<span style='float:right'>";
+                if (Session::haveRight('config', UPDATE)) {
+                    echo '<b>' . PluginMreportingConfig::getTypeName() . '</b> : ';
+                    echo "&nbsp;<a href='config.form.php?name='&classname='' target='_blank'>";
+                    echo "<img src='../pics/config.png' class='title_pics'/></a>";
                 }
-                if (!$export) {
-                    if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != 'test') {
-                        echo "<div class='graph_bottom'>";
-                        echo "<span style='float:left'>";
-                        echo '<br><br>';
-                        self::showNavigation();
-                        echo '</span>';
-                        echo "<span style='float:right'>";
-                        if (Session::haveRight('config', UPDATE)) {
-                            echo '<b>' . PluginMreportingConfig::getTypeName() . '</b> : ';
-                            echo "&nbsp;<a href='config.form.php?name=" . $opt['f_name'] .
-                            '&classname=' . $opt['class'] . "' target='_blank'>";
-                            echo "<img src='../pics/config.png' class='title_pics'/></a>";
-                        }
-                        if ($randname !== false) {
-                            echo '<br><br>';
-
-                            echo "<form method='post' action='export.php?$request_string'
-                        style='margin: 0; padding: 0' target='_blank' id='export_form'>";
-
-                            echo '<b>' . __('Export') . '</b> : ';
-                            $params = ['myname' => 'ext',
-                                'ajax_page'     => Plugin::getWebDir('mreporting') . '/ajax/dropdownExport.php',
-                                'class'         => __CLASS__,
-                                'span'          => 'show_ext',
-                                'gtype'         => $_REQUEST['gtype'],
-                                'show_graph'    => $show_graph,
-                                'display_svg'   => ($config['graphtype'] != 'PNG'),
-                                'randname'      => $randname,
-                            ];
-
-                            self::dropdownExt($params);
-
-                            echo "<span id='show_ext'></span>";
-                            Html::closeForm();
-                        }
-                        echo '</span>';
-                    }
-                    echo "<div style='clear:both;'></div>";
-                    echo '</div>';
-
-                    if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != 'test') {
-                        echo '</div></div>';
-                    }
-                }
-
-                if ($randname == false) {
-                    echo '</div>';
-                }
+                echo '</span>';
             }
+            echo "<div style='clear:both;'></div>";
+            echo '</div>';
+
+            if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != 'test') {
+                echo '</div></div>';
+            }
+
+            echo '</div>';
         }
 
         //destroy specific palette
@@ -922,6 +851,7 @@ class PluginMreportingCommon extends CommonDBTM
         $flip_data = false,
         $show_graph = false
     ) {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         $simpledatas = false;
@@ -1013,8 +943,6 @@ class PluginMreportingCommon extends CommonDBTM
                 echo '<td>' . $label2 . '</td>';
                 if ($simpledatas) { //simple array
                     echo "<td class='center'>" . $cols . ' ' . $unit . '</td>';
-                } elseif ($treedatas) { //multiple array
-                    self::showGraphTreeDatas($cols, $flip_data);
                 } else { //multiple array
                     foreach ($cols as $date => $nb) {
                         if (!is_array($nb)) {
@@ -1071,6 +999,7 @@ class PluginMreportingCommon extends CommonDBTM
     */
     public function export($opt)
     {
+        /** @var array $LANG */
         global $LANG;
 
         switch ($opt['switchto']) {
@@ -1259,6 +1188,7 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function generateOdt($params)
     {
+        /** @var array $LANG */
         global $LANG;
 
         $config = ['PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp'];
@@ -1272,9 +1202,9 @@ class PluginMreportingCommon extends CommonDBTM
         }
 
         $odf = new Odf('../templates/template.odt', $config);
-        $odf->setVars('category', $category, ENT_NOQUOTES, 'utf-8');
-        $odf->setVars('title', $params[0]['title'], ENT_NOQUOTES, 'utf-8');
-        $odf->setVars('description', $description, ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('category', $category, (bool)ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('title', $params[0]['title'], (bool)ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('description', $description, (bool)ENT_NOQUOTES, 'utf-8');
 
         $path = GLPI_PLUGIN_DOC_DIR . '/mreporting/' . $params[0]['f_name'] . '.png';
 
@@ -1282,7 +1212,7 @@ class PluginMreportingCommon extends CommonDBTM
             list($image_width, $image_height) = @getimagesize($path);
             $image_width  *= Odf::PIXEL_TO_CM;
             $image_height *= Odf::PIXEL_TO_CM * 17 / $image_width;
-            $odf->setImage('image', $path, -1, 17, $image_height);
+            $odf->setImage('image', $path, -1, 17, (int)$image_height);
         } else {
             $odf->setVars('image', '', true, 'UTF-8');
         }
@@ -1301,25 +1231,12 @@ class PluginMreportingCommon extends CommonDBTM
                 $multipledatas->setVars('datas_title', mb_strtoupper(__('data', 'mreporting')), ENT_NOQUOTES, 'utf-8');
 
                 foreach ($datas as $key => $value) {
-                    $multipledatas->subtitle->datas_subtitle(mb_strtoupper($key), ENT_NOQUOTES, 'utf-8');
-                    $multipledatas->subtitle->merge();
-
-                    foreach ($value as $col => $val) {
-                        $multipledatas->datas->row($col, ENT_NOQUOTES, 'utf-8');
-                        $multipledatas->datas->value($val, ENT_NOQUOTES, 'utf-8');
-                        $multipledatas->datas->merge();
-                    }
                     $multipledatas->merge();
                 }
 
                 // Simples graph
             } else {
                 $singledatas->setVars('datas_title', mb_strtoupper(__('data', 'mreporting')), ENT_NOQUOTES, 'utf-8');
-                foreach ($datas as $key => $value) {
-                    $singledatas->datas->row($key, ENT_NOQUOTES, 'utf-8');
-                    $singledatas->datas->value($value, ENT_NOQUOTES, 'utf-8');
-                    $singledatas->datas->merge();
-                }
                 $singledatas->merge();
             }
         }
@@ -1332,8 +1249,6 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function selectorForMultipleGroups($field, $condition = [], $label = '')
     {
-        global $DB;
-
         echo '<br /><b>' . $label . ' : </b><br />';
 
         $values = [];
@@ -1427,6 +1342,10 @@ class PluginMreportingCommon extends CommonDBTM
      */
     public static function selectorAllSlasWithTicket()
     {
+        /**
+         * @var array $LANG
+         * @var DBmysql $DB
+         */
         global $LANG, $DB;
 
         echo '<b>' . $LANG['plugin_mreporting']['Helpdeskplus']['selector']['slas'] . ' : </b><br />';
@@ -1441,7 +1360,7 @@ class PluginMreportingCommon extends CommonDBTM
         ) . ")
       AND t.is_deleted = '0'
       ORDER BY s.name ASC";
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         $values = [];
         while ($data = $DB->fetchAssoc($result)) {
@@ -1458,6 +1377,7 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function selectorPeriod($period = 'day')
     {
+        /** @var array $LANG */
         global $LANG;
 
         echo '<b>' . $LANG['plugin_mreporting']['Helpdeskplus']['period'] . ' : </b><br />';
@@ -1491,6 +1411,7 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function selectorCategory($type = true)
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         echo '<br /><b>' . _n('Ticket category', 'Ticket categories', 2) . ' : </b><br />';
@@ -1596,12 +1517,10 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Show entity level selector.
-     * @return display selector
+     * @return integer|string selector
      */
     public static function selectorEntityLevel()
     {
-        global $DB;
-
         echo '<b>' . __('Max depth entity level', 'mreporting') . ' :</b><br />';
 
         $default_level = self::getActiveEntityLevel();
@@ -1666,6 +1585,7 @@ class PluginMreportingCommon extends CommonDBTM
      */
     public static function getMaxEntityLevel()
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         if (count($_SESSION['glpiactiveentities']) > 1) {
@@ -1678,7 +1598,7 @@ class PluginMreportingCommon extends CommonDBTM
                   FROM glpi_entities
                   WHERE {$restrict}";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         if ($DB->numrows($result) > 0) {
             return $DB->result($result, 0, 'maxlevel');
         } else {
@@ -1720,13 +1640,14 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Show a date selector
-     * @param  datetime $date1    date of start
-     * @param  datetime $date2    date of ending
+     * @param  string $date1    date of start
+     * @param  string $date2    date of ending
      * @param  string $randname random string (to prevent conflict in js selection)
      * @return void
      */
     public static function showSelector($date1, $date2, $randname)
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         if (!isset($_REQUEST['f_name'])) {
@@ -1752,6 +1673,7 @@ class PluginMreportingCommon extends CommonDBTM
         }
         $_SERVER['REQUEST_URI'] .= '&date1' . $randname . '=' . $date1 . '&date2' . $randname . '=' . $date2;
 
+        /* @phpstan-ignore-next-line */
         SavedSearch::showSaveButton(SavedSearch::URI, __CLASS__);
 
         //If there's no selector for the report, there's no need for a reset button !
@@ -1879,12 +1801,10 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function getSelectorValuesByUser()
     {
-        global $DB;
-
         $myvalues  = (isset($_SESSION['mreporting_values']) ? $_SESSION['mreporting_values'] : []);
         $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', Session::getLoginUserID());
         if ($selectors) {
-            $values = json_decode(stripslashes($selectors), true);
+            $values = json_decode(stripslashes((string)$selectors), true);
             if (isset($_REQUEST['f_name']) && isset($values[$_REQUEST['f_name']])) {
                 foreach ($values[$_REQUEST['f_name']] as $key => $value) {
                     $myvalues[$key] = $value;
@@ -1905,13 +1825,14 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function resetSelectorsForReport($report_name)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $users_id  = Session::getLoginUserID();
         $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', $users_id);
 
         if ($selectors) {
-            $values = json_decode(stripslashes($selectors), true);
+            $values = json_decode(stripslashes((string)$selectors), true);
             if (isset($values[$report_name])) {
                 unset($values[$report_name]);
             }
@@ -1920,7 +1841,7 @@ class PluginMreportingCommon extends CommonDBTM
             $query = "UPDATE `glpi_plugin_mreporting_preferences`
                    SET `selectors`='$selector'
                    WHERE `users_id`='$users_id'";
-            $DB->query($query);
+            $DB->doQuery($query);
         }
     }
 
@@ -1942,10 +1863,10 @@ class PluginMreportingCommon extends CommonDBTM
         }
 
         $date_array1 = explode('-', $_SESSION['mreporting_values']['date1' . $randname]);
-        $time1       = mktime(0, 0, 0, $date_array1[1], $date_array1[2], $date_array1[0]);
+        $time1       = mktime(0, 0, 0, (int)$date_array1[1], (int)$date_array1[2], (int)$date_array1[0]);
 
         $date_array2 = explode('-', $_SESSION['mreporting_values']['date2' . $randname]);
-        $time2       = mktime(0, 0, 0, $date_array2[1], $date_array2[2], $date_array2[0]);
+        $time2       = mktime(0, 0, 0, (int)$date_array2[1], (int)$date_array2[2], (int)$date_array2[0]);
 
         //if data inverted, reverse it
         if ($time1 > $time2) {
@@ -1965,16 +1886,12 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Get the max value of a multidimensionnal array
-     * @param  array() $array the array to compute
+     * @param  array $array the array to compute
      * @return number the sum
      */
     public static function getArrayMaxValue($array)
     {
         $max = 0;
-
-        if (!is_array($array)) {
-            return $array;
-        }
 
         foreach ($array as $value) {
             if (is_array($value)) {
@@ -1994,16 +1911,12 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Computes the sum of a multidimensionnal array
-     * @param  array() $array the array where to seek
+     * @param  array $array the array where to seek
      * @return number the sum
      */
     public static function getArraySum($array)
     {
         $sum = 0;
-
-        if (!is_array($array)) {
-            return $array;
-        }
 
         foreach ($array as $value) {
             if (is_array($value)) {
@@ -2018,7 +1931,7 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Get the depth of a multidimensionnal array
-     * @param  array() $array the array where to seek
+     * @param  array $array the array where to seek
      * @return number the sum
      */
     public static function getArrayDepth($array)
@@ -2053,7 +1966,8 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Transform a flat array to a tree array (without keys changes)
-     * @param  array $flat_array the flat array. Format : array('id', 'parent', 'name', 'count')
+     * @param  array $elements the flat array. Format : array('id', 'parent', 'name', 'count')
+     * @param integer $parentId
      * @return array the tree array. Format : array(orginal_keys, children => array(...)
      */
     public static function mapTree(array &$elements, $parentId = 0)
@@ -2075,7 +1989,7 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Transform a tree array to a tree array (with clean keyss)
-     * @param  array $flat_array the tree array.
+     * @param  array $raw_tree the tree array.
      *               Format : array('id', 'parent', 'name', 'count', children => array(...)
      * @return array the tree array.
      *               Format : array(name => array(name2 => array(count), ...)

@@ -64,8 +64,9 @@ class PluginMreportingProfile extends CommonDBTM
 
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
+        /** @var CommonDBTM $item */
         if ($item->getField('interface') == 'helpdesk') {
-            return false;
+            return '';
         }
 
         switch ($item->getType()) {
@@ -80,10 +81,7 @@ class PluginMreportingProfile extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        global $CFG_GLPI;
-
-        if ($item->getType() == 'Profile' && $item->getField('interface') != 'helpdesk') {
-            $ID   = $item->getField('id');
+        if ($item instanceof Profile && $item->getField('interface') != 'helpdesk') {
             $prof = new self();
 
             if (!$prof->getFromDBByProfile($item->getField('id'))) {
@@ -100,11 +98,12 @@ class PluginMreportingProfile extends CommonDBTM
 
     public function getFromDBByProfile($profiles_id)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $query = "SELECT * FROM `{$this->getTable()}`
          WHERE `profiles_id` = '" . $profiles_id . "'";
-        if ($result = $DB->query($query)) {
+        if ($result = $DB->doQuery($query)) {
             if ($DB->numrows($result) != 1) {
                 return false;
             }
@@ -121,6 +120,7 @@ class PluginMreportingProfile extends CommonDBTM
     */
     public static function addRightToAllProfiles()
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $result_config = $DB->request('SELECT `id` FROM `glpi_plugin_mreporting_configs`');
@@ -140,6 +140,7 @@ class PluginMreportingProfile extends CommonDBTM
 
     public static function getRight()
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $query = 'SELECT `profiles_id`
@@ -160,6 +161,7 @@ class PluginMreportingProfile extends CommonDBTM
     */
     public static function addRightToProfile($idProfile)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         //get all reports
@@ -184,6 +186,7 @@ class PluginMreportingProfile extends CommonDBTM
     */
     public function addRightToReports($report_id)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $reportProfile = new self();
@@ -219,6 +222,10 @@ class PluginMreportingProfile extends CommonDBTM
     */
     public function showForm($ID, $options = [])
     {
+        /**
+         * @var array $LANG
+         * @var array $CFG_GLPI
+         */
         global $LANG, $CFG_GLPI;
 
         if (!Session::haveRight('profile', READ)) {
@@ -290,6 +297,7 @@ class PluginMreportingProfile extends CommonDBTM
         echo '</table>';
         echo '</div>';
         Html::closeForm();
+        return true;
     }
 
     /**
@@ -298,6 +306,10 @@ class PluginMreportingProfile extends CommonDBTM
     */
     public function showFormForManageProfile($items, $options = [])
     {
+        /**
+         * @var \DBmysql $DB
+         * @var array $CFG_GLPI
+         */
         global $DB, $CFG_GLPI;
 
         if (!Session::haveRight('config', READ)) {
