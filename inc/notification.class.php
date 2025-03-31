@@ -39,7 +39,7 @@ class PluginMreportingNotification extends CommonDBTM
      * Return the localized name of the current Type (PluginMreporting)
      *
      * @see CommonGLPI::getTypeName()
-     * @param string $nb
+     * @param integer $nb
      * @return string name of the plugin
      */
     public static function getTypeName($nb = 0)
@@ -54,6 +54,7 @@ class PluginMreportingNotification extends CommonDBTM
      */
     public static function install($migration)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         // Création du template de la notification
@@ -101,7 +102,7 @@ class PluginMreportingNotification extends CommonDBTM
                 ],
             );
 
-            $DB->query('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
+            $DB->doQuery('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
               VALUES (1, 1, ' . $notification_id . ');');
         }
 
@@ -115,6 +116,7 @@ class PluginMreportingNotification extends CommonDBTM
      */
     public static function uninstall()
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $queries = [];
@@ -140,7 +142,7 @@ class PluginMreportingNotification extends CommonDBTM
         }
 
         foreach ($queries as $query) {
-            $DB->query($query);
+            $DB->doQuery($query);
         }
 
         return ['success' => true];
@@ -177,7 +179,7 @@ class PluginMreportingNotification extends CommonDBTM
      *
      * @param CronTask $task Object of CronTask class for log / stat
      *
-     * @return interger
+     * @return integer
      *    >0 : done
      *    <0 : to be run again (not finished)
      *     0 : nothing to do

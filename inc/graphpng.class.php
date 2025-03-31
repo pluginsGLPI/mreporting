@@ -58,7 +58,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     */
     public function initGraph($options)
     {
-        global $LANG, $CFG_GLPI;
+        /** @var array $LANG */
+        global $LANG;
 
         $randname = $options['randname'];
 
@@ -122,6 +123,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
     public function showImage($contents, $export = 'png')
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         if ($export != 'odt' && $export != 'odtall') {

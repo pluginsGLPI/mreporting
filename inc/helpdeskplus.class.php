@@ -47,6 +47,8 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     protected $sql_join_gt;
     protected $sql_join_gtr;
     protected $sql_select_sla;
+    protected $lcl_slaok;
+    protected $lcl_slako;
 
     public function __construct($config = [])
     {
@@ -135,6 +137,11 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportGlineBacklogs($config = [])
     {
+        /**
+         * @var \DBmysql $DB
+         * @var array    $LANG
+        */
+
         global $DB, $LANG;
 
         $_SESSION['mreporting_selector']['reportGlineBacklogs'] = ['dateinterval', 'period', 'backlogstates', 'multiplegrouprequest',
@@ -318,6 +325,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportVstackbarLifetime($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $tab = $datas = $labels2 = [];
@@ -352,7 +360,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                      AND {$this->sql_user_assign}
                   GROUP BY period
                   ORDER BY period";
-                $res = $DB->query($sql_status);
+                $res = $DB->doQuery($sql_status);
                 while ($data = $DB->fetchAssoc($res)) {
                     $tab[$data['period']][$status_name] = $data['nb'];
                     $labels2[$data['period']]           = $data['period_name'];
@@ -371,6 +379,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportVstackbarTicketsgroups($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportVstackbarTicketsgroups'] = ['dateinterval', 'allstates', 'multiplegroupassign', 'category'];
@@ -400,7 +409,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                      AND {$this->sql_group_assign}
                   GROUP BY group_name
                   ORDER BY group_name";
-                $res = $DB->query($sql_status);
+                $res = $DB->doQuery($sql_status);
                 while ($data = $DB->fetchAssoc($res)) {
                     if (empty($data['group_name'])) {
                         $data['group_name'] = __('None');
@@ -421,6 +430,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportVstackbarTicketstech($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportVstackbarTicketstech']
@@ -457,7 +467,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                      AND {$this->sql_itilcat}
                   GROUP BY name
                   ORDER BY name";
-                $res = $DB->query($sql_create);
+                $res = $DB->doQuery($sql_create);
                 while ($data = $DB->fetchAssoc($res)) {
                     $data['name'] = empty($data['completename']) ? __('None') : $data['completename'];
 
@@ -481,6 +491,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportHbarTopcategory($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarTopcategory']
@@ -510,7 +521,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit']))
                      ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
 
-        $res = $DB->query($sql_create);
+        $res = $DB->doQuery($sql_create);
         while ($data = $DB->fetchAssoc($res)) {
             if (empty($data['completename'])) {
                 $data['completename'] = __('None');
@@ -523,6 +534,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportHbarTopapplicant($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarTopapplicant'] = ['dateinterval', 'limit', 'type'];
@@ -546,7 +558,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit']))
                      ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
 
-        $res = $DB->query($sql_create);
+        $res = $DB->doQuery($sql_create);
         while ($data = $DB->fetchAssoc($res)) {
             if (empty($data['completename'])) {
                 $data['completename'] = __('None');
@@ -559,6 +571,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportVstackbarGroupChange($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportVstackbarGroupChange']
@@ -597,7 +610,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
          ) as ticc
          GROUP BY ticc.nb_add_group";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
 
         $datas['datas'] = [];
         while ($ticket = $DB->fetchAssoc($result)) {
@@ -610,6 +623,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportLineActiontimeVsSolvedelay($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportLineActiontimeVsSolvedelay'] = ['dateinterval', 'period', 'multiplegrouprequest',
@@ -657,6 +671,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportGlineNbTicketBySla($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $area  = false;
@@ -681,7 +696,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             AND `glpi_tickets`.`is_deleted` = '0'
             AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ')
          ORDER BY `glpi_tickets`.`date` ASC';
-            $res_date = $DB->query($query_date);
+            $res_date = $DB->doQuery($query_date);
 
             $dates = [];
             while ($data = $DB->fetchAssoc($res_date)) {
@@ -711,7 +726,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             }
             $query .= 'GROUP BY `glpi_slas`.name, period, respected_sla';
 
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
             while ($data = $DB->fetchAssoc($result)) {
                 $datas['labels2'][$data['period']] = $data['period_name'];
                 if ($data['respected_sla'] == 'ok') {
@@ -734,6 +749,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportHgbarRespectedSlasByTopCategory($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $area = false;
@@ -770,7 +786,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
          ORDER BY nb DESC
          LIMIT " . $category_limit;
 
-            $result_categories = $DB->query($query_categories);
+            $result_categories = $DB->doQuery($query_categories);
             while ($data = $DB->fetchAssoc($result_categories)) {
                 $categories[] = $data['id'];
             }
@@ -796,7 +812,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $query .= ' GROUP BY respected_sla, `glpi_itilcategories`.id
          ORDER BY nb DESC';
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         while ($data = $DB->fetchAssoc($result)) {
             $value = ($data['respected_sla'] == 'ok') ? $this->lcl_slaok
                                                    : $this->lcl_slako;
@@ -817,6 +833,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportHgbarRespectedSlasByTechnician($config = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $area  = false;
@@ -843,7 +860,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
          GROUP BY respected_sla, `glpi_users`.id
          ORDER BY nb DESC";
 
-        $result = $DB->query($query);
+        $result = $DB->doQuery($query);
         while ($data = $DB->fetchAssoc($result)) {
             if ($data['respected_sla'] == 'ok') {
                 $value = $this->lcl_slaok;
@@ -894,6 +911,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public static function selectorBacklogstates()
     {
+        /** @var array $LANG */
         global $LANG;
 
         echo '<br /><b>' . $LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus'] . ' : </b><br />';
@@ -943,6 +961,10 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportVstackbarRespectedSlasByGroup($config = [])
     {
+        /**
+         * @var \DBmysql $DB
+         * @var array $LANG
+        */
         global $DB, $LANG;
 
         $datas = [];
@@ -976,11 +998,11 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                AND `glpi_tickets`.is_deleted = '0'
                AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ')
             GROUP BY `glpi_groups_tickets`.groups_id, respected_sla;';
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
 
             while ($data = $DB->fetchAssoc($result)) {
                 $gp = new Group();
-                $gp->getFromDB($data['groups_id']);
+                $gp->getFromDB((int)$data['groups_id']);
 
                 $datas['labels2'][$gp->fields['name']] = $gp->fields['name'];
 
@@ -1025,9 +1047,11 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
     public function reportVstackbarNbTicketBySla($config = [])
     {
+        /**
+         * @var \DBmysql $DB
+         * @var array $LANG
+        */
         global $DB, $LANG;
-
-        $area = false;
 
         $_SESSION['mreporting_selector']['reportVstackbarNbTicketBySla'] = ['dateinterval', 'allSlasWithTicket'];
 
@@ -1056,7 +1080,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                      AND `glpi_slas`.id IN (" . implode(',', $_SESSION['mreporting_values']['slas']) . ')
                      GROUP BY `glpi_slas`.name, respected_sla;';
 
-            $result = $DB->query($query);
+            $result = $DB->doQuery($query);
             while ($data = $DB->fetchAssoc($result)) {
                 $tmp_datas[$data['name']][$data['respected_sla']] = $data['nb'];
             }

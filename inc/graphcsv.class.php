@@ -42,6 +42,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
     public function showHbar($params, $dashboard = false, $width = false)
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         $criterias = PluginMreportingCommon::initGraphParams($params);
@@ -104,6 +105,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
     public function showHgbar($params, $dashboard = false, $width = false)
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         $criterias = PluginMreportingCommon::initGraphParams($params);

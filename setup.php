@@ -67,6 +67,10 @@ include_once __DIR__ . '/vendor/autoload.php';
  */
 function plugin_init_mreporting()
 {
+    /**
+     * @var array $PLUGIN_HOOKS
+     * @var array $CFG_GLPI
+     */
     global $PLUGIN_HOOKS, $CFG_GLPI;
 
     $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;

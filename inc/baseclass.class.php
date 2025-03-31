@@ -48,14 +48,18 @@ class PluginMreportingBaseclass
 
     public function __construct($config = [])
     {
+        /**
+         * @var DBmysql $DB
+         * @var array   $LANG
+         */
         global $DB, $LANG;
 
         //force MySQL DATE_FORMAT in user locale
         $query = "SET lc_time_names = '" . $_SESSION['glpilanguage'] . "'";
-        $DB->query($query);
+        $DB->doQuery($query);
 
         if (empty($config)) {
-            return true;
+            return;
         }
 
         $this->filters = [

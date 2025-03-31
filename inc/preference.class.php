@@ -52,9 +52,9 @@ class PluginMreportingPreference extends CommonDBTM
     /**
      *
      * Get a preference for an user
-     * @param unknown_type preference field to get
-     * @param unknown_type user ID
-     * @return preference value or 0
+     * @param string $field preference field to get
+     * @param int $users_id user ID
+     * @return int value or 0
      */
     public static function checkPreferenceValue($field, $users_id = 0)
     {
@@ -113,7 +113,7 @@ class PluginMreportingPreference extends CommonDBTM
     /**
      *
      * Check if at least one template exists
-     * @return true if at least one template exists, false otherwise
+     * @return bool if at least one template exists, false otherwise
      */
     public static function atLeastOneTemplateExists()
     {
@@ -153,6 +153,7 @@ class PluginMreportingPreference extends CommonDBTM
         echo '</table>';
         echo '</div>';
         Html::closeForm();
+        return true;
     }
 
     public static function getFiles($directory, $ext)
@@ -196,7 +197,7 @@ class PluginMreportingPreference extends CommonDBTM
     {
         switch (get_class($item)) {
             case 'Preference':
-                return [1 => __('More Reporting', 'mreporting')];
+                return __('More Reporting', 'mreporting');
             default:
                 return '';
         }

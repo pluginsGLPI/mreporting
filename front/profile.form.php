@@ -32,6 +32,9 @@ include('../../../inc/includes.php');
 
 Session::checkRight('profile', READ);
 
+/** @var DBmysql $DB */
+global $DB;
+
 $config = new PluginMreportingConfig();
 $res    = $config->find();
 $profil = new PluginMreportingProfile();
