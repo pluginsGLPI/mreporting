@@ -67,15 +67,12 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public function showDashBoard($show_reports_dropdown = true)
     {
+        /** @var array $LANG */
         global $LANG;
 
         $root_ajax = Plugin::getWebDir('mreporting') . '/ajax/dashboard.php';
 
-        if (isset($options['target'])) {
-            $target = $options['target'];
-        } else {
-            $target = $this->getFormURL();
-        }
+        $target = $this->getFormURL();
 
         $_REQUEST['f_name'] = 'option';
         PluginMreportingCommon::getSelectorValuesByUser();
@@ -278,6 +275,7 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public static function updateWidget($idreport)
     {
+        /** @var array $LANG */
         global $LANG;
 
         $dashboard = new self();

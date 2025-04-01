@@ -126,7 +126,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
                                                 $users_infos,
                                                 $options,
                                             ),
-                                            $notificationtarget->additionalData,
+                                            [],
                                         );
                                     } else {
                                         $notificationtarget->getFromDB($target['id']);

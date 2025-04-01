@@ -1106,28 +1106,6 @@ class PluginMreportingCommon extends CommonDBTM
                         }
                     }
                 }
-                if (
-                    isset($_SESSION['glpi_plugin_mreporting_odtarray']) && !empty($_SESSION['glpi_plugin_mreporting_odtarray'])
-                ) {
-                    if (PluginMreportingPreference::atLeastOneTemplateExists()) {
-                        $template = PluginMreportingPreference::checkPreferenceTemplateValue(Session::getLoginUserID());
-                        if ($template) {
-                            self::generateOdt($_SESSION['glpi_plugin_mreporting_odtarray']);
-                        } else {
-                            Html::popHeader(__('General Report - ODT', 'mreporting'), $_SERVER['PHP_SELF']);
-                            echo "<div class='center'><br>" . __('Please, select a model in your preferences', 'mreporting') . '<br><br>';
-                            Html::displayBackLink();
-                            echo '</div>';
-                            Html::popFooter();
-                        }
-                    } else {
-                        Html::popHeader(__('General Report - ODT', 'mreporting'), $_SERVER['PHP_SELF']);
-                        echo "<div class='center'><br>" . __('No model available', 'mreporting') . '<br><br>';
-                        Html::displayBackLink();
-                        echo '</div>';
-                        Html::popFooter();
-                    }
-                }
             } else { //no selected data
                 Html::popHeader(__('General Report - ODT', 'mreporting'), $_SERVER['PHP_SELF']);
                 echo "<div class='center'><br>" . __('No graphic selected', 'mreporting') . '<br><br>';
@@ -1673,7 +1651,6 @@ class PluginMreportingCommon extends CommonDBTM
         }
         $_SERVER['REQUEST_URI'] .= '&date1' . $randname . '=' . $date1 . '&date2' . $randname . '=' . $date2;
 
-        /* @phpstan-ignore-next-line */
         SavedSearch::showSaveButton(SavedSearch::URI, __CLASS__);
 
         //If there's no selector for the report, there's no need for a reset button !
