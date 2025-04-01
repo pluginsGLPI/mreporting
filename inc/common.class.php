@@ -731,35 +731,97 @@ class PluginMreportingCommon extends CommonDBTM
     */
     public static function endGraph($options, $dashboard = false)
     {
-        foreach ($options as $k => $v) {
-            $$k = $v;
-        }
+        $opt       = $options['opt'];
+        $export    = $options['export'];
+        $datas     = $options['datas'];
+        $unit      = $options['unit'];
+        $labels2   = [];
+        $flip_data = false;
 
         $randname = false;
+        if (isset($opt['randname']) && $opt['randname'] !== false) {
+            $randname                    = $opt['randname'];
+            $_REQUEST['short_classname'] = $opt['short_classname'];
+            $_REQUEST['f_name']          = $opt['f_name'];
+            $_REQUEST['gtype']           = $opt['gtype'];
+            $_REQUEST['randname']        = $opt['randname'];
+
+            //End Script for graph display
+            //if $randname exists
+
+            $config = PluginMreportingConfig::initConfigParams(
+                $opt['f_name'],
+                'PluginMreporting' . $opt['short_classname'],
+            );
+            if (!$export) {
+                if ($config['graphtype'] == 'SVG') {
+                    echo "}
+                  showGraph$randname();
+               </script>";
+                }
+                echo '</div>';
+            }
+        }
 
         if (!$dashboard) {
-            if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != 'test') {
-                echo "<div class='graph_bottom'>";
-                echo "<span style='float:left'>";
-                echo '<br><br>';
-                self::showNavigation();
-                echo '</span>';
-                echo "<span style='float:right'>";
-                if (Session::haveRight('config', UPDATE)) {
-                    echo '<b>' . PluginMreportingConfig::getTypeName() . '</b> : ';
-                    echo "&nbsp;<a href='config.form.php?name='&classname='' target='_blank'>";
-                    echo "<img src='../pics/config.png' class='title_pics'/></a>";
+            $request_string = self::getRequestString($_REQUEST);
+
+            if ($export != 'odtall') {
+                $show_graph = false;
+                if ($randname !== false && !$export) {
+                    $show_graph = PluginMreportingConfig::showGraphConfigValue($opt['f_name'], $opt['class']);
+                    self::showGraphDatas($datas, $unit, $labels2, $flip_data, $show_graph);
                 }
-                echo '</span>';
-            }
-            echo "<div style='clear:both;'></div>";
-            echo '</div>';
+                if (!$export) {
+                    if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != 'test') {
+                        echo "<div class='graph_bottom'>";
+                        echo "<span style='float:left'>";
+                        echo '<br><br>';
+                        self::showNavigation();
+                        echo '</span>';
+                        echo "<span style='float:right'>";
+                        if (Session::haveRight('config', UPDATE)) {
+                            echo '<b>' . PluginMreportingConfig::getTypeName() . '</b> : ';
+                            echo "&nbsp;<a href='config.form.php?name=" . $opt['f_name'] .
+                            '&classname=' . $opt['class'] . "' target='_blank'>";
+                            echo "<img src='../pics/config.png' class='title_pics'/></a>";
+                        }
+                        if ($randname !== false) {
+                            echo '<br><br>';
 
-            if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != 'test') {
-                echo '</div></div>';
-            }
+                            echo "<form method='post' action='export.php?$request_string'
+                        style='margin: 0; padding: 0' target='_blank' id='export_form'>";
 
-            echo '</div>';
+                            echo '<b>' . __('Export') . '</b> : ';
+                            $params = ['myname' => 'ext',
+                                'ajax_page'     => Plugin::getWebDir('mreporting') . '/ajax/dropdownExport.php',
+                                'class'         => __CLASS__,
+                                'span'          => 'show_ext',
+                                'gtype'         => $_REQUEST['gtype'],
+                                'show_graph'    => $show_graph,
+                                'display_svg'   => ($config['graphtype'] != 'PNG'),
+                                'randname'      => $randname,
+                            ];
+
+                            self::dropdownExt($params);
+
+                            echo "<span id='show_ext'></span>";
+                            Html::closeForm();
+                        }
+                        echo '</span>';
+                    }
+                    echo "<div style='clear:both;'></div>";
+                    echo '</div>';
+
+                    if (isset($_REQUEST['f_name']) && $_REQUEST['f_name'] != 'test') {
+                        echo '</div></div>';
+                    }
+                }
+
+                if ($randname == false) {
+                    echo '</div>';
+                }
+            }
         }
 
         //destroy specific palette
@@ -1180,9 +1242,9 @@ class PluginMreportingCommon extends CommonDBTM
         }
 
         $odf = new Odf('../templates/template.odt', $config);
-        $odf->setVars('category', $category, (bool)ENT_NOQUOTES, 'utf-8');
-        $odf->setVars('title', $params[0]['title'], (bool)ENT_NOQUOTES, 'utf-8');
-        $odf->setVars('description', $description, (bool)ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('category', $category, ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('title', $params[0]['title'], ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('description', $description, ENT_NOQUOTES, 'utf-8');
 
         $path = GLPI_PLUGIN_DOC_DIR . '/mreporting/' . $params[0]['f_name'] . '.png';
 
@@ -1190,7 +1252,7 @@ class PluginMreportingCommon extends CommonDBTM
             list($image_width, $image_height) = @getimagesize($path);
             $image_width  *= Odf::PIXEL_TO_CM;
             $image_height *= Odf::PIXEL_TO_CM * 17 / $image_width;
-            $odf->setImage('image', $path, -1, 17, (int)$image_height);
+            $odf->setImage('image', $path, -1, 17, $image_height);
         } else {
             $odf->setVars('image', '', true, 'UTF-8');
         }
@@ -1209,12 +1271,25 @@ class PluginMreportingCommon extends CommonDBTM
                 $multipledatas->setVars('datas_title', mb_strtoupper(__('data', 'mreporting')), ENT_NOQUOTES, 'utf-8');
 
                 foreach ($datas as $key => $value) {
+                    $multipledatas->subtitle->datas_subtitle(mb_strtoupper($key), ENT_NOQUOTES, 'utf-8');
+                    $multipledatas->subtitle->merge();
+
+                    foreach ($value as $col => $val) {
+                        $multipledatas->datas->row($col, ENT_NOQUOTES, 'utf-8');
+                        $multipledatas->datas->value($val, ENT_NOQUOTES, 'utf-8');
+                        $multipledatas->datas->merge();
+                    }
                     $multipledatas->merge();
                 }
 
                 // Simples graph
             } else {
                 $singledatas->setVars('datas_title', mb_strtoupper(__('data', 'mreporting')), ENT_NOQUOTES, 'utf-8');
+                foreach ($datas as $key => $value) {
+                    $singledatas->datas->row($key, ENT_NOQUOTES, 'utf-8');
+                    $singledatas->datas->value($value, ENT_NOQUOTES, 'utf-8');
+                    $singledatas->datas->merge();
+                }
                 $singledatas->merge();
             }
         }
@@ -1322,7 +1397,7 @@ class PluginMreportingCommon extends CommonDBTM
     {
         /**
          * @var array $LANG
-         * @var DBmysql $DB
+         * @var \DBmysql $DB
          */
         global $LANG, $DB;
 
@@ -1781,7 +1856,7 @@ class PluginMreportingCommon extends CommonDBTM
         $myvalues  = (isset($_SESSION['mreporting_values']) ? $_SESSION['mreporting_values'] : []);
         $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', Session::getLoginUserID());
         if ($selectors) {
-            $values = json_decode(stripslashes((string)$selectors), true);
+            $values = json_decode(stripslashes($selectors), true);
             if (isset($_REQUEST['f_name']) && isset($values[$_REQUEST['f_name']])) {
                 foreach ($values[$_REQUEST['f_name']] as $key => $value) {
                     $myvalues[$key] = $value;
@@ -1809,7 +1884,7 @@ class PluginMreportingCommon extends CommonDBTM
         $selectors = PluginMreportingPreference::checkPreferenceValue('selectors', $users_id);
 
         if ($selectors) {
-            $values = json_decode(stripslashes((string)$selectors), true);
+            $values = json_decode(stripslashes($selectors), true);
             if (isset($values[$report_name])) {
                 unset($values[$report_name]);
             }
@@ -1840,10 +1915,10 @@ class PluginMreportingCommon extends CommonDBTM
         }
 
         $date_array1 = explode('-', $_SESSION['mreporting_values']['date1' . $randname]);
-        $time1       = mktime(0, 0, 0, (int)$date_array1[1], (int)$date_array1[2], (int)$date_array1[0]);
+        $time1       = mktime(0, 0, 0, $date_array1[1], $date_array1[2], $date_array1[0]);
 
         $date_array2 = explode('-', $_SESSION['mreporting_values']['date2' . $randname]);
-        $time2       = mktime(0, 0, 0, (int)$date_array2[1], (int)$date_array2[2], (int)$date_array2[0]);
+        $time2       = mktime(0, 0, 0, $date_array2[1], $date_array2[2], $date_array2[0]);
 
         //if data inverted, reverse it
         if ($time1 > $time2) {
@@ -1863,12 +1938,16 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Get the max value of a multidimensionnal array
-     * @param  array $array the array to compute
+     * @param  array|int $array the array to compute
      * @return number the sum
      */
     public static function getArrayMaxValue($array)
     {
         $max = 0;
+
+        if (!is_array($array)) {
+            return $array;
+        }
 
         foreach ($array as $value) {
             if (is_array($value)) {
@@ -1888,12 +1967,16 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Computes the sum of a multidimensionnal array
-     * @param  array $array the array where to seek
+     * @param  array|int $array the array where to seek
      * @return number the sum
      */
     public static function getArraySum($array)
     {
         $sum = 0;
+
+        if (!is_array($array)) {
+            return $array;
+        }
 
         foreach ($array as $value) {
             if (is_array($value)) {
@@ -1908,7 +1991,7 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Get the depth of a multidimensionnal array
-     * @param  array $array the array where to seek
+     * @param  array() $array the array where to seek
      * @return number the sum
      */
     public static function getArrayDepth($array)
@@ -1944,7 +2027,6 @@ class PluginMreportingCommon extends CommonDBTM
     /**
      * Transform a flat array to a tree array (without keys changes)
      * @param  array $elements the flat array. Format : array('id', 'parent', 'name', 'count')
-     * @param integer $parentId
      * @return array the tree array. Format : array(orginal_keys, children => array(...)
      */
     public static function mapTree(array &$elements, $parentId = 0)

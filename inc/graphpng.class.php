@@ -156,57 +156,57 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     public function generateImage($params)
     {
         // Default values of parameters
-        $image     = '';
-        $export    = 'png';
-        $f_name    = '';
-        $class     = '';
-        $title     = '';
-        $unit      = '';
-        $raw_datas = [];
-        $withdata  = 0;
+        $default_params = [
+            'image'     => '',
+            'export'    => 'png',
+            'f_name'    => '',
+            'class'     => '',
+            'title'     => '',
+            'unit'      => '',
+            'raw_datas' => [],
+            'withdata'  => 0,
+        ];
 
-        foreach ($params as $key => $val) {
-            $$key = $val;
-        }
+        $params = array_merge($default_params, $params);
 
         ob_start();
 
-        if ($export == 'odt') {
-            $show_graph = PluginMreportingConfig::showGraphConfigValue($f_name, $class);
+        if ($params['export'] == 'odt') {
+            $show_graph = PluginMreportingConfig::showGraphConfigValue($params['f_name'], $params['class']);
             if ($show_graph) {
-                $path = GLPI_PLUGIN_DOC_DIR . '/mreporting/' . $f_name . '.png';
-                imagepng($image, $path);
+                $path = GLPI_PLUGIN_DOC_DIR . '/mreporting/' . $params['f_name'] . '.png';
+                imagepng($params['image'], $path);
             }
             $common    = new PluginMreportingCommon();
-            $options[] = ['title' => $title,
-                'f_name'          => $f_name,
-                'class'           => $class,
-                'randname'        => $randname,
-                'raw_datas'       => $raw_datas,
-                'withdata'        => $withdata,
+            $options[] = ['title' => $params['title'],
+                'f_name'          => $params['f_name'],
+                'class'           => $params['class'],
+                'randname'        => $params['randname'],
+                'raw_datas'       => $params['raw_datas'],
+                'withdata'        => $params['withdata'],
             ];
             $common->generateOdt($options);
 
             return true;
-        } elseif ($export == 'odtall') {
-            $show_graph = PluginMreportingConfig::showGraphConfigValue($f_name, $class);
+        } elseif ($params['export'] == 'odtall') {
+            $show_graph = PluginMreportingConfig::showGraphConfigValue($params['f_name'], $params['class']);
             if ($show_graph) {
-                $path = GLPI_PLUGIN_DOC_DIR . '/mreporting/' . $f_name . '.png';
-                imagepng($image, $path);
+                $path = GLPI_PLUGIN_DOC_DIR . '/mreporting/' . $params['f_name'] . '.png';
+                imagepng($params['image'], $path);
             }
-            if (isset($raw_datas['datas'])) {
-                $_SESSION['glpi_plugin_mreporting_odtarray'][] = ['title' => $title,
-                    'f_name'                                              => $f_name,
-                    'class'                                               => $class,
-                    'randname'                                            => $randname,
-                    'raw_datas'                                           => $raw_datas,
-                    'withdata'                                            => $withdata,
+            if (isset($params['raw_datas']['datas'])) {
+                $_SESSION['glpi_plugin_mreporting_odtarray'][] = ['title' => $params['title'],
+                    'f_name'                                              => $params['f_name'],
+                    'class'                                               => $params['class'],
+                    'randname'                                            => $params['randname'],
+                    'raw_datas'                                           => $params['raw_datas'],
+                    'withdata'                                            => $params['withdata'],
                 ];
             }
 
             return true;
         } else {
-            imagepng($image);
+            imagepng($params['image']);
             $contents = ob_get_contents();
             ob_end_clean();
 
@@ -415,8 +415,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     imagecolorallocatealpha(
                         $image,
                         round($tcr * $ya + $icr * $yb),
-                        ($tcg * $ya + $icg * $yb),
-                        ($tcb * $ya + $icb * $yb),
+                        (int) ($tcg * $ya + $icg * $yb),
+                        (int) ($tcb * $ya + $icb * $yb),
                         hexdec($alpha),
                     ),
                 );
@@ -495,7 +495,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
     public function imageSmoothAlphaLineLarge($image, $x1, $y1, $x2, $y2, $color)
     {
-        imageline($image, $x1, $y1, $x2, $y2, hexdec($color));
+        imageline($image, (int) $x1, (int) $y1, (int) $x2, (int) $y2, hexdec($color));
         $this->imageSmoothAlphaLine($image, $x1 - 1, $y1 - 1, $x2 - 1, $y2 - 1, $color);
         $this->imageSmoothAlphaLine($image, $x1 + 1, $y1 + 1, $x2 + 1, $y2 + 1, $color);
         $this->imageSmoothAlphaLine($image, $x1, $y1 + 1, $x2, $y2 + 1, $color);
@@ -2008,7 +2008,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 $yaxis = $height - 30 - $xstep * $i;
 
                 //grey lines
-                imageLine($image, 30, $yaxis, 30 + $width_line * ($nb - 1), $yaxis, hexdec($this->grey));
+                imageLine($image, 30, (int) $yaxis, 30 + (int) $width_line * ($nb - 1), (int) $yaxis, hexdec($this->grey));
 
                 //value labels
                 $val       = round($i * $max / 12);
@@ -2029,7 +2029,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             //draw y-axis grey step line
             for ($i = 0; $i < $nb; $i++) {
                 $xaxis = 30 + $width_line * $i;
-                imageLine($image, $xaxis, 50, $xaxis, $height - 25, hexdec($this->grey));
+                imageLine($image, (int) $xaxis, 50, (int) $xaxis, $height - 25, hexdec($this->grey));
             }
 
             //draw y-axis
