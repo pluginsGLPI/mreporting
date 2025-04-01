@@ -318,7 +318,6 @@ class PluginMreportingConfig extends CommonDBTM
                 }
 
                 $input['firstconfig'] = 1;
-                unset($input['id']);
                 $this->add($input);
             }
         }
@@ -871,6 +870,7 @@ class PluginMreportingConfig extends CommonDBTM
             return true;
         }
 
+        /* @phpstan-ignore-next-line */
         $self = new self();
         if ($self->getFromDBByFunctionAndClassname($name, $classname)) {
             return $self->fields['show_graph'];

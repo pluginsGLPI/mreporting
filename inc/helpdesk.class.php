@@ -366,7 +366,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
         $datas['datas'] = [];
         while ($ticket = $DB->fetchAssoc($result)) {
-            if (is_empty($ticket['category_id'])) {
+            if (empty($ticket['category_id'])) {
                 $ticket['category_id']   = 0;
                 $ticket['category_name'] = __('None');
             }
@@ -485,7 +485,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $result = $DB->doQuery($query);
 
         while ($ticket = $DB->fetchAssoc($result)) {
-            if (is_null($ticket['category_name'])) {
+            if (empty($ticket['category_name'])) {
                 $ticket['category_name'] = __('None');
             }
 
@@ -583,6 +583,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             $config['randname'],
         );
 
+        $status_to_show = [];
         // Get status to show
         if (isset($_POST['status_1'])) {
             foreach ($_POST as $key => $value) {
@@ -782,7 +783,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $result = $DB->doQuery($query);
 
         while ($ticket = $DB->fetchAssoc($result)) {
-            if (is_null($ticket['technician'])) {
+            if (empty($ticket['technician'])) {
                 $ticket['technician'] = __('None');
             }
             $datas['datas'][$status[$ticket['status']]][$ticket['username']] = $ticket['count'];
@@ -844,10 +845,10 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
     * You can configure your dates for the Allodt export
     *
     * @param array $opt : contains the dates
-    * @param type $functionname
-    * @return $opt
+    * @param string $functionname
+    * @return array $opt
     */
-    public function customExportDates(array $opt, $functionname)
+    public function customExportDates(array $opt, string $functionname)
     {
         $config = PluginMreportingConfig::initConfigParams($functionname, __CLASS__);
 
@@ -859,12 +860,12 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
     /**
     * Preconfig datas with your values when init config is done
     *
-    * @param type $funct_name
-    * @param type $classname
+    * @param string $funct_name
+    * @param string $classname
     * @param PluginMreportingConfig $config
-    * @return $config
+    * @return array|bool $config
     */
-    public function preconfig($funct_name, $classname, PluginMreportingConfig $config)
+    public function preconfig(string $funct_name, string $classname, PluginMreportingConfig $config)
     {
         if ($funct_name != -1 && $classname) {
             $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $funct_name);

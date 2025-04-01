@@ -40,7 +40,8 @@ class PluginMreportingGraph
     */
     public function initGraph($options)
     {
-        global $LANG, $CFG_GLPI;
+      /** @var array $LANG */
+        global $LANG;
 
         $width    = $this->width + 100;
         $randname = $options['randname'];
@@ -131,6 +132,11 @@ class PluginMreportingGraph
      */
     public function showHbar($params, $dashboard = false, $width = false)
     {
+        $opt = [
+            'f_name' => '',
+            'class'  => '',
+        ];
+
         ob_start();
         if ($width !== false) {
             $this->width = $width;

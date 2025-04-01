@@ -490,7 +490,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             $key                 = $version['os_name'] . ' ' . $version['os_version'] . ' (' . round($version['os_qty'] / $total_computers * 100) . '%)';
             $data['datas'][$key] = $version['os_qty'];
         }
-        if (isset($data['datas']) && !empty($data['datas'])) {
+        if (!empty($data['datas'])) {
             arsort($data['datas']);
         }
 
@@ -549,7 +549,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 }
             }
         }
-        if (isset($data['datas']) && !empty($data['datas'])) {
+        if (!empty($data['datas'])) {
             arsort($data['datas']);
         }
 
@@ -591,7 +591,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 $data['datas'][$os['name']] = $number;
             }
         }
-        if (isset($data['datas']) && !empty($data['datas'])) {
+        if (!empty($data['datas'])) {
             arsort($data['datas']);
         }
 
@@ -714,7 +714,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 }
             }
         }
-        if (isset($data['datas']) && count($data['datas'])) {
+        if (!empty($data['datas'])) {
             arsort($data['datas']);
         }
 
@@ -868,6 +868,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     public function reportHbarComputersByEntity($config = [])
     {
         /** @var \DBmysql $DB */
+        /** @var array $CFG_GLPI */
         global $DB, $CFG_GLPI;
 
         $_SESSION['mreporting_selector']['reportHbarComputersByEntity'] = ['multiplestates',
@@ -915,7 +916,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             if ($value == 0) {
                 $percent = 0;
             } else {
-                $percent = round((100 * $value) / $total);
+                $percent = round((100 * (int) $value) / $total);
             }
             $ent_id               = $entities[$key];
             $key                  = str_replace('pourcentage', $percent, $key);
