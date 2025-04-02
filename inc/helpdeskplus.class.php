@@ -1002,7 +1002,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
             while ($data = $DB->fetchAssoc($result)) {
                 $gp = new Group();
-                $gp->getFromDB((int)$data['groups_id']);
+                $gp->getFromDB((int) $data['groups_id']);
 
                 $datas['labels2'][$gp->fields['name']] = $gp->fields['name'];
 

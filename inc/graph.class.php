@@ -40,7 +40,7 @@ class PluginMreportingGraph
     */
     public function initGraph($options)
     {
-      /** @var array $LANG */
+        /** @var array $LANG */
         global $LANG;
 
         $width    = $this->width + 100;
@@ -142,7 +142,7 @@ class PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         [
@@ -348,7 +348,7 @@ JAVASCRIPT;
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         [
@@ -548,7 +548,7 @@ JAVASCRIPT;
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         [
@@ -825,7 +825,7 @@ JAVASCRIPT;
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         [
@@ -1054,7 +1054,7 @@ JAVASCRIPT;
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         [
@@ -1288,7 +1288,7 @@ JAVASCRIPT;
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         [
@@ -1548,7 +1548,7 @@ JAVASCRIPT;
             'desc'      => $desc,
             'root'      => $root,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         [

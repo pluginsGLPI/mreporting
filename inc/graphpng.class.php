@@ -569,7 +569,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         //$rand = $opt['rand'];
@@ -768,7 +768,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         if ($width !== false) {
@@ -1015,7 +1015,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         [
@@ -1355,7 +1355,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         //$rand = $opt['rand'];
@@ -1609,7 +1609,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         //$rand = $opt['rand'];
@@ -1954,7 +1954,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         //$rand = $opt['rand'];
@@ -2284,7 +2284,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         //$rand = $opt['rand'];
