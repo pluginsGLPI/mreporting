@@ -647,7 +647,7 @@ class PluginMreportingCommon extends CommonDBTM
         if (!isset($_SESSION['mreporting_values']['date1' . $config['randname']])) {
             $_SESSION['mreporting_values']['date1' . $config['randname']] = date(
                 'Y-m-d',
-                time() - ($config['delay'] * 24 * 60 * 60),
+                time() - ((intval($config['delay'])) * 24 * 60 * 60),
             );
         }
         if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {

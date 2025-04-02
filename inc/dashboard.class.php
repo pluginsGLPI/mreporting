@@ -299,14 +299,6 @@ class PluginMreportingDashboard extends CommonDBTM
 
         $short_classname = str_replace('PluginMreporting', '', $report->fields['classname']);
 
-        if (!empty($short_classname) && !empty($f_name)) {
-            if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-                $opt  = ['short_classname' => $short_classname , 'f_name' => $f_name , 'gtype' => $gtype];
-                $dash = new PluginMreportingDashboard();
-                $out  = $dash->showGraphOnDashboard($opt);
-            }
-        }
-
         echo $out;
     }
 
