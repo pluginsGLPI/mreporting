@@ -51,7 +51,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         // Write in Log
@@ -117,7 +117,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         // Write in log
@@ -202,7 +202,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             'title'     => $title,
             'desc'      => $desc,
             'export'    => $export,
-            'opt'       => $opt
+            'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
         /* @phpstan-ignore-next-line */
