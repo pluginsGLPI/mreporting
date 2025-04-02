@@ -820,7 +820,20 @@ class PluginMreportingConfig extends CommonDBTM
      *
      * @param $name of graph
      * @param $classname of graph
-    **/
+     *
+     * @return array{
+     *     area: bool,
+     *     spline: bool,
+     *     flip_data: bool,
+     *     unit: string,
+     *     show_label: string,
+     *     delay: string,
+     *     condition: string,
+     *     show_graph: bool,
+     *     randname: int,
+     *     graphtype: string
+     * }
+     **/
     public static function initConfigParams($name, $classname)
     {
         $crit = ['area'  => false,
@@ -851,7 +864,7 @@ class PluginMreportingConfig extends CommonDBTM
 
         /* @phpstan-ignore-next-line */
         if (DEBUG_MREPORTING) {
-            $crit['show_graph'] = 1;
+            $crit['show_graph'] = true;
         }
 
         return $crit;

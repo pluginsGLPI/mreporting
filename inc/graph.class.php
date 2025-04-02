@@ -128,29 +128,30 @@ class PluginMreportingGraph
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void
+     * @return void|bool
      */
     public function showHbar($params, $dashboard = false, $width = false)
     {
-        $opt = [
-            'f_name' => '',
-            'class'  => '',
-        ];
-
         ob_start();
         if ($width !== false) {
             $this->width = $width;
         }
 
-        $criterias = PluginMreportingCommon::initGraphParams($params);
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'export'    => $export,
+            'opt'       => $opt
+        ] = PluginMreportingCommon::initGraphParams($params);
 
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'unit'       => $unit,
+            'show_label' => $show_label,
+            'delay'      => $delay,
+            'show_graph' => $show_graph,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -333,7 +334,7 @@ JAVASCRIPT;
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void
+     * @return void|bool
      */
     public function showPie($params, $dashboard = false, $width = false)
     {
@@ -342,17 +343,21 @@ JAVASCRIPT;
             $this->width = $width;
         }
 
-        $criterias = PluginMreportingCommon::initGraphParams($params);
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'export'    => $export,
+            'opt'       => $opt
+        ] = PluginMreportingCommon::initGraphParams($params);
 
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
-
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'unit'       => $unit,
+            'show_label' => $show_label,
+            'delay'      => $delay,
+            'show_graph' => $show_graph,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -529,7 +534,7 @@ JAVASCRIPT;
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void
+     * @return void|bool
      */
     public function showSunburst($params, $dashboard = false, $width = false)
     {
@@ -537,17 +542,23 @@ JAVASCRIPT;
         if ($width !== false) {
             $this->width = $width;
         }
-        $criterias = PluginMreportingCommon::initGraphParams($params);
 
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'export'    => $export,
+            'opt'       => $opt
+        ] = PluginMreportingCommon::initGraphParams($params);
 
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'flip_data'  => $flip_data,
+            'unit'       => $unit,
+            'show_label' => $show_label,
+            'delay'      => $delay,
+            'show_graph' => $show_graph,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -800,24 +811,31 @@ JAVASCRIPT;
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void
+     * @return void|bool
      */
     public function showHgbar($params, $dashboard = false, $width = false)
     {
-        $criterias = PluginMreportingCommon::initGraphParams($params);
         ob_start();
         if ($width !== false) {
             $this->width = $width;
         }
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
 
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'export'    => $export,
+            'opt'       => $opt
+        ] = PluginMreportingCommon::initGraphParams($params);
 
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'flip_data'  => $flip_data,
+            'unit'       => $unit,
+            'show_label' => $show_label,
+            'delay'      => $delay,
+            'show_graph' => $show_graph,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -1022,7 +1040,7 @@ JAVASCRIPT;
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void
+     * @return void|bool
      */
     public function showVstackbar($params, $dashboard = false, $width = false)
     {
@@ -1030,17 +1048,23 @@ JAVASCRIPT;
         if ($width !== false) {
             $this->width = $width;
         }
-        $criterias = PluginMreportingCommon::initGraphParams($params);
 
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'export'    => $export,
+            'opt'       => $opt
+        ] = PluginMreportingCommon::initGraphParams($params);
 
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'flip_data'  => $flip_data,
+            'unit'       => $unit,
+            'show_label' => $show_label,
+            'delay'      => $delay,
+            'show_graph' => $show_graph,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -1250,7 +1274,7 @@ JAVASCRIPT;
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
      * @param $area : show plain chart instead only a line (optionnal)
-     * @return void
+     * @return void|bool
      */
     public function showArea($params, $dashboard = false, $width = false)
     {
@@ -1259,17 +1283,23 @@ JAVASCRIPT;
             $this->width = $width;
         }
 
-        $criterias = PluginMreportingCommon::initGraphParams($params);
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'export'    => $export,
+            'opt'       => $opt
+        ] = PluginMreportingCommon::initGraphParams($params);
 
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
-
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'area'       => $area,
+            'spline'     => $spline,
+            'unit'       => $unit,
+            'show_label' => $show_label,
+            'delay'      => $delay,
+            'show_graph' => $show_graph,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         $area = true;
         if (isset($params['area'])) {
@@ -1479,7 +1509,7 @@ JAVASCRIPT;
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void
+     * @return void|bool|null
      */
     public function showLine($params, $dashboard = false, $width = false)
     {
@@ -1503,7 +1533,7 @@ JAVASCRIPT;
     * @param $show_label : behavior of the graph labels,
     *                      values : 'hover', 'never', 'always' (optionnal)
     * @param $export : keep only svg to export (optionnal)
-    * @return void
+    * @return void|bool
     */
     public function showGarea($params, $dashboard = false, $width = false)
     {
@@ -1511,16 +1541,26 @@ JAVASCRIPT;
         if ($width !== false) {
             $this->width = $width;
         }
-        $criterias = PluginMreportingCommon::initGraphParams($params);
 
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'root'      => $root,
+            'export'    => $export,
+            'opt'       => $opt
+        ] = PluginMreportingCommon::initGraphParams($params);
 
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'area'       => $area,
+            'spline'     => $spline,
+            'flip_data'  => $flip_data,
+            'unit'       => $unit,
+            'show_label' => $show_label,
+            'delay'      => $delay,
+            'show_graph' => $show_graph,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -1747,7 +1787,7 @@ JAVASCRIPT;
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void
+     * @return void|bool|null
      */
     public function showGline($params, $dashboard = false, $width = false)
     {
@@ -1764,7 +1804,8 @@ JAVASCRIPT;
      *
      * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
      * @param $unit, ex : '%', 'Kg' (optionnal)
-     * @return void
+     *
+     * @return array
      */
     public function initDatasSimple($datas, $unit = '', $links = [])
     {
@@ -1816,7 +1857,7 @@ JAVASCRIPT;
      * @param $labels2
      * @param $unit, ex : '%', 'Kg' (optionnal)
      * @param $stacked : if stacked graph, option to compile the max value
-     * @return void
+     * @return array
      */
     public function initDatasMultiple($datas, $labels2, $unit = '', $stacked = false)
     {
@@ -1902,7 +1943,7 @@ JAVASCRIPT;
      *             'key2' => array('key2.1' => val, 'key2.2' => val, 'key2.3' => val)
      *          )
      * @param $unit, ex : '%', 'Kg' (optionnal)
-     * @return void
+     * @return array
      */
     public function initDatasTree($datas, $unit = '')
     {

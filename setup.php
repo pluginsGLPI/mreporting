@@ -31,7 +31,7 @@
 define('PLUGIN_MREPORTING_VERSION', '1.8.7');
 
 // Minimal GLPI version, inclusive
-define('PLUGIN_MREPORTING_MIN_GLPI', '10.0.0');
+define('PLUGIN_MREPORTING_MIN_GLPI', '10.0.11');
 // Maximum GLPI version, exclusive
 define('PLUGIN_MREPORTING_MAX_GLPI', '10.0.99');
 

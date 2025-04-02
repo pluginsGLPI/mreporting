@@ -574,22 +574,33 @@ class PluginMreportingCommon extends CommonDBTM
     }
 
     /**
-     * init Params for graph function
+     * Initialize parameters for the graph function.
      *
-     * @params
-    */
-    public static function initGraphParams($params)
+     * @param array $params Input parameters that override default values.
+     *
+     * @return array{
+     *     raw_datas: array,
+     *     title: string,
+     *     desc: string,
+     *     root: string,
+     *     export: bool,
+     *     opt: array
+     * }
+     */
+    public static function initGraphParams(array $params): array
     {
-        $crit = [];
-
         // Default values of parameters
-        $raw_datas = [];
-        $title     = '';
-        $desc      = '';
-        $root      = '';
-
-        $export = false;
-        $opt    = [];
+        $crit = [
+            'raw_datas' => [],
+            'title'     => '',
+            'desc'      => '',
+            'root'      => '',
+            'export'    => false,
+            'opt'       => [
+                'f_name' => '',
+                'class'  => '',
+            ],
+        ];
 
         foreach ($params as $key => $val) {
             $crit[$key] = $val;
@@ -835,6 +846,8 @@ class PluginMreportingCommon extends CommonDBTM
      * @param $datas, ex : array( 'test1' => 15, 'test2' => 25)
      * @param $unit, ex : '%', 'Kg' (optionnal)
      * @if percent, return new datas
+     *
+     * @return array
      */
     public static function compileDatasForUnit($values, $unit = '')
     {
