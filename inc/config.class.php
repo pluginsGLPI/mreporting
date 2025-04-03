@@ -186,12 +186,10 @@ class PluginMreportingConfig extends CommonDBTM
         switch ($field) {
             case 'graphtype':
                 return $values[$field];
-                break;
             case 'show_label':
                 $labels = self::getLabelTypes();
 
                 return $labels[$values[$field]];
-                break;
         }
 
         return parent::getSpecificValueToDisplay($field, $values, $options);
@@ -204,6 +202,7 @@ class PluginMreportingConfig extends CommonDBTM
      * @param $name            (default '')
      * @param $values          (default '')
      * @param $options   array
+     * @return string|void|integer
      **/
     public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = [])
     {
@@ -219,10 +218,8 @@ class PluginMreportingConfig extends CommonDBTM
                     ['PNG' => 'PNG', 'SVG' => 'SVG'],
                     $options,
                 );
-                break;
             case 'show_label':
                 return self::dropdownLabel($name, $options);
-                break;
         }
 
         return parent::getSpecificValueToSelect($field, $name, $values, $options);
@@ -230,6 +227,7 @@ class PluginMreportingConfig extends CommonDBTM
 
     public function getFromDBByFunctionAndClassname($function, $classname)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $query = 'SELECT *
@@ -237,7 +235,7 @@ class PluginMreportingConfig extends CommonDBTM
                 WHERE `name` = '" . addslashes($function) . "'
                 AND `classname` = '" . addslashes($classname) . "'";
 
-        if ($result = $DB->query($query)) {
+        if ($result = $DB->doQuery($query)) {
             if ($DB->numrows($result) != 1) {
                 return false;
             }
@@ -256,8 +254,6 @@ class PluginMreportingConfig extends CommonDBTM
      **/
     public static function addFirstconfigLink()
     {
-        global $CFG_GLPI;
-
         $buttons = [];
         $title   = '';
 
@@ -280,6 +276,7 @@ class PluginMreportingConfig extends CommonDBTM
     {
         //$reports = array();
         $classConfig = false;
+        $classObject = null;
 
         $inc_dir = Plugin::getPhpDir('mreporting') . '/inc';
         //parse inc dir to search report classes
@@ -321,8 +318,7 @@ class PluginMreportingConfig extends CommonDBTM
                 }
 
                 $input['firstconfig'] = 1;
-                unset($input['id']);
-                $newid = $this->add($input);
+                $this->add($input);
             }
         }
     }
@@ -330,7 +326,7 @@ class PluginMreportingConfig extends CommonDBTM
     /**
      * Preconfig datas for standard system
      * @graphname internal name of graph
-     *@return void
+     * @return array|boolean
      **/
     public function preconfig($funct_name, $classname)
     {
@@ -404,7 +400,7 @@ class PluginMreportingConfig extends CommonDBTM
      * show not used Graphs dropdown
      * @name name of dropdown
      * @options array example $value
-     *@return void
+     *@return int
      **/
     public static function dropdownGraph($name, $options = [])
     {
@@ -425,37 +421,32 @@ class PluginMreportingConfig extends CommonDBTM
             }
 
             if (isset($graphs[$classname])) {
-                $count = count($graphs[$classname]);
-                if ($count > 0) {
-                    $select .= '<optgroup label="' . $report['title'] . '">';
+                $select .= '<optgroup label="' . $report['title'] . '">';
 
-                    $count = count($graphs[$classname]);
-                    if ($count > 0) {
-                        foreach ($graphs[$classname] as $cat => $graph) {
-                            $select .= '<optgroup label="' . $cat . '">';
+                foreach ($graphs[$classname] as $cat => $graph) {
+                    $select .= '<optgroup label="' . $cat . '">';
 
-                            foreach ($graph as $k => $v) {
-                                $comment = '';
-                                if (isset($v['desc'])) {
-                                    $comment = $v['desc'];
-                                    $desc    = ' (' . $comment . ')';
-                                }
-
-                                $select .= '<option  title="' .
-                                 Html::cleanInputText($comment) . "\"
-                                 value='" . $classname . ';' . $v['function'] .
-                                 "'" . ($options['value'] == $classname . ';' .
-                                 $v['function'] ? ' selected ' : '') . '>';
-                                $select .= $v['title'] . $desc;
-                                $select .= '</option>';
-
-                                $i++;
-                            }
-                            $select .= '</optgroup>';
+                    foreach ($graph as $k => $v) {
+                        $comment = '';
+                        $desc = '';
+                        if (isset($v['desc'])) {
+                            $comment = $v['desc'];
+                            $desc    = ' (' . $comment . ')';
                         }
+
+                        $select .= '<option  title="' .
+                            Html::cleanInputText($comment) . "\"
+                            value='" . $classname . ';' . $v['function'] .
+                            "'" . ($options['value'] == $classname . ';' .
+                            $v['function'] ? ' selected ' : '') . '>';
+                        $select .= $v['title'] . $desc;
+                        $select .= '</option>';
+
+                        $i++;
                     }
                     $select .= '</optgroup>';
                 }
+                $select .= '</optgroup>';
             }
         }
 
@@ -470,7 +461,7 @@ class PluginMreportingConfig extends CommonDBTM
      * show Label dropdown
      * @name name of dropdown
      * @options array example $value
-     *@return void
+     *@return integer|string
      **/
     public static function dropdownLabel($name, $options = [], $notall = false)
     {
@@ -603,7 +594,7 @@ class PluginMreportingConfig extends CommonDBTM
             $object      = new $input['classname']([]);
             $checkConfig = $object->checkConfig($input);
             if (!$checkConfig['result']) {
-                Session::addMessageAfterRedirect($checkConfig['message'], ERROR, true);
+                Session::addMessageAfterRedirect($checkConfig['message'], false, ERROR);
 
                 return [];
             }
@@ -614,6 +605,7 @@ class PluginMreportingConfig extends CommonDBTM
 
     public function showForm($ID, $options = [])
     {
+        /** @var array $LANG */
         global $LANG;
 
         $this->initForm($ID, $options);
@@ -828,7 +820,20 @@ class PluginMreportingConfig extends CommonDBTM
      *
      * @param $name of graph
      * @param $classname of graph
-    **/
+     *
+     * @return array{
+     *     area: bool,
+     *     spline: bool,
+     *     flip_data: bool,
+     *     unit: string,
+     *     show_label: string,
+     *     delay: string,
+     *     condition: string,
+     *     show_graph: bool,
+     *     randname: int,
+     *     graphtype: string
+     * }
+     **/
     public static function initConfigParams($name, $classname)
     {
         $crit = ['area'  => false,
@@ -857,8 +862,9 @@ class PluginMreportingConfig extends CommonDBTM
             $crit['randname']   = $classname . $name;
         }
 
+        /* @phpstan-ignore-next-line */
         if (DEBUG_MREPORTING) {
-            $crit['show_graph'] = 1;
+            $crit['show_graph'] = true;
         }
 
         return $crit;
@@ -872,10 +878,12 @@ class PluginMreportingConfig extends CommonDBTM
     **/
     public static function showGraphConfigValue($name, $classname)
     {
+        /* @phpstan-ignore-next-line */
         if (DEBUG_MREPORTING) {
             return true;
         }
 
+        /* @phpstan-ignore-next-line */
         $self = new self();
         if ($self->getFromDBByFunctionAndClassname($name, $classname)) {
             return $self->fields['show_graph'];

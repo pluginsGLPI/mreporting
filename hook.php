@@ -35,6 +35,7 @@
  */
 function plugin_mreporting_install()
 {
+    /** @var \DBmysql $DB */
     global $DB;
 
     $version   = plugin_version_mreporting();
@@ -98,7 +99,7 @@ function plugin_mreporting_install()
     $query_display_pref = "SELECT id
       FROM glpi_displaypreferences
       WHERE itemtype = 'PluginMreportingConfig'";
-    $res_display_pref = $DB->query($query_display_pref);
+    $res_display_pref = $DB->doQuery($query_display_pref);
     if ($DB->numrows($res_display_pref) == 0) {
         $queries[] = "INSERT INTO `glpi_displaypreferences`
          VALUES (NULL,'PluginMreportingConfig','2','2','0');";
@@ -130,7 +131,7 @@ function plugin_mreporting_install()
       ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
     foreach ($queries as $query) {
-        $DB->query($query);
+        $DB->doQuery($query);
     }
 
     // == Update to 2.1 ==
@@ -152,7 +153,7 @@ function plugin_mreporting_install()
 
         //truncate profile table
         $query = 'TRUNCATE TABLE `glpi_plugin_mreporting_profiles`';
-        $DB->query($query);
+        $DB->doQuery($query);
 
         //migration of field
         $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
@@ -175,16 +176,16 @@ function plugin_mreporting_install()
 
     // == UPDATE to 0.84+1.0 ==
     $query = 'UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ' . READ . " WHERE pr.right = 'r'";
-    $DB->query($query);
+    $DB->doQuery($query);
     if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
         $query = 'ALTER TABLE glpi_plugin_mreporting_profiles
                 ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)';
-        $DB->query($query);
+        $DB->doQuery($query);
     }
 
     // Remove GLPI graphtype to fix compatibility with GLPI 9.2.2+
     $query = "UPDATE `glpi_plugin_mreporting_configs` SET `graphtype` = 'SVG' WHERE `graphtype` = 'GLPI'";
-    $DB->query($query);
+    $DB->doQuery($query);
 
     //== Create directories
     $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR . '/mreporting';
@@ -224,8 +225,6 @@ function plugin_mreporting_install()
  */
 function plugin_mreporting_uninstall()
 {
-    global $DB;
-
     $migration = new Migration('2.3.0');
     $tables    = ['glpi_plugin_mreporting_profiles',
         'glpi_plugin_mreporting_configs',
@@ -267,6 +266,7 @@ function plugin_mreporting_getDatabaseRelations()
 
 function plugin_mreporting_giveItem($type, $ID, $data, $num)
 {
+    /** @var array $LANG */
     global $LANG;
 
     $searchopt = &Search::getOptions($type);
@@ -288,13 +288,11 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num)
                     }
 
                     return $out;
-                    break;
                 case 'glpi_plugin_mreporting_configs.name':
                     $out = ' ';
                     if (!empty($data['raw']["ITEM_$num"])) {
                         $title_func      = '';
                         $short_classname = '';
-                        $f_name          = '';
 
                         $inc_dir = Plugin::getPhpDir('mreporting') . '/inc';
                         //parse inc dir to search report classes
@@ -312,10 +310,8 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num)
                                     continue;
                                 }
 
-                                $gtype = strtolower($ex_func[1]);
-
                                 if ($data['raw']["ITEM_$num"] == $funct_name) {
-                                    if (!empty($classname) && !empty($funct_name)) {
+                                    if (!empty($classname)) {
                                         $short_classname = str_replace('PluginMreporting', '', $classname);
                                         if (isset($LANG['plugin_mreporting'][$short_classname][$funct_name]['title'])) {
                                             $title_func = $LANG['plugin_mreporting'][$short_classname][$funct_name]['title'];
@@ -329,11 +325,9 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num)
                     }
 
                     return $out;
-                    break;
             }
 
             return '';
-            break;
     }
 
     return '';
@@ -351,8 +345,6 @@ function plugin_mreporting_MassiveActionsFieldsDisplay($options = [])
                 PluginMreportingConfig::dropdownLabel('show_label');
 
                 return true;
-                break;
-
             case 'glpi_plugin_mreporting_configs.graphtype':
                 Dropdown::showFromArray(
                     'graphtype',
@@ -360,7 +352,6 @@ function plugin_mreporting_MassiveActionsFieldsDisplay($options = [])
                 );
 
                 return true;
-                break;
         }
     }
 

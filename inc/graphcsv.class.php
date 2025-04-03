@@ -34,6 +34,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
     public function initGraph($options)
     {
+        /* @phpstan-ignore-next-line */
         if (!self::DEBUG_CSV) {
             header('Content-type: application/csv');
             header('Content-Disposition: inline; filename=export.csv');
@@ -42,14 +43,19 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
     public function showHbar($params, $dashboard = false, $width = false)
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
-        $criterias = PluginMreportingCommon::initGraphParams($params);
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'export'    => $export,
+            'opt'       => $opt,
+        ] = PluginMreportingCommon::initGraphParams($params);
 
         // Write in Log
+        /* @phpstan-ignore-next-line */
         if (self::DEBUG_CSV && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
         }
@@ -60,11 +66,10 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             return false;
         }
 
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'unit'       => $unit,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         if ($unit == '%') {
             $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
@@ -104,15 +109,19 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
     public function showHgbar($params, $dashboard = false, $width = false)
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
-        $criterias = PluginMreportingCommon::initGraphParams($params);
-
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'export'    => $export,
+            'opt'       => $opt,
+        ] = PluginMreportingCommon::initGraphParams($params);
 
         // Write in log
+        /* @phpstan-ignore-next-line */
         if (self::DEBUG_CSV && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
         }
@@ -123,11 +132,10 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             return false;
         }
 
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'unit'       => $unit,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         if ($unit == '%') {
             $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
@@ -189,12 +197,15 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
     public function showSunburst($params, $dashboard = false, $width = false)
     {
-        $criterias = PluginMreportingCommon::initGraphParams($params);
+        [
+            'raw_datas' => $raw_datas,
+            'title'     => $title,
+            'desc'      => $desc,
+            'export'    => $export,
+            'opt'       => $opt,
+        ] = PluginMreportingCommon::initGraphParams($params);
 
-        foreach ($criterias as $key => $val) {
-            $$key = $val;
-        }
-
+        /* @phpstan-ignore-next-line */
         if (self::DEBUG_CSV && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
         }
@@ -209,11 +220,10 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             return false;
         }
 
-        $configs = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
-
-        foreach ($configs as $k => $v) {
-            $$k = $v;
-        }
+        [
+            'unit'       => $unit,
+            'randname'   => $randname,
+        ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
         if ($unit == '%') {
             $datas = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
@@ -235,6 +245,8 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
     public function sunburstLevel($datas, $level = 0)
     {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
         $out = '';
 
         $i = 0;
