@@ -1284,13 +1284,17 @@ class PluginMreportingCommon extends CommonDBTM
                 $multipledatas->setVars('datas_title', mb_strtoupper(__('data', 'mreporting')), ENT_NOQUOTES, 'utf-8');
 
                 foreach ($datas as $key => $value) {
-                    $multipledatas->subtitle->datas_subtitle(mb_strtoupper($key), ENT_NOQUOTES, 'utf-8');
-                    $multipledatas->subtitle->merge();
+                    if (property_exists($multipledatas, 'subtitle') && $multipledatas->subtitle !== null) {
+                        $multipledatas->subtitle->datas_subtitle(mb_strtoupper($key), ENT_NOQUOTES, 'utf-8');
+                        $multipledatas->subtitle->merge();
+                    }
 
                     foreach ($value as $col => $val) {
-                        $multipledatas->datas->row($col, ENT_NOQUOTES, 'utf-8');
-                        $multipledatas->datas->value($val, ENT_NOQUOTES, 'utf-8');
-                        $multipledatas->datas->merge();
+                        if (property_exists($multipledatas, 'datas') && $multipledatas->datas !== null) {
+                            $multipledatas->datas->row($col, ENT_NOQUOTES, 'utf-8');
+                            $multipledatas->datas->value($val, ENT_NOQUOTES, 'utf-8');
+                            $multipledatas->datas->merge();
+                        }
                     }
                     $multipledatas->merge();
                 }
@@ -1299,9 +1303,11 @@ class PluginMreportingCommon extends CommonDBTM
             } else {
                 $singledatas->setVars('datas_title', mb_strtoupper(__('data', 'mreporting')), ENT_NOQUOTES, 'utf-8');
                 foreach ($datas as $key => $value) {
-                    $singledatas->datas->row($key, ENT_NOQUOTES, 'utf-8');
-                    $singledatas->datas->value($value, ENT_NOQUOTES, 'utf-8');
-                    $singledatas->datas->merge();
+                    if (property_exists($singledatas, 'datas') && $singledatas->datas !== null) {
+                        $singledatas->datas->row($key, ENT_NOQUOTES, 'utf-8');
+                        $singledatas->datas->value($value, ENT_NOQUOTES, 'utf-8');
+                        $singledatas->datas->merge();
+                    }
                 }
                 $singledatas->merge();
             }
@@ -2004,7 +2010,7 @@ class PluginMreportingCommon extends CommonDBTM
 
     /**
      * Get the depth of a multidimensionnal array
-     * @param  array() $array the array where to seek
+     * @param  array  $array the array where to seek
      * @return number the sum
      */
     public static function getArrayDepth($array)
