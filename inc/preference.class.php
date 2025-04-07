@@ -54,7 +54,7 @@ class PluginMreportingPreference extends CommonDBTM
      * Get a preference for an user
      * @param string $field preference field to get
      * @param int $users_id user ID
-     * @return int value or 0
+     * @return int|string value or 0
      */
     public static function checkPreferenceValue($field, $users_id = 0)
     {

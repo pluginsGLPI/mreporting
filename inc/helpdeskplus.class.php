@@ -216,10 +216,10 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
          */
         if ($search_backlogs) {
             $date_array1 = explode('-', $_SESSION['mreporting_values']['date1' . $config['randname']]);
-            $time1       = mktime(0, 0, 0, $date_array1[1], $date_array1[2], $date_array1[0]);
+            $time1       = mktime(0, 0, 0, intval($date_array1[1]), intval($date_array1[2]), intval($date_array1[0]));
 
             $date_array2 = explode('-', $_SESSION['mreporting_values']['date2' . $config['randname']]);
-            $time2       = mktime(0, 0, 0, $date_array2[1], $date_array2[2], $date_array2[0]);
+            $time2       = mktime(0, 0, 0, intval($date_array2[1]), intval($date_array2[2]), intval($date_array2[0]));
 
             //if data inverted, reverse it
             if ($time1 > $time2) {

@@ -142,7 +142,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $datas = [];
         while ($computer = $DB->fetchAssoc($result)) {
             if ($computer['Total']) {
-                $percent                                                     = round($computer['Percent'], 2);
+                $percent = round(floatval($computer['Percent']), 2);
                 $datas['datas'][$computer['Manufacturer'] . " ($percent %)"] = $computer['Total'];
             }
         }
@@ -194,7 +194,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $result = $DB->doQuery($query);
         $datas  = [];
         while ($computer = $DB->fetchAssoc($result)) {
-            $percent                                             = round($computer['Percent'], 2);
+            $percent = round(floatval($computer['Percent']), 2);
             $datas['datas'][$computer['Type'] . " ($percent %)"] = $computer['Total'];
         }
 
@@ -320,7 +320,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $result = $DB->doQuery($query);
 
         while ($computer = $DB->fetchAssoc($result)) {
-            $percent = round($computer['Percent'], 2);
+            $percent = round(floatval($computer['Percent']), 2);
 
             $datas['datas'][__($computer['Age'], 'mreporting') . " ($percent %)"] = $computer['Total'];
         }
@@ -418,7 +418,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $datas = [];
         while ($computer = $DB->fetchAssoc($result)) {
-            $percent = round($computer['Percent'], 2);
+            $percent = round(floatval($computer['Percent']), 2);
             if ($computer['Total']) {
                 $datas['datas'][$computer['OS'] . " ($percent %)"] = $computer['Total'];
             }
@@ -830,7 +830,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $result = $DB->doQuery($query);
         $datas  = [];
         while ($computer = $DB->fetchAssoc($result)) {
-            $percent                                               = round($computer['Percent'], 2);
+            $percent = round(floatval($computer['Percent']), 2);
             $datas['datas'][$computer['status'] . " ($percent %)"] = $computer['Total'];
         }
 
@@ -857,7 +857,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $result = $DB->doQuery($query);
 
         while ($printer = $DB->fetchAssoc($result)) {
-            $pourcentage                                              = round($printer['Pourcentage'], 2);
+            $pourcentage = round(floatval($printer['Pourcentage']), 2);
             $datas['datas'][$printer['status'] . " ($pourcentage %)"] = $printer['Total'];
         }
 
@@ -919,7 +919,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 $percent = round((100 * (int) $value) / $total);
             }
             $ent_id               = $entities[$key];
-            $key                  = str_replace('pourcentage', $percent, $key);
+            $key                  = str_replace('pourcentage', (string) $percent, $key);
             $datas['datas'][$key] = $value;
             $type                 = 'under';
             if ($ent_id == $_SESSION['glpiactive_entity']) {
