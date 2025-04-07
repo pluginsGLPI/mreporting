@@ -373,7 +373,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             if ($ticket['type'] == 0) {
                 $type = __('Undefined', 'mreporting');
             } else {
-                $type = Ticket::getTicketTypeName($ticket['type']);
+                $type = Ticket::getTicketTypeName(intval($ticket['type']));
             }
             $datas['labels2'][$type]                         = $type;
             $datas['datas'][$ticket['category_name']][$type] = $ticket['count'];
@@ -630,7 +630,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
       ORDER BY period, status';
         $res = $DB->doQuery($query);
         while ($data = $DB->fetchAssoc($res)) {
-            $status                                   = Ticket::getStatus($data['status']);
+            $status                                   = Ticket::getStatus(intval($data['status']));
             $datas['labels2'][$data['period']]        = $data['period_name'];
             $datas['datas'][$status][$data['period']] = $data['nb'];
         }
@@ -693,7 +693,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             if (!isset($flat_datas[$current_datas['parent']])) {
                 if (
                     $current_datas['parent'] != 0
-                    && $itilcategory->getFromDB($current_datas['parent'])
+                    && $itilcategory->getFromDB(intval($current_datas['parent']))
                 ) {
                     $flat_datas[$current_datas['parent']] = [
                         'id'     => $current_datas['parent'],

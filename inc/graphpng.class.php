@@ -315,7 +315,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             $amount      = round($amount * $factor);
             $new_decimal = $v - $amount;
 
-            $new_hex_component = dechex($new_decimal);
+            $new_hex_component = dechex((int) $new_decimal);
             if (strlen($new_hex_component) < 2) {
                 $new_hex_component = '0' . $new_hex_component;
             }
@@ -343,7 +343,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             $amount      = round($amount * $factor);
             $new_decimal = $v + $amount;
 
-            $new_hex_component = dechex($new_decimal);
+            $new_hex_component = dechex((int) $new_decimal);
             if (strlen($new_hex_component) < 2) {
                 $new_hex_component = '0' . $new_hex_component;
             }
@@ -404,36 +404,36 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     continue;
                 }
 
-                $trgb = ImageColorAt($image, $x, floor($y));
+                $trgb = ImageColorAt($image, $x, (int) floor($y));
                 $tcr  = ($trgb >> 16) & 0xFF;
                 $tcg  = ($trgb >> 8)  & 0xFF;
                 $tcb  = $trgb         & 0xFF;
                 imagesetpixel(
                     $image,
                     $x,
-                    floor($y),
+                    (int) floor($y),
                     imagecolorallocatealpha(
                         $image,
-                        round($tcr * $ya + $icr * $yb),
+                        (int) round($tcr * $ya + $icr * $yb),
                         (int) ($tcg * $ya + $icg * $yb),
                         (int) ($tcb * $ya + $icb * $yb),
                         hexdec($alpha),
                     ),
                 );
 
-                $trgb = ImageColorAt($image, $x, ceil($y));
+                $trgb = ImageColorAt($image, $x, (int) ceil($y));
                 $tcr  = ($trgb >> 16) & 0xFF;
                 $tcg  = ($trgb >> 8)  & 0xFF;
                 $tcb  = $trgb         & 0xFF;
                 imagesetpixel(
                     $image,
                     $x,
-                    ceil($y),
+                    (int) ceil($y),
                     imagecolorallocatealpha(
                         $image,
-                        round($tcr * $yb + $icr * $ya),
-                        round($tcg * $yb + $icg * $ya),
-                        round($tcb * $yb + $icb * $ya),
+                        (int) round($tcr * $yb + $icr * $ya),
+                        (int) round($tcg * $yb + $icg * $ya),
+                        (int) round($tcb * $yb + $icb * $ya),
                         hexdec($alpha),
                     ),
                 );
@@ -454,36 +454,36 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     continue;
                 }
 
-                $trgb = ImageColorAt($image, floor($x), $y);
+                $trgb = ImageColorAt($image, (int) floor($x), $y);
                 $tcr  = ($trgb >> 16) & 0xFF;
                 $tcg  = ($trgb >> 8)  & 0xFF;
                 $tcb  = $trgb         & 0xFF;
                 imagesetpixel(
                     $image,
-                    floor($x),
+                    (int) floor($x),
                     $y,
                     imagecolorallocatealpha(
                         $image,
-                        round($tcr * $xa + $icr * $xb),
-                        round($tcg * $xa + $icg * $xb),
-                        round($tcb * $xa + $icb * $xb),
+                        (int) round($tcr * $xa + $icr * $xb),
+                        (int) round($tcg * $xa + $icg * $xb),
+                        (int) round($tcb * $xa + $icb * $xb),
                         hexdec($alpha),
                     ),
                 );
 
-                $trgb = ImageColorAt($image, ceil($x), $y);
+                $trgb = ImageColorAt($image, (int) ceil($x), $y);
                 $tcr  = ($trgb >> 16) & 0xFF;
                 $tcg  = ($trgb >> 8)  & 0xFF;
                 $tcb  = $trgb         & 0xFF;
                 imagesetpixel(
                     $image,
-                    ceil($x),
+                    (int) ceil($x),
                     $y,
                     imagecolorallocatealpha(
                         $image,
-                        round($tcr * $xb + $icr * $xa),
-                        round($tcg * $xb + $icg * $xa),
-                        round($tcb * $xb + $icb * $xa),
+                        (int) round($tcr * $xb + $icr * $xa),
+                        (int) round($tcg * $xb + $icg * $xa),
+                        (int) round($tcb * $xb + $icb * $xa),
                         hexdec($alpha),
                     ),
                 );
@@ -685,9 +685,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 $by2 = $by1                              + $height_bar;
 
                 //createbar
-                ImageFilledRectangle($image, $bx1, $by1, $bx2, $by2, hexdec($palette[$index]));
-                imagerectangle($image, $bx1, $by1 - 1, $bx2 + 1, $by2 + 1, hexdec($darkerpalette[$index]));
-                imagerectangle($image, $bx1, $by1 - 2, $bx2 + 2, $by2 + 2, hexdec($darkerpalette[$index]));
+                ImageFilledRectangle($image, $bx1, (int) $by1, (int) $bx2, (int) $by2, hexdec($palette[$index]));
+                imagerectangle($image, $bx1, (int) $by1 - 1, (int) $bx2 + 1, (int) $by2 + 1, hexdec($darkerpalette[$index]));
+                imagerectangle($image, $bx1, (int) $by1 - 2, (int) $bx2 + 2, (int) $by2 + 2, hexdec($darkerpalette[$index]));
 
                 //create data label
                 if ($show_label == 'always' || $show_label == 'hover') {
@@ -695,8 +695,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                         $image,
                         $this->fontsize,
                         $this->fontangle,
-                        $bx2 + 6,
-                        $by1 + 14,
+                        (int) $bx2 + 6,
+                        (int) $by1 + 14,
                         hexdec($darkerpalette[$index]),
                         $this->font,
                         Toolbox::stripTags($data . $unit),
@@ -711,7 +711,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     $this->fontsize,
                     $this->fontangle,
                     245 - $textwidth,
-                    $by1 + 14,
+                    (int) $by1 + 14,
                     hexdec($this->black),
                     $this->font,
                     Toolbox::stripTags($labels[$index]),
@@ -926,8 +926,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                             $image,
                             $this->fontsize,
                             $this->fontangle,
-                            $xtext,
-                            $ytext,
+                            (int) $xtext,
+                            (int) $ytext,
                             hexdec($darkerpalette[$index]),
                             $this->font,
                             Toolbox::stripTags($data . $unit),
@@ -1284,8 +1284,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 $image,
                 $this->fontsize,
                 $this->fontangle,
-                $xtext,
-                $ytext,
+                (int) $xtext,
+                (int) $ytext,
                 hexdec($darkercolor),
                 $this->font,
                 $key,
@@ -1315,8 +1315,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     $image,
                     $this->fontsize,
                     $this->fontangle,
-                    $xtext,
-                    $ytext,
+                    (int) $xtext,
+                    (int) $ytext,
                     hexdec($this->black),
                     $this->font,
                     (is_array($data)) ? $sum : $data,
@@ -1505,9 +1505,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     $by2 = $by1               + 16;
 
                     //createbar
-                    ImageFilledRectangle($image, $bx1, $by1, $bx2, $by2, hexdec($palette[$index2]));
-                    imagerectangle($image, $bx1, $by1 - 1, $bx2 + 1, $by2 + 1, hexdec($darkerpalette[$index2]));
-                    imagerectangle($image, $bx1, $by1 - 2, $bx2 + 2, $by2 + 2, hexdec($darkerpalette[$index2]));
+                    ImageFilledRectangle($image, $bx1, $by1, (int) $bx2, $by2, hexdec($palette[$index2]));
+                    imagerectangle($image, $bx1, $by1 - 1, (int) $bx2 + 1, $by2 + 1, hexdec($darkerpalette[$index2]));
+                    imagerectangle($image, $bx1, $by1 - 2, (int) $bx2 + 2, $by2 + 2, hexdec($darkerpalette[$index2]));
 
                     //create data label
                     if ($show_label == 'always' || $show_label == 'hover') {
@@ -1515,7 +1515,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                             $image,
                             $this->fontsize,
                             $this->fontangle,
-                            $bx2 + 6,
+                            (int) $bx2 + 6,
                             $by1 + 14,
                             hexdec($darkerpalette[$index2]),
                             $this->font,
@@ -1749,35 +1749,35 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             $xstep = round(($height - $legend_height - $x_labels_height) / 12);
             for ($i = 0; $i <= 12; $i++) {
                 $yaxis = $height - $x_labels_height - $xstep * $i;
-                imageLine($image, .9 * $y_labels_width, $yaxis, 0.95 * $this->width, $yaxis, hexdec($this->grey));
+                imageLine($image, (int) (.9 * $y_labels_width), (int) $yaxis, (int) (0.95 * $this->width), (int) $yaxis, hexdec($this->grey));
 
                 //value label
                 $val       = round($i * $cum / 12, 1);
-                $box       = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $val);
+                $box       = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, strval($val));
                 $textwidth = abs($box[4] - $box[0]);
 
                 imagettftext(
                     $image,
                     $this->fontsize,
                     $this->fontangle,
-                    $y_labels_width - 2 - $textwidth,
-                    $yaxis + 5,
+                    (int) ($y_labels_width - 2 - $textwidth),
+                    (int) $yaxis + 5,
                     hexdec($this->darkgrey),
                     $this->font,
-                    $val,
+                    strval($val),
                 );
             }
 
             //draw y-axis
-            imageLine($image, $y_labels_width, $legend_height, $y_labels_width, $height - 28, hexdec($this->black));
+            imageLine($image, (int) $y_labels_width, $legend_height, (int) $y_labels_width, $height - 28, hexdec($this->black));
 
             //draw x-axis
             imageline(
                 $image,
-                .9 * $y_labels_width,
-                $height - $x_labels_height,
-                0.95 * $this->width,
-                $height - $x_labels_height,
+                (int) (.9 * $y_labels_width),
+                (int) ($height - $x_labels_height),
+                (int) (0.95 * $this->width),
+                (int) ($height - $x_labels_height),
                 hexdec($this->black),
             );
 
@@ -1821,8 +1821,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     $bx2 = $bx1 + $width_bar;
 
                     if ($by1 != $by2) { // no draw for empty datas
-                        imagefilledrectangle($image, $bx1, $by1, $bx2, $by2, hexdec($alphapalette[$index2]));
-                        imagerectangle($image, $bx1, $by1, $bx2, $by2, hexdec($darkerpalette[$index2]));
+                        imagefilledrectangle($image, (int) $bx1, (int) $by1, (int) $bx2, (int) $by2, hexdec($alphapalette[$index2]));
+                        imagerectangle($image, (int) $bx1, (int) $by1, (int) $bx2, (int) $by2, hexdec($darkerpalette[$index2]));
 
                         //create data label  // Affichage des données à côté des barres
                         if (($show_label == 'always' || $show_label == 'hover') && $subdata > 0) {
@@ -1833,8 +1833,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                                 $image,
                                 $this->fontsize - 1,
                                 $this->fontangle,
-                                $bx1                                                            + ($width_bar / 2) - ($textwidth / 2) - 4,
-                                $by1                                                                               - ($by1 - $by2) / 2 + 5,
+                                (int) ($bx1 + ($width_bar / 2) - ($textwidth / 2) - 4),
+                                (int) ($by1 - ($by1 - $by2) / 2 + 5),
                                 hexdec($darkerpalette[$index2]),
                                 $this->font,
                                 $subdata . $unit,
@@ -1855,8 +1855,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     $image,
                     $this->fontsize - 1,
                     -45,
-                    $lx,
-                    $height - $x_labels_height + 9,
+                    (int) $lx,
+                    (int) ($height - $x_labels_height + 9),
                     hexdec($this->black),
                     $this->font,
                     Toolbox::stripTags($labels2[$label]),
@@ -2050,17 +2050,17 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
                 //value labels
                 $val       = round($i * $max / 12);
-                $box       = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, $val);
+                $box       = @imageTTFBbox($this->fontsize, $this->fontangle, $this->font, strval($val));
                 $textwidth = abs($box[4] - $box[0]);
                 imagettftext(
                     $image,
                     $this->fontsize,
                     $this->fontangle,
                     28 - $textwidth,
-                    $yaxis + 5,
+                    (int) ($yaxis + 5),
                     hexdec($this->darkgrey),
                     $this->font,
-                    $val,
+                    strval($val),
                 );
             }
 
@@ -2397,7 +2397,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 $yaxis = $height - $x_labels_height - $xstep * $i;
 
                 //horizontal grey lines
-                imageLine($image, $x_bar, $yaxis, $x_bar + $width_line * ($nb - 1), $yaxis, hexdec($this->grey));
+                imageLine($image, $x_bar, (int) $yaxis, $x_bar + $width_line * ($nb - 1), (int) $yaxis, hexdec($this->grey));
 
                 //value ticks
                 if ($i * $max / 12 < 10) {
@@ -2406,7 +2406,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     $val = round($i * $max / 12);
                 }
 
-                $box       = @imageTTFBbox($this->fontsize - 1, $this->fontangle, $this->font, $val);
+                $box       = @imageTTFBbox($this->fontsize - 1, $this->fontangle, $this->font, strval($val));
                 $textwidth = abs($box[4] - $box[0]);
 
                 imagettftext(
@@ -2414,10 +2414,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     $this->fontsize - 1,
                     $this->fontangle,
                     25 - $textwidth,
-                    $yaxis + 5,
+                    (int) $yaxis + 5,
                     hexdec($this->darkgrey),
                     $this->font,
-                    $val,
+                    strval($val),
                 );
             }
 

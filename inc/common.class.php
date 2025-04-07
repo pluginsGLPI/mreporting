@@ -1255,9 +1255,9 @@ class PluginMreportingCommon extends CommonDBTM
         }
 
         $odf = new Odf('../templates/template.odt', $config);
-        $odf->setVars('category', $category, ENT_NOQUOTES, 'utf-8');
-        $odf->setVars('title', $params[0]['title'], ENT_NOQUOTES, 'utf-8');
-        $odf->setVars('description', $description, ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('category', $category, (bool) ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('title', $params[0]['title'], (bool) ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('description', $description, (bool) ENT_NOQUOTES, 'utf-8');
 
         $path = GLPI_PLUGIN_DOC_DIR . '/mreporting/' . $params[0]['f_name'] . '.png';
 
@@ -1265,7 +1265,7 @@ class PluginMreportingCommon extends CommonDBTM
             list($image_width, $image_height) = @getimagesize($path);
             $image_width  *= Odf::PIXEL_TO_CM;
             $image_height *= Odf::PIXEL_TO_CM * 17 / $image_width;
-            $odf->setImage('image', $path, -1, 17, $image_height);
+            $odf->setImage('image', $path, -1, 17, intval($image_height));
         } else {
             $odf->setVars('image', '', true, 'UTF-8');
         }
@@ -1745,6 +1745,7 @@ class PluginMreportingCommon extends CommonDBTM
         }
         $_SERVER['REQUEST_URI'] .= '&date1' . $randname . '=' . $date1 . '&date2' . $randname . '=' . $date2;
 
+        /* @phpstan-ignore-next-line */
         SavedSearch::showSaveButton(SavedSearch::URI, __CLASS__);
 
         //If there's no selector for the report, there's no need for a reset button !
@@ -1934,10 +1935,10 @@ class PluginMreportingCommon extends CommonDBTM
         }
 
         $date_array1 = explode('-', $_SESSION['mreporting_values']['date1' . $randname]);
-        $time1       = mktime(0, 0, 0, $date_array1[1], $date_array1[2], $date_array1[0]);
+        $time1       = mktime(0, 0, 0, intval($date_array1[1]), intval($date_array1[2]), intval($date_array1[0]));
 
         $date_array2 = explode('-', $_SESSION['mreporting_values']['date2' . $randname]);
-        $time2       = mktime(0, 0, 0, $date_array2[1], $date_array2[2], $date_array2[0]);
+        $time2       = mktime(0, 0, 0, intval($date_array2[1]), intval($date_array2[2]), intval($date_array2[0]));
 
         //if data inverted, reverse it
         if ($time1 > $time2) {
