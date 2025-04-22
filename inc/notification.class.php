@@ -102,8 +102,12 @@ class PluginMreportingNotification extends CommonDBTM
                 ],
             );
 
-            $DB->doQuery('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
-              VALUES (1, 1, ' . $notification_id . ');');
+            $notification_target    = new NotificationTarget();
+            $notification_target->add([
+                'items_id' => 1,
+                'type' => 1,
+                'notifications_id' => $notification_id
+            ]);
         }
 
         return ['success' => true];
@@ -123,26 +127,26 @@ class PluginMreportingNotification extends CommonDBTM
 
         // Remove NotificationTargets and Notifications
         $notification = new Notification();
+        $notification_target = new NotificationTarget();
         $result       = $notification->find(['itemtype' => 'PluginMreportingNotification']);
         foreach ($result as $row) {
             $notification_id = $row['id'];
-            $queries[]       = 'DELETE FROM glpi_notificationtargets WHERE notifications_id = ' . $notification_id;
-            $queries[]       = 'DELETE FROM glpi_notifications WHERE id = ' . $notification_id;
+            $notification->delete(['id' => $notification_id]);
+            $notification_target->deleteByCriteria([
+                'notifications_id' => $notification_id
+            ]);
         }
 
         // Remove NotificationTemplateTranslations and NotificationTemplates
         $template = new NotificationTemplate();
+        $notification_translation = new NotificationTemplateTranslation();
         $result   = $template->find(['itemtype' => 'PluginMreportingNotification']);
         foreach ($result as $row) {
             $template_id = $row['id'];
-            $queries[]   = 'DELETE FROM glpi_notificationtemplatetranslations
-                        WHERE notificationtemplates_id = ' . $template_id;
-            $queries[] = 'DELETE FROM glpi_notificationtemplates
-                        WHERE id = ' . $template_id;
-        }
-
-        foreach ($queries as $query) {
-            $DB->doQuery($query);
+            $notification_translation->deleteByCriteria([
+                'notificationtemplates_id' => $template_id,
+            ]);
+            $template->delete(['id' => $template_id]);
         }
 
         return ['success' => true];

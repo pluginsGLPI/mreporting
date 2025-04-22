@@ -1255,9 +1255,9 @@ class PluginMreportingCommon extends CommonDBTM
         }
 
         $odf = new Odf('../templates/template.odt', $config);
-        $odf->setVars('category', $category, (bool) ENT_NOQUOTES, 'utf-8');
-        $odf->setVars('title', $params[0]['title'], (bool) ENT_NOQUOTES, 'utf-8');
-        $odf->setVars('description', $description, (bool) ENT_NOQUOTES, 'utf-8');
+        $odf->setVars('category', $category, true, 'utf-8');
+        $odf->setVars('title', $params[0]['title'], true, 'utf-8');
+        $odf->setVars('description', $description, true, 'utf-8');
 
         $path = GLPI_PLUGIN_DOC_DIR . '/mreporting/' . $params[0]['f_name'] . '.png';
 
@@ -1745,7 +1745,6 @@ class PluginMreportingCommon extends CommonDBTM
         }
         $_SERVER['REQUEST_URI'] .= '&date1' . $randname . '=' . $date1 . '&date2' . $randname . '=' . $date2;
 
-        /* @phpstan-ignore-next-line */
         SavedSearch::showSaveButton(SavedSearch::URI, __CLASS__);
 
         //If there's no selector for the report, there's no need for a reset button !
@@ -1910,10 +1909,13 @@ class PluginMreportingCommon extends CommonDBTM
             }
             $selector = addslashes(json_encode($values));
 
-            $query = "UPDATE `glpi_plugin_mreporting_preferences`
-                   SET `selectors`='$selector'
-                   WHERE `users_id`='$users_id'";
-            $DB->doQuery($query);
+            $DB->buildUpdate(
+                'glpi_plugin_mreporting_preferences',
+                ['selectors' => $selector],
+                [
+                    'WHERE' => ['users_id' => $users_id]
+                ]
+            );
         }
     }
 

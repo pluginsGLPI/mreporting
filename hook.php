@@ -99,7 +99,7 @@ function plugin_mreporting_install()
     $query_display_pref = "SELECT id
       FROM glpi_displaypreferences
       WHERE itemtype = 'PluginMreportingConfig'";
-    $res_display_pref = $DB->doQuery($query_display_pref);
+    $res_display_pref = $DB->doQueryOrDie($query_display_pref);
     if ($DB->numrows($res_display_pref) == 0) {
         $queries[] = "INSERT INTO `glpi_displaypreferences`
          VALUES (NULL,'PluginMreportingConfig','2','2','0');";
@@ -131,7 +131,7 @@ function plugin_mreporting_install()
       ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
     foreach ($queries as $query) {
-        $DB->doQuery($query);
+        $DB->doQueryOrDie($query);
     }
 
     // == Update to 2.1 ==
@@ -153,7 +153,7 @@ function plugin_mreporting_install()
 
         //truncate profile table
         $query = 'TRUNCATE TABLE `glpi_plugin_mreporting_profiles`';
-        $DB->doQuery($query);
+        $DB->doQueryOrDie($query);
 
         //migration of field
         $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
@@ -176,16 +176,16 @@ function plugin_mreporting_install()
 
     // == UPDATE to 0.84+1.0 ==
     $query = 'UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ' . READ . " WHERE pr.right = 'r'";
-    $DB->doQuery($query);
+    $DB->doQueryOrDie($query);
     if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
         $query = 'ALTER TABLE glpi_plugin_mreporting_profiles
                 ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)';
-        $DB->doQuery($query);
+        $DB->doQueryOrDie($query);
     }
 
     // Remove GLPI graphtype to fix compatibility with GLPI 9.2.2+
     $query = "UPDATE `glpi_plugin_mreporting_configs` SET `graphtype` = 'SVG' WHERE `graphtype` = 'GLPI'";
-    $DB->doQuery($query);
+    $DB->doQueryOrDie($query);
 
     //== Create directories
     $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR . '/mreporting';
