@@ -1913,8 +1913,8 @@ class PluginMreportingCommon extends CommonDBTM
                 'glpi_plugin_mreporting_preferences',
                 ['selectors' => $selector],
                 [
-                    'WHERE' => ['users_id' => $users_id]
-                ]
+                    'WHERE' => ['users_id' => $users_id],
+                ],
             );
         }
     }

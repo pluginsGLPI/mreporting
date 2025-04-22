@@ -106,7 +106,7 @@ class PluginMreportingNotification extends CommonDBTM
             $notification_target->add([
                 'items_id' => 1,
                 'type' => 1,
-                'notifications_id' => $notification_id
+                'notifications_id' => $notification_id,
             ]);
         }
 
@@ -133,7 +133,7 @@ class PluginMreportingNotification extends CommonDBTM
             $notification_id = $row['id'];
             $notification->delete(['id' => $notification_id]);
             $notification_target->deleteByCriteria([
-                'notifications_id' => $notification_id
+                'notifications_id' => $notification_id,
             ]);
         }
 
