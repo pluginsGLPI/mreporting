@@ -1422,20 +1422,30 @@ class PluginMreportingCommon extends CommonDBTM
 
         echo '<b>' . $LANG['plugin_mreporting']['Helpdeskplus']['selector']['slas'] . ' : </b><br />';
 
-        $query = 'SELECT DISTINCT s.id,
-         s.name
-      FROM glpi_slas s
-      INNER JOIN glpi_tickets t ON s.id = t.slas_id_ttr
-      WHERE t.status IN (' . implode(
-            ',',
-            array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray()),
-        ) . ")
-      AND t.is_deleted = '0'
-      ORDER BY s.name ASC";
-        $result = $DB->doQuery($query);
+        $result = $DB->request([
+            'SELECT' => [
+                'glpi_slas.id',
+                'glpi_slas.name'
+            ],
+            'DISTINCT' => true,
+            'FROM' => 'glpi_slas',
+            'INNER JOIN' => [
+                'glpi_tickets' => [
+                    'ON' => [
+                        'glpi_slas'    => 'id',
+                        'glpi_tickets' => 'slas_id_ttr'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                'glpi_tickets.status'     => array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray()),
+                'glpi_tickets.is_deleted' => 0
+            ],
+            'ORDERBY' => 'glpi_slas.name ASC'
+        ]);
 
         $values = [];
-        while ($data = $DB->fetchAssoc($result)) {
+        foreach ($result as $data) {
             $values[$data['id']] = $data['name'];
         }
 
@@ -1956,6 +1966,48 @@ class PluginMreportingCommon extends CommonDBTM
         $end   = date('Y-m-d H:i:s', $time2);
 
         return "($field >= '$begin' AND $field <= ADDDATE('$end', INTERVAL 1 DAY) )";
+    }
+
+        /**
+     * Generate a criteria date test with $_REQUEST date fields
+     * @param  string  $field     the sql table field to compare
+     * @param  integer $delay     if $_REQUET date fields not provided,
+     *                            generate them from $delay (in days)
+     * @param  string $randname   random string (to prevent conflict in js selection)
+     * @return string             The sql test to insert in your query
+     */
+    public static function getCriteriaDate($field = '`glpi_tickets`.`date`', $delay = 365, $randname = '')
+    {
+        if (empty($_SESSION['mreporting_values']['date1' . $randname])) {
+            $_SESSION['mreporting_values']['date1' . $randname] = date('Y-m-d', time() - ($delay * 24 * 60 * 60));
+        }
+        if (empty($_SESSION['mreporting_values']['date2' . $randname])) {
+            $_SESSION['mreporting_values']['date2' . $randname] = date('Y-m-d');
+        }
+
+        $date_array1 = explode('-', $_SESSION['mreporting_values']['date1' . $randname]);
+        $time1       = mktime(0, 0, 0, intval($date_array1[1]), intval($date_array1[2]), intval($date_array1[0]));
+
+        $date_array2 = explode('-', $_SESSION['mreporting_values']['date2' . $randname]);
+        $time2       = mktime(0, 0, 0, intval($date_array2[1]), intval($date_array2[2]), intval($date_array2[0]));
+
+        //if data inverted, reverse it
+        if ($time1 > $time2) {
+            list($time1, $time2) = [$time2, $time1];
+            list($_SESSION['mreporting_values']['date1' . $randname],
+                $_SESSION['mreporting_values']['date2' . $randname]) = [
+                    $_SESSION['mreporting_values']['date2' . $randname],
+                    $_SESSION['mreporting_values']['date1' . $randname],
+                ];
+        }
+
+        $begin = date('Y-m-d H:i:s', $time1);
+        $end   = date('Y-m-d H:i:s', $time2);
+        $endPlusOne = date('Y-m-d', strtotime($end . ' +1 day'));
+        return [
+            [$field => ['>=', $begin]],
+            [$field => ['<=', $endPlusOne]],
+        ];
     }
 
     /**

@@ -55,23 +55,34 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
         $datas = [];
 
-        $query = "SELECT COUNT(glpi_tickets.id) as count,
-         glpi_entities.name as name
-      FROM glpi_tickets
-      LEFT JOIN glpi_entities
-         ON (glpi_tickets.entities_id = glpi_entities.id)
-      WHERE {$this->sql_date} ";
+        $query_params = [
+            'SELECT' => ['glpi_entities.name AS name'],
+            'FROM'   => 'glpi_tickets',
+            'COUNT' => 'glpi_tickets.id AS count',
+            'LEFT JOIN' => [
+                'glpi_entities' => [
+                    'ON' => [
+                        'glpi_tickets' => 'entities_id',
+                        'glpi_entities' => 'id',
+                    ]
+                ]
+            ],
+            'WHERE'  => [
+                $this->sql_date,
+                'glpi_tickets.is_deleted' => '0'
+            ],
+            'GROUP BY' => 'glpi_entities.name',
+            'ORDER BY' => 'count DESC',
+            'LIMIT' => (isset($_REQUEST['glpilist_limit'])) ? (int)$_REQUEST['glpilist_limit'] : 20
+        ];
 
+        // Si le mode multi-entités est activé, on ajoute la condition supplémentaire
         if (Session::isMultiEntitiesMode()) {
-            $query .= 'AND glpi_entities.id IN (' . $this->where_entities . ') ';
+            $query_params['WHERE']['glpi_entities.id'] = $this->where_entities;
         }
-        $query .= "AND glpi_tickets.is_deleted = '0'
-      GROUP BY glpi_entities.name
-      ORDER BY count DESC
-      LIMIT 0, ";
-        $query .= (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
 
-        $result = $DB->doQuery($query);
+        // Exécution de la requête
+        $result = $DB->request($query_params);
 
         while ($ticket = $DB->fetchAssoc($result)) {
             if (empty($ticket['name'])) {
@@ -103,25 +114,38 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             $config['randname'],
         );
 
-        //get categories used in this period
-        $query_cat = "SELECT DISTINCT(glpi_tickets.itilcategories_id) as itilcategories_id,
-         glpi_itilcategories.completename as category
-      FROM glpi_tickets
-      LEFT JOIN glpi_itilcategories
-         ON glpi_tickets.itilcategories_id = glpi_itilcategories.id
-      WHERE {$this->sql_date} ";
+        $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
 
+        $query = [
+            'SELECT' => [Ticket::getTable() . '.itilcategories_id as itilcategories_id', ITILCategory::getTable() . '.completename as category'],
+            'DISTINCT' => true,
+            'FROM' => Ticket::getTable(),
+            'LEFT JOIN' => [
+                ITILCategory::getTable() => [
+                    'ON' => [
+                        Ticket::getTable() => 'itilcategories_id',
+                        ITILCategory::getTable() => 'id'
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                Ticket::getTable() . '.entities_id' => 0,
+                Ticket::getTable() . '.is_deleted' => 0,
+            ],
+            'ORDER' => ["glpi_itilcategories.id ASC"]
+        ];
+
+        $query['WHERE']['AND'] = $delay;
+
+        // Si le mode multi-entités est activé, on ajoute la condition supplémentaire
         if (Session::isMultiEntitiesMode()) {
-            $query_cat .= 'AND glpi_tickets.entities_id IN (' . $this->where_entities . ') ';
+            $query_params['WHERE']['glpi_entities.id'] = $this->where_entities;
         }
 
-        $query_cat .= "AND glpi_tickets.is_deleted = '0'
-      ORDER BY glpi_itilcategories.id ASC";
-
-        $res_cat = $DB->doQuery($query_cat);
+        $result = $DB->request($query);
 
         $categories = [];
-        while ($data = $DB->fetchAssoc($res_cat)) {
+        foreach ($result as $data) {
             if (empty($data['category'])) {
                 $data['category'] = __('None');
             }
@@ -135,27 +159,43 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             $tmp_cat[] = "cat_$id";
         }
         $cat_str = "'" . implode("', '", array_values($categories)) . "'";
+        $cat_ids = array_values($categories);
 
         //count ticket by entity and categories previously selected
-        $query = "SELECT
-         COUNT(glpi_tickets.id) as nb,
-         glpi_entities.name as entity,
-         glpi_tickets.itilcategories_id as cat_id
-      FROM glpi_tickets
-      LEFT JOIN glpi_entities
-         ON glpi_tickets.entities_id = glpi_entities.id
-      WHERE glpi_tickets.itilcategories_id IN ($cat_str) ";
+        $query = [
+            'SELECT' => [
+                'COUNT(' . Ticket::getTable() . '.id) as nb',
+                Entity::getTable() . '.name as nb',
+                Ticket::getTable() . '.itilcategories_id as cat_id',
+            ],
+            'FROM' => Ticket::getTable(),
+            'LEFT JOIN' => [
+                Entity::getTable() => [
+                    'ON' => [
+                        Ticket::getTable() . '.entities_id',
+                        Entity::getTable() . '.id',
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                Ticket::getTable() . '.itilcategories_id' => $cat_ids,
+                Ticket::getTable() . '.is_deleted' => 0,
+            ],
+            'GROUPBY' => [
+                Entity::getTable() . '.name',
+                Ticket::getTable() . '.itilcategories_id',
+            ],
+            'ORDER' => ['glpi_entities.name ASC', 'glpi_tickets.itilcategories_id ASC']
+        ];
 
-        if (Session::isMultiEntitiesMode()) {
-            $query .= 'AND glpi_tickets.entities_id IN (' . $this->where_entities . ')';
-        }
+        $query['WHERE']['AND'] = $delay;
 
-        $query .= 'AND ' . $this->sql_date . "
-         AND glpi_tickets.is_deleted = '0'
-      GROUP BY glpi_entities.name, glpi_tickets.itilcategories_id
-      ORDER BY glpi_entities.name ASC, glpi_tickets.itilcategories_id ASC";
-        $res = $DB->doQuery($query);
-        while ($data = $DB->fetchAssoc($res)) {
+        /*if (Session::isMultiEntitiesMode()) {
+            $query['WHERE']['glpi_entities.id'] = $this->where_entities;
+        }*/
+
+        $result = $DB->request($query);
+        foreach ($result as $data) {
             if (empty($data['entity'])) {
                 $data['entity'] = __('Root entity');
             }
