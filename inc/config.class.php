@@ -230,22 +230,10 @@ class PluginMreportingConfig extends CommonDBTM
         /** @var \DBmysql $DB */
         global $DB;
 
-        $query = 'SELECT *
-                FROM `' . $this->getTable() . "`
-                WHERE `name` = '" . addslashes($function) . "'
-                AND `classname` = '" . addslashes($classname) . "'";
-
-        if ($result = $DB->doQuery($query)) {
-            if ($DB->numrows($result) != 1) {
-                return false;
-            }
-            $this->fields = $DB->fetchAssoc($result);
-            if (is_array($this->fields) && count($this->fields)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->getFromDBByCrit([
+            'name'     => $function,
+            'classname' => $classname
+        ]);
     }
 
     /**
@@ -318,6 +306,7 @@ class PluginMreportingConfig extends CommonDBTM
                 }
 
                 $input['firstconfig'] = 1;
+                unset($input['id']);
                 $this->add($input);
             }
         }
