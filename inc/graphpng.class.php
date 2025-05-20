@@ -2492,7 +2492,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                             $x2, $height - $x_labels_height,
                             $x1, $height - $x_labels_height,
                         ];
-                        imagefilledpolygon($image, $points, 4, hexdec($alphapalette[$index1]));
+                        imagefilledpolygon($image, $points, hexdec($alphapalette[$index1]));
                     }
 
                     //trace lines between points (if linear)
