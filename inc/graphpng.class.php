@@ -67,11 +67,11 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             $width = $this->width + 100;
 
             if (!isset($_REQUEST['date1' . $randname])) {
-                $_REQUEST['date1' . $randname] = strftime('%Y-%m-%d', time()
+                $_REQUEST['date1' . $randname] = date('Y-m-d', time()
                  - ($options['delay'] * 24 * 60 * 60));
             }
             if (!isset($_REQUEST['date2' . $randname])) {
-                $_REQUEST['date2' . $randname] = strftime('%Y-%m-%d');
+                $_REQUEST['date2' . $randname] = date('Y-m-d');
             }
 
             $backtrace     = debug_backtrace();
@@ -404,31 +404,31 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     continue;
                 }
 
-                $trgb = ImageColorAt($image, $x, (int) floor($y));
+                $trgb = ImageColorAt($image, floor($x), floor($y));
                 $tcr  = ($trgb >> 16) & 0xFF;
                 $tcg  = ($trgb >> 8)  & 0xFF;
                 $tcb  = $trgb         & 0xFF;
                 imagesetpixel(
                     $image,
-                    $x,
-                    (int) floor($y),
+                    floor($x),
+                    floor($y),
                     imagecolorallocatealpha(
                         $image,
-                        (int) round($tcr * $ya + $icr * $yb),
-                        (int) ($tcg * $ya + $icg * $yb),
-                        (int) ($tcb * $ya + $icb * $yb),
+                        round($tcr * $ya + $icr * $yb),
+                        round($tcg * $ya + $icg * $yb),
+                        round($tcb * $ya + $icb * $yb),
                         hexdec($alpha),
                     ),
                 );
 
-                $trgb = ImageColorAt($image, $x, (int) ceil($y));
+                $trgb = ImageColorAt($image, ceil($x), ceil($y));
                 $tcr  = ($trgb >> 16) & 0xFF;
                 $tcg  = ($trgb >> 8)  & 0xFF;
                 $tcb  = $trgb         & 0xFF;
                 imagesetpixel(
                     $image,
-                    $x,
-                    (int) ceil($y),
+                    ceil($x),
+                    ceil($y),
                     imagecolorallocatealpha(
                         $image,
                         (int) round($tcr * $yb + $icr * $ya),
@@ -681,9 +681,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             $index = 0;
             foreach ($datas as $label => $data) {
                 $bx1 = 250;
-                $by1 = ($index + 1) * 1.25 * $height_bar + .05 * $height + 2;
+                $by1 = round(($index + 1) * 1.25 * $height_bar + .05 * $height + 2);
                 $bx2 = $bx1                              + round(($data * ($width - 300)) / $max);
-                $by2 = $by1                              + $height_bar;
+                $by2 = round($by1                              + $height_bar);
 
                 //createbar
                 ImageFilledRectangle($image, $bx1, (int) $by1, (int) $bx2, (int) $by2, hexdec($palette[$index]));
@@ -922,8 +922,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
                     //text associated with pie arc (only for angle > 2°)
                     if ($angle > 2 && ($show_label == 'always' || $show_label == 'hover')) {
-                        $xtext = $x                 - 1 + cos(deg2rad(($start_angle + $angle) / 2)) * ($radius / 1.7);
-                        $ytext = $y             + 5 - sin(deg2rad(($start_angle + $angle) / 2))     * ($radius / 1.7);
+                        $xtext = round($x                 - 1 + cos(deg2rad(($start_angle + $angle) / 2)) * ($radius / 1.7));
+                        $ytext = round($y             + 5 - sin(deg2rad(($start_angle + $angle) / 2))     * ($radius / 1.7));
                         imagettftext(
                             $image,
                             $this->fontsize,
@@ -1274,12 +1274,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             //define label position
             if (is_array($data)) {
                 //show label inside its arc
-                $xtext = $x                                                             - $dx * $tw + cos($amr) * (0.5 * $radius - $step / 3);
-                $ytext = $y                                     + $dy                         * $th - sin($amr) * (0.5 * $radius - $step / 4);
+                $xtext = round($x - $dx * $tw + cos($amr) * (0.5 * $radius - $step / 3));
+                $ytext = round($y + $dy * $th - sin($amr) * (0.5 * $radius - $step / 4));
             } else {
                 //show label outside of its arc
-                $xtext = $x + 3                     - $dx * $tw + cos($amr) * (0.5 * $radius + $step / 16);
-                $ytext = $y + $dy                         * $th - sin($amr) * (0.5 * $radius + $step / 8);
+                $xtext = round($x + 3 - $dx * $tw + cos($amr) * (0.5 * $radius + $step / 16));
+                $ytext = round($y + $dy * $th - sin($amr) * (0.5 * $radius + $step / 8));
             }
 
             //draw label
@@ -1310,8 +1310,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 $th = abs($box[5] - $box[1]);
 
                 //define label position
-                $xtext = $x                                                             - $dx * $tw + cos($samr) * (0.5 * $radius - $step / 8);
-                $ytext = $y                                     + $dy                         * $th - sin($samr) * (0.5 * $radius - $step / 16);
+                $xtext = round($x - $dx * $tw + cos($samr) * (0.5 * $radius - $step / 8));
+                $ytext = round($y + $dy * $th - sin($samr) * (0.5 * $radius - $step / 16));
 
                 //draw label
                 imagettftext(
@@ -1715,10 +1715,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         if ($dashboard) {
             $height = 350;
         }
-        $x_bar           = (0.85 * $this->width / $nb_bar);
-        $width_bar       = $x_bar         * .85;
-        $y_labels_width  = .1             * $this->width;
-        $x_labels_height = $height - 0.95 * $height;
+        $x_bar           = round(0.85 * $this->width / $nb_bar);
+        $width_bar       = round($x_bar         * .85);
+        $y_labels_width  = round(.1             * $this->width);
+        $x_labels_height = round($height - 0.95 * $height);
         $legend_height   = $nb_labels2    * 15 + 10;
 
         //longueur du texte en dessous des barres
@@ -1753,8 +1753,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             //draw x-axis grey step line and values ticks
             $xstep = round(($height - $legend_height - $x_labels_height) / 12);
             for ($i = 0; $i <= 12; $i++) {
-                $yaxis = $height - $x_labels_height - $xstep * $i;
-                imageLine($image, (int) (.9 * $y_labels_width), (int) $yaxis, (int) (0.95 * $this->width), (int) $yaxis, hexdec($this->grey));
+                $yaxis = round($height - $x_labels_height - $xstep * $i);
+                imageLine($image, round(.9 * $y_labels_width), $yaxis, round(0.95 * $this->width), $yaxis, hexdec($this->grey));
 
                 //value label
                 $val       = round($i * $cum / 12, 1);
@@ -1822,7 +1822,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 foreach ($data as $subdata) {
                     $by1 = $by2;
                     $bx1 = $y_labels_width + $index1 * $x_bar;
-                    $by2 = $by1 - $subdata           * ($height - $legend_height - $x_labels_height) / $cum;
+                    $by2 = round($by1 - $subdata           * ($height - $legend_height - $x_labels_height) / $cum);
                     $bx2 = $bx1 + $width_bar;
 
                     if ($by1 != $by2) { // no draw for empty datas
@@ -1855,7 +1855,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 $textwidth = abs($box[4] - $box[6]);
                 $textwidth = abs(sqrt((pow($textwidth, 2) / 2)));
 
-                $lx = $y_labels_width + $index1 * $x_bar + ($width_bar / 2.5);
+                $lx = round($y_labels_width + $index1 * $x_bar + ($width_bar / 2.5));
                 imagettftext(
                     $image,
                     $this->fontsize - 1,
@@ -2030,7 +2030,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         $nb         = count($datas);
         $width      = $this->width;
         $height     = 350;
-        $width_line = ($width - 45) / $nb;
+        $width_line = round(($width - 45) / $nb);
         $step       = ceil($nb / 20);
 
         //create image
@@ -2125,9 +2125,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
                 // determine coords
                 $x1           = $index                                                               * $width_line - $width_line + 30;
-                $y1           = $height                                             - 30 - $old_data * ($height - 85) / $max;
+                $y1           = floor($height                                             - 30 - $old_data * ($height - 85) / $max);
                 $x2           = $x1 + $width_line;
-                $y2           = $height - 30 - $data * ($height - 85) / $max;
+                $y2           = floor($height - 30 - $data * ($height - 85) / $max);
                 $aCoords[$x1] = $y1;
 
                 //in case of area chart fill under point space
@@ -2138,7 +2138,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                         $x2, $height - 30,
                         $x1, $height - 30,
                     ];
-                    imagefilledpolygon($image, $points, 4, hexdec($alphapalette[0]));
+                    imagefilledpolygon($image, $points, hexdec($alphapalette[0]));
                 }
 
                 //trace lines between points (if linear)
@@ -2170,9 +2170,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
                 // determine coords
                 $x1 = $index                                                               * $width_line - $width_line + 30;
-                $y1 = $height                                             - 30 - $old_data * ($height - 85) / $max;
+                $y1 = floor($height                                             - 30 - $old_data * ($height - 85) / $max);
                 $x2 = $x1 + $width_line;
-                $y2 = $height - 30 - $data * ($height - 85) / $max;
+                $y2 = floor($height - 30 - $data * ($height - 85) / $max);
 
                 //trace dots
                 $color_rbg = self::colorHexToRGB($darkerpalette[0]);
