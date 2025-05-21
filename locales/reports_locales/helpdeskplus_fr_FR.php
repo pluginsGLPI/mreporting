@@ -85,6 +85,13 @@ $LANG['plugin_mreporting']['Helpdeskplus'] = [
         'category' => 'Général',
     ],
 
+    'reportVstackbarTicketstechtime' => [
+        'title'    => 'Quantitatif mensuel par temps passé par technicien',
+        'desc'     => 'Ce rapport affiche la durée totale passée par chaque employée sur des tâches pour chaque mois sélectionnés.<br>'.
+                        '<b>Vous devez selectionner au préalable un groupe de technicien pour afficher les données.</b>',
+        'category' => 'Général',
+    ],
+
     'reportHbarTopcategory' => [
         'title' => 'TOP catégories',
         'desc'  => 'Nombre croissant de ticket affiché par catégorie. <br>' .

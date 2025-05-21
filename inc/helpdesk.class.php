@@ -539,6 +539,66 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         return $datas;
     }
 
+    public function reportGlineNbTicketYear($config = [])
+    {
+        $_SESSION['mreporting_selector']['reportGlineNbTicketYear'] = ['dateinterval'];
+
+        return $this->reportGareaNbTicketYear($config);
+    }
+
+    public function reportGareaNbTicketYear($config = [])
+    {
+        global $DB;
+
+        $_SESSION['mreporting_selector']['reportGareaNbTicketYear'] = ['dateinterval'];
+
+        $datas = [];
+
+        //Init delay value
+        $this->sql_date = PluginMreportingCommon::getSQLDate(
+            "glpi_tickets.date",
+            $config['delay'],
+            $config['randname']
+        );
+
+        $query = "SELECT DISTINCT
+        date_format(date, '%Y-%m') as period,
+        COUNT(id) as nb
+        FROM glpi_tickets
+        WHERE " . $this->sql_date . "
+            AND glpi_tickets.entities_id IN (" . $this->where_entities . ")
+            AND glpi_tickets.is_deleted = '0'
+        GROUP BY period
+        ORDER BY period";
+        $res = $DB->query($query);
+        $lang = $_SESSION['glpilanguage'] ?? 'en_GB';
+
+        for ($m = 1; $m <= 12; $m++) {
+            $datas['labels2'][$m] = IntlDateFormatter::formatObject(new DateTime("2024-$m"), 'MMMM', $lang);
+        }
+
+        while ($data = $DB->fetchAssoc($res)) {
+            $date = new DateTime($data['period']);
+            $month = IntlDateFormatter::formatObject($date, 'M', $lang);
+            $datas['datas'][IntlDateFormatter::formatObject($date, 'Y', $lang)][$month] = $data['nb'];
+        }
+
+        foreach (array_keys($datas['datas']) as $key) {
+            for ($m = 1; $m <= 12; $m++) {
+                if (!isset($datas['datas'][$key][$m]))
+                    $datas['datas'][$key][$m] = 0;
+            }
+        }
+
+        if (count($datas) > 0) {
+            foreach ($datas['datas'] as &$data) {
+                ksort($data);
+            }
+        }
+
+        return $datas;
+    }
+
     public function reportVstackbarNbTicket($config = [])
     {
         $_SESSION['mreporting_selector']['reportVstackbarNbTicket'] = ['dateinterval'];
