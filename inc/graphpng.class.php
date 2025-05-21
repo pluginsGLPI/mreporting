@@ -2372,7 +2372,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         $nb_bar     = count($labels2);
         $nb_labels2 = count($datas);
 
-        $width_line = ($this->width - 45) / $nb;
+        $width_line = floor(($this->width - 45) / $nb);
         $index1     = 0;
         $index3     = 1;
         $step       = ceil($nb / 21);
@@ -2479,10 +2479,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     }
 
                     // determine coords
-                    $x1 = $index2                                                                                           * $width_line - $width_line + $x_bar;
-                    $y1 = $height                                                            - $x_labels_height - $old_data * ($height - $legend_height - $x_labels_height) / $max;
+                    $x1 = $index2 * $width_line - $width_line + $x_bar;
+                    $y1 = round($height - $x_labels_height - $old_data * ($height - $legend_height - $x_labels_height) / $max);
                     $x2 = $x1 + $width_line;
-                    $y2 = $height - $x_labels_height - $subdata * ($height - $legend_height - $x_labels_height) / $max;
+                    $y2 = round($height - $x_labels_height - $subdata * ($height - $legend_height - $x_labels_height) / $max);
 
                     //in case of area chart fill under point space
                     if ($area > 0) {
