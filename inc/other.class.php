@@ -32,6 +32,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
 {
     public function reportHbarLogs($configs = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         //Init delay value
@@ -71,22 +72,22 @@ class PluginMreportingOther extends PluginMreportingBaseclass
 
         $datas = [];
 
-        $result                                                                = $DB->query($query_computer_software);
+        $result                                                                = $DB->doQuery($query_computer_software);
         $datas['datas'][__('Add/remove software on a computer', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-        $result                                                               = $DB->query($query_software_version);
+        $result                                                               = $DB->doQuery($query_software_version);
         $datas['datas'][__('Add/remove version on a software', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-        $result                                          = $DB->query($query_add_infocom);
+        $result                                          = $DB->doQuery($query_add_infocom);
         $datas['datas'][__('Add infocom', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-        $result                                                           = $DB->query($query_user_profiles);
+        $result                                                           = $DB->doQuery($query_user_profiles);
         $datas['datas'][__('Add/remove profile on a user', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-        $result                                                         = $DB->query($query_user_groups);
+        $result                                                         = $DB->doQuery($query_user_groups);
         $datas['datas'][__('Add/remove group on a user', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-        $result                                                     = $DB->query($query_user_deleted);
+        $result                                                     = $DB->doQuery($query_user_deleted);
         $datas['datas'][__('User deleted from LDAP', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
         $plugin = new Plugin();
@@ -94,23 +95,23 @@ class PluginMreportingOther extends PluginMreportingBaseclass
             $query_webservice = "$prefix `itemtype`='PluginWebservicesClient'";
 
             // Display this information is not usefull if webservices is not activated
-            $result                                              = $DB->query($query_webservice);
+            $result                                              = $DB->doQuery($query_webservice);
             $datas['datas'][__('Webservice logs', 'mreporting')] = $DB->result($result, 0, 'cpt');
         }
 
-        $result                                        = $DB->query($query_ocs);
+        $result                                        = $DB->doQuery($query_ocs);
         $datas['datas'][__('OCS Infos', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-        $result                                                       = $DB->query($query_device);
+        $result                                                       = $DB->doQuery($query_device);
         $datas['datas'][__('Add/update/remove device', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-        $result                                                  = $DB->query($query_relation);
+        $result                                                  = $DB->doQuery($query_relation);
         $datas['datas'][__('Add/remove relation', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-        $result                                              = $DB->query($query_item);
+        $result                                              = $DB->doQuery($query_item);
         $datas['datas'][__('Add/remove item', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
-        $result                                                          = $DB->query($query_other);
+        $result                                                          = $DB->doQuery($query_other);
         $datas['datas'][__('Comments & date_mod changes', 'mreporting')] = $DB->result($result, 0, 'cpt');
 
         $plugin = new Plugin();
@@ -118,7 +119,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
             $query_genericobject = "$prefix `itemtype` LIKE '%PluginGenericobject%'";
 
             // Display this information is not usefull if genericobject is not activated
-            $result                                                        = $DB->query($query_genericobject);
+            $result                                                        = $DB->doQuery($query_genericobject);
             $datas['datas'][__('Genericobject plugin logs', 'mreporting')] = $DB->result($result, 0, 'cpt');
         }
 
@@ -128,10 +129,10 @@ class PluginMreportingOther extends PluginMreportingBaseclass
     /**
     * Preconfig datas with your values when init config is done
     *
-    * @param type $funct_name
-    * @param type $classname
+    * @param string|int $funct_name
+    * @param string $classname
     * @param PluginMreportingConfig $config
-    * @return $config
+    * @return array|boolean $config
     */
     public function preconfig($funct_name, $classname, PluginMreportingConfig $config)
     {

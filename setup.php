@@ -31,7 +31,7 @@
 define('PLUGIN_MREPORTING_VERSION', '1.8.7');
 
 // Minimal GLPI version, inclusive
-define('PLUGIN_MREPORTING_MIN_GLPI', '10.0.0');
+define('PLUGIN_MREPORTING_MIN_GLPI', '10.0.11');
 // Maximum GLPI version, exclusive
 define('PLUGIN_MREPORTING_MAX_GLPI', '10.0.99');
 
@@ -67,6 +67,10 @@ include_once __DIR__ . '/vendor/autoload.php';
  */
 function plugin_init_mreporting()
 {
+    /**
+     * @var array $PLUGIN_HOOKS
+     * @var array $CFG_GLPI
+     */
     global $PLUGIN_HOOKS, $CFG_GLPI;
 
     $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
