@@ -2010,6 +2010,32 @@ class PluginMreportingCommon extends CommonDBTM
         ];
     }
 
+        /**
+     * Format where_entities field for criteria
+     * @param string $where_entities  entities string
+     *
+     * @return array formatted array
+     */
+    public static function formatWhereEntitiesArray($where_entities)
+    {
+        preg_match_all('/\d+/', $where_entities, $matches);
+        return array_map('intval', $matches[0]);
+    }
+
+    public static function convertDateFormatSQLtoPHP(string $format): string {
+        return strtr($format, [
+            '%Y' => 'Y',
+            '%y' => 'y',
+            '%m' => 'm',
+            '%d' => 'd',
+            '%H' => 'H',
+            '%i' => 'i',
+            '%s' => 's',
+            '%M' => 'F',
+            '%b' => 'M',
+        ]);
+    }
+
     /**
      * Get the max value of a multidimensionnal array
      * @param  array|int $array the array to compute
