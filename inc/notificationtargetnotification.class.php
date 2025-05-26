@@ -157,17 +157,21 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
             $start = new DateTime($graph['start']);
             $end   = new DateTime($graph['end']);
 
-            $format = 'j';
+            $format = 'd';
             if ($start->format('Y') != $end->format('Y')) {
-                $format .= ' F Y';
+                $format .= ' MMMM y';
             } elseif ($start->format('F') != $end->format('F')) {
-                $format .= ' F';
+                $format .= ' MMMM';
             }
 
+            $language = $_SESSION['glpilanguage'] ?? 'en_GB';
             $image_title = $LANG['plugin_mreporting'][$graph['class']][$graph['method']]['title'];
-            $image_title .= ' du ' . $start->format($format);
-            $image_title .= ' au ' . $end->format('j F Y');
-
+            $image_title .= ' ' . lcfirst(
+                sprintf(__('From %1$s to %2$s'),
+                    IntlDateFormatter::formatObject($start, $format, $language),
+                    IntlDateFormatter::formatObject($end, 'd MMMM Y', $language)
+                )
+            );
             array_push($images, ['title' => $image_title,
                 'base64'                 => $image_base64,
                 'width'                  => $image_width,
