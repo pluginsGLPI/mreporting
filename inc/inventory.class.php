@@ -1,5 +1,7 @@
 <?php
 
+use Composer\XdebugHandler\Status;
+
 /**
  * -------------------------------------------------------------------------
  * Mreporting plugin for GLPI
@@ -95,6 +97,15 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         return $sql_states;
     }
 
+    public static function getCriteriaStateCondition($field)
+    {
+        if (isset($_SESSION['mreporting_values']['states_id'])) {
+            return [$field => $_SESSION['mreporting_values']['states_id']];
+        }
+
+        return [];
+    }
+
     /* ==== MANUFACTURERS REPORTS ==== */
     public function reportPieComputersByFabricant($config = [])
     {
@@ -115,32 +126,60 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         /** @var \DBmysql $DB */
         global $DB;
 
-        $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
-        $sql_states   = self::getStateCondition('c.states_id');
+        $criteria_states   = self::getCriteriaStateCondition(Computer::getTable() . '.states_id');
 
-        $query = "SELECT m.`name`   as Manufacturer,
-                       count(*) as Total,
-                       count(*) * 100 / (SELECT count(*)
-                           FROM glpi_computers     as c,
-                                glpi_manufacturers as m
-                           WHERE c.`is_deleted` = 0
-                                 AND c.`is_template` = 0
-                                 AND c.`manufacturers_id` = m.`id`
-                                 $sql_entities
-                                 $sql_states) as Percent
-         FROM glpi_computers     as c,
-              glpi_manufacturers as m
-         WHERE c.`manufacturers_id` = m.`id`
-               $sql_entities
-               $sql_states
-               AND c.`is_deleted` = 0
-               AND c.`is_template` = 0
-         GROUP BY m.`name`
-         ORDER BY Total DESC";
-        $result = $DB->doQuery($query);
+        $subquery = [
+            'SELECT' => [
+                new QueryExpression("COUNT(*)"),
+            ],
+            'FROM' => Computer::getTable(),
+            'LEFT JOIN' => [
+                Manufacturer::getTable() => [
+                    'ON' => [
+                        Manufacturer::getTable() . '.id',
+                        Computer::getTable() . '.manufacturers_id',
+                    ]
+                ]
+            ],
+            'WHERE' => array_merge(
+                [
+                    Computer::getTable() . '.is_template' => 0,
+                    Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                ], $criteria_states
+            ),
+        ];
+
+        $query = [
+            'SELECT' => [
+                Manufacturer::getTable() . '.name as Manufacturer',
+                new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Percent')),
+            ],
+            'COUNT' => 'Total',
+            'FROM' => Computer::getTable(),
+            'LEFT JOIN' => [
+                Manufacturer::getTable() => [
+                    'ON' => [
+                        Manufacturer::getTable() . '.id',
+                        Computer::getTable() . '.manufacturers_id',
+                    ]
+                ]
+            ],
+            'WHERE' => array_merge(
+                [
+                    Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                    Computer::getTable() . '.is_deleted' => 0,
+                    Computer::getTable() . '.is_template' => 0,
+                ],
+                $criteria_states),
+            'GROUPBY' => [
+                Manufacturer::getTable() . '.name',
+            ],
+            'ORDER' => ['Total DESC'],
+        ];
+        $result = $DB->request($query);
 
         $datas = [];
-        while ($computer = $DB->fetchAssoc($result)) {
+        foreach ($result as $computer) {
             if ($computer['Total']) {
                 $percent = round(floatval($computer['Percent']), 2);
                 $datas['datas'][$computer['Manufacturer'] . " ($percent %)"] = $computer['Total'];
@@ -170,30 +209,60 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         /** @var \DBmysql $DB */
         global $DB;
 
-        $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
-        $sql_states   = self::getStateCondition('c.states_id');
-        $query        = "SELECT t.`name`   as Type,
-                       count(*) as Total,
-                       count(*) * 100 / (SELECT count(*)
-                           FROM glpi_computers     as c,
-                                glpi_computertypes as t
-                           WHERE c.`is_deleted` = 0
-                                 AND c.`is_template` = 0
-                                 AND c.`computertypes_id` = t.`id`
-                                 $sql_entities
-                                 $sql_states) as Percent
-         FROM glpi_computers     as c,
-              glpi_computertypes as t
-         WHERE c.`computertypes_id` = t.`id`
-               $sql_entities
-               $sql_states
-               AND c.`is_deleted` = 0
-               AND c.`is_template` = 0
-         GROUP BY t.`name`
-         ORDER BY Total DESC";
-        $result = $DB->doQuery($query);
+        $criteria_states   = self::getCriteriaStateCondition(Computer::getTable() . '.states_id');
+
+        $subquery = [
+            'SELECT' => [
+                new QueryExpression("COUNT(*)"),
+            ],
+            'FROM' => Computer::getTable(),
+            'LEFT JOIN' => [
+                ComputerType::getTable() => [
+                    'ON' => [
+                        ComputerType::getTable() . '.id',
+                        Computer::getTable() . '.computertypes_id',
+                    ]
+                ]
+            ],
+            'WHERE' => array_merge(
+                [
+                    Computer::getTable() . '.is_template' => 0,
+                    Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                ], $criteria_states
+            ),
+        ];
+
+        $query = [
+            'SELECT' => [
+                ComputerType::getTable() . '.name as Type',
+                new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Percent')),
+            ],
+            'COUNT' => 'Total',
+            'FROM' => Computer::getTable(),
+            'LEFT JOIN' => [
+                ComputerType::getTable() => [
+                    'ON' => [
+                        ComputerType::getTable() . '.id',
+                        Computer::getTable() . '.computertypes_id',
+                    ]
+                ]
+            ],
+            'WHERE' => array_merge(
+                [
+                    Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                    Computer::getTable() . '.is_deleted' => 0,
+                    Computer::getTable() . '.is_template' => 0,
+                ],
+                $criteria_states),
+            'GROUPBY' => [
+                ComputerType::getTable() . '.name',
+            ],
+            'ORDER' => ['Total DESC'],
+        ];
+        $result = $DB->request($query);
+
         $datas  = [];
-        while ($computer = $DB->fetchAssoc($result)) {
+        foreach ($result as $computer) {
             $percent = round(floatval($computer['Percent']), 2);
             $datas['datas'][$computer['Type'] . " ($percent %)"] = $computer['Total'];
         }
@@ -221,105 +290,86 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         /** @var \DBmysql $DB */
         global $DB;
 
-        $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
-        $sql_states   = self::getStateCondition('c.states_id');
+        $criteria_states   = self::getCriteriaStateCondition(Computer::getTable() . '.states_id');
         $datas        = [];
 
-        $query = "SELECT '< 1 year' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
-                           FROM glpi_computers as c,
-                                glpi_infocoms  as i
-                           WHERE c.`id` = i.`items_id`
-                             AND c.`is_deleted` = 0
-                             AND c.`is_template` = 0
-                             AND itemtype = 'Computer'
-                             $sql_entities
-                             $sql_states) Percent
-         FROM glpi_computers as c,
-              glpi_infocoms  as i
-         WHERE c.`id` = i.`items_id`
-           AND c.`is_deleted` = 0
-           AND c.`is_template` = 0
-           AND itemtype = 'Computer'
-           AND i.`warranty_date` > CURRENT_DATE - INTERVAL 1 YEAR
-           $sql_entities
-           $sql_states
-         UNION
-         SELECT '1-3 years' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
-                                    FROM glpi_computers c,  glpi_infocoms i
-                                    WHERE c.`id` = i.`items_id`
-                                    AND c.`is_deleted` = 0
-                                    AND c.`is_template` = 0
-                                    AND itemtype = 'Computer'
-                                    $sql_entities
-                                    $sql_states) Percent
-         FROM glpi_computers as c,
-              glpi_infocoms  as i
-         WHERE c.`id` = i.`items_id`
-           AND c.`is_deleted` = 0
-           AND c.`is_template` = 0
-           AND itemtype = 'Computer'
-           AND i.`warranty_date` <= CURRENT_DATE - INTERVAL 1 YEAR
-           AND i.`warranty_date` > CURRENT_DATE - INTERVAL 3 YEAR
-           $sql_entities
-           $sql_states
-         UNION
-         SELECT '3-5 years' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
-                                    FROM glpi_computers c,  glpi_infocoms i
-                                    WHERE c.`id` = i.`items_id`
-                                    AND c.`is_deleted` = 0
-                                    AND c.`is_template` = 0
-                                    AND itemtype = 'Computer'
-                                    $sql_entities
-                                    $sql_states) Percent
-         FROM glpi_computers as c,
-              glpi_infocoms  as i
-         WHERE c.`id` = i.`items_id`
-           AND c.`is_deleted` = 0
-           AND c.`is_template` = 0
-           AND itemtype = 'Computer'
-           AND i.`warranty_date` <= CURRENT_DATE - INTERVAL 3 YEAR
-           AND i.`warranty_date` > CURRENT_DATE - INTERVAL 5 YEAR
-           $sql_entities
-           $sql_states
-         UNION
-         SELECT '> 5 years' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
-                                    FROM glpi_computers c,  glpi_infocoms i
-                                    WHERE c.`id` = i.`items_id`
-                                    AND c.`is_deleted` = 0
-                                    AND c.`is_template` = 0
-                                    AND itemtype = 'Computer'
-                                    $sql_entities
-                                    $sql_states) Percent
-         FROM glpi_computers as c,
-              glpi_infocoms  as i
-         WHERE c.`id` = i.`items_id`
-           AND c.`is_deleted` = 0
-           AND c.`is_template` = 0
-           AND itemtype = 'Computer'
-           AND i.`warranty_date` <= CURRENT_DATE - INTERVAL 5 YEAR
-           $sql_entities
-           $sql_states
-         UNION
-         SELECT 'Undefined' Age, count(*) Total, count(*) * 100 / (SELECT count(*)
-                                    FROM glpi_computers c,  glpi_infocoms i
-                                    WHERE c.`id` = i.`items_id`
-                                    AND c.`is_deleted` = 0
-                                    AND c.`is_template` = 0
-                                    AND itemtype = 'Computer'
-                                    $sql_entities
-                                    $sql_states) Percent
-         FROM glpi_computers as c,
-              glpi_infocoms  as i
-         WHERE c.`id` = i.`items_id`
-           AND c.`is_deleted` = 0
-           AND c.`is_template` = 0
-           AND itemtype = 'Computer'
-            AND i.`warranty_date` IS NULL
-            $sql_entities
-            $sql_states";
-        $result = $DB->doQuery($query);
+        $param_requests = [
+            "'< 1 year' AS Age" => [
+                ['>', new QueryExpression('CURRENT_DATE - INTERVAL 1 YEAR')],
+            ],
+            "'1-3 year' AS Age" => [
+                ['<=', new QueryExpression('CURRENT_DATE - INTERVAL 1 YEAR')],
+                ['>', new QueryExpression('CURRENT_DATE - INTERVAL 3 YEAR')],
+            ],
+            "'3-5 year' AS Age" => [
+                ['<=', new QueryExpression('CURRENT_DATE - INTERVAL 3 YEAR')],
+                ['>', new QueryExpression('CURRENT_DATE - INTERVAL 5 YEAR')],
+            ],
+            "'> 5 year' AS Age" => [
+                ['<=', new QueryExpression('CURRENT_DATE - INTERVAL 5 YEAR')],
+            ],
+            "'Undefined' AS Age" => [
+                new QueryExpression(Infocom::getTable() . '.warranty_date IS NULL'),
+            ],
+        ];
 
-        while ($computer = $DB->fetchAssoc($result)) {
+        $subquery = [
+            'SELECT' => [
+                new QueryExpression("COUNT(*)"),
+            ],
+            'FROM' => Computer::getTable(),
+            'LEFT JOIN' => [
+                Infocom::getTable() => [
+                    'ON' => [
+                        Infocom::getTable() . '.items_id',
+                        Computer::getTable() . '.id',
+                    ]
+                ]
+            ],
+            'WHERE' => array_merge(
+                [
+                    Computer::getTable() . '.is_deleted' => 0,
+                    Computer::getTable() . '.is_template' => 0,
+                    Infocom::getTable() . '.itemtype' => 'Computer',
+                    Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                ], $criteria_states
+            ),
+        ];
+
+        $queries = [];
+
+        foreach ($param_requests as $label => $criterias) {
+            $query_union = [
+                'SELECT' => [
+                    new QueryExpression($label),
+                    new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Percent')),
+                ],
+                'COUNT' => 'Total',
+                'FROM' => Computer::getTable(),
+                'LEFT JOIN' => [
+                    Infocom::getTable() => [
+                        'ON' => [
+                            Infocom::getTable() . '.items_id',
+                            Computer::getTable() . '.id',
+                        ]
+                    ]
+                ],
+                'WHERE' => [
+                    Computer::getTable() . '.is_deleted' => 0,
+                    Computer::getTable() . '.is_template' => 0,
+                    Infocom::getTable() . '.itemtype' => 'Computer',
+                ],
+            ];
+            foreach ($criterias as $criteria) {
+                $query_union['WHERE'] = array_merge($query_union['WHERE'], [Infocom::getTable() . '.warranty_date' => $criteria]);
+            }
+            $queries[] = $query_union;
+        }
+
+        $query = new \QueryUnion($queries);
+        $result = $DB->request($query);
+
+        foreach ($result as $computer) {
             $percent = round(floatval($computer['Percent']), 2);
 
             $datas['datas'][__($computer['Age'], 'mreporting') . " ($percent %)"] = $computer['Total'];
@@ -348,8 +398,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         /** @var \DBmysql $DB */
         global $DB;
 
-        $sql_entities = " AND c.`entities_id` IN ({$this->where_entities})";
-        $sql_states   = self::getStateCondition('c.states_id');
+        $criteria_states   = self::getCriteriaStateCondition(Computer::getTable() . '.states_id');
         $oses         = ['Windows' => 'Windows',
             'Linux'                => 'Linux|Ubuntu|openSUSE',
             'Solaris'              => 'Solaris',
@@ -360,64 +409,107 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             'Android'              => 'Android',
             'HP-UX'                => 'HP-UX',
         ];
-        $query   = '';
-        $first   = true;
-        $notlike = '';
+        $notlike = [];
+
+        $queries = [];
+
+        $subquery = [
+            'SELECT' => [
+                new QueryExpression("COUNT(*)")
+            ],
+            'FROM' => Computer::getTable(),
+            'LEFT JOIN' => [
+                Item_OperatingSystem::getTable() => [
+                    'ON' => [
+                        Item_OperatingSystem::getTable() . '.items_id',
+                        Computer::getTable() . '.id',
+                    ]
+                ],
+                OperatingSystem::getTable() => [
+                    'ON' => [
+                        OperatingSystem::getTable() . '.id',
+                        Item_OperatingSystem::getTable() . '.operatingsystems_id',
+                    ]
+                ],
+            ],
+            'WHERE' => array_merge([
+                Computer::getTable() . '.is_deleted' => 0,
+                Computer::getTable() . '.is_template' => 0,
+                Item_OperatingSystem::getTable() . '.itemtype' => 'Computer',
+                Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+            ], $criteria_states),
+        ];
+
         foreach ($oses as $os => $search) {
-            $query .= (!$first ? ' UNION ' : '')
-            . "\n SELECT '$os' AS OS, count(*) AS Total, count(*) * 100 / (SELECT count(*)
-                                                                        FROM glpi_computers        as c,
-                                                                             glpi_operatingsystems as os,
-                                                                             glpi_items_operatingsystems as ios
-                                                                        WHERE c.`is_deleted`='0' AND c.`is_template`='0'
-                                                                        AND ios.`operatingsystems_id` = os.`id`
-                                                                        AND ios.items_id = c.id
-                                                                        AND ios.itemtype = 'Computer'
-                                                                            $sql_entities
-                                                                            $sql_states) AS Percent
-               FROM glpi_computers        as c,
-                    glpi_operatingsystems as os,
-                    glpi_items_operatingsystems as ios
-               WHERE ios.`operatingsystems_id` = os.`id`
-                     AND ios.items_id = c.id
-                     AND ios.itemtype = 'Computer'
-                     AND c.`is_deleted`='0'
-                     AND c.`is_template`='0'
-                     AND os.`name` REGEXP '$search'
-                     $sql_entities
-                     $sql_states";
+            $queries[] = [
+                'SELECT' => [
+                    new QueryExpression("'$os'" . " AS OS"),
+                    new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Percent')),
+                ],
+                'COUNT' => 'Total',
+                'FROM' => Computer::getTable(),
+                'LEFT JOIN' => [
+                    Item_OperatingSystem::getTable() => [
+                        'ON' => [
+                            Item_OperatingSystem::getTable() . '.items_id',
+                            Computer::getTable() . '.id',
+                        ]
+                    ],
+                    OperatingSystem::getTable() => [
+                        'ON' => [
+                            OperatingSystem::getTable() . '.id',
+                            Item_OperatingSystem::getTable() . '.operatingsystems_id',
+                        ]
+                    ],
+                ],
+                'WHERE' => array_merge([
+                    Item_OperatingSystem::getTable() . '.itemtype' => 'Computer',
+                    Computer::getTable() . '.is_deleted' => 0,
+                    Computer::getTable() . '.is_template' => 0,
+                    new QueryExpression(OperatingSystem::getTable() . ".name REGEXP '" . $search . "'"),
+                    Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                ], $criteria_states),
+            ];
 
-            $notlike .= " AND os.`name` NOT REGEXP '$search'";
-            $first = false;
+            $notlike[] = new QueryExpression(OperatingSystem::getTable() . ".name NOT REGEXP '" . $search . "'");
         }
-        $query .= " UNION
-         SELECT '" . __('Others') . "' AS OS, count(*) Total, count(*) * 100 / (SELECT count(*)
-                                    FROM glpi_computers        as c,
-                                         glpi_operatingsystems as os,
-                                         glpi_items_operatingsystems as ios
-                                    WHERE c.`is_deleted`= 0
-                                          AND c.`is_template`=0
-                                          AND ios.`operatingsystems_id` = os.`id`
-                                          AND ios.items_id = c.id
-                                          $sql_entities
-                                          $sql_states) as Percent
-         FROM glpi_computers        as c,
-              glpi_operatingsystems as os,
-              glpi_items_operatingsystems as ios
-         WHERE ios.`operatingsystems_id` = os.`id`
-           AND ios.items_id = c.id
-           AND ios.itemtype = 'Computer'
-           AND c.`is_deleted` = 0
-           AND c.`is_template`=0
-           $notlike
-           $sql_entities
-           $sql_states";
 
-        $query .= ' ORDER BY Total DESC';
-        $result = $DB->doQuery($query);
+        $queries[] = [
+            'SELECT' => [
+                new QueryExpression("'" . __('Others') . "' AS OS"),
+                new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Percent')),
+            ],
+            'COUNT' => 'Total',
+            'FROM' => Computer::getTable(),
+            'LEFT JOIN' => [
+                Item_OperatingSystem::getTable() => [
+                    'ON' => [
+                        Item_OperatingSystem::getTable() . '.items_id',
+                        Computer::getTable() . '.id',
+                    ]
+                ],
+                OperatingSystem::getTable() => [
+                    'ON' => [
+                        OperatingSystem::getTable() . '.id',
+                        Item_OperatingSystem::getTable() . '.operatingsystems_id',
+                    ]
+                ],
+            ],
+            'WHERE' => array_merge([
+                Item_OperatingSystem::getTable() . '.itemtype' => 'Computer',
+                Computer::getTable() . '.is_deleted' => 0,
+                Computer::getTable() . '.is_template' => 0,
+                Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                $notlike,
+            ], $criteria_states),
+            'ORDER' => ['Total DESC'],
+        ];
+
+        $query = new \QueryUnion($queries);
+        $result = $DB->request($query);
 
         $datas = [];
-        while ($computer = $DB->fetchAssoc($result)) {
+        foreach ($result as $computer) {
             $percent = round(floatval($computer['Percent']), 2);
             if ($computer['Total']) {
                 $datas['datas'][$computer['OS'] . " ($percent %)"] = $computer['Total'];
@@ -782,19 +874,29 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMonitors'] = ['multiplestates'];
-        $sql_states                                            = self::getStateCondition('c.`states_id`');
+        $criteria_states   = self::getCriteriaStateCondition(Computer::getTable() . '.states_id');
 
-        $query = "SELECT COUNT(*) AS cpt
-                FROM `glpi_computers_items` AS ci,
-                     `glpi_computers` AS c
-                WHERE `ci`.`itemtype` = 'Monitor'
-                  AND `c`.`is_deleted` = '0'
-                  AND `ci`.`computers_id` = c.`id`
-                  AND `c`.`is_template` = '0'
-                  AND c.`entities_id` IN ({$this->where_entities})
-                  $sql_states
-                GROUP BY `ci`.`computers_id`
-                ORDER BY `cpt`";
+        $query = [
+            'COUNT'   => 'cpt',
+            'FROM'    => Computer::getTable(),
+            'LEFT JOIN' => [
+                Computer_Item::getTable() => [
+                    'ON' => [
+                        Computer_Item::getTable() . '.computers_id',
+                        Computer::getTable() . '.id',
+                    ]
+                ]
+            ],
+            'WHERE'   => array_merge([
+                Computer_Item::getTable() . '.itemtype'   => 'Monitor',
+                Computer::getTable() . '.is_deleted'  => 0,
+                Computer::getTable() . '.is_template'   => '0',
+                Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+            ], $criteria_states),
+            'GROUPBY' => [Computer_Item::getTable() . '.computers_id'],
+            'ORDER'   => ['cpt'],
+        ];
+
         $data = [];
         foreach ($DB->request($query) as $result) {
             $label = $result['cpt'] . ' ' . _n('Monitor', 'Monitors', $result['cpt']);
@@ -813,23 +915,52 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         /** @var \DBmysql $DB */
         global $DB;
 
-        $query = "SELECT t.`name` status, count(*) Total, count(*) * 100 / (SELECT count(*)
-                           FROM glpi_computers as c,
-                                glpi_states    as t
-                           WHERE c.`states_id` = t.`id`
-                             AND c.`entities_id` IN ({$this->where_entities})
-                             AND c.`is_deleted` = 0
-                             AND c.`is_template` = 0) Percent
-         FROM glpi_computers as c,
-              glpi_states    as t
-         WHERE c.`states_id` = t.`id`
-           AND c.`entities_id` IN ({$this->where_entities})
-           AND c.`is_deleted` = 0
-           AND c.`is_template` = 0
-         GROUP BY t.`name`";
-        $result = $DB->doQuery($query);
+        $subquery = [
+            'SELECT' => [
+                new QueryExpression("COUNT(*)")
+            ],
+            'FROM' => Computer::getTable(),
+            'LEFT JOIN' => [
+                State::getTable() => [
+                    'ON' => [
+                        State::getTable() . '.id',
+                        Computer::getTable() . '.states_id',
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                Computer::getTable() . '.is_deleted' => 0,
+                Computer::getTable() . '.is_template' => 0,
+            ],
+        ];
+
+        $query = [
+            'SELECT' => [
+                State::getTable() . '.name as status',
+                new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Percent')),
+            ],
+            'COUNT'   => 'Total',
+            'FROM'    => Computer::getTable(),
+            'LEFT JOIN' => [
+                State::getTable() => [
+                    'ON' => [
+                        State::getTable() . '.id',
+                        Computer::getTable() . '.states_id',
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                Computer::getTable() . '.is_deleted' => 0,
+                Computer::getTable() . '.is_template' => 0,
+            ],
+            'GROUPBY' => [State::getTable() . '.name'],
+        ];
+
+        $result = $DB->request($query);
         $datas  = [];
-        while ($computer = $DB->fetchAssoc($result)) {
+        foreach ($result as $computer) {
             $percent = round(floatval($computer['Percent']), 2);
             $datas['datas'][$computer['status'] . " ($percent %)"] = $computer['Total'];
         }
@@ -846,17 +977,52 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $condition = ' AND c.entities_id IN (' . $this->where_entities . ')';
 
-        $query = "SELECT t.name status, count(*) Total, count(*)*100/(
-                     SELECT count(*)
-                     FROM glpi_printers c, glpi_states t
-                     WHERE c.`is_deleted`=0 AND c.`is_template`=0
-                     AND c.states_id = t.id $condition) Pourcentage
-                FROM glpi_printers c, glpi_states t
-                WHERE c.states_id = t.id $condition  AND c.`is_deleted`=0 AND c.`is_template`=0
-                GROUP BY t.name";
-        $result = $DB->doQuery($query);
+        $subquery = [
+            'SELECT' => [
+                new QueryExpression("COUNT(*)")
+            ],
+            'FROM' => Printer::getTable(),
+            'LEFT JOIN' => [
+                State::getTable() => [
+                    'ON' => [
+                        State::getTable() . '.id',
+                        Printer::getTable() . '.states_id',
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                Printer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                Printer::getTable() . '.is_deleted' => 0,
+                Printer::getTable() . '.is_template' => 0,
+            ],
+        ];
 
-        while ($printer = $DB->fetchAssoc($result)) {
+        $query = [
+            'SELECT' => [
+                State::getTable() . '.name as status',
+                new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Pourcentage')),
+            ],
+            'COUNT'   => 'Total',
+            'FROM'    => Printer::getTable(),
+            'LEFT JOIN' => [
+                State::getTable() => [
+                    'ON' => [
+                        State::getTable() . '.id',
+                        Printer::getTable() . '.states_id',
+                    ]
+                ]
+            ],
+            'WHERE' => [
+                Printer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                Printer::getTable() . '.is_deleted' => 0,
+                Printer::getTable() . '.is_template' => 0,
+            ],
+            'GROUPBY' => [State::getTable() . '.name'],
+        ];
+
+        $result = $DB->request($query);
+
+        foreach ($result as $printer) {
             $pourcentage = round(floatval($printer['Pourcentage']), 2);
             $datas['datas'][$printer['status'] . " ($pourcentage %)"] = $printer['Total'];
         }
@@ -875,7 +1041,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             'entityLevel',
         ];
 
-        $this->where_entities_level = PluginMreportingCommon::getSQLEntityLevel('`glpi_entities`.`level`');
+        $entities_level = PluginMreportingCommon::getCriteriaEntityLevel('`glpi_entities`.`level`');
 
         $datas = [];
 
@@ -883,13 +1049,19 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $entity->getFromDB($_SESSION['glpiactive_entity']);
         $entities_first_level = [$_SESSION['glpiactive_entity'] => $entity->getName()];
 
-        $query = "SELECT `id`, `name`
-                  FROM `glpi_entities`
-                  WHERE {$this->where_entities_level}
-                  ORDER BY `name`";
-        $result = $DB->doQuery($query);
+        $query = [
+            'SELECT' => [
+                Entity::getTable() . '.id',
+                Entity::getTable() . '.name',
+            ],
+            'FROM' => Entity::getTable(),
+            'WHERE' => $entities_level,
+            'ORDER' => ['name'],
+        ];
 
-        while ($data = $DB->fetchAssoc($result)) {
+        $result = $DB->request($query);
+
+        foreach ($result as $data) {
             $entities_first_level[$data['id']] = $data['name'];
         }
         $entities = [];
@@ -899,14 +1071,18 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             } else {
                 $restrict = 'IN (' . implode(',', getSonsOf('glpi_entities', $entities_id)) . ')';
             }
-            $query = 'SELECT count(*) Total
-                     FROM `glpi_computers`
-                     WHERE `entities_id` ' . $restrict . '
-                     AND `is_deleted` = 0
-                     AND `is_template` = 0';
-            $result = $DB->doQuery($query);
+            $query = [
+                'COUNT' => 'Total',
+                'FROM' => Computer::getTable(),
+                'WHERE' => [
+                    Computer::getTable() . '.entities_id' => getSonsOf(Entity::getTable(), $entities_id),
+                    Computer::getTable() . '.is_deleted' => 0,
+                    Computer::getTable() . '.is_template' => 0,
+                ],
+            ];
+            $result = $DB->request($query);
 
-            while ($computer = $DB->fetchAssoc($result)) {
+            foreach ($result as $computer) {
                 $datas['tmp'][$entities_name . ' (pourcentage %)'] = $computer['Total'];
                 $entities[$entities_name . ' (pourcentage %)']     = $entities_id;
             }
