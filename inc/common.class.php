@@ -1646,6 +1646,27 @@ class PluginMreportingCommon extends CommonDBTM
     }
 
     /**
+     * Get criteria condition to filter entity depth by level.
+     * @param  string  $field     the sql table field to compare
+     * @return string sql condition
+     */
+    public static function getCriteriaEntityLevel($field = '`glpi_entities`.`level`')
+    {
+        if (isset($_SESSION['mreporting_values']['entitylevel'])) {
+            $maxlevel = $_SESSION['mreporting_values']['entitylevel'];
+        } else {
+            $maxlevel = self::getMaxEntityLevel();
+        }
+
+        $default_level = self::getActiveEntityLevel();
+
+        return [
+            $field => ['<=', $maxlevel],
+            $field => ['>=', $default_level],
+        ];
+    }
+
+    /**
      * Get active entity level according to GLPi SESSION
      * @return integer default entity level
      */

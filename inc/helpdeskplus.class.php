@@ -35,17 +35,28 @@ if (!defined('GLPI_ROOT')) {
 class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 {
     protected $sql_group_assign;
+    protected $criteria_group_assign;
     protected $sql_group_request;
+    protected $criteria_group_request;
     protected $sql_user_assign;
+    protected $criteria_user_assign;
     protected $sql_type;
+    protected $criteria_type;
     protected $sql_itilcat;
+    protected $criteria_itilcat;
     protected $sql_join_cat;
+    protected $criteria_join_cat;
     protected $sql_join_g;
+    protected $criteria_join_g;
     protected $sql_join_u;
+    protected $criteria_join_u;
     protected $sql_join_tt;
     protected $sql_join_tu;
+    protected $criteria_join_tu;
     protected $sql_join_gt;
+    protected $criteria_join_gt;
     protected $sql_join_gtr;
+    protected $criteria_join_gtr;
     protected $sql_select_sla;
     protected $lcl_slaok;
     protected $lcl_slako;
@@ -55,27 +66,100 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         /** @var array $LANG */
         global $LANG;
         $this->sql_group_assign  = '1=1';
+        $this->criteria_group_assign = [];
         $this->sql_group_request = '1=1';
+        $this->criteria_group_request = [];
         $this->sql_user_assign   = '1=1';
-        $this->sql_type          = 'glpi_tickets.type IN (' . Ticket::INCIDENT_TYPE . ', ' . Ticket::DEMAND_TYPE . ')';
+        $this->criteria_user_assign = [];
+        $this->sql_type = 'glpi_tickets.type IN (' . Ticket::INCIDENT_TYPE . ', ' . Ticket::DEMAND_TYPE . ')';
+        $this->criteria_type = [
+            Ticket::getTable() . '.type' => [
+                Ticket::INCIDENT_TYPE,
+                Ticket::DEMAND_TYPE
+            ],
+        ];
         $this->sql_itilcat       = '1=1';
+        $this->criteria_itilcat = [];
         $this->sql_join_cat      = 'LEFT JOIN glpi_itilcategories cat
                               ON glpi_tickets.itilcategories_id = cat.id';
+        $this->criteria_join_cat = [
+            ITILCategory::getTable() => [
+                'FKEY' => [
+                    ITILCategory::getTable() . '.id',
+                    Ticket::getTable() . '.itilcategories_id',
+                ],
+            ],
+        ];
         $this->sql_join_g = 'LEFT JOIN glpi_groups g
                               ON gt.groups_id = g.id';
+        $this->criteria_join_g = [
+            Group::getTable() => [
+                'FKEY' => [
+                    Group::getTable() . '.id',
+                    Group_Ticket::getTable() . '.groups_id',
+                ],
+            ],
+        ];
         $this->sql_join_u = 'LEFT JOIN glpi_users u
                               ON tu.users_id = u.id';
+        $this->criteria_join_u = [
+            User::getTable() => [
+                'FKEY' => [
+                    User::getTable() . '.id',
+                    Ticket_User::getTable() . '.users_id',
+                ],
+            ],
+        ];
         $this->sql_join_tt = 'LEFT JOIN glpi_tickettasks tt
                               ON tt.tickets_id  = glpi_tickets.id';
         $this->sql_join_tu = 'LEFT JOIN glpi_tickets_users tu
                               ON tu.tickets_id = glpi_tickets.id
                               AND tu.type = ' . Ticket_User::ASSIGN;
+        $this->criteria_join_tu = [
+            Ticket_User::getTable() => [
+                'FKEY' => [
+                    Ticket_User::getTable() . '.tickets_id',
+                    Ticket::getTable() . '.id',
+                    [
+                        'AND' => [
+                            Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN
+                        ],
+                    ],
+                ],
+            ],
+        ];
         $this->sql_join_gt = 'LEFT JOIN glpi_groups_tickets gt
                               ON gt.tickets_id  = glpi_tickets.id
                               AND gt.type = ' . Group_Ticket::ASSIGN;
+        $this->criteria_join_gt = [
+            Group_Ticket::getTable() => [
+                'FKEY' => [
+                    Group_Ticket::getTable() . '.tickets_id',
+                    Ticket::getTable() . '.id',
+                    [
+                        'AND' => [
+                            Group_Ticket::getTable() . '.type' => Group_Ticket::ASSIGN
+                        ],
+                    ],
+                ],
+            ],
+        ];
         $this->sql_join_gtr = 'LEFT JOIN glpi_groups_tickets gtr
                               ON gtr.tickets_id = glpi_tickets.id
                               AND gtr.type = ' . Group_Ticket::REQUESTER;
+        $this->criteria_join_gtr = [
+            Group_Ticket::getTable() => [
+                'FKEY' => [
+                    Group_Ticket::getTable() . '.tickets_id',
+                    Ticket::getTable() . '.id',
+                    [
+                        'AND' => [
+                            Group_Ticket::getTable() . '.type' => Group_Ticket::REQUESTER
+                        ],
+                    ],
+                ],
+            ],
+        ];
         $this->sql_select_sla = "CASE WHEN glpi_slas.definition_time = 'day'
                                              AND glpi_tickets.solve_delay_stat <= glpi_slas.number_time * 86400
                                        THEN 'ok'
@@ -102,6 +186,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             } elseif ($mr_values['groups_assign_id'] > 0) {
                 $this->sql_group_assign = 'gt.groups_id = ' . $mr_values['groups_assign_id'];
             }
+            $this->criteria_group_assign = [
+                Group_Ticket::getTable() . '.groups_id' => $mr_values['groups_assign_id'],
+            ];
         }
 
         if (isset($mr_values['groups_request_id'])) {
@@ -111,6 +198,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             } elseif ($mr_values['groups_request_id'] > 0) {
                 $this->sql_group_request = 'gt.groups_id = ' . $mr_values['groups_request_id'];
             }
+            $this->criteria_group_assign = [
+                Group_Ticket::getTable() . '.groups_id' => $mr_values['groups_request_id'],
+            ];
         }
 
         if (
@@ -118,6 +208,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             && $mr_values['users_assign_id'] > 0
         ) {
             $this->sql_user_assign = 'tu.users_id = ' . $mr_values['users_assign_id'];
+            $this->criteria_user_assign = [
+                Ticket_User::getTable() . '.users_id' => $mr_values['users_assign_id'],
+            ];
         }
 
         if (
@@ -125,6 +218,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             && $mr_values['type'] > 0
         ) {
             $this->sql_type = 'glpi_tickets.type = ' . $mr_values['type'];
+            $this->criteria_type = [
+                Ticket::getTable() . '.type' => $mr_values['type']
+            ];
         }
 
         if (
@@ -132,6 +228,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             && $mr_values['itilcategories_id'] > 0
         ) {
             $this->sql_itilcat = 'glpi_tickets.itilcategories_id = ' . $mr_values['itilcategories_id'];
+            $this->criteria_itilcat = [
+                Ticket::getTable() . '.itilcategories_id' => $mr_values['itilcategories_id'],
+            ];
         }
     }
 
@@ -338,30 +437,66 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
         }
 
+        //Init delay value
+        $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
+
         foreach ($this->status as $current_status) {
             if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
                 $status_name = Ticket::getStatus($current_status);
-                $sql_status  = "SELECT
-                     DISTINCT DATE_FORMAT(date, '{$this->period_sort}') as period,
-                     DATE_FORMAT(date, '{$this->period_label}') as period_name,
-                     COUNT(DISTINCT glpi_tickets.id) as nb
-                  FROM glpi_tickets
-                  {$this->sql_join_tu}
-                  {$this->sql_join_gt}
-                  {$this->sql_join_gtr}
-                  WHERE {$this->sql_date_create}
-                     AND glpi_tickets.entities_id IN ({$this->where_entities})
-                     AND glpi_tickets.is_deleted = '0'
-                     AND glpi_tickets.status = $current_status
-                     AND {$this->sql_type}
-                     AND {$this->sql_itilcat}
-                     AND {$this->sql_group_assign}
-                     AND {$this->sql_group_request}
-                     AND {$this->sql_user_assign}
-                  GROUP BY period
-                  ORDER BY period";
-                $res = $DB->doQuery($sql_status);
-                while ($data = $DB->fetchAssoc($res)) {
+
+                $query = [
+                    "SELECT" => [
+                        new QueryExpression("DATE_FORMAT(" . Ticket::getTable() . ".date, " . $DB->quoteValue($this->period_sort) . ") as period"),
+                        new QueryExpression("DATE_FORMAT(" . Ticket::getTable() . ".date, " . $DB->quoteValue($this->period_label) . ") as period_name"),
+                    ],
+                    'COUNT' => 'nb',
+                    'FROM' => Ticket::getTable(),
+                    'LEFT JOIN' => [
+                        Ticket_User::getTable() => [
+                            'FKEY' => [
+                                Ticket_User::getTable() . '.tickets_id',
+                                Ticket::getTable() . '.id',
+                                [
+                                    'AND' => [
+                                        Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN
+                                    ],
+                                ],
+                            ],
+                        ],
+                        Group_Ticket::getTable() => [
+                            'FKEY' => [
+                                Group_Ticket::getTable() . '.tickets_id',
+                                Ticket::getTable() . '.id',
+                                [
+                                    'AND' => [
+                                        'OR' => [
+                                            Group_Ticket::getTable() . '.type' => Group_Ticket::REQUESTER,
+                                            Group_Ticket::getTable() . '.type' => Group_Ticket::ASSIGN,
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'WHERE' => array_merge(
+                        [
+                            Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                            Ticket::getTable() . '.is_deleted' => 0,
+                            Ticket::getTable() . '.status'  => $current_status,
+                        ],
+                        $this->criteria_type,
+                        $this->criteria_itilcat,
+                        $this->criteria_group_assign,
+                        $this->criteria_group_request,
+                        $this->criteria_user_assign,
+                    ),
+                    'GROUPBY' => ['period'],
+                    'ORDER' => ['period'],
+                ];
+                $query['WHERE']['AND'] = $delay;
+
+                $result = $DB->request($query);
+                foreach ($result as $data) {
                     $tab[$data['period']][$status_name] = $data['nb'];
                     $labels2[$data['period']]           = $data['period_name'];
                 }
@@ -391,26 +526,40 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
         }
 
+        //Init delay value
+        $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
+
         foreach ($this->status as $current_status) {
             if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
                 $status_name = Ticket::getStatus($current_status);
-                $sql_status  = "SELECT
-                     DISTINCT g.completename AS group_name,
-                     COUNT(DISTINCT glpi_tickets.id) AS nb
-                  FROM glpi_tickets
-                  {$this->sql_join_gt}
-                  {$this->sql_join_g}
-                  WHERE {$this->sql_date_create}
-                     AND glpi_tickets.entities_id IN ({$this->where_entities})
-                     AND glpi_tickets.is_deleted = '0'
-                     AND glpi_tickets.status = $current_status
-                     AND {$this->sql_type}
-                     AND {$this->sql_itilcat}
-                     AND {$this->sql_group_assign}
-                  GROUP BY group_name
-                  ORDER BY group_name";
-                $res = $DB->doQuery($sql_status);
-                while ($data = $DB->fetchAssoc($res)) {
+
+                $query = [
+                    "SELECT" => [
+                        Group::getTable() . '.completename as group_name'
+                    ],
+                    'COUNT' => 'nb',
+                    'FROM' => Ticket::getTable(),
+                    'LEFT JOIN' => array_merge(
+                        $this->criteria_join_gt,
+                        $this->criteria_join_g
+                    ),
+                    'WHERE' => array_merge(
+                        [
+                            Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                            Ticket::getTable() . '.is_deleted' => 0,
+                            Ticket::getTable() . '.status'  => $current_status,
+                        ],
+                        $this->criteria_type,
+                        $this->criteria_itilcat,
+                        $this->criteria_group_assign,
+                    ),
+                    'GROUPBY' => ['group_name'],
+                    'ORDER' => ['group_name'],
+                ];
+                $query['WHERE']['AND'] = $delay;
+
+                $result = $DB->request($query);
+                foreach ($result as $data) {
                     if (empty($data['group_name'])) {
                         $data['group_name'] = __('None');
                     }
@@ -447,28 +596,37 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
                 $status_name = Ticket::getStatus($current_status);
 
-                $sql_create = "SELECT
-                     DISTINCT CONCAT(u.firstname, ' ', u.realname) AS completename,
-                     u.name as name,
-                     u.id as u_id,
-                     COUNT(DISTINCT glpi_tickets.id) AS nb
-                  FROM glpi_tickets
-                  {$this->sql_join_tu}
-                  {$this->sql_join_gt}
-                  {$this->sql_join_gtr}
-                  {$this->sql_join_u}
-                  WHERE {$this->sql_date_create}
-                     AND glpi_tickets.entities_id IN ({$this->where_entities})
-                     AND glpi_tickets.is_deleted = '0'
-                     AND glpi_tickets.status = $current_status
-                     AND {$this->sql_group_assign}
-                     AND {$this->sql_group_request}
-                     AND {$this->sql_type}
-                     AND {$this->sql_itilcat}
-                  GROUP BY name
-                  ORDER BY name";
-                $res = $DB->doQuery($sql_create);
-                while ($data = $DB->fetchAssoc($res)) {
+                $query = [
+                    "SELECT" => [
+                        new QueryExpression("CONCAT(" . User::getTable() . ".firstname, ' ', " . User::getTable() . ".realname) as completename"),
+                        User::getTable() . '.name as name',
+                        User::getTable() . '.id as u_id',
+                    ],
+                    'COUNT' => 'nb',
+                    'FROM' => Ticket::getTable(),
+                    'LEFT JOIN' => array_merge(
+                        $this->criteria_join_tu,
+                        $this->criteria_join_gt,
+                        $this->criteria_join_gtr,
+                        $this->criteria_join_u,
+                    ),
+                    'WHERE' => array_merge(
+                        [
+                            Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                            Ticket::getTable() . '.is_deleted' => 0,
+                            Ticket::getTable() . '.status'  => $current_status,
+                        ],
+                        $this->criteria_group_assign,
+                        $this->criteria_group_request,
+                        $this->criteria_type,
+                        $this->criteria_itilcat,
+                    ),
+                    'GROUPBY' => ['name'],
+                    'ORDER' => ['name'],
+                ];
+
+                $result = $DB->request($query);
+                foreach ($result as $data) {
                     $data['name'] = empty($data['completename']) ? __('None') : $data['completename'];
 
                     if (!isset($tab[$data['name']][$status_name])) {
@@ -497,32 +655,44 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $_SESSION['mreporting_selector']['reportHbarTopcategory']
          = ['dateinterval', 'limit', 'userassign', 'multiplegrouprequest', 'multiplegroupassign', 'type'];
 
-        $tab   = [];
         $datas = [];
 
-        $sql_create = "SELECT DISTINCT glpi_tickets.itilcategories_id,
-                  COUNT(DISTINCT glpi_tickets.id) as nb,
-                  cat.completename
-               FROM glpi_tickets
-               {$this->sql_join_cat}
-               {$this->sql_join_tu}
-               {$this->sql_join_gt}
-               {$this->sql_join_gtr}
-               WHERE {$this->sql_date_create}
-                  AND glpi_tickets.entities_id IN ({$this->where_entities})
-                  AND glpi_tickets.is_deleted = '0'
-                  AND {$this->sql_type}
-                  AND {$this->sql_group_assign}
-                  AND {$this->sql_group_request}
-                  AND {$this->sql_user_assign}
-               GROUP BY cat.completename
-               ORDER BY nb DESC
-               LIMIT 0, ";
-        $sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit']))
-                     ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
+        //Init delay value
+        $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
+        $limit = isset($_SESSION['mreporting_values']['glpilist_limit']) ? '0, ' . $_SESSION['mreporting_values']['glpilist_limit'] : '0, 20';
 
-        $res = $DB->doQuery($sql_create);
-        while ($data = $DB->fetchAssoc($res)) {
+        $query = [
+            "SELECT" => [
+                Ticket::getTable() . '.itilcategories_id',
+                ITILCategory::getTable() . '.completename',
+            ],
+            'COUNT' => 'nb',
+            'FROM' => Ticket::getTable(),
+            'LEFT JOIN' => array_merge(
+                $this->criteria_join_cat,
+                $this->criteria_join_tu,
+                $this->criteria_join_gt,
+                $this->criteria_join_gtr,
+            ),
+            'WHERE' => array_merge(
+                [
+                    Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                    Ticket::getTable() . '.is_deleted' => 0,
+                ],
+                $this->criteria_type,
+                $this->criteria_group_assign,
+                $this->criteria_group_request,
+                $this->criteria_itilcat,
+                $this->criteria_user_assign,
+            ),
+            'GROUPBY' => [ITILCategory::getTable() . '.completename'],
+            'ORDER' => ['nb DESC'],
+            'LIMIT' => $limit,
+        ];
+        $query['WHERE']['AND'] = $delay;
+
+        $result = $DB->request($query);
+        foreach ($result as $data) {
             if (empty($data['completename'])) {
                 $data['completename'] = __('None');
             }
@@ -539,27 +709,38 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $_SESSION['mreporting_selector']['reportHbarTopapplicant'] = ['dateinterval', 'limit', 'type'];
 
-        $tab   = [];
         $datas = [];
 
-        $sql_create = "SELECT DISTINCT gt.groups_id,
-                  COUNT(DISTINCT glpi_tickets.id) AS nb,
-                  g.completename
-               FROM glpi_tickets
-               {$this->sql_join_gt}
-               {$this->sql_join_g}
-               WHERE {$this->sql_date_create}
-                  AND {$this->sql_type}
-                  AND glpi_tickets.entities_id IN ({$this->where_entities})
-                  AND glpi_tickets.is_deleted = '0'
-               GROUP BY g.completename
-               ORDER BY nb DESC
-               LIMIT 0, ";
-        $sql_create .= (isset($_SESSION['mreporting_values']['glpilist_limit']))
-                     ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
+        //Init delay value
+        $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
+        $limit = isset($_SESSION['mreporting_values']['glpilist_limit']) ? '0, ' . $_SESSION['mreporting_values']['glpilist_limit'] : '0, 20';
 
-        $res = $DB->doQuery($sql_create);
-        while ($data = $DB->fetchAssoc($res)) {
+        $query = [
+            "SELECT" => [
+                Group_Ticket::getTable() . '.groups_id',
+                Group::getTable() . '.completename',
+            ],
+            'COUNT' => 'nb',
+            'FROM' => Ticket::getTable(),
+            'LEFT JOIN' => array_merge(
+                $this->criteria_join_gt,
+                $this->criteria_join_g,
+            ),
+            'WHERE' => array_merge(
+                [
+                    Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                    Ticket::getTable() . '.is_deleted' => 0,
+                ],
+                $this->criteria_type,
+            ),
+            'GROUPBY' => [Group::getTable() . '.completename'],
+            'ORDER' => ['nb DESC'],
+            'LIMIT' => $limit,
+        ];
+        $query['WHERE']['AND'] = $delay;
+
+        $result = $DB->request($query);
+        foreach ($result as $data) {
             if (empty($data['completename'])) {
                 $data['completename'] = __('None');
             }
@@ -581,39 +762,63 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $datas = [];
 
-        $query = "SELECT COUNT(DISTINCT ticc.id) as nb_ticket,
-            ticc.nb_add_group - 1 as nb_add_group
-         FROM (
-            SELECT
-               glpi_tickets.id,
-               COUNT(glpi_tickets.id) as nb_add_group
-            FROM glpi_tickets
-            LEFT JOIN glpi_logs logs_tic
-               ON  logs_tic.itemtype = 'Ticket'
-               AND logs_tic.items_id = glpi_tickets.id
-               AND logs_tic.itemtype_link = 'Group'
-               AND logs_tic.linked_action = 15 /* add action */
-            {$this->sql_join_cat}
-            {$this->sql_join_tu}
-            {$this->sql_join_gt}
-            {$this->sql_join_gtr}
-            WHERE {$this->sql_date_create}
-               AND glpi_tickets.entities_id IN ({$this->where_entities})
-               AND glpi_tickets.is_deleted = '0'
-               AND {$this->sql_type}
-               AND {$this->sql_group_assign}
-               AND {$this->sql_group_request}
-               AND {$this->sql_user_assign}
-               AND {$this->sql_itilcat}
-            GROUP BY glpi_tickets.id
-            HAVING nb_add_group > 0
-         ) as ticc
-         GROUP BY ticc.nb_add_group";
+        //Init delay value
+        $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
 
-        $result = $DB->doQuery($query);
+        $subquery = [
+            "SELECT" => [
+                Ticket::getTable() . '.id',
+            ],
+            'COUNT' => 'nb_add_group',
+            'FROM' => Ticket::getTable(),
+            'LEFT JOIN' => array_merge(
+                [
+                    Log::getTable() => [
+                        'FKEY' => [
+                            Log::getTable() . '.items_id',
+                            Ticket::getTable() . '.id',
+                            [
+                                'AND' => [
+                                    Log::getTable() . '.itemtype' => 'Ticket',
+                                    Log::getTable() . '.itemtype_link' => Group::class,
+                                    log::getTable() . '.linked_action' => 15,
+                                ]
+                            ],
+                        ],
+                    ],
+                ],
+                $this->criteria_join_cat,
+                $this->criteria_join_tu,
+                $this->criteria_join_gt,
+                $this->criteria_join_gtr,
+            ),
+            'WHERE' => array_merge(
+                [
+                    Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                    Ticket::getTable() . '.is_deleted' => 0,
+                ],
+                $this->criteria_type,
+                $this->criteria_group_assign,
+                $this->criteria_group_request,
+                $this->criteria_user_assign,
+                $this->criteria_itilcat,
+            ),
+            'GROUPBY' => [Ticket::getTable() . '.id'],
+            'HAVING' => [
+                'nb_add_group' => ['>', 0],
+            ],
+        ];
+        $subquery['WHERE']['AND'] = $delay;
 
+        $query = [
+            'SELECT' => [new QueryExpression('ticc.nb_add_group - 1 as nb_add_group')],
+            'COUNT' => 'nb_ticket',
+            'FROM' => new \QuerySubQuery($subquery, 'ticc'),
+            'GROUPBY' => ['ticc.nb_add_group'],
+        ];
+        $result = $DB->request($query);
         $datas['datas'] = [];
-        while ($ticket = $DB->fetchAssoc($result)) {
+        foreach ($result as $ticket) {
             $datas['labels2'][$ticket['nb_add_group']]                        = $ticket['nb_add_group'];
             $datas['datas'][__('Number of tickets')][$ticket['nb_add_group']] = $ticket['nb_ticket'];
         }
