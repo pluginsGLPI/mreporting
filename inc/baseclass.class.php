@@ -31,6 +31,7 @@
 class PluginMreportingBaseclass
 {
     protected $sql_date;
+    protected $sql_closedate;
     protected $sql_date_create;
     protected $sql_date_solve;
     protected $sql_date_closed;

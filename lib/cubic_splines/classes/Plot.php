@@ -48,7 +48,7 @@ class Plot
         imageline($vImage, $iPosX, $iPosY, $iPosX, 0, $vColor);
         imageline($vImage, $iPosX, $iPosY, $vImageWidth, $iPosY, $vColor);
 
-        imagefilledpolygon($vImage, [$iPosX, 0, $iPosX - 3, 5, $iPosX + 3, 5], 3, $vColor);
-        imagefilledpolygon($vImage, [$vImageWidth, $iPosY, $vImageWidth - 5, $iPosY - 3, $vImageWidth - 5, $iPosY + 3], 3, $vColor);
+        imagefilledpolygon($vImage, [$iPosX, 0, $iPosX - 3, 5, $iPosX + 3, 5], $vColor);
+        imagefilledpolygon($vImage, [$vImageWidth, $iPosY, $vImageWidth - 5, $iPosY - 3, $vImageWidth - 5, $iPosY + 3], $vColor);
     }
 }

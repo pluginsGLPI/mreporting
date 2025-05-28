@@ -110,7 +110,7 @@ class CubicSplines
                 $i = 0;
                 $j = $n - 1;
                 while ($i + 1 < $j) {
-                    $k = $i + ($j - $i) / 2;
+                    $k = floor($i + ($j - $i) / 2);
                     if ($x <= $this->aSplines[$k]['x']) {
                         $j = $k;
                     } else {

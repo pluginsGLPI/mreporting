@@ -47,6 +47,8 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
     protected $sql_join_gt;
     protected $sql_join_gtr;
     protected $sql_select_sla;
+    protected $lcl_slaok;
+    protected $lcl_slako;
 
     public function __construct($config = [])
     {

@@ -118,7 +118,7 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                     $ya = +1;
                 }
                 if ($stop < ($i + 1) * (M_PI / 2) && $x <= $xStop) {
-                    $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error1);
+                    $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error1));
                     $y1         = $_y1;
                     if ($aaStopX) {
                         imageSetPixel($img, $cx + $xp * ($x) + $xa, $cy + $yp * ($y1 + 1) + $ya, $diffColor1);
@@ -127,14 +127,14 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                     $y         = $b * sqrt(1 - ($x * $x) / ($a * $a));
                     $error     = $y - (int) ($y);
                     $y         = (int) ($y);
-                    $diffColor = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error);
+                    $diffColor = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error));
                     $y1        = $y;
                     if ($x < $aaAngleX) {
                         imageSetPixel($img, $cx + $xp * $x + $xa, $cy + $yp * ($y1 + 1) + $ya, $diffColor);
                     }
                 }
                 if ($start > $i * M_PI / 2 && $x <= $xStart) {
-                    $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error2);
+                    $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error2));
                     $y2         = $_y2;
                     if ($aaStartX) {
                         imageSetPixel($img, $cx + $xp * $x + $xa, $cy + $yp * ($y2 - 1) + $ya, $diffColor2);
@@ -163,7 +163,7 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                     $ya = 1;
                 }
                 if ($start > $i * M_PI / 2 && $x < $xStart) {
-                    $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error2);
+                    $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error2));
                     $y1         = $_y2;
                     if ($aaStartX) {
                         imageSetPixel($img, $cx + $xp * $x + $xa, $cy + $yp * ($y1 + 1) + $ya, $diffColor2);
@@ -172,14 +172,14 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                     $y         = $b * sqrt(1 - ($x * $x) / ($a * $a));
                     $error     = $y - (int) ($y);
                     $y         = (int) $y;
-                    $diffColor = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error);
+                    $diffColor = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error));
                     $y1        = $y;
                     if ($x < $aaAngleX) {
                         imageSetPixel($img, $cx + $xp * $x + $xa, $cy + $yp * ($y1 + 1) + $ya, $diffColor);
                     }
                 }
                 if ($stop < ($i + 1) * M_PI / 2 && $x <= $xStop) {
-                    $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error1);
+                    $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error1));
                     $y2         = $_y1;
                     if ($aaStopX) {
                         imageSetPixel($img, $cx + $xp * $x + $xa, $cy + $yp * ($y2 - 1) + $ya, $diffColor1);
@@ -239,14 +239,14 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                     $ya = 1;
                 }
                 if ($stop < ($i + 1) * (M_PI / 2) && $y <= $yStop) {
-                    $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error1);
+                    $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error1));
                     $x1         = $_x1;
                     if (!$aaStopX) {
                         imageSetPixel($img, $cx + $xp * ($x1 - 1) + $xa, $cy + $yp * ($y) + $ya, $diffColor1);
                     }
                 }
                 if ($start > $i * M_PI / 2 && $y < $yStart) {
-                    $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error2);
+                    $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error2));
                     $x2         = $_x2;
                     if (!$aaStartX) {
                         imageSetPixel($img, $cx + $xp * ($x2 + 1) + $xa, $cy + $yp * ($y) + $ya, $diffColor2);
@@ -255,7 +255,7 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                     $x         = $a * sqrt(1 - ($y * $y) / ($b * $b));
                     $error     = $x - (int) ($x);
                     $x         = (int) ($x);
-                    $diffColor = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error);
+                    $diffColor = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error));
                     $x1        = $x;
                     if ($y < $aaAngleY && $y <= $yStop) {
                         imageSetPixel($img, $cx + $xp * ($x1 + 1) + $xa, $cy + $yp * $y + $ya, $diffColor);
@@ -279,14 +279,14 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                     $ya = 1;
                 }
                 if ($start > $i * M_PI / 2 && $y < $yStart) {
-                    $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error2);
+                    $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error2));
                     $x1         = $_x2;
                     if (!$aaStartX) {
                         imageSetPixel($img, $cx + $xp * ($x1 - 1) + $xa, $cy + $yp * $y + $ya, $diffColor2);
                     }
                 }
                 if ($stop < ($i + 1) * M_PI / 2 && $y <= $yStop) {
-                    $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error1);
+                    $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error1));
                     $x2         = $_x1;
                     if (!$aaStopX) {
                         imageSetPixel($img, $cx + $xp * ($x2 + 1) + $xa, $cy + $yp * $y + $ya, $diffColor1);
@@ -295,7 +295,7 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                     $x         = $a * sqrt(1 - ($y * $y) / ($b * $b));
                     $error     = $x - (int) ($x);
                     $x         = (int) ($x);
-                    $diffColor = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error);
+                    $diffColor = imageColorExactAlpha($img, $color[0], $color[1], $color[2], round(127 - (127 - $color[3]) * $error));
                     $x1        = $x;
                     if ($y < $aaAngleY && $y < $yStart) {
                         imageSetPixel($img, $cx + $xp * ($x1 + 1) + $xa, $cy + $yp * $y + $ya, $diffColor);
