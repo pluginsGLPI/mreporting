@@ -167,10 +167,11 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
             $language = $_SESSION['glpilanguage'] ?? 'en_GB';
             $image_title = $LANG['plugin_mreporting'][$graph['class']][$graph['method']]['title'];
             $image_title .= ' ' . lcfirst(
-                sprintf(__('From %1$s to %2$s'),
+                sprintf(
+                    __('From %1$s to %2$s'),
                     IntlDateFormatter::formatObject($start, $format, $language),
-                    IntlDateFormatter::formatObject($end, 'd MMMM Y', $language)
-                )
+                    IntlDateFormatter::formatObject($end, 'd MMMM Y', $language),
+                ),
             );
             array_push($images, ['title' => $image_title,
                 'base64'                 => $image_base64,
