@@ -50,12 +50,26 @@ class PluginMreportingTag extends PluginMreportingBaseclass
 
         $datas = [];
 
-        $result = $DB->doQuery('SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name as name
-                     FROM glpi_plugin_tag_tagitems
-                     LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
-                     GROUP BY plugin_tag_tags_id
-                     ORDER BY count_tag DESC');
-        while ($datas_tag = $DB->fetchAssoc($result)) {
+        $query = [
+            'SELECT' => [
+                PluginTagTag::getTable() . '.name AS name',
+            ],
+            'COUNT' => 'count_tag',
+            'FROM'   => PluginTagTagItem::getTable(),
+            'LEFT JOIN' => [
+                PluginTagTag::getTable() => [
+                    'ON' => [
+                        PluginTagTag::getTable() . '.id',
+                        PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
+                    ]
+                ],
+            ],
+            'GROUPBY' => PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
+            'ORDERBY' => 'count_tag DESC',
+        ];
+
+        $result = $DB->request($query);
+        foreach ($result as $datas_tag) {
             $label                  = $datas_tag['name'];
             $datas['datas'][$label] = $datas_tag['count_tag'];
         }
@@ -81,20 +95,50 @@ class PluginMreportingTag extends PluginMreportingBaseclass
 
         $_SESSION['mreporting_selector'][__FUNCTION__] = ['category'];
 
-        $sql_itilcat = isset($_SESSION['mreporting_values']['itilcategories_id']) && $_SESSION['mreporting_values']['itilcategories_id'] > 0 ?
-                     ' AND glpi_tickets.itilcategories_id = ' . $_SESSION['mreporting_values']['itilcategories_id'] : '';
+        $criteria_cat = [];
+        if (
+            isset($_SESSION['mreporting_values']['itilcategories_id']) &&
+            $_SESSION['mreporting_values']['itilcategories_id'] > 0
+        ) {
+            $criteria_cat = [
+                Ticket::getTable() . '.itilcategories_id' => $_SESSION['mreporting_values']['itilcategories_id'],
+            ];
+        }
 
         $datas = [];
 
-        $result = $DB->doQuery("SELECT COUNT(*) as count_tag, glpi_plugin_tag_tags.name
-                           FROM glpi_plugin_tag_tagitems
-                           LEFT JOIN glpi_plugin_tag_tags ON plugin_tag_tags_id = glpi_plugin_tag_tags.id
-                           LEFT JOIN glpi_tickets ON glpi_tickets.id = glpi_plugin_tag_tagitems.items_id
-                           WHERE itemtype = 'Ticket'
-                           $sql_itilcat
-                           GROUP BY plugin_tag_tags_id
-                           ORDER BY count_tag DESC");
-        while ($datas_tag = $DB->fetchAssoc($result)) {
+        $query = [
+            'SELECT' => [
+                PluginTagTag::getTable() . '.name AS name',
+            ],
+            'COUNT' => 'count_tag',
+            'FROM'   => PluginTagTagItem::getTable(),
+            'LEFT JOIN' => [
+                PluginTagTag::getTable() => [
+                    'ON' => [
+                        PluginTagTag::getTable() . '.id',
+                        PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
+                    ]
+                ],
+                Ticket::getTable() => [
+                    'ON' => [
+                        Ticket::getTable() . '.id',
+                        PluginTagTagItem::getTable() . '.items_id',
+                    ]
+                ],
+            ],
+            'WHERE'  => array_merge(
+                [
+                    'itemtype' => Ticket::getType(),
+                ],
+                $criteria_cat
+            ),
+            'GROUPBY' => PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
+            'ORDERBY' => 'count_tag DESC',
+        ];
+
+        $result = $DB->request($query);
+        foreach ($result as $datas_tag) {
             $label                  = $datas_tag['name'];
             $datas['datas'][$label] = $datas_tag['count_tag'];
         }

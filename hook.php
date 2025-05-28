@@ -96,11 +96,18 @@ function plugin_mreporting_install()
    ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
     // add display preferences
-    $query_display_pref = "SELECT id
-      FROM glpi_displaypreferences
-      WHERE itemtype = 'PluginMreportingConfig'";
-    $res_display_pref = $DB->doQueryOrDie($query_display_pref);
-    if ($DB->numrows($res_display_pref) == 0) {
+    $query_display_pref = [
+        'SELECT' => [
+            'id',
+        ],
+        'FROM'   => DisplayPreference::getTable(),
+        'WHERE'  => [
+            'itemtype' => 'PluginMreportingConfig',
+        ],
+    ];
+
+    $res_display_pref = $DB->request($query_display_pref);
+    if ($res_display_pref->numrows() == 0) {
         $queries[] = "INSERT INTO `glpi_displaypreferences`
          VALUES (NULL,'PluginMreportingConfig','2','2','0');";
         $queries[] = "INSERT INTO `glpi_displaypreferences`
@@ -175,8 +182,12 @@ function plugin_mreporting_install()
     }
 
     // == UPDATE to 0.84+1.0 ==
-    $query = 'UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ' . READ . " WHERE pr.right = 'r'";
-    $DB->doQueryOrDie($query);
+    //$query = 'UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ' . READ . " WHERE pr.right = 'r'";
+    $DB->updateOrDie(
+        'glpi_plugin_mreporting_profiles',
+        ['right' => READ],
+        ['right' => 'r'],
+    );
     if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
         $query = 'ALTER TABLE glpi_plugin_mreporting_profiles
                 ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)';
@@ -184,8 +195,11 @@ function plugin_mreporting_install()
     }
 
     // Remove GLPI graphtype to fix compatibility with GLPI 9.2.2+
-    $query = "UPDATE `glpi_plugin_mreporting_configs` SET `graphtype` = 'SVG' WHERE `graphtype` = 'GLPI'";
-    $DB->doQueryOrDie($query);
+    $DB->updateOrDie(
+        'glpi_plugin_mreporting_configs',
+        ['graphtype' => 'SVG'],
+        ['graphtype' => 'GLPI'],
+    );
 
     //== Create directories
     $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR . '/mreporting';
