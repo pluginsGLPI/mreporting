@@ -48,7 +48,7 @@ if (isset($_POST['add'])) {
     $config->update($_POST);
     Html::back();
 } elseif (isset($_POST['delete'])) {
-    $config->delete($_POST, 1);
+    $config->delete($_POST, true);
     Html::redirect('./config.form.php');
 } else {
     Html::header(__('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'config');

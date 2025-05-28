@@ -121,12 +121,12 @@ class PluginMreportingNotificationEvent extends NotificationEvent
                                         PluginMreportingNotification::send(
                                             $template->getDataToSend(
                                                 $notificationtarget,
-                                                $tid,
+                                                (string) $tid,
                                                 $users_infos[$eventClass::getTargetFieldName()],
                                                 $users_infos,
                                                 $options,
                                             ),
-                                            $notificationtarget->additionalData,
+                                            [],
                                         );
                                     } else {
                                         $notificationtarget->getFromDB($target['id']);
