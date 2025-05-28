@@ -32,7 +32,7 @@ use GuzzleHttp\Psr7\Query;
 
 class PluginMreportingOther extends PluginMreportingBaseclass
 {
-        public function reportHbarLogs($configs = [])
+    public function reportHbarLogs($configs = [])
     {
         /** @var \DBmysql $DB */
         global $DB;
@@ -56,7 +56,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
             [
                 'WHERE' => [
                     Log::getTable() . '.linked_action' => [4, 5],
-                ]
+                ],
             ],
         );
 
@@ -67,7 +67,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
                     Log::getTable() . '.itemtype'       => 'Software',
                     Log::getTable() . '.itemtype_link'  => 'SoftwareVersion',
                     Log::getTable() . '.linked_action'  => [17, 18, 19],
-                ]
+                ],
             ],
         );
 
@@ -78,7 +78,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
                     Log::getTable() . '.itemtype'       => 'Software',
                     Log::getTable() . '.itemtype_link'  => 'Infocom',
                     Log::getTable() . '.linked_action'  => [17],
-                ]
+                ],
             ],
         );
 
@@ -89,7 +89,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
                     Log::getTable() . '.itemtype'       => 'User',
                     Log::getTable() . '.itemtype_link'  => 'Profile_User',
                     Log::getTable() . '.linked_action'  => [17, 18, 19],
-                ]
+                ],
             ],
         );
 
@@ -100,7 +100,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
                     Log::getTable() . '.itemtype'       => 'User',
                     Log::getTable() . '.itemtype_link'  => 'Group_User',
                     Log::getTable() . '.linked_action'  => [17, 18, 19],
-                ]
+                ],
             ],
         );
 
@@ -110,7 +110,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
                 'WHERE' => [
                     Log::getTable() . '.itemtype'      => 'User',
                     Log::getTable() . '.linked_action' => [12],
-                ]
+                ],
             ],
         );
 
@@ -119,7 +119,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
             [
                 'WHERE' => [
                     Log::getTable() . '.linked_action' => [8, 9, 10, 11],
-                ]
+                ],
             ],
         );
 
@@ -128,7 +128,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
             [
                 'WHERE' => [
                     Log::getTable() . '.linked_action' => [1, 2, 3, 6, 7],
-                ]
+                ],
             ],
         );
 
@@ -137,7 +137,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
             [
                 'WHERE' => [
                     Log::getTable() . '.linked_action' => [15, 16],
-                ]
+                ],
             ],
         );
 
@@ -146,7 +146,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
             [
                 'WHERE' => [
                     Log::getTable() . '.linked_action' => [13, 14, 17, 18, 19, 20],
-                ]
+                ],
             ],
         );
 
@@ -155,41 +155,29 @@ class PluginMreportingOther extends PluginMreportingBaseclass
             [
                 'WHERE' => [
                     Log::getTable() . '.id_search_option' => [16, 19],
-                ]
+                ],
             ],
         );
 
         $datas = [];
 
         $result = $DB->request($query_computer_software);
-        foreach ($result as $data) {
-            $datas['datas'][__('Add/remove software on a computer', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('Add/remove software on a computer', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_software_version);
-        foreach ($result as $data) {
-            $datas['datas'][__('Add/remove version on a software', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('Add/remove version on a software', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_add_infocom);
-        foreach ($result as $data) {
-            $datas['datas'][__('Add infocom', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('Add infocom', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_user_profiles);
-        foreach ($result as $data) {
-            $datas['datas'][__('Add/remove profile on a user', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('Add/remove profile on a user', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_user_groups);
-        foreach ($result as $data) {
-            $datas['datas'][__('Add/remove group on a user', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('Add/remove group on a user', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_user_deleted);
-        foreach ($result as $data) {
-            $datas['datas'][__('User deleted from LDAP', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('User deleted from LDAP', 'mreporting')] = $result->current()['cpt'];
 
         $plugin = new Plugin();
         if ($plugin->isActivated('webservices')) {
@@ -198,42 +186,30 @@ class PluginMreportingOther extends PluginMreportingBaseclass
                 $prefix2,
                 [
                     'WHERE' => [
-                        Log::getTable() . ".itemtype = 'PluginWebservicesClient'"
-                    ]
+                        Log::getTable() . ".itemtype = 'PluginWebservicesClient'",
+                    ],
                 ],
             );
 
             // Display this information is not usefull if webservices is not activated
             $result = $DB->request($query_webservice);
-            foreach ($result as $data) {
-                $datas['datas'][__('Webservice logs', 'mreporting')] = $data['cpt'];
-            }
+            $datas['datas'][__('Webservice logs', 'mreporting')] = $result->current()['cpt'];
         }
 
         $result = $DB->request($query_ocs);
-        foreach ($result as $data) {
-            $datas['datas'][__('OCS Infos', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('OCS Infos', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_device);
-        foreach ($result as $data) {
-            $datas['datas'][__('Add/update/remove device', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('Add/update/remove device', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_relation);
-        foreach ($result as $data) {
-            $datas['datas'][__('Add/remove relation', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('Add/remove relation', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_item);
-        foreach ($result as $data) {
-            $datas['datas'][__('Add/remove item', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('Add/remove item', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_other);
-        foreach ($result as $data) {
-            $datas['datas'][__('Comments & date_mod changes', 'mreporting')] = $data['cpt'];
-        }
+        $datas['datas'][__('Comments & date_mod changes', 'mreporting')] = $result->current()['cpt'];
 
         $plugin = new Plugin();
         if ($plugin->isActivated('genericobject')) {
@@ -242,17 +218,15 @@ class PluginMreportingOther extends PluginMreportingBaseclass
                 [
                     'WHERE' => [
                         new QueryExpression(
-                            Log::getTable() . ".itemtype LIKE '%PluginGenericobject%'"
+                            Log::getTable() . ".itemtype LIKE '%PluginGenericobject%'",
                         ),
-                    ]
+                    ],
                 ],
             );
 
             // Display this information is not usefull if genericobject is not activated
             $result = $DB->request($query_genericobject);
-            foreach ($result as $data) {
-                $datas['datas'][__('Genericobject plugin logs', 'mreporting')] = $data['cpt'];
-            }
+            $datas['datas'][__('Genericobject plugin logs', 'mreporting')] = $result->current()['cpt'];
         }
 
         return $datas;

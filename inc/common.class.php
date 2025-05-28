@@ -1425,7 +1425,7 @@ class PluginMreportingCommon extends CommonDBTM
         $result = $DB->request([
             'SELECT' => [
                 'glpi_slas.id',
-                'glpi_slas.name'
+                'glpi_slas.name',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_slas',
@@ -1433,15 +1433,15 @@ class PluginMreportingCommon extends CommonDBTM
                 'glpi_tickets' => [
                     'ON' => [
                         'glpi_slas'    => 'id',
-                        'glpi_tickets' => 'slas_id_ttr'
-                    ]
-                ]
+                        'glpi_tickets' => 'slas_id_ttr',
+                    ],
+                ],
             ],
             'WHERE' => [
                 'glpi_tickets.status'     => array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray()),
-                'glpi_tickets.is_deleted' => 0
+                'glpi_tickets.is_deleted' => 0,
             ],
-            'ORDERBY' => 'glpi_slas.name ASC'
+            'ORDERBY' => 'glpi_slas.name ASC',
         ]);
 
         $values = [];
@@ -1965,7 +1965,7 @@ class PluginMreportingCommon extends CommonDBTM
         return "($field >= '$begin' AND $field <= ADDDATE('$end', INTERVAL 1 DAY) )";
     }
 
-        /**
+    /**
      * Generate a criteria date test with $_REQUEST date fields
      * @param  string  $field     the sql table field to compare
      * @param  integer $delay     if $_REQUET date fields not provided,
@@ -2007,7 +2007,7 @@ class PluginMreportingCommon extends CommonDBTM
         ];
     }
 
-        /**
+    /**
      * Format where_entities field for criteria
      * @param string $where_entities  entities string
      *
@@ -2019,7 +2019,8 @@ class PluginMreportingCommon extends CommonDBTM
         return array_map('intval', $matches[0]);
     }
 
-    public static function convertDateFormatSQLtoPHP(string $format): string {
+    public static function convertDateFormatSQLtoPHP(string $format): string
+    {
         return strtr($format, [
             '%Y' => 'Y',
             '%y' => 'y',

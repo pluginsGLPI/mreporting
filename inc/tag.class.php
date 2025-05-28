@@ -61,7 +61,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
                     'ON' => [
                         PluginTagTag::getTable() . '.id',
                         PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
-                    ]
+                    ],
                 ],
             ],
             'GROUPBY' => PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
@@ -118,20 +118,20 @@ class PluginMreportingTag extends PluginMreportingBaseclass
                     'ON' => [
                         PluginTagTag::getTable() . '.id',
                         PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
-                    ]
+                    ],
                 ],
                 Ticket::getTable() => [
                     'ON' => [
                         Ticket::getTable() . '.id',
                         PluginTagTagItem::getTable() . '.items_id',
-                    ]
+                    ],
                 ],
             ],
             'WHERE'  => array_merge(
                 [
                     'itemtype' => Ticket::getType(),
                 ],
-                $criteria_cat
+                $criteria_cat,
             ),
             'GROUPBY' => PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
             'ORDERBY' => 'count_tag DESC',

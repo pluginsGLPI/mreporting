@@ -77,7 +77,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $this->criteria_type = [
             Ticket::getTable() . '.type' => [
                 Ticket::INCIDENT_TYPE,
-                Ticket::DEMAND_TYPE
+                Ticket::DEMAND_TYPE,
             ],
         ];
         $this->sql_itilcat       = '1=1';
@@ -132,7 +132,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                     Ticket::getTable() . '.id',
                     [
                         'AND' => [
-                            Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN
+                            Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN,
                         ],
                     ],
                 ],
@@ -148,7 +148,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                     Ticket::getTable() . '.id',
                     [
                         'AND' => [
-                            Group_Ticket::getTable() . '.type' => Group_Ticket::ASSIGN
+                            Group_Ticket::getTable() . '.type' => Group_Ticket::ASSIGN,
                         ],
                     ],
                 ],
@@ -164,7 +164,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                     Ticket::getTable() . '.id',
                     [
                         'AND' => [
-                            Group_Ticket::getTable() . '.type' => Group_Ticket::REQUESTER
+                            Group_Ticket::getTable() . '.type' => Group_Ticket::REQUESTER,
                         ],
                     ],
                 ],
@@ -192,7 +192,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                         AND glpi_tickets.solve_delay_stat <= glpi_slas.number_time * 60
                 THEN 'ok'
             ELSE 'nok'
-            END AS respected_sla"
+            END AS respected_sla",
         );
 
         parent::__construct($config);
@@ -242,7 +242,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         ) {
             $this->sql_type = 'glpi_tickets.type = ' . $mr_values['type'];
             $this->criteria_type = [
-                Ticket::getTable() . '.type' => $mr_values['type']
+                Ticket::getTable() . '.type' => $mr_values['type'],
             ];
         }
 
@@ -481,7 +481,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                                 Ticket::getTable() . '.id',
                                 [
                                     'AND' => [
-                                        Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN
+                                        Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN,
                                     ],
                                 ],
                             ],
@@ -558,13 +558,13 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
                 $query = [
                     "SELECT" => [
-                        Group::getTable() . '.completename as group_name'
+                        Group::getTable() . '.completename as group_name',
                     ],
                     'COUNT' => 'nb',
                     'FROM' => Ticket::getTable(),
                     'LEFT JOIN' => array_merge(
                         $this->criteria_join_gt,
-                        $this->criteria_join_g
+                        $this->criteria_join_g,
                     ),
                     'WHERE' => array_merge(
                         [
@@ -805,7 +805,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                                     Log::getTable() . '.itemtype' => 'Ticket',
                                     Log::getTable() . '.itemtype_link' => Group::class,
                                     log::getTable() . '.linked_action' => 15,
-                                ]
+                                ],
                             ],
                         ],
                     ],
@@ -977,7 +977,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                     new QueryExpression("DATE_FORMAT(" . Ticket::getTable() . ".date, " . $DB->quoteValue($this->period_sort) . ") as period"),
                     new QueryExpression("DATE_FORMAT(" . Ticket::getTable() . ".date, " . $DB->quoteValue($this->period_label) . ") as period_name"),
                     SLA::getTable() . '.name',
-                    $this->criteria_select_sla
+                    $this->criteria_select_sla,
                 ],
                 'COUNT' => 'nb',
                 'FROM' => Ticket::getTable(),
