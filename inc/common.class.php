@@ -1622,30 +1622,6 @@ class PluginMreportingCommon extends CommonDBTM
     }
 
     /**
-     * Get SQL condition to filter entity depth by level.
-     * @param  string  $field     the sql table field to compare
-     * @return string sql condition
-     */
-    public static function getSQLEntityLevel($field = '`glpi_entities`.`level`')
-    {
-        if (isset($_SESSION['mreporting_values']['entitylevel'])) {
-            $maxlevel = $_SESSION['mreporting_values']['entitylevel'];
-        } else {
-            $maxlevel = self::getMaxEntityLevel();
-        }
-
-        $default_level = self::getActiveEntityLevel();
-
-        $where_entities_level = "({$field} = {$default_level}";
-        for ($i = ($default_level + 1); $i <= $maxlevel; $i++) {
-            $where_entities_level .= " OR {$field} = {$i}";
-        }
-        $where_entities_level .= ')';
-
-        return $where_entities_level;
-    }
-
-    /**
      * Get criteria condition to filter entity depth by level.
      * @param  string  $field     the sql table field to compare
      * @return string sql condition
@@ -1691,19 +1667,19 @@ class PluginMreportingCommon extends CommonDBTM
         /** @var \DBmysql $DB */
         global $DB;
 
-        if (count($_SESSION['glpiactiveentities']) > 1) {
-            $restrict = " `id` IN ({$_SESSION['glpiactiveentities_string']})";
-        } else {
-            $restrict = " `id` = {$_SESSION['glpiactiveentities_string']}";
-        }
+        $query = [
+            'SELECT' => [
+                new QueryExpression('MAX(level) as maxlevel'),
+            ],
+            'FROM'   => Entity::getTable(),
+            'WHERE'  => [
+                Entity::getTable() . '.id' => $_SESSION['glpiactiveentities'],
+            ],
+        ];
 
-        $query = "SELECT MAX(level) AS 'maxlevel'
-                  FROM glpi_entities
-                  WHERE {$restrict}";
-
-        $result = $DB->doQuery($query);
-        if ($DB->numrows($result) > 0) {
-            return $DB->result($result, 0, 'maxlevel');
+        $result = $DB->request($query);
+        if ($result->numrows() > 0) {
+            return $result->current()['maxlevel'];
         } else {
             return 0;
         }

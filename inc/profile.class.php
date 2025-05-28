@@ -101,13 +101,17 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var \DBmysql $DB */
         global $DB;
 
-        $query = "SELECT * FROM `{$this->getTable()}`
-         WHERE `profiles_id` = '" . $profiles_id . "'";
-        if ($result = $DB->doQuery($query)) {
-            if ($DB->numrows($result) != 1) {
+        $query = [
+            'FROM'   => $this->getTable(),
+            'WHERE'  => [
+                'profiles_id' => $profiles_id,
+            ],
+        ];
+        if ($result = $DB->request($query)) {
+            if ($result->numrows() != 1) {
                 return false;
             }
-            $this->fields = $DB->fetchAssoc($result);
+            $this->fields = $result->current();
 
             return (is_array($this->fields) && count($this->fields));
         }
