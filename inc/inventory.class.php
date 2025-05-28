@@ -138,14 +138,15 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         Manufacturer::getTable() . '.id',
                         Computer::getTable() . '.manufacturers_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => array_merge(
                 [
                     Computer::getTable() . '.is_template' => 0,
                     Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
-                ], $criteria_states
+                ],
+                $criteria_states,
             ),
         ];
 
@@ -161,8 +162,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         Manufacturer::getTable() . '.id',
                         Computer::getTable() . '.manufacturers_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => array_merge(
                 [
@@ -170,7 +171,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     Computer::getTable() . '.is_deleted' => 0,
                     Computer::getTable() . '.is_template' => 0,
                 ],
-                $criteria_states),
+                $criteria_states,
+            ),
             'GROUPBY' => [
                 Manufacturer::getTable() . '.name',
             ],
@@ -221,14 +223,15 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         ComputerType::getTable() . '.id',
                         Computer::getTable() . '.computertypes_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => array_merge(
                 [
                     Computer::getTable() . '.is_template' => 0,
                     Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
-                ], $criteria_states
+                ],
+                $criteria_states,
             ),
         ];
 
@@ -244,8 +247,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         ComputerType::getTable() . '.id',
                         Computer::getTable() . '.computertypes_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => array_merge(
                 [
@@ -253,7 +256,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     Computer::getTable() . '.is_deleted' => 0,
                     Computer::getTable() . '.is_template' => 0,
                 ],
-                $criteria_states),
+                $criteria_states,
+            ),
             'GROUPBY' => [
                 ComputerType::getTable() . '.name',
             ],
@@ -323,8 +327,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         Infocom::getTable() . '.items_id',
                         Computer::getTable() . '.id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => array_merge(
                 [
@@ -332,7 +336,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     Computer::getTable() . '.is_template' => 0,
                     Infocom::getTable() . '.itemtype' => 'Computer',
                     Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
-                ], $criteria_states
+                ],
+                $criteria_states,
             ),
         ];
 
@@ -351,8 +356,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                         'ON' => [
                             Infocom::getTable() . '.items_id',
                             Computer::getTable() . '.id',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'WHERE' => [
                     Computer::getTable() . '.is_deleted' => 0,
@@ -415,7 +420,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $subquery = [
             'SELECT' => [
-                new QueryExpression("COUNT(*)")
+                new QueryExpression("COUNT(*)"),
             ],
             'FROM' => Computer::getTable(),
             'LEFT JOIN' => [
@@ -423,13 +428,13 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         Item_OperatingSystem::getTable() . '.items_id',
                         Computer::getTable() . '.id',
-                    ]
+                    ],
                 ],
                 OperatingSystem::getTable() => [
                     'ON' => [
                         OperatingSystem::getTable() . '.id',
                         Item_OperatingSystem::getTable() . '.operatingsystems_id',
-                    ]
+                    ],
                 ],
             ],
             'WHERE' => array_merge([
@@ -453,13 +458,13 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                         'ON' => [
                             Item_OperatingSystem::getTable() . '.items_id',
                             Computer::getTable() . '.id',
-                        ]
+                        ],
                     ],
                     OperatingSystem::getTable() => [
                         'ON' => [
                             OperatingSystem::getTable() . '.id',
                             Item_OperatingSystem::getTable() . '.operatingsystems_id',
-                        ]
+                        ],
                     ],
                 ],
                 'WHERE' => array_merge([
@@ -486,13 +491,13 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         Item_OperatingSystem::getTable() . '.items_id',
                         Computer::getTable() . '.id',
-                    ]
+                    ],
                 ],
                 OperatingSystem::getTable() => [
                     'ON' => [
                         OperatingSystem::getTable() . '.id',
                         Item_OperatingSystem::getTable() . '.operatingsystems_id',
-                    ]
+                    ],
                 ],
             ],
             'WHERE' => array_merge([
@@ -884,8 +889,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         Computer_Item::getTable() . '.computers_id',
                         Computer::getTable() . '.id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE'   => array_merge([
                 Computer_Item::getTable() . '.itemtype'   => 'Monitor',
@@ -917,7 +922,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $subquery = [
             'SELECT' => [
-                new QueryExpression("COUNT(*)")
+                new QueryExpression("COUNT(*)"),
             ],
             'FROM' => Computer::getTable(),
             'LEFT JOIN' => [
@@ -925,8 +930,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         State::getTable() . '.id',
                         Computer::getTable() . '.states_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -947,8 +952,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         State::getTable() . '.id',
                         Computer::getTable() . '.states_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -979,7 +984,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $subquery = [
             'SELECT' => [
-                new QueryExpression("COUNT(*)")
+                new QueryExpression("COUNT(*)"),
             ],
             'FROM' => Printer::getTable(),
             'LEFT JOIN' => [
@@ -987,8 +992,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         State::getTable() . '.id',
                         Printer::getTable() . '.states_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Printer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -1009,8 +1014,8 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                     'ON' => [
                         State::getTable() . '.id',
                         Printer::getTable() . '.states_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Printer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),

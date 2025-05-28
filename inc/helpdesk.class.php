@@ -62,8 +62,8 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                     'ON' => [
                         Ticket::getTable() . '.entities_id',
                         Entity::getTable() . '.id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Ticket::getTable() . '.is_deleted' => 0,
@@ -72,7 +72,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 Entity::getTable() . '.name',
             ],
             'ORDER' => ['glpi_entities.name ASC', 'glpi_tickets.itilcategories_id ASC'],
-            'LIMIT' => (isset($_REQUEST['glpilist_limit'])) ? (int)$_REQUEST['glpilist_limit'] : 20
+            'LIMIT' => (isset($_REQUEST['glpilist_limit'])) ? (int) $_REQUEST['glpilist_limit'] : 20,
         ];
 
         $query['WHERE']['AND'] = $delay;
@@ -119,15 +119,15 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 ITILCategory::getTable() => [
                     'ON' => [
                         Ticket::getTable() => 'itilcategories_id',
-                        ITILCategory::getTable() => 'id'
-                    ]
-                ]
+                        ITILCategory::getTable() => 'id',
+                    ],
+                ],
             ],
             'WHERE' => [
                 Ticket::getTable() . '.entities_id' => 0,
                 Ticket::getTable() . '.is_deleted' => 0,
             ],
-            'ORDER' => ["glpi_itilcategories.id ASC"]
+            'ORDER' => ["glpi_itilcategories.id ASC"],
         ];
 
         $query['WHERE']['AND'] = $delay;
@@ -169,8 +169,8 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                     'ON' => [
                         Ticket::getTable() . '.entities_id',
                         Entity::getTable() . '.id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Ticket::getTable() . '.itilcategories_id' => $cat_ids,
@@ -180,7 +180,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 Entity::getTable() . '.name',
                 Ticket::getTable() . '.itilcategories_id',
             ],
-            'ORDER' => ['glpi_entities.name ASC', 'glpi_tickets.itilcategories_id ASC']
+            'ORDER' => ['glpi_entities.name ASC', 'glpi_tickets.itilcategories_id ASC'],
         ];
 
         $query['WHERE']['AND'] = $delay;
@@ -295,7 +295,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                         Ticket::getTable() . '.is_deleted' => 0,
                         Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
                         Ticket::getTable() . '.status' => $key,
-                    ]
+                    ],
                 ];
 
                 $query['WHERE']['AND'] = $delay;
@@ -327,7 +327,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
         $query = [
             'SELECT' => [
-                Ticket_User::getTable() . '.users_id as users_id'
+                Ticket_User::getTable() . '.users_id as users_id',
             ],
             'COUNT' => 'count',
             'FROM' => Ticket::getTable(),
@@ -338,11 +338,11 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                         Ticket::getTable() . '.id',
                         [
                             'AND' => [
-                                Ticket_User::getTable() . '.type' => Ticket_User::REQUESTER
-                            ]
-                        ]
-                    ]
-                ]
+                                Ticket_User::getTable() . '.type' => Ticket_User::REQUESTER,
+                            ],
+                        ],
+                    ],
+                ],
             ],
             'WHERE' => [
                 Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -410,8 +410,8 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                     'ON' => [
                         ITILCategory::getTable() . '.id',
                         Ticket::getTable() . '.itilcategories_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -422,7 +422,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 ITILCategory::getTable() . '.id',
                 Ticket::getTable() . '.type',
             ],
-            'ORDER' => [ITILCategory::getTable() . '.name']
+            'ORDER' => [ITILCategory::getTable() . '.name'],
         ];
         $query['WHERE']['AND'] = $delay;
 
@@ -489,7 +489,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 'WHERE' => [
                     [
                         'NOT' => [
-                            Ticket::getTable() . '.id' => $ticket_ids
+                            Ticket::getTable() . '.id' => $ticket_ids,
                         ],
                     ],
                     Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -514,14 +514,14 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                         'ON' => [
                             Group_Ticket::getTable() . '.tickets_id',
                             Ticket::getTable() . '.id',
-                        ]
                         ],
+                    ],
                     Group::getTable() => [
                         'ON' => [
                             Group::getTable() . '.id',
                             Group_Ticket::getTable() . '.groups_id',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'WHERE' => [
                     Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -532,7 +532,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 'GROUPBY' => [
                     Group::getTable() . '.id',
                 ],
-                'ORDER' => [Group::getTable() . '.name']
+                'ORDER' => [Group::getTable() . '.name'],
             ];
             $query['WHERE']['AND'] = $delay;
 
@@ -586,8 +586,8 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                     'ON' => [
                         ITILCategory::getTable() . '.id',
                         Ticket::getTable() . '.itilcategories_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -599,7 +599,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 ITILCategory::getTable() . '.id',
                 Ticket::getTable() . '.status',
             ],
-            'ORDER' => [ITILCategory::getTable() . '.name']
+            'ORDER' => [ITILCategory::getTable() . '.name'],
         ];
         $query['WHERE']['AND'] = $delay;
 
@@ -659,7 +659,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             'FROM'    => Ticket::getTable(),
             'WHERE'   => [
                 Ticket::getTable() . '.is_deleted'   => 0,
-                Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities)
+                Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
             ],
             'GROUPBY' => ['period'],
             'ORDER'   => ['period'],
@@ -728,7 +728,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
                 Ticket::getTable() . '.status' => $status_to_show,
             ],
-            'ORDER' => [Ticket::getTable() . '.date ASC']
+            'ORDER' => [Ticket::getTable() . '.date ASC'],
         ];
 
         $query['WHERE']['AND'] = $delay;
@@ -814,8 +814,8 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                     'ON' => [
                         ITILCategory::getTable() . '.id',
                         Ticket::getTable() . '.itilcategories_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -886,23 +886,23 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                         Ticket::getTable() . '.id',
                         [
                             'AND' => [
-                                Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN
-                            ]
-                        ]
-                    ]
+                                Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN,
+                            ],
+                        ],
+                    ],
                 ],
                 User::getTable() => [
                     'FKEY' => [
                         User::getTable() . '.id',
                         Ticket_User::getTable() . '.users_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
                 Ticket::getTable() . '.is_deleted' => 0,
             ],
-            'ORDER' => ['fullname, username']
+            'ORDER' => ['fullname, username'],
         ];
 
         $query['WHERE']['AND'] = $delay;
@@ -943,17 +943,17 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                         Ticket::getTable() . '.id',
                         [
                             'AND' => [
-                                Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN
-                            ]
-                        ]
-                    ]
+                                Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN,
+                            ],
+                        ],
+                    ],
                 ],
                 User::getTable() => [
                     'FKEY' => [
                         User::getTable() . '.id',
                         Ticket_User::getTable() . '.users_id',
-                    ]
-                ]
+                    ],
+                ],
             ],
             'WHERE' => [
                 Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -1003,7 +1003,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                         Ticket::getTable() . '.id',
                         [
                             'AND' => [
-                                Ticket_User::getTable() . '.type' => Ticket_User::REQUESTER
+                                Ticket_User::getTable() . '.type' => Ticket_User::REQUESTER,
                             ],
                         ],
                     ],

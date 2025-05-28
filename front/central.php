@@ -62,9 +62,9 @@ if (count($tabs) > 0) {
                 'glpi_plugin_mreporting_profiles' => [
                     'ON' => [
                         'glpi_plugin_mreporting_configs' => 'id',
-                        'glpi_plugin_mreporting_profiles' => 'reports'
-                    ]
-                ]
+                        'glpi_plugin_mreporting_profiles' => 'reports',
+                    ],
+                ],
             ],
             'WHERE' => [
                 'glpi_plugin_mreporting_configs.classname' => $classname,

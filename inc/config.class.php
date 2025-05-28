@@ -232,7 +232,7 @@ class PluginMreportingConfig extends CommonDBTM
 
         return $this->getFromDBByCrit([
             'name'     => $function,
-            'classname' => $classname
+            'classname' => $classname,
         ]);
     }
 
