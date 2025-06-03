@@ -34,6 +34,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
     public function initGraph($options)
     {
+        // DEBUG_CSV is constant. It is used to debug csv file. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (!self::DEBUG_CSV) {
             header('Content-type: application/csv');
@@ -55,6 +56,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         ] = PluginMreportingCommon::initGraphParams($params);
 
         // Write in Log
+        // DEBUG_CSV is constant. It is used to debug csv file. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_CSV && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
@@ -121,6 +123,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         ] = PluginMreportingCommon::initGraphParams($params);
 
         // Write in log
+        // DEBUG_CSV is constant. It is used to debug csv file. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_CSV && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
@@ -205,6 +208,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             'opt'       => $opt,
         ] = PluginMreportingCommon::initGraphParams($params);
 
+        // DEBUG_CSV is constant. It is used to debug csv file. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_CSV && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);

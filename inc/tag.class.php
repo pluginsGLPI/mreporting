@@ -52,19 +52,19 @@ class PluginMreportingTag extends PluginMreportingBaseclass
 
         $query = [
             'SELECT' => [
-                PluginTagTag::getTable() . '.name AS name',
+                'glpi_plugin_tag_tags.name AS name',
             ],
             'COUNT' => 'count_tag',
-            'FROM'   => PluginTagTagItem::getTable(),
+            'FROM'   => 'glpi_plugin_tag_tagitems',
             'LEFT JOIN' => [
-                PluginTagTag::getTable() => [
+                'glpi_plugin_tag_tags' => [
                     'ON' => [
-                        PluginTagTag::getTable() . '.id',
-                        PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
+                        'glpi_plugin_tag_tags.id',
+                        'glpi_plugin_tag_tagitems.plugin_tag_tags_id',
                     ],
                 ],
             ],
-            'GROUPBY' => PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
+            'GROUPBY' => 'glpi_plugin_tag_tagitems.plugin_tag_tags_id',
             'ORDERBY' => 'count_tag DESC',
         ];
 
@@ -109,21 +109,21 @@ class PluginMreportingTag extends PluginMreportingBaseclass
 
         $query = [
             'SELECT' => [
-                PluginTagTag::getTable() . '.name AS name',
+                'glpi_plugin_tag_tags.name AS name',
             ],
             'COUNT' => 'count_tag',
-            'FROM'   => PluginTagTagItem::getTable(),
+            'FROM'   => 'glpi_plugin_tag_tagitems',
             'LEFT JOIN' => [
-                PluginTagTag::getTable() => [
+                'glpi_plugin_tag_tags' => [
                     'ON' => [
-                        PluginTagTag::getTable() . '.id',
-                        PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
+                        'glpi_plugin_tag_tags.id',
+                        'glpi_plugin_tag_tagitems.plugin_tag_tags_id',
                     ],
                 ],
                 Ticket::getTable() => [
                     'ON' => [
                         Ticket::getTable() . '.id',
-                        PluginTagTagItem::getTable() . '.items_id',
+                        'glpi_plugin_tag_tagitems.items_id',
                     ],
                 ],
             ],
@@ -133,7 +133,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
                 ],
                 $criteria_cat,
             ),
-            'GROUPBY' => PluginTagTagItem::getTable() . '.plugin_tag_tags_id',
+            'GROUPBY' => 'glpi_plugin_tag_tagitems.plugin_tag_tags_id',
             'ORDERBY' => 'count_tag DESC',
         ];
 
