@@ -44,6 +44,8 @@ class PluginMreportingBaseclass
     protected $period_label;
     protected $period_interval;
     protected $sql_list_date;
+    protected $criteria_list_date;
+    protected $criteria_list_date2;
     protected $status;
 
     public function __construct($config = [])
@@ -128,6 +130,12 @@ class PluginMreportingBaseclass
                     $this->period_label    = '%d %b';
                     $this->period_interval = 'DAY';
                     $this->sql_list_date   = "DISTINCT DATE_FORMAT(`date` , '{$this->period_datetime}') as period_l";
+                    $this->criteria_list_date = new QueryExpression(
+                        "DATE_FORMAT(`date`, '{$this->period_datetime}') as period_l",
+                    );
+                    $this->criteria_list_date2 = new QueryExpression(
+                        "DATE_FORMAT(`solvedate`, '{$this->period_datetime}') as period_l",
+                    );
                     break;
                 case 'week':
                     $this->period_sort     = '%x%v';
@@ -136,6 +144,12 @@ class PluginMreportingBaseclass
                     $this->period_label    = 'S%v %x';
                     $this->period_interval = 'WEEK';
                     $this->sql_list_date   = "DISTINCT DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l";
+                    $this->criteria_list_date = new QueryExpression(
+                        "DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l",
+                    );
+                    $this->criteria_list_date2 = new QueryExpression(
+                        "DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`solvedate`)) DAY, '{$this->period_datetime}') as period_l",
+                    );
                     break;
                 case 'month':
                     $this->period_sort     = '%y%m';
@@ -144,6 +158,12 @@ class PluginMreportingBaseclass
                     $this->period_label    = '%b %Y';
                     $this->period_interval = 'MONTH';
                     $this->sql_list_date   = "DISTINCT CONCAT(LAST_DAY(DATE_FORMAT(`date` , '{$this->period_datetime}')), ' 23:59:59') as period_l";
+                    $this->criteria_list_date = new QueryExpression(
+                        "CONCAT(LAST_DAY(DATE_FORMAT(`date` , '{$this->period_datetime}')), ' 23:59:59') as period_l",
+                    );
+                    $this->criteria_list_date2 = new QueryExpression(
+                        "CONCAT(LAST_DAY(DATE_FORMAT(`solvedate` , '{$this->period_datetime}')), ' 23:59:59') as period_l",
+                    );
                     break;
                 case 'year':
                     $this->period_sort     = '%Y';
@@ -152,6 +172,12 @@ class PluginMreportingBaseclass
                     $this->period_label    = '%Y';
                     $this->period_interval = 'YEAR';
                     $this->sql_list_date   = "DISTINCT DATE_FORMAT(`date` , '{$this->period_datetime}') as period_l";
+                    $this->criteria_list_date = new QueryExpression(
+                        "DATE_FORMAT(`date` , '{$this->period_datetime}') as period_l",
+                    );
+                    $this->criteria_list_date2 = new QueryExpression(
+                        "DATE_FORMAT(`solvedate` , '{$this->period_datetime}') as period_l",
+                    );
                     break;
                 default:
                     $this->period_sort  = '%y%u';

@@ -107,16 +107,13 @@ class PluginMreportingProfile extends CommonDBTM
                 'profiles_id' => $profiles_id,
             ],
         ];
-        if ($result = $DB->request($query)) {
-            if ($result->numrows() != 1) {
-                return false;
-            }
-            $this->fields = $result->current();
-
-            return (is_array($this->fields) && count($this->fields));
+        $result = $DB->request($query);
+        if ($result->numrows() != 1) {
+            return false;
         }
+        $this->fields = $result->current();
 
-        return false;
+        return (is_array($this->fields) && count($this->fields));
     }
 
     /**

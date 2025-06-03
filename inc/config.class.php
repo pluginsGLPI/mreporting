@@ -300,6 +300,7 @@ class PluginMreportingConfig extends CommonDBTM
                 $input = [];
 
                 if ($classConfig) { // If a preconfig exists in class we do it
+                    /** @var null|PluginMreportingOther|PluginMreportingHelpdesk $classObject */
                     $input = $classObject->preconfig($funct_name, $classname, $this);
                 } else {// Else we get the default preconfig
                     $input = $this->preconfig($funct_name, $classname);
@@ -851,6 +852,7 @@ class PluginMreportingConfig extends CommonDBTM
             $crit['randname']   = $classname . $name;
         }
 
+        // DEBUG_MREPORTING is constant. It is true if debug mode is enabled, false otherwise. For PHPStan, this constant is always true or false.
         /* @phpstan-ignore-next-line */
         if (DEBUG_MREPORTING) {
             $crit['show_graph'] = true;
@@ -867,11 +869,13 @@ class PluginMreportingConfig extends CommonDBTM
     **/
     public static function showGraphConfigValue($name, $classname)
     {
+        // DEBUG_MREPORTING is constant. It is true if debug mode is enabled, false otherwise. For PHPStan, this constant is always true or false.
         /* @phpstan-ignore-next-line */
         if (DEBUG_MREPORTING) {
             return true;
         }
 
+        // DEBUG_MREPORTING is constant. It is true if debug mode is enabled, false otherwise. For PHPStan, this constant is always true or false.
         /* @phpstan-ignore-next-line */
         $self = new self();
         if ($self->getFromDBByFunctionAndClassname($name, $classname)) {

@@ -757,7 +757,6 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
                 Ticket::getTable() . '.status' => $status_to_show,
             ],
-            'ORDER' => [Ticket::getTable() . '.date ASC'],
             'GROUPBY' => ['period', Ticket::getTable() . '.status'],
             'ORDER' => ['period', Ticket::getTable() . '.status'],
         ];

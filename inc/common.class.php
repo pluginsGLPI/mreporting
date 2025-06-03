@@ -1624,7 +1624,7 @@ class PluginMreportingCommon extends CommonDBTM
     /**
      * Get criteria condition to filter entity depth by level.
      * @param  string  $field     the sql table field to compare
-     * @return string sql condition
+     * @return array sql condition
      */
     public static function getCriteriaEntityLevel($field = '`glpi_entities`.`level`')
     {
@@ -1971,7 +1971,7 @@ class PluginMreportingCommon extends CommonDBTM
      * @param  integer $delay     if $_REQUET date fields not provided,
      *                            generate them from $delay (in days)
      * @param  string $randname   random string (to prevent conflict in js selection)
-     * @return string             The sql test to insert in your query
+     * @return array              The sql test to insert in your query
      */
     public static function getCriteriaDate($field = '`glpi_tickets`.`date`', $delay = 365, $randname = '')
     {

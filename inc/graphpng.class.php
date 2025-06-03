@@ -582,6 +582,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'randname'   => $randname,
         ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
+        // DEBUG_GRAPH is constant. It is used to debug graph. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_GRAPH && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
@@ -783,6 +784,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'randname'   => $randname,
         ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
+        // DEBUG_GRAPH is constant. It is used to debug graph. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_GRAPH && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
@@ -1026,6 +1028,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'randname'   => $randname,
         ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
+        // DEBUG_GRAPH is constant. It is used to debug graph. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_GRAPH && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
@@ -1369,6 +1372,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'randname'   => $randname,
         ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
+        // DEBUG_GRAPH is constant. It is used to debug graph. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_GRAPH && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
@@ -1623,6 +1627,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'randname'   => $randname,
         ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
+        // DEBUG_GRAPH is constant. It is used to debug graph. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_GRAPH && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
@@ -1969,6 +1974,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'randname'   => $randname,
         ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
+        // DEBUG_GRAPH is constant. It is used to debug graph. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_GRAPH && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
@@ -2300,6 +2306,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             'randname'   => $randname,
         ] = PluginMreportingConfig::initConfigParams($opt['f_name'], $opt['class']);
 
+        // DEBUG_GRAPH is constant. It is used to debug graph. It is always false for PHPStan.
         /* @phpstan-ignore-next-line */
         if (self::DEBUG_GRAPH && isset($raw_datas)) {
             Toolbox::logdebug($raw_datas);
