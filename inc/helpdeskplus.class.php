@@ -350,17 +350,12 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                 'LEFT JOIN' => array_merge(
                     [
                         Ticket::getTable() => [
-                            'FKEY' => [
-                                Ticket::getTable() . '.date',
-                                'list_date.period_l',
-                                [
-                                    'AND' => [
-                                        Ticket::getTable() . '.solvedate > list_date.period_l',
-                                        new QueryExpression(Ticket::getTable() . '.solvedate IS NULL'),
-                                    ],
-                                ],
+                            'OR' => [
+                                Ticket::getTable() . '.solvedate > list_date.period_l',
+                                new QueryExpression(Ticket::getTable() . '.solvedate IS NULL'),
+                                Ticket::getTable() . '.date' => ['<=', 'list_date.period_l'],
                             ],
-                        ]
+                        ],
                     ],
                     $this->criteria_join_tu,
                     $this->criteria_join_gt,
@@ -382,7 +377,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                 'GROUPBY' => ['period'],
             ];
 
-            foreach ($DB->request($query) as $data) {
+            $result = $DB->request($query);
+
+            foreach ($result as $data) {
                 $tab[$data['period']]['backlog']     = $data['nb'];
                 $tab[$data['period']]['period_name'] = $data['period_name'];
             }
