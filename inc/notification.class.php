@@ -39,7 +39,7 @@ class PluginMreportingNotification extends CommonDBTM
      * Return the localized name of the current Type (PluginMreporting)
      *
      * @see CommonGLPI::getTypeName()
-     * @param string $nb
+     * @param integer $nb
      * @return string name of the plugin
      */
     public static function getTypeName($nb = 0)
@@ -54,6 +54,7 @@ class PluginMreportingNotification extends CommonDBTM
      */
     public static function install($migration)
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         // Création du template de la notification
@@ -101,8 +102,12 @@ class PluginMreportingNotification extends CommonDBTM
                 ],
             );
 
-            $DB->query('INSERT INTO glpi_notificationtargets (items_id, type, notifications_id)
-              VALUES (1, 1, ' . $notification_id . ');');
+            $notification_target    = new NotificationTarget();
+            $notification_target->add([
+                'items_id' => 1,
+                'type' => 1,
+                'notifications_id' => $notification_id,
+            ]);
         }
 
         return ['success' => true];
@@ -115,32 +120,33 @@ class PluginMreportingNotification extends CommonDBTM
      */
     public static function uninstall()
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $queries = [];
 
         // Remove NotificationTargets and Notifications
         $notification = new Notification();
+        $notification_target = new NotificationTarget();
         $result       = $notification->find(['itemtype' => 'PluginMreportingNotification']);
         foreach ($result as $row) {
             $notification_id = $row['id'];
-            $queries[]       = 'DELETE FROM glpi_notificationtargets WHERE notifications_id = ' . $notification_id;
-            $queries[]       = 'DELETE FROM glpi_notifications WHERE id = ' . $notification_id;
+            $notification->delete(['id' => $notification_id]);
+            $notification_target->deleteByCriteria([
+                'notifications_id' => $notification_id,
+            ]);
         }
 
         // Remove NotificationTemplateTranslations and NotificationTemplates
         $template = new NotificationTemplate();
+        $notification_translation = new NotificationTemplateTranslation();
         $result   = $template->find(['itemtype' => 'PluginMreportingNotification']);
         foreach ($result as $row) {
             $template_id = $row['id'];
-            $queries[]   = 'DELETE FROM glpi_notificationtemplatetranslations
-                        WHERE notificationtemplates_id = ' . $template_id;
-            $queries[] = 'DELETE FROM glpi_notificationtemplates
-                        WHERE id = ' . $template_id;
-        }
-
-        foreach ($queries as $query) {
-            $DB->query($query);
+            $notification_translation->deleteByCriteria([
+                'notificationtemplates_id' => $template_id,
+            ]);
+            $template->delete(['id' => $template_id]);
         }
 
         return ['success' => true];
@@ -177,7 +183,7 @@ class PluginMreportingNotification extends CommonDBTM
      *
      * @param CronTask $task Object of CronTask class for log / stat
      *
-     * @return interger
+     * @return integer
      *    >0 : done
      *    <0 : to be run again (not finished)
      *     0 : nothing to do
