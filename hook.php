@@ -108,18 +108,43 @@ function plugin_mreporting_install()
 
     $res_display_pref = $DB->request($query_display_pref);
     if ($res_display_pref->numrows() == 0) {
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','2','2','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','3','3','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','4','4','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','5','5','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','6','6','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','8','8','0');";
+        $display_preference = new DisplayPreference();
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '2',
+            'rank'     => '2',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '3',
+            'rank'     => '3',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '4',
+            'rank'     => '4',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '5',
+            'rank'     => '5',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '6',
+            'rank'     => '6',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '8',
+            'rank'     => '8',
+            'users_id' => 0,
+        ]);
     }
 
     $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_notifications` (
@@ -138,7 +163,7 @@ function plugin_mreporting_install()
       ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
     foreach ($queries as $query) {
-        $DB->doQueryOrDie($query);
+        $DB->doQuery($query);
     }
 
     // == Update to 2.1 ==
@@ -160,7 +185,7 @@ function plugin_mreporting_install()
 
         //truncate profile table
         $query = 'TRUNCATE TABLE `glpi_plugin_mreporting_profiles`';
-        $DB->doQueryOrDie($query);
+        $DB->doQuery($query);
 
         //migration of field
         $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
@@ -183,7 +208,7 @@ function plugin_mreporting_install()
 
     // == UPDATE to 0.84+1.0 ==
     //$query = 'UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ' . READ . " WHERE pr.right = 'r'";
-    $DB->updateOrDie(
+    $DB->update(
         'glpi_plugin_mreporting_profiles',
         ['right' => READ],
         ['right' => 'r'],
@@ -191,11 +216,11 @@ function plugin_mreporting_install()
     if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
         $query = 'ALTER TABLE glpi_plugin_mreporting_profiles
                 ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)';
-        $DB->doQueryOrDie($query);
+        $DB->doQuery($query);
     }
 
     // Remove GLPI graphtype to fix compatibility with GLPI 9.2.2+
-    $DB->updateOrDie(
+    $DB->update(
         'glpi_plugin_mreporting_configs',
         ['graphtype' => 'SVG'],
         ['graphtype' => 'GLPI'],

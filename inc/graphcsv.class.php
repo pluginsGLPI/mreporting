@@ -132,7 +132,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : [];
 
         if (count($datas) <= 0) {
-            return false;
+            return '';
         }
 
         [
@@ -221,7 +221,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         }
 
         if (count($datas) <= 0) {
-            return false;
+            return '';
         }
 
         [
