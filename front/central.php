@@ -56,7 +56,6 @@ if (count($tabs) > 0) {
 
         //we found all reports for classname where current profil have right
         $result = $DB->request([
-            'SELECT' => '*',
             'FROM' => 'glpi_plugin_mreporting_configs',
             'LEFT JOIN' => [
                 'glpi_plugin_mreporting_profiles' => [

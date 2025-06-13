@@ -556,7 +556,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void|bool
+     * @return void|string
      */
     public function showHbar($params, $dashboard = false, $width = false)
     {
@@ -615,7 +615,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 PluginMreportingCommon::endGraph($end);
             }
 
-            return false;
+            return '';
         }
 
         if (empty($unit) && !empty($raw_datas['unit'])) {
@@ -760,7 +760,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void|bool
+     * @return void|string
      */
     public function showPie($params, $dashboard = false, $width = false)
     {
@@ -817,7 +817,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 PluginMreportingCommon::endGraph($end);
             }
 
-            return false;
+            return '';
         }
 
         if (empty($unit) && !empty($raw_datas['unit'])) {
@@ -1008,7 +1008,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void|bool
+     * @return void|string
      */
     public function showSunburst($params, $dashboard = false, $width = false)
     {
@@ -1061,7 +1061,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 PluginMreportingCommon::endGraph($end);
             }
 
-            return false;
+            return '';
         }
 
         $labels2 = [];
@@ -1345,7 +1345,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void|bool
+     * @return void|string
      */
     public function showHgbar($params, $dashboard = false, $width = false)
     {
@@ -1405,7 +1405,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 PluginMreportingCommon::endGraph($end);
             }
 
-            return false;
+            return '';
         }
 
         $labels2 = $raw_datas['labels2'];
@@ -1600,7 +1600,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void|bool
+     * @return void|string
      */
     public function showVstackbar($params, $dashboard = false, $width = false)
     {
@@ -1660,7 +1660,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 PluginMreportingCommon::endGraph($end);
             }
 
-            return false;
+            return '';
         }
 
         $labels2 = $raw_datas['labels2'];
@@ -1946,7 +1946,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
      * @param $area : show plain chart instead only a line (optionnal)
-     * @return void|bool
+     * @return void|string
      */
     public function showArea($params, $dashboard = false, $width = false)
     {
@@ -2007,7 +2007,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 PluginMreportingCommon::endGraph($end);
             }
 
-            return false;
+            return '';
         }
 
         if (empty($unit) && !empty($raw_datas['unit'])) {
@@ -2277,7 +2277,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void|bool
+     * @return void|string
      */
     public function showGArea($params, $dashboard = false, $width = false)
     {
@@ -2339,7 +2339,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 PluginMreportingCommon::endGraph($end);
             }
 
-            return false;
+            return '';
         }
 
         $labels2 = $raw_datas['labels2'];
