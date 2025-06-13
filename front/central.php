@@ -47,25 +47,35 @@ foreach ($reports as $classname => $report) {
 if (count($tabs) > 0) {
     //foreach tabs
     foreach ($tabs as $tab) {
+        /** @var \DBmysql $DB */
         global $DB;
-        $params = (isset($tab['params']) ? $tab['params'] : '');
+
+        $params = $tab['params'];
         //we get the classname
         $classname = str_replace('target=' . $_SERVER['PHP_SELF'] . '&classname=', '', $params);
 
         //we found all reports for classname where current profil have right
-        $query = "SELECT *
-            FROM `glpi_plugin_mreporting_configs`,`glpi_plugin_mreporting_profiles`
-            WHERE `glpi_plugin_mreporting_configs`.`id` = `glpi_plugin_mreporting_profiles`.`reports`
-            AND `glpi_plugin_mreporting_configs`.`classname` = '$classname'
-            AND `glpi_plugin_mreporting_profiles`.`right` = " . READ . '
-            AND `glpi_plugin_mreporting_profiles`.`profiles_id` = ' . $_SESSION['glpiactiveprofile']['id'];
+        $result = $DB->request([
+            'FROM' => 'glpi_plugin_mreporting_configs',
+            'LEFT JOIN' => [
+                'glpi_plugin_mreporting_profiles' => [
+                    'ON' => [
+                        'glpi_plugin_mreporting_configs' => 'id',
+                        'glpi_plugin_mreporting_profiles' => 'reports',
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                'glpi_plugin_mreporting_configs.classname' => $classname,
+                'glpi_plugin_mreporting_profiles.right' => READ,
+                'glpi_plugin_mreporting_profiles.profiles_id' => $_SESSION['glpiactiveprofile']['id'],
+            ],
+        ]);
 
         //for this classname if current user have no right on any reports
-        if ($result = $DB->query($query)) {
-            if ($DB->numrows($result) == 0) {
-                //we unset the index
-                unset($tabs[$classname]);
-            }
+        if ($result->numrows() == 0) {
+            //we unset the index
+            unset($tabs[$classname]);
         }
     }
 

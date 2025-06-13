@@ -49,6 +49,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
 
     public function addDataForTemplate($event, $options = [])
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         $file_name = $this->buildPDF(mt_rand() . '_');
@@ -64,11 +65,15 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
     /**
      * Generate a PDF file (with mreporting reports) to be send in the notifications
      *
-     * @return string hash Name of the created file
+     * @return string|boolean hash Name of the created file
      */
     private function buildPDF($user_name = '')
     {
-        global $CFG_GLPI, $DB, $LANG;
+        /**
+         * @var DBmysql $DB
+         * @var DBmysql $LANG
+         */
+        global $DB, $LANG;
 
         $dir = GLPI_PLUGIN_DOC_DIR . '/mreporting/notifications';
 
@@ -82,13 +87,21 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
 
         $images = [];
 
-        $result = $DB->query('SELECT id, name, classname, default_delay
-                           FROM glpi_plugin_mreporting_configs
-                           WHERE is_notified = 1
-                              AND is_active = 1');
+        $query = [
+            'SELECT' => [
+                'id', 'name', 'classname', 'default_delay',
+            ],
+            'FROM'   => PluginMreportingConfig::getTable(),
+            'WHERE'  => [
+                'is_notified' => 1,
+                'is_active'   => 1,
+            ],
+        ];
+
+        $result = $DB->request($query);
 
         $graphs = [];
-        while ($graph = $result->fetch_array()) {
+        foreach ($result as $graph) {
             $type = preg_split('/(?<=\\w)(?=[A-Z])/', $graph['name']);
 
             $graphs[] = [
