@@ -1,7 +1,5 @@
 <?php
 
-use Composer\XdebugHandler\Status;
-
 /**
  * -------------------------------------------------------------------------
  * Mreporting plugin for GLPI

@@ -1,7 +1,5 @@
 <?php
 
-use GuzzleHttp\Psr7\Query;
-
 /**
  * -------------------------------------------------------------------------
  * Mreporting plugin for GLPI
