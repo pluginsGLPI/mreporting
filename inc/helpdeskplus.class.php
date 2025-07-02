@@ -323,13 +323,15 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             $subqueries = [];
 
             $subqueries[] = [
-                'SELECT' => [$this->criteria_list_date],
-                'FROM'   => Ticket::getTable(),
+                'SELECT'   => [$this->criteria_list_date],
+                'DISTINCT' => true,
+                'FROM'     => Ticket::getTable(),
             ];
 
             $subqueries[] = [
-                'SELECT' => [$this->criteria_list_date2],
-                'FROM'   => Ticket::getTable(),
+                'SELECT'   => [$this->criteria_list_date2],
+                'DISTINCT' => true,
+                'FROM'     => Ticket::getTable(),
             ];
 
             $union = new QueryUnion($subqueries, false, 'list_date_union');
