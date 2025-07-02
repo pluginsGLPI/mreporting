@@ -44,8 +44,6 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        global $CFG_GLPI;
-
         if (
             get_class($item) == 'Central'
             && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])
@@ -69,15 +67,12 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public function showDashBoard($show_reports_dropdown = true)
     {
+        /** @var array $LANG */
         global $LANG;
 
         $root_ajax = Plugin::getWebDir('mreporting') . '/ajax/dashboard.php';
 
-        if (isset($options['target'])) {
-            $target = $options['target'];
-        } else {
-            $target = $this->getFormURL();
-        }
+        $target = $this->getFormURL();
 
         $_REQUEST['f_name'] = 'option';
         PluginMreportingCommon::getSelectorValuesByUser();
@@ -280,6 +275,7 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public static function updateWidget($idreport)
     {
+        /** @var array $LANG */
         global $LANG;
 
         $dashboard = new self();
@@ -302,14 +298,6 @@ class PluginMreportingDashboard extends CommonDBTM
         }
 
         $short_classname = str_replace('PluginMreporting', '', $report->fields['classname']);
-
-        if (!empty($short_classname) && !empty($f_name)) {
-            if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-                $opt  = ['short_classname' => $short_classname , 'f_name' => $f_name , 'gtype' => $gtype];
-                $dash = new PluginMreportingDashboard();
-                $out  = $dash->showGraphOnDashboard($opt);
-            }
-        }
 
         echo $out;
     }

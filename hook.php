@@ -35,6 +35,7 @@
  */
 function plugin_mreporting_install()
 {
+    /** @var \DBmysql $DB */
     global $DB;
 
     $version   = plugin_version_mreporting();
@@ -47,18 +48,17 @@ function plugin_mreporting_install()
     $default_key_sign  = DBConnection::getDefaultPrimaryKeySignOption();
 
     //create profiles table
-    $queries   = [];
-    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
+    $DB->doQuery("CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_profiles` (
       `id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
       `profiles_id` VARCHAR(45) NOT NULL,
       `reports` CHAR(1),
       PRIMARY KEY (`id`),
       UNIQUE `profiles_id_reports` (`profiles_id`, `reports`)
       )
-      ENGINE = InnoDB;";
+      ENGINE = InnoDB;");
 
     //create configuration table
-    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
+    $DB->doQuery("CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_configs` (
    `id` int {$default_key_sign} NOT NULL auto_increment,
    `name` varchar(255) default NULL,
    `classname` varchar(255) default NULL,
@@ -75,46 +75,78 @@ function plugin_mreporting_install()
    `graphtype` VARCHAR(255) default 'SVG',
    PRIMARY KEY  (`id`),
    KEY `is_active` (`is_active`)
-   ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+   ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;");
 
     //create configuration table
-    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_dashboards` (
+    $DB->doQuery("CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_dashboards` (
    `id` int {$default_key_sign} NOT NULL auto_increment,
    `users_id` int {$default_key_sign} NOT NULL,
    `reports_id`int {$default_key_sign} NOT NULL,
    `configuration` VARCHAR(500) default NULL,
    PRIMARY KEY  (`id`)
-   ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+   ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;");
 
-    $queries[] = "CREATE TABLE  IF NOT EXISTS `glpi_plugin_mreporting_preferences` (
+    $DB->doQuery("CREATE TABLE  IF NOT EXISTS `glpi_plugin_mreporting_preferences` (
    `id` int {$default_key_sign} NOT NULL auto_increment,
    `users_id` int {$default_key_sign} NOT NULL default 0,
    `template` varchar(255) default NULL,
    PRIMARY KEY  (`id`),
    KEY `users_id` (`users_id`)
-   ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+   ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;");
 
     // add display preferences
-    $query_display_pref = "SELECT id
-      FROM glpi_displaypreferences
-      WHERE itemtype = 'PluginMreportingConfig'";
-    $res_display_pref = $DB->query($query_display_pref);
-    if ($DB->numrows($res_display_pref) == 0) {
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','2','2','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','3','3','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','4','4','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','5','5','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','6','6','0');";
-        $queries[] = "INSERT INTO `glpi_displaypreferences`
-         VALUES (NULL,'PluginMreportingConfig','8','8','0');";
+    $query_display_pref = [
+        'SELECT' => [
+            'id',
+        ],
+        'FROM'   => DisplayPreference::getTable(),
+        'WHERE'  => [
+            'itemtype' => 'PluginMreportingConfig',
+        ],
+    ];
+
+    $res_display_pref = $DB->request($query_display_pref);
+    if ($res_display_pref->numrows() == 0) {
+        $display_preference = new DisplayPreference();
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '2',
+            'rank'     => '2',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '3',
+            'rank'     => '3',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '4',
+            'rank'     => '4',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '5',
+            'rank'     => '5',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '6',
+            'rank'     => '6',
+            'users_id' => 0,
+        ]);
+        $display_preference->add([
+            'itemtype' => 'PluginMreportingConfig',
+            'num'    => '8',
+            'rank'     => '8',
+            'users_id' => 0,
+        ]);
     }
 
-    $queries[] = "CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_notifications` (
+    $DB->doQuery("CREATE TABLE IF NOT EXISTS `glpi_plugin_mreporting_notifications` (
       `id` int {$default_key_sign} NOT NULL auto_increment,
       `entities_id` int {$default_key_sign} NOT NULL default '0',
       `is_recursive` tinyint NOT NULL default '0',
@@ -127,11 +159,7 @@ function plugin_mreporting_install()
       `date_mod` timestamp NULL default NULL,
       `is_deleted` tinyint NOT NULL default '0',
       PRIMARY KEY  (`id`)
-      ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-
-    foreach ($queries as $query) {
-        $DB->query($query);
-    }
+      ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;");
 
     // == Update to 2.1 ==
     $migration->addField(
@@ -152,7 +180,7 @@ function plugin_mreporting_install()
 
         //truncate profile table
         $query = 'TRUNCATE TABLE `glpi_plugin_mreporting_profiles`';
-        $DB->query($query);
+        $DB->doQuery($query);
 
         //migration of field
         $migration->addField('glpi_plugin_mreporting_profiles', 'right', 'char');
@@ -174,17 +202,23 @@ function plugin_mreporting_install()
     }
 
     // == UPDATE to 0.84+1.0 ==
-    $query = 'UPDATE `glpi_plugin_mreporting_profiles` pr SET pr.right = ' . READ . " WHERE pr.right = 'r'";
-    $DB->query($query);
+    $DB->update(
+        'glpi_plugin_mreporting_profiles',
+        ['right' => READ],
+        ['right' => 'r'],
+    );
     if (!isIndex('glpi_plugin_mreporting_profiles', 'profiles_id_reports')) {
         $query = 'ALTER TABLE glpi_plugin_mreporting_profiles
                 ADD UNIQUE INDEX `profiles_id_reports` (`profiles_id`, `reports`)';
-        $DB->query($query);
+        $DB->doQuery($query);
     }
 
     // Remove GLPI graphtype to fix compatibility with GLPI 9.2.2+
-    $query = "UPDATE `glpi_plugin_mreporting_configs` SET `graphtype` = 'SVG' WHERE `graphtype` = 'GLPI'";
-    $DB->query($query);
+    $DB->update(
+        'glpi_plugin_mreporting_configs',
+        ['graphtype' => 'SVG'],
+        ['graphtype' => 'GLPI'],
+    );
 
     //== Create directories
     $rep_files_mreporting = GLPI_PLUGIN_DOC_DIR . '/mreporting';
@@ -224,8 +258,6 @@ function plugin_mreporting_install()
  */
 function plugin_mreporting_uninstall()
 {
-    global $DB;
-
     $migration = new Migration('2.3.0');
     $tables    = ['glpi_plugin_mreporting_profiles',
         'glpi_plugin_mreporting_configs',
@@ -267,6 +299,7 @@ function plugin_mreporting_getDatabaseRelations()
 
 function plugin_mreporting_giveItem($type, $ID, $data, $num)
 {
+    /** @var array $LANG */
     global $LANG;
 
     $searchopt = &Search::getOptions($type);
@@ -288,13 +321,11 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num)
                     }
 
                     return $out;
-                    break;
                 case 'glpi_plugin_mreporting_configs.name':
                     $out = ' ';
                     if (!empty($data['raw']["ITEM_$num"])) {
                         $title_func      = '';
                         $short_classname = '';
-                        $f_name          = '';
 
                         $inc_dir = Plugin::getPhpDir('mreporting') . '/inc';
                         //parse inc dir to search report classes
@@ -312,10 +343,8 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num)
                                     continue;
                                 }
 
-                                $gtype = strtolower($ex_func[1]);
-
                                 if ($data['raw']["ITEM_$num"] == $funct_name) {
-                                    if (!empty($classname) && !empty($funct_name)) {
+                                    if (!empty($classname)) {
                                         $short_classname = str_replace('PluginMreporting', '', $classname);
                                         if (isset($LANG['plugin_mreporting'][$short_classname][$funct_name]['title'])) {
                                             $title_func = $LANG['plugin_mreporting'][$short_classname][$funct_name]['title'];
@@ -329,11 +358,9 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num)
                     }
 
                     return $out;
-                    break;
             }
 
             return '';
-            break;
     }
 
     return '';
@@ -351,8 +378,6 @@ function plugin_mreporting_MassiveActionsFieldsDisplay($options = [])
                 PluginMreportingConfig::dropdownLabel('show_label');
 
                 return true;
-                break;
-
             case 'glpi_plugin_mreporting_configs.graphtype':
                 Dropdown::showFromArray(
                     'graphtype',
@@ -360,7 +385,6 @@ function plugin_mreporting_MassiveActionsFieldsDisplay($options = [])
                 );
 
                 return true;
-                break;
         }
     }
 

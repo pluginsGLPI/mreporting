@@ -41,6 +41,7 @@ class PluginMreportingPdf extends TCPDF
     public function Init()
     {
         // @codingStandardsIgnoreEnd
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         $title   = __('GLPI statistics reports', 'mreporting');
@@ -83,10 +84,10 @@ class PluginMreportingPdf extends TCPDF
             }
 
             $h = floor(($image['height'] * $w) / $image['width']);
-            $this->Image($file, '', '', $w, $h);
+            $this->Image($file, null, null, $w, $h);
             $this->Ln($h);
 
-            $this->writeHTMLCell('', '', '', '', $image['title'], 0, 1, false, true, 'C');
+            $this->writeHTMLCell(0., 0., null, null, $image['title'], 0, 1, false, true, 'C');
             if ($i < $images_lengh) {
                 $this->AddPage();
             }
@@ -101,6 +102,6 @@ class PluginMreportingPdf extends TCPDF
     {
         $this->SetY(-15);
         $this->SetFontSize(8);
-        $this->writeHTMLCell('', '', '', '', date('Y-m-d H:i:s'), 0, 0, false, true, 'R');
+        $this->writeHTMLCell(0., 0., null, null, date('Y-m-d H:i:s'), 0, 0, false, true, 'R');
     }
 }

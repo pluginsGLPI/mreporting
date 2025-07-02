@@ -46,6 +46,9 @@ if ($plugin->isActivated('mreporting')) {
         Search::show('PluginMreportingConfig');
     }
 } else {
+    /** @var array $CFG_GLPI */
+    global $CFG_GLPI;
+
     Html::header(__('Setup'), '', 'config', 'plugins');
     echo "<div align='center'>";
     echo '<br><br>';

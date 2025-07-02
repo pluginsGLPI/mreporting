@@ -32,6 +32,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
 {
     public function reportHbarLogs($configs = [])
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         //Init delay value
@@ -41,85 +42,189 @@ class PluginMreportingOther extends PluginMreportingBaseclass
             $configs['randname'],
         );
 
-        $prefix = 'SELECT count(*) as cpt FROM `glpi_logs` WHERE ';
-        //Add/remove a software on a computer
-        $query_software = "$prefix `linked_action` IN (4,5)";
+        $prefix = 'SELECT COUNT(*) AS cpt FROM `glpi_logs` WHERE ';
+        $prefix2 = [
+            'COUNT' => 'cpt',
+            'FROM'  => Log::getTable(),
+        ];
 
         //Add/remove a software on a computer
-        $query_computer_software = "$prefix `linked_action` IN (4,5)";
+        $query_computer_software = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.linked_action' => [4, 5],
+                ],
+            ],
+        );
 
-        $query_software_version = "$prefix `itemtype`='Software'
-                                  AND `itemtype_link`='SoftwareVersion'
-                                  AND `linked_action` IN (17, 18, 19)";
-        $query_add_infocom = "$prefix `itemtype`='Software'
-                                  AND `itemtype_link`='Infocom'
-                                  AND `linked_action` IN (17)";
-        $query_user_profiles = "$prefix `itemtype`='User'
-                                  AND `itemtype_link`='Profile_User'
-                                  AND `linked_action` IN (17, 18, 19)";
-        $query_user_groups = "$prefix `itemtype`='User'
-                                  AND `itemtype_link`='Group_User'
-                                  AND `linked_action` IN (17, 18, 19)";
+        $query_software_version = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.itemtype'       => 'Software',
+                    Log::getTable() . '.itemtype_link'  => 'SoftwareVersion',
+                    Log::getTable() . '.linked_action'  => [17, 18, 19],
+                ],
+            ],
+        );
 
-        $query_user_deleted = "$prefix `itemtype`='User' AND `linked_action` IN (12)";
+        $query_add_infocom = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.itemtype'       => 'Software',
+                    Log::getTable() . '.itemtype_link'  => 'Infocom',
+                    Log::getTable() . '.linked_action'  => [17],
+                ],
+            ],
+        );
 
-        $query_ocs      = "$prefix `linked_action` IN (8, 9, 10, 11)";
-        $query_device   = "$prefix `linked_action` IN (1, 2, 3, 6, 7)";
-        $query_relation = "$prefix `linked_action` IN (15, 16)";
-        $query_item     = "$prefix `linked_action` IN (13, 14, 17, 18, 19, 20)";
-        $query_other    = "$prefix `id_search_option` IN (16, 19)";
+        $query_user_profiles = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.itemtype'       => 'User',
+                    Log::getTable() . '.itemtype_link'  => 'Profile_User',
+                    Log::getTable() . '.linked_action'  => [17, 18, 19],
+                ],
+            ],
+        );
+
+        $query_user_groups = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.itemtype'       => 'User',
+                    Log::getTable() . '.itemtype_link'  => 'Group_User',
+                    Log::getTable() . '.linked_action'  => [17, 18, 19],
+                ],
+            ],
+        );
+
+        $query_user_deleted = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.itemtype'      => 'User',
+                    Log::getTable() . '.linked_action' => [12],
+                ],
+            ],
+        );
+
+        $query_ocs      = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.linked_action' => [8, 9, 10, 11],
+                ],
+            ],
+        );
+
+        $query_device   = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.linked_action' => [1, 2, 3, 6, 7],
+                ],
+            ],
+        );
+
+        $query_relation = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.linked_action' => [15, 16],
+                ],
+            ],
+        );
+
+        $query_item     = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.linked_action' => [13, 14, 17, 18, 19, 20],
+                ],
+            ],
+        );
+
+        $query_other    = array_merge(
+            $prefix2,
+            [
+                'WHERE' => [
+                    Log::getTable() . '.id_search_option' => [16, 19],
+                ],
+            ],
+        );
 
         $datas = [];
 
-        $result                                                                = $DB->query($query_computer_software);
-        $datas['datas'][__('Add/remove software on a computer', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_computer_software);
+        $datas['datas'][__('Add/remove software on a computer', 'mreporting')] = $result->current()['cpt'];
 
-        $result                                                               = $DB->query($query_software_version);
-        $datas['datas'][__('Add/remove version on a software', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_software_version);
+        $datas['datas'][__('Add/remove version on a software', 'mreporting')] = $result->current()['cpt'];
 
-        $result                                          = $DB->query($query_add_infocom);
-        $datas['datas'][__('Add infocom', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_add_infocom);
+        $datas['datas'][__('Add infocom', 'mreporting')] = $result->current()['cpt'];
 
-        $result                                                           = $DB->query($query_user_profiles);
-        $datas['datas'][__('Add/remove profile on a user', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_user_profiles);
+        $datas['datas'][__('Add/remove profile on a user', 'mreporting')] = $result->current()['cpt'];
 
-        $result                                                         = $DB->query($query_user_groups);
-        $datas['datas'][__('Add/remove group on a user', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_user_groups);
+        $datas['datas'][__('Add/remove group on a user', 'mreporting')] = $result->current()['cpt'];
 
-        $result                                                     = $DB->query($query_user_deleted);
-        $datas['datas'][__('User deleted from LDAP', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_user_deleted);
+        $datas['datas'][__('User deleted from LDAP', 'mreporting')] = $result->current()['cpt'];
 
         $plugin = new Plugin();
         if ($plugin->isActivated('webservices')) {
             $query_webservice = "$prefix `itemtype`='PluginWebservicesClient'";
+            $query_webservice = array_merge(
+                $prefix2,
+                [
+                    'WHERE' => [
+                        Log::getTable() . ".itemtype = 'PluginWebservicesClient'",
+                    ],
+                ],
+            );
 
             // Display this information is not usefull if webservices is not activated
-            $result                                              = $DB->query($query_webservice);
-            $datas['datas'][__('Webservice logs', 'mreporting')] = $DB->result($result, 0, 'cpt');
+            $result = $DB->request($query_webservice);
+            $datas['datas'][__('Webservice logs', 'mreporting')] = $result->current()['cpt'];
         }
 
-        $result                                        = $DB->query($query_ocs);
-        $datas['datas'][__('OCS Infos', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_ocs);
+        $datas['datas'][__('OCS Infos', 'mreporting')] = $result->current()['cpt'];
 
-        $result                                                       = $DB->query($query_device);
-        $datas['datas'][__('Add/update/remove device', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_device);
+        $datas['datas'][__('Add/update/remove device', 'mreporting')] = $result->current()['cpt'];
 
-        $result                                                  = $DB->query($query_relation);
-        $datas['datas'][__('Add/remove relation', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_relation);
+        $datas['datas'][__('Add/remove relation', 'mreporting')] = $result->current()['cpt'];
 
-        $result                                              = $DB->query($query_item);
-        $datas['datas'][__('Add/remove item', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_item);
+        $datas['datas'][__('Add/remove item', 'mreporting')] = $result->current()['cpt'];
 
-        $result                                                          = $DB->query($query_other);
-        $datas['datas'][__('Comments & date_mod changes', 'mreporting')] = $DB->result($result, 0, 'cpt');
+        $result = $DB->request($query_other);
+        $datas['datas'][__('Comments & date_mod changes', 'mreporting')] = $result->current()['cpt'];
 
         $plugin = new Plugin();
         if ($plugin->isActivated('genericobject')) {
-            $query_genericobject = "$prefix `itemtype` LIKE '%PluginGenericobject%'";
+            $query_genericobject = array_merge(
+                $prefix2,
+                [
+                    'WHERE' => [
+                        new QueryExpression(
+                            Log::getTable() . ".itemtype LIKE '%PluginGenericobject%'",
+                        ),
+                    ],
+                ],
+            );
 
             // Display this information is not usefull if genericobject is not activated
-            $result                                                        = $DB->query($query_genericobject);
-            $datas['datas'][__('Genericobject plugin logs', 'mreporting')] = $DB->result($result, 0, 'cpt');
+            $result = $DB->request($query_genericobject);
+            $datas['datas'][__('Genericobject plugin logs', 'mreporting')] = $result->current()['cpt'];
         }
 
         return $datas;
@@ -128,10 +233,10 @@ class PluginMreportingOther extends PluginMreportingBaseclass
     /**
     * Preconfig datas with your values when init config is done
     *
-    * @param type $funct_name
-    * @param type $classname
+    * @param string|int $funct_name
+    * @param string $classname
     * @param PluginMreportingConfig $config
-    * @return $config
+    * @return array|boolean $config
     */
     public function preconfig($funct_name, $classname, PluginMreportingConfig $config)
     {
