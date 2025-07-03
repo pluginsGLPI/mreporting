@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-30 01:23+0000\n"
+"POT-Creation-Date: 2025-07-03 01:46+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: INOUE Daisuke, 2024\n"
 "Language-Team: Japanese (Japan) (http://app.transifex.com/teclib/glpi-project-plugin-mreporting/language/ja_JP/)\n"
@@ -19,7 +19,225 @@ msgstr ""
 "Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: inc/notification.class.php:69
+#: front/config.form.php:54 front/preference.form.php:45 front/config.php:43
+#: front/graph.php:40 front/dashboard.form.php:57 front/dashboard.form.php:62
+#: front/central.php:34 inc/common.class.php:52 inc/profile.class.php:41
+#: inc/notificationtargetnotification.class.php:37
+#: inc/preference.class.php:200 inc/notification.class.php:47 setup.php:191
+msgid "More Reporting"
+msgstr "追加レポート"
+
+#: front/popup.php:39 inc/common.class.php:1185
+msgid "General Report - ODT"
+msgstr "総合レポート - ODT"
+
+#: front/central.php:84 front/central.php:90 inc/common.class.php:338
+#: inc/common.class.php:406 inc/config.class.php:666
+msgid "No report is available !"
+msgstr "有効なレポートがありません！"
+
+#: inc/common.class.php:64 inc/common.class.php:65 inc/common.class.php:81
+#: inc/dashboard.class.php:39 ajax/homepage_link.php:37
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#: inc/common.class.php:67 inc/common.class.php:68 inc/common.class.php:90
+msgid "Reports list"
+msgstr "レポート一覧"
+
+#: inc/common.class.php:530 ajax/dropdownExport.php:45
+msgid "Without data"
+msgstr "データなし"
+
+#: inc/common.class.php:531 ajax/dropdownExport.php:44
+msgid "With data"
+msgstr "データ有"
+
+#: inc/common.class.php:969
+msgid "Number"
+msgstr "数"
+
+#: inc/common.class.php:990 inc/common.class.php:1284
+#: inc/common.class.php:1304
+msgid "data"
+msgstr "データ"
+
+#: inc/common.class.php:1186
+msgid "No graphic selected"
+msgstr "画像を選択していません"
+
+#: inc/common.class.php:1469
+msgid "Week"
+msgstr "週"
+
+#: inc/common.class.php:1470
+msgid "Month"
+msgstr "月"
+
+#: inc/common.class.php:1606
+msgid "Max depth entity level"
+msgstr "エンティティーレベル最大深度"
+
+#: inc/graphpng.class.php:610 inc/graphpng.class.php:812
+#: inc/graphpng.class.php:1056 inc/graphpng.class.php:1400
+#: inc/graphpng.class.php:1655 inc/graphpng.class.php:2002
+#: inc/graphpng.class.php:2334 inc/graph.class.php:169 inc/graph.class.php:375
+#: inc/graph.class.php:582 inc/graph.class.php:853 inc/graph.class.php:1082
+#: inc/graph.class.php:1322 inc/graph.class.php:1578
+msgid "No data for this date range !"
+msgstr "この日付範囲にはデータがありません！"
+
+#: inc/config.class.php:41
+msgid "Configuration"
+msgstr "設定"
+
+#: inc/config.class.php:86 inc/config.class.php:696
+msgid "See area"
+msgstr "エリアを表示"
+
+#: inc/config.class.php:95 inc/config.class.php:711
+msgid "Curve lines (SVG)"
+msgstr "曲線（SVG）"
+
+#: inc/config.class.php:104 inc/config.class.php:723
+msgid "See values"
+msgstr "値を表示"
+
+#: inc/config.class.php:114 inc/config.class.php:738
+msgid "Reverse data array"
+msgstr "日付逆順"
+
+#: inc/config.class.php:123 inc/config.class.php:750
+msgid "Unit"
+msgstr "単位"
+
+#: inc/config.class.php:131 inc/config.class.php:765
+msgid "Default delay"
+msgstr "標準期間"
+
+#: inc/config.class.php:139 inc/config.class.php:778
+msgid "Additional condition for MySQL"
+msgstr "MySQL への追加条件"
+
+#: inc/config.class.php:147 inc/config.class.php:674
+msgid "See graphic"
+msgstr "画像を表示"
+
+#: inc/config.class.php:156
+msgid "Class"
+msgstr "クラス"
+
+#: inc/config.class.php:164 inc/config.class.php:679
+msgid "Default chart format"
+msgstr "標準グラフ形式"
+
+#: inc/config.class.php:173 inc/config.class.php:792
+msgid "Send this report with the notification"
+msgstr "このレポートを通知付きで送信"
+
+#: inc/config.class.php:249
+msgid "Initialize graphics configuration"
+msgstr "画像設定の初期化"
+
+#: inc/config.class.php:482 inc/config.class.php:499
+msgid "On mouse over"
+msgstr "マウスオーバー時"
+
+#: inc/config.class.php:568
+msgid "Object already exists"
+msgstr "オブジェクトがすでに存在します"
+
+#: inc/profile.class.php:76 inc/profile.class.php:244
+#: inc/profile.class.php:324
+msgid "Rights management"
+msgstr "権限管理"
+
+#: inc/dashboard.class.php:89
+msgid "Select a report to display"
+msgstr "表示するレポートを選択"
+
+#: inc/dashboard.class.php:100
+msgid "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "ダッシュボードが空です。アイコンをクリックしてレポートを追加してください"
+
+#: inc/dashboard.class.php:107
+msgid "Add a report"
+msgstr "レポートの追加"
+
+#: inc/dashboard.class.php:133
+msgid "Select a report to add"
+msgstr "追加するレポートを選択"
+
+#: inc/dashboard.class.php:207
+msgid "Configure report"
+msgstr "レポート設定"
+
+#: inc/helpdesk.class.php:361 inc/helpdesk.class.php:437
+msgid "Undefined"
+msgstr "未定義"
+
+#: inc/preference.class.php:140
+msgid "Please, select a model in your preferences"
+msgstr "設定でモデルを選択してください"
+
+#: inc/other.class.php:163
+msgid "Add/remove software on a computer"
+msgstr "コンピューターのソフトウェアの追加・削除"
+
+#: inc/other.class.php:166
+msgid "Add/remove version on a software"
+msgstr "ソフトウェアのバージョンの追加・削除"
+
+#: inc/other.class.php:169
+msgid "Add infocom"
+msgstr "Infocom の追加"
+
+#: inc/other.class.php:172
+msgid "Add/remove profile on a user"
+msgstr "ユーザーのプロファイルを追加・削除"
+
+#: inc/other.class.php:175
+msgid "Add/remove group on a user"
+msgstr "グループのユーザーを追加・削除"
+
+#: inc/other.class.php:178
+msgid "User deleted from LDAP"
+msgstr "LDAP から削除されたユーザー"
+
+#: inc/other.class.php:194
+msgid "Webservice logs"
+msgstr "Web サービスログ"
+
+#: inc/other.class.php:198
+msgid "OCS Infos"
+msgstr "OCS 情報"
+
+#: inc/other.class.php:201
+msgid "Add/update/remove device"
+msgstr "デバイスの追加・更新・削除"
+
+#: inc/other.class.php:204
+msgid "Add/remove relation"
+msgstr "関係を追加・削除"
+
+#: inc/other.class.php:207
+msgid "Add/remove item"
+msgstr "アイテムの追加・削除"
+
+#: inc/other.class.php:210
+msgid "Comments & date_mod changes"
+msgstr "コメントと変更日の変更"
+
+#: inc/other.class.php:227
+msgid "Genericobject plugin logs"
+msgstr "「Genelicobject」プラグイン ログ"
+
+#: inc/notification.class.php:65 inc/notification.class.php:86
+#: inc/notification.class.php:166
+msgid "Notification for \"More Reporting\""
+msgstr "「追加レポート」通知"
+
+#: inc/notification.class.php:70
 msgid ""
 "\n"
 "<p>Hello,</p>\n"
@@ -29,101 +247,11 @@ msgid ""
 "\n"
 msgstr "\n<p>こんにちは</p>\n\n<p>GLPI レポートの準備ができました。<br />\nこのメールの末尾で確認してください。</p>\n\n"
 
-#: inc/dashboard.class.php:112
-msgid "Add a report"
-msgstr "レポートの追加"
-
-#: inc/other.class.php:81
-msgid "Add infocom"
-msgstr "Infocom の追加"
-
-#: inc/other.class.php:87
-msgid "Add/remove group on a user"
-msgstr "グループのユーザーを追加・削除"
-
-#: inc/other.class.php:111
-msgid "Add/remove item"
-msgstr "アイテムの追加・削除"
-
-#: inc/other.class.php:84
-msgid "Add/remove profile on a user"
-msgstr "ユーザーのプロファイルを追加・削除"
-
-#: inc/other.class.php:108
-msgid "Add/remove relation"
-msgstr "関係を追加・削除"
-
-#: inc/other.class.php:75
-msgid "Add/remove software on a computer"
-msgstr "コンピューターのソフトウェアの追加・削除"
-
-#: inc/other.class.php:78
-msgid "Add/remove version on a software"
-msgstr "ソフトウェアのバージョンの追加・削除"
-
-#: inc/other.class.php:105
-msgid "Add/update/remove device"
-msgstr "デバイスの追加・更新・削除"
-
-#: inc/config.class.php:139 inc/config.class.php:796
-msgid "Additional condition for MySQL"
-msgstr "MySQL への追加条件"
-
-#: inc/pdf.class.php:47
-msgid "Automaticaly generated by GLPI"
-msgstr "GLPI による自動生成"
-
-#: inc/config.class.php:156
-msgid "Class"
-msgstr "クラス"
-
-#: inc/other.class.php:114
-msgid "Comments & date_mod changes"
-msgstr "コメントと変更日の変更"
-
-#: inc/config.class.php:41
-msgid "Configuration"
-msgstr "設定"
-
-#: inc/dashboard.class.php:212
-msgid "Configure report"
-msgstr "レポート設定"
-
-#: inc/config.class.php:95 inc/config.class.php:729
-msgid "Curve lines (SVG)"
-msgstr "曲線（SVG）"
-
-#: ajax/homepage_link.php:37 inc/dashboard.class.php:39
-#: inc/common.class.php:66 inc/common.class.php:67 inc/common.class.php:83
-msgid "Dashboard"
-msgstr "ダッシュボード"
-
-#: inc/dashboard.class.php:105
-msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "ダッシュボードが空です。アイコンをクリックしてレポートを追加してください"
-
-#: inc/config.class.php:164 inc/config.class.php:697
-msgid "Default chart format"
-msgstr "標準グラフ形式"
-
-#: inc/config.class.php:131 inc/config.class.php:783
-msgid "Default delay"
-msgstr "標準期間"
-
-#: inc/pdf.class.php:46 inc/notification.class.php:76
+#: inc/notification.class.php:77 inc/pdf.class.php:47
 msgid "GLPI statistics reports"
 msgstr "GLPI 統計レポート"
 
-#: front/popup.php:39 inc/common.class.php:1188 inc/common.class.php:1195
-#: inc/common.class.php:1203
-msgid "General Report - ODT"
-msgstr "総合レポート - ODT"
-
-#: inc/other.class.php:122
-msgid "Genericobject plugin logs"
-msgstr "「Genelicobject」プラグイン ログ"
-
-#: inc/notification.class.php:77
+#: inc/notification.class.php:78
 msgid ""
 "Hello,\n"
 "\n"
@@ -132,144 +260,10 @@ msgid ""
 "\n"
 msgstr "こんにちは\n\nGLPI レポートの準備ができました。\nこのメールにファイルを添付しています。\n\n"
 
-#: inc/config.class.php:265
-msgid "Initialize graphics configuration"
-msgstr "画像設定の初期化"
-
-#: inc/common.class.php:1605
-msgid "Max depth entity level"
-msgstr "エンティティーレベル最大深度"
-
-#: inc/common.class.php:1468
-msgid "Month"
-msgstr "月"
-
-#: setup.php:187 front/central.php:34 front/dashboard.form.php:57
-#: front/dashboard.form.php:62 front/graph.php:40 front/config.form.php:54
-#: front/config.php:43 front/preference.form.php:45
-#: inc/notificationtargetnotification.class.php:37 inc/common.class.php:52
-#: inc/profile.class.php:41 inc/preference.class.php:199
-#: inc/notification.class.php:47
-msgid "More Reporting"
-msgstr "追加レポート"
-
-#: inc/graph.class.php:162 inc/graph.class.php:364 inc/graph.class.php:565
-#: inc/graph.class.php:829 inc/graph.class.php:1052 inc/graph.class.php:1286
-#: inc/graph.class.php:1532 inc/graphpng.class.php:602
-#: inc/graphpng.class.php:798 inc/graphpng.class.php:1033
-#: inc/graphpng.class.php:1370 inc/graphpng.class.php:1618
-#: inc/graphpng.class.php:1956 inc/graphpng.class.php:2274
-msgid "No data for this date range !"
-msgstr "この日付範囲にはデータがありません！"
-
-#: inc/common.class.php:1204
-msgid "No graphic selected"
-msgstr "画像を選択していません"
-
-#: inc/common.class.php:1196
-msgid "No model available"
-msgstr "有効なモデルがありません"
-
-#: front/central.php:74 front/central.php:80 inc/common.class.php:341
-#: inc/common.class.php:409 inc/config.class.php:684
-msgid "No report is available !"
-msgstr "有効なレポートがありません！"
-
-#: inc/notification.class.php:64 inc/notification.class.php:85
-#: inc/notification.class.php:160
-msgid "Notification for \"More Reporting\""
-msgstr "「追加レポート」通知"
-
-#: inc/notification.class.php:187
+#: inc/notification.class.php:193
 msgid "Notification(s) sent !"
 msgstr "通知を送信しました！"
 
-#: inc/common.class.php:964
-msgid "Number"
-msgstr "数"
-
-#: inc/other.class.php:102
-msgid "OCS Infos"
-msgstr "OCS 情報"
-
-#: inc/config.class.php:587
-msgid "Object already exists"
-msgstr "オブジェクトがすでに存在します"
-
-#: inc/config.class.php:501 inc/config.class.php:518
-msgid "On mouse over"
-msgstr "マウスオーバー時"
-
-#: inc/common.class.php:1189 inc/preference.class.php:140
-msgid "Please, select a model in your preferences"
-msgstr "設定でモデルを選択してください"
-
-#: inc/common.class.php:69 inc/common.class.php:70 inc/common.class.php:92
-msgid "Reports list"
-msgstr "レポート一覧"
-
-#: inc/config.class.php:114 inc/config.class.php:756
-msgid "Reverse data array"
-msgstr "日付逆順"
-
-#: inc/profile.class.php:75 inc/profile.class.php:236
-#: inc/profile.class.php:311
-msgid "Rights management"
-msgstr "権限管理"
-
-#: inc/config.class.php:86 inc/config.class.php:714
-msgid "See area"
-msgstr "エリアを表示"
-
-#: inc/config.class.php:147 inc/config.class.php:692
-msgid "See graphic"
-msgstr "画像を表示"
-
-#: inc/config.class.php:104 inc/config.class.php:741
-msgid "See values"
-msgstr "値を表示"
-
-#: inc/dashboard.class.php:138
-msgid "Select a report to add"
-msgstr "追加するレポートを選択"
-
-#: inc/dashboard.class.php:94
-msgid "Select a report to display"
-msgstr "表示するレポートを選択"
-
-#: inc/config.class.php:173 inc/config.class.php:810
-msgid "Send this report with the notification"
-msgstr "このレポートを通知付きで送信"
-
-#: inc/helpdesk.class.php:302 inc/helpdesk.class.php:366
-msgid "Undefined"
-msgstr "未定義"
-
-#: inc/config.class.php:123 inc/config.class.php:768
-msgid "Unit"
-msgstr "単位"
-
-#: inc/other.class.php:90
-msgid "User deleted from LDAP"
-msgstr "LDAP から削除されたユーザー"
-
-#: inc/other.class.php:98
-msgid "Webservice logs"
-msgstr "Web サービスログ"
-
-#: inc/common.class.php:1467
-msgid "Week"
-msgstr "週"
-
-#: ajax/dropdownExport.php:44 inc/common.class.php:534
-msgid "With data"
-msgstr "データ有"
-
-#: ajax/dropdownExport.php:45 inc/common.class.php:533
-msgid "Without data"
-msgstr "データなし"
-
-#: inc/common.class.php:985 inc/common.class.php:1301
-#: inc/common.class.php:1317
-msgid "data"
-msgstr "データ"
+#: inc/pdf.class.php:48
+msgid "Automaticaly generated by GLPI"
+msgstr "GLPI による自動生成"
