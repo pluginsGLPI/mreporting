@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-30 01:23+0000\n"
+"POT-Creation-Date: 2025-07-03 01:46+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: feonsu <feonsu@gmail.com>, 2023\n"
 "Language-Team: Slovak (Slovakia) (http://app.transifex.com/teclib/glpi-project-plugin-mreporting/language/sk_SK/)\n"
@@ -18,7 +18,225 @@ msgstr ""
 "Language: sk_SK\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
-#: inc/notification.class.php:69
+#: front/config.form.php:54 front/preference.form.php:45 front/config.php:43
+#: front/graph.php:40 front/dashboard.form.php:57 front/dashboard.form.php:62
+#: front/central.php:34 inc/common.class.php:52 inc/profile.class.php:41
+#: inc/notificationtargetnotification.class.php:37
+#: inc/preference.class.php:200 inc/notification.class.php:47 setup.php:191
+msgid "More Reporting"
+msgstr "Dodatočné reporty"
+
+#: front/popup.php:39 inc/common.class.php:1185
+msgid "General Report - ODT"
+msgstr "Všeobecný report - ODT"
+
+#: front/central.php:84 front/central.php:90 inc/common.class.php:338
+#: inc/common.class.php:406 inc/config.class.php:666
+msgid "No report is available !"
+msgstr "Nie je k dispozícii žiadny report!"
+
+#: inc/common.class.php:64 inc/common.class.php:65 inc/common.class.php:81
+#: inc/dashboard.class.php:39 ajax/homepage_link.php:37
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: inc/common.class.php:67 inc/common.class.php:68 inc/common.class.php:90
+msgid "Reports list"
+msgstr "Zoznam reportov"
+
+#: inc/common.class.php:530 ajax/dropdownExport.php:45
+msgid "Without data"
+msgstr "Bez dát"
+
+#: inc/common.class.php:531 ajax/dropdownExport.php:44
+msgid "With data"
+msgstr "S dátami"
+
+#: inc/common.class.php:969
+msgid "Number"
+msgstr "Počet"
+
+#: inc/common.class.php:990 inc/common.class.php:1284
+#: inc/common.class.php:1304
+msgid "data"
+msgstr "dáta"
+
+#: inc/common.class.php:1186
+msgid "No graphic selected"
+msgstr "Nebol vybraný žiaden graf"
+
+#: inc/common.class.php:1469
+msgid "Week"
+msgstr "Týždeň"
+
+#: inc/common.class.php:1470
+msgid "Month"
+msgstr "Mesiac"
+
+#: inc/common.class.php:1606
+msgid "Max depth entity level"
+msgstr "Maximálna hĺbka úrovne entity"
+
+#: inc/graphpng.class.php:610 inc/graphpng.class.php:812
+#: inc/graphpng.class.php:1056 inc/graphpng.class.php:1400
+#: inc/graphpng.class.php:1655 inc/graphpng.class.php:2002
+#: inc/graphpng.class.php:2334 inc/graph.class.php:169 inc/graph.class.php:375
+#: inc/graph.class.php:582 inc/graph.class.php:853 inc/graph.class.php:1082
+#: inc/graph.class.php:1322 inc/graph.class.php:1578
+msgid "No data for this date range !"
+msgstr "Nenašli sa žiadne dáta pre tento rozsah dátumov!"
+
+#: inc/config.class.php:41
+msgid "Configuration"
+msgstr "Konfigurácia"
+
+#: inc/config.class.php:86 inc/config.class.php:696
+msgid "See area"
+msgstr "Zobraziť oblasť"
+
+#: inc/config.class.php:95 inc/config.class.php:711
+msgid "Curve lines (SVG)"
+msgstr "Krivky (SVG)"
+
+#: inc/config.class.php:104 inc/config.class.php:723
+msgid "See values"
+msgstr "Zobraziť hodnoty"
+
+#: inc/config.class.php:114 inc/config.class.php:738
+msgid "Reverse data array"
+msgstr "Reverzné pole dát"
+
+#: inc/config.class.php:123 inc/config.class.php:750
+msgid "Unit"
+msgstr "Jednotka"
+
+#: inc/config.class.php:131 inc/config.class.php:765
+msgid "Default delay"
+msgstr "Predvolené oneskorenie"
+
+#: inc/config.class.php:139 inc/config.class.php:778
+msgid "Additional condition for MySQL"
+msgstr "Ďalšia podmienka pre MySQL"
+
+#: inc/config.class.php:147 inc/config.class.php:674
+msgid "See graphic"
+msgstr "Zobraziť graf"
+
+#: inc/config.class.php:156
+msgid "Class"
+msgstr "Trieda"
+
+#: inc/config.class.php:164 inc/config.class.php:679
+msgid "Default chart format"
+msgstr "Predvolený formát grafu"
+
+#: inc/config.class.php:173 inc/config.class.php:792
+msgid "Send this report with the notification"
+msgstr "Odoslať tento report s oznámením"
+
+#: inc/config.class.php:249
+msgid "Initialize graphics configuration"
+msgstr "Inicializovať konfiguráciu grafiky"
+
+#: inc/config.class.php:482 inc/config.class.php:499
+msgid "On mouse over"
+msgstr "Pri presunutí kurzora myši"
+
+#: inc/config.class.php:568
+msgid "Object already exists"
+msgstr "Objekt už existuje"
+
+#: inc/profile.class.php:76 inc/profile.class.php:244
+#: inc/profile.class.php:324
+msgid "Rights management"
+msgstr "Správa práv"
+
+#: inc/dashboard.class.php:89
+msgid "Select a report to display"
+msgstr "Vyberte report, ktorý chcete zobraziť"
+
+#: inc/dashboard.class.php:100
+msgid "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "Dashboard je prázdny. Kliknutím na ikonu pridáte report"
+
+#: inc/dashboard.class.php:107
+msgid "Add a report"
+msgstr "Pridať report"
+
+#: inc/dashboard.class.php:133
+msgid "Select a report to add"
+msgstr "Vyberte report, ktorý chcete pridať"
+
+#: inc/dashboard.class.php:207
+msgid "Configure report"
+msgstr "Konfigurácia reportu"
+
+#: inc/helpdesk.class.php:361 inc/helpdesk.class.php:437
+msgid "Undefined"
+msgstr "Nedefinované"
+
+#: inc/preference.class.php:140
+msgid "Please, select a model in your preferences"
+msgstr "Vo svojich nastaveniach vyberte model"
+
+#: inc/other.class.php:163
+msgid "Add/remove software on a computer"
+msgstr "Pridanie/odstránenie softvéru v počítači"
+
+#: inc/other.class.php:166
+msgid "Add/remove version on a software"
+msgstr "Pridanie/odstránenie verzie softvéru"
+
+#: inc/other.class.php:169
+msgid "Add infocom"
+msgstr "Pridanie finančných informácií"
+
+#: inc/other.class.php:172
+msgid "Add/remove profile on a user"
+msgstr "Pridanie/odstránenie profilu používateľa"
+
+#: inc/other.class.php:175
+msgid "Add/remove group on a user"
+msgstr "Pridanie/odstránenie skupiny používateľa"
+
+#: inc/other.class.php:178
+msgid "User deleted from LDAP"
+msgstr "Používateľ odstránený z LDAP"
+
+#: inc/other.class.php:194
+msgid "Webservice logs"
+msgstr "Logy webovej služby"
+
+#: inc/other.class.php:198
+msgid "OCS Infos"
+msgstr "Informácie z OCS"
+
+#: inc/other.class.php:201
+msgid "Add/update/remove device"
+msgstr "Pridanie/aktualizácia/odstránenie zariadenia"
+
+#: inc/other.class.php:204
+msgid "Add/remove relation"
+msgstr "Pridanie/odstránenie vzťahu"
+
+#: inc/other.class.php:207
+msgid "Add/remove item"
+msgstr "Pridanie/odstránenie položky"
+
+#: inc/other.class.php:210
+msgid "Comments & date_mod changes"
+msgstr "Komentáre a zmeny date_mod"
+
+#: inc/other.class.php:227
+msgid "Genericobject plugin logs"
+msgstr "Logy pluginu Genericobject"
+
+#: inc/notification.class.php:65 inc/notification.class.php:86
+#: inc/notification.class.php:166
+msgid "Notification for \"More Reporting\""
+msgstr "Oznámenie pre \"Dodatočné reporty\""
+
+#: inc/notification.class.php:70
 msgid ""
 "\n"
 "<p>Hello,</p>\n"
@@ -28,101 +246,11 @@ msgid ""
 "\n"
 msgstr "\n<p>Dobrý deň,</p>\n\n<p>K dispozícii sú GLPI reporty.<br />\nNájdete ich priložené v tomto e-maili.</p>\n\n"
 
-#: inc/dashboard.class.php:112
-msgid "Add a report"
-msgstr "Pridať report"
-
-#: inc/other.class.php:81
-msgid "Add infocom"
-msgstr "Pridanie finančných informácií"
-
-#: inc/other.class.php:87
-msgid "Add/remove group on a user"
-msgstr "Pridanie/odstránenie skupiny používateľa"
-
-#: inc/other.class.php:111
-msgid "Add/remove item"
-msgstr "Pridanie/odstránenie položky"
-
-#: inc/other.class.php:84
-msgid "Add/remove profile on a user"
-msgstr "Pridanie/odstránenie profilu používateľa"
-
-#: inc/other.class.php:108
-msgid "Add/remove relation"
-msgstr "Pridanie/odstránenie vzťahu"
-
-#: inc/other.class.php:75
-msgid "Add/remove software on a computer"
-msgstr "Pridanie/odstránenie softvéru v počítači"
-
-#: inc/other.class.php:78
-msgid "Add/remove version on a software"
-msgstr "Pridanie/odstránenie verzie softvéru"
-
-#: inc/other.class.php:105
-msgid "Add/update/remove device"
-msgstr "Pridanie/aktualizácia/odstránenie zariadenia"
-
-#: inc/config.class.php:139 inc/config.class.php:796
-msgid "Additional condition for MySQL"
-msgstr "Ďalšia podmienka pre MySQL"
-
-#: inc/pdf.class.php:47
-msgid "Automaticaly generated by GLPI"
-msgstr "Automaticky generované systémom GLPI"
-
-#: inc/config.class.php:156
-msgid "Class"
-msgstr "Trieda"
-
-#: inc/other.class.php:114
-msgid "Comments & date_mod changes"
-msgstr "Komentáre a zmeny date_mod"
-
-#: inc/config.class.php:41
-msgid "Configuration"
-msgstr "Konfigurácia"
-
-#: inc/dashboard.class.php:212
-msgid "Configure report"
-msgstr "Konfigurácia reportu"
-
-#: inc/config.class.php:95 inc/config.class.php:729
-msgid "Curve lines (SVG)"
-msgstr "Krivky (SVG)"
-
-#: ajax/homepage_link.php:37 inc/dashboard.class.php:39
-#: inc/common.class.php:66 inc/common.class.php:67 inc/common.class.php:83
-msgid "Dashboard"
-msgstr "Dashboard"
-
-#: inc/dashboard.class.php:105
-msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "Dashboard je prázdny. Kliknutím na ikonu pridáte report"
-
-#: inc/config.class.php:164 inc/config.class.php:697
-msgid "Default chart format"
-msgstr "Predvolený formát grafu"
-
-#: inc/config.class.php:131 inc/config.class.php:783
-msgid "Default delay"
-msgstr "Predvolené oneskorenie"
-
-#: inc/pdf.class.php:46 inc/notification.class.php:76
+#: inc/notification.class.php:77 inc/pdf.class.php:47
 msgid "GLPI statistics reports"
 msgstr "Štatistické reporty GLPI"
 
-#: front/popup.php:39 inc/common.class.php:1188 inc/common.class.php:1195
-#: inc/common.class.php:1203
-msgid "General Report - ODT"
-msgstr "Všeobecný report - ODT"
-
-#: inc/other.class.php:122
-msgid "Genericobject plugin logs"
-msgstr "Logy pluginu Genericobject"
-
-#: inc/notification.class.php:77
+#: inc/notification.class.php:78
 msgid ""
 "Hello,\n"
 "\n"
@@ -131,144 +259,10 @@ msgid ""
 "\n"
 msgstr "Dobrý deň,\n\nK dispozícii sú GLPI reporty.\nNájdete ich priložene v tomto e-maili.\n\n"
 
-#: inc/config.class.php:265
-msgid "Initialize graphics configuration"
-msgstr "Inicializovať konfiguráciu grafiky"
-
-#: inc/common.class.php:1605
-msgid "Max depth entity level"
-msgstr "Maximálna hĺbka úrovne entity"
-
-#: inc/common.class.php:1468
-msgid "Month"
-msgstr "Mesiac"
-
-#: setup.php:187 front/central.php:34 front/dashboard.form.php:57
-#: front/dashboard.form.php:62 front/graph.php:40 front/config.form.php:54
-#: front/config.php:43 front/preference.form.php:45
-#: inc/notificationtargetnotification.class.php:37 inc/common.class.php:52
-#: inc/profile.class.php:41 inc/preference.class.php:199
-#: inc/notification.class.php:47
-msgid "More Reporting"
-msgstr "Dodatočné reporty"
-
-#: inc/graph.class.php:162 inc/graph.class.php:364 inc/graph.class.php:565
-#: inc/graph.class.php:829 inc/graph.class.php:1052 inc/graph.class.php:1286
-#: inc/graph.class.php:1532 inc/graphpng.class.php:602
-#: inc/graphpng.class.php:798 inc/graphpng.class.php:1033
-#: inc/graphpng.class.php:1370 inc/graphpng.class.php:1618
-#: inc/graphpng.class.php:1956 inc/graphpng.class.php:2274
-msgid "No data for this date range !"
-msgstr "Nenašli sa žiadne dáta pre tento rozsah dátumov!"
-
-#: inc/common.class.php:1204
-msgid "No graphic selected"
-msgstr "Nebol vybraný žiaden graf"
-
-#: inc/common.class.php:1196
-msgid "No model available"
-msgstr "Nie je k dispozícii žiadny model"
-
-#: front/central.php:74 front/central.php:80 inc/common.class.php:341
-#: inc/common.class.php:409 inc/config.class.php:684
-msgid "No report is available !"
-msgstr "Nie je k dispozícii žiadny report!"
-
-#: inc/notification.class.php:64 inc/notification.class.php:85
-#: inc/notification.class.php:160
-msgid "Notification for \"More Reporting\""
-msgstr "Oznámenie pre \"Dodatočné reporty\""
-
-#: inc/notification.class.php:187
+#: inc/notification.class.php:193
 msgid "Notification(s) sent !"
 msgstr "Oznámenia boli odoslané!"
 
-#: inc/common.class.php:964
-msgid "Number"
-msgstr "Počet"
-
-#: inc/other.class.php:102
-msgid "OCS Infos"
-msgstr "Informácie z OCS"
-
-#: inc/config.class.php:587
-msgid "Object already exists"
-msgstr "Objekt už existuje"
-
-#: inc/config.class.php:501 inc/config.class.php:518
-msgid "On mouse over"
-msgstr "Pri presunutí kurzora myši"
-
-#: inc/common.class.php:1189 inc/preference.class.php:140
-msgid "Please, select a model in your preferences"
-msgstr "Vo svojich nastaveniach vyberte model"
-
-#: inc/common.class.php:69 inc/common.class.php:70 inc/common.class.php:92
-msgid "Reports list"
-msgstr "Zoznam reportov"
-
-#: inc/config.class.php:114 inc/config.class.php:756
-msgid "Reverse data array"
-msgstr "Reverzné pole dát"
-
-#: inc/profile.class.php:75 inc/profile.class.php:236
-#: inc/profile.class.php:311
-msgid "Rights management"
-msgstr "Správa práv"
-
-#: inc/config.class.php:86 inc/config.class.php:714
-msgid "See area"
-msgstr "Zobraziť oblasť"
-
-#: inc/config.class.php:147 inc/config.class.php:692
-msgid "See graphic"
-msgstr "Zobraziť graf"
-
-#: inc/config.class.php:104 inc/config.class.php:741
-msgid "See values"
-msgstr "Zobraziť hodnoty"
-
-#: inc/dashboard.class.php:138
-msgid "Select a report to add"
-msgstr "Vyberte report, ktorý chcete pridať"
-
-#: inc/dashboard.class.php:94
-msgid "Select a report to display"
-msgstr "Vyberte report, ktorý chcete zobraziť"
-
-#: inc/config.class.php:173 inc/config.class.php:810
-msgid "Send this report with the notification"
-msgstr "Odoslať tento report s oznámením"
-
-#: inc/helpdesk.class.php:302 inc/helpdesk.class.php:366
-msgid "Undefined"
-msgstr "Nedefinované"
-
-#: inc/config.class.php:123 inc/config.class.php:768
-msgid "Unit"
-msgstr "Jednotka"
-
-#: inc/other.class.php:90
-msgid "User deleted from LDAP"
-msgstr "Používateľ odstránený z LDAP"
-
-#: inc/other.class.php:98
-msgid "Webservice logs"
-msgstr "Logy webovej služby"
-
-#: inc/common.class.php:1467
-msgid "Week"
-msgstr "Týždeň"
-
-#: ajax/dropdownExport.php:44 inc/common.class.php:534
-msgid "With data"
-msgstr "S dátami"
-
-#: ajax/dropdownExport.php:45 inc/common.class.php:533
-msgid "Without data"
-msgstr "Bez dát"
-
-#: inc/common.class.php:985 inc/common.class.php:1301
-#: inc/common.class.php:1317
-msgid "data"
-msgstr "dáta"
+#: inc/pdf.class.php:48
+msgid "Automaticaly generated by GLPI"
+msgstr "Automaticky generované systémom GLPI"
