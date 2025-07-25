@@ -302,7 +302,7 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num)
     /** @var array $LANG */
     global $LANG;
 
-    $searchopt = &Search::getOptions($type);
+    $searchopt = Search::getOptions($type);
     $table     = $searchopt[$ID]['table'];
     $field     = $searchopt[$ID]['field'];
 

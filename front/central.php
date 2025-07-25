@@ -28,7 +28,8 @@
  * -------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+/** @var array $CFG_GLPI */
+global $CFG_GLPI;
 
 Session::checkLoginUser();
 Html::header(__('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'dashboard_list');
@@ -39,7 +40,7 @@ $reports = $common->getAllReports();
 $tabs    = [];
 foreach ($reports as $classname => $report) {
     $tabs[$classname] = ['title' => $report['title'],
-        'url'                    => Plugin::getWebDir('mreporting') . '/ajax/common.tabs.php',
+        'url'                    => $CFG_GLPI['root_doc'] . '/plugins/mreporting/ajax/common.tabs.php',
         'params'                 => 'target=' . $_SERVER['PHP_SELF'] . "&classname=$classname",
     ];
 }

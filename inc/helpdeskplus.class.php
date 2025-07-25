@@ -1236,7 +1236,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         /** @var array $LANG */
         global $LANG;
 
-        echo '<br /><b>' . $LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus'] . ' : </b><br />';
+        echo '<br /><b>' . htmlspecialchars($LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']) . ' : </b><br />';
 
         // Opened
         echo '<label>';
@@ -1245,7 +1245,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         echo (!isset($_SESSION['mreporting_values']['show_new'])
             || ($_SESSION['mreporting_values']['show_new'] == '1')) ? ' checked="checked"' : '';
         echo ' /> ';
-        echo $LANG['plugin_mreporting']['Helpdeskplus']['opened'];
+        echo htmlspecialchars($LANG['plugin_mreporting']['Helpdeskplus']['opened']);
         echo '</label>';
 
         // Solved
@@ -1267,7 +1267,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         echo (!isset($_SESSION['mreporting_values']['show_backlog'])
             || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? ' checked="checked"' : '';
         echo ' /> ';
-        echo $LANG['plugin_mreporting']['Helpdeskplus']['backlogs'];
+        echo htmlspecialchars($LANG['plugin_mreporting']['Helpdeskplus']['backlogs']);
         echo '</label>';
 
         // Closed

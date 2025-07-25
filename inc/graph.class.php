@@ -40,26 +40,28 @@ class PluginMreportingGraph
     */
     public function initGraph($options)
     {
-        /** @var array $LANG */
-        global $LANG;
+        /** @var array $LANG
+         *  @var array $CFG_GLPI
+        */
+        global $LANG, $CFG_GLPI;
 
         $width    = $this->width + 100;
-        $randname = $options['randname'];
+        $randname = htmlspecialchars($options['randname']);
 
         if (!$options['showHeader']) {
-            echo "<div class='center'><div id='fig' style='width:{$width}px'>";
+            echo "<div class='center'><div id='fig' style='width:{" . htmlspecialchars($width) . "}px'>";
             //Show global title
             if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
                 echo "<div class='graph_title'>";
-                echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+                echo htmlspecialchars($LANG['plugin_mreporting'][$options['short_classname']]['title']);
                 echo '</div>';
             }
             //Show graph title
             echo "<div class='graph_title'>";
-            $gtype = $_REQUEST['gtype'];
+            $gtype = htmlspecialchars($_REQUEST['gtype']);
 
-            echo "<img src='" . Plugin::getWebDir('mreporting') . "/pics/chart-$gtype.png' class='title_pics' />";
-            echo $options['title'];
+            echo "<img src='" . $CFG_GLPI['root_doc'] . "'/plugins/mreporting/pics/chart-$gtype.png' class='title_pics' />";
+            echo htmlspecialchars($options['title']);
             echo '</div>';
 
             $desc = '';
@@ -80,7 +82,7 @@ class PluginMreportingGraph
                 $desc .= Html::convdate($_SESSION['mreporting_values']['date1' . $randname]) . ' / ' .
                 Html::convdate($_SESSION['mreporting_values']['date2' . $randname]);
             }
-            echo "<div class='graph_desc'>" . $desc . '</div>';
+            echo "<div class='graph_desc'>" . htmlspecialchars($desc) . '</div>';
 
             //Show date selector
             echo "<div class='graph_navigation'>";

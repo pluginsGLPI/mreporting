@@ -52,14 +52,17 @@ class PluginMreportingCommon extends CommonDBTM
         return __('More Reporting', 'mreporting');
     }
 
-    public static function canCreate()
+    public static function canCreate(): bool
     {
         return false;
     }
 
     public static function getMenuContent()
     {
-        $web_full_dir = Plugin::getWebDir('mreporting');
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
+        $web_full_dir = $CFG_GLPI['url_base'] . 'plugins/mreporting';
         $img_db       = "<img src='" . $web_full_dir . "/pics/dashboard.png'
                            title='" . __('Dashboard', 'mreporting') . "'
                            alt='" . __('Dashboard', 'mreporting') . "'>";
@@ -67,9 +70,9 @@ class PluginMreportingCommon extends CommonDBTM
                            title='" . __('Reports list', 'mreporting') . "'
                            alt='" . __('Reports list', 'mreporting') . "'>";
 
-        $web_rel_dir   = Plugin::getWebDir('mreporting', false);
-        $url_central   = "/$web_rel_dir/front/central.php";
-        $url_dashboard = "/$web_rel_dir/front/dashboard.php";
+        $web_rel_dir   = '/plugins/mreporting';
+        $url_central   = "$web_rel_dir/front/central.php";
+        $url_dashboard = "$web_rel_dir/front/dashboard.php";
 
         $menu = parent::getMenuContent();
 
@@ -308,10 +311,10 @@ class PluginMreportingCommon extends CommonDBTM
                                     $option_value = $value['id'];
                                 }
                                 $icon = self::getReportIcon($value['function']);
-                                $select .= "<option value='$option_value' title=\"" .
-                                Html::cleanInputText($comment) .
+                                $select .= "<option value='" . htmlspecialchars($option_value) . "' title=\"" .
+                                htmlspecialchars($comment) .
                                 '">&nbsp;&nbsp;&nbsp;' . $icon . '&nbsp;' .
-                                $value['title'] . '</option>';
+                                htmlspecialchars($value['title']) . '</option>';
                             }
                         }
                     }
@@ -356,7 +359,7 @@ class PluginMreportingCommon extends CommonDBTM
             if (isset($graphs[$classname])) {
                 foreach ($graphs[$classname] as $cat => $graph) {
                     if (self::haveSomeThingToShow($graph)) {
-                        echo "<tr class='tab_bg_1'><th colspan='4'>" . $cat . '</th></tr>';
+                        echo "<tr class='tab_bg_1'><th colspan='4'>" . htmlspecialchars($cat) . '</th></tr>';
                         foreach ($graph as $k => $v) {
                             if ($v['right'] && $v['is_active']) {
                                 if ($i % $nb_per_line == 0) {
@@ -367,9 +370,9 @@ class PluginMreportingCommon extends CommonDBTM
                                 }
 
                                 echo '<td>';
-                                echo "<a href='" . $v['url_graph'] . "'>";
-                                echo "<img src='" . $v['pic'] . "' />&nbsp;";
-                                echo $v['title'];
+                                echo "<a href='" . htmlspecialchars($v['url_graph']) . "'>";
+                                echo "<img src='" . htmlspecialchars($v['pic']) . "' />&nbsp;";
+                                echo htmlspecialchars($v['title']);
                                 echo '</a>';
                                 echo'</td>';
                                 $i++;
@@ -398,8 +401,8 @@ class PluginMreportingCommon extends CommonDBTM
 
                 echo "<div class='f_right'>";
                 echo __('Export') . ' : ';
-                echo "<a href='#' onClick=\"var w = window.open('popup.php?classname=$classname' ,'glpipopup', " .
-                  "'height=$height, width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";
+                echo "<a href='#' onClick=\"var w = window.open('popup.php?classname=" . htmlspecialchars($classname) . "' ,'glpipopup', " .
+                  "'height=" . htmlspecialchars($height) . ", width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";
                 echo 'ODT</a>';
                 echo '</div>';
             } else {
@@ -433,7 +436,7 @@ class PluginMreportingCommon extends CommonDBTM
         if ($classname) {
             echo "<div align='center'>";
 
-            echo "<form method='POST' action='export.php?switchto=odtall&classname=" . $classname . "'
+            echo "<form method='POST' action='export.php?switchto=odtall&classname=" . htmlspecialchars($classname) . "'
                      id='exportform' name='exportform'>\n";
 
             echo "<table class='tab_cadre_fixe'>";
@@ -454,7 +457,7 @@ class PluginMreportingCommon extends CommonDBTM
                 }
 
                 foreach ($graphs[$classname] as $cat => $graph) {
-                    echo "<tr class='tab_bg_1'><th colspan='4'>" . $cat . '</th></tr>';
+                    echo "<tr class='tab_bg_1'><th colspan='4'>" . htmlspecialchars($cat) . '</th></tr>';
                     foreach ($graph as $k => $v) {
                         if ($v['is_active']) {
                             if ($i % $nb_per_line == 0) {
@@ -465,15 +468,15 @@ class PluginMreportingCommon extends CommonDBTM
                             }
 
                             echo '<td>';
-                            echo "<input type='checkbox' name='check[" . $v['function'] . $classname . "]'";
+                            echo "<input type='checkbox' name='check[" . htmlspecialchars($v['function']) . htmlspecialchars($classname) . "]'";
                             if (isset($_POST['check']) && $_POST['check'] == 'all') {
                                 echo ' checked ';
                             }
                             echo '>';
                             echo '</td>';
                             echo '<td>';
-                            echo "<img src='" . $v['pic'] . "' />&nbsp;";
-                            echo $v['title'];
+                            echo "<img src='" . htmlspecialchars($v['pic']) . "' />&nbsp;";
+                            echo htmlspecialchars($v['title']);
                             echo '</td>';
                             $i++;
                         }
@@ -520,12 +523,12 @@ class PluginMreportingCommon extends CommonDBTM
             $arrow = 'fas fa-level-up-alt';
 
             echo '<tr>';
-            echo "<td><i class='$arrow fa-flip-horizontal fa-lg mx-2'></i></td>";
+            echo "<td><i class='" . htmlspecialchars($arrow) . " fa-flip-horizontal fa-lg mx-2'></i></td>";
             echo "<td class='center' style='white-space:nowrap;'>";
-            echo "<a onclick= \"if ( markCheckboxes('$formname') ) return false;\" href='#'>" . __('Check all') . '</a></td>';
+            echo "<a onclick= \"if ( markCheckboxes('" . htmlspecialchars($formname) . "') ) return false;\" href='#'>" . __('Check all') . '</a></td>';
             echo '<td>/</td>';
             echo "<td class='center' style='white-space:nowrap;'>";
-            echo "<a onclick= \"if ( unMarkCheckboxes('$formname') ) return false;\" href='#'>" . __('Uncheck all') . '</a></td>';
+            echo "<a onclick= \"if ( unMarkCheckboxes('" . htmlspecialchars($formname) . "') ) return false;\" href='#'>" . __('Uncheck all') . '</a></td>';
 
             $option[0] = __('Without data', 'mreporting');
             $option[1] = __('With data', 'mreporting');
@@ -703,7 +706,7 @@ class PluginMreportingCommon extends CommonDBTM
             $p[$key] = $value;
         }
 
-        echo "<select name='switchto' id='" . $p['myname'] . "'>";
+        echo "<select name='switchto' id='" . htmlspecialchars($p['myname']) . "'>";
 
         $elements[0] = Dropdown::EMPTY_VALUE;
         if ($p['gtype'] !== 'sunburst') {
@@ -717,7 +720,7 @@ class PluginMreportingCommon extends CommonDBTM
             }
         }
         foreach ($elements as $key => $val) {
-            echo "<option value='" . $key . "'>" . $val . '</option>';
+            echo "<option value='" . htmlspecialchars($key) . "'>" . htmlspecialchars($val) . '</option>';
         }
 
         echo '</select>';
@@ -742,6 +745,9 @@ class PluginMreportingCommon extends CommonDBTM
     */
     public static function endGraph($options, $dashboard = false)
     {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
         $opt       = $options['opt'];
         $export    = $options['export'];
         $datas     = $options['datas'];
@@ -792,20 +798,20 @@ class PluginMreportingCommon extends CommonDBTM
                         echo '</span>';
                         echo "<span style='float:right'>";
                         if (Session::haveRight('config', UPDATE)) {
-                            echo '<b>' . PluginMreportingConfig::getTypeName() . '</b> : ';
+                            echo '<b>' . htmlspecialchars(PluginMreportingConfig::getTypeName()) . '</b> : ';
                             echo "&nbsp;<a href='config.form.php?name=" . $opt['f_name'] .
-                            '&classname=' . $opt['class'] . "' target='_blank'>";
+                            '&classname=' . htmlspecialchars($opt['class']) . "' target='_blank'>";
                             echo "<img src='../pics/config.png' class='title_pics'/></a>";
                         }
                         if ($randname !== false) {
                             echo '<br><br>';
 
-                            echo "<form method='post' action='export.php?$request_string'
+                            echo "<form method='post' action='export.php?" . htmlspecialchars($request_string) . "'
                         style='margin: 0; padding: 0' target='_blank' id='export_form'>";
 
                             echo '<b>' . __('Export') . '</b> : ';
                             $params = ['myname' => 'ext',
-                                'ajax_page'     => Plugin::getWebDir('mreporting') . '/ajax/dropdownExport.php',
+                                'ajax_page'     => $CFG_GLPI['root_doc'] . '/plugins/mreporting/ajax/dropdownExport.php',
                                 'class'         => __CLASS__,
                                 'span'          => 'show_ext',
                                 'gtype'         => $_REQUEST['gtype'],
@@ -985,7 +991,7 @@ class PluginMreportingCommon extends CommonDBTM
             $img = 'deplier_up.png';
         }
         echo "<img alt='' name='viewimg' src=\"" .
-         $CFG_GLPI['root_doc'] . "/pics/$img\">&nbsp;";
+         $CFG_GLPI['root_doc'] . "/pics/" . htmlspecialchars($img) . "\">&nbsp;";
 
         echo __('data', 'mreporting') . '</a>';
         echo '</th>';
@@ -993,7 +999,7 @@ class PluginMreportingCommon extends CommonDBTM
         echo '</table>';
 
         $visibility = $show_graph ? 'display:none;' : 'display:inline;';
-        echo "<div align='center' style='" . $visibility . "' id='view_datas$rand'>";
+        echo "<div align='center' style='" . htmlspecialchars($visibility) . "' id='view_datas" . htmlspecialchars($rand) . "'>";
         echo "<table class='tab_cadre' width='90%'>";
 
         echo "<tr class='tab_bg_1'>";
@@ -1002,9 +1008,9 @@ class PluginMreportingCommon extends CommonDBTM
         }
         foreach ($datas as $label => $cols) {
             if (!empty($labels2)) {
-                echo '<th>' . $labels2[$label] . '</th>';
+                echo '<th>' . htmlspecialchars($labels2[$label]) . '</th>';
             } else {
-                echo '<th>' . $label . '</th>';
+                echo '<th>' . htmlspecialchars($label) . '</th>';
             }
         }
         echo '</tr>';
@@ -1015,13 +1021,13 @@ class PluginMreportingCommon extends CommonDBTM
         } else {
             foreach ($types as $label2 => $cols) {
                 echo "<tr class='tab_bg_1'>";
-                echo '<td>' . $label2 . '</td>';
+                echo '<td>' . htmlspecialchars($label2) . '</td>';
                 if ($simpledatas) { //simple array
-                    echo "<td class='center'>" . $cols . ' ' . $unit . '</td>';
+                    echo "<td class='center'>" . htmlspecialchars($cols) . ' ' . htmlspecialchars($unit) . '</td>';
                 } else { //multiple array
                     foreach ($cols as $date => $nb) {
                         if (!is_array($nb)) {
-                            echo "<td class='center'>" . $nb . ' ' . $unit . '</td>';
+                            echo "<td class='center'>" . htmlspecialchars($nb) . ' ' . htmlspecialchars($unit) . '</td>';
                         }
                     }
                 }
@@ -1039,28 +1045,28 @@ class PluginMreportingCommon extends CommonDBTM
             arsort($cols);
             foreach ($cols as $label => $value) {
                 echo "<tr class='tab_bg_1'>";
-                echo "<th class='center'>$label</th>";
+                echo "<th class='center'>" . htmlspecialchars($label) . "</th>";
                 echo "<td class='center'>";
                 if (is_array($value)) {
                     echo "<table class='tab_cadre' width='90%'>";
                     self::showGraphTreeDatas($value);
                     echo '</table>';
                 } else {
-                    echo $value;
+                    echo htmlspecialchars($value);
                 }
                 echo '</td></tr>';
             }
         } else {
             foreach ($cols as $label => $value) {
                 echo "<tr class='tab_bg_1'>";
-                echo "<th class='center'>$label</th>";
+                echo "<th class='center'>" . htmlspecialchars($label) . "</th>";
                 echo "<td class='center'>";
                 if (is_array($value)) {
                     echo "<table class='tab_cadre' width='90%'>";
                     self::showGraphTreeDatas($value, true);
                     echo '</table>';
                 } else {
-                    echo $value;
+                    echo htmlspecialchars($value);
                 }
                 echo '</td></tr>';
             }
@@ -1321,7 +1327,7 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function selectorForMultipleGroups($field, $condition = [], $label = '')
     {
-        echo '<br /><b>' . $label . ' : </b><br />';
+        echo '<br /><b>' . htmlspecialchars($label) . ' : </b><br />';
 
         $values = [];
         if (isset($_SESSION['mreporting_values'][$field])) {
@@ -1349,7 +1355,7 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function selectorForSingleGroup($field, $condition = [], $label = '')
     {
-        echo '<br /><b>' . $label . ' : </b><br />';
+        echo '<br /><b>' . htmlspecialchars($label) . ' : </b><br />';
 
         $value = isset($_SESSION['mreporting_values'][$field]) ? $_SESSION['mreporting_values'][$field] : 0;
 
@@ -1420,7 +1426,7 @@ class PluginMreportingCommon extends CommonDBTM
          */
         global $LANG, $DB;
 
-        echo '<b>' . $LANG['plugin_mreporting']['Helpdeskplus']['selector']['slas'] . ' : </b><br />';
+        echo '<b>' . htmlspecialchars($LANG['plugin_mreporting']['Helpdeskplus']['selector']['slas']) . ' : </b><br />';
 
         $result = $DB->request([
             'SELECT' => [
@@ -1462,7 +1468,7 @@ class PluginMreportingCommon extends CommonDBTM
         /** @var array $LANG */
         global $LANG;
 
-        echo '<b>' . $LANG['plugin_mreporting']['Helpdeskplus']['period'] . ' : </b><br />';
+        echo '<b>' . htmlspecialchars($LANG['plugin_mreporting']['Helpdeskplus']['period']) . ' : </b><br />';
 
         $elements = [
             'day'   => _n('Day', 'Days', 1),
@@ -1551,8 +1557,8 @@ class PluginMreportingCommon extends CommonDBTM
         $i = 1;
         foreach (Ticket::getAllStatusArray() as $value => $name) {
             echo '<label>';
-            echo '<input type="hidden" name="status_' . $value . '" value="0" /> ';
-            echo '<input type="checkbox" name="status_' . $value . '" value="1"';
+            echo '<input type="hidden" name="status_' . htmlspecialchars($value) . '" value="0" /> ';
+            echo '<input type="checkbox" name="status_' . htmlspecialchars($value) . '" value="1"';
             if (
                 (isset($_SESSION['mreporting_values']['status_' . $value])
                 && ($_SESSION['mreporting_values']['status_' . $value] == '1'))
@@ -1562,7 +1568,7 @@ class PluginMreportingCommon extends CommonDBTM
                 echo ' checked="checked"';
             }
             echo ' /> ';
-            echo $name;
+            echo htmlspecialchars($name);
             echo '</label>';
             if ($i % 3 == 0) {
                 echo '<br />';
@@ -1737,7 +1743,7 @@ class PluginMreportingCommon extends CommonDBTM
 
         echo "<div class='center'>";
         $request_string = self::getRequestString($_GET);
-        echo "<form method='POST' action='?$request_string' name='form' id='mreporting_date_selector'>";
+        echo "<form method='POST' action='?" . htmlspecialchars($request_string) . "' name='form' id='mreporting_date_selector'>";
 
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr class='tab_bg_1'>";
@@ -1756,9 +1762,9 @@ class PluginMreportingCommon extends CommonDBTM
 
         //If there's no selector for the report, there's no need for a reset button !
         if ($has_selector) {
-            echo "<a href='?$request_string&reset=reset'>&nbsp;&nbsp;";
+            echo "<a href='?" . htmlspecialchars($request_string) . "&reset=reset'>&nbsp;&nbsp;";
             echo '<img title="' . __s('Blank') . '" alt="' . __s('Blank') . "\" src='" .
-               $CFG_GLPI['root_doc'] . "/pics/reset.png' class='calendrier'>";
+               htmlspecialchars($CFG_GLPI['root_doc']) . "/pics/reset.png' class='calendrier'>";
             echo '</a>';
         }
         echo '</td>';
@@ -1822,7 +1828,7 @@ class PluginMreportingCommon extends CommonDBTM
         if ($export) {
             return $content;
         }
-        echo $content;
+        echo htmlspecialchars($content);
     }
 
     public static function saveSelectors($graphname, $config = [])

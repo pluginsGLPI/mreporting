@@ -58,8 +58,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
     */
     public function initGraph($options)
     {
-        /** @var array $LANG */
-        global $LANG;
+        /** @var array $LANG
+         *  @var array $CFG_GLPI
+        */
+        global $LANG, $CFG_GLPI;
 
         $randname = $options['randname'];
 
@@ -80,12 +82,12 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             echo "<div class='center'><div id='fig' style='width:{$width}px'>";
             if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
                 echo "<div class='graph_title'>";
-                echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+                echo htmlspecialchars($LANG['plugin_mreporting'][$options['short_classname']]['title']);
                 echo '</div>';
             }
             echo "<div class='graph_title'>";
-            echo "<img src='" . Plugin::getWebDir('mreporting') . "/pics/chart-$prev_function.png' class='title_pics' />";
-            echo $options['title'];
+            echo "<img src='" . $CFG_GLPI['root_doc'] . "'/plugins/mreporting/pics/chart-" . htmlspecialchars($prev_function) . ".png' class='title_pics' />";
+            echo htmlspecialchars($options['title']);
             echo '</div>';
 
             $desc = '';
@@ -106,7 +108,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 $desc .= Html::convdate($_REQUEST['date1' . $randname]) . ' / ' .
                 Html::convdate($_REQUEST['date2' . $randname]);
             }
-            echo "<div class='graph_desc'>" . $desc . '</div>';
+            echo "<div class='graph_desc'>" . htmlspecialchars($desc) . '</div>';
 
             echo "<div class='graph_navigation'>";
             PluginMreportingCommon::showSelector(
@@ -139,8 +141,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                         $filedir  = GLPI_ROOT . "/files/_plugins/mreporting/$filename";
                         file_put_contents($filedir, $contents);
 
-                        echo "<img src='" . $CFG_GLPI['root_doc'] .
-                        '/front/pluginimage.send.php?plugin=mreporting&name=' . $filename .
+                        echo "<img src='" . htmlspecialchars($CFG_GLPI['root_doc']) .
+                        '/front/pluginimage.send.php?plugin=mreporting&name=' . htmlspecialchars($filename) .
                         "' alt='graph' title='graph' />";
 
                         return;
@@ -148,7 +150,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 }
             }
 
-            echo "<img src='data:image/png;base64," . base64_encode($contents)
+            echo "<img src='data:image/png;base64," . htmlspecialchars(base64_encode($contents))
             . "' alt='graph' title='graph' />";
         }
     }

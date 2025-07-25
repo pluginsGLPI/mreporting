@@ -131,14 +131,14 @@ class PluginMreportingNotificationEvent extends NotificationEvent
                                     } else {
                                         $notificationtarget->getFromDB($target['id']);
                                         echo "<tr class='tab_bg_2'>";
-                                        echo '<td>' . $label . '</td>';
-                                        echo '<td>' . $notificationtarget->getNameID() . '</td>';
+                                        echo '<td>' . htmlspecialchars($label) . '</td>';
+                                        echo '<td>' . htmlspecialchars($notificationtarget->getNameID()) . '</td>';
                                         echo '<td>' . sprintf(
                                             __('%1$s (%2$s)'),
                                             $template->getName(),
                                             $users_infos['language'],
                                         ) . '</td>';
-                                        echo '<td>' . $users_infos['email'] . '</td>';
+                                        echo '<td>' . htmlspecialchars($users_infos['email']) . '</td>';
                                         echo '</tr>';
                                     }
                                     $email_processed[$users_infos['language']][$users_infos['email']]

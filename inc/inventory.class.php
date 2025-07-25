@@ -55,7 +55,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             'values'         => $selected_states,
         ];
 
-        echo '<br /><b>' . $label . ' : </b><br />';
+        echo '<br /><b>' . htmlspecialchars($label) . ' : </b><br />';
         Dropdown::showFromArray($field, $datas, $param);
     }
 
