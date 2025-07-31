@@ -28,6 +28,8 @@
  * -------------------------------------------------------------------------
  */
 
+use \Glpi\DBAL\QueryExpression;
+
 class PluginMreportingOther extends PluginMreportingBaseclass
 {
     public function reportHbarLogs($configs = [])

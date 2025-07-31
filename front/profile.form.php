@@ -28,8 +28,6 @@
  * -------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
-
 Session::checkRight('profile', READ);
 
 /** @var DBmysql $DB */
@@ -56,9 +54,12 @@ if (isset($_REQUEST['update'])) {
         }
     }
 } elseif (isset($_REQUEST['add'])) {
-    $query = "SELECT `id`, `name`
-   FROM `glpi_profiles` WHERE `interface` = 'central'
-   ORDER BY `name`";
+   $query = [
+        'SELECT' => ['id', 'name'],
+        'FROM'   => Profile::getTable(),
+        'WHERE'  => ['interface' => 'central'],
+        'ORDER'  => ['name'],
+    ];
 
     foreach ($DB->request($query) as $profile) {
         $access = $_REQUEST[$profile['id']];
@@ -95,9 +96,11 @@ if (isset($_REQUEST['update'])) {
         $profil->update($profil->fields);
     }
 } elseif (isset($_REQUEST['giveNoneAccessForAllProfile'])) {
-    $query = 'SELECT `id`, `name`
-   FROM `glpi_profiles`
-   ORDER BY `name`';
+    $query = [
+        'SELECT' => ['id', 'name'],
+        'FROM'   => Profile::getTable(),
+        'ORDER'  => ['name'],
+    ];
 
     foreach ($DB->request($query) as $profile) {
         $profil->getFromDBByCrit(
@@ -110,9 +113,11 @@ if (isset($_REQUEST['update'])) {
         $profil->update($profil->fields);
     }
 } elseif (isset($_REQUEST['giveReadAccessForAllProfile'])) {
-    $query = 'SELECT `id`, `name`
-   FROM `glpi_profiles`
-   ORDER BY `name`';
+    $query = [
+        'SELECT' => ['id', 'name'],
+        'FROM'   => Profile::getTable(),
+        'ORDER'  => ['name'],
+    ];
 
     foreach ($DB->request($query) as $profile) {
         $profil->getFromDBByCrit(
