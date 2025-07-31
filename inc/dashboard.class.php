@@ -44,6 +44,9 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
         if (
             get_class($item) == 'Central'
             && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])
@@ -56,7 +59,7 @@ class PluginMreportingDashboard extends CommonDBTM
             }
          </script>";
 
-            echo "<iframe src='" . Plugin::getWebDir('mreporting') .
+            echo "<iframe src='" . $CFG_GLPI['root_doc'] . '/plugins/mreporting' .
               "/ajax/dashboard.php?action=centralDashboard' " .
               "frameborder='0' scrolling='no' onload='javascript:resizeIframe(this);'></iframe>";
             echo '</div>';
@@ -67,10 +70,13 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public function showDashBoard($show_reports_dropdown = true)
     {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
         /** @var array $LANG */
         global $LANG;
 
-        $root_ajax = Plugin::getWebDir('mreporting') . '/ajax/dashboard.php';
+        $root_ajax = $CFG_GLPI['root_doc'] . '/plugins/mreporting/ajax/dashboard.php';
 
         $target = $this->getFormURL();
 
@@ -232,7 +238,7 @@ class PluginMreportingDashboard extends CommonDBTM
                     <i class='ti ti-tool'></i>
                </button>
                <span class='mreportingwidget-header-text'>
-                  <a href='" . Plugin::getWebDir('mreporting') . '/front/graph.php?short_classname=' .
+                  <a href='" . $CFG_GLPI['root_doc'] . '/plugins/mreporting/front/graph.php?short_classname=' .
                   $short_classname . '&amp;f_name=' . $f_name . '&amp;gtype=' . $gtype . "' target='_top'>
                      &nbsp;$title
                   </a>
@@ -314,16 +320,16 @@ class PluginMreportingDashboard extends CommonDBTM
             return;
         }
 
-        echo "<form method='POST' action='" . $_REQUEST['target'] . "' name='form' id='mreporting_date_selector'>";
+        echo "<form method='POST' action='" . htmlspecialchars($_REQUEST['target']) . "' name='form' id='mreporting_date_selector'>";
 
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr class='tab_bg_1'>";
         echo $reportSelectors;
         echo '</table>';
 
-        echo "<input type='hidden' name='short_classname' value='" . $_REQUEST['short_classname'] . "' class='submit'>";
-        echo "<input type='hidden' name='f_name' value='" . $_REQUEST['f_name'] . "' class='submit'>";
-        echo "<input type='hidden' name='gtype' value='" . $_REQUEST['gtype'] . "' class='submit'>";
+        echo "<input type='hidden' name='short_classname' value='" . htmlspecialchars($_REQUEST['short_classname']) . "' class='submit'>";
+        echo "<input type='hidden' name='f_name' value='" . htmlspecialchars($_REQUEST['f_name']) . "' class='submit'>";
+        echo "<input type='hidden' name='gtype' value='" . htmlspecialchars($_REQUEST['gtype']) . "' class='submit'>";
         echo "<input type='submit' class='submit' name='saveConfig' value=\"" . _sx('button', 'Post') . '">';
 
         Html::closeForm();

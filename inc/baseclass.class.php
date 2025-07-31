@@ -28,6 +28,8 @@
  * -------------------------------------------------------------------------
  */
 
+use \Glpi\DBAL\QueryExpression;
+
 class PluginMreportingBaseclass
 {
     protected $sql_date;

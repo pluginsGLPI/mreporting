@@ -33,8 +33,6 @@ if (!isset($_POST['saveConfig']) && !isset($_POST['addReports'])) {
 }
 $DBCONNECTION_REQUIRED = 0; // Not really a big SQL request
 
-include('../../../inc/includes.php');
-
 Session::checkLoginUser();
 
 if (isset($_POST['saveConfig'])) {

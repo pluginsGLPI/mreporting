@@ -28,6 +28,10 @@
  * -------------------------------------------------------------------------
  */
 
+use \Glpi\DBAL\QueryExpression;
+use \Glpi\DBAL\QueryUnion;
+use \Glpi\DBAL\QuerySubQuery;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
@@ -837,7 +841,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $query = [
             'SELECT' => [new QueryExpression('ticc.nb_add_group - 1 as nb_add_group')],
             'COUNT' => 'nb_ticket',
-            'FROM' => new \QuerySubQuery($subquery, 'ticc'),
+            'FROM' => new QuerySubQuery($subquery, 'ticc'),
             'GROUPBY' => ['ticc.nb_add_group'],
         ];
         $result = $DB->request($query);
@@ -896,7 +900,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                 new QueryExpression("DATE_FORMAT(" . Ticket::getTable() . ".date, " . $DB->quoteValue($this->period_label) . ") as period_name"),
                 new QueryExpression("ROUND(AVG(actiontime_vs_solvedelay.time_percent), 1) as time_percent"),
             ],
-            'FROM' => new \QuerySubQuery($subquery, 'actiontime_vs_solvedelay'),
+            'FROM' => new QuerySubQuery($subquery, 'actiontime_vs_solvedelay'),
             'LEFT JOIN' => [
                 Ticket::getTable() => [
                     'FKEY' => [
@@ -1240,7 +1244,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         /** @var array $LANG */
         global $LANG;
 
-        echo '<br /><b>' . $LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus'] . ' : </b><br />';
+        echo '<br /><b>' . htmlspecialchars($LANG['plugin_mreporting']['Helpdeskplus']['backlogstatus']) . ' : </b><br />';
 
         // Opened
         echo '<label>';
@@ -1249,7 +1253,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         echo (!isset($_SESSION['mreporting_values']['show_new'])
             || ($_SESSION['mreporting_values']['show_new'] == '1')) ? ' checked="checked"' : '';
         echo ' /> ';
-        echo $LANG['plugin_mreporting']['Helpdeskplus']['opened'];
+        echo htmlspecialchars($LANG['plugin_mreporting']['Helpdeskplus']['opened']);
         echo '</label>';
 
         // Solved
@@ -1271,7 +1275,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         echo (!isset($_SESSION['mreporting_values']['show_backlog'])
             || ($_SESSION['mreporting_values']['show_backlog'] == '1')) ? ' checked="checked"' : '';
         echo ' /> ';
-        echo $LANG['plugin_mreporting']['Helpdeskplus']['backlogs'];
+        echo htmlspecialchars($LANG['plugin_mreporting']['Helpdeskplus']['backlogs']);
         echo '</label>';
 
         // Closed
