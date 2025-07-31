@@ -45,7 +45,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
      * @param array      $options options used
      * @param string     $label   used for debugEvent() (default '')
     **/
-    public static function raiseEvent($event, $item, $options = [], $label = '')
+    public static function raiseEvent($event, $item, $options = [], ?CommonDBTM $trigger = null, $label = '')
     {
         /** @var array $CFG_GLPI */
         global $CFG_GLPI;
@@ -131,14 +131,14 @@ class PluginMreportingNotificationEvent extends NotificationEvent
                                     } else {
                                         $notificationtarget->getFromDB($target['id']);
                                         echo "<tr class='tab_bg_2'>";
-                                        echo '<td>' . $label . '</td>';
-                                        echo '<td>' . $notificationtarget->getNameID() . '</td>';
+                                        echo '<td>' . htmlspecialchars($label) . '</td>';
+                                        echo '<td>' . htmlspecialchars($notificationtarget->getNameID()) . '</td>';
                                         echo '<td>' . sprintf(
                                             __('%1$s (%2$s)'),
                                             $template->getName(),
                                             $users_infos['language'],
                                         ) . '</td>';
-                                        echo '<td>' . $users_infos['email'] . '</td>';
+                                        echo '<td>' . htmlspecialchars($users_infos['email']) . '</td>';
                                         echo '</tr>';
                                     }
                                     $email_processed[$users_infos['language']][$users_infos['email']]

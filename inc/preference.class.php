@@ -128,12 +128,12 @@ class PluginMreportingPreference extends CommonDBTM
 
         $version = plugin_version_mreporting();
 
-        echo "<form method='post' action='" . Toolbox::getItemTypeFormURL(__CLASS__) . "'>";
+        echo "<form method='post' action='" . htmlspecialchars(Toolbox::getItemTypeFormURL(__CLASS__)) . "'>";
         echo "<div align='center'>";
 
         echo "<table class='tab_cadre_fixe' cellpadding='5'>";
 
-        echo "<tr><th colspan='2'>" . $version['name'] . ' - ' . $version['version'] . '</th></tr>';
+        echo "<tr><th colspan='2'>" . htmlspecialchars($version['name']) . ' - ' . htmlspecialchars($version['version']) . '</th></tr>';
 
         echo "<tr class='tab_bg_2'>";
         echo "<td align='center'>";
@@ -145,7 +145,7 @@ class PluginMreportingPreference extends CommonDBTM
         echo "<tr class='tab_bg_2'>";
         echo "<td align='center' colspan='2'>";
         echo "<input type='hidden' name='id' value='" . $ID . "'>";
-        echo "<input type='hidden' name='users_id' value='" . $this->fields['users_id'] . "'>";
+        echo "<input type='hidden' name='users_id' value='" . htmlspecialchars($this->fields['users_id']) . "'>";
         echo "<input type='submit' name='update' value='" . _sx('button', 'Post') . "' class='submit'>";
         echo '</td>';
         echo '</tr>';
