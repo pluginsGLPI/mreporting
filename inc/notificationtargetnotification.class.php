@@ -154,17 +154,25 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
             $image_width  = imagesx($image);
             $image_height = imagesy($image);
 
-            $format = '%e';
-            if (strftime('%Y', strtotime($graph['start'])) != strftime('%Y', strtotime($graph['end']))) {
-                $format .= ' %B %Y';
-            } elseif (strftime('%B', strtotime($graph['start'])) != strftime('%B', strtotime($graph['end']))) {
-                $format .= ' %B';
+            $start = new DateTime($graph['start']);
+            $end   = new DateTime($graph['end']);
+
+            $format = 'd';
+            if ($start->format('Y') != $end->format('Y')) {
+                $format .= ' MMMM y';
+            } elseif ($start->format('F') != $end->format('F')) {
+                $format .= ' MMMM';
             }
 
+            $language = $_SESSION['glpilanguage'] ?? 'en_GB';
             $image_title = $LANG['plugin_mreporting'][$graph['class']][$graph['method']]['title'];
-            $image_title .= ' du ' . strftime($format, strtotime($graph['start']));
-            $image_title .= ' au ' . strftime('%e %B %Y', strtotime($graph['end']));
-
+            $image_title .= ' ' . lcfirst(
+                sprintf(
+                    __('From %1$s to %2$s'),
+                    IntlDateFormatter::formatObject($start, $format, $language),
+                    IntlDateFormatter::formatObject($end, 'd MMMM Y', $language),
+                ),
+            );
             array_push($images, ['title' => $image_title,
                 'base64'                 => $image_base64,
                 'width'                  => $image_width,
