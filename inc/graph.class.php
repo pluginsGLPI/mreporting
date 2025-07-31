@@ -40,26 +40,28 @@ class PluginMreportingGraph
     */
     public function initGraph($options)
     {
-        /** @var array $LANG */
-        global $LANG;
+        /** @var array $LANG
+         *  @var array $CFG_GLPI
+        */
+        global $LANG, $CFG_GLPI;
 
         $width    = $this->width + 100;
         $randname = $options['randname'];
 
         if (!$options['showHeader']) {
-            echo "<div class='center'><div id='fig' style='width:{$width}px'>";
+            echo "<div class='center'><div id='fig' style='width:{" . htmlspecialchars(strval($width)) . "}px'>";
             //Show global title
             if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
                 echo "<div class='graph_title'>";
-                echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+                echo htmlspecialchars($LANG['plugin_mreporting'][$options['short_classname']]['title']);
                 echo '</div>';
             }
             //Show graph title
             echo "<div class='graph_title'>";
-            $gtype = $_REQUEST['gtype'];
+            $gtype = htmlspecialchars($_REQUEST['gtype']);
 
-            echo "<img src='" . Plugin::getWebDir('mreporting') . "/pics/chart-$gtype.png' class='title_pics' />";
-            echo $options['title'];
+            echo "<img src='" . $CFG_GLPI['root_doc'] . "'/plugins/mreporting/pics/chart-$gtype.png' class='title_pics' />";
+            echo htmlspecialchars($options['title']);
             echo '</div>';
 
             $desc = '';
@@ -80,7 +82,7 @@ class PluginMreportingGraph
                 $desc .= Html::convdate($_SESSION['mreporting_values']['date1' . $randname]) . ' / ' .
                 Html::convdate($_SESSION['mreporting_values']['date2' . $randname]);
             }
-            echo "<div class='graph_desc'>" . $desc . '</div>';
+            echo "<div class='graph_desc'>" . htmlspecialchars($desc) . '</div>';
 
             //Show date selector
             echo "<div class='graph_navigation'>";
@@ -171,6 +173,9 @@ class PluginMreportingGraph
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return false;
@@ -377,6 +382,9 @@ JAVASCRIPT;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return false;
@@ -584,6 +592,9 @@ JAVASCRIPT;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -855,6 +866,9 @@ JAVASCRIPT;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -1084,6 +1098,9 @@ JAVASCRIPT;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -1324,6 +1341,9 @@ JAVASCRIPT;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -1580,6 +1600,9 @@ JAVASCRIPT;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -1816,21 +1839,21 @@ JAVASCRIPT;
 
         $out = "var datas = [\n";
         foreach ($values as $value) {
-            $out .= "\t" . addslashes($value) . ",\n";
+            $out .= "\t" . $value . ",\n";
         }
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";
 
         $out .= "var labels = [\n";
         foreach ($labels as $label) {
-            $out .= "\t'" . addslashes($label) . "',\n";
+            $out .= "\t'" . $label . "',\n";
         }
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";
 
         $out .= "var links = [\n";
         foreach ($links as $link) {
-            $out .= "\t'" . addslashes($link) . "',\n";
+            $out .= "\t'" . $link . "',\n";
         }
         $out .= "];\n";
 
@@ -1894,7 +1917,7 @@ JAVASCRIPT;
         foreach ($values as $line) {
             $out .= "\t[";
             foreach ($line as $label2 => $value) {
-                $out .= addslashes($value) . ',';
+                $out .= $value . ',';
                 if ($value > $max && !$stacked) {
                     $max = $value;
                 }
@@ -1907,14 +1930,14 @@ JAVASCRIPT;
 
         $out .= "var labels = [\n";
         foreach ($labels as $label) {
-            $out .= "\t'" . addslashes($label) . "',\n";
+            $out .= "\t'" . $label . "',\n";
         }
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";
 
         $out .= "var labels2 = [\n";
         foreach ($labels2 as $label) {
-            $out .= "\t'" . addslashes($label) . "',\n";
+            $out .= "\t'" . $label . "',\n";
         }
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";

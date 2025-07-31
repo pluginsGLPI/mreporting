@@ -27,6 +27,10 @@
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
+use \Glpi\DBAL\QueryExpression;
+use \Glpi\DBAL\QueryUnion;
+use \Glpi\DBAL\QuerySubQuery;
+use \Glpi\Asset\Asset_PeripheralAsset;
 
 class PluginMreportingInventory extends PluginMreportingBaseclass
 {
@@ -55,7 +59,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             'values'         => $selected_states,
         ];
 
-        echo '<br /><b>' . $label . ' : </b><br />';
+        echo '<br /><b>' . htmlspecialchars($label) . ' : </b><br />';
         Dropdown::showFromArray($field, $datas, $param);
     }
 
@@ -65,7 +69,13 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         global $DB;
 
         $states = [];
-        $query  = "SELECT `id`FROM `glpi_states` WHERE `name` IN ('En service')";
+        $query  = [
+            'SELECT' => ['id'],
+            'FROM'   => State::getTable(),
+            'WHERE'  => [
+                'name' => ['En service'],
+            ],
+        ];
         foreach ($DB->request($query) as $data) {
             $states[] = $data['id'];
         }
@@ -369,7 +379,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             $queries[] = $query_union;
         }
 
-        $query = new \QueryUnion($queries);
+        $query = new QueryUnion($queries);
         $result = $DB->request($query);
 
         foreach ($result as $computer) {
@@ -508,7 +518,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             'ORDER' => ['Total DESC'],
         ];
 
-        $query = new \QueryUnion($queries);
+        $query = new QueryUnion($queries);
         $result = $DB->request($query);
 
         $datas = [];
@@ -602,13 +612,24 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $sql_states2                                        = self::getStateCondition('c.states_id', true);
 
         $data = [];
-        foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%' OR name LIKE '%openSUSE%'") as $os) {
+        $query = [
+            'SELECT' => ['id', 'name'],
+            'FROM' => OperatingSystem::getTable(),
+            'WHERE' => [
+                'OR' => [
+                    new QueryExpression(OperatingSystem::getTable() . ".name LIKE '%Linux%'"),
+                    new QueryExpression(OperatingSystem::getTable() . ".name LIKE '%Ubuntu%'"),
+                    new QueryExpression(OperatingSystem::getTable() . ".name LIKE '%openSUSE%'"),
+                ],
+            ],
+        ];
+        foreach ($DB->request($query) as $os) {
             $iterator = $DB->request(
-                'glpi_computers',
                 [
                     'SELECT' => [
                         'glpi_operatingsystemversions.name',
                     ],
+                    'FROM' => Computer::getTable(),
                     'COUNT'      => 'cpt',
                     'INNER JOIN' => [
                         'glpi_items_operatingsystems' => [
@@ -660,9 +681,20 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $sql_states                                               = self::getStateCondition('glpi_computers.states_id', true);
 
         $data = [];
-        foreach ($DB->request('glpi_operatingsystems', "name LIKE '%Linux%' OR name LIKE '%Ubuntu%' OR name LIKE '%openSUSE%'") as $os) {
+        $query = [
+            'SELECT' => ['id', 'name'],
+            'FROM' => OperatingSystem::getTable(),
+            'WHERE' => [
+                'OR' => [
+                    new QueryExpression(OperatingSystem::getTable() . ".name LIKE '%Linux%'"),
+                    new QueryExpression(OperatingSystem::getTable() . ".name LIKE '%Ubuntu%'"),
+                    new QueryExpression(OperatingSystem::getTable() . ".name LIKE '%openSUSE%'"),
+                ],
+            ],
+        ];
+        foreach ($DB->request($query) as $os) {
             $number = countElementsInTable(
-                'glpi_computers',
+                Computer::getTable(),
                 [
                     'INNER JOIN' => [
                         'glpi_items_operatingsystems' => [
@@ -703,14 +735,21 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $sql_states2                                      = self::getStateCondition('c.states_id', true);
 
         $data       = [];
-        $ositerator = $DB->request('glpi_operatingsystems', ['name' => ['LIKE', '%Mac OS%']]);
+        $query = [
+            'SELECT' => ['id', 'name'],
+            'FROM' => OperatingSystem::getTable(),
+            'WHERE' => [
+                new QueryExpression(OperatingSystem::getTable() . ".name LIKE '%Mac OS%'"),
+            ],
+        ];
+        $ositerator = $DB->request($query);
         foreach ($ositerator as $os) {
             $iterator = $DB->request(
-                'glpi_computers',
                 [
                     'SELECT' => [
                         'glpi_operatingsystemversions.name',
                     ],
+                    'FROM' => Computer::getTable(),
                     'COUNT'      => 'cpt',
                     'INNER JOIN' => [
                         'glpi_items_operatingsystems' => [
@@ -760,15 +799,22 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $sql_states2                                            = self::getStateCondition('c.states_id', true);
 
         $data       = [];
-        $ositerator = $DB->request('glpi_operatingsystems', ['name' => ['LIKE', '%Mac OS%']]);
+        $query = [
+            'SELECT' => ['id', 'name'],
+            'FROM' => OperatingSystem::getTable(),
+            'WHERE' => [
+                new QueryExpression(OperatingSystem::getTable() . ".name LIKE '%Mac OS%'"),
+            ],
+        ];
+        $ositerator = $DB->request($query);
         foreach ($ositerator as $os) {
             $iterator = $DB->request(
-                'glpi_computers',
                 [
                     'SELECT' => [
                         'glpi_operatingsystemversions.name',
                     ],
-                    'COUNT'      => 'cpt',
+                    'COUNT' => 'cpt',
+                    'FROM' => Computer::getTable(),
                     'INNER JOIN' => [
                         'glpi_items_operatingsystems' => [
                             'FKEY' => [
@@ -850,12 +896,16 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             ] + $sql_states,
         );
 
-        $query = 'SELECT count(*) AS cpt, `useragent`
-                FROM `glpi_plugin_fusioninventory_agents`
-                WHERE `computers_id` > 0
-                GROUP BY `useragent`
-                ORDER BY cpt DESC';
-
+        $query = [
+            'SELECT' => ['useragent'],
+            'COUNT' => 'cpt',
+            'FROM' => 'glpi_plugin_fusioninventory_agents',
+            'WHERE' => [
+                'computers_id' => ['>', 0],
+            ],
+            'GROUPBY' => ['useragent'],
+            'ORDER' => ['cpt DESC'],
+        ];
         $data = [];
         foreach ($DB->request($query) as $agent) {
             $values = [];
@@ -883,20 +933,25 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             'COUNT'   => 'cpt',
             'FROM'    => Computer::getTable(),
             'LEFT JOIN' => [
-                Computer_Item::getTable() => [
-                    'ON' => [
-                        Computer_Item::getTable() . '.computers_id',
+                Asset_PeripheralAsset::getTable() => [
+                    'FKEY' => [
+                        Asset_PeripheralAsset::getTable() . '.items_id_asset',
                         Computer::getTable() . '.id',
+                        [
+                            'AND' => [
+                                Asset_PeripheralAsset::getTable() . '.itemtype_asset' => 'Computer',
+                            ],
+                        ],
                     ],
                 ],
             ],
             'WHERE'   => array_merge([
-                Computer_Item::getTable() . '.itemtype'   => 'Monitor',
+                Asset_PeripheralAsset::getTable() . '.itemtype_peripheral'   => 'Monitor',
                 Computer::getTable() . '.is_deleted'  => 0,
                 Computer::getTable() . '.is_template'   => '0',
                 Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
             ], $criteria_states),
-            'GROUPBY' => [Computer_Item::getTable() . '.computers_id'],
+            'GROUPBY' => [Asset_PeripheralAsset::getTable() . '.items_id_asset'],
             'ORDER'   => ['cpt'],
         ];
 
