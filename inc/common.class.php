@@ -670,7 +670,11 @@ class PluginMreportingCommon extends CommonDBTM
         $classname = 'PluginMreporting' . $opt['short_classname'];
 
         //dynamic call of method passed by 'f_name' GET parameter with previously instancied class
-        $obj   = new $classname($config);
+        if (!is_a($classname, PluginMreportingBaseclass::class, true)) {
+            return false;
+        }
+        $obj = new $classname($config);
+
         $datas = $obj->{$opt['f_name']}($config);
 
         //show graph (pgrah type determined by first entry of explode of camelcase of function name
@@ -1124,6 +1128,9 @@ class PluginMreportingCommon extends CommonDBTM
                                 //dynamic instanciation of class passed by 'short_classname' GET parameter
                                 $config   = PluginMreportingConfig::initConfigParams($func['function'], $classname);
                                 $class    = 'PluginMreporting' . $func['short_classname'];
+                                if (!is_a($class, PluginMreportingBaseclass::class, true)) {
+                                    return false;
+                                }
                                 $obj      = new $class($config);
                                 $randname = $classname . $func['function'];
                                 if (isset($opt['date1']) && isset($opt['date2'])) {
@@ -1206,6 +1213,9 @@ class PluginMreportingCommon extends CommonDBTM
 
             //dynamic instanciation of class passed by 'short_classname' GET parameter
             $classname = 'PluginMreporting' . $opt['short_classname'];
+            if (!is_a($classname, PluginMreportingBaseclass::class, true)) {
+                return false;
+            }
             $obj       = new $classname($config);
 
             //dynamic call of method passed by 'f_name' GET parameter with previously instancied class

@@ -33,7 +33,7 @@ use \Glpi\DBAL\QueryUnion;
 use \Glpi\DBAL\QuerySubQuery;
 
 if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
+    throw new \Glpi\Exception\Http\NotFoundHttpException("Sorry. You can't access directly to this file");
 }
 
 class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass

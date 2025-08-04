@@ -29,7 +29,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
+    throw new \Glpi\Exception\Http\NotFoundHttpException("Sorry. You can't access directly to this file");
 }
 
 class PluginMreportingConfig extends CommonDBTM
@@ -290,6 +290,9 @@ class PluginMreportingConfig extends CommonDBTM
             foreach ($functions as $funct_name) {
                 if ($funct_name == 'preconfig') { // If a preconfig exists we construct the class
                     $classConfig = true;
+                    if (!is_a($classname, PluginMreportingBaseclass::class, true)) {
+                        return;
+                    }
                     $classObject = new $classname([]);
                 }
             }
@@ -583,7 +586,7 @@ class PluginMreportingConfig extends CommonDBTM
 
     public function prepareInputForUpdate($input)
     {
-        if (isset($input['classname']) && method_exists(new $input['classname']([]), 'checkConfig')) {
+        if (isset($input['classname']) && is_a($input['classname'], PluginMreportingBaseclass::class, true) && method_exists(new $input['classname']([]), 'checkConfig')) {
             $object      = new $input['classname']([]);
             $checkConfig = $object->checkConfig($input);
             if (!$checkConfig['result']) {

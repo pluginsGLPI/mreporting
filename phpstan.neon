@@ -5,7 +5,6 @@ parameters:
     bootstrapFiles:
         - ../../stubs/glpi_constants.php
         - ../../vendor/autoload.php
-        - stubs/GLPIMailer.stub
     paths:
         - ajax
         - front
@@ -18,7 +17,4 @@ parameters:
         - ../../src
         - ./public/lib
     stubFiles:
-        - ../../stubs/glpi_constants.php
         - stubs/GLPIMailer.stub
-rules:
-    - GlpiProject\Tools\PHPStan\Rules\GlobalVarTypeRule

@@ -29,7 +29,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
+    throw new \Glpi\Exception\Http\NotFoundHttpException("Sorry. You can't access directly to this file");
 }
 
 class PluginMreportingProfile extends CommonDBTM
@@ -184,14 +184,16 @@ class PluginMreportingProfile extends CommonDBTM
         foreach ($config->find() as $report) {
             // add right for any reports for profile
             // Add manual request because Add function get error : right is set to NULL
-            $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
+            if (!$DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
                 'profiles_id' => $idProfile,
                 'reports'     => $report['id'],
                 'right'       => READ,
             ], [
                 'profiles_id' => $idProfile,
                 'reports'     => $report['id'],
-            ]) or die('An error occurs during profile initialisation.');
+            ])) {
+                return;
+            }
         }
     }
 

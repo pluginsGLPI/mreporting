@@ -100,11 +100,6 @@ class PluginMreportingGraph
 
                 $config = PluginMreportingConfig::initConfigParams($functionname, $classname);
 
-                // We check if a configuration is needed for the graph
-                if (method_exists(new $classname($config), 'needConfig')) {
-                    $object = new $classname();
-                    $object->needConfig($config);
-                }
             }
         }
 
