@@ -28,9 +28,9 @@
  * -------------------------------------------------------------------------
  */
 
-use \Glpi\DBAL\QueryExpression;
-use \Glpi\DBAL\QueryUnion;
-use \Glpi\DBAL\QuerySubQuery;
+use Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QueryUnion;
+use Glpi\DBAL\QuerySubQuery;
 
 if (!defined('GLPI_ROOT')) {
     throw new \Glpi\Exception\Http\NotFoundHttpException("Sorry. You can't access directly to this file");
