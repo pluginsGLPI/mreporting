@@ -54,7 +54,7 @@ if (isset($_REQUEST['update'])) {
         }
     }
 } elseif (isset($_REQUEST['add'])) {
-   $query = [
+    $query = [
         'SELECT' => ['id', 'name'],
         'FROM'   => Profile::getTable(),
         'WHERE'  => ['interface' => 'central'],
