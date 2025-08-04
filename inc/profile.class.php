@@ -358,7 +358,7 @@ class PluginMreportingProfile extends CommonDBTM
             $prof->getFromDB($profile['id']);
 
             echo "<tr class='tab_bg_1'>";
-            echo '<td>' . htmlspecialchars($prof->getLink()) . '</td>';
+            echo '<td>' . $prof->getLink() . '</td>';
             echo '<td>';
             Profile::dropdownRight(
                 $profile['id'],

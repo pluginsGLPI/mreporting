@@ -29,7 +29,7 @@
  */
 
 use Odtphp\Odf;
-use \Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QueryExpression;
 
 class PluginMreportingCommon extends CommonDBTM
 {
@@ -63,7 +63,7 @@ class PluginMreportingCommon extends CommonDBTM
         /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
-        $web_full_dir = $CFG_GLPI['url_base'] . 'plugins/mreporting';
+        $web_full_dir = $CFG_GLPI['url_base'] . '/plugins/mreporting';
         $img_db       = "<img src='" . $web_full_dir . "/pics/dashboard.png'
                            title='" . __('Dashboard', 'mreporting') . "'
                            alt='" . __('Dashboard', 'mreporting') . "'>";
