@@ -41,6 +41,11 @@ class PluginMreportingConfig extends CommonDBTM
         return __('Configuration', 'mreporting');
     }
 
+    public static function getIcon()
+    {
+        return 'ti ti-settings';
+    }
+
     /**
      * Définition des onglets
     **/

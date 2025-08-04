@@ -28,7 +28,7 @@
  * -------------------------------------------------------------------------
  */
 
-use \Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QueryExpression;
 
 class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 {

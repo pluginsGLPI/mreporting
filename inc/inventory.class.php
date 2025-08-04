@@ -27,10 +27,10 @@
  * @link      https://github.com/pluginsGLPI/mreporting
  * -------------------------------------------------------------------------
  */
-use \Glpi\DBAL\QueryExpression;
-use \Glpi\DBAL\QueryUnion;
-use \Glpi\DBAL\QuerySubQuery;
-use \Glpi\Asset\Asset_PeripheralAsset;
+use Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QueryUnion;
+use Glpi\DBAL\QuerySubQuery;
+use Glpi\Asset\Asset_PeripheralAsset;
 
 class PluginMreportingInventory extends PluginMreportingBaseclass
 {
