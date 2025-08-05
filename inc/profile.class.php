@@ -29,7 +29,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
+    throw new \Glpi\Exception\Http\NotFoundHttpException("Sorry. You can't access directly to this file");
 }
 
 class PluginMreportingProfile extends CommonDBTM
@@ -124,8 +124,18 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var \DBmysql $DB */
         global $DB;
 
-        $result_config = $DB->request('SELECT `id` FROM `glpi_plugin_mreporting_configs`');
-        foreach ($DB->request('SELECT `id` FROM `glpi_profiles`') as $prof) {
+        $query_config = [
+            'SELECT' => 'id',
+            'FROM'   => PluginMreportingConfig::getTable(),
+        ];
+
+        $query_profil = [
+            'SELECT' => 'id',
+            'FROM'   => Profile::getTable(),
+        ];
+
+        $result_config = $DB->request($query_config);
+        foreach ($DB->request($query_profil) as $prof) {
             foreach ($result_config as $report) {
                 $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
                     'profiles_id' => $prof['id'],
@@ -144,9 +154,13 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var \DBmysql $DB */
         global $DB;
 
-        $query = 'SELECT `profiles_id`
-               FROM `glpi_plugin_mreporting_profiles`
-               WHERE `reports` = ' . READ;
+        $query = [
+            'SELECT' => 'profiles_id',
+            'FROM'   => PluginMreportingProfile::getTable(),
+            'WHERE'  => [
+                'reports' => READ,
+            ],
+        ];
 
         $right = [];
         foreach ($DB->request($query) as $profile) {
@@ -170,14 +184,16 @@ class PluginMreportingProfile extends CommonDBTM
         foreach ($config->find() as $report) {
             // add right for any reports for profile
             // Add manual request because Add function get error : right is set to NULL
-            $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
+            if (!$DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
                 'profiles_id' => $idProfile,
                 'reports'     => $report['id'],
                 'right'       => READ,
             ], [
                 'profiles_id' => $idProfile,
                 'reports'     => $report['id'],
-            ]) or die('An error occurs during profile initialisation.');
+            ])) {
+                return;
+            }
         }
     }
 
@@ -192,7 +208,12 @@ class PluginMreportingProfile extends CommonDBTM
 
         $reportProfile = new self();
 
-        foreach ($DB->request('SELECT `id` FROM `glpi_profiles`') as $prof) {
+        $query = [
+            'SELECT' => 'id',
+            'FROM'   => Profile::getTable(),
+        ];
+
+        foreach ($DB->request($query) as $prof) {
             $reportProfile->add(['profiles_id' => $prof['id'],
                 'reports'                      => $report_id,
                 'right'                        => READ,
@@ -233,11 +254,11 @@ class PluginMreportingProfile extends CommonDBTM
             return false;
         }
 
-        echo '<form method="post" action="' . self::getFormURL() . '">';
+        echo '<form method="post" action="' . htmlspecialchars(self::getFormURL()) . '">';
         echo '<div class="spaced" id="tabsbody">';
         echo '<table class="tab_cadre_fixe" id="mainformtable">';
 
-        echo '<tr class="headerRow"><th colspan="3">' . self::getTypeName() . '</th></tr>';
+        echo '<tr class="headerRow"><th colspan="3">' . htmlspecialchars(self::getTypeName()) . '</th></tr>';
 
         Plugin::doHook('pre_item_form', ['item' => $this, 'options' => &$options]);
 
@@ -255,7 +276,7 @@ class PluginMreportingProfile extends CommonDBTM
                 $title   = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
 
                 echo "<tr class='tab_bg_1'>";
-                echo '<td>' . $mreportingConfig->getLink() . '&nbsp(' . $title . '): </td>';
+                echo '<td>' . htmlspecialchars($mreportingConfig->getLink()) . '&nbsp(' . htmlspecialchars($title) . '): </td>';
                 echo '<td>';
                 Profile::dropdownRight(
                     $report['id'],
@@ -319,13 +340,15 @@ class PluginMreportingProfile extends CommonDBTM
 
         $target = isset($options['target']) ? $options['target'] : $this->getFormURL();
 
-        echo '<form action="' . $target . '" method="post" name="form">';
+        echo '<form action="' . htmlspecialchars($target) . '" method="post" name="form">';
         echo "<table class='tab_cadre_fixe'>\n";
         echo "<tr><th colspan='3'>" . __('Rights management', 'mreporting') . "</th></tr>\n";
 
-        $query = 'SELECT `id`, `name`
-               FROM `glpi_profiles`
-               ORDER BY `name`';
+        $query = [
+            'SELECT' => ['id', 'name'],
+            'FROM'   => Profile::getTable(),
+            'ORDER'  => 'name',
+        ];
 
         foreach ($DB->request($query) as $profile) {
             $reportProfiles = new self();
@@ -351,17 +374,17 @@ class PluginMreportingProfile extends CommonDBTM
         echo "<tr class='tab_bg_4'>";
         echo "<td colspan='2'>";
         echo "<div style='float:right;'>";
-        echo "<input type='submit' style='background-image: url(" . $CFG_GLPI['root_doc'] .
+        echo "<input type='submit' style='background-image: url(" . htmlspecialchars($CFG_GLPI['root_doc']) .
            "/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;' " .
            "name='giveReadAccessForAllProfile' value='' title='" . __('Select all') . "'>";
 
-        echo "<input type='submit' style='background-image: url(" . $CFG_GLPI['root_doc'] .
+        echo "<input type='submit' style='background-image: url(" . htmlspecialchars($CFG_GLPI['root_doc']) .
            "/pics/sub_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;' " .
            "name='giveNoneAccessForAllProfile' value='' title='" . __('Deselect all') . "'><br><br>";
         echo '</div>';
 
         echo "<div class='center'>";
-        echo "<input type='hidden' name='report_id' value=" . $items->fields['id'] . '>';
+        echo "<input type='hidden' name='report_id' value=" . htmlspecialchars($items->fields['id']) . '>';
         echo "<input type='submit' name='add' value=\"" . _sx('button', 'Save') . "\" class='submit'>";
         echo '</div>';
 

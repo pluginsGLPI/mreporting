@@ -29,7 +29,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
+    throw new \Glpi\Exception\Http\NotFoundHttpException("Sorry. You can't access directly to this file");
 }
 
 class PluginMreportingConfig extends CommonDBTM
@@ -39,6 +39,11 @@ class PluginMreportingConfig extends CommonDBTM
     public static function getTypeName($nb = 0)
     {
         return __('Configuration', 'mreporting');
+    }
+
+    public static function getIcon()
+    {
+        return 'ti ti-settings';
     }
 
     /**
@@ -242,6 +247,9 @@ class PluginMreportingConfig extends CommonDBTM
      **/
     public static function addFirstconfigLink()
     {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
         $buttons = [];
         $title   = '';
 
@@ -249,7 +257,7 @@ class PluginMreportingConfig extends CommonDBTM
             $buttons['config.php?new=1'] = __('Initialize graphics configuration', 'mreporting');
         }
         Html::displayTitle(
-            Plugin::getWebDir('mreporting') . '/pics/config2.png',
+            $CFG_GLPI['root_doc'] . '/plugins/mreporting/pics/config2.png',
             $title,
             $title,
             $buttons,
@@ -287,6 +295,9 @@ class PluginMreportingConfig extends CommonDBTM
             foreach ($functions as $funct_name) {
                 if ($funct_name == 'preconfig') { // If a preconfig exists we construct the class
                     $classConfig = true;
+                    if (!is_a($classname, PluginMreportingBaseclass::class, true)) {
+                        return;
+                    }
                     $classObject = new $classname([]);
                 }
             }
@@ -398,7 +409,7 @@ class PluginMreportingConfig extends CommonDBTM
         $common = new PluginMreportingCommon();
         $rand   = mt_rand();
 
-        $select = "<select name='$name' id='dropdown_" . $name . $rand . "'>";
+        $select = "<select name='" . htmlspecialchars($name) . "' id='dropdown_" . htmlspecialchars($name) . htmlspecialchars(strval($rand)) . "'>";
         $select .= "<option value='-1' selected>" . Dropdown::EMPTY_VALUE . '</option>';
 
         $i       = 0;
@@ -411,10 +422,10 @@ class PluginMreportingConfig extends CommonDBTM
             }
 
             if (isset($graphs[$classname])) {
-                $select .= '<optgroup label="' . $report['title'] . '">';
+                $select .= '<optgroup label="' . htmlspecialchars($report['title']) . '">';
 
                 foreach ($graphs[$classname] as $cat => $graph) {
-                    $select .= '<optgroup label="' . $cat . '">';
+                    $select .= '<optgroup label="' . htmlspecialchars($cat) . '">';
 
                     foreach ($graph as $k => $v) {
                         $comment = '';
@@ -425,11 +436,11 @@ class PluginMreportingConfig extends CommonDBTM
                         }
 
                         $select .= '<option  title="' .
-                            Html::cleanInputText($comment) . "\"
+                            htmlspecialchars($comment) . "\"
                             value='" . $classname . ';' . $v['function'] .
                             "'" . ($options['value'] == $classname . ';' .
                             $v['function'] ? ' selected ' : '') . '>';
-                        $select .= $v['title'] . $desc;
+                        $select .= htmlspecialchars($v['title']) . htmlspecialchars($desc);
                         $select .= '</option>';
 
                         $i++;
@@ -580,7 +591,7 @@ class PluginMreportingConfig extends CommonDBTM
 
     public function prepareInputForUpdate($input)
     {
-        if (isset($input['classname']) && method_exists(new $input['classname']([]), 'checkConfig')) {
+        if (isset($input['classname']) && is_a($input['classname'], PluginMreportingBaseclass::class, true) && method_exists(new $input['classname']([]), 'checkConfig')) {
             $object      = new $input['classname']([]);
             $checkConfig = $object->checkConfig($input);
             if (!$checkConfig['result']) {
@@ -630,15 +641,15 @@ class PluginMreportingConfig extends CommonDBTM
         echo '</table>';
 
         $style = ($_GET['preconfig'] == -1 && $ID <= 0) ? 'display:none;' : "'display:block;'";
-        echo "<div id='show_form' style='$style'>";
+        echo "<div id='show_form' style='" . htmlspecialchars($style) . "'>";
 
         $this->showFormHeader($options);
 
         echo "<tr class='tab_bg_1'>";
         echo '<td>' . __('Name') . '</td>';
         echo '<td>';
-        echo $this->fields['name'];
-        echo "<input type='hidden' name='name' value=\"" . $this->fields['name'] . '">';
+        echo htmlspecialchars($this->fields['name']);
+        echo "<input type='hidden' name='name' value=\"" . htmlspecialchars($this->fields['name']) . '">';
         echo '</td>';
 
         echo "<td colspan='2'>";
@@ -659,21 +670,21 @@ class PluginMreportingConfig extends CommonDBTM
             && isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])
         ) {
             echo '&nbsp;';
-            echo "<a href='graph.php?short_classname=" . $short_classname . '&f_name=' . $f_name . '&gtype=' . $gtype . "'>";
-            echo $LANG['plugin_mreporting'][$short_classname][$f_name]['title'];
+            echo "<a href='graph.php?short_classname=" . htmlspecialchars($short_classname) . '&f_name=' . htmlspecialchars($f_name) . '&gtype=' . htmlspecialchars($gtype) . "'>";
+            echo htmlspecialchars($LANG['plugin_mreporting'][$short_classname][$f_name]['title']);
             echo '</a>';
         } else {
             echo __('No report is available !', 'mreporting');
         }
 
-        echo "<input type='hidden' name='classname' value=\"" . $this->fields['classname'] . '">';
+        echo "<input type='hidden' name='classname' value=\"" . htmlspecialchars($this->fields['classname']) . '">';
         echo '</td>';
         echo '</tr>';
 
         echo "<tr class='tab_bg_1'>";
         echo '<td>' . __('See graphic', 'mreporting') . '</td>';
         echo '<td>';
-        Dropdown::showYesNo('show_graph', $this->fields['show_graph']);
+        Dropdown::showYesNo('show_graph', htmlspecialchars($this->fields['show_graph']));
         echo '</td>';
 
         echo '<td>' . __('Default chart format', 'mreporting') . '</td>';
