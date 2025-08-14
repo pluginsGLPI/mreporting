@@ -149,7 +149,7 @@ class PluginMreportingBaseclass
                         "DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l",
                     );
                     $this->criteria_list_date2 = new QueryExpression(
-                        "DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`solvedate`)) DAY, '{$this->period_datetime}') as period_l",
+                        "DATE_FORMAT(`solvedate` - INTERVAL (WEEKDAY(`solvedate`)) DAY, '{$this->period_datetime}') as period_l",
                     );
                     break;
                 case 'month':

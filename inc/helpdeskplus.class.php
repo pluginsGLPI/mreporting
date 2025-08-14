@@ -110,31 +110,32 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             ],
         ];
         $this->criteria_join_gt = [
-            Group_Ticket::getTable() => [
+            Group_Ticket::getTable() . ' AS gt' => [
                 'FKEY' => [
-                    Group_Ticket::getTable() . '.tickets_id',
+                    'gt.tickets_id',
                     Ticket::getTable() . '.id',
                     [
                         'AND' => [
-                            Group_Ticket::getTable() . '.type' => Group_Ticket::ASSIGN,
+                            'gt.type' => Group_Ticket::ASSIGN,
                         ],
                     ],
                 ],
             ],
         ];
         $this->criteria_join_gtr = [
-            Group_Ticket::getTable() => [
+            Group_Ticket::getTable() . ' AS gtr' => [
                 'FKEY' => [
-                    Group_Ticket::getTable() . '.tickets_id',
+                    'gtr.tickets_id',
                     Ticket::getTable() . '.id',
                     [
                         'AND' => [
-                            Group_Ticket::getTable() . '.type' => Group_Ticket::REQUESTER,
+                            'gtr.type' => Group_Ticket::REQUESTER,
                         ],
                     ],
                 ],
             ],
         ];
+
         $this->criteria_select_sla = new QueryExpression(
             "CASE WHEN glpi_slas.definition_time = 'day'
                     AND glpi_tickets.solve_delay_stat <= glpi_slas.number_time * 86400
