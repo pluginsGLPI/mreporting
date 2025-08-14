@@ -345,7 +345,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
             $query = [
                 'SELECT' => [
-                    new QueryExpression("DISTINCT(DATE_FORMAT(list_date.period_l, '{$this->period_sort}')) as period"),
+                    new QueryExpression("DATE_FORMAT(list_date.period_l, '{$this->period_sort}') as period"),
                     new QueryExpression("DATE_FORMAT(list_date.period_l, '{$this->period_label}') as period_name"),
                     new QueryExpression("COUNT(DISTINCT " . Ticket::getTable() . ".id) as nb"),
                 ],
