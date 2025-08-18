@@ -110,31 +110,32 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             ],
         ];
         $this->criteria_join_gt = [
-            Group_Ticket::getTable() => [
+            Group_Ticket::getTable() . ' AS gt' => [
                 'FKEY' => [
-                    Group_Ticket::getTable() . '.tickets_id',
+                    'gt.tickets_id',
                     Ticket::getTable() . '.id',
                     [
                         'AND' => [
-                            Group_Ticket::getTable() . '.type' => Group_Ticket::ASSIGN,
+                            'gt.type' => Group_Ticket::ASSIGN,
                         ],
                     ],
                 ],
             ],
         ];
         $this->criteria_join_gtr = [
-            Group_Ticket::getTable() => [
+            Group_Ticket::getTable() . ' AS gtr' => [
                 'FKEY' => [
-                    Group_Ticket::getTable() . '.tickets_id',
+                    'gtr.tickets_id',
                     Ticket::getTable() . '.id',
                     [
                         'AND' => [
-                            Group_Ticket::getTable() . '.type' => Group_Ticket::REQUESTER,
+                            'gtr.type' => Group_Ticket::REQUESTER,
                         ],
                     ],
                 ],
             ],
         ];
+
         $this->criteria_select_sla = new QueryExpression(
             "CASE WHEN glpi_slas.definition_time = 'day'
                     AND glpi_tickets.solve_delay_stat <= glpi_slas.number_time * 86400
@@ -346,16 +347,18 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                 'SELECT' => [
                     new QueryExpression("DATE_FORMAT(list_date.period_l, '{$this->period_sort}') as period"),
                     new QueryExpression("DATE_FORMAT(list_date.period_l, '{$this->period_label}') as period_name"),
+                    new QueryExpression("COUNT(DISTINCT " . Ticket::getTable() . ".id) as nb"),
                 ],
-                'COUNT' => 'nb',
                 'FROM' => new QuerySubQuery($list_date_table, 'list_date'),
                 'LEFT JOIN' => array_merge(
                     [
                         Ticket::getTable() => [
-                            'OR' => [
-                                Ticket::getTable() . '.solvedate > list_date.period_l',
-                                new QueryExpression(Ticket::getTable() . '.solvedate IS NULL'),
-                                Ticket::getTable() . '.date' => ['<=', 'list_date.period_l'],
+                            'AND' => [
+                                Ticket::getTable() . '.date' => ['<=', new QueryExpression('list_date.period_l')],
+                                'OR' => [
+                                    Ticket::getTable() . '.solvedate' => ['>', new QueryExpression('list_date.period_l')],
+                                    new QueryExpression(Ticket::getTable() . '.solvedate IS NULL'),
+                                ],
                             ],
                         ],
                     ],

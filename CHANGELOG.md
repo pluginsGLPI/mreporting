@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [UNRELEASED] - 
+
+### Fixed
+
+ - Fix the SQL query for the backlog graph (#290)
+
 ## [1.8.8] - 2025-08-07
 
 ### Fixed
