@@ -29,7 +29,6 @@
  */
 
 if (strpos($_SERVER['PHP_SELF'], 'dropdownGraphs.php')) {
-    include('../../../inc/includes.php');
     header('Content-Type: text/html; charset=UTF-8');
     Html::header_nocache();
 }
@@ -42,5 +41,5 @@ if ($_POST['graphname'] != -1) {
     $_POST['name']      = $test[1];
 
     $config = new PluginMreportingConfig();
-    echo "&nbsp;<a href='" . $config->getFormURL() . '?name=' . $_POST['name'] . '&classname=' . $_POST['classname'] . "'>" . __('Send') . '</a>';
+    echo "&nbsp;<a href='" . htmlspecialchars($config->getFormURL()) . '?name=' . htmlspecialchars($_POST['name']) . '&classname=' . htmlspecialchars($_POST['classname']) . "'>" . __('Send') . '</a>';
 }
