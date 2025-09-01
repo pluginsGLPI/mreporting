@@ -144,12 +144,12 @@ class PluginMreportingBaseclass
                     $this->period_datetime = '%Y-%m-%d 23:59:59';
                     $this->period_label    = 'S%v %x';
                     $this->period_interval = 'WEEK';
-                    $this->sql_list_date   = "DISTINCT DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l";
+                    $this->sql_list_date   = "DISTINCT DATE_FORMAT(`date` + INTERVAL (6 - WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l";
                     $this->criteria_list_date = new QueryExpression(
-                        "DATE_FORMAT(`date` - INTERVAL (WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l",
+                        "DATE_FORMAT(`date` + INTERVAL (6 - WEEKDAY(`date`)) DAY, '{$this->period_datetime}') as period_l",
                     );
                     $this->criteria_list_date2 = new QueryExpression(
-                        "DATE_FORMAT(`solvedate` - INTERVAL (WEEKDAY(`solvedate`)) DAY, '{$this->period_datetime}') as period_l",
+                        "DATE_FORMAT(`solvedate` + INTERVAL (6 - WEEKDAY(`solvedate`)) DAY, '{$this->period_datetime}') as period_l",
                     );
                     break;
                 case 'month':
