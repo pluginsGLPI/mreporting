@@ -743,9 +743,9 @@ class PluginMreportingCommon extends CommonDBTM
     public static function endGraph($options, $dashboard = false)
     {
         $opt       = $options['opt'];
-        $export    = $options['export'] ?? null;
-        $datas     = $options['datas'] ?? [];
-        $unit      = $options['unit'] ?? '';
+        $export    = $options['export'];
+        $datas     = $options['datas'];
+        $unit      = $options['unit'];
         $labels2   = [];
         $flip_data = false;
 
