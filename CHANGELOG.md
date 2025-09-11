@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+ - Fix weekly backlog calculation using wrong week reference point (#294)
  - Fix the SQL query for the backlog graph (#290)
 
 ## [1.8.8] - 2025-08-07
