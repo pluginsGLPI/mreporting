@@ -3,7 +3,8 @@ parameters:
         maximumNumberOfProcesses: 2
     level: 5
     bootstrapFiles:
-        - ../../inc/based_config.php
+        - ../../stubs/glpi_constants.php
+        - ../../vendor/autoload.php
     paths:
         - ajax
         - front
@@ -14,8 +15,6 @@ parameters:
     scanDirectories:
         - ../../inc
         - ../../src
-        - ./lib
+        - ./public/lib
     stubFiles:
-        - ../../stubs/glpi_constants.php
-rules:
-    - GlpiProject\Tools\PHPStan\Rules\GlobalVarTypeRule
+        - stubs/GLPIMailer.stub

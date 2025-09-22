@@ -40,8 +40,6 @@ if ($oCurve) {
     $r = $oCurve->processCoords();
     if ($r) {
         $curveGraph = new Plot($r);
-    } else {
-        continue;
     }
 } else {
     $curveGraph = $oPlot;
