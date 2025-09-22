@@ -159,13 +159,13 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         if (isset($mr_values['groups_assign_id'])) {
             $this->criteria_group_assign = [
-                Group_Ticket::getTable() . '.groups_id' => $mr_values['groups_assign_id'],
+                'gt.groups_id' => $mr_values['groups_assign_id'],
             ];
         }
 
         if (isset($mr_values['groups_request_id'])) {
-            $this->criteria_group_assign = [
-                Group_Ticket::getTable() . '.groups_id' => $mr_values['groups_request_id'],
+            $this->criteria_group_request = [
+                'gtr.groups_id' => $mr_values['groups_request_id'],
             ];
         }
 
@@ -1338,7 +1338,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                     Ticket::getTable() . '.status'  => array_merge(Ticket::getSolvedStatusArray(), Ticket::getClosedStatusArray()),
                     SLA::getTable() . '.id' => $_SESSION['mreporting_values']['slas'],
                 ],
-                'GROUPBY' => ['glpi_groups_tickets.groups_id', 'respected_sla'],
+                'GROUPBY' => [Group_Ticket::getTable() . '.groups_id', 'respected_sla'],
             ];
             $query['WHERE']['AND'] = $delay;
 
