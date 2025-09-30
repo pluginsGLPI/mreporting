@@ -998,6 +998,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                 ],
                 'GROUPBY' => [SLA::getTable() . '.name', 'period', 'respected_sla'],
             ];
+            $query['WHERE']['AND'] = $delay;
 
             $result = $DB->request($query);
             foreach ($result as $data) {
