@@ -5,9 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [UNRELEASED] - 
+## [UNRELEASED]
 
-### Fixed
+## [1.8.9] - 2025-09-30
 
  - Fix SQL alias errors and undefined array keys
  - Fix missing `delay` to where clause
