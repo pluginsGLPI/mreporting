@@ -1,5 +1,7 @@
 <?php
 
+use Glpi\Exception\Http\NotFoundHttpException;
+
 /**
  * -------------------------------------------------------------------------
  * Mreporting plugin for GLPI
@@ -29,7 +31,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-    throw new \Glpi\Exception\Http\NotFoundHttpException("Sorry. You can't access directly to this file");
+    throw new NotFoundHttpException("Sorry. You can't access directly to this file");
 }
 
 /**
@@ -72,7 +74,7 @@ class PluginMreportingNotificationMail extends NotificationMailing
         // Attach pdf to mail
         $mmail->AddAttachment($options['attachment']['path'], $options['attachment']['name']);
 
-        $messageerror = __('Error in sending the email');
+        $messageerror = __s('Error in sending the email');
 
         if (!$mmail->Send()) {
             $senderror = true;
@@ -80,8 +82,8 @@ class PluginMreportingNotificationMail extends NotificationMailing
         } else {
             //TRANS to be written in logs %1$s is the to email / %2$s is the subject of the mail
             Toolbox::logInFile('mail', sprintf(
-                __('%1$s: %2$s'),
-                sprintf(__('An email was sent to %s'), $options['to']),
+                __s('%1$s: %2$s'),
+                sprintf(__s('An email was sent to %s'), $options['to']),
                 $options['subject'] . "\n",
             ));
         }

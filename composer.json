@@ -1,7 +1,7 @@
 {
     "require": {
         "php": ">=8.2",
-        "masnathan/odtphp": "dev-teclib"
+        "sboden/odtphp": "^3.2"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.85",

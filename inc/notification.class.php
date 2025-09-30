@@ -44,7 +44,7 @@ class PluginMreportingNotification extends CommonDBTM
      */
     public static function getTypeName($nb = 0)
     {
-        return __('More Reporting', 'mreporting');
+        return __s('More Reporting', 'mreporting');
     }
 
     /**
@@ -54,7 +54,7 @@ class PluginMreportingNotification extends CommonDBTM
      */
     public static function install($migration)
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         // Création du template de la notification
@@ -62,20 +62,20 @@ class PluginMreportingNotification extends CommonDBTM
         $found_template = $template->find(['itemtype' => 'PluginMreportingNotification']);
         if (empty($found_template)) {
             $template_id = $template->add([
-                'name'     => __('Notification for "More Reporting"', 'mreporting'),
+                'name'     => __s('Notification for "More Reporting"', 'mreporting'),
                 'comment'  => '',
-                'itemtype' => __CLASS__,
+                'itemtype' => self::class,
             ]);
 
-            $content_html = __("\n<p>Hello,</p>\n\n<p>GLPI reports are available.<br />\nYou will find attached in this email.</p>\n\n", 'mreporting');
+            $content_html = __s("\n<p>Hello,</p>\n\n<p>GLPI reports are available.<br />\nYou will find attached in this email.</p>\n\n", 'mreporting');
 
             // Ajout d'une traduction (texte) en Français
             $translation = new NotificationTemplateTranslation();
             $translation->add([
                 'notificationtemplates_id' => $template_id,
                 'language'                 => '',
-                'subject'                  => __('GLPI statistics reports', 'mreporting'),
-                'content_text'             => __("Hello,\n\nGLPI reports are available.\nYou will find attached in this email.\n\n", 'mreporting'),
+                'subject'                  => __s('GLPI statistics reports', 'mreporting'),
+                'content_text'             => __s("Hello,\n\nGLPI reports are available.\nYou will find attached in this email.\n\n", 'mreporting'),
                 'content_html'             => $content_html,
             ]);
 
@@ -83,12 +83,12 @@ class PluginMreportingNotification extends CommonDBTM
             $notification    = new Notification();
             $notification_id = $notification->add(
                 [
-                    'name'         => __('Notification for "More Reporting"', 'mreporting'),
+                    'name'         => __s('Notification for "More Reporting"', 'mreporting'),
                     'comment'      => '',
                     'entities_id'  => 0,
                     'is_recursive' => 1,
                     'is_active'    => 1,
-                    'itemtype'     => __CLASS__,
+                    'itemtype'     => self::class,
                     'event'        => 'sendReporting',
                 ],
             );
@@ -120,10 +120,8 @@ class PluginMreportingNotification extends CommonDBTM
      */
     public static function uninstall()
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
-
-        $queries = [];
 
         // Remove NotificationTargets and Notifications
         $notification = new Notification();
@@ -163,7 +161,7 @@ class PluginMreportingNotification extends CommonDBTM
     {
         switch ($name) {
             case 'SendNotifications':
-                return ['description' => __('Notification for "More Reporting"', 'mreporting')];
+                return ['description' => __s('Notification for "More Reporting"', 'mreporting')];
         }
 
         return [];
@@ -190,7 +188,7 @@ class PluginMreportingNotification extends CommonDBTM
      */
     public static function cronSendNotifications($task)
     {
-        $task->log(__('Notification(s) sent !', 'mreporting'));
+        $task->log(__s('Notification(s) sent !', 'mreporting'));
         PluginMreportingNotificationEvent::raiseEvent('sendReporting', new self(), $task->fields);
 
         return 1;

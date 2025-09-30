@@ -35,7 +35,7 @@
  */
 function plugin_mreporting_install()
 {
-    /** @var \DBmysql $DB */
+    /** @var DBmysql $DB */
     global $DB;
 
     $version   = plugin_version_mreporting();
@@ -231,7 +231,7 @@ function plugin_mreporting_install()
     }
 
     // == Install notifications
-    require_once 'inc/notification.class.php';
+    require_once __DIR__ . '/inc/notification.class.php';
     PluginMreportingNotification::install($migration);
     CronTask::Register('PluginMreportingNotification', 'SendNotifications', MONTH_TIMESTAMP);
 
@@ -239,9 +239,9 @@ function plugin_mreporting_install()
     $migration->migrationOneTable('glpi_plugin_mreporting_preferences');
 
     // == Init available reports
-    require_once 'inc/baseclass.class.php';
-    require_once 'inc/common.class.php';
-    require_once 'inc/config.class.php';
+    require_once __DIR__ . '/inc/baseclass.class.php';
+    require_once __DIR__ . '/inc/common.class.php';
+    require_once __DIR__ . '/inc/config.class.php';
     $config = new PluginMreportingConfig();
     $config->createFirstConfig();
 
@@ -280,7 +280,7 @@ function plugin_mreporting_uninstall()
         $obj->deleteByCriteria(['itemtype' => 'PluginMreportingConfig']);
     }
 
-    require_once 'inc/notification.class.php';
+    require_once __DIR__ . '/inc/notification.class.php';
     PluginMreportingNotification::uninstall();
 
     return true;
@@ -343,12 +343,10 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num)
                                     continue;
                                 }
 
-                                if ($data['raw']["ITEM_$num"] == $funct_name) {
-                                    if (!empty($classname)) {
-                                        $short_classname = str_replace('PluginMreporting', '', $classname);
-                                        if (isset($LANG['plugin_mreporting'][$short_classname][$funct_name]['title'])) {
-                                            $title_func = $LANG['plugin_mreporting'][$short_classname][$funct_name]['title'];
-                                        }
+                                if ($data['raw']["ITEM_$num"] == $funct_name && !empty($classname)) {
+                                    $short_classname = str_replace('PluginMreporting', '', $classname);
+                                    if (isset($LANG['plugin_mreporting'][$short_classname][$funct_name]['title'])) {
+                                        $title_func = $LANG['plugin_mreporting'][$short_classname][$funct_name]['title'];
                                     }
                                 }
                             }
@@ -370,7 +368,6 @@ function plugin_mreporting_MassiveActionsFieldsDisplay($options = [])
 {
     $table     = $options['options']['table'];
     $field     = $options['options']['field'];
-    $linkfield = $options['options']['linkfield'];
     if ($table == getTableForItemType($options['itemtype'])) {
         // Table fields
         switch ($table . '.' . $field) {

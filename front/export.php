@@ -42,10 +42,10 @@ Html::header_nocache();
 $common = new PluginMreportingCommon();
 $common->export($_REQUEST);
 //   } else {
-//      Session::addMessageAfterRedirect(__("Please, select a model in your preferences", 'mreporting'), false, ERROR);
+//      Session::addMessageAfterRedirect(__s("Please, select a model in your preferences", 'mreporting'), false, ERROR);
 //      Html::redirect("../../../front/preference.php");
 //   }
 //} else {
-//   Session::addMessageAfterRedirect(__("No model available", 'mreporting'), false, ERROR);
+//   Session::addMessageAfterRedirect(__s("No model available", 'mreporting'), false, ERROR);
 //   Html::back();
 //}

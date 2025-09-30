@@ -341,7 +341,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
         foreach ($base as $k => $v) {
             $amount      = 255 - $v;
-            $amount      = $amount / 100;
+            $amount /= 100;
             $amount      = round($amount * $factor);
             $new_decimal = $v + $amount;
 
@@ -590,11 +590,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = [];
-        }
+        $datas = $raw_datas['datas'] ?? [];
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -609,7 +605,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
         if (count($datas) <= 0) {
             if ($export != 'odtall') {
-                echo __('No data for this date range !', 'mreporting');
+                echo __s('No data for this date range !', 'mreporting');
                 $end['opt']['export']   = false;
                 $end['opt']['randname'] = false;
                 $end['opt']['f_name']   = $opt['f_name'];
@@ -643,10 +639,8 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         $nb_bar = count($datas);
         $width  = $this->width;
         $height = 30 * $nb_bar + 80;
-        if ($dashboard) {
-            if ($height > 380) {
-                $height = 380;
-            }
+        if ($dashboard && $height > 380) {
+            $height = 380;
         }
         $height_bar = .7 * $height / ($nb_bar + 1);
 
@@ -795,11 +789,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = [];
-        }
+        $datas = $raw_datas['datas'] ?? [];
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -814,7 +804,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
         if (count($datas) <= 0) {
             if ($export != 'odtall') {
-                echo __('No data for this date range !', 'mreporting');
+                echo __s('No data for this date range !', 'mreporting');
                 $end['opt']['export']   = false;
                 $end['opt']['randname'] = false;
                 $end['opt']['f_name']   = $opt['f_name'];
@@ -1042,11 +1032,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = [];
-        }
+        $datas = $raw_datas['datas'] ?? [];
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -1061,7 +1047,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
         if (count($datas) <= 0) {
             if ($export != 'odtall') {
-                echo __('No data for this date range !', 'mreporting');
+                echo __s('No data for this date range !', 'mreporting');
                 $end['opt']['export']   = false;
                 $end['opt']['randname'] = false;
                 $end['opt']['f_name']   = $opt['f_name'];
@@ -1084,9 +1070,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         if ($unit == '%') {
             $raw_datas['datas'] = PluginMreportingCommon::compileDatasForUnit($datas, $unit);
         }
-
-        $values = array_values($datas);
-        $labels = array_keys($datas);
 
         $width  = $this->width - 200;
         $height = 500;
@@ -1172,17 +1155,15 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         $index           = 0;
         $x               = $width  / 2;
         $y               = $height / 2 + 60;
-        $params['depth'] = isset($params['depth'])
-         ? $params['depth']
-         : PluginMreportingCommon::getArrayDepth($datas);
-        $params['start_angle']   = isset($params['start_angle']) ? $params['start_angle'] : 0;
-        $params['max_angle']     = isset($params['max_angle']) ? $params['max_angle'] : 360;
-        $params['level']         = isset($params['level']) ? $params['level'] : 0;
-        $params['current_index'] = isset($params['current_index']) ? $params['current_index'] : false;
+        $params['depth'] ??= PluginMreportingCommon::getArrayDepth($datas);
+        $params['start_angle'] ??= 0;
+        $params['max_angle'] ??= 360;
+        $params['level'] ??= 0;
+        $params['current_index'] ??= false;
         $step                    = $height / $params['depth'];
         $radius                  = $step * ($params['level'] + 1);
 
-        $darkerpalette = self::getDarkerPalette(50);
+        self::getDarkerPalette(50);
 
         foreach ($datas as $key => $data) {
             $sum   = PluginMreportingCommon::getArraySum($data);
@@ -1207,7 +1188,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             }
 
             //get colors
-            $palette = $this->getPalette(50);
+            $palette = static::getPalette(50);
             if ($params['current_index'] === false) {
                 $color = $palette[$index];
             } else {
@@ -1389,11 +1370,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = [];
-        }
+        $datas = $raw_datas['datas'] ?? [];
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -1408,7 +1385,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
         if (count($datas) <= 0) {
             if ($export != 'odtall') {
-                echo __('No data for this date range !', 'mreporting');
+                echo __s('No data for this date range !', 'mreporting');
                 $end['opt']['export']   = false;
                 $end['opt']['randname'] = false;
                 $end['opt']['f_name']   = $opt['f_name'];
@@ -1647,11 +1624,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = [];
-        }
+        $datas = $raw_datas['datas'] ?? [];
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -1666,7 +1639,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
         if (count($datas) <= 0) {
             if ($export != 'odtall') {
-                echo __('No data for this date range !', 'mreporting');
+                echo __s('No data for this date range !', 'mreporting');
                 $end['opt']['export']   = false;
                 $end['opt']['randname'] = false;
                 $end['opt']['f_name']   = $opt['f_name'];
@@ -1870,7 +1843,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 //create label 2
                 $box       = @imageTTFBbox($this->fontsize - 1, $this->fontangle, $this->font, $labels2[$label]);
                 $textwidth = abs($box[4] - $box[6]);
-                $textwidth = abs(sqrt((pow($textwidth, 2) / 2)));
+                $textwidth = abs(sqrt(($textwidth ** 2 / 2)));
 
                 $lx = round($y_labels_width + $index1 * $x_bar + ($width_bar / 2.5));
                 imagettftext(
@@ -1997,11 +1970,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = [];
-        }
+        $datas = $raw_datas['datas'] ?? [];
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -2016,7 +1985,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
         if (count($datas) <= 0) {
             if ($export != 'odtall') {
-                echo __('No data for this date range !', 'mreporting');
+                echo __s('No data for this date range !', 'mreporting');
                 $end['opt']['export']   = false;
                 $end['opt']['randname'] = false;
                 $end['opt']['f_name']   = $opt['f_name'];
@@ -2038,7 +2007,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         $raw_datas['datas'] = $datas;
 
         $values = array_values($datas);
-        $labels = array_keys($datas);
         $max    = max($values);
         if ($max <= 1) {
             $max = 1;
@@ -2257,7 +2225,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                     $height - 10,
                     hexdec($this->black),
                     $this->font,
-                    isset($label) ? $label : '',
+                    $label ?? '',
                 );
                 imageline($image, $x2, $height - 30, $x2, $height - 27, hexdec($darkerpalette[0]));
             }
@@ -2332,11 +2300,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = [];
-        }
+        $datas = $raw_datas['datas'] ?? [];
 
         $options = ['title'   => $title,
             'desc'            => $desc,
@@ -2351,7 +2315,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
         if (count($datas) <= 0) {
             if ($export != 'odtall') {
-                echo __('No data for this date range !', 'mreporting');
+                echo __s('No data for this date range !', 'mreporting');
                 $end['opt']['export']   = false;
                 $end['opt']['randname'] = false;
                 $end['opt']['f_name']   = $opt['f_name'];
@@ -2403,7 +2367,6 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         if ($dashboard) {
             $height = 350;
         }
-        $y_labels_width  = .1 * $this->width;
         $x_labels_height = 60;
         $x_bar           = 30;
         $legend_height   = $nb_labels2 * 15 + 20;
@@ -2430,11 +2393,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 imageLine($image, $x_bar, (int) $yaxis, $x_bar + $width_line * ($nb - 1), (int) $yaxis, hexdec($this->grey));
 
                 //value ticks
-                if ($i * $max / 12 < 10) {
-                    $val = round($i * $max / 12, 1);
-                } else {
-                    $val = round($i * $max / 12);
-                }
+                $val = $i * $max / 12 < 10 ? round($i * $max / 12, 1) : round($i * $max / 12);
 
                 $box       = @imageTTFBbox($this->fontsize - 1, $this->fontangle, $this->font, strval($val));
                 $textwidth = abs($box[4] - $box[0]);

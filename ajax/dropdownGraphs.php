@@ -41,5 +41,5 @@ if ($_POST['graphname'] != -1) {
     $_POST['name']      = $test[1];
 
     $config = new PluginMreportingConfig();
-    echo "&nbsp;<a href='" . htmlspecialchars($config->getFormURL()) . '?name=' . htmlspecialchars($_POST['name']) . '&classname=' . htmlspecialchars($_POST['classname']) . "'>" . __('Send') . '</a>';
+    echo "&nbsp;<a href='" . htmlspecialchars($config->getFormURL()) . '?name=' . htmlspecialchars($_POST['name']) . '&classname=' . htmlspecialchars($_POST['classname']) . "'>" . __s('Send') . '</a>';
 }

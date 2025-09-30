@@ -1,5 +1,7 @@
 <?php
 
+use Glpi\Exception\Http\NotFoundHttpException;
+
 /**
  * -------------------------------------------------------------------------
  * Mreporting plugin for GLPI
@@ -29,7 +31,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-    throw new \Glpi\Exception\Http\NotFoundHttpException("Sorry. You can't access directly to this file");
+    throw new NotFoundHttpException("Sorry. You can't access directly to this file");
 }
 
 class PluginMreportingProfile extends CommonDBTM
@@ -38,7 +40,7 @@ class PluginMreportingProfile extends CommonDBTM
 
     public static function getTypeName($nb = 0)
     {
-        return __('More Reporting', 'mreporting');
+        return __s('More Reporting', 'mreporting');
     }
 
     //if profile deleted
@@ -73,7 +75,7 @@ class PluginMreportingProfile extends CommonDBTM
             case 'Profile':
                 return self::getTypeName();
             case 'PluginMreportingConfig':
-                return __('Rights management', 'mreporting');
+                return __s('Rights management', 'mreporting');
             default:
                 return '';
         }
@@ -98,7 +100,7 @@ class PluginMreportingProfile extends CommonDBTM
 
     public function getFromDBByProfile($profiles_id)
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $query = [
@@ -121,7 +123,7 @@ class PluginMreportingProfile extends CommonDBTM
     */
     public static function addRightToAllProfiles()
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $query_config = [
@@ -151,7 +153,7 @@ class PluginMreportingProfile extends CommonDBTM
 
     public static function getRight()
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $query = [
@@ -176,7 +178,7 @@ class PluginMreportingProfile extends CommonDBTM
     */
     public static function addRightToProfile($idProfile)
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         //get all reports
@@ -203,7 +205,7 @@ class PluginMreportingProfile extends CommonDBTM
     */
     public function addRightToReports($report_id)
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $reportProfile = new self();
@@ -262,7 +264,7 @@ class PluginMreportingProfile extends CommonDBTM
 
         Plugin::doHook('pre_item_form', ['item' => $this, 'options' => &$options]);
 
-        echo "<tr><th colspan='3'>" . __('Rights management', 'mreporting') . "</th></tr>\n";
+        echo "<tr><th colspan='3'>" . __s('Rights management', 'mreporting') . "</th></tr>\n";
 
         $config = new PluginMreportingConfig();
         foreach ($config->find() as $report) {
@@ -304,12 +306,12 @@ class PluginMreportingProfile extends CommonDBTM
         echo "<input type='submit'
                style='background-image: url(" .
                   $CFG_GLPI['root_doc'] . "/pics/add_dropdown.png);background-repeat:no-repeat;width:14px;border:none;cursor:pointer;'
-               name='giveReadAccessForAllReport' value='' title='" . __('Select all') . "'>";
+               name='giveReadAccessForAllReport' value='' title='" . __s('Select all') . "'>";
 
         echo "<input type='submit'
                style='background-image: url(" .
                   $CFG_GLPI['root_doc'] . "/pics/sub_dropdown.png);background-repeat:no-repeat;width:14px;border:none;cursor:pointer;'
-               name='giveNoneAccessForAllReport' value='' title='" . __('Deselect all') . "'>";
+               name='giveNoneAccessForAllReport' value='' title='" . __s('Deselect all') . "'>";
 
         echo '<br><br>';
 
@@ -329,7 +331,7 @@ class PluginMreportingProfile extends CommonDBTM
     public function showFormForManageProfile($items, $options = [])
     {
         /**
-         * @var \DBmysql $DB
+         * @var DBmysql $DB
          * @var array $CFG_GLPI
          */
         global $DB, $CFG_GLPI;
@@ -338,11 +340,11 @@ class PluginMreportingProfile extends CommonDBTM
             return false;
         }
 
-        $target = isset($options['target']) ? $options['target'] : $this->getFormURL();
+        $target = $options['target'] ?? $this->getFormURL();
 
         echo '<form action="' . htmlspecialchars($target) . '" method="post" name="form">';
         echo "<table class='tab_cadre_fixe'>\n";
-        echo "<tr><th colspan='3'>" . __('Rights management', 'mreporting') . "</th></tr>\n";
+        echo "<tr><th colspan='3'>" . __s('Rights management', 'mreporting') . "</th></tr>\n";
 
         $query = [
             'SELECT' => ['id', 'name'],
@@ -376,11 +378,11 @@ class PluginMreportingProfile extends CommonDBTM
         echo "<div style='float:right;'>";
         echo "<input type='submit' style='background-image: url(" . htmlspecialchars($CFG_GLPI['root_doc']) .
            "/pics/add_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;' " .
-           "name='giveReadAccessForAllProfile' value='' title='" . __('Select all') . "'>";
+           "name='giveReadAccessForAllProfile' value='' title='" . __s('Select all') . "'>";
 
         echo "<input type='submit' style='background-image: url(" . htmlspecialchars($CFG_GLPI['root_doc']) .
            "/pics/sub_dropdown.png);background-repeat:no-repeat; width:14px;border:none;cursor:pointer;' " .
-           "name='giveNoneAccessForAllProfile' value='' title='" . __('Deselect all') . "'><br><br>";
+           "name='giveNoneAccessForAllProfile' value='' title='" . __s('Deselect all') . "'><br><br>";
         echo '</div>';
 
         echo "<div class='center'>";
@@ -427,12 +429,7 @@ class PluginMreportingProfile extends CommonDBTM
                 'reports'     => $report_id,
             ],
         );
-
-        if ($res && $prof->fields['right'] == READ) {
-            return true;
-        }
-
-        return false;
+        return $res && $prof->fields['right'] == READ;
     }
 
     // Hook done on add item case

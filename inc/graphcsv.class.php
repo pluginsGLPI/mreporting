@@ -62,7 +62,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : [];
+        $datas = $raw_datas['datas'] ?? [];
 
         if (count($datas) <= 0) {
             return false;
@@ -129,7 +129,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : [];
+        $datas = $raw_datas['datas'] ?? [];
 
         if (count($datas) <= 0) {
             return '';
@@ -214,11 +214,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = [];
-        }
+        $datas = $raw_datas['datas'] ?? [];
 
         if (count($datas) <= 0) {
             return '';

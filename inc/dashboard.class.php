@@ -36,7 +36,7 @@ class PluginMreportingDashboard extends CommonDBTM
             get_class($item) == 'Central'
             && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])
         ) {
-            return [1 => __('Dashboard', 'mreporting')];
+            return [1 => __s('Dashboard', 'mreporting')];
         }
 
         return '';
@@ -92,7 +92,7 @@ class PluginMreportingDashboard extends CommonDBTM
 
         if ($show_reports_dropdown) {
             echo "<div class='center'>";
-            echo '<b>' . __('Select a report to display', 'mreporting') . '</b> : ';
+            echo '<b>' . __s('Select a report to display', 'mreporting') . '</b> : ';
             echo PluginMreportingCommon::getSelectAllReports(true);
             echo '<br />';
             echo '<br />';
@@ -103,14 +103,14 @@ class PluginMreportingDashboard extends CommonDBTM
         if (empty($widgets)) {
             echo "<div class='empty_dashboard'>";
             echo "<div class='empty_dashboard_text'>";
-            echo __('Dashboard is empty. Please add reports by clicking on the icon', 'mreporting');
+            echo __s('Dashboard is empty. Please add reports by clicking on the icon', 'mreporting');
             echo '</div>';
             echo '</div>';
         }
 
         echo "<div class='m_dashboard_controls'>";
         echo "<button type='button' class='add_report btn btn-ghost-secondary me-3 mt-2' id='addReport_button'
-                    title='" . __('Add a report', 'mreporting') . "' data-bs-toggle='tooltip'>
+                    title='" . __s('Add a report', 'mreporting') . "' data-bs-toggle='tooltip'>
         <i class='ti ti-square-plus'></i>
       </button>";
         echo '</div>';
@@ -136,7 +136,7 @@ class PluginMreportingDashboard extends CommonDBTM
 
             $('#addReport_button').on('click', function( event ) {
                glpi_html_dialog({
-                  title: '" . __('Select a report to add', 'mreporting') . "',
+                  title: '" . __s('Select a report to add', 'mreporting') . "',
                   body: {$modal_html}
                })
             });
@@ -184,22 +184,20 @@ class PluginMreportingDashboard extends CommonDBTM
             $_REQUEST['short_classname'] = $short_classname;
             PluginMreportingCommon::getSelectorValuesByUser();
 
-            if (!empty($short_classname) && !empty($f_name)) {
-                if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-                    $opt = ['short_classname' => $short_classname,
-                        'f_name'              => $f_name,
-                        'gtype'               => $gtype,
-                        'width'               => 410,
-                        'hide_title'          => true,
-                    ];
-                    $common = new PluginMreportingCommon();
-                    ob_start();
-                    $report_script = $common->showGraph($opt);
-                    if ($report_script === false) {
-                        $report_script = '</div>';
-                    }
-                    $report_script = ob_get_clean() . $report_script;
+            if (!empty($short_classname) && !empty($f_name) && isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
+                $opt = ['short_classname' => $short_classname,
+                    'f_name'              => $f_name,
+                    'gtype'               => $gtype,
+                    'width'               => 410,
+                    'hide_title'          => true,
+                ];
+                $common = new PluginMreportingCommon();
+                ob_start();
+                $report_script = $common->showGraph($opt);
+                if ($report_script === false) {
+                    $report_script = '</div>';
                 }
+                $report_script = ob_get_clean() . $report_script;
             }
 
             $rand_widget = mt_rand();
@@ -210,7 +208,7 @@ class PluginMreportingDashboard extends CommonDBTM
 
             $('#configWidget_button$rand_widget').on('click', function( event ) {
                glpi_ajax_dialog({
-                  title: '" . __('Configure report', 'mreporting') . "',
+                  title: '" . __s('Configure report', 'mreporting') . "',
                   dialogclass: 'modal-lg',
                   url: '$root_ajax',
                   params: {
@@ -265,7 +263,7 @@ class PluginMreportingDashboard extends CommonDBTM
     {
         $out = "<form method='post' action='" . $this->getFormURL() . "'>";
         $out .= PluginMreportingCommon::getSelectAllReports(false, true);
-        $out .= "<input type='submit' class='mt-2 btn btn-primary' name='addReports' value='" . __('Add') . "' class='submit'>";
+        $out .= "<input type='submit' class='mt-2 btn btn-primary' name='addReports' value='" . __s('Add') . "' class='submit'>";
         $out .= Html::closeForm(false);
         $out .= '</div>';
 
@@ -291,7 +289,7 @@ class PluginMreportingDashboard extends CommonDBTM
         $report->getFromDB($dashboard->fields['reports_id']);
 
         $index = str_replace('PluginMreporting', '', $report->fields['classname']);
-        $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
+        $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
         $out = 'Nothing to show';
 
@@ -303,7 +301,7 @@ class PluginMreportingDashboard extends CommonDBTM
             $gtype = strtolower($ex_func[1]);
         }
 
-        $short_classname = str_replace('PluginMreporting', '', $report->fields['classname']);
+        str_replace('PluginMreporting', '', $report->fields['classname']);
 
         echo $out;
     }

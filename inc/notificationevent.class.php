@@ -1,5 +1,7 @@
 <?php
 
+use Glpi\Exception\Http\NotFoundHttpException;
+
 /**
  * -------------------------------------------------------------------------
  * Mreporting plugin for GLPI
@@ -29,7 +31,7 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-    throw new \Glpi\Exception\Http\NotFoundHttpException("Sorry. You can't access directly to this file");
+    throw new NotFoundHttpException("Sorry. You can't access directly to this file");
 }
 
 /**
@@ -94,59 +96,54 @@ class PluginMreportingNotificationEvent extends NotificationEvent
                     $notificationtarget->addForTarget($target, $options);
 
                     foreach ($notificationtarget->getTargets() as $user_email => $users_infos) {
-                        if (
-                            $label
-                            || $notificationtarget->validateSendTo($event, $users_infos, $notify_me)
-                        ) {
-                            //If the user have not yet been notified
-                            if (!isset($email_processed[$users_infos['language']][$users_infos['email']])) {
-                                //If ther user's language is the same as the template's one
-                                if (
-                                    isset($email_notprocessed[$users_infos['language']]
-                                                     [$users_infos['email']])
-                                ) {
-                                    unset($email_notprocessed[$users_infos['language']]
-                                                [$users_infos['email']]);
-                                }
-                                if (
-                                    $tid = $template->getTemplateByLanguage(
-                                        $notificationtarget,
-                                        $users_infos,
-                                        $event,
-                                        $options,
-                                    )
-                                ) {
-                                    //Send notification to the user
-                                    if ($label == '') {
-                                        PluginMreportingNotification::send(
-                                            $template->getDataToSend(
-                                                $notificationtarget,
-                                                (string) $tid,
-                                                $users_infos[$eventClass::getTargetFieldName()],
-                                                $users_infos,
-                                                $options,
-                                            ),
-                                            [],
-                                        );
-                                    } else {
-                                        $notificationtarget->getFromDB($target['id']);
-                                        echo "<tr class='tab_bg_2'>";
-                                        echo '<td>' . htmlspecialchars($label) . '</td>';
-                                        echo '<td>' . htmlspecialchars($notificationtarget->getNameID()) . '</td>';
-                                        echo '<td>' . sprintf(
-                                            __('%1$s (%2$s)'),
-                                            $template->getName(),
-                                            $users_infos['language'],
-                                        ) . '</td>';
-                                        echo '<td>' . htmlspecialchars($users_infos['email']) . '</td>';
-                                        echo '</tr>';
-                                    }
-                                    $email_processed[$users_infos['language']][$users_infos['email']]
-                                                                     = $users_infos;
+                        //If the user have not yet been notified
+                        if (($label || $notificationtarget->validateSendTo($event, $users_infos, $notify_me)) && !isset($email_processed[$users_infos['language']][$users_infos['email']])) {
+                            //If ther user's language is the same as the template's one
+                            if (
+                                isset($email_notprocessed[$users_infos['language']]
+                                                 [$users_infos['email']])
+                            ) {
+                                unset($email_notprocessed[$users_infos['language']]
+                                            [$users_infos['email']]);
+                            }
+                            if (
+                                $tid = $template->getTemplateByLanguage(
+                                    $notificationtarget,
+                                    $users_infos,
+                                    $event,
+                                    $options,
+                                )
+                            ) {
+                                //Send notification to the user
+                                if ($label == '') {
+                                    PluginMreportingNotification::send(
+                                        $template->getDataToSend(
+                                            $notificationtarget,
+                                            (string) $tid,
+                                            $users_infos[$eventClass::getTargetFieldName()],
+                                            $users_infos,
+                                            $options,
+                                        ),
+                                        [],
+                                    );
                                 } else {
-                                    $email_notprocessed[$users_infos['language']][$users_infos['email']]
-                                                                        = $users_infos;
+                                    $notificationtarget->getFromDB($target['id']);
+                                    echo "<tr class='tab_bg_2'>";
+                                    echo '<td>' . htmlspecialchars($label) . '</td>';
+                                    echo '<td>' . htmlspecialchars($notificationtarget->getNameID()) . '</td>';
+                                    echo '<td>' . sprintf(
+                                        __s('%1$s (%2$s)'),
+                                        $template->getName(),
+                                        $users_infos['language'],
+                                    ) . '</td>';
+                                    echo '<td>' . htmlspecialchars($users_infos['email']) . '</td>';
+                                    echo '</tr>';
                                 }
+                                $email_processed[$users_infos['language']][$users_infos['email']]
+                                                                 = $users_infos;
+                            } else {
+                                $email_notprocessed[$users_infos['language']][$users_infos['email']]
+                                                                    = $users_infos;
                             }
                         }
                     }
@@ -155,7 +152,6 @@ class PluginMreportingNotificationEvent extends NotificationEvent
         }
         unset($email_processed);
         unset($email_notprocessed);
-        $template = null;
 
         return true;
     }

@@ -41,7 +41,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHbarTicketNumberByEntity($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarTicketNumberByEntity'] = ['dateinterval',
@@ -88,11 +88,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $result = $DB->request($query);
 
         foreach ($result as $ticket) {
-            if (empty($ticket['name'])) {
-                $label = __('Root entity');
-            } else {
-                $label = $ticket['name'];
-            }
+            $label = empty($ticket['name']) ? __s('Root entity') : $ticket['name'];
             $datas['datas'][$label] = $ticket['count'];
         }
 
@@ -101,7 +97,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHgbarTicketNumberByCatAndEntity($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCatAndEntity']
@@ -144,7 +140,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $categories = [];
         foreach ($result as $data) {
             if (empty($data['category'])) {
-                $data['category'] = __('None');
+                $data['category'] = __s('None');
             }
             $categories[$data['category']] = $data['itilcategories_id'];
         }
@@ -155,7 +151,6 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         foreach (array_values($categories) as $id) {
             $tmp_cat[] = "cat_$id";
         }
-        $cat_str = "'" . implode("', '", array_values($categories)) . "'";
         $cat_ids = array_values($categories);
 
         //count ticket by entity and categories previously selected
@@ -194,14 +189,14 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $result = $DB->request($query);
         foreach ($result as $data) {
             if (empty($data['entity'])) {
-                $data['entity'] = __('Root entity');
+                $data['entity'] = __s('Root entity');
             }
             $tmp_datas[$data['entity']]['cat_' . $data['cat_id']] = $data['nb'];
         }
 
         //merge missing datas (0 ticket for a category)
         foreach ($tmp_datas as &$data) {
-            $data = $data + array_fill_keys($tmp_cat, 0);
+            $data += array_fill_keys($tmp_cat, 0);
         }
 
         //replace cat_id by labels2
@@ -218,7 +213,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
         $datas['datas'] = $tmp_datas;
 
-        foreach ($categories as $key => $value) {
+        foreach (array_keys($categories) as $key) {
             $datas['labels2'][$key] = $key;
         }
 
@@ -227,7 +222,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportPieTicketOpenedAndClosed($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportPieTicketOpenedAndClosed']
@@ -264,7 +259,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportPieTicketOpenedbyStatus($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $status_to_show = [];
@@ -278,7 +273,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         // Get status to show
         if (isset($_POST['status_1'])) {
             foreach ($_POST as $key => $value) {
-                if ((substr($key, 0, 7) == 'status_') && ($value == 1)) {
+                if ((str_starts_with($key, 'status_')) && ($value == 1)) {
                     $status_to_show[] = substr($key, 7, 1);
                 }
             }
@@ -315,7 +310,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportPieTopTenAuthor($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportPieTopTenAuthor']
@@ -359,11 +354,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
         $result = $DB->request($query);
         foreach ($result as $ticket) {
-            if ($ticket['users_id'] == 0) {
-                $label = __('Undefined', 'mreporting');
-            } else {
-                $label = getUserName($ticket['users_id']);
-            }
+            $label = $ticket['users_id'] == 0 ? __s('Undefined', 'mreporting') : getUserName($ticket['users_id']);
             $datas['datas'][$label] = $ticket['count'];
         }
 
@@ -388,7 +379,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     private function reportHgbarTicketNumberByCategoryAndByType(array $config, $filter)
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHgbarTicketNumberByCategoryAndByType']
@@ -433,13 +424,9 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         foreach ($result as $ticket) {
             if (empty($ticket['category_id'])) {
                 $ticket['category_id']   = 0;
-                $ticket['category_name'] = __('None');
+                $ticket['category_name'] = __s('None');
             }
-            if ($ticket['type'] == 0) {
-                $type = __('Undefined', 'mreporting');
-            } else {
-                $type = Ticket::getTicketTypeName(intval($ticket['type']));
-            }
+            $type = $ticket['type'] == 0 ? __s('Undefined', 'mreporting') : Ticket::getTicketTypeName(intval($ticket['type']));
             $datas['labels2'][$type]                         = $type;
             $datas['datas'][$ticket['category_name']][$type] = $ticket['count'];
         }
@@ -449,7 +436,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHgbarTicketNumberByService($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHgbarTicketNumberByService']
@@ -502,7 +489,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
             $result = $DB->request($query);
             foreach ($result as $ticket) {
-                $datas['datas'][__('None')][$filter['label']] = $ticket['count'];
+                $datas['datas'][__s('None')][$filter['label']] = $ticket['count'];
             }
 
             $query = [
@@ -550,7 +537,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHgbarOpenedTicketNumberByCategory($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHgbarOpenedTicketNumberByCategory']
@@ -565,7 +552,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         // Get status to show
         if (isset($_POST['status_1'])) {
             foreach ($_POST as $key => $value) {
-                if (substr($key, 0, 7) == 'status_' && $value == 1) {
+                if (str_starts_with($key, 'status_') && $value == 1) {
                     $status_to_show[] = substr($key, 7, 1);
                 }
             }
@@ -609,7 +596,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
         foreach ($result as $ticket) {
             if (empty($ticket['category_name'])) {
-                $ticket['category_name'] = __('None');
+                $ticket['category_name'] = __s('None');
             }
 
             if (!isset($datas['datas'][$ticket['category_name']])) {
@@ -642,7 +629,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportAreaNbTicket($config = [], $area = true)
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportAreaNbTicket'] = ['dateinterval', 'period'];
@@ -694,7 +681,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportGlineNbTicket($config = [], $area = false)
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportGlineNbTicket']
@@ -709,7 +696,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         // Get status to show
         if (isset($_POST['status_1'])) {
             foreach ($_POST as $key => $value) {
-                if ((substr($key, 0, 7) == 'status_') && ($value == 1)) {
+                if ((str_starts_with($key, 'status_')) && ($value == 1)) {
                     $status_to_show[] = substr($key, 7, 1);
                 }
             }
@@ -775,7 +762,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         //merge missing datas (not defined status for a month)
         if (isset($datas['datas'])) {
             foreach ($datas['datas'] as &$data) {
-                $data = $data + array_fill_keys($tmp_date, 0);
+                $data += array_fill_keys($tmp_date, 0);
             }
         }
 
@@ -791,7 +778,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportSunburstTicketByCategories($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportSunburstTicketByCategories'] = ['dateinterval'];
@@ -800,7 +787,6 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
 
         $flat_datas = [];
-        $datas      = [];
 
         $query = [
             'SELECT' => [
@@ -837,18 +823,13 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         krsort($flat_datas);
         $itilcategory = new ITILCategory();
         foreach ($flat_datas as $cat_id => $current_datas) {
-            if (!isset($flat_datas[$current_datas['parent']])) {
-                if (
-                    $current_datas['parent'] != 0
-                    && $itilcategory->getFromDB(intval($current_datas['parent']))
-                ) {
-                    $flat_datas[$current_datas['parent']] = [
-                        'id'     => $current_datas['parent'],
-                        'name'   => $itilcategory->fields['name'],
-                        'parent' => $itilcategory->fields['itilcategories_id'],
-                        'count'  => 0,
-                    ];
-                }
+            if (!isset($flat_datas[$current_datas['parent']]) && ($current_datas['parent'] != 0 && $itilcategory->getFromDB(intval($current_datas['parent'])))) {
+                $flat_datas[$current_datas['parent']] = [
+                    'id'     => $current_datas['parent'],
+                    'name'   => $itilcategory->fields['name'],
+                    'parent' => $itilcategory->fields['itilcategories_id'],
+                    'count'  => 0,
+                ];
             }
         }
 
@@ -859,7 +840,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportVstackbarTicketStatusByTechnician($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportVstackbarTicketStatusByTechnician'] = ['dateinterval'];
@@ -869,7 +850,6 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
 
         $status      = $this->filters['open']['status'] + $this->filters['close']['status'];
-        $status_keys = array_keys($status);
 
         //get technician list
         $technicians = [];
@@ -921,11 +901,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 $datas['datas'][$current_status][$technician['username']] = 0;
 
                 $fullname = trim($technician['fullname'] ?? '');
-                if (!empty($fullname)) {
-                    $datas['labels2'][$technician['username']] = $fullname;
-                } else {
-                    $datas['labels2'][$technician['username']] = $technician['username'];
-                }
+                $datas['labels2'][$technician['username']] = !empty($fullname) ? $fullname : $technician['username'];
             }
         }
 
@@ -969,7 +945,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $result = $DB->request($query);
         foreach ($result as $ticket) {
             if (empty($ticket['technician'])) {
-                $ticket['technician'] = __('None');
+                $ticket['technician'] = __s('None');
             }
             $datas['datas'][$status[$ticket['status']]][$ticket['username']] = $ticket['count'];
         }
@@ -979,7 +955,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
     public function reportHbarTicketNumberByLocation($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarTicketNumberByLocation']
@@ -989,7 +965,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
 
         $datas = [];
-        $limit = (isset($_REQUEST['glpilist_limit'])) ? $_REQUEST['glpilist_limit'] : 20;
+        $limit = $_REQUEST['glpilist_limit'] ?? 20;
 
         $query = [
             "SELECT" => [
@@ -1033,11 +1009,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
 
         $result = $DB->request($query);
         foreach ($result as $ticket) {
-            if (empty($ticket['name'])) {
-                $label = __('None');
-            } else {
-                $label = $ticket['name'];
-            }
+            $label = empty($ticket['name']) ? __s('None') : $ticket['name'];
             $datas['datas'][$label] = $ticket['count'];
         }
 
@@ -1054,7 +1026,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
     */
     public function customExportDates(array $opt, string $functionname)
     {
-        $config = PluginMreportingConfig::initConfigParams($functionname, __CLASS__);
+        $config = PluginMreportingConfig::initConfigParams($functionname, self::class);
 
         $opt['date1'] = date('Y-m-j', strtotime($opt['date2'] . ' -' . $config['delay'] . ' days'));
 

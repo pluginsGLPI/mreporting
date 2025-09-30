@@ -163,7 +163,7 @@ class PluginMreportingGraph
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
@@ -372,7 +372,7 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
@@ -574,15 +574,11 @@ JAVASCRIPT;
 
         $this->initGraph($options);
 
-        if (isset($_REQUEST['export'])) {
-            $export_txt = 'true';
-        } else {
-            $export_txt = 'false';
-        }
+        $export_txt = isset($_REQUEST['export']) ? 'true' : 'false';
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
@@ -856,7 +852,7 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
@@ -1088,7 +1084,7 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
@@ -1331,7 +1327,7 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
@@ -1590,7 +1586,7 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
@@ -1853,11 +1849,7 @@ JAVASCRIPT;
         $out .= "];\n";
 
         echo $out;
-        if (count($values) > 0) {
-            $max = (max($values) * 1.1);
-        } else {
-            $max = 1;
-        }
+        $max = count($values) > 0 ? max($values) * 1.1 : 1;
         if ($unit == '%') {
             $max = 110;
         }
@@ -1939,7 +1931,7 @@ JAVASCRIPT;
         echo $out;
 
         if (!$stacked) {
-            $max = ($max * 1.2);
+            $max *= 1.2;
         }
         if ($unit == '%') {
             $max = 110;

@@ -52,12 +52,12 @@ if (isset($_POST['saveConfig'])) {
 } else {
     if ($_SESSION['glpiactiveprofile']['interface'] == 'helpdesk') {
         Html::helpHeader(
-            __('More Reporting', 'mreporting'),
+            __s('More Reporting', 'mreporting'),
             $_SERVER['PHP_SELF'],
         );
     } else {
         Html::header(
-            __('More Reporting', 'mreporting'),
+            __s('More Reporting', 'mreporting'),
             $_SERVER['PHP_SELF'],
             'tools',
             'PluginMreportingCommon',

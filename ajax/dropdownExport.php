@@ -40,8 +40,8 @@ if (
     if ($_POST['ext'] == 'odt') {
         echo '&nbsp;';
         $option    = [];
-        $option[1] = __('With data', 'mreporting');
-        $option[0] = __('Without data', 'mreporting');
+        $option[1] = __s('With data', 'mreporting');
+        $option[0] = __s('Without data', 'mreporting');
         Dropdown::showFromArray('withdata', $option, []);
     }
 

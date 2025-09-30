@@ -65,7 +65,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public static function getDefaultState()
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $states = [];
@@ -131,7 +131,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function computersByFabricant($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $criteria_states   = self::getCriteriaStateCondition(Computer::getTable() . '.states_id');
@@ -216,7 +216,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function computersByType($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $criteria_states   = self::getCriteriaStateCondition(Computer::getTable() . '.states_id');
@@ -299,7 +299,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function computersByAge($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $criteria_states   = self::getCriteriaStateCondition(Computer::getTable() . '.states_id');
@@ -385,7 +385,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         foreach ($result as $computer) {
             $percent = round(floatval($computer['Percent']), 2);
 
-            $datas['datas'][__($computer['Age'], 'mreporting') . " ($percent %)"] = $computer['Total'];
+            $datas['datas'][__s($computer['Age'], 'mreporting') . " ($percent %)"] = $computer['Total'];
         }
 
         return $datas;
@@ -408,7 +408,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function computersByOS($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $criteria_states   = self::getCriteriaStateCondition(Computer::getTable() . '.states_id');
@@ -489,7 +489,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $queries[] = [
             'SELECT' => [
-                new QueryExpression("'" . __('Others') . "' AS OS"),
+                new QueryExpression("'" . __s('Others') . "' AS OS"),
                 new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Percent')),
             ],
             'COUNT' => 'Total',
@@ -534,7 +534,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarWindows($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarWindows'] = ['multiplestates'];
@@ -604,7 +604,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarLinux($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarLinux'] = ['multiplestates'];
@@ -674,7 +674,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarLinuxDistro($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarLinuxDistro'] = ['multiplestates'];
@@ -727,7 +727,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarMac($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMac'] = ['multiplestates'];
@@ -791,7 +791,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarMacFamily($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMacFamily'] = ['multiplestates'];
@@ -844,13 +844,11 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             );
 
             foreach ($iterator as $version) {
-                if ($version['name'] != '' && $version['cpt']) {
-                    if (preg_match('/(10.[0-9]+)/', $version['name'], $results)) {
-                        if (!isset($data['datas'][$os['name'] . ' ' . $results[1]])) {
-                            $data['datas'][$os['name'] . ' ' . $results[1]] = $version['cpt'];
-                        } else {
-                            $data['datas'][$os['name'] . ' ' . $results[1]] += $version['cpt'];
-                        }
+                if ($version['name'] != '' && $version['cpt'] && preg_match('/(10.[0-9]+)/', $version['name'], $results)) {
+                    if (!isset($data['datas'][$os['name'] . ' ' . $results[1]])) {
+                        $data['datas'][$os['name'] . ' ' . $results[1]] = $version['cpt'];
+                    } else {
+                        $data['datas'][$os['name'] . ' ' . $results[1]] += $version['cpt'];
                     }
                 }
             }
@@ -879,7 +877,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function fusionInventory($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $plugin = new Plugin();
@@ -887,7 +885,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             return [];
         }
         $sql_states      = self::getStateCondition('glpi_computers.states_id', true);
-        $total_computers = countElementsInTable(
+        countElementsInTable(
             'glpi_computers',
             [
                 'is_deleted'  => 0,
@@ -923,7 +921,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     /* ==== MONITOR REPORST ==== */
     public function reportHbarMonitors($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $_SESSION['mreporting_selector']['reportHbarMonitors'] = ['multiplestates'];
@@ -957,11 +955,11 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
         $data = [];
         foreach ($DB->request($query) as $result) {
-            $label = $result['cpt'] . ' ' . _n('Monitor', 'Monitors', $result['cpt']);
+            $label = $result['cpt'] . ' ' . _sn('Monitor', 'Monitors', $result['cpt']);
             if (!isset($data['datas'][$label])) {
                 $data['datas'][$label] = 0;
             }
-            $data['datas'][$label] = $data['datas'][$label] + 1;
+            $data['datas'][$label] += 1;
         }
 
         return $data;
@@ -970,7 +968,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
     /* ==== COMPUTER'S STATE REPORTS ==== */
     public function reportHbarComputersByStatus($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $subquery = [
@@ -1028,12 +1026,10 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
 
     public function reportHbarPrintersByStatus($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $datas = [];
-
-        $condition = ' AND c.entities_id IN (' . $this->where_entities . ')';
 
         $subquery = [
             'SELECT' => [
@@ -1147,11 +1143,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         }
         $total = array_sum($datas['tmp']);
         foreach ($datas['tmp'] as $key => $value) {
-            if ($value == 0) {
-                $percent = 0;
-            } else {
-                $percent = round((100 * (int) $value) / $total);
-            }
+            $percent = $value == 0 ? 0 : round((100 * (int) $value) / $total);
             $ent_id               = $entities[$key];
             $key                  = str_replace('pourcentage', (string) $percent, $key);
             $datas['datas'][$key] = $value;

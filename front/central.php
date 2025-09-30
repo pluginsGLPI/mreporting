@@ -32,7 +32,7 @@
 global $CFG_GLPI;
 
 Session::checkLoginUser();
-Html::header(__('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'dashboard_list');
+Html::header(__s('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'dashboard_list');
 $common = new PluginMreportingCommon();
 
 /*** Regular Tab ***/
@@ -48,7 +48,7 @@ foreach ($reports as $classname => $report) {
 if (count($tabs) > 0) {
     //foreach tabs
     foreach ($tabs as $tab) {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         $params = $tab['params'];
@@ -81,14 +81,14 @@ if (count($tabs) > 0) {
     }
 
     //finally if tabs is empty
-    if (empty($tabs)) {
-        echo "<div class='center'><br>" . __('No report is available !', 'mreporting') . '</div>';
+    if ($tabs === []) {
+        echo "<div class='center'><br>" . __s('No report is available !', 'mreporting') . '</div>';
     } else {
         echo "<div id='tabspanel' class='center-h'></div>";
         Ajax::createTabs('tabspanel', 'tabcontent', $tabs, 'PluginMreportingCommon');
     }
 } else {
-    echo "<div class='center'><br>" . __('No report is available !', 'mreporting') . '</div>';
+    echo "<div class='center'><br>" . __s('No report is available !', 'mreporting') . '</div>';
 }
 
 Html::footer();

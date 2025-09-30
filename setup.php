@@ -77,7 +77,7 @@ function plugin_init_mreporting()
 
     if (Plugin::isPluginActive('mreporting')) {
         // *Direct* access to rapport file (from e-mail) :
-        if (isset($_GET['redirect']) && strpos($_GET['redirect'], 'plugin_mreporting') !== false) {
+        if (isset($_GET['redirect']) && str_contains($_GET['redirect'], 'plugin_mreporting')) {
             $filename = str_replace('plugin_mreporting_', '', $_GET['redirect']);
             Html::redirect($CFG_GLPI['root_doc'] . '/files/_plugins/mreporting/notifications/' . $filename);
         }
@@ -158,7 +158,7 @@ function plugin_init_mreporting()
             $PLUGIN_HOOKS['helpdesk_menu_entry']['mreporting'] = true;
         }
 
-        if (strpos($_SERVER['REQUEST_URI'] ?? '', '/mreporting/') !== false) {
+        if (str_contains($_SERVER['REQUEST_URI'] ?? '', '/mreporting/')) {
             // Add specific files to add to the header : javascript
             $PLUGIN_HOOKS['add_javascript']['mreporting'] = [
                 'lib/protovis/protovis.js',
@@ -188,7 +188,7 @@ function plugin_init_mreporting()
 function plugin_version_mreporting()
 {
     return [
-        'name'         => __('More Reporting', 'mreporting'),
+        'name'         => __s('More Reporting', 'mreporting'),
         'version'      => PLUGIN_MREPORTING_VERSION,
         'author'       => "<a href='http://www.teclib.com'>Teclib'</a> & <a href='http://www.infotel.com'>Infotel</a>",
         'homepage'     => 'https://github.com/pluginsGLPI/mreporting',
