@@ -34,13 +34,13 @@ header('Cache-control: private, must-revalidate'); /// IE BUG + SSL
 header('Content-disposition: attachment; filename=export.svg');
 header('Content-type: image/svg+xml');
 
-$svg_content = (string)($_REQUEST['svg_content'] ?? '');
+$svg_content = (string) ($_REQUEST['svg_content'] ?? '');
 $svg_content = htmlspecialchars($svg_content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
 $svg_content = preg_replace(
     '/^<svg\b/i',
     '<svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg"',
-    $svg_content
+    $svg_content,
 );
 
 echo $svg_content;
