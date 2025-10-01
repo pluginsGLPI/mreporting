@@ -101,17 +101,14 @@ class PluginMreportingGraph
                 $config = PluginMreportingConfig::initConfigParams($functionname, $classname);
 
             }
-        }
+         }
 
-        //Script for graph display
-        if ($randname !== false) {
-            echo "<div class='graph' id='graph_content" . $randname . "'>";
+         echo "<div class='graph' id='graph_content" . $randname . "'>";
 
-            $colors = htmlspecialchars("'" . implode("', '", PluginMreportingConfig::getColors()) . "'");
-            echo "<script type='text/javascript+protovis'>
-            showGraph$randname = function() {
-               colors = pv.colors($colors);";
-        }
+         $colors = htmlspecialchars("'" . implode("', '", PluginMreportingConfig::getColors()) . "'");
+         echo "<script type='text/javascript+protovis'>
+         showGraph$randname = function() {
+            colors = pv.colors($colors);";
     }
 
     /**
