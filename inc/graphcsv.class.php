@@ -62,7 +62,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : [];
+        $datas = $raw_datas['datas'] ?? [];
 
         if (count($datas) <= 0) {
             return false;
@@ -101,7 +101,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         }
         $out = substr($out, 0, -1) . "\r\n";
 
-        echo $out;
+        echo htmlspecialchars($out);
     }
 
     public function showPie($params, $dashboard = false, $width = false)
@@ -129,7 +129,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        $datas = isset($raw_datas['datas']) ? $raw_datas['datas'] : [];
+        $datas = $raw_datas['datas'] ?? [];
 
         if (count($datas) <= 0) {
             return '';
@@ -180,7 +180,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         }
         $out = substr($out, 0, -1) . "\r\n";
 
-        echo $out;
+        echo htmlspecialchars($out);
     }
 
     public function showVstackbar($params, $dashboard = false, $width = false)
@@ -214,11 +214,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
             Toolbox::logdebug($raw_datas);
         }
 
-        if (isset($raw_datas['datas'])) {
-            $datas = $raw_datas['datas'];
-        } else {
-            $datas = [];
-        }
+        $datas = $raw_datas['datas'] ?? [];
 
         if (count($datas) <= 0) {
             return '';

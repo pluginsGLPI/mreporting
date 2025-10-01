@@ -34,13 +34,13 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
 
     public function getEvents()
     {
-        return ['sendReporting' => __('More Reporting', 'mreporting')];
+        return ['sendReporting' => __s('More Reporting', 'mreporting')];
     }
 
     public function getTags()
     {
         $this->addTagToList(['tag' => 'mreporting.file_url',
-            'label'                => __('Link'),
+            'label'                => __s('Link'),
             'value'                => true,
         ]);
 
@@ -54,7 +54,7 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
 
         $file_name = $this->buildPDF(mt_rand() . '_');
 
-        $this->data['##lang.mreporting.file_url##'] = __('Link');
+        $this->data['##lang.mreporting.file_url##'] = __s('Link');
         $this->data['##mreporting.file_url##']      = $CFG_GLPI['url_base'] .
                                                     "/index.php?redirect=plugin_mreporting_$file_name";
 
@@ -138,12 +138,10 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
                 continue;
             }
             $image_base64 = $matches[1][2];
-            if (strpos($image_base64, 'data:image/png;base64,') === false) {
-                if (isset($matches[1][3])) {
-                    $image_base64 = $matches[1][3];
-                }
+            if (!str_contains($image_base64, 'data:image/png;base64,') && isset($matches[1][3])) {
+                $image_base64 = $matches[1][3];
             }
-            if (strpos($image_base64, 'data:image/png;base64,') === false) {
+            if (!str_contains($image_base64, 'data:image/png;base64,')) {
                 continue;
             }
 
@@ -168,16 +166,16 @@ class PluginMreportingNotificationTargetNotification extends NotificationTarget
             $image_title = $LANG['plugin_mreporting'][$graph['class']][$graph['method']]['title'];
             $image_title .= ' ' . lcfirst(
                 sprintf(
-                    __('From %1$s to %2$s'),
+                    __s('From %1$s to %2$s'),
                     IntlDateFormatter::formatObject($start, $format, $language),
                     IntlDateFormatter::formatObject($end, 'd MMMM Y', $language),
                 ),
             );
-            array_push($images, ['title' => $image_title,
+            $images[] = ['title' => $image_title,
                 'base64'                 => $image_base64,
                 'width'                  => $image_width,
                 'height'                 => $image_height,
-            ]);
+            ];
         }
 
         $file_name = 'glpi_report_' . $user_name . date('d-m-Y') . '.pdf';

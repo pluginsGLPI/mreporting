@@ -28,8 +28,6 @@
  * -------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
-
 Session::checkRight('config', UPDATE);
 
 $plugin = new Plugin();
@@ -40,7 +38,7 @@ if ($plugin->isActivated('mreporting')) {
         $config->createFirstConfig();
         Html::back();
     } else {
-        Html::header(__('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'config');
+        Html::header(__s('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'config');
 
         PluginMreportingConfig::addFirstconfigLink();
         Search::show('PluginMreportingConfig');
@@ -49,7 +47,7 @@ if ($plugin->isActivated('mreporting')) {
     /** @var array $CFG_GLPI */
     global $CFG_GLPI;
 
-    Html::header(__('Setup'), '', 'config', 'plugins');
+    Html::header(__s('Setup'), '', 'config', 'plugins');
     echo "<div align='center'>";
     echo '<br><br>';
     echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/warning.png" alt="warning">';

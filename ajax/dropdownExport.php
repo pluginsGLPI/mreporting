@@ -28,7 +28,6 @@
  * -------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
 header('Content-Type: text/html; charset=UTF-8');
 Html::header_nocache();
 
@@ -41,8 +40,8 @@ if (
     if ($_POST['ext'] == 'odt') {
         echo '&nbsp;';
         $option    = [];
-        $option[1] = __('With data', 'mreporting');
-        $option[0] = __('Without data', 'mreporting');
+        $option[1] = __s('With data', 'mreporting');
+        $option[0] = __s('Without data', 'mreporting');
         Dropdown::showFromArray('withdata', $option, []);
     }
 
@@ -59,7 +58,7 @@ if (
         Html::Closeform();
         echo "<script type='text/javascript'>
             $('#export_svg_link').on('click', function () {
-               var svg_content = vis{$randname}.scene[0].canvas.innerHTML;
+               var svg_content = vis{" . htmlspecialchars($randname) . "}.scene[0].canvas.innerHTML;
 
                var form = document.getElementById('export_svg_form');
                form.svg_content.value = svg_content;

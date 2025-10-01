@@ -28,11 +28,13 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\DBAL\QueryExpression;
+
 class PluginMreportingOther extends PluginMreportingBaseclass
 {
     public function reportHbarLogs($configs = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         //Init delay value
@@ -160,22 +162,22 @@ class PluginMreportingOther extends PluginMreportingBaseclass
         $datas = [];
 
         $result = $DB->request($query_computer_software);
-        $datas['datas'][__('Add/remove software on a computer', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('Add/remove software on a computer', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_software_version);
-        $datas['datas'][__('Add/remove version on a software', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('Add/remove version on a software', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_add_infocom);
-        $datas['datas'][__('Add infocom', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('Add infocom', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_user_profiles);
-        $datas['datas'][__('Add/remove profile on a user', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('Add/remove profile on a user', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_user_groups);
-        $datas['datas'][__('Add/remove group on a user', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('Add/remove group on a user', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_user_deleted);
-        $datas['datas'][__('User deleted from LDAP', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('User deleted from LDAP', 'mreporting')] = $result->current()['cpt'];
 
         $plugin = new Plugin();
         if ($plugin->isActivated('webservices')) {
@@ -191,23 +193,23 @@ class PluginMreportingOther extends PluginMreportingBaseclass
 
             // Display this information is not usefull if webservices is not activated
             $result = $DB->request($query_webservice);
-            $datas['datas'][__('Webservice logs', 'mreporting')] = $result->current()['cpt'];
+            $datas['datas'][__s('Webservice logs', 'mreporting')] = $result->current()['cpt'];
         }
 
         $result = $DB->request($query_ocs);
-        $datas['datas'][__('OCS Infos', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('OCS Infos', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_device);
-        $datas['datas'][__('Add/update/remove device', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('Add/update/remove device', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_relation);
-        $datas['datas'][__('Add/remove relation', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('Add/remove relation', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_item);
-        $datas['datas'][__('Add/remove item', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('Add/remove item', 'mreporting')] = $result->current()['cpt'];
 
         $result = $DB->request($query_other);
-        $datas['datas'][__('Comments & date_mod changes', 'mreporting')] = $result->current()['cpt'];
+        $datas['datas'][__s('Comments & date_mod changes', 'mreporting')] = $result->current()['cpt'];
 
         $plugin = new Plugin();
         if ($plugin->isActivated('genericobject')) {
@@ -224,7 +226,7 @@ class PluginMreportingOther extends PluginMreportingBaseclass
 
             // Display this information is not usefull if genericobject is not activated
             $result = $DB->request($query_genericobject);
-            $datas['datas'][__('Genericobject plugin logs', 'mreporting')] = $result->current()['cpt'];
+            $datas['datas'][__s('Genericobject plugin logs', 'mreporting')] = $result->current()['cpt'];
         }
 
         return $datas;

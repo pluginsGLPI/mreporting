@@ -36,7 +36,7 @@ class PluginMreportingDashboard extends CommonDBTM
             get_class($item) == 'Central'
             && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])
         ) {
-            return [1 => __('Dashboard', 'mreporting')];
+            return [1 => __s('Dashboard', 'mreporting')];
         }
 
         return '';
@@ -44,6 +44,9 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
         if (
             get_class($item) == 'Central'
             && PluginMreportingCommon::canAccessAtLeastOneReport($_SESSION['glpiactiveprofile']['id'])
@@ -56,7 +59,7 @@ class PluginMreportingDashboard extends CommonDBTM
             }
          </script>";
 
-            echo "<iframe src='" . Plugin::getWebDir('mreporting') .
+            echo "<iframe src='" . $CFG_GLPI['root_doc'] . '/plugins/mreporting' .
               "/ajax/dashboard.php?action=centralDashboard' " .
               "frameborder='0' scrolling='no' onload='javascript:resizeIframe(this);'></iframe>";
             echo '</div>';
@@ -67,12 +70,15 @@ class PluginMreportingDashboard extends CommonDBTM
 
     public function showDashBoard($show_reports_dropdown = true)
     {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
         /** @var array $LANG */
         global $LANG;
 
-        $root_ajax = Plugin::getWebDir('mreporting') . '/ajax/dashboard.php';
+        $root_ajax = htmlspecialchars($CFG_GLPI['root_doc'] . '/plugins/mreporting/ajax/dashboard.php');
 
-        $target = $this->getFormURL();
+        $target = htmlspecialchars($this->getFormURL());
 
         $_REQUEST['f_name'] = 'option';
         PluginMreportingCommon::getSelectorValuesByUser();
@@ -86,7 +92,7 @@ class PluginMreportingDashboard extends CommonDBTM
 
         if ($show_reports_dropdown) {
             echo "<div class='center'>";
-            echo '<b>' . __('Select a report to display', 'mreporting') . '</b> : ';
+            echo '<b>' . __s('Select a report to display', 'mreporting') . '</b> : ';
             echo PluginMreportingCommon::getSelectAllReports(true);
             echo '<br />';
             echo '<br />';
@@ -97,14 +103,14 @@ class PluginMreportingDashboard extends CommonDBTM
         if (empty($widgets)) {
             echo "<div class='empty_dashboard'>";
             echo "<div class='empty_dashboard_text'>";
-            echo __('Dashboard is empty. Please add reports by clicking on the icon', 'mreporting');
+            echo __s('Dashboard is empty. Please add reports by clicking on the icon', 'mreporting');
             echo '</div>';
             echo '</div>';
         }
 
         echo "<div class='m_dashboard_controls'>";
         echo "<button type='button' class='add_report btn btn-ghost-secondary me-3 mt-2' id='addReport_button'
-                    title='" . __('Add a report', 'mreporting') . "' data-bs-toggle='tooltip'>
+                    title='" . __s('Add a report', 'mreporting') . "' data-bs-toggle='tooltip'>
         <i class='ti ti-square-plus'></i>
       </button>";
         echo '</div>';
@@ -130,7 +136,7 @@ class PluginMreportingDashboard extends CommonDBTM
 
             $('#addReport_button').on('click', function( event ) {
                glpi_html_dialog({
-                  title: '" . __('Select a report to add', 'mreporting') . "',
+                  title: '" . __s('Select a report to add', 'mreporting') . "',
                   body: {$modal_html}
                })
             });
@@ -164,7 +170,7 @@ class PluginMreportingDashboard extends CommonDBTM
             $report_script = 'Nothing to show';
             //$config = "No configuration";
 
-            $f_name = $report->fields['name'];
+            $f_name = htmlspecialchars($report->fields['name']);
 
             $gtype   = '';
             $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
@@ -172,28 +178,26 @@ class PluginMreportingDashboard extends CommonDBTM
                 $gtype = strtolower($ex_func[1]);
             }
 
-            $short_classname = str_replace('PluginMreporting', '', $report->fields['classname']);
+            $short_classname = htmlspecialchars(str_replace('PluginMreporting', '', $report->fields['classname']));
 
             $_REQUEST['f_name']          = $f_name;
             $_REQUEST['short_classname'] = $short_classname;
             PluginMreportingCommon::getSelectorValuesByUser();
 
-            if (!empty($short_classname) && !empty($f_name)) {
-                if (isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
-                    $opt = ['short_classname' => $short_classname,
-                        'f_name'              => $f_name,
-                        'gtype'               => $gtype,
-                        'width'               => 410,
-                        'hide_title'          => true,
-                    ];
-                    $common = new PluginMreportingCommon();
-                    ob_start();
-                    $report_script = $common->showGraph($opt);
-                    if ($report_script === false) {
-                        $report_script = '</div>';
-                    }
-                    $report_script = ob_get_clean() . $report_script;
+            if (!empty($short_classname) && !empty($f_name) && isset($LANG['plugin_mreporting'][$short_classname][$f_name]['title'])) {
+                $opt = ['short_classname' => $short_classname,
+                    'f_name'              => $f_name,
+                    'gtype'               => $gtype,
+                    'width'               => 410,
+                    'hide_title'          => true,
+                ];
+                $common = new PluginMreportingCommon();
+                ob_start();
+                $report_script = $common->showGraph($opt);
+                if ($report_script === false) {
+                    $report_script = '</div>';
                 }
+                $report_script = ob_get_clean() . $report_script;
             }
 
             $rand_widget = mt_rand();
@@ -204,7 +208,7 @@ class PluginMreportingDashboard extends CommonDBTM
 
             $('#configWidget_button$rand_widget').on('click', function( event ) {
                glpi_ajax_dialog({
-                  title: '" . __('Configure report', 'mreporting') . "',
+                  title: '" . __s('Configure report', 'mreporting') . "',
                   dialogclass: 'modal-lg',
                   url: '$root_ajax',
                   params: {
@@ -218,12 +222,12 @@ class PluginMreportingDashboard extends CommonDBTM
             });
 
             $('#closeWidget_button$rand_widget').on('click', function( event ) {
-               removeWidget(" . $data['id'] . ");
+               removeWidget(" . htmlspecialchars($data['id']) . ");
             });
 
          });
          </script>
-         <div class='card mreportingwidget' id='mreportingwidget" . $data['id'] . "'>
+         <div class='card mreportingwidget' id='mreportingwidget" . htmlspecialchars($data['id']) . "'>
             <div class='card-header d-inline-block'>
                <button id='closeWidget_button$rand_widget' class='m_right me-1 btn btn-sm btn-outline-secondary'>
                     <i class='ti ti-x'></i>
@@ -232,15 +236,13 @@ class PluginMreportingDashboard extends CommonDBTM
                     <i class='ti ti-tool'></i>
                </button>
                <span class='mreportingwidget-header-text'>
-                  <a href='" . Plugin::getWebDir('mreporting') . '/front/graph.php?short_classname=' .
+                  <a href='" . htmlspecialchars($CFG_GLPI['root_doc']) . '/plugins/mreporting/front/graph.php?short_classname=' .
                   $short_classname . '&amp;f_name=' . $f_name . '&amp;gtype=' . $gtype . "' target='_top'>
                      &nbsp;$title
                   </a>
                </span>
             </div>
-            <div class='card-body mreportingwidget-body'>
-               $report_script
-            </div>
+            <div class='card-body mreportingwidget-body'>" . htmlspecialchars($report_script) . "</div>
          </div>";
         }
 
@@ -259,7 +261,7 @@ class PluginMreportingDashboard extends CommonDBTM
     {
         $out = "<form method='post' action='" . $this->getFormURL() . "'>";
         $out .= PluginMreportingCommon::getSelectAllReports(false, true);
-        $out .= "<input type='submit' class='mt-2 btn btn-primary' name='addReports' value='" . __('Add') . "' class='submit'>";
+        $out .= "<input type='submit' class='mt-2 btn btn-primary' name='addReports' value='" . __s('Add') . "' class='submit'>";
         $out .= Html::closeForm(false);
         $out .= '</div>';
 
@@ -284,20 +286,20 @@ class PluginMreportingDashboard extends CommonDBTM
         $report = new PluginMreportingConfig();
         $report->getFromDB($dashboard->fields['reports_id']);
 
-        $index = str_replace('PluginMreporting', '', $report->fields['classname']);
-        $title = $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
+        //$index = str_replace('PluginMreporting', '', $report->fields['classname']);
+        //$LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
         $out = 'Nothing to show';
 
-        $f_name = $report->fields['name'];
+        //$f_name = $report->fields['name'];
 
-        $gtype   = '';
+        /*$gtype   = '';
         $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
         if (isset($ex_func[1])) {
             $gtype = strtolower($ex_func[1]);
-        }
+        }*/
 
-        $short_classname = str_replace('PluginMreporting', '', $report->fields['classname']);
+        //str_replace('PluginMreporting', '', $report->fields['classname']);
 
         echo $out;
     }
@@ -314,16 +316,16 @@ class PluginMreportingDashboard extends CommonDBTM
             return;
         }
 
-        echo "<form method='POST' action='" . $_REQUEST['target'] . "' name='form' id='mreporting_date_selector'>";
+        echo "<form method='POST' action='" . htmlspecialchars($_REQUEST['target']) . "' name='form' id='mreporting_date_selector'>";
 
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr class='tab_bg_1'>";
         echo $reportSelectors;
         echo '</table>';
 
-        echo "<input type='hidden' name='short_classname' value='" . $_REQUEST['short_classname'] . "' class='submit'>";
-        echo "<input type='hidden' name='f_name' value='" . $_REQUEST['f_name'] . "' class='submit'>";
-        echo "<input type='hidden' name='gtype' value='" . $_REQUEST['gtype'] . "' class='submit'>";
+        echo "<input type='hidden' name='short_classname' value='" . htmlspecialchars($_REQUEST['short_classname']) . "' class='submit'>";
+        echo "<input type='hidden' name='f_name' value='" . htmlspecialchars($_REQUEST['f_name']) . "' class='submit'>";
+        echo "<input type='hidden' name='gtype' value='" . htmlspecialchars($_REQUEST['gtype']) . "' class='submit'>";
         echo "<input type='submit' class='submit' name='saveConfig' value=\"" . _sx('button', 'Post') . '">';
 
         Html::closeForm();

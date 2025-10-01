@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @property string $Subject
+ * @property string $Body
+ * @property string $AltBody
+ * @property string $MessageID
+ * @property string $ErrorInfo
+ *
+ * @method void AddCustomHeader(string $name, string|null $value = null)
+ * @method void SetFrom($address, $name = '', $auto = true)
+ * @method void AddReplyTo($address, $name = '')
+ * @method void isHTML($isHtml = true)
+ * @method void AddAddress($address, $name = '')
+ * @method void AddAttachment($path, $name = '', $encoding = 'base64', $type = '', $disposition = 'attachment')
+ * @method void ClearAddresses()
+ */
+class GLPIMailer {}

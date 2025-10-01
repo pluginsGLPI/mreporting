@@ -40,26 +40,28 @@ class PluginMreportingGraph
     */
     public function initGraph($options)
     {
-        /** @var array $LANG */
-        global $LANG;
+        /** @var array $LANG
+         *  @var array $CFG_GLPI
+        */
+        global $LANG, $CFG_GLPI;
 
         $width    = $this->width + 100;
-        $randname = $options['randname'];
+        $randname = htmlspecialchars($options['randname']);
 
         if (!$options['showHeader']) {
-            echo "<div class='center'><div id='fig' style='width:{$width}px'>";
+            echo "<div class='center'><div id='fig' style='width:{" . htmlspecialchars(strval($width)) . "}px'>";
             //Show global title
             if (isset($LANG['plugin_mreporting'][$options['short_classname']]['title'])) {
                 echo "<div class='graph_title'>";
-                echo $LANG['plugin_mreporting'][$options['short_classname']]['title'];
+                echo htmlspecialchars($LANG['plugin_mreporting'][$options['short_classname']]['title']);
                 echo '</div>';
             }
             //Show graph title
             echo "<div class='graph_title'>";
-            $gtype = $_REQUEST['gtype'];
+            $gtype = htmlspecialchars($_REQUEST['gtype']);
 
-            echo "<img src='" . Plugin::getWebDir('mreporting') . "/pics/chart-$gtype.png' class='title_pics' />";
-            echo $options['title'];
+            echo "<img src='" . $CFG_GLPI['root_doc'] . "'/plugins/mreporting/pics/chart-$gtype.png' class='title_pics' />";
+            echo htmlspecialchars($options['title']);
             echo '</div>';
 
             $desc = '';
@@ -80,7 +82,7 @@ class PluginMreportingGraph
                 $desc .= Html::convdate($_SESSION['mreporting_values']['date1' . $randname]) . ' / ' .
                 Html::convdate($_SESSION['mreporting_values']['date2' . $randname]);
             }
-            echo "<div class='graph_desc'>" . $desc . '</div>';
+            echo "<div class='graph_desc'>" . htmlspecialchars($desc) . '</div>';
 
             //Show date selector
             echo "<div class='graph_navigation'>";
@@ -98,23 +100,15 @@ class PluginMreportingGraph
 
                 $config = PluginMreportingConfig::initConfigParams($functionname, $classname);
 
-                // We check if a configuration is needed for the graph
-                if (method_exists(new $classname($config), 'needConfig')) {
-                    $object = new $classname();
-                    $object->needConfig($config);
-                }
             }
         }
 
-        //Script for graph display
-        if ($randname !== false) {
-            echo "<div class='graph' id='graph_content$randname'>";
+        echo "<div class='graph' id='graph_content" . $randname . "'>";
 
-            $colors = "'" . implode("', '", PluginMreportingConfig::getColors()) . "'";
-            echo "<script type='text/javascript+protovis'>
-            showGraph$randname = function() {
-               colors = pv.colors($colors);";
-        }
+        $colors = htmlspecialchars("'" . implode("', '", PluginMreportingConfig::getColors()) . "'");
+        echo "<script type='text/javascript+protovis'>
+         showGraph$randname = function() {
+            colors = pv.colors($colors);";
     }
 
     /**
@@ -166,11 +160,14 @@ class PluginMreportingGraph
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return false;
@@ -302,7 +299,7 @@ class PluginMreportingGraph
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -372,11 +369,14 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return false;
@@ -496,7 +496,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -571,19 +571,18 @@ JAVASCRIPT;
 
         $this->initGraph($options);
 
-        if (isset($_REQUEST['export'])) {
-            $export_txt = 'true';
-        } else {
-            $export_txt = 'false';
-        }
+        $export_txt = isset($_REQUEST['export']) ? 'true' : 'false';
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -777,7 +776,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -850,11 +849,14 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -1006,7 +1008,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -1079,11 +1081,14 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -1239,7 +1244,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -1319,11 +1324,14 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -1477,7 +1485,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -1575,11 +1583,14 @@ JAVASCRIPT;
 
         if (!isset($raw_datas['datas'])) {
             echo '}</script>';
-            echo __('No data for this date range !', 'mreporting');
+            echo __s('No data for this date range !', 'mreporting');
             $end['opt']['export']   = false;
             $end['opt']['randname'] = false;
             $end['opt']['f_name']   = $opt['f_name'];
             $end['opt']['class']    = $opt['class'];
+            $end['export']          = false;
+            $end['datas']           = [];
+            $end['unit']            = '';
             PluginMreportingCommon::endGraph($end, $dashboard);
 
             return '';
@@ -1754,7 +1765,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -1816,30 +1827,26 @@ JAVASCRIPT;
 
         $out = "var datas = [\n";
         foreach ($values as $value) {
-            $out .= "\t" . addslashes($value) . ",\n";
+            $out .= "\t" . $value . ",\n";
         }
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";
 
         $out .= "var labels = [\n";
         foreach ($labels as $label) {
-            $out .= "\t'" . addslashes($label) . "',\n";
+            $out .= "\t'" . $label . "',\n";
         }
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";
 
         $out .= "var links = [\n";
         foreach ($links as $link) {
-            $out .= "\t'" . addslashes($link) . "',\n";
+            $out .= "\t'" . $link . "',\n";
         }
         $out .= "];\n";
 
         echo $out;
-        if (count($values) > 0) {
-            $max = (max($values) * 1.1);
-        } else {
-            $max = 1;
-        }
+        $max = count($values) > 0 ? max($values) * 1.1 : 1;
         if ($unit == '%') {
             $max = 110;
         }
@@ -1894,7 +1901,7 @@ JAVASCRIPT;
         foreach ($values as $line) {
             $out .= "\t[";
             foreach ($line as $label2 => $value) {
-                $out .= addslashes($value) . ',';
+                $out .= $value . ',';
                 if ($value > $max && !$stacked) {
                     $max = $value;
                 }
@@ -1907,21 +1914,21 @@ JAVASCRIPT;
 
         $out .= "var labels = [\n";
         foreach ($labels as $label) {
-            $out .= "\t'" . addslashes($label) . "',\n";
+            $out .= "\t'" . $label . "',\n";
         }
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";
 
         $out .= "var labels2 = [\n";
         foreach ($labels2 as $label) {
-            $out .= "\t'" . addslashes($label) . "',\n";
+            $out .= "\t'" . $label . "',\n";
         }
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";
         echo $out;
 
         if (!$stacked) {
-            $max = ($max * 1.2);
+            $max *= 1.2;
         }
         if ($unit == '%') {
             $max = 110;

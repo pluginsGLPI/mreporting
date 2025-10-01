@@ -58,7 +58,7 @@ class PluginMreportingPreference extends CommonDBTM
      */
     public static function checkPreferenceValue($field, $users_id = 0)
     {
-        $data = getAllDataFromTable(getTableForItemType(__CLASS__), ['users_id' => $users_id]);
+        $data = getAllDataFromTable(getTableForItemType(self::class), ['users_id' => $users_id]);
         if (!empty($data)) {
             $first = array_pop($data);
 
@@ -128,16 +128,16 @@ class PluginMreportingPreference extends CommonDBTM
 
         $version = plugin_version_mreporting();
 
-        echo "<form method='post' action='" . Toolbox::getItemTypeFormURL(__CLASS__) . "'>";
+        echo "<form method='post' action='" . htmlspecialchars(Toolbox::getItemTypeFormURL(self::class)) . "'>";
         echo "<div align='center'>";
 
         echo "<table class='tab_cadre_fixe' cellpadding='5'>";
 
-        echo "<tr><th colspan='2'>" . $version['name'] . ' - ' . $version['version'] . '</th></tr>';
+        echo "<tr><th colspan='2'>" . htmlspecialchars($version['name']) . ' - ' . htmlspecialchars($version['version']) . '</th></tr>';
 
         echo "<tr class='tab_bg_2'>";
         echo "<td align='center'>";
-        __('Please, select a model in your preferences', 'mreporting') . '</td>';
+        __s('Please, select a model in your preferences', 'mreporting') . '</td>';
         echo "<td align='center'>";
         self::dropdownFileTemplates($this->fields['template']);
         echo '</td></tr>';
@@ -145,7 +145,7 @@ class PluginMreportingPreference extends CommonDBTM
         echo "<tr class='tab_bg_2'>";
         echo "<td align='center' colspan='2'>";
         echo "<input type='hidden' name='id' value='" . $ID . "'>";
-        echo "<input type='hidden' name='users_id' value='" . $this->fields['users_id'] . "'>";
+        echo "<input type='hidden' name='users_id' value='" . htmlspecialchars($this->fields['users_id']) . "'>";
         echo "<input type='submit' name='update' value='" . _sx('button', 'Post') . "' class='submit'>";
         echo '</td>';
         echo '</tr>';
@@ -161,31 +161,29 @@ class PluginMreportingPreference extends CommonDBTM
         $array_dir  = [];
         $array_file = [];
 
-        if (is_dir($directory)) {
-            if ($dh = opendir($directory)) {
-                while (($file = readdir($dh)) !== false) {
-                    $filename  = $file;
-                    $filetype  = filetype($directory . $file);
-                    $filedate  = Html::convDate(date('Y-m-d', filemtime($directory . $file)));
-                    $basename  = explode('.', basename($filename));
-                    $extension = array_pop($basename);
-                    switch ($filename) {
-                        case '..':
-                        case '.':
-                            echo '';
-                            break;
+        if (is_dir($directory) && $dh = opendir($directory)) {
+            while (($file = readdir($dh)) !== false) {
+                $filename  = $file;
+                $filetype  = filetype($directory . $file);
+                $filedate  = Html::convDate(date('Y-m-d', filemtime($directory . $file)));
+                $basename  = explode('.', basename($filename));
+                $extension = array_pop($basename);
+                switch ($filename) {
+                    case '..':
+                    case '.':
+                        echo '';
+                        break;
 
-                        default:
-                            if ($filetype == 'file' && $extension == $ext) {
-                                $array_file[] = [$filename, $filedate, $extension];
-                            } elseif ($filetype == 'dir') {
-                                $array_dir[] = $filename;
-                            }
-                            break;
-                    }
+                    default:
+                        if ($filetype == 'file' && $extension == $ext) {
+                            $array_file[] = [$filename, $filedate, $extension];
+                        } elseif ($filetype == 'dir') {
+                            $array_dir[] = $filename;
+                        }
+                        break;
                 }
-                closedir($dh);
             }
+            closedir($dh);
         }
 
         rsort($array_file);
@@ -197,7 +195,7 @@ class PluginMreportingPreference extends CommonDBTM
     {
         switch (get_class($item)) {
             case 'Preference':
-                return __('More Reporting', 'mreporting');
+                return __s('More Reporting', 'mreporting');
             default:
                 return '';
         }

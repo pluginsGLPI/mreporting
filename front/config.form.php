@@ -28,8 +28,6 @@
  * -------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
-
 Session::checkRight('config', UPDATE);
 
 if (!isset($_GET['id'])) {
@@ -51,13 +49,11 @@ if (isset($_POST['add'])) {
     $config->delete($_POST, true);
     Html::redirect('./config.form.php');
 } else {
-    Html::header(__('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'config');
+    Html::header(__s('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'config');
 
     //Link from graph
-    if (isset($_GET['name']) && isset($_GET['classname'])) {
-        if ($config->getFromDBByFunctionAndClassname($_GET['name'], $_GET['classname'])) {
-            $_GET['id'] = $config->fields['id'];
-        }
+    if (isset($_GET['name']) && isset($_GET['classname']) && $config->getFromDBByFunctionAndClassname($_GET['name'], $_GET['classname'])) {
+        $_GET['id'] = $config->fields['id'];
     }
     $config->display($_GET);
 

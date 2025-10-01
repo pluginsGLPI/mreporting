@@ -28,6 +28,8 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\DBAL\QueryExpression;
+
 class PluginMreportingBaseclass
 {
     protected $sql_date;
@@ -72,7 +74,7 @@ class PluginMreportingBaseclass
                     CommonITILObject::INCOMING => _x('status', 'New'),
                     CommonITILObject::ASSIGNED => _x('status', 'Processing (assigned)'),
                     CommonITILObject::PLANNED  => _x('status', 'Processing (planned)'),
-                    CommonITILObject::WAITING  => __('Pending'),
+                    CommonITILObject::WAITING  => __s('Pending'),
                 ],
             ],
             'close' => [

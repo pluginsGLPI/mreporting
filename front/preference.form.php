@@ -28,8 +28,6 @@
  * -------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
-
 Session::checkLoginUser();
 
 if (!isset($_GET['id'])) {
@@ -42,7 +40,7 @@ if (isset($_POST['update'])) {
     $pref->update($_POST);
     Html::back();
 } else {
-    Html::header(__('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
+    Html::header(__s('More Reporting', 'mreporting'), '', 'tools', 'PluginMreportingCommon', 'viewreports');
 
     $pref->showForm($_GET['id']);
 

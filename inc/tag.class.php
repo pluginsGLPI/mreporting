@@ -39,7 +39,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
      */
     public function reportPieTag($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         if (!Plugin::isPluginActive('tag')) {
@@ -86,7 +86,7 @@ class PluginMreportingTag extends PluginMreportingBaseclass
      */
     public function reportPieTagOnTicket($config = [])
     {
-        /** @var \DBmysql $DB */
+        /** @var DBmysql $DB */
         global $DB;
 
         if (!Plugin::isPluginActive('tag')) {
