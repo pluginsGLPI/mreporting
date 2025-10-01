@@ -101,7 +101,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         }
         $out = substr($out, 0, -1) . "\r\n";
 
-        echo $out;
+        echo htmlspecialchars($out);
     }
 
     public function showPie($params, $dashboard = false, $width = false)
@@ -180,7 +180,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         }
         $out = substr($out, 0, -1) . "\r\n";
 
-        echo $out;
+        echo htmlspecialchars($out);
     }
 
     public function showVstackbar($params, $dashboard = false, $width = false)

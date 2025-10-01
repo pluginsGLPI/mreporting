@@ -63,7 +63,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         */
         global $LANG, $CFG_GLPI;
 
-        $randname = $options['randname'];
+        $randname = htmlspecialchars($options['randname']);
 
         if (!$options['export'] && !$options['showHeader']) {
             $width = $this->width + 100;

@@ -46,7 +46,7 @@ class PluginMreportingGraph
         global $LANG, $CFG_GLPI;
 
         $width    = $this->width + 100;
-        $randname = $options['randname'];
+        $randname = htmlspecialchars($options['randname']);
 
         if (!$options['showHeader']) {
             echo "<div class='center'><div id='fig' style='width:{" . htmlspecialchars(strval($width)) . "}px'>";
@@ -107,7 +107,7 @@ class PluginMreportingGraph
         if ($randname !== false) {
             echo "<div class='graph' id='graph_content" . $randname . "'>";
 
-            $colors = "'" . implode("', '", PluginMreportingConfig::getColors()) . "'";
+            $colors = htmlspecialchars("'" . implode("', '", PluginMreportingConfig::getColors()) . "'");
             echo "<script type='text/javascript+protovis'>
             showGraph$randname = function() {
                colors = pv.colors($colors);";
@@ -302,7 +302,7 @@ class PluginMreportingGraph
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -499,7 +499,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -779,7 +779,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -1011,7 +1011,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -1247,7 +1247,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -1488,7 +1488,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;
@@ -1768,7 +1768,7 @@ JAVASCRIPT;
 JAVASCRIPT;
 
         if ($show_graph) {
-            echo $JS;
+            echo htmlspecialchars($JS);
         }
 
         $opt['randname'] = $randname;

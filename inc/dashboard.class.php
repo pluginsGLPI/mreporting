@@ -76,9 +76,9 @@ class PluginMreportingDashboard extends CommonDBTM
         /** @var array $LANG */
         global $LANG;
 
-        $root_ajax = $CFG_GLPI['root_doc'] . '/plugins/mreporting/ajax/dashboard.php';
+        $root_ajax = htmlspecialchars($CFG_GLPI['root_doc'] . '/plugins/mreporting/ajax/dashboard.php');
 
-        $target = $this->getFormURL();
+        $target = htmlspecialchars($this->getFormURL());
 
         $_REQUEST['f_name'] = 'option';
         PluginMreportingCommon::getSelectorValuesByUser();
@@ -170,7 +170,7 @@ class PluginMreportingDashboard extends CommonDBTM
             $report_script = 'Nothing to show';
             //$config = "No configuration";
 
-            $f_name = $report->fields['name'];
+            $f_name = htmlspecialchars($report->fields['name']);
 
             $gtype   = '';
             $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
@@ -178,7 +178,7 @@ class PluginMreportingDashboard extends CommonDBTM
                 $gtype = strtolower($ex_func[1]);
             }
 
-            $short_classname = str_replace('PluginMreporting', '', $report->fields['classname']);
+            $short_classname = htmlspecialchars(str_replace('PluginMreporting', '', $report->fields['classname']));
 
             $_REQUEST['f_name']          = $f_name;
             $_REQUEST['short_classname'] = $short_classname;
@@ -222,12 +222,12 @@ class PluginMreportingDashboard extends CommonDBTM
             });
 
             $('#closeWidget_button$rand_widget').on('click', function( event ) {
-               removeWidget(" . $data['id'] . ");
+               removeWidget(" . htmlspecialchars($data['id']) . ");
             });
 
          });
          </script>
-         <div class='card mreportingwidget' id='mreportingwidget" . $data['id'] . "'>
+         <div class='card mreportingwidget' id='mreportingwidget" . htmlspecialchars($data['id']) . "'>
             <div class='card-header d-inline-block'>
                <button id='closeWidget_button$rand_widget' class='m_right me-1 btn btn-sm btn-outline-secondary'>
                     <i class='ti ti-x'></i>
@@ -236,15 +236,13 @@ class PluginMreportingDashboard extends CommonDBTM
                     <i class='ti ti-tool'></i>
                </button>
                <span class='mreportingwidget-header-text'>
-                  <a href='" . $CFG_GLPI['root_doc'] . '/plugins/mreporting/front/graph.php?short_classname=' .
+                  <a href='" . htmlspecialchars($CFG_GLPI['root_doc']) . '/plugins/mreporting/front/graph.php?short_classname=' .
                   $short_classname . '&amp;f_name=' . $f_name . '&amp;gtype=' . $gtype . "' target='_top'>
                      &nbsp;$title
                   </a>
                </span>
             </div>
-            <div class='card-body mreportingwidget-body'>
-               $report_script
-            </div>
+            <div class='card-body mreportingwidget-body'>" . htmlspecialchars($report_script) . "</div>
          </div>";
         }
 
