@@ -1270,8 +1270,8 @@ class PluginMreportingCommon extends CommonDBTM
 
         if (is_file($path)) {
             [$image_width, $image_height] = @getimagesize($path);
-            $image_width  *= Odf::PIXEL_TO_CM;
-            $image_height *= Odf::PIXEL_TO_CM * 17 / $image_width;
+            $image_width  *= $odf->getPixelToCm();
+            $image_height *= $odf->getPixelToCm() * 17 / $image_width;
             $odf->setImage('image', $path, -1, 17, intval($image_height));
         } else {
             $odf->setVars('image', '', true, 'UTF-8');
@@ -1288,7 +1288,7 @@ class PluginMreportingCommon extends CommonDBTM
 
             // Multidatas graph
             if ($is_multiple) {
-                $multipledatas->setVars('datas_title', mb_strtoupper(__s('data', 'mreporting')), ENT_NOQUOTES, 'utf-8');
+                $multipledatas->setVars('datas_title', mb_strtoupper(__s('data', 'mreporting')), false, 'utf-8');
 
                 foreach ($datas as $key => $value) {
                     if (property_exists($multipledatas, 'subtitle') && $multipledatas->subtitle !== null) {
@@ -1308,7 +1308,7 @@ class PluginMreportingCommon extends CommonDBTM
 
                 // Simples graph
             } else {
-                $singledatas->setVars('datas_title', mb_strtoupper(__s('data', 'mreporting')), ENT_NOQUOTES, 'utf-8');
+                $singledatas->setVars('datas_title', mb_strtoupper(__s('data', 'mreporting')), false, 'utf-8');
                 foreach ($datas as $key => $value) {
                     if (property_exists($singledatas, 'datas') && $singledatas->datas !== null) {
                         $singledatas->datas->row($key, ENT_NOQUOTES, 'utf-8');
@@ -1952,9 +1952,9 @@ class PluginMreportingCommon extends CommonDBTM
         if ($time1 > $time2) {
             [$time1, $time2] = [$time2, $time1];
             [$_SESSION['mreporting_values']['date1' . $randname], $_SESSION['mreporting_values']['date2' . $randname]] = [
-                    $_SESSION['mreporting_values']['date2' . $randname],
-                    $_SESSION['mreporting_values']['date1' . $randname],
-                ];
+                $_SESSION['mreporting_values']['date2' . $randname],
+                $_SESSION['mreporting_values']['date1' . $randname],
+            ];
         }
 
         $begin = date('Y-m-d H:i:s', $time1);
@@ -1990,9 +1990,9 @@ class PluginMreportingCommon extends CommonDBTM
         if ($time1 > $time2) {
             [$time1, $time2] = [$time2, $time1];
             [$_SESSION['mreporting_values']['date1' . $randname], $_SESSION['mreporting_values']['date2' . $randname]] = [
-                    $_SESSION['mreporting_values']['date2' . $randname],
-                    $_SESSION['mreporting_values']['date1' . $randname],
-                ];
+                $_SESSION['mreporting_values']['date2' . $randname],
+                $_SESSION['mreporting_values']['date1' . $randname],
+            ];
         }
 
         $begin = date('Y-m-d H:i:s', $time1);

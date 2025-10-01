@@ -288,20 +288,20 @@ class PluginMreportingDashboard extends CommonDBTM
         $report = new PluginMreportingConfig();
         $report->getFromDB($dashboard->fields['reports_id']);
 
-        $index = str_replace('PluginMreporting', '', $report->fields['classname']);
-        $LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
+        //$index = str_replace('PluginMreporting', '', $report->fields['classname']);
+        //$LANG['plugin_mreporting'][$index][$report->fields['name']]['title'];
 
         $out = 'Nothing to show';
 
-        $f_name = $report->fields['name'];
+        //$f_name = $report->fields['name'];
 
-        $gtype   = '';
+        /*$gtype   = '';
         $ex_func = preg_split('/(?<=\\w)(?=[A-Z])/', $f_name);
         if (isset($ex_func[1])) {
             $gtype = strtolower($ex_func[1]);
-        }
+        }*/
 
-        str_replace('PluginMreporting', '', $report->fields['classname']);
+        //str_replace('PluginMreporting', '', $report->fields['classname']);
 
         echo $out;
     }

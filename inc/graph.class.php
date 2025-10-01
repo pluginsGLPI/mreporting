@@ -105,7 +105,7 @@ class PluginMreportingGraph
 
         //Script for graph display
         if ($randname !== false) {
-            echo "<div class='graph' id='graph_content$randname'>";
+            echo "<div class='graph' id='graph_content" . $randname . "'>";
 
             $colors = "'" . implode("', '", PluginMreportingConfig::getColors()) . "'";
             echo "<script type='text/javascript+protovis'>
