@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "529f4c5ef201ebfa2aff96ec4870308a",
+    "content-hash": "09eedbbc75a566781431393c0998bc57",
     "packages": [
         {
             "name": "sboden/odtphp",
@@ -611,16 +611,16 @@
         },
         {
             "name": "glpi-project/tools",
-            "version": "0.7.8",
+            "version": "0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/glpi-project/tools.git",
-                "reference": "bd78ad2ab0d30510729530c077f84d52b8f02866"
+                "reference": "cf182b1a6bd1a73c5c6469dbbd0edabf7cb5857e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/glpi-project/tools/zipball/bd78ad2ab0d30510729530c077f84d52b8f02866",
-                "reference": "bd78ad2ab0d30510729530c077f84d52b8f02866",
+                "url": "https://api.github.com/repos/glpi-project/tools/zipball/cf182b1a6bd1a73c5c6469dbbd0edabf7cb5857e",
+                "reference": "cf182b1a6bd1a73c5c6469dbbd0edabf7cb5857e",
                 "shasum": ""
             },
             "require": {
@@ -663,7 +663,7 @@
                 "issues": "https://github.com/glpi-project/tools/issues",
                 "source": "https://github.com/glpi-project/tools"
             },
-            "time": "2025-08-20T09:58:56+00:00"
+            "time": "2025-09-08T09:45:41+00:00"
         },
         {
             "name": "php-parallel-lint/php-parallel-lint",
