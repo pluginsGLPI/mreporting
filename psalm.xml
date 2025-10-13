@@ -11,13 +11,16 @@
     </projectFiles>
 
     <issueHandlers>
-        <!--
-            Too many false positives.
-            - many are already secured by ForbidDynamicInstantiationRule, but Psalm does not seems to consider `is_a()` checks safe enough;
-            - many are related dynamic call to plugin functions/classes, we need a lot of refactor to indicate to Psalm these can be ignored;
-            - the rest is likely to not be exploitable, due to the really low probability to have a classname
-              that can be abused and that implements the specific static method called on a dynamic classname.
-        -->
+        <TaintedTextWithQuotes>
+            <errorLevel type="suppress">
+            <file name="inc/graph.class.php" />
+            </errorLevel>
+        </TaintedTextWithQuotes>
+        <TaintedHtml>
+            <errorLevel type="suppress">
+            <file name="inc/graph.class.php" />
+            </errorLevel>
+        </TaintedHtml>
         <TaintedCallable errorLevel="suppress" />
     </issueHandlers>
 </psalm>
