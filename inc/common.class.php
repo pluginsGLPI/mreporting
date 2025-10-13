@@ -1018,7 +1018,7 @@ class PluginMreportingCommon extends CommonDBTM
                 echo "<tr class='tab_bg_1'>";
                 echo '<td>' . htmlspecialchars($label2) . '</td>';
                 if ($simpledatas) { //simple array
-                    echo "<td class='center'>" . htmlspecialchars($cols) . ' ' . htmlspecialchars($unit) . '</td>';
+                    echo "<td class='center'>" . htmlspecialchars($cols) . ' ' . htmlspecialchars($unit ?? '') . '</td>';
                 } else { //multiple array
                     foreach ($cols as $date => $nb) {
                         if (!is_array($nb)) {
