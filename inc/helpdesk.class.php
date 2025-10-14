@@ -432,7 +432,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 $type = htmlspecialchars(Ticket::getTicketTypeName(intval($ticket['type'])));
             }
             $datas['labels2'][$type]                         = $type;
-            $datas['datas'][htmlspecialchars($ticket['category_name'])][$type] = $ticket['count'];
+            $datas['datas'][htmlspecialchars($ticket['category_name'], ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8', false)][$type] = $ticket['count'];
         }
 
         return $datas;
@@ -830,7 +830,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             if (!isset($flat_datas[$current_datas['parent']]) && ($current_datas['parent'] != 0 && $itilcategory->getFromDB(intval($current_datas['parent'])))) {
                 $flat_datas[$current_datas['parent']] = [
                     'id'     => $current_datas['parent'],
-                    'name'   => htmlspecialchars($itilcategory->fields['name']),
+                    'name'   => htmlspecialchars($itilcategory->fields['name'], ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8', false),
                     'parent' => $itilcategory->fields['itilcategories_id'],
                     'count'  => 0,
                 ];
