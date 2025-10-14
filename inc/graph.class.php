@@ -60,7 +60,7 @@ class PluginMreportingGraph
             echo "<div class='graph_title'>";
             $gtype = htmlspecialchars($_REQUEST['gtype']);
 
-            echo "<img src='/plugins/mreporting/pics/chart-$gtype.png' class='title_pics' />";
+            echo "<img src='" . $CFG_GLPI['root_doc'] . "'/plugins/mreporting/pics/chart-$gtype.png' class='title_pics' />";
             echo htmlspecialchars($options['title']);
             echo '</div>';
 
