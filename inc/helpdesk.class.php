@@ -424,10 +424,10 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         foreach ($result as $ticket) {
             if (empty($ticket['category_id'])) {
                 $ticket['category_id']   = 0;
-                $ticket['category_name'] = __('None');
+                $ticket['category_name'] = __s('None');
             }
             if ($ticket['type'] == 0) {
-                $type = __('Undefined', 'mreporting');
+                $type = __s('Undefined', 'mreporting');
             } else {
                 $type = htmlspecialchars(Ticket::getTicketTypeName(intval($ticket['type'])));
             }
