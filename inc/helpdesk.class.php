@@ -617,6 +617,12 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         foreach ($result as $ticket) {
             if (empty($ticket['category_name'])) {
                 $ticket['category_name'] = __s('None');
+            } else {
+                $ticket['category_name'] = str_replace(
+                    ["'", '"'],
+                    ["\'", "&quot;"],
+                    $ticket['category_name'],
+                );
             }
 
             if (!isset($datas['datas'][$ticket['category_name']])) {
@@ -626,6 +632,8 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                     }
                 }
             }
+
+
 
             $datas['datas'][$ticket['category_name']][$status[$ticket['status']]] = $ticket['count'];
         }
