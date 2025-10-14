@@ -86,7 +86,7 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
                 echo '</div>';
             }
             echo "<div class='graph_title'>";
-            echo "<img src='" . $CFG_GLPI['root_doc'] . "'/plugins/mreporting/pics/chart-" . htmlspecialchars($prev_function) . ".png' class='title_pics' />";
+            echo "<img src='" . $CFG_GLPI['root_doc'] . "/plugins/mreporting/pics/chart-" . htmlspecialchars($prev_function) . ".png' class='title_pics' />";
             echo htmlspecialchars($options['title']);
             echo '</div>';
 
