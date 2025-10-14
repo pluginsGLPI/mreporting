@@ -436,7 +436,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             $ticket['category_name'] = str_replace(
                 ["'", '"'],
                 ["\'", "&quot;"],
-                $ticket['category_name']
+                $ticket['category_name'],
             );
 
             $datas['datas'][$ticket['category_name']][$type] = $ticket['count'];
