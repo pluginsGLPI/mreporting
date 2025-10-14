@@ -424,11 +424,15 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         foreach ($result as $ticket) {
             if (empty($ticket['category_id'])) {
                 $ticket['category_id']   = 0;
-                $ticket['category_name'] = __s('None');
+                $ticket['category_name'] = __('None');
             }
-            $type = $ticket['type'] == 0 ? __s('Undefined', 'mreporting') : Ticket::getTicketTypeName(intval($ticket['type']));
+            if ($ticket['type'] == 0) {
+                $type = __('Undefined', 'mreporting');
+            } else {
+                $type = htmlspecialchars(Ticket::getTicketTypeName(intval($ticket['type'])));
+            }
             $datas['labels2'][$type]                         = $type;
-            $datas['datas'][$ticket['category_name']][$type] = $ticket['count'];
+            $datas['datas'][htmlspecialchars($ticket['category_name'])][$type] = $ticket['count'];
         }
 
         return $datas;
@@ -826,7 +830,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             if (!isset($flat_datas[$current_datas['parent']]) && ($current_datas['parent'] != 0 && $itilcategory->getFromDB(intval($current_datas['parent'])))) {
                 $flat_datas[$current_datas['parent']] = [
                     'id'     => $current_datas['parent'],
-                    'name'   => $itilcategory->fields['name'],
+                    'name'   => htmlspecialchars($itilcategory->fields['name']),
                     'parent' => $itilcategory->fields['itilcategories_id'],
                     'count'  => 0,
                 ];
