@@ -88,7 +88,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $result = $DB->request($query);
 
         foreach ($result as $ticket) {
-            $label = empty($ticket['name']) ? __s('Root entity') : $ticket['name'];
+            $label = empty($ticket['name']) ? __s('Root entity') : htmlspecialchars($ticket['name']);
             $datas['datas'][$label] = $ticket['count'];
         }
 
@@ -142,8 +142,17 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             if (empty($data['category'])) {
                 $data['category'] = __s('None');
             }
+
+            $data['category'] = str_replace(
+                ["'", '"'],
+                ["\'", "&quot;"],
+                $data['category'],
+            );
+
             $categories[$data['category']] = $data['itilcategories_id'];
         }
+
+
 
         $labels2 = array_keys($categories);
 
