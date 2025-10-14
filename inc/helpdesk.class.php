@@ -432,7 +432,14 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 $type = htmlspecialchars(Ticket::getTicketTypeName(intval($ticket['type'])));
             }
             $datas['labels2'][$type]                         = $type;
-            $datas['datas'][htmlspecialchars($ticket['category_name'], ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8', false)][$type] = $ticket['count'];
+
+            $ticket['category_name'] = str_replace(
+                ["'", '"'],
+                ["\'", "&quot;"],
+                $ticket['category_name']
+            );
+
+            $datas['datas'][$ticket['category_name']][$type] = $ticket['count'];
         }
 
         return $datas;
@@ -828,9 +835,10 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $itilcategory = new ITILCategory();
         foreach ($flat_datas as $cat_id => $current_datas) {
             if (!isset($flat_datas[$current_datas['parent']]) && ($current_datas['parent'] != 0 && $itilcategory->getFromDB(intval($current_datas['parent'])))) {
+
                 $flat_datas[$current_datas['parent']] = [
                     'id'     => $current_datas['parent'],
-                    'name'   => htmlspecialchars($itilcategory->fields['name'], ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8', false),
+                    'name'   => htmlspecialchars($itilcategory->fields['name']),
                     'parent' => $itilcategory->fields['itilcategories_id'],
                     'count'  => 0,
                 ];
