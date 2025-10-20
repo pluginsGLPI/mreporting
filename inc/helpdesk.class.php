@@ -88,7 +88,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $result = $DB->request($query);
 
         foreach ($result as $ticket) {
-            $label = empty($ticket['name']) ? __s('Root entity') : $ticket['name'];
+            $label = empty($ticket['name']) ? __s('Root entity') : htmlspecialchars($ticket['name']);
             $datas['datas'][$label] = $ticket['count'];
         }
 
@@ -142,8 +142,17 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             if (empty($data['category'])) {
                 $data['category'] = __s('None');
             }
+
+            $data['category'] = str_replace(
+                ["'", '"'],
+                ["\'", "&quot;"],
+                $data['category'],
+            );
+
             $categories[$data['category']] = $data['itilcategories_id'];
         }
+
+
 
         $labels2 = array_keys($categories);
 
@@ -426,8 +435,19 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                 $ticket['category_id']   = 0;
                 $ticket['category_name'] = __s('None');
             }
-            $type = $ticket['type'] == 0 ? __s('Undefined', 'mreporting') : Ticket::getTicketTypeName(intval($ticket['type']));
+            if ($ticket['type'] == 0) {
+                $type = __s('Undefined', 'mreporting');
+            } else {
+                $type = htmlspecialchars(Ticket::getTicketTypeName(intval($ticket['type'])));
+            }
             $datas['labels2'][$type]                         = $type;
+
+            $ticket['category_name'] = str_replace(
+                ["'", '"'],
+                ["\'", "&quot;"],
+                $ticket['category_name'],
+            );
+
             $datas['datas'][$ticket['category_name']][$type] = $ticket['count'];
         }
 
@@ -597,6 +617,12 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         foreach ($result as $ticket) {
             if (empty($ticket['category_name'])) {
                 $ticket['category_name'] = __s('None');
+            } else {
+                $ticket['category_name'] = str_replace(
+                    ["'", '"'],
+                    ["\'", "&quot;"],
+                    $ticket['category_name'],
+                );
             }
 
             if (!isset($datas['datas'][$ticket['category_name']])) {
@@ -606,6 +632,8 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
                     }
                 }
             }
+
+
 
             $datas['datas'][$ticket['category_name']][$status[$ticket['status']]] = $ticket['count'];
         }
@@ -824,9 +852,10 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $itilcategory = new ITILCategory();
         foreach ($flat_datas as $cat_id => $current_datas) {
             if (!isset($flat_datas[$current_datas['parent']]) && ($current_datas['parent'] != 0 && $itilcategory->getFromDB(intval($current_datas['parent'])))) {
+
                 $flat_datas[$current_datas['parent']] = [
                     'id'     => $current_datas['parent'],
-                    'name'   => $itilcategory->fields['name'],
+                    'name'   => htmlspecialchars($itilcategory->fields['name']),
                     'parent' => $itilcategory->fields['itilcategories_id'],
                     'count'  => 0,
                 ];
