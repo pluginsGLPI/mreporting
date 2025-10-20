@@ -138,7 +138,7 @@ class PluginMreportingProfile extends CommonDBTM
             ],
         ];
         $result = $DB->request($query);
-        if (!$result->numrows()) {
+        if ($result->numrows() === 0) {
             return false;
         }
         $this->fields = $result->current();
