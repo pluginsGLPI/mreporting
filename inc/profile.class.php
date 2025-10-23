@@ -138,7 +138,7 @@ class PluginMreportingProfile extends CommonDBTM
             ],
         ];
         $result = $DB->request($query);
-        if ($result->numrows() != 1) {
+        if ($result->numrows() === 0) {
             return false;
         }
         $this->fields = $result->current();
@@ -306,7 +306,7 @@ class PluginMreportingProfile extends CommonDBTM
                 $title   = $LANG['plugin_mreporting'][$index][$report['name']]['title'];
 
                 echo "<tr class='tab_bg_1'>";
-                echo '<td>' . htmlspecialchars($mreportingConfig->getLink()) . '&nbsp(' . htmlspecialchars($title) . '): </td>';
+                echo '<td>' . $mreportingConfig->getLink() . '&nbsp(' . $title . '): </td>';
                 echo '<td>';
                 Profile::dropdownRight(
                     $report['id'],
