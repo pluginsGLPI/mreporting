@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
 
+
+## [1.9.1] - 2025-10-27
+
 ### Fixed
 
 - Fix display right form
