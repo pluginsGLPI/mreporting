@@ -4,7 +4,7 @@
         "sboden/odtphp": "^3.2"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.85",
+        "friendsofphp/php-cs-fixer": "^3.89",
         "glpi-project/phpstan-glpi": "^1.0",
         "glpi-project/tools": "^0.8",
         "php-parallel-lint/php-parallel-lint": "^1.4",
