@@ -204,25 +204,35 @@ class PluginMreportingProfile extends CommonDBTM
     * Function to add right on report to a profile
     * @param $idProfile
     */
-    public static function addRightToProfile($idProfile)
+    public static function addRightToProfile(?int $idProfile = null): void
     {
         /** @var DBmysql $DB */
         global $DB;
 
-        //get all reports
+        $profiles = [];
+        $profiles = is_null($idProfile) ? Profile::getSuperAdminProfilesId() : [$idProfile];
+
         $config = new PluginMreportingConfig();
-        foreach ($config->find() as $report) {
-            // add right for any reports for profile
-            // Add manual request because Add function get error : right is set to NULL
-            if (!$DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
-                'profiles_id' => $idProfile,
-                'reports'     => $report['id'],
-                'right'       => READ,
-            ], [
-                'profiles_id' => $idProfile,
-                'reports'     => $report['id'],
-            ])) {
-                return;
+        $reports = $config->find();
+
+        foreach ($profiles as $profileId) {
+            foreach ($reports as $report) {
+                $success = $DB->updateOrInsert(
+                    'glpi_plugin_mreporting_profiles',
+                    [
+                        'profiles_id' => $profileId,
+                        'reports'     => $report['id'],
+                        'right'       => READ,
+                    ],
+                    [
+                        'profiles_id' => $profileId,
+                        'reports'     => $report['id'],
+                    ]
+                );
+
+                if (!$success) {
+                    return;
+                }
             }
         }
     }
