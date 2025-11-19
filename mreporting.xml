@@ -2,7 +2,7 @@
    <name>More Reporting</name>
    <key>mreporting</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/public/pics/chart-garea.png</logo>
+   <logo>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/mreporting.png</logo>
    <description>
       <short>
          <cs>Přidání (a vytváření) nových výkazů s grafy pro glpi</cs>
