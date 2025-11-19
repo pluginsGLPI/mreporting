@@ -227,7 +227,7 @@ class PluginMreportingProfile extends CommonDBTM
                     [
                         'profiles_id' => $profileId,
                         'reports'     => $report['id'],
-                    ]
+                    ],
                 );
             }
         }
