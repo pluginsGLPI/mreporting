@@ -209,15 +209,15 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var DBmysql $DB */
         global $DB;
 
-        $profiles = [];
-        $profiles = is_null($idProfile) ? Profile::getSuperAdminProfilesId() : [$idProfile];
+        $profiles_ids = [];
+        $profiles_ids = is_null($idProfile) ? Profile::getSuperAdminProfilesId() : [$idProfile];
 
         $config = new PluginMreportingConfig();
         $reports = $config->find();
 
-        foreach ($profiles as $profileId) {
+        foreach ($profiles_ids as $profileId) {
             foreach ($reports as $report) {
-                $success = $DB->updateOrInsert(
+                $DB->updateOrInsert(
                     'glpi_plugin_mreporting_profiles',
                     [
                         'profiles_id' => $profileId,
@@ -229,10 +229,6 @@ class PluginMreportingProfile extends CommonDBTM
                         'reports'     => $report['id'],
                     ]
                 );
-
-                if (!$success) {
-                    return;
-                }
             }
         }
     }
