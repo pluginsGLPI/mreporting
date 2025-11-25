@@ -487,16 +487,24 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                                 ],
                             ],
                         ],
-                        Group_Ticket::getTable() => [
+                        Group_Ticket::getTable() . ' AS gt' => [
                             'FKEY' => [
-                                Group_Ticket::getTable() . '.tickets_id',
+                                'gt.tickets_id',
                                 Ticket::getTable() . '.id',
                                 [
                                     'AND' => [
-                                        'OR' => [
-                                            Group_Ticket::getTable() . '.type' => Group_Ticket::REQUESTER,
-                                            Group_Ticket::getTable() . '.type' => Group_Ticket::ASSIGN,
-                                        ],
+                                        'gt.type' => Group_Ticket::ASSIGN,
+                                    ],
+                                ],
+                            ],
+                        ],
+                        Group_Ticket::getTable() . ' AS gtr' => [
+                            'FKEY' => [
+                                'gtr.tickets_id',
+                                Ticket::getTable() . '.id',
+                                [
+                                    'AND' => [
+                                        'gtr.type' => Group_Ticket::REQUESTER,
                                     ],
                                 ],
                             ],
