@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
 
+## [1.8.10] - 2025-12-04
+
 ### Fixed
 
  - Fix SQL alias errors for reportVstackbarLifetime chart
