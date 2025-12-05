@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [UNRELEASED]
+
+### Fixed
+
+ - Fix SQL alias errors for reportVstackbarLifetime chart
+
 ## [1.9.2] - 2025-12-02
 
 ### Fixed
