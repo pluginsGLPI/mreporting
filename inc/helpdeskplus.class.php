@@ -80,7 +80,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             Group::getTable() => [
                 'FKEY' => [
                     Group::getTable() . '.id',
-                    Group_Ticket::getTable() . '.groups_id',
+                    'gt.groups_id',
                 ],
             ],
         ];
@@ -478,33 +478,11 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                     ],
                     'COUNT' => 'nb',
                     'FROM' => Ticket::getTable(),
-                    'LEFT JOIN' => [
-                        Ticket_User::getTable() => [
-                            'FKEY' => [
-                                Ticket_User::getTable() . '.tickets_id',
-                                Ticket::getTable() . '.id',
-                                [
-                                    'AND' => [
-                                        Ticket_User::getTable() . '.type' => Ticket_User::ASSIGN,
-                                    ],
-                                ],
-                            ],
-                        ],
-                        Group_Ticket::getTable() => [
-                            'FKEY' => [
-                                Group_Ticket::getTable() . '.tickets_id',
-                                Ticket::getTable() . '.id',
-                                [
-                                    'AND' => [
-                                        'OR' => [
-                                            Group_Ticket::getTable() . '.type' => Group_Ticket::REQUESTER,
-                                            Group_Ticket::getTable() . '.type' => Group_Ticket::ASSIGN,
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+                    'LEFT JOIN' => array_merge(
+                        $this->criteria_join_tu,
+                        $this->criteria_join_gt,
+                        $this->criteria_join_gtr,
+                    ),
                     'WHERE' => array_merge(
                         [
                             Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -744,7 +722,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $query = [
             "SELECT" => [
-                Group_Ticket::getTable() . '.groups_id',
+                'gt.groups_id',
                 Group::getTable() . '.completename',
             ],
             'COUNT' => 'nb',
