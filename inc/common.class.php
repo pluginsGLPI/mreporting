@@ -1426,9 +1426,18 @@ class PluginMreportingCommon extends CommonDBTM
             'SELECT' => [
                 'glpi_slas.id',
                 'glpi_slas.name',
+                'glpi_slms.name AS slm_name',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_slas',
+            'LEFT JOIN' => [
+                'glpi_slms' => [
+                    'ON' => [
+                        'glpi_slas' => 'slms_id',
+                        'glpi_slms' => 'id',
+                    ],
+                ],
+            ],
             'INNER JOIN' => [
                 'glpi_tickets' => [
                     'ON' => [
@@ -1446,7 +1455,8 @@ class PluginMreportingCommon extends CommonDBTM
 
         $values = [];
         foreach ($result as $data) {
-            $values[$data['id']] = $data['name'];
+            $slm_name = $data['slm_name'];
+            $values[$slm_name][$data['id']] = $data['name'];
         }
 
         $selected_values = isset($_SESSION['mreporting_values']['slas']) ? $_SESSION['mreporting_values']['slas'] : [];
