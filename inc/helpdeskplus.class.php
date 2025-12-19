@@ -664,7 +664,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         //Init delay value
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
-        $limit = isset($_SESSION['mreporting_values']['glpilist_limit']) ? '0, ' . $_SESSION['mreporting_values']['glpilist_limit'] : '0, 20';
+        $limit = isset($_SESSION['mreporting_values']['glpilist_limit']) ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
 
         $query = [
             "SELECT" => [
@@ -718,7 +718,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         //Init delay value
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
-        $limit = isset($_SESSION['mreporting_values']['glpilist_limit']) ? '0, ' . $_SESSION['mreporting_values']['glpilist_limit'] : '0, 20';
+        $limit = isset($_SESSION['mreporting_values']['glpilist_limit']) ? $_SESSION['mreporting_values']['glpilist_limit'] : 20;
 
         $query = [
             "SELECT" => [
