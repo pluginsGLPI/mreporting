@@ -161,13 +161,13 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $mr_values = $_SESSION['mreporting_values'];
 
-        if (isset($mr_values['groups_assign_id'])) {
+        if (isset($mr_values['groups_assign_id']) && !empty($mr_values['groups_assign_id'])) {
             $this->criteria_group_assign = [
                 'gt.groups_id' => $mr_values['groups_assign_id'],
             ];
         }
 
-        if (isset($mr_values['groups_request_id'])) {
+        if (isset($mr_values['groups_request_id']) && !empty($mr_values['groups_request_id'])) {
             $this->criteria_group_request = [
                 'gtr.groups_id' => $mr_values['groups_request_id'],
             ];

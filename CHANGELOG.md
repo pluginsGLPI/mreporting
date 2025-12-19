@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
- - Fix SQL alias errors for reportVstackbarLifetime chart
+- Fix SQL alias errors for reportVstackbarLifetime chart
+- Fix empty `WHERE` clause
 
 ## [1.9.2] - 2025-12-02
 
