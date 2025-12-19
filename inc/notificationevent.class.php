@@ -57,7 +57,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
 
             $options['entities_id'] = 0; //New code
             $notificationtarget     = NotificationTarget::getInstance($item, $event, $options);
-            if (!$notificationtarget) {
+            if (!$notificationtarget || !($notificationtarget instanceof PluginMreportingNotificationTargetNotification)) {
                 return false;
             }
 
@@ -76,6 +76,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
                 $notificationtarget->setMode($data['mode']);
                 $notificationtarget->setEvent($eventClass);
                 $notificationtarget->clearAddressesList();
+                $notificationtarget->addDataForTemplate($event, $options);
 
                 //Process more infos (for example for tickets)
                 $notificationtarget->addAdditionnalInfosForTarget();
@@ -126,7 +127,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
                                                 $users_infos,
                                                 $options,
                                             ),
-                                            [],
+                                            $notificationtarget->additionalData,
                                         );
                                     } else {
                                         $notificationtarget->getFromDB($target['id']);
