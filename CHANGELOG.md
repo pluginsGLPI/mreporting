@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
 
+### Fixed
+
+- Fix missing attachment from notification
+
 ## [1.8.10] - 2025-12-05
 
 ### Fixed
