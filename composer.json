@@ -1,4 +1,5 @@
 {
+    "name": "glpi-plugin/mreporting",
     "require": {
         "php": ">=8.2",
         "sboden/odtphp": "^3.2"
