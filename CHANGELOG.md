@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- Fix missing attachment from notification
+ - Fix missing attachment from notification
+ - Fix `limit` clause
 
 ## [1.8.10] - 2025-12-05
 
