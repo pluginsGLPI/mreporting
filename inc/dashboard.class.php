@@ -242,7 +242,7 @@ class PluginMreportingDashboard extends CommonDBTM
                   </a>
                </span>
             </div>
-            <div class='card-body mreportingwidget-body'>" . htmlspecialchars($report_script) . "</div>
+            <div class='card-body mreportingwidget-body'>" . $report_script . "</div>
          </div>";
         }
 
