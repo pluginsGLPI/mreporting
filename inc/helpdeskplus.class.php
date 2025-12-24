@@ -1013,7 +1013,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         if (isset($_POST['categories']) && $_POST['categories'] > 0) {
             $category = $_POST['categories'];
         } else {
-            $category = false;To
+            $category = false;
         }
 
         $category_limit = isset($_POST['glpilist_limit']) ? $_POST['glpilist_limit'] : 10;
