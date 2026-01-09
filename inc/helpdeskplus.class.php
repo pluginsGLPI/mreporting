@@ -594,6 +594,9 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
         }
 
+        //Init delay value
+        $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
+
         foreach ($this->status as $current_status) {
             if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
                 $status_name = Ticket::getStatus($current_status);
@@ -626,6 +629,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                     'GROUPBY' => ['name'],
                     'ORDER' => ['name'],
                 ];
+                $query['WHERE']['AND'] = $delay;
 
                 $result = $DB->request($query);
                 foreach ($result as $data) {

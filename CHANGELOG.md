@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  - Fix missing attachment from notification
  - Fix `limit` clause
  - Improve SLA selector in reports
+ - Fix date filter for reportVstackbarTicketstech report
 
 ## [1.8.10] - 2025-12-05
 
