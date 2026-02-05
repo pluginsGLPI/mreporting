@@ -58,8 +58,10 @@ class PluginMreportingBaseclass
         global $DB, $LANG;
 
         //force MySQL DATE_FORMAT in user locale
-        $query = "SET lc_time_names = '" . $_SESSION['glpilanguage'] . "'";
-        $DB->doQuery($query);
+        $query = "SET lc_time_names = ?";
+        $stmt = $DB->prepare($query);
+        $stmt->bind_param("s", $_SESSION['glpilanguage']);
+        $stmt->execute();
 
         if (empty($config)) {
             return;
