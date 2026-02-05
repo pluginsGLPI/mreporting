@@ -99,6 +99,11 @@ Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
    </authors>
    <versions>
       <version>
+         <num>1.9.4</num>
+         <compatibility>~11.0.0</compatibility>
+         <download_url>https://github.com/pluginsGLPI/mreporting/releases/download/1.9.4/glpi-mreporting-1.9.4.tar.bz2</download_url>
+      </version>
+      <version>
          <num>1.9.3</num>
          <compatibility>~11.0.0</compatibility>
          <download_url>https://github.com/pluginsGLPI/mreporting/releases/download/1.9.3/glpi-mreporting-1.9.3.tar.bz2</download_url>
