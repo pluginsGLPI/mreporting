@@ -108,7 +108,7 @@ class PluginMreportingProfile extends CommonDBTM
             ],
         ];
         $result = $DB->request($query);
-        if ($result->numrows() != 1) {
+        if (empty($result->numrows())) {
             return false;
         }
         $this->fields = $result->current();
@@ -127,14 +127,23 @@ class PluginMreportingProfile extends CommonDBTM
         $result_config = $DB->request('SELECT `id` FROM `glpi_plugin_mreporting_configs`');
         foreach ($DB->request('SELECT `id` FROM `glpi_profiles`') as $prof) {
             foreach ($result_config as $report) {
-                $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
-                    'profiles_id' => $prof['id'],
-                    'reports'     => $report['id'],
-                    'right'       => null,
-                ], [
-                    'profiles_id' => $prof['id'],
-                    'reports'     => $report['id'],
+                // Only insert if it doesn't exist yet (don't overwrite existing rights)
+                $existing = $DB->request([
+                    'FROM'   => 'glpi_plugin_mreporting_profiles',
+                    'WHERE'  => [
+                        'profiles_id' => $prof['id'],
+                        'reports'     => $report['id'],
+                    ],
+                    'LIMIT'  => 1
                 ]);
+
+                if ($existing->numrows() == 0) {
+                    $DB->insert('glpi_plugin_mreporting_profiles', [
+                        'profiles_id' => $prof['id'],
+                        'reports'     => $report['id'],
+                        'right'       => null,
+                    ]);
+                }
             }
         }
     }
@@ -168,16 +177,23 @@ class PluginMreportingProfile extends CommonDBTM
         //get all reports
         $config = new PluginMreportingConfig();
         foreach ($config->find() as $report) {
-            // add right for any reports for profile
-            // Add manual request because Add function get error : right is set to NULL
-            $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
-                'profiles_id' => $idProfile,
-                'reports'     => $report['id'],
-                'right'       => READ,
-            ], [
-                'profiles_id' => $idProfile,
-                'reports'     => $report['id'],
-            ]) or die('An error occurs during profile initialisation.');
+            // Only insert if it doesn't exist yet (don't overwrite existing rights)
+            $existing = $DB->request([
+                'FROM'   => 'glpi_plugin_mreporting_profiles',
+                'WHERE'  => [
+                    'profiles_id' => $idProfile,
+                    'reports'     => $report['id'],
+                ],
+                'LIMIT'  => 1
+            ]);
+
+            if ($existing->numrows() == 0) {
+                $DB->insert('glpi_plugin_mreporting_profiles', [
+                    'profiles_id' => $idProfile,
+                    'reports'     => $report['id'],
+                    'right'       => READ,
+                ]) or die('An error occurs during profile initialisation.');
+            }
         }
     }
 
