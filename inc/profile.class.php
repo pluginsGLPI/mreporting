@@ -134,7 +134,7 @@ class PluginMreportingProfile extends CommonDBTM
                         'profiles_id' => $prof['id'],
                         'reports'     => $report['id'],
                     ],
-                    'LIMIT'  => 1
+                    'LIMIT'  => 1,
                 ]);
 
                 if ($existing->numrows() == 0) {
@@ -184,7 +184,7 @@ class PluginMreportingProfile extends CommonDBTM
                     'profiles_id' => $idProfile,
                     'reports'     => $report['id'],
                 ],
-                'LIMIT'  => 1
+                'LIMIT'  => 1,
             ]);
 
             if ($existing->numrows() == 0) {
