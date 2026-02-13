@@ -128,23 +128,23 @@ class PluginMreportingProfile extends CommonDBTM
         $iterator = $DB->request([
             'SELECT' => [
                 'configs.id AS reports',
-                'profiles.id AS profiles_id'
+                'profiles.id AS profiles_id',
             ],
             'FROM' => [
                 'glpi_plugin_mreporting_configs AS configs',
-                'glpi_profiles AS profiles'
+                'glpi_profiles AS profiles',
             ],
             'LEFT JOIN' => [
                 'glpi_plugin_mreporting_profiles AS mreporting_profiles' => [
                     'ON' => [
                         'mreporting_profiles.profiles_id' => new \QueryExpression($DB->quoteName('profiles.id')),
-                        'mreporting_profiles.reports' => new \QueryExpression($DB->quoteName('configs.id'))
-                    ]
-                ]
+                        'mreporting_profiles.reports' => new \QueryExpression($DB->quoteName('configs.id')),
+                    ],
+                ],
             ],
             'WHERE' => [
-                'mreporting_profiles.id' => null
-            ]
+                'mreporting_profiles.id' => null,
+            ],
         ]);
 
         foreach ($iterator as $row) {
@@ -190,13 +190,13 @@ class PluginMreportingProfile extends CommonDBTM
                 'glpi_plugin_mreporting_profiles AS mreporting_profiles' => [
                     'ON' => [
                         'mreporting_profiles.reports' => new \QueryExpression($DB->quoteName('configs.id')),
-                        'mreporting_profiles.profiles_id' => $idProfile
-                    ]
-                ]
+                        'mreporting_profiles.profiles_id' => $idProfile,
+                    ],
+                ],
             ],
             'WHERE' => [
-                'mreporting_profiles.id' => null
-            ]
+                'mreporting_profiles.id' => null,
+            ],
         ]);
 
         foreach ($iterator as $row) {
