@@ -108,7 +108,7 @@ class PluginMreportingProfile extends CommonDBTM
             ],
         ];
         $result = $DB->request($query);
-        if ($result->numrows() != 1) {
+        if (empty($result->numrows())) {
             return false;
         }
         $this->fields = $result->current();
@@ -124,18 +124,35 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var \DBmysql $DB */
         global $DB;
 
-        $result_config = $DB->request('SELECT `id` FROM `glpi_plugin_mreporting_configs`');
-        foreach ($DB->request('SELECT `id` FROM `glpi_profiles`') as $prof) {
-            foreach ($result_config as $report) {
-                $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
-                    'profiles_id' => $prof['id'],
-                    'reports'     => $report['id'],
-                    'right'       => null,
-                ], [
-                    'profiles_id' => $prof['id'],
-                    'reports'     => $report['id'],
-                ]);
-            }
+        // Find all missing profile/report combinations using a single optimized query
+        $iterator = $DB->request([
+            'SELECT' => [
+                'configs.id AS reports',
+                'profiles.id AS profiles_id',
+            ],
+            'FROM' => [
+                'glpi_plugin_mreporting_configs AS configs',
+                'glpi_profiles AS profiles',
+            ],
+            'LEFT JOIN' => [
+                'glpi_plugin_mreporting_profiles AS mreporting_profiles' => [
+                    'ON' => [
+                        'mreporting_profiles.profiles_id' => new \QueryExpression($DB->quoteName('profiles.id')),
+                        'mreporting_profiles.reports' => new \QueryExpression($DB->quoteName('configs.id')),
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                'mreporting_profiles.id' => null,
+            ],
+        ]);
+
+        foreach ($iterator as $row) {
+            $DB->insert('glpi_plugin_mreporting_profiles', [
+                'profiles_id' => $row['profiles_id'],
+                'reports'     => $row['reports'],
+                'right'       => null,
+            ]);
         }
     }
 
@@ -165,18 +182,28 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var \DBmysql $DB */
         global $DB;
 
-        //get all reports
-        $config = new PluginMreportingConfig();
-        foreach ($config->find() as $report) {
-            // add right for any reports for profile
-            // Add manual request because Add function get error : right is set to NULL
-            $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
+        // Find all missing reports for this specific profile using an optimized query
+        $iterator = $DB->request([
+            'SELECT' => 'configs.id AS reports',
+            'FROM' => 'glpi_plugin_mreporting_configs AS configs',
+            'LEFT JOIN' => [
+                'glpi_plugin_mreporting_profiles AS mreporting_profiles' => [
+                    'ON' => [
+                        'mreporting_profiles.reports' => new \QueryExpression($DB->quoteName('configs.id')),
+                        'mreporting_profiles.profiles_id' => $idProfile,
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                'mreporting_profiles.id' => null,
+            ],
+        ]);
+
+        foreach ($iterator as $row) {
+            $DB->insert('glpi_plugin_mreporting_profiles', [
                 'profiles_id' => $idProfile,
-                'reports'     => $report['id'],
+                'reports'     => $row['reports'],
                 'right'       => READ,
-            ], [
-                'profiles_id' => $idProfile,
-                'reports'     => $report['id'],
             ]) or die('An error occurs during profile initialisation.');
         }
     }
