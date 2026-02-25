@@ -127,7 +127,7 @@ function plugin_init_mreporting()
             }
 
             /* Show Reports in standart stats page */
-            if (preg_match('#front/stat.*\.php#', $_SERVER['SCRIPT_NAME'])) {
+            if (preg_match('#front/stat.*\.php#', $_SERVER['REQUEST_URI'])) {
                 $mreporting_common = new PluginMreportingCommon();
                 $reports           = $mreporting_common->getAllReports();
                 if ($reports !== false) {
