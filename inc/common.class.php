@@ -223,7 +223,7 @@ class PluginMreportingCommon extends CommonDBTM
 
                         if ($with_url) {
                             $reports[$classname]['functions'][$i]['url_graph']     = $url_graph;
-                            $reports[$classname]['functions'][$i]['min_url_graph'] = $min_url_graph;
+                            $reports[$classname]['functions'][$i]['min_url_graph'] = html_entity_decode($min_url_graph, ENT_QUOTES | ENT_HTML5, 'UTF-8');
                         }
 
                         $i++;
