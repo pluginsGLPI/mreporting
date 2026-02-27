@@ -101,9 +101,9 @@ class PluginMreportingProfile extends CommonDBTM
 
         switch ($item->getType()) {
             case 'Profile':
-                return self::getTypeName();
+                return self::createTabEntry(self::getTypeName(), 0, self::class, PluginMreportingCommon::getIcon());
             case 'PluginMreportingConfig':
-                return __s('Rights management', 'mreporting');
+                return self::createTabEntry(__s('Rights management', 'mreporting'), 0, self::class, PluginMreportingCommon::getIcon());
             default:
                 return '';
         }
