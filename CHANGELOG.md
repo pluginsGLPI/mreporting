@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Fix GLIP Stat injection
+- Fix missing icon
 
 ## [1.9.3] - 2026-01-08
 

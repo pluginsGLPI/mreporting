@@ -2191,6 +2191,6 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function getIcon()
     {
-        return 'fa fa-chart-pie';
+        return 'ti ti-chart-pie';
     }
 }
