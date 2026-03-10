@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Fix the loss of profile rights when updating the plugin
+- Fix missing categories in `reportSunburstTicketByCategories` chart.
 
 ## [1.8.11] - 2025-02-05
 
