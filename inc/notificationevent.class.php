@@ -75,7 +75,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
      * @param array      $options options used
      * @param string     $label   used for debugEvent() (default '')
     **/
-    public static function raiseEvent($event, $item, $options = [], ?CommonDBTM $trigger = null, $label = '')
+    public static function raiseEvent($event, $item, $options = [], $label = '')
     {
         /** @var array $CFG_GLPI */
         global $CFG_GLPI;
@@ -87,7 +87,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
 
             $options['entities_id'] = 0; //New code
             $notificationtarget     = NotificationTarget::getInstance($item, $event, $options);
-            if (!$notificationtarget) {
+            if (!$notificationtarget || !($notificationtarget instanceof PluginMreportingNotificationTargetNotification)) {
                 return false;
             }
 
@@ -106,6 +106,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
                 $notificationtarget->setMode($data['mode']);
                 $notificationtarget->setEvent($eventClass);
                 $notificationtarget->clearAddressesList();
+                $notificationtarget->addDataForTemplate($event, $options);
 
                 //Process more infos (for example for tickets)
                 $notificationtarget->addAdditionnalInfosForTarget();
@@ -152,7 +153,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
                                             $users_infos,
                                             $options,
                                         ),
-                                        [],
+                                        $notificationtarget->additionalData,
                                     );
                                 } else {
                                     $notificationtarget->getFromDB($target['id']);
