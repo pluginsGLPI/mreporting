@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fix GLIP Stat injection
 - Fix missing icon
 - Fix missing categories in `reportSunburstTicketByCategories` chart.
+- Fix missing attachment from notification
 
 ## [1.9.3] - 2026-01-08
 
