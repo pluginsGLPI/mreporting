@@ -75,7 +75,7 @@ class PluginMreportingNotificationEvent extends NotificationEvent
      * @param array      $options options used
      * @param string     $label   used for debugEvent() (default '')
     **/
-    public static function raiseEvent($event, $item, $options = [], $label = '')
+    public static function raiseEvent($event, $item, $options = [], ?CommonDBTM $trigger = null, $label = '')
     {
         /** @var array $CFG_GLPI */
         global $CFG_GLPI;
