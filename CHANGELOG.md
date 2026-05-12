@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [UNRELEASED]
+## [1.9.5] - 2026-05-12
 
 ### Fixed
 
-- Fix GLIP Stat injection
+- Fix GLPI Stat injection
 - Fix missing icon
 - Fix missing categories in `reportSunburstTicketByCategories` chart.
 - Fix missing attachment from notification
