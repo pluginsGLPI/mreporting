@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Fix dashboard crash when adding a report without selecting one (invalid `reports_id` value)
+
 ## [1.9.5] - 2026-05-12
 
 ### Fixed

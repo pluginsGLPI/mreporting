@@ -238,6 +238,16 @@ function plugin_mreporting_install()
     $migration->addField('glpi_plugin_mreporting_preferences', 'selectors', 'text');
     $migration->migrationOneTable('glpi_plugin_mreporting_preferences');
 
+    // == Fix dashboard entries with invalid reports_id (e.g. -1 from empty dropdown selection)
+    $DB->delete('glpi_plugin_mreporting_dashboards', ['reports_id' => ['<=', 0]]);
+    $migration->changeField(
+        'glpi_plugin_mreporting_dashboards',
+        'reports_id',
+        'reports_id',
+        "int {$default_key_sign} NOT NULL",
+    );
+    $migration->migrationOneTable('glpi_plugin_mreporting_dashboards');
+
     // == Init available reports
     require_once __DIR__ . '/inc/baseclass.class.php';
     require_once __DIR__ . '/inc/common.class.php';
