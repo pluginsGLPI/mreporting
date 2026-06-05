@@ -45,6 +45,9 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $selected_states = [];
         if (isset($_SESSION['mreporting_values'][$field])) {
             $selected_states = $_SESSION['mreporting_values'][$field];
+            if (!is_array($selected_states)) {
+                $selected_states = [];
+            }
         } else {
             $selected_states = self::getDefaultState();
         }
