@@ -125,7 +125,7 @@ class PluginMreportingGraph
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void|bool
+     * @return void|string|bool
      */
     public function showHbar($params, $dashboard = false, $width = false)
     {
@@ -334,7 +334,7 @@ JAVASCRIPT;
      * @param $show_label : behavior of the graph labels,
      *                      values : 'hover', 'never', 'always' (optionnal)
      * @param $export : keep only svg to export (optionnal)
-     * @return void|bool
+     * @return void|string|bool
      */
     public function showPie($params, $dashboard = false, $width = false)
     {
