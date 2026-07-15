@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Dmytro Iliukhin, 2026
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-13 08:02+0000\n"
+"POT-Creation-Date: 2026-07-13 02:53+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Dmytro Iliukhin, 2026\n"
 "Language-Team: Ukrainian (Ukraine) (http://app.transifex.com/teclib/glpi-project-plugin-mreporting/language/uk_UA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,7 +18,225 @@ msgstr ""
 "Language: uk_UA\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: inc/notification.class.php:69
+#: front/central.php:35 front/preference.form.php:43 front/config.php:41
+#: front/graph.php:38 front/config.form.php:52 front/dashboard.form.php:57
+#: front/dashboard.form.php:62 inc/profile.class.php:71
+#: inc/notificationtargetnotification.class.php:37 inc/common.class.php:53
+#: inc/preference.class.php:198 inc/notification.class.php:47 setup.php:191
+msgid "More Reporting"
+msgstr "Розширена звітність"
+
+#: front/central.php:85 front/central.php:91 inc/common.class.php:340
+#: inc/common.class.php:408 inc/config.class.php:701
+msgid "No report is available !"
+msgstr "Немає доступних звітів!"
+
+#: front/popup.php:37 inc/common.class.php:1189
+msgid "General Report - ODT"
+msgstr "Генерувати звіт - ODT"
+
+#: inc/other.class.php:165
+msgid "Add/remove software on a computer"
+msgstr "Додати/видалити програмне забезпечення на комп'ютері"
+
+#: inc/other.class.php:168
+msgid "Add/remove version on a software"
+msgstr "Додати/видалити версію програми"
+
+#: inc/other.class.php:171
+msgid "Add infocom"
+msgstr "Додати інфоком"
+
+#: inc/other.class.php:174
+msgid "Add/remove profile on a user"
+msgstr "Додати/видалити профіль для користувача"
+
+#: inc/other.class.php:177
+msgid "Add/remove group on a user"
+msgstr "Додати/видалити групу користувача"
+
+#: inc/other.class.php:180
+msgid "User deleted from LDAP"
+msgstr "Користувача видалено з LDAP"
+
+#: inc/other.class.php:196
+msgid "Webservice logs"
+msgstr "Журнал вебсервісів"
+
+#: inc/other.class.php:200
+msgid "OCS Infos"
+msgstr "Інформація OCS"
+
+#: inc/other.class.php:203
+msgid "Add/update/remove device"
+msgstr "Додати/оновити/видалити пристрій"
+
+#: inc/other.class.php:206
+msgid "Add/remove relation"
+msgstr "Додати/видалити зв'язок"
+
+#: inc/other.class.php:209
+msgid "Add/remove item"
+msgstr "Додати/видалити елемент"
+
+#: inc/other.class.php:212
+msgid "Comments & date_mod changes"
+msgstr "Зміни коментарів та дати модифікації"
+
+#: inc/other.class.php:229
+msgid "Genericobject plugin logs"
+msgstr "Журнали плагіна Generic Object"
+
+#: inc/profile.class.php:106 inc/profile.class.php:301
+#: inc/profile.class.php:381
+msgid "Rights management"
+msgstr "Керування правами"
+
+#: inc/helpdesk.class.php:366 inc/helpdesk.class.php:439
+msgid "Undefined"
+msgstr "Невизначено"
+
+#: inc/graphpng.class.php:608 inc/graphpng.class.php:807
+#: inc/graphpng.class.php:1050 inc/graphpng.class.php:1388
+#: inc/graphpng.class.php:1642 inc/graphpng.class.php:1988
+#: inc/graphpng.class.php:2318 inc/graph.class.php:166 inc/graph.class.php:375
+#: inc/graph.class.php:581 inc/graph.class.php:855 inc/graph.class.php:1087
+#: inc/graph.class.php:1330 inc/graph.class.php:1589
+msgid "No data for this date range !"
+msgstr "Немає даних за цей діапазон дат!"
+
+#: inc/dashboard.class.php:39 inc/common.class.php:68 inc/common.class.php:69
+#: inc/common.class.php:85 ajax/homepage_link.php:38
+msgid "Dashboard"
+msgstr "Дашборд"
+
+#: inc/dashboard.class.php:95
+msgid "Select a report to display"
+msgstr "Виберіть звіт для відображення"
+
+#: inc/dashboard.class.php:106
+msgid "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "Дашборд порожній. Будь ласка, додайте звіти, натиснувши на іконку"
+
+#: inc/dashboard.class.php:113
+msgid "Add a report"
+msgstr "Додати звіт"
+
+#: inc/dashboard.class.php:139
+msgid "Select a report to add"
+msgstr "Виберіть звіт для додавання"
+
+#: inc/dashboard.class.php:211
+msgid "Configure report"
+msgstr "Налаштувати звіт"
+
+#: inc/common.class.php:71 inc/common.class.php:72 inc/common.class.php:94
+msgid "Reports list"
+msgstr "Список звітів"
+
+#: inc/common.class.php:532 ajax/dropdownExport.php:44
+msgid "Without data"
+msgstr "Без даних"
+
+#: inc/common.class.php:533 ajax/dropdownExport.php:43
+msgid "With data"
+msgstr "З даними"
+
+#: inc/common.class.php:974
+msgid "Number"
+msgstr "Кількість"
+
+#: inc/common.class.php:991 inc/common.class.php:1291
+#: inc/common.class.php:1311
+msgid "data"
+msgstr "дані"
+
+#: inc/common.class.php:1190
+msgid "No graphic selected"
+msgstr "Графік не вибрано"
+
+#: inc/common.class.php:1476
+msgid "Week"
+msgstr "Тиждень"
+
+#: inc/common.class.php:1477
+msgid "Month"
+msgstr "Місяць"
+
+#: inc/common.class.php:1607
+msgid "Max depth entity level"
+msgstr "Максимальна глибина рівня сутностей"
+
+#: inc/preference.class.php:140
+msgid "Please, select a model in your preferences"
+msgstr "Будь ласка, виберіть модель у своїх налаштуваннях"
+
+#: inc/config.class.php:71
+msgid "Configuration"
+msgstr "Конфігурація"
+
+#: inc/config.class.php:121 inc/config.class.php:731
+msgid "See area"
+msgstr "Показати область"
+
+#: inc/config.class.php:130 inc/config.class.php:746
+msgid "Curve lines (SVG)"
+msgstr "Згладжені лінії (SVG)"
+
+#: inc/config.class.php:139 inc/config.class.php:758
+msgid "See values"
+msgstr "Показати значення"
+
+#: inc/config.class.php:149 inc/config.class.php:773
+msgid "Reverse data array"
+msgstr "Інвертувати масив даних"
+
+#: inc/config.class.php:158 inc/config.class.php:785
+msgid "Unit"
+msgstr "Одиниця виміру"
+
+#: inc/config.class.php:166 inc/config.class.php:800
+msgid "Default delay"
+msgstr "Затримка за замовчуванням"
+
+#: inc/config.class.php:174 inc/config.class.php:813
+msgid "Additional condition for MySQL"
+msgstr "Додаткова умова для MySQL"
+
+#: inc/config.class.php:182 inc/config.class.php:709
+msgid "See graphic"
+msgstr "Переглянути графік"
+
+#: inc/config.class.php:191
+msgid "Class"
+msgstr "Клас"
+
+#: inc/config.class.php:199 inc/config.class.php:714
+msgid "Default chart format"
+msgstr "Формат графіка за замовчуванням"
+
+#: inc/config.class.php:208 inc/config.class.php:827
+msgid "Send this report with the notification"
+msgstr "Надіслати цей звіт разом із сповіщенням"
+
+#: inc/config.class.php:287
+msgid "Initialize graphics configuration"
+msgstr "Ініціалізувати налаштування графіків"
+
+#: inc/config.class.php:523 inc/config.class.php:540
+msgid "On mouse over"
+msgstr "При наведенні миші"
+
+#: inc/config.class.php:605
+msgid "Object already exists"
+msgstr "Об'єкт вже існує"
+
+#: inc/notification.class.php:65 inc/notification.class.php:86
+#: inc/notification.class.php:164
+msgid "Notification for \"More Reporting\""
+msgstr "Сповіщення для \"Розширена звітність\""
+
+#: inc/notification.class.php:70
 msgid ""
 "\n"
 "<p>Hello,</p>\n"
@@ -25,249 +244,25 @@ msgid ""
 "<p>GLPI reports are available.<br />\n"
 "You will find attached in this email.</p>\n"
 "\n"
-msgstr ""
+msgstr "\nВітаємо,\n\nзвіти GLPI готові.\nВи знайдете їх у додатку до цього листа.\n"
 
-#: inc/dashboard.class.php:111
-msgid "Add a report"
-msgstr ""
-
-#: inc/other.class.php:81
-msgid "Add infocom"
-msgstr ""
-
-#: inc/other.class.php:87
-msgid "Add/remove group on a user"
-msgstr ""
-
-#: inc/other.class.php:111
-msgid "Add/remove item"
-msgstr ""
-
-#: inc/other.class.php:84
-msgid "Add/remove profile on a user"
-msgstr ""
-
-#: inc/other.class.php:108
-msgid "Add/remove relation"
-msgstr ""
-
-#: inc/other.class.php:75
-msgid "Add/remove software on a computer"
-msgstr ""
-
-#: inc/other.class.php:78
-msgid "Add/remove version on a software"
-msgstr ""
-
-#: inc/other.class.php:105
-msgid "Add/update/remove device"
-msgstr ""
-
-#: inc/config.class.php:140 inc/config.class.php:796
-msgid "Additional condition for MySQL"
-msgstr ""
-
-#: inc/pdf.class.php:47
-msgid "Automaticaly generated by GLPI"
-msgstr ""
-
-#: inc/config.class.php:157
-msgid "Class"
-msgstr ""
-
-#: inc/other.class.php:114
-msgid "Comments & date_mod changes"
-msgstr ""
-
-#: inc/config.class.php:41
-msgid "Configuration"
-msgstr ""
-
-#: inc/dashboard.class.php:211
-msgid "Configure report"
-msgstr ""
-
-#: inc/config.class.php:96 inc/config.class.php:729 inc/config.class.php:741
-msgid "Curve lines (SVG)"
-msgstr ""
-
-#: inc/dashboard.class.php:39 inc/common.class.php:66 inc/common.class.php:67
-#: inc/common.class.php:83 ajax/homepage_link.php:37
-msgid "Dashboard"
-msgstr ""
-
-#: inc/dashboard.class.php:104
-msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr ""
-
-#: inc/config.class.php:165
-msgid "Default chart format"
-msgstr ""
-
-#: inc/config.class.php:132 inc/config.class.php:783
-msgid "Default delay"
-msgstr ""
-
-#: inc/pdf.class.php:46 inc/notification.class.php:76
+#: inc/notification.class.php:77 inc/pdf.class.php:77
 msgid "GLPI statistics reports"
-msgstr ""
+msgstr "Статистичні звіти GLPI"
 
-#: inc/common.class.php:1200 inc/common.class.php:1207
-#: inc/common.class.php:1215 front/popup.php:39
-msgid "General Report - ODT"
-msgstr ""
-
-#: inc/other.class.php:122
-msgid "Genericobject plugin logs"
-msgstr ""
-
-#: inc/notification.class.php:77
+#: inc/notification.class.php:78
 msgid ""
 "Hello,\n"
 "\n"
 "GLPI reports are available.\n"
 "You will find attached in this email.\n"
 "\n"
-msgstr ""
+msgstr "Вітаємо,\nзвіти GLPI готові.\nВи знайдете їх у додатку до цього листа.\n"
 
-#: inc/config.class.php:266
-msgid "Initialize graphics configuration"
-msgstr ""
-
-#: inc/common.class.php:1618
-msgid "Max depth entity level"
-msgstr ""
-
-#: inc/common.class.php:1480
-msgid "Month"
-msgstr ""
-
-#: inc/profile.class.php:41 inc/preference.class.php:198
-#: inc/notification.class.php:47 inc/common.class.php:52
-#: inc/notificationtargetnotification.class.php:37 front/config.php:43
-#: front/config.form.php:54 front/central.php:34 front/graph.php:40
-#: front/preference.form.php:45 front/dashboard.form.php:57
-#: front/dashboard.form.php:62 setup.php:187
-msgid "More Reporting"
-msgstr ""
-
-#: inc/graphpng.class.php:612 inc/graphpng.class.php:809
-#: inc/graphpng.class.php:1044 inc/graphpng.class.php:1381
-#: inc/graphpng.class.php:1629 inc/graphpng.class.php:1967
-#: inc/graphpng.class.php:2285 inc/graph.class.php:163 inc/graph.class.php:365
-#: inc/graph.class.php:565 inc/graph.class.php:828 inc/graph.class.php:1051
-#: inc/graph.class.php:1284 inc/graph.class.php:1529
-msgid "No data for this date range !"
-msgstr ""
-
-#: inc/common.class.php:1216
-msgid "No graphic selected"
-msgstr ""
-
-#: inc/common.class.php:1208
-msgid "No model available"
-msgstr ""
-
-#: inc/config.class.php:684 inc/common.class.php:346 inc/common.class.php:413
-#: front/central.php:74 front/central.php:80
-msgid "No report is available !"
-msgstr ""
-
-#: inc/notification.class.php:64 inc/notification.class.php:85
-#: inc/notification.class.php:160
-msgid "Notification for \"More Reporting\""
-msgstr ""
-
-#: inc/notification.class.php:187
+#: inc/notification.class.php:191
 msgid "Notification(s) sent !"
-msgstr ""
+msgstr "Сповіщення надіслано!"
 
-#: inc/common.class.php:975
-msgid "Number"
-msgstr ""
-
-#: inc/other.class.php:102
-msgid "OCS Infos"
-msgstr ""
-
-#: inc/config.class.php:587
-msgid "Object already exists"
-msgstr ""
-
-#: inc/config.class.php:501 inc/config.class.php:517
-msgid "On mouse over"
-msgstr ""
-
-#: inc/preference.class.php:137 inc/common.class.php:1201
-msgid "Please, select a model in your preferences"
-msgstr ""
-
-#: inc/common.class.php:69 inc/common.class.php:70 inc/common.class.php:92
-msgid "Reports list"
-msgstr ""
-
-#: inc/config.class.php:115 inc/config.class.php:756
-msgid "Reverse data array"
-msgstr ""
-
-#: inc/profile.class.php:77 inc/profile.class.php:239
-#: inc/profile.class.php:315
-msgid "Rights management"
-msgstr ""
-
-#: inc/config.class.php:87 inc/config.class.php:714
-msgid "See area"
-msgstr ""
-
-#: inc/config.class.php:148 inc/config.class.php:692
-msgid "See graphic"
-msgstr ""
-
-#: inc/config.class.php:105
-msgid "See values"
-msgstr ""
-
-#: inc/dashboard.class.php:137
-msgid "Select a report to add"
-msgstr ""
-
-#: inc/dashboard.class.php:93
-msgid "Select a report to display"
-msgstr ""
-
-#: inc/config.class.php:174 inc/config.class.php:810
-msgid "Send this report with the notification"
-msgstr ""
-
-#: inc/helpdesk.class.php:302 inc/helpdesk.class.php:365
-msgid "Undefined"
-msgstr ""
-
-#: inc/config.class.php:124 inc/config.class.php:768
-msgid "Unit"
-msgstr ""
-
-#: inc/other.class.php:90
-msgid "User deleted from LDAP"
-msgstr ""
-
-#: inc/other.class.php:98
-msgid "Webservice logs"
-msgstr ""
-
-#: inc/common.class.php:1479
-msgid "Week"
-msgstr ""
-
-#: inc/common.class.php:538 ajax/dropdownExport.php:44
-msgid "With data"
-msgstr ""
-
-#: inc/common.class.php:537 ajax/dropdownExport.php:45
-msgid "Without data"
-msgstr ""
-
-#: inc/common.class.php:996 inc/common.class.php:1313
-#: inc/common.class.php:1329
-msgid "data"
-msgstr ""
+#: inc/pdf.class.php:78
+msgid "Automaticaly generated by GLPI"
+msgstr "Сгенеровано автоматично за допомогою GLPI"
