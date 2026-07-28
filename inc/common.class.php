@@ -612,6 +612,24 @@ class PluginMreportingCommon extends CommonDBTM
     }
 
     /**
+     * Reject the request unless the report is active and the current profile
+     * has read access to it (mirrors the check used to build the reports menu,
+     * but enforced here on the actual data-returning endpoints).
+     */
+    private static function checkReportAccess($f_name, $classname)
+    {
+        $config = new PluginMreportingConfig();
+        if (
+            !$config->getFromDBByFunctionAndClassname($f_name, $classname)
+            || !$config->fields['is_active']
+            || !isset($_SESSION['glpiactiveprofile']['id'])
+            || !PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'], $config->fields['id'])
+        ) {
+            throw new NotFoundHttpException();
+        }
+    }
+
+    /**
      * show Graph : Show graph
      *
      * @params $options ($opt, export)
@@ -671,6 +689,7 @@ class PluginMreportingCommon extends CommonDBTM
         if (!is_a($classname, PluginMreportingBaseclass::class, true)) {
             return false;
         }
+        self::checkReportAccess($opt['f_name'], $classname);
         $obj = new $classname($config);
 
         $datas = $obj->{$opt['f_name']}($config);
@@ -1115,6 +1134,9 @@ class PluginMreportingCommon extends CommonDBTM
                     foreach ($report['functions'] as $func) {
                         foreach ($opt['check'] as $do => $to) {
                             if ($do == $func['function'] . $classname) {
+                                if (!$func['is_active'] || !$func['right']) {
+                                    continue;
+                                }
                                 //dynamic instanciation of class passed by 'short_classname' GET parameter
                                 $config   = PluginMreportingConfig::initConfigParams($func['function'], $classname);
                                 $class    = 'PluginMreporting' . $func['short_classname'];
@@ -1206,6 +1228,7 @@ class PluginMreportingCommon extends CommonDBTM
             if (!is_a($classname, PluginMreportingBaseclass::class, true)) {
                 return false;
             }
+            self::checkReportAccess($opt['f_name'], $classname);
             $obj       = new $classname($config);
 
             //dynamic call of method passed by 'f_name' GET parameter with previously instancied class

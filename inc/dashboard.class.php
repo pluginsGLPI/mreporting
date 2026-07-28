@@ -271,6 +271,9 @@ class PluginMreportingDashboard extends CommonDBTM
     public static function removeReportFromDashboard($id)
     {
         $report = new PluginMreportingDashboard();
+        if (!$report->getFromDB($id) || $report->fields['users_id'] != Session::getLoginUserID()) {
+            return false;
+        }
 
         return $report->delete(['id' => $id]);
     }

@@ -664,7 +664,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         //Init delay value
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
-        $limit = $_SESSION['mreporting_values']['glpilist_limit'] ?? 20;
+        $limit = (int) ($_SESSION['mreporting_values']['glpilist_limit'] ?? 20);
 
         $query = [
             "SELECT" => [
@@ -718,7 +718,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         //Init delay value
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
-        $limit = $_SESSION['mreporting_values']['glpilist_limit'] ?? 20;
+        $limit = (int) ($_SESSION['mreporting_values']['glpilist_limit'] ?? 20);
 
         $query = [
             "SELECT" => [
@@ -1009,7 +1009,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
 
         $category = isset($_POST['categories']) && $_POST['categories'] > 0 ? $_POST['categories'] : false;
 
-        $category_limit = $_POST['glpilist_limit'] ?? 10;
+        $category_limit = (int) ($_POST['glpilist_limit'] ?? 10);
 
         $_SESSION['glpilist_limit'] = $category_limit;
 

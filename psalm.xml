@@ -14,11 +14,14 @@
         <TaintedTextWithQuotes>
             <errorLevel type="suppress">
             <file name="inc/graph.class.php" />
+            <!-- CSV response, not HTML: formula-injection is mitigated in escapeCsvField() instead -->
+            <file name="inc/graphcsv.class.php" />
             </errorLevel>
         </TaintedTextWithQuotes>
         <TaintedHtml>
             <errorLevel type="suppress">
             <file name="inc/graph.class.php" />
+            <file name="inc/graphcsv.class.php" />
             </errorLevel>
         </TaintedHtml>
         <TaintedCallable errorLevel="suppress" />

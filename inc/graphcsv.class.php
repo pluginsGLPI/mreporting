@@ -42,6 +42,17 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         }
     }
 
+    /**
+     * Prefix a leading =, +, - or @ so spreadsheet software doesn't
+     * interpret the field as a formula.
+     */
+    private static function escapeCsvField($value)
+    {
+        $value = (string) $value;
+
+        return preg_match('/^[=+\-@]/', $value) ? "'" . $value : $value;
+    }
+
     public function showHbar($params, $dashboard = false, $width = false)
     {
         /** @var array $CFG_GLPI */
@@ -91,7 +102,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         //titles
         $out = $title . ' - ' . $desc . "\r\n";
         foreach ($labels as $label) {
-            $out .= $label . $CFG_GLPI['csv_delimiter'];
+            $out .= self::escapeCsvField($label) . $CFG_GLPI['csv_delimiter'];
         }
         $out = substr($out, 0, -1) . "\r\n";
 
@@ -101,7 +112,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         }
         $out = substr($out, 0, -1) . "\r\n";
 
-        echo htmlspecialchars($out);
+        echo $out;
     }
 
     public function showPie($params, $dashboard = false, $width = false)
@@ -158,7 +169,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
 
         foreach ($datas as $label2 => $cols) {
             //title
-            $out .= $label2 . "\r\n";
+            $out .= self::escapeCsvField($label2) . "\r\n";
 
             //subtitle
             $i = 0;
@@ -167,7 +178,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
                 if (isset($labels2[$i])) {
                     $label = str_replace(',', '-', $labels2[$i]);
                 }
-                $out .= $label . $CFG_GLPI['csv_delimiter'];
+                $out .= self::escapeCsvField($label) . $CFG_GLPI['csv_delimiter'];
                 $i++;
             }
             $out = substr($out, 0, -1) . "\r\n";
@@ -180,7 +191,7 @@ class PluginMreportingGraphcsv extends PluginMreportingGraph
         }
         $out = substr($out, 0, -1) . "\r\n";
 
-        echo htmlspecialchars($out);
+        echo $out;
     }
 
     public function showVstackbar($params, $dashboard = false, $width = false)

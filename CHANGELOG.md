@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
 
+### Fixed
+
+- Fix missing access and validation checks on several report and admin actions
+
 ## [1.10.0] - 2026-06-10
 
 ### Fixed
