@@ -996,7 +996,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
 
         $datas = [];
-        $limit = $_REQUEST['glpilist_limit'] ?? 20;
+        $limit = (int) ($_REQUEST['glpilist_limit'] ?? 20);
 
         $query = [
             "SELECT" => [
@@ -1034,7 +1034,7 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
             ],
             'GROUPBY' => [Location::getTable() . '.name'],
             'ORDER' => ['count DESC'],
-            'LIMIT' => '0, ' . $limit,
+            'LIMIT' => $limit,
         ];
         $query['WHERE']['AND'] = $delay;
 

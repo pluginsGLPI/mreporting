@@ -37,6 +37,10 @@ if (!isset($_GET['id'])) {
 $pref = new PluginMreportingPreference();
 
 if (isset($_POST['update'])) {
+    if (!$pref->getFromDB($_POST['id']) || $pref->fields['users_id'] != Session::getLoginUserID()) {
+        Html::back();
+    }
+    $_POST['users_id'] = Session::getLoginUserID();
     $pref->update($_POST);
     Html::back();
 } else {

@@ -361,8 +361,8 @@ function plugin_mreporting_giveItem($type, $ID, $data, $num)
                                 }
                             }
                         }
-                        $out = "<a href='config.form.php?id=" . $data['id'] . "'>" .
-                        $data['raw']["ITEM_$num"] . '</a> (' . $title_func . ')';
+                        $out = "<a href='config.form.php?id=" . htmlspecialchars((string) $data['id'], ENT_QUOTES) . "'>" .
+                        htmlspecialchars($data['raw']["ITEM_$num"], ENT_QUOTES) . '</a> (' . $title_func . ')';
                     }
 
                     return $out;

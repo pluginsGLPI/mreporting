@@ -78,8 +78,10 @@ function plugin_init_mreporting()
     if (Plugin::isPluginActive('mreporting')) {
         // *Direct* access to rapport file (from e-mail) :
         if (isset($_GET['redirect']) && str_contains($_GET['redirect'], 'plugin_mreporting')) {
-            $filename = str_replace('plugin_mreporting_', '', $_GET['redirect']);
-            Html::redirect($CFG_GLPI['root_doc'] . '/files/_plugins/mreporting/notifications/' . $filename);
+            $filename = basename(str_replace('plugin_mreporting_', '', $_GET['redirect']));
+            if (preg_match('/^[\w\-.]+$/', $filename)) {
+                Html::redirect($CFG_GLPI['root_doc'] . '/files/_plugins/mreporting/notifications/' . $filename);
+            }
         }
 
         //Load additionnal language files in needed

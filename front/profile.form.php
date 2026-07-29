@@ -28,7 +28,7 @@
  * -------------------------------------------------------------------------
  */
 
-Session::checkRight('profile', READ);
+Session::checkRight('profile', UPDATE);
 
 /** @var DBmysql $DB */
 global $DB;
