@@ -4,20 +4,11 @@
         "php": ">=8.2",
         "sboden/odtphp": "^3.2"
     },
-    "require-dev": {
-        "glpi-project/tools": "^0.8"
-    },
     "config": {
         "optimize-autoloader": true,
         "platform": {
             "php": "8.2.99"
         },
         "sort-packages": true
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "https://github.com/teclib/odtphp/"
-        }
-    ]
+    }
 }

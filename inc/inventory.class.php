@@ -717,7 +717,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 ],
             );
 
-            if ($number) {
+            if ($number !== 0) {
                 $data['datas'][$os['name']] = $number;
             }
         }
