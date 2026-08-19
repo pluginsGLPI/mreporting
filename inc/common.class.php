@@ -33,7 +33,7 @@ use Glpi\DBAL\QueryExpression;
 
 class PluginMreportingCommon extends CommonDBTM
 {
-    public static $rightname = 'statistic';
+    public static string $rightname = 'statistic';
 
     public const MNBSP = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -60,16 +60,8 @@ class PluginMreportingCommon extends CommonDBTM
 
     public static function getMenuContent()
     {
-        /** @var array $CFG_GLPI */
-        global $CFG_GLPI;
-
-        $web_full_dir = $CFG_GLPI['url_base'] . '/plugins/mreporting';
-        $img_db       = "<img src='" . $web_full_dir . "/pics/dashboard.png'
-                           title='" . __s('Dashboard', 'mreporting') . "'
-                           alt='" . __s('Dashboard', 'mreporting') . "'>";
-        $img_ct = "<img src='" . $web_full_dir . "/pics/list_dashboard.png'
-                           title='" . __s('Reports list', 'mreporting') . "'
-                           alt='" . __s('Reports list', 'mreporting') . "'>";
+        $icon_db = "<i class='ti ti-layout-dashboard' title='" . __s('Dashboard', 'mreporting') . "'></i>" . __s('Dashboard', 'mreporting');
+        $icon_ct = "<i class='ti ti-list' title='" . __s('Reports list', 'mreporting') . "'></i>" . __s('Reports list', 'mreporting');
 
         $web_rel_dir   = '/plugins/mreporting';
         $url_central   = "$web_rel_dir/front/central.php";
@@ -82,15 +74,17 @@ class PluginMreportingCommon extends CommonDBTM
         $menu['title'] = self::getTypeName(Session::getPluralNumber());
 
         $menu['options']['dashboard']['page']           = $url_dashboard;
+        $menu['options']['dashboard']['icon']           = 'ti ti-layout-dashboard';
         $menu['options']['dashboard']['title']          = __s('Dashboard', 'mreporting');
-        $menu['options']['dashboard']['links'][$img_db] = $url_dashboard;
-        $menu['options']['dashboard']['links'][$img_ct] = $url_central;
+        $menu['options']['dashboard']['links'][$icon_db] = $url_dashboard;
+        $menu['options']['dashboard']['links'][$icon_ct] = $url_central;
         if (PluginMreportingConfig::canCreate()) {
             $menu['options']['dashboard']['links']['config'] = PluginMreportingConfig::getSearchURL(false);
         }
 
         $menu['options']['dashboard_list']          = $menu['options']['dashboard'];
         $menu['options']['dashboard_list']['page']  = $url_central;
+        $menu['options']['dashboard_list']['icon']   = 'ti ti-list';
         $menu['options']['dashboard_list']['title'] = __s('Reports list', 'mreporting');
 
         $menu['options']['config']['title']           = PluginMreportingConfig::getTypeName(2);

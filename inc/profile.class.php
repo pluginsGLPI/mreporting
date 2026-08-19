@@ -64,7 +64,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginMreportingProfile extends CommonDBTM
 {
-    public static $rightname = 'profile';
+    public static string $rightname = 'profile';
 
     public static function getTypeName($nb = 0)
     {
@@ -143,7 +143,7 @@ class PluginMreportingProfile extends CommonDBTM
         }
         $this->fields = $result->current();
 
-        return (is_array($this->fields) && count($this->fields));
+        return count($this->fields) > 0;
     }
 
     /**
