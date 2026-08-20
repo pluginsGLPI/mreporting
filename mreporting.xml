@@ -1,19 +1,19 @@
 <root>
-   <name>More Reporting</name>
+   <name>More Reporting End-of-Life</name>
    <key>mreporting</key>
    <state>stable</state>
    <logo>https://raw.githubusercontent.com/pluginsGLPI/mreporting/main/mreporting.png</logo>
    <description>
       <short>
          <cs>Přidání (a vytváření) nových výkazů s grafy pro glpi</cs>
-         <en>Add (and develop) new graphical reports for glpi</en>
-         <fr>Ajouter (et développer) de nouveaux rapports graphiques pour glpi</fr>
+         <en>[End of Life] Last release for GLPI 12 — reports are now available natively in GLPI dashboards</en>
+         <fr>[Fin de vie] Dernière version pour GLPI 12 — les rapports sont désormais disponibles nativement dans GLPI</fr>
 
       </short>
       <long>
-         <cs>Přidání (a vytváření) nových výkazů s grafy pro glpi.   
+         <cs>Přidání (a vytváření) nových výkazů s grafy pro glpi.
 
-Tento zásuvný modul obsahuje sadu nových statistických výkazů: 
+Tento zásuvný modul obsahuje sadu nových statistických výkazů:
 
 * Služba podpory
   * Nahromaděné požadavky
@@ -33,13 +33,15 @@ Tento zásuvný modul obsahuje sadu nových statistických výkazů:
 
 * Distribuce záznamů o událostech
 
-Můžete si také vytvořit nový výkaz pomocí kostry zásuvného modulu.  
+Můžete si také vytvořit nový výkaz pomocí kostry zásuvného modulu.
 Viz dokumentace: https://github.com/PluginsGLPI/mreporting/wiki
          </cs>
 
-         <en>Add (and develop) new graphical reports for glpi.   
+         <en>This plugin has reached End of Life.
 
-This plugins embed a set of new statistics reports : 
+All reports it provided are now available natively in GLPI's built-in dashboard system. This release (compatible with GLPI 12.0.x) is the last one. No further development or maintenance will be carried out.
+
+Previously included reports:
 
 * Helpdesk
   * Backlog
@@ -50,42 +52,36 @@ This plugins embed a set of new statistics reports :
   * 5 SLA reports
 
 * Inventory
-  * Os versions and distributions
+  * OS versions and distributions
   * Top manufacturers
   * Top types (server, laptop, ...)
   * Top status
   * Age of computers
-  * FusionInventory agents
 
 * Logs distribution
-
-You can also develop new report with the framework of plugin.  
-See documentation : https://github.com/PluginsGLPI/mreporting/wiki
          </en>
-         <fr>Ajouter (et développer) de nouveaux rapports grahiques pour glpi.   
+         <fr>Ce plugin a atteint sa fin de vie.
 
-Ce plugin contient un ensemble de nouveaux rapports statistiques.
+L'ensemble des rapports qu'il proposait sont désormais disponibles nativement dans le système de tableaux de bord intégré à GLPI. Cette version (compatible GLPI 12.0.x) est la dernière. Aucun développement ni maintenance supplémentaire ne sera effectué.
+
+Rapports précédemment disponibles :
 
 * Assistance
   * Backlog
   * Ancienneté des tickets
   * Tickets par groupes ou techniciens
   * Top catégories ou groupes demandeurs
-  * Nombre de changement de groupes
+  * Nombre de changements de groupes
   * 5 rapports SLA
 
 * Inventaire
   * Versions et distributions des OS
   * Top fabricants
-  * top types (serveurs, portables, ...)
+  * Top types (serveurs, portables, ...)
   * Top statuts
-  * Age des ordinateurs
-  * Agents FusionInventory
+  * Âge des ordinateurs
 
 * Répartition des logs
-
-Vous pouvez aussi ajouter vos propre rapports en utilisant le "framework" fourni par le plugin
-Voir documentation : https://github.com/PluginsGLPI/mreporting/wiki
          </fr>
       </long>
    </description>

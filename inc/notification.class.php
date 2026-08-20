@@ -33,7 +33,7 @@ class PluginMreportingNotification extends CommonDBTM
     /**
      * @var boolean activate the history for the plugin
      */
-    public $dohistory = true;
+    public bool $dohistory = true;
 
     /**
      * Return the localized name of the current Type (PluginMreporting)
