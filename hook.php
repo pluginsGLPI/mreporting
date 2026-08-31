@@ -248,6 +248,21 @@ function plugin_mreporting_install()
     );
     $migration->migrationOneTable('glpi_plugin_mreporting_dashboards');
 
+    // == Remove the logs activity report (instance-wide counts, no entity restriction)
+    $logs_report = $DB->request([
+        'SELECT' => 'id',
+        'FROM'   => 'glpi_plugin_mreporting_configs',
+        'WHERE'  => [
+            'classname' => 'PluginMreportingOther',
+            'name'      => 'reportHbarLogs',
+        ],
+    ]);
+    foreach ($logs_report as $report) {
+        $DB->delete('glpi_plugin_mreporting_profiles', ['reports' => $report['id']]);
+        $DB->delete('glpi_plugin_mreporting_dashboards', ['reports_id' => $report['id']]);
+        $DB->delete('glpi_plugin_mreporting_configs', ['id' => $report['id']]);
+    }
+
     // == Init available reports
     require_once __DIR__ . '/inc/baseclass.class.php';
     require_once __DIR__ . '/inc/common.class.php';
