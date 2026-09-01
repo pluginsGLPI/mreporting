@@ -1835,9 +1835,9 @@ JAVASCRIPT;
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";
 
-        $out .= 'var labels = ' . json_encode(array_values($labels), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
+        $out .= 'var labels = ' . json_encode($labels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
 
-        $out .= 'var links = ' . json_encode(array_values($links), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
+        $out .= 'var links = ' . json_encode($links, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
 
         echo $out;
         $max = count($values) > 0 ? max($values) * 1.1 : 1;
@@ -1906,9 +1906,9 @@ JAVASCRIPT;
         $out = substr($out, 0, -2) . "\n";
         $out .= "];\n";
 
-        $out .= 'var labels = ' . json_encode(array_values($labels), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
+        $out .= 'var labels = ' . json_encode($labels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
 
-        $out .= 'var labels2 = ' . json_encode(array_values($labels2), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
+        $out .= 'var labels2 = ' . json_encode($labels2, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
         echo $out;
 
         if (!$stacked) {
