@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 02:29+0000\n"
+"POT-Creation-Date: 2026-09-02 03:20+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: Dmytro Iliukhin, 2026\n"
 "Language-Team: Ukrainian (Ukraine) (http://app.transifex.com/teclib/glpi-project-plugin-mreporting/language/uk_UA/)\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Language: uk_UA\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: front/config.php:41 front/graph.php:38 front/dashboard.form.php:57
-#: front/dashboard.form.php:62 front/config.form.php:52
-#: front/preference.form.php:47 front/central.php:35
-#: inc/notification.class.php:47 inc/preference.class.php:198
-#: inc/notificationtargetnotification.class.php:37 inc/profile.class.php:71
-#: inc/common.class.php:53 setup.php:193
+#: front/graph.php:38 front/config.form.php:52 front/config.php:41
+#: front/preference.form.php:47 front/dashboard.form.php:57
+#: front/dashboard.form.php:62 front/central.php:35 setup.php:193
+#: inc/notification.class.php:47 inc/profile.class.php:71
+#: inc/notificationtargetnotification.class.php:37
+#: inc/preference.class.php:198 inc/common.class.php:53
 msgid "More Reporting"
 msgstr "Розширена звітність"
 
@@ -31,62 +31,10 @@ msgstr "Розширена звітність"
 msgid "General Report - ODT"
 msgstr "Генерувати звіт - ODT"
 
-#: front/central.php:85 front/central.php:91 inc/config.class.php:701
-#: inc/common.class.php:340 inc/common.class.php:408
+#: front/central.php:85 front/central.php:91 inc/common.class.php:340
+#: inc/common.class.php:408 inc/config.class.php:701
 msgid "No report is available !"
 msgstr "Немає доступних звітів!"
-
-#: inc/other.class.php:165
-msgid "Add/remove software on a computer"
-msgstr "Додати/видалити програмне забезпечення на комп'ютері"
-
-#: inc/other.class.php:168
-msgid "Add/remove version on a software"
-msgstr "Додати/видалити версію програми"
-
-#: inc/other.class.php:171
-msgid "Add infocom"
-msgstr "Додати інфоком"
-
-#: inc/other.class.php:174
-msgid "Add/remove profile on a user"
-msgstr "Додати/видалити профіль для користувача"
-
-#: inc/other.class.php:177
-msgid "Add/remove group on a user"
-msgstr "Додати/видалити групу користувача"
-
-#: inc/other.class.php:180
-msgid "User deleted from LDAP"
-msgstr "Користувача видалено з LDAP"
-
-#: inc/other.class.php:196
-msgid "Webservice logs"
-msgstr "Журнал вебсервісів"
-
-#: inc/other.class.php:200
-msgid "OCS Infos"
-msgstr "Інформація OCS"
-
-#: inc/other.class.php:203
-msgid "Add/update/remove device"
-msgstr "Додати/оновити/видалити пристрій"
-
-#: inc/other.class.php:206
-msgid "Add/remove relation"
-msgstr "Додати/видалити зв'язок"
-
-#: inc/other.class.php:209
-msgid "Add/remove item"
-msgstr "Додати/видалити елемент"
-
-#: inc/other.class.php:212
-msgid "Comments & date_mod changes"
-msgstr "Зміни коментарів та дати модифікації"
-
-#: inc/other.class.php:229
-msgid "Genericobject plugin logs"
-msgstr "Журнали плагіна Generic Object"
 
 #: inc/notification.class.php:65 inc/notification.class.php:86
 #: inc/notification.class.php:164
@@ -120,9 +68,89 @@ msgstr "Вітаємо,\nзвіти GLPI готові.\nВи знайдете ї
 msgid "Notification(s) sent !"
 msgstr "Сповіщення надіслано!"
 
+#: inc/graphpng.class.php:612 inc/graphpng.class.php:811
+#: inc/graphpng.class.php:1054 inc/graphpng.class.php:1392
+#: inc/graphpng.class.php:1646 inc/graphpng.class.php:1992
+#: inc/graphpng.class.php:2322 inc/graph.class.php:166 inc/graph.class.php:375
+#: inc/graph.class.php:581 inc/graph.class.php:855 inc/graph.class.php:1087
+#: inc/graph.class.php:1330 inc/graph.class.php:1589
+msgid "No data for this date range !"
+msgstr "Немає даних за цей діапазон дат!"
+
 #: inc/helpdesk.class.php:366 inc/helpdesk.class.php:439
 msgid "Undefined"
 msgstr "Невизначено"
+
+#: inc/profile.class.php:106 inc/profile.class.php:301
+#: inc/profile.class.php:381
+msgid "Rights management"
+msgstr "Керування правами"
+
+#: inc/dashboard.class.php:39 inc/common.class.php:68 inc/common.class.php:69
+#: inc/common.class.php:85 ajax/homepage_link.php:38
+msgid "Dashboard"
+msgstr "Дашборд"
+
+#: inc/dashboard.class.php:95
+msgid "Select a report to display"
+msgstr "Виберіть звіт для відображення"
+
+#: inc/dashboard.class.php:106
+msgid "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "Дашборд порожній. Будь ласка, додайте звіти, натиснувши на іконку"
+
+#: inc/dashboard.class.php:113
+msgid "Add a report"
+msgstr "Додати звіт"
+
+#: inc/dashboard.class.php:139
+msgid "Select a report to add"
+msgstr "Виберіть звіт для додавання"
+
+#: inc/dashboard.class.php:211
+msgid "Configure report"
+msgstr "Налаштувати звіт"
+
+#: inc/preference.class.php:140
+msgid "Please, select a model in your preferences"
+msgstr "Будь ласка, виберіть модель у своїх налаштуваннях"
+
+#: inc/common.class.php:71 inc/common.class.php:72 inc/common.class.php:94
+msgid "Reports list"
+msgstr "Список звітів"
+
+#: inc/common.class.php:532 ajax/dropdownExport.php:44
+msgid "Without data"
+msgstr "Без даних"
+
+#: inc/common.class.php:533 ajax/dropdownExport.php:43
+msgid "With data"
+msgstr "З даними"
+
+#: inc/common.class.php:993
+msgid "Number"
+msgstr "Кількість"
+
+#: inc/common.class.php:1010 inc/common.class.php:1314
+#: inc/common.class.php:1334
+msgid "data"
+msgstr "дані"
+
+#: inc/common.class.php:1212
+msgid "No graphic selected"
+msgstr "Графік не вибрано"
+
+#: inc/common.class.php:1499
+msgid "Week"
+msgstr "Тиждень"
+
+#: inc/common.class.php:1500
+msgid "Month"
+msgstr "Місяць"
+
+#: inc/common.class.php:1630
+msgid "Max depth entity level"
+msgstr "Максимальна глибина рівня сутностей"
 
 #: inc/pdf.class.php:78
 msgid "Automaticaly generated by GLPI"
@@ -187,83 +215,3 @@ msgstr "При наведенні миші"
 #: inc/config.class.php:605
 msgid "Object already exists"
 msgstr "Об'єкт вже існує"
-
-#: inc/preference.class.php:140
-msgid "Please, select a model in your preferences"
-msgstr "Будь ласка, виберіть модель у своїх налаштуваннях"
-
-#: inc/profile.class.php:106 inc/profile.class.php:301
-#: inc/profile.class.php:381
-msgid "Rights management"
-msgstr "Керування правами"
-
-#: inc/dashboard.class.php:39 inc/common.class.php:68 inc/common.class.php:69
-#: inc/common.class.php:85 ajax/homepage_link.php:38
-msgid "Dashboard"
-msgstr "Дашборд"
-
-#: inc/dashboard.class.php:95
-msgid "Select a report to display"
-msgstr "Виберіть звіт для відображення"
-
-#: inc/dashboard.class.php:106
-msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "Дашборд порожній. Будь ласка, додайте звіти, натиснувши на іконку"
-
-#: inc/dashboard.class.php:113
-msgid "Add a report"
-msgstr "Додати звіт"
-
-#: inc/dashboard.class.php:139
-msgid "Select a report to add"
-msgstr "Виберіть звіт для додавання"
-
-#: inc/dashboard.class.php:211
-msgid "Configure report"
-msgstr "Налаштувати звіт"
-
-#: inc/common.class.php:71 inc/common.class.php:72 inc/common.class.php:94
-msgid "Reports list"
-msgstr "Список звітів"
-
-#: inc/common.class.php:532 ajax/dropdownExport.php:44
-msgid "Without data"
-msgstr "Без даних"
-
-#: inc/common.class.php:533 ajax/dropdownExport.php:43
-msgid "With data"
-msgstr "З даними"
-
-#: inc/common.class.php:993
-msgid "Number"
-msgstr "Кількість"
-
-#: inc/common.class.php:1010 inc/common.class.php:1314
-#: inc/common.class.php:1334
-msgid "data"
-msgstr "дані"
-
-#: inc/common.class.php:1212
-msgid "No graphic selected"
-msgstr "Графік не вибрано"
-
-#: inc/common.class.php:1499
-msgid "Week"
-msgstr "Тиждень"
-
-#: inc/common.class.php:1500
-msgid "Month"
-msgstr "Місяць"
-
-#: inc/common.class.php:1630
-msgid "Max depth entity level"
-msgstr "Максимальна глибина рівня сутностей"
-
-#: inc/graph.class.php:166 inc/graph.class.php:375 inc/graph.class.php:581
-#: inc/graph.class.php:855 inc/graph.class.php:1087 inc/graph.class.php:1330
-#: inc/graph.class.php:1589 inc/graphpng.class.php:608
-#: inc/graphpng.class.php:807 inc/graphpng.class.php:1050
-#: inc/graphpng.class.php:1388 inc/graphpng.class.php:1642
-#: inc/graphpng.class.php:1988 inc/graphpng.class.php:2318
-msgid "No data for this date range !"
-msgstr "Немає даних за цей діапазон дат!"

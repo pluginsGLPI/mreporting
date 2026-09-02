@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Plugin - MReporting\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-30 02:29+0000\n"
+"POT-Creation-Date: 2026-09-02 03:20+0000\n"
 "PO-Revision-Date: 2015-09-18 08:41+0000\n"
 "Last-Translator: Cédric Anne, 2018\n"
 "Language-Team: French (France) (http://app.transifex.com/teclib/glpi-project-plugin-mreporting/language/fr_FR/)\n"
@@ -21,12 +21,12 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: front/config.php:41 front/graph.php:38 front/dashboard.form.php:57
-#: front/dashboard.form.php:62 front/config.form.php:52
-#: front/preference.form.php:47 front/central.php:35
-#: inc/notification.class.php:47 inc/preference.class.php:198
-#: inc/notificationtargetnotification.class.php:37 inc/profile.class.php:71
-#: inc/common.class.php:53 setup.php:193
+#: front/graph.php:38 front/config.form.php:52 front/config.php:41
+#: front/preference.form.php:47 front/dashboard.form.php:57
+#: front/dashboard.form.php:62 front/central.php:35 setup.php:193
+#: inc/notification.class.php:47 inc/profile.class.php:71
+#: inc/notificationtargetnotification.class.php:37
+#: inc/preference.class.php:198 inc/common.class.php:53
 msgid "More Reporting"
 msgstr "Plus de rapports"
 
@@ -34,62 +34,10 @@ msgstr "Plus de rapports"
 msgid "General Report - ODT"
 msgstr "Rapport général - ODT"
 
-#: front/central.php:85 front/central.php:91 inc/config.class.php:701
-#: inc/common.class.php:340 inc/common.class.php:408
+#: front/central.php:85 front/central.php:91 inc/common.class.php:340
+#: inc/common.class.php:408 inc/config.class.php:701
 msgid "No report is available !"
 msgstr "Aucun rapport disponible !"
-
-#: inc/other.class.php:165
-msgid "Add/remove software on a computer"
-msgstr "Ajout/suppression d'un logiciel sur un ordinateur"
-
-#: inc/other.class.php:168
-msgid "Add/remove version on a software"
-msgstr "Ajout/suppression d'une version sur un logiciel"
-
-#: inc/other.class.php:171
-msgid "Add infocom"
-msgstr "Ajout des informations financières"
-
-#: inc/other.class.php:174
-msgid "Add/remove profile on a user"
-msgstr "Ajout/suppression d'un profil à un utilisateur"
-
-#: inc/other.class.php:177
-msgid "Add/remove group on a user"
-msgstr "Ajout/suppression d'un groupe à un utilisateur"
-
-#: inc/other.class.php:180
-msgid "User deleted from LDAP"
-msgstr "Utilisateur supprimé depuis LDAP"
-
-#: inc/other.class.php:196
-msgid "Webservice logs"
-msgstr "Logs Webservices"
-
-#: inc/other.class.php:200
-msgid "OCS Infos"
-msgstr "Infos OCS"
-
-#: inc/other.class.php:203
-msgid "Add/update/remove device"
-msgstr "Ajout/mise à jour/suppression d'un périphérique"
-
-#: inc/other.class.php:206
-msgid "Add/remove relation"
-msgstr "Ajout/suppression d'une relation"
-
-#: inc/other.class.php:209
-msgid "Add/remove item"
-msgstr "Ajout/suppression d'un élément"
-
-#: inc/other.class.php:212
-msgid "Comments & date_mod changes"
-msgstr "Modifications commentaires & date_mod"
-
-#: inc/other.class.php:229
-msgid "Genericobject plugin logs"
-msgstr "Logs plugin Genericobjec"
 
 #: inc/notification.class.php:65 inc/notification.class.php:86
 #: inc/notification.class.php:164
@@ -123,9 +71,89 @@ msgstr "Bonjour,\n\nLes rapports de GLPI sont disponibles.\nVous les trouverez e
 msgid "Notification(s) sent !"
 msgstr "Notification(s) envoyée(s) !"
 
+#: inc/graphpng.class.php:612 inc/graphpng.class.php:811
+#: inc/graphpng.class.php:1054 inc/graphpng.class.php:1392
+#: inc/graphpng.class.php:1646 inc/graphpng.class.php:1992
+#: inc/graphpng.class.php:2322 inc/graph.class.php:166 inc/graph.class.php:375
+#: inc/graph.class.php:581 inc/graph.class.php:855 inc/graph.class.php:1087
+#: inc/graph.class.php:1330 inc/graph.class.php:1589
+msgid "No data for this date range !"
+msgstr "Aucune données pour cette plage de date !"
+
 #: inc/helpdesk.class.php:366 inc/helpdesk.class.php:439
 msgid "Undefined"
 msgstr "Non défini"
+
+#: inc/profile.class.php:106 inc/profile.class.php:301
+#: inc/profile.class.php:381
+msgid "Rights management"
+msgstr "Gestion des droits"
+
+#: inc/dashboard.class.php:39 inc/common.class.php:68 inc/common.class.php:69
+#: inc/common.class.php:85 ajax/homepage_link.php:38
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: inc/dashboard.class.php:95
+msgid "Select a report to display"
+msgstr "Sélectionnez un rapport à afficher"
+
+#: inc/dashboard.class.php:106
+msgid "Dashboard is empty. Please add reports by clicking on the icon"
+msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur l'icône"
+
+#: inc/dashboard.class.php:113
+msgid "Add a report"
+msgstr "Ajouter un rapport"
+
+#: inc/dashboard.class.php:139
+msgid "Select a report to add"
+msgstr "Sélectionnez un rapport à ajouter"
+
+#: inc/dashboard.class.php:211
+msgid "Configure report"
+msgstr "Configurer le rapport"
+
+#: inc/preference.class.php:140
+msgid "Please, select a model in your preferences"
+msgstr "Merci de sélectionner un modèle dans vos préférences"
+
+#: inc/common.class.php:71 inc/common.class.php:72 inc/common.class.php:94
+msgid "Reports list"
+msgstr "Liste des rapports"
+
+#: inc/common.class.php:532 ajax/dropdownExport.php:44
+msgid "Without data"
+msgstr "Sans les données"
+
+#: inc/common.class.php:533 ajax/dropdownExport.php:43
+msgid "With data"
+msgstr "Avec les données"
+
+#: inc/common.class.php:993
+msgid "Number"
+msgstr "Nombre"
+
+#: inc/common.class.php:1010 inc/common.class.php:1314
+#: inc/common.class.php:1334
+msgid "data"
+msgstr "Données"
+
+#: inc/common.class.php:1212
+msgid "No graphic selected"
+msgstr "aucun graphique sélectionné"
+
+#: inc/common.class.php:1499
+msgid "Week"
+msgstr "Semaine"
+
+#: inc/common.class.php:1500
+msgid "Month"
+msgstr "Mois"
+
+#: inc/common.class.php:1630
+msgid "Max depth entity level"
+msgstr "Profondeur maxi dans l'arborescence d'entités"
 
 #: inc/pdf.class.php:78
 msgid "Automaticaly generated by GLPI"
@@ -190,83 +218,3 @@ msgstr "Au passage de la souris"
 #: inc/config.class.php:605
 msgid "Object already exists"
 msgstr "L'objet existe déjà"
-
-#: inc/preference.class.php:140
-msgid "Please, select a model in your preferences"
-msgstr "Merci de sélectionner un modèle dans vos préférences"
-
-#: inc/profile.class.php:106 inc/profile.class.php:301
-#: inc/profile.class.php:381
-msgid "Rights management"
-msgstr "Gestion des droits"
-
-#: inc/dashboard.class.php:39 inc/common.class.php:68 inc/common.class.php:69
-#: inc/common.class.php:85 ajax/homepage_link.php:38
-msgid "Dashboard"
-msgstr "Tableau de bord"
-
-#: inc/dashboard.class.php:95
-msgid "Select a report to display"
-msgstr "Sélectionnez un rapport à afficher"
-
-#: inc/dashboard.class.php:106
-msgid "Dashboard is empty. Please add reports by clicking on the icon"
-msgstr "Le tableau de bord est vide. Merci d'ajouter des rapports en cliquant sur l'icône"
-
-#: inc/dashboard.class.php:113
-msgid "Add a report"
-msgstr "Ajouter un rapport"
-
-#: inc/dashboard.class.php:139
-msgid "Select a report to add"
-msgstr "Sélectionnez un rapport à ajouter"
-
-#: inc/dashboard.class.php:211
-msgid "Configure report"
-msgstr "Configurer le rapport"
-
-#: inc/common.class.php:71 inc/common.class.php:72 inc/common.class.php:94
-msgid "Reports list"
-msgstr "Liste des rapports"
-
-#: inc/common.class.php:532 ajax/dropdownExport.php:44
-msgid "Without data"
-msgstr "Sans les données"
-
-#: inc/common.class.php:533 ajax/dropdownExport.php:43
-msgid "With data"
-msgstr "Avec les données"
-
-#: inc/common.class.php:993
-msgid "Number"
-msgstr "Nombre"
-
-#: inc/common.class.php:1010 inc/common.class.php:1314
-#: inc/common.class.php:1334
-msgid "data"
-msgstr "Données"
-
-#: inc/common.class.php:1212
-msgid "No graphic selected"
-msgstr "aucun graphique sélectionné"
-
-#: inc/common.class.php:1499
-msgid "Week"
-msgstr "Semaine"
-
-#: inc/common.class.php:1500
-msgid "Month"
-msgstr "Mois"
-
-#: inc/common.class.php:1630
-msgid "Max depth entity level"
-msgstr "Profondeur maxi dans l'arborescence d'entités"
-
-#: inc/graph.class.php:166 inc/graph.class.php:375 inc/graph.class.php:581
-#: inc/graph.class.php:855 inc/graph.class.php:1087 inc/graph.class.php:1330
-#: inc/graph.class.php:1589 inc/graphpng.class.php:608
-#: inc/graphpng.class.php:807 inc/graphpng.class.php:1050
-#: inc/graphpng.class.php:1388 inc/graphpng.class.php:1642
-#: inc/graphpng.class.php:1988 inc/graphpng.class.php:2318
-msgid "No data for this date range !"
-msgstr "Aucune données pour cette plage de date !"
