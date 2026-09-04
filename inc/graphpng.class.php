@@ -169,6 +169,10 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
 
         $params = array_merge($default_params, $params);
 
+        if ($params['f_name'] !== '' && !preg_match('/^[A-Za-z0-9_]+$/', $params['f_name'])) {
+            $params['f_name'] = '';
+        }
+
         ob_start();
 
         if ($params['export'] == 'odt') {

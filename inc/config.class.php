@@ -300,7 +300,7 @@ class PluginMreportingConfig extends CommonDBTM
                 $input = [];
 
                 if ($classConfig) { // If a preconfig exists in class we do it
-                    /** @var null|PluginMreportingOther|PluginMreportingHelpdesk $classObject */
+                    /** @var null|PluginMreportingHelpdesk $classObject */
                     $input = $classObject->preconfig($funct_name, $classname, $this);
                 } else {// Else we get the default preconfig
                     $input = $this->preconfig($funct_name, $classname);

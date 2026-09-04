@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Fix the loss of profile rights when updating the plugin
 - Fix missing categories in `reportSunburstTicketByCategories` chart.
+- Escape chart labels before injecting them into report graphs
+- Cast state filter values before building SQL
+
+### Removed
+
+- Remove the logs activity report to prevent cross-entity data display
 
 ## [1.8.11] - 2025-02-05
 

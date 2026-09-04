@@ -81,13 +81,13 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 if ($as_array) {
                     $sql_states[$field] = $_SESSION['mreporting_values']['states_id'];
                 } else {
-                    $sql_states = " AND $field IN (" . implode(',', $_SESSION['mreporting_values']['states_id']) . ')';
+                    $sql_states = " AND $field IN (" . implode(',', array_map('intval', $_SESSION['mreporting_values']['states_id'])) . ')';
                 }
             } elseif ($_SESSION['mreporting_values']['states_id'] > 0) {
                 if ($as_array) {
                     $sql_states[$field] = $_SESSION['mreporting_values']['states_id'];
                 } else {
-                    $sql_states = " AND $field = " . $_SESSION['mreporting_values']['states_id'];
+                    $sql_states = " AND $field = " . (int) $_SESSION['mreporting_values']['states_id'];
                 }
             }
         }
