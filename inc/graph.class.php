@@ -1908,7 +1908,8 @@ JAVASCRIPT;
 
         $out .= 'var labels = ' . json_encode($labels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
 
-        $out .= 'var labels2 = ' . json_encode($labels2, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
+        // labels2 keys (e.g. technician login) are only used to align datas order ; JS consumes it positionally
+        $out .= 'var labels2 = ' . json_encode(array_values($labels2), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) . ";\n";
         echo $out;
 
         if (!$stacked) {
