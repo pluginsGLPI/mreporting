@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [UNRELEASED]
 
+### Fixed
+
+- Technician names missing on stacked bar chart labels
+
 ## [1.10.2] - 2026-09-01
 
 ### Fixed
