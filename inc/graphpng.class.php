@@ -68,13 +68,9 @@ class PluginMreportingGraphpng extends PluginMreportingGraph
         if (!$options['export'] && !$options['showHeader']) {
             $width = $this->width + 100;
 
-            if (!isset($_REQUEST['date1' . $randname])) {
-                $_REQUEST['date1' . $randname] = date('Y-m-d', time()
-                 - ($options['delay'] * 24 * 60 * 60));
-            }
-            if (!isset($_REQUEST['date2' . $randname])) {
-                $_REQUEST['date2' . $randname] = date('Y-m-d');
-            }
+            $_REQUEST['date1' . $randname] ??= date('Y-m-d', time()
+             - ($options['delay'] * 24 * 60 * 60));
+            $_REQUEST['date2' . $randname] ??= date('Y-m-d');
 
             $backtrace     = debug_backtrace();
             $prev_function = strtolower(str_replace('show', '', $backtrace[1]['function']));

@@ -460,9 +460,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
              'multiplegroupassign', 'userassign', 'category',
          ];
 
-        if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
-            $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
-        }
+        $_SESSION['mreporting_values']['date2' . $config['randname']] ??= date('Y-m-d');
 
         //Init delay value
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
@@ -527,9 +525,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $tab   = [];
         $datas = [];
 
-        if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
-            $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
-        }
+        $_SESSION['mreporting_values']['date2' . $config['randname']] ??= date('Y-m-d');
 
         //Init delay value
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
@@ -593,9 +589,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
         $tab   = [];
         $datas = [];
 
-        if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
-            $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
-        }
+        $_SESSION['mreporting_values']['date2' . $config['randname']] ??= date('Y-m-d');
 
         foreach ($this->status as $current_status) {
             if ($_SESSION['mreporting_values']['status_' . $current_status] == '1') {
@@ -634,9 +628,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                 foreach ($result as $data) {
                     $data['name'] = empty($data['completename']) ? __s('None') : $data['completename'];
 
-                    if (!isset($tab[$data['name']][$status_name])) {
-                        $tab[$data['name']][$status_name] = 0;
-                    }
+                    $tab[$data['name']][$status_name] ??= 0;
 
                     $tab[$data['name']][$status_name] += $data['nb'];
                 }
@@ -1325,9 +1317,7 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                     $datas['labels2'][$group_name]                                                          = $group_name;
                     $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slaobserved']][$group_name] = 0;
                 }
-                if (!isset($datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name])) {
-                    $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name] = 0;
-                }
+                $datas['datas'][$LANG['plugin_mreporting']['Helpdeskplus']['slanotobserved']][$group_name] ??= 0;
             }
 
             //Flip array to have observed SLA first

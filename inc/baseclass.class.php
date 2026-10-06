@@ -120,9 +120,7 @@ class PluginMreportingBaseclass
             = $_SESSION['mreporting_values']['status_6'] = 0;
         }
 
-        if (!isset($_SESSION['mreporting_values']['period'])) {
-            $_SESSION['mreporting_values']['period'] = 'month';
-        }
+        $_SESSION['mreporting_values']['period'] ??= 'month';
         if (
             isset($_SESSION['mreporting_values']['period'])
             && !empty($_SESSION['mreporting_values']['period'])

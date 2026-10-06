@@ -717,7 +717,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 ],
             );
 
-            if ($number) {
+            if ($number !== 0) {
                 $data['datas'][$os['name']] = $number;
             }
         }
@@ -959,9 +959,7 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         $data = [];
         foreach ($DB->request($query) as $result) {
             $label = $result['cpt'] . ' ' . _sn('Monitor', 'Monitors', $result['cpt']);
-            if (!isset($data['datas'][$label])) {
-                $data['datas'][$label] = 0;
-            }
+            $data['datas'][$label] ??= 0;
             $data['datas'][$label] += 1;
         }
 
