@@ -30,12 +30,8 @@
 
 Session::checkRight('config', UPDATE);
 
-if (!isset($_GET['id'])) {
-    $_GET['id'] = 0;
-}
-if (!isset($_GET['preconfig'])) {
-    $_GET['preconfig'] = -1;
-}
+$_GET['id'] ??= 0;
+$_GET['preconfig'] ??= -1;
 
 $config = new PluginMreportingConfig();
 

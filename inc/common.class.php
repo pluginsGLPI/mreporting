@@ -639,9 +639,7 @@ class PluginMreportingCommon extends CommonDBTM
             $opt['hide_title'] = false;
         }
 
-        if (!isset($opt['width'])) {
-            $opt['width'] = false;
-        }
+        $opt['width'] ??= false;
 
         //check the format display charts configured in glpi
         $opt    = $this->initParams($opt, $export);
@@ -658,15 +656,11 @@ class PluginMreportingCommon extends CommonDBTM
         }
 
         //generate default date
-        if (!isset($_SESSION['mreporting_values']['date1' . $config['randname']])) {
-            $_SESSION['mreporting_values']['date1' . $config['randname']] = date(
-                'Y-m-d',
-                time() - (intval($config['delay']) * 24 * 60 * 60),
-            );
-        }
-        if (!isset($_SESSION['mreporting_values']['date2' . $config['randname']])) {
-            $_SESSION['mreporting_values']['date2' . $config['randname']] = date('Y-m-d');
-        }
+        $_SESSION['mreporting_values']['date1' . $config['randname']] ??= date(
+            'Y-m-d',
+            time() - (intval($config['delay']) * 24 * 60 * 60),
+        );
+        $_SESSION['mreporting_values']['date2' . $config['randname']] ??= date('Y-m-d');
 
         // save/clear selectors
         if (isset($opt['submit'])) {
@@ -1593,12 +1587,8 @@ class PluginMreportingCommon extends CommonDBTM
     {
         $randname = 'PluginMreporting' . $_REQUEST['short_classname'] . $_REQUEST['f_name'];
 
-        if (!isset($_SESSION['mreporting_values']['date1' . $randname])) {
-            $_SESSION['mreporting_values']['date1' . $randname] = date('Y-m-d', time() - (365 * 24 * 60 * 60));
-        }
-        if (!isset($_SESSION['mreporting_values']['date2' . $randname])) {
-            $_SESSION['mreporting_values']['date2' . $randname] = date('Y-m-d');
-        }
+        $_SESSION['mreporting_values']['date1' . $randname] ??= date('Y-m-d', time() - (365 * 24 * 60 * 60));
+        $_SESSION['mreporting_values']['date2' . $randname] ??= date('Y-m-d');
 
         $date1 = $_SESSION['mreporting_values']['date1' . $randname];
         echo '<b>' . __s('Start date') . '</b><br />';
@@ -1911,9 +1901,7 @@ class PluginMreportingCommon extends CommonDBTM
     public static function addToSelector()
     {
         foreach ($_REQUEST as $key => $value) {
-            if (!isset($_SESSION['mreporting_values'][$key])) {
-                $_SESSION['mreporting_values'][$key] = $value;
-            }
+            $_SESSION['mreporting_values'][$key] ??= $value;
         }
     }
 

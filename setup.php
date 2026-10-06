@@ -28,7 +28,7 @@
  * -------------------------------------------------------------------------
  */
 
-define('PLUGIN_MREPORTING_VERSION', '1.10.3');
+define('PLUGIN_MREPORTING_VERSION', '1.11.0');
 
 // Minimal GLPI version, inclusive
 define('PLUGIN_MREPORTING_MIN_GLPI', '12.0.0');
@@ -190,7 +190,7 @@ function plugin_init_mreporting()
 function plugin_version_mreporting()
 {
     return [
-        'name'         => 'More Reporting End-of-Life',
+        'name'         => 'More Reporting',
         'version'      => PLUGIN_MREPORTING_VERSION,
         'author'       => "<a href='http://www.teclib.com'>Teclib'</a> & <a href='http://www.infotel.com'>Infotel</a>",
         'homepage'     => 'https://github.com/pluginsGLPI/mreporting',
