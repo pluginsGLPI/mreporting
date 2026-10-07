@@ -154,27 +154,34 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var DBmysql $DB */
         global $DB;
 
-        $query_config = [
-            'SELECT' => 'id',
-            'FROM'   => PluginMreportingConfig::getTable(),
-        ];
+        $profiles_ids = array_column(
+            iterator_to_array($DB->request(['SELECT' => 'id', 'FROM' => Profile::getTable()])),
+            'id',
+        );
+        $reports_ids = array_column(
+            iterator_to_array($DB->request(['SELECT' => 'id', 'FROM' => PluginMreportingConfig::getTable()])),
+            'id',
+        );
 
-        $query_profil = [
-            'SELECT' => 'id',
-            'FROM'   => Profile::getTable(),
-        ];
+        // Only create the missing profile/report combinations, never overwrite an existing right
+        foreach ($profiles_ids as $profile_id) {
+            foreach ($reports_ids as $report_id) {
+                $already_exists = $DB->request([
+                    'COUNT' => 'cpt',
+                    'FROM'  => self::getTable(),
+                    'WHERE' => [
+                        'profiles_id' => $profile_id,
+                        'reports'     => $report_id,
+                    ],
+                ])->current()['cpt'] > 0;
 
-        $result_config = $DB->request($query_config);
-        foreach ($DB->request($query_profil) as $prof) {
-            foreach ($result_config as $report) {
-                $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
-                    'profiles_id' => $prof['id'],
-                    'reports'     => $report['id'],
-                    'right'       => null,
-                ], [
-                    'profiles_id' => $prof['id'],
-                    'reports'     => $report['id'],
-                ]);
+                if (!$already_exists) {
+                    $DB->insert(self::getTable(), [
+                        'profiles_id' => $profile_id,
+                        'reports'     => $report_id,
+                        'right'       => null,
+                    ]);
+                }
             }
         }
     }
@@ -209,26 +216,31 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var DBmysql $DB */
         global $DB;
 
-        $profiles_ids = [];
         $profiles_ids = is_null($idProfile) ? Profile::getSuperAdminProfilesId() : [$idProfile];
+        $reports_ids = array_column(
+            iterator_to_array($DB->request(['SELECT' => 'id', 'FROM' => PluginMreportingConfig::getTable()])),
+            'id',
+        );
 
-        $config = new PluginMreportingConfig();
-        $reports = $config->find();
-
+        // Only create the missing profile/report combinations, never overwrite an existing right
         foreach ($profiles_ids as $profileId) {
-            foreach ($reports as $report) {
-                $DB->updateOrInsert(
-                    'glpi_plugin_mreporting_profiles',
-                    [
+            foreach ($reports_ids as $report_id) {
+                $already_exists = $DB->request([
+                    'COUNT' => 'cpt',
+                    'FROM'  => self::getTable(),
+                    'WHERE' => [
                         'profiles_id' => $profileId,
-                        'reports'     => $report['id'],
+                        'reports'     => $report_id,
+                    ],
+                ])->current()['cpt'] > 0;
+
+                if (!$already_exists) {
+                    $DB->insert(self::getTable(), [
+                        'profiles_id' => $profileId,
+                        'reports'     => $report_id,
                         'right'       => READ,
-                    ],
-                    [
-                        'profiles_id' => $profileId,
-                        'reports'     => $report['id'],
-                    ],
-                );
+                    ]);
+                }
             }
         }
     }
