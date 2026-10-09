@@ -163,27 +163,7 @@ class PluginMreportingProfile extends CommonDBTM
             'id',
         );
 
-        // Only create the missing profile/report combinations, never overwrite an existing right
-        foreach ($profiles_ids as $profile_id) {
-            foreach ($reports_ids as $report_id) {
-                $already_exists = $DB->request([
-                    'COUNT' => 'cpt',
-                    'FROM'  => self::getTable(),
-                    'WHERE' => [
-                        'profiles_id' => $profile_id,
-                        'reports'     => $report_id,
-                    ],
-                ])->current()['cpt'] > 0;
-
-                if (!$already_exists) {
-                    $DB->insert(self::getTable(), [
-                        'profiles_id' => $profile_id,
-                        'reports'     => $report_id,
-                        'right'       => null,
-                    ]);
-                }
-            }
-        }
+        self::addMissingRights($profiles_ids, $reports_ids, null);
     }
 
     public static function getRight()
@@ -222,23 +202,29 @@ class PluginMreportingProfile extends CommonDBTM
             'id',
         );
 
-        // Only create the missing profile/report combinations, never overwrite an existing right
-        foreach ($profiles_ids as $profileId) {
-            foreach ($reports_ids as $report_id) {
-                $already_exists = $DB->request([
-                    'COUNT' => 'cpt',
-                    'FROM'  => self::getTable(),
-                    'WHERE' => [
-                        'profiles_id' => $profileId,
-                        'reports'     => $report_id,
-                    ],
-                ])->current()['cpt'] > 0;
+        self::addMissingRights($profiles_ids, $reports_ids, READ);
+    }
 
-                if (!$already_exists) {
+    /**
+     * Only create the missing profile/report combinations, never overwrite an existing right
+     */
+    private static function addMissingRights(array $profiles_ids, array $reports_ids, ?int $right): void
+    {
+        /** @var DBmysql $DB */
+        global $DB;
+
+        $existing = [];
+        foreach ($DB->request(['SELECT' => ['profiles_id', 'reports'], 'FROM' => self::getTable()]) as $row) {
+            $existing[$row['profiles_id'] . '-' . $row['reports']] = true;
+        }
+
+        foreach ($profiles_ids as $profile_id) {
+            foreach ($reports_ids as $report_id) {
+                if (!isset($existing[$profile_id . '-' . $report_id])) {
                     $DB->insert(self::getTable(), [
-                        'profiles_id' => $profileId,
+                        'profiles_id' => $profile_id,
                         'reports'     => $report_id,
-                        'right'       => READ,
+                        'right'       => $right,
                     ]);
                 }
             }

@@ -270,8 +270,9 @@ function plugin_mreporting_install()
     $config = new PluginMreportingConfig();
     $config->createFirstConfig();
 
-    PluginMreportingProfile::addRightToAllProfiles();
+    // Super-admin READ defaults first, so the NULL seeding below does not pre-empt them
     PluginMreportingProfile::addRightToProfile();
+    PluginMreportingProfile::addRightToAllProfiles();
 
     return true;
 }
