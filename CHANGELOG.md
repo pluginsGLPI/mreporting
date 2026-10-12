@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - CI: fix Psalm cache directory, drop the stray `glpi-project/tools` composer dependency, declare a unique composer autoloader suffix
+- Profile rights to reports are no longer reset to "no access" each time the plugin is installed or updated
 
 ## [1.10.3] - 2026-09-28
 
