@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - CI: fix Psalm cache directory, drop the stray `glpi-project/tools` composer dependency, declare a unique composer autoloader suffix
 - Profile rights to reports are no longer reset to "no access" each time the plugin is installed or updated
+- "Tickets per technician" report now applies the selected date interval
 
 ## [1.10.3] - 2026-09-28
 
