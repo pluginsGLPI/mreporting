@@ -154,29 +154,16 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var DBmysql $DB */
         global $DB;
 
-        $query_config = [
-            'SELECT' => 'id',
-            'FROM'   => PluginMreportingConfig::getTable(),
-        ];
+        $profiles_ids = array_column(
+            iterator_to_array($DB->request(['SELECT' => 'id', 'FROM' => Profile::getTable()])),
+            'id',
+        );
+        $reports_ids = array_column(
+            iterator_to_array($DB->request(['SELECT' => 'id', 'FROM' => PluginMreportingConfig::getTable()])),
+            'id',
+        );
 
-        $query_profil = [
-            'SELECT' => 'id',
-            'FROM'   => Profile::getTable(),
-        ];
-
-        $result_config = $DB->request($query_config);
-        foreach ($DB->request($query_profil) as $prof) {
-            foreach ($result_config as $report) {
-                $DB->updateOrInsert('glpi_plugin_mreporting_profiles', [
-                    'profiles_id' => $prof['id'],
-                    'reports'     => $report['id'],
-                    'right'       => null,
-                ], [
-                    'profiles_id' => $prof['id'],
-                    'reports'     => $report['id'],
-                ]);
-            }
-        }
+        self::addMissingRights($profiles_ids, $reports_ids, null);
     }
 
     public static function getRight()
@@ -209,26 +196,37 @@ class PluginMreportingProfile extends CommonDBTM
         /** @var DBmysql $DB */
         global $DB;
 
-        $profiles_ids = [];
         $profiles_ids = is_null($idProfile) ? Profile::getSuperAdminProfilesId() : [$idProfile];
+        $reports_ids = array_column(
+            iterator_to_array($DB->request(['SELECT' => 'id', 'FROM' => PluginMreportingConfig::getTable()])),
+            'id',
+        );
 
-        $config = new PluginMreportingConfig();
-        $reports = $config->find();
+        self::addMissingRights($profiles_ids, $reports_ids, READ);
+    }
 
-        foreach ($profiles_ids as $profileId) {
-            foreach ($reports as $report) {
-                $DB->updateOrInsert(
-                    'glpi_plugin_mreporting_profiles',
-                    [
-                        'profiles_id' => $profileId,
-                        'reports'     => $report['id'],
-                        'right'       => READ,
-                    ],
-                    [
-                        'profiles_id' => $profileId,
-                        'reports'     => $report['id'],
-                    ],
-                );
+    /**
+     * Only create the missing profile/report combinations, never overwrite an existing right
+     */
+    private static function addMissingRights(array $profiles_ids, array $reports_ids, ?int $right): void
+    {
+        /** @var DBmysql $DB */
+        global $DB;
+
+        $existing = [];
+        foreach ($DB->request(['SELECT' => ['profiles_id', 'reports'], 'FROM' => self::getTable()]) as $row) {
+            $existing[$row['profiles_id'] . '-' . $row['reports']] = true;
+        }
+
+        foreach ($profiles_ids as $profile_id) {
+            foreach ($reports_ids as $report_id) {
+                if (!isset($existing[$profile_id . '-' . $report_id])) {
+                    $DB->insert(self::getTable(), [
+                        'profiles_id' => $profile_id,
+                        'reports'     => $report_id,
+                        'right'       => $right,
+                    ]);
+                }
             }
         }
     }

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - "Tickets per technician" report now applies the selected date interval
+- Profile rights to reports are no longer reset to "no access" each time the plugin is installed or updated
 
 ## [1.11.0] - 2026-10-06
 
