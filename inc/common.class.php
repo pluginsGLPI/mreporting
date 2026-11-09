@@ -1262,7 +1262,7 @@ class PluginMreportingCommon extends CommonDBTM
         /** @var array $LANG */
         global $LANG;
 
-        $config = ['PATH_TO_TMP' => GLPI_DOC_DIR . '/_tmp'];
+        $config = ['PATH_TO_TMP' => GLPI_TMP_DIR];
 
         $category        = '';
         $description     = '';
@@ -1321,7 +1321,7 @@ class PluginMreportingCommon extends CommonDBTM
             } else {
                 $singledatas->setVars('datas_title', mb_strtoupper(__s('data', 'mreporting')), false, 'utf-8');
                 foreach ($datas as $key => $value) {
-                    if (property_exists($singledatas, 'datas') && $singledatas->datas !== null) {
+                    if (isset($singledatas->datas) || $singledatas->datas !== null) {
                         $singledatas->datas->row($key, ENT_NOQUOTES, 'utf-8');
                         $singledatas->datas->value($value, ENT_NOQUOTES, 'utf-8');
                         $singledatas->datas->merge();
