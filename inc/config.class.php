@@ -66,6 +66,15 @@ class PluginMreportingConfig extends CommonDBTM
 {
     public static $rightname = 'config';
 
+    /**
+     * Every report config, keyed by lowercase "classname|name" (the database comparison ignores case),
+     * loaded with one query the first time a read-only lookup needs it during the request.
+     * false marks a key matching several configs, which getFromDBByCrit() refuses too.
+     *
+     * @var array<string, array<string, mixed>|false>|null
+     */
+    private static ?array $configs_cache = null;
+
     public static function getTypeName($nb = 0)
     {
         return __s('Configuration', 'mreporting');
@@ -269,6 +278,50 @@ class PluginMreportingConfig extends CommonDBTM
             'name'     => $function,
             'classname' => $classname,
         ]);
+    }
+
+    /**
+     * Fields of the config of a report, for read-only lookups: every config is loaded with one query per request.
+     *
+     * @return array<string, mixed>|null null when no config, or several configs, match
+     */
+    public static function getCachedConfig(string $function, string $classname): ?array
+    {
+        /** @var DBmysql $DB */
+        global $DB;
+
+        if (self::$configs_cache === null) {
+            self::$configs_cache = [];
+            foreach ($DB->request(['FROM' => self::getTable()]) as $row) {
+                $key = strtolower($row['classname'] . '|' . $row['name']);
+                self::$configs_cache[$key] = isset(self::$configs_cache[$key]) ? false : $row;
+            }
+        }
+
+        return (self::$configs_cache[strtolower($classname . '|' . $function)] ?? null) ?: null;
+    }
+
+    public static function resetConfigCache(): void
+    {
+        self::$configs_cache = null;
+    }
+
+    public function post_addItem()
+    {
+        self::resetConfigCache();
+        parent::post_addItem();
+    }
+
+    public function post_updateItem($history = true)
+    {
+        self::resetConfigCache();
+        parent::post_updateItem($history);
+    }
+
+    public function post_purgeItem()
+    {
+        self::resetConfigCache();
+        parent::post_purgeItem();
     }
 
     /**
@@ -873,17 +926,18 @@ class PluginMreportingConfig extends CommonDBTM
             'graphtype'  => 'SVG',
         ];
 
-        $self = new self();
-        if ($self->getFromDBByFunctionAndClassname($name, $classname)) {
-            $crit['area']       = $self->fields['show_area'];
-            $crit['spline']     = $self->fields['spline'];
-            $crit['show_label'] = $self->fields['show_label'];
-            $crit['flip_data']  = $self->fields['flip_data'];
-            $crit['unit']       = $self->fields['unit'];
-            $crit['delay']      = $self->fields['default_delay'];
-            $crit['condition']  = $self->fields['condition'];
-            $crit['show_graph'] = $self->fields['show_graph'];
-            $crit['graphtype']  = $self->fields['graphtype'];
+        // read about 5 times per displayed report: served by the per-request cache
+        $fields = self::getCachedConfig($name, $classname);
+        if ($fields !== null) {
+            $crit['area']       = $fields['show_area'];
+            $crit['spline']     = $fields['spline'];
+            $crit['show_label'] = $fields['show_label'];
+            $crit['flip_data']  = $fields['flip_data'];
+            $crit['unit']       = $fields['unit'];
+            $crit['delay']      = $fields['default_delay'];
+            $crit['condition']  = $fields['condition'];
+            $crit['show_graph'] = $fields['show_graph'];
+            $crit['graphtype']  = $fields['graphtype'];
             $crit['randname']   = $classname . $name;
         }
 
@@ -912,9 +966,9 @@ class PluginMreportingConfig extends CommonDBTM
 
         // DEBUG_MREPORTING is constant. It is true if debug mode is enabled, false otherwise. For PHPStan, this constant is always true or false.
         /* @phpstan-ignore-next-line */
-        $self = new self();
-        if ($self->getFromDBByFunctionAndClassname($name, $classname)) {
-            return $self->fields['show_graph'];
+        $fields = self::getCachedConfig($name, $classname);
+        if ($fields !== null) {
+            return $fields['show_graph'];
         }
 
         return false;

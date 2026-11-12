@@ -474,31 +474,17 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         $delay = PluginMreportingCommon::getCriteriaDate('glpi_tickets.date', $config['delay'], $config['randname']);
 
         foreach ($this->filters as $class => $filter) {
-            $query = [
-                'SELECT' => [
-                    Ticket::getTable() . '.id',
-                ],
-                'FROM' => Ticket::getTable(),
-                'WHERE' => [
-                    Ticket::getTable() . '.type' => 1,
-                ],
-            ];
-
-            $result = $DB->request($query);
             $datas['labels2'][$filter['label']] = $filter['label'];
 
-            $ticket_ids = [];
-            foreach ($result as $ticket) {
-                $ticket_ids[] = $ticket['id'];
-            }
-
+            // tickets that are not of type 1; `type` is NOT NULL, so this is the former
+            // "id NOT IN (ids of every type 1 ticket)" without loading and sending back every id
             $query = [
                 'COUNT' => 'count',
                 'FROM' => Ticket::getTable(),
                 'WHERE' => [
                     [
                         'NOT' => [
-                            Ticket::getTable() . '.id' => $ticket_ids,
+                            Ticket::getTable() . '.type' => 1,
                         ],
                     ],
                     Ticket::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
@@ -885,11 +871,13 @@ class PluginMreportingHelpdesk extends PluginMreportingBaseclass
         //get technician list
         $technicians = [];
 
+        // one row per technician, not per assignment
         $query = [
             'SELECT' => [
                 new QueryExpression("CONCAT(" . User::getTable() . ".firstname, ' ', " . User::getTable() . ".realname) as fullname"),
                 User::getTable() . ".name as username",
             ],
+            'DISTINCT' => true,
             'FROM' => Ticket::getTable(),
             'INNER JOIN' => [
                 Ticket_User::getTable() => [

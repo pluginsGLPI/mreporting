@@ -110,6 +110,12 @@ class PluginMreportingCommon extends CommonDBTM
     */
     public static function parseAllClasses($inc_dir)
     {
+        // the files are read once per request: getAllReports() and the config list call this several times
+        static $cache = [];
+        if (isset($cache[$inc_dir])) {
+            return $cache[$inc_dir];
+        }
+
         $classes = [];
         $matches = [];
 
@@ -130,7 +136,7 @@ class PluginMreportingCommon extends CommonDBTM
             }
         }
 
-        return $classes;
+        return $cache[$inc_dir] = $classes;
     }
 
     /**
@@ -209,15 +215,16 @@ class PluginMreportingCommon extends CommonDBTM
                         $reports[$classname]['functions'][$i]['short_classname'] = $scn;
                         $reports[$classname]['functions'][$i]['is_active']       = false;
 
-                        $config = new PluginMreportingConfig();
-                        if ($config->getFromDBByFunctionAndClassname($f_name, $classname)) {
-                            if ($config->fields['is_active'] == 1) {
+                        // configs and rights come from per-request caches: one query each instead of 4 per report
+                        $config_fields = PluginMreportingConfig::getCachedConfig($f_name, $classname);
+                        if ($config_fields !== null) {
+                            if ($config_fields['is_active'] == 1) {
                                 $reports[$classname]['functions'][$i]['is_active'] = true;
-                                $reports[$classname]['functions'][$i]['id']        = $config->fields['id'];
+                                $reports[$classname]['functions'][$i]['id']        = $config_fields['id'];
                             }
                             $reports[$classname]['functions'][$i]['right'] = READ;
                             if (isset($_SESSION['glpiactiveprofile'])) {
-                                $reports[$classname]['functions'][$i]['right'] = PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'], $config->fields['id']);
+                                $reports[$classname]['functions'][$i]['right'] = PluginMreportingProfile::canViewReports($_SESSION['glpiactiveprofile']['id'], $config_fields['id']);
                             }
                         }
 

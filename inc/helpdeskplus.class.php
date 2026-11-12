@@ -324,57 +324,71 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
             $begin            = date($this->period_sort_php, $time1);
             $end              = date($this->period_sort_php, $time2);
 
-            $subqueries = [];
+            $ticket_table = Ticket::getTable();
+            $date_end     = $this->getPeriodEndSql(DBmysql::quoteName($ticket_table . '.date'));
+            $solve_end    = $this->getPeriodEndSql(DBmysql::quoteName($ticket_table . '.solvedate'));
 
-            $subqueries[] = [
-                'SELECT'   => [$this->criteria_list_date],
-                'DISTINCT' => true,
-                'FROM'     => Ticket::getTable(),
-            ];
+            // Period ends to display: every period holding the creation or the resolution of any ticket,
+            // inside the selected interval. The bounds, one period wider than the interval, only let the index skip rows.
+            $low  = date('Y-m-d H:i:s', strtotime('-1 ' . $this->period_interval, $time1));
+            $high = date('Y-m-d 23:59:59', strtotime('+1 ' . $this->period_interval, $time2));
 
-            $subqueries[] = [
-                'SELECT'   => [$this->criteria_list_date2],
-                'DISTINCT' => true,
-                'FROM'     => Ticket::getTable(),
-            ];
-
-            $union = new QueryUnion($subqueries, false, 'list_date_union');
-
-            $list_date_table = [
-                'SELECT' => ['period_l'],
-                'FROM'   => $union,
-                'DISTINCT' => true,
-            ];
-
-            $query = [
-                'SELECT' => [
-                    new QueryExpression("DATE_FORMAT(list_date.period_l, '{$this->period_sort}') as period"),
-                    new QueryExpression("DATE_FORMAT(list_date.period_l, '{$this->period_label}') as period_name"),
-                    new QueryExpression("COUNT(DISTINCT " . Ticket::getTable() . ".id) as nb"),
-                ],
-                'FROM' => new QuerySubQuery($list_date_table, 'list_date'),
-                'LEFT JOIN' => array_merge(
-                    [
-                        Ticket::getTable() => [
-                            'AND' => [
-                                Ticket::getTable() . '.date' => ['<=', new QueryExpression('list_date.period_l')],
-                                'OR' => [
-                                    Ticket::getTable() . '.solvedate' => ['>', new QueryExpression('list_date.period_l')],
-                                    new QueryExpression(Ticket::getTable() . '.solvedate IS NULL'),
-                                ],
-                            ],
-                        ],
+            $list_date = new QueryUnion([
+                [
+                    'SELECT' => [new QueryExpression("$date_end AS period_l")],
+                    'FROM'   => $ticket_table,
+                    'WHERE'  => [
+                        $ticket_table . '.date' => ['>=', $low],
+                        [$ticket_table . '.date' => ['<=', $high]],
                     ],
-                    $this->criteria_join_tu,
-                    $this->criteria_join_gt,
-                    $this->criteria_join_gtr,
-                ),
+                ],
+                [
+                    'SELECT' => [new QueryExpression("$solve_end AS period_l")],
+                    'FROM'   => $ticket_table,
+                    'WHERE'  => [
+                        $ticket_table . '.solvedate' => ['>=', $low],
+                        [$ticket_table . '.solvedate' => ['<=', $high]],
+                    ],
+                ],
+            ], true, 'list_date');
+
+            $periods = $DB->request([
+                'SELECT' => [
+                    'period_l',
+                    new QueryExpression('DATE_FORMAT(list_date.period_l, ' . $DB->quoteValue($this->period_sort) . ') AS period'),
+                    new QueryExpression('DATE_FORMAT(list_date.period_l, ' . $DB->quoteValue($this->period_label) . ') AS period_name'),
+                ],
+                'FROM'  => $list_date,
+                'WHERE' => [
+                    new QueryExpression('DATE_FORMAT(list_date.period_l, ' . $DB->quoteValue($this->period_sort) . ') >= ' . $DB->quoteValue($begin)),
+                    new QueryExpression('DATE_FORMAT(list_date.period_l, ' . $DB->quoteValue($this->period_sort) . ') <= ' . $DB->quoteValue($end)),
+                ],
+                'ORDER' => ['period_l'],
+            ]);
+
+            // A ticket is in the backlog at a period end when it was opened before and not solved before:
+            // backlog = tickets opened up to the period end - tickets opened and solved up to the period end.
+            // Both are counted once per period over the whole history, then accumulated in PHP.
+            // The actor joins are LEFT JOINs: they only change the counted tickets when their filter is set,
+            // so they are added only then (the distinct count is the same without them).
+            $backlog_joins = [];
+            if ($this->criteria_user_assign !== []) {
+                $backlog_joins = array_merge($backlog_joins, $this->criteria_join_tu);
+            }
+            if ($this->criteria_group_assign !== []) {
+                $backlog_joins = array_merge($backlog_joins, $this->criteria_join_gt);
+            }
+            if ($this->criteria_group_request !== []) {
+                $backlog_joins = array_merge($backlog_joins, $this->criteria_join_gtr);
+            }
+
+            $count_criteria = [
+                'FROM'      => $ticket_table,
+                'LEFT JOIN' => $backlog_joins,
                 'WHERE' => array_merge(
                     [
-                        Ticket::getTable() . '.entities_id'  => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
-                        Ticket::getTable() . '.is_deleted' => 0,
-                        new QueryExpression("DATE_FORMAT(list_date.period_l, '{$this->period_sort}') >= '$begin'"),
-                        new QueryExpression("DATE_FORMAT(list_date.period_l, '{$this->period_sort}') <= '$end'"),
+                        $ticket_table . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
+                        $ticket_table . '.is_deleted'  => 0,
                     ],
                     $this->criteria_type,
                     $this->criteria_group_assign,
@@ -382,14 +396,48 @@ class PluginMreportingHelpdeskplus extends PluginMreportingBaseclass
                     $this->criteria_user_assign,
                     $this->criteria_itilcat,
                 ),
-                'GROUPBY' => ['period'],
+                'GROUPBY' => ['period_l'],
+                'ORDER'   => ['period_l'],
             ];
+            $count_distinct = new QueryExpression('COUNT(DISTINCT ' . DBmysql::quoteName($ticket_table . '.id') . ') AS nb');
 
-            $result = $DB->request($query);
+            $opened = [];
+            $opened_criteria = $count_criteria;
+            $opened_criteria['SELECT'] = [new QueryExpression("$date_end AS period_l"), $count_distinct];
+            $opened_criteria['WHERE'][] = ['NOT' => [$ticket_table . '.date' => null]];
+            foreach ($DB->request($opened_criteria) as $data) {
+                $opened[] = [$data['period_l'], (int) $data['nb']];
+            }
 
-            foreach ($result as $data) {
-                $tab[$data['period']]['backlog']     = $data['nb'];
-                $tab[$data['period']]['period_name'] = $data['period_name'];
+            // a ticket solved before its creation date leaves the backlog at its creation period
+            $solved = [];
+            $solved_criteria = $count_criteria;
+            $solved_criteria['SELECT'] = [new QueryExpression("GREATEST($date_end, $solve_end) AS period_l"), $count_distinct];
+            $solved_criteria['WHERE'][] = ['NOT' => [$ticket_table . '.date' => null]];
+            $solved_criteria['WHERE'][] = ['NOT' => [$ticket_table . '.solvedate' => null]];
+            foreach ($DB->request($solved_criteria) as $data) {
+                $solved[] = [$data['period_l'], (int) $data['nb']];
+            }
+
+            $opened_total = 0;
+            $solved_total = 0;
+            $opened_index = 0;
+            $solved_index = 0;
+            foreach ($periods as $data) {
+                while ($opened_index < count($opened) && $opened[$opened_index][0] <= $data['period_l']) {
+                    $opened_total += $opened[$opened_index][1];
+                    $opened_index++;
+                }
+                while ($solved_index < count($solved) && $solved[$solved_index][0] <= $data['period_l']) {
+                    $solved_total += $solved[$solved_index][1];
+                    $solved_index++;
+                }
+
+                // periods without any ticket in the backlog are not displayed, as before
+                if ($opened_total - $solved_total > 0) {
+                    $tab[$data['period']]['backlog']     = $opened_total - $solved_total;
+                    $tab[$data['period']]['period_name'] = $data['period_name'];
+                }
             }
         }
 
