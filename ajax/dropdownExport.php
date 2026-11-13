@@ -54,9 +54,9 @@ if (
          "style='margin: 0; padding: 0' target='_blank'>";
         echo "<input type='hidden' name='svg_content' value='none' />";
         echo "<input type='button' class='submit' id='export_svg_link' target='_blank' href='#' " .
-                        "onClick='return false;' value='" . _sx('button', 'Post') . "' />";
+                        "value='" . _sx('button', 'Post') . "' />";
         Html::Closeform();
-        echo "<script type='text/javascript'>
+        echo Html::scriptBlock("
             $('#export_svg_link').on('click', function () {
                var svg_content = vis{" . htmlspecialchars($randname) . "}.scene[0].canvas.innerHTML;
 
@@ -79,12 +79,12 @@ if (
                });
 
             });
-         </script>";
+         ");
     } else {
         echo "&nbsp;<input type='submit' id='export_submit' name='export' value=\"" .
         _sx('button', 'Post') . "\" class='submit'>";
 
-        echo "<script type='text/javascript'>
+        echo Html::scriptBlock("
          $('#export_submit').on('click', function () {
             $.ajax({
                url: '../ajax/get_new_crsf_token.php'
@@ -93,6 +93,6 @@ if (
             });
          });
 
-      </script>";
+      ");
     }
 }

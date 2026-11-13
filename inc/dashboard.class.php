@@ -53,15 +53,17 @@ class PluginMreportingDashboard extends CommonDBTM
         ) {
             echo "<div id='mreporting_central_dashboard'>";
 
-            echo "<script language='javascript' type='text/javascript'>
+            echo "<iframe id='mreporting_central_iframe' src='" . $CFG_GLPI['root_doc'] . '/plugins/mreporting' .
+              "/ajax/dashboard.php?action=centralDashboard' " .
+              "frameborder='0' scrolling='no'></iframe>";
+            echo Html::scriptBlock("
             function resizeIframe(obj) {
                obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
             }
-         </script>";
-
-            echo "<iframe src='" . $CFG_GLPI['root_doc'] . '/plugins/mreporting' .
-              "/ajax/dashboard.php?action=centralDashboard' " .
-              "frameborder='0' scrolling='no' onload='javascript:resizeIframe(this);'></iframe>";
+            $('#mreporting_central_iframe').on('load', function () {
+               resizeIframe(this);
+            });
+         ");
             echo '</div>';
         }
 
@@ -115,8 +117,7 @@ class PluginMreportingDashboard extends CommonDBTM
       </button>";
         echo '</div>';
         $modal_html = json_encode($this->getFormForColumn());
-        echo "
-      <script type='text/javascript'>
+        echo Html::scriptBlock("
          $(function() {
             removeWidget = function(id){
                $.ajax({
@@ -141,7 +142,7 @@ class PluginMreportingDashboard extends CommonDBTM
                })
             });
          });
-      </script>";
+      ");
 
         if (empty($widgets)) {
             echo '</div>';
@@ -202,7 +203,7 @@ class PluginMreportingDashboard extends CommonDBTM
 
             $rand_widget = mt_rand();
 
-            echo "<script type='text/javascript'>
+            echo Html::scriptBlock("
          $(function() {
             configWidget$rand_widget =  null;
 
@@ -226,7 +227,8 @@ class PluginMreportingDashboard extends CommonDBTM
             });
 
          });
-         </script>
+         ");
+            echo "
          <div class='card mreportingwidget' id='mreportingwidget" . htmlspecialchars($data['id']) . "'>
             <div class='card-header d-inline-block'>
                <button id='closeWidget_button$rand_widget' class='m_right me-1 btn btn-sm btn-outline-secondary'>

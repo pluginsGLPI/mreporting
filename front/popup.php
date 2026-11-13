@@ -41,6 +41,7 @@ $common->showExportForm($_POST);
 
 echo "<div class='center'>";
 echo '<br>';
-echo "<a href='javascript:window.close()'>" . __s('Back') . '</a>';
+echo "<a href='#' id='mreporting_popup_close'>" . __s('Back') . '</a>';
+echo Html::scriptBlock("$('#mreporting_popup_close').on('click', function (e) { e.preventDefault(); window.close(); });");
 echo '</div>';
 Html::popFooter();
