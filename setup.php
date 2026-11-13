@@ -75,7 +75,11 @@ function plugin_init_mreporting()
 
     $PLUGIN_HOOKS['csrf_compliant']['mreporting'] = true;
 
-    // No activation check: the core only calls this function for an active plugin
+    // Plugin::load() also runs this function while the plugin is being installed, when its tables do not exist yet.
+    // The list of active plugins is kept in memory by the core: no query, unlike Plugin::isPluginActive() during init.
+    if (!in_array('mreporting', Plugin::getPlugins(), true)) {
+        return;
+    }
 
     // *Direct* access to rapport file (from e-mail) :
     if (isset($_GET['redirect']) && str_contains($_GET['redirect'], 'plugin_mreporting')) {
