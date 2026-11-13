@@ -210,4 +210,19 @@ class PluginMreportingBaseclass
             $config['randname'],
         );
     }
+
+    /**
+     * SQL expression of the end of the selected period ('Y-m-d 23:59:59') containing a date field,
+     * the same value as criteria_list_date / criteria_list_date2 give for `date` / `solvedate`.
+     *
+     * @param string $field quoted column name, e.g. `glpi_tickets`.`date`
+     */
+    protected function getPeriodEndSql(string $field): string
+    {
+        return match ($this->period_interval) {
+            'WEEK'  => "DATE_FORMAT($field + INTERVAL (6 - WEEKDAY($field)) DAY, '{$this->period_datetime}')",
+            'MONTH' => "CONCAT(LAST_DAY(DATE_FORMAT($field, '{$this->period_datetime}')), ' 23:59:59')",
+            default => "DATE_FORMAT($field, '{$this->period_datetime}')",
+        };
+    }
 }

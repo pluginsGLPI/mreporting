@@ -229,6 +229,9 @@ class PluginMreportingProfile extends CommonDBTM
                 }
             }
         }
+
+        // the inserts bypass post_addItem()
+        self::resetRightsCache();
     }
 
     /**
@@ -452,16 +455,57 @@ class PluginMreportingProfile extends CommonDBTM
         return $prof;
     }
 
+    /**
+     * Rights of each profile on each report, loaded with one query per profile the first time they are read in the request.
+     *
+     * @var array<int, array<int, mixed>>
+     */
+    private static array $rights_cache = [];
+
+    public static function resetRightsCache(): void
+    {
+        self::$rights_cache = [];
+    }
+
     public static function canViewReports($profil_id, $report_id)
     {
-        $prof = new self();
-        $res  = $prof->getFromDBByCrit(
-            [
-                'profiles_id' => $profil_id,
-                'reports'     => $report_id,
-            ],
-        );
-        return $res && $prof->fields['right'] == READ;
+        /** @var DBmysql $DB */
+        global $DB;
+
+        // called for every report by getAllReports(): one query for the profile instead of 2 per report
+        if (!isset(self::$rights_cache[$profil_id])) {
+            self::$rights_cache[$profil_id] = [];
+            $result = $DB->request([
+                'SELECT' => ['reports', 'right'],
+                'FROM'   => self::getTable(),
+                'WHERE'  => ['profiles_id' => $profil_id],
+            ]);
+            foreach ($result as $row) {
+                self::$rights_cache[$profil_id][$row['reports']] = $row['right'];
+            }
+        }
+
+        // (profiles_id, reports) is unique: at most one right per report
+        return array_key_exists($report_id, self::$rights_cache[$profil_id])
+            && self::$rights_cache[$profil_id][$report_id] == READ;
+    }
+
+    public function post_addItem()
+    {
+        self::resetRightsCache();
+        parent::post_addItem();
+    }
+
+    public function post_updateItem($history = true)
+    {
+        self::resetRightsCache();
+        parent::post_updateItem($history);
+    }
+
+    public function post_purgeItem()
+    {
+        self::resetRightsCache();
+        parent::post_purgeItem();
     }
 
     // Hook done on add item case

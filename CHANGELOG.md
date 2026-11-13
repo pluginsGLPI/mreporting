@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Faster dashboards and report pages: report configurations and rights are read once per page
+- Faster "Backlogs", "Computers by OS", "Tickets per service", "Ticket status by technician" and "Computers by entity" reports, with the same results
+- Fewer queries on every GLPI page and on the core statistics page
+
 ## [1.10.4] - 2026-11-04
 
 ### Fixed

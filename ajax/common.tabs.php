@@ -33,5 +33,8 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
+// the tab only reads the session: release its lock for the other requests of the user
+session_write_close();
+
 $common = new PluginMreportingCommon();
 $common->showCentral($_REQUEST);

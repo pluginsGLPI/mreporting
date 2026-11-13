@@ -425,75 +425,11 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
             'Android'              => 'Android',
             'HP-UX'                => 'HP-UX',
         ];
-        $notlike = [];
-
-        $queries = [];
-
-        $subquery = [
+        // one query counting the OS links per OS name; the families are matched in PHP.
+        // A name can match several families and is counted in each of them; 'Others' gets the names matching none.
+        $result = $DB->request([
             'SELECT' => [
-                new QueryExpression("COUNT(*)"),
-            ],
-            'FROM' => Computer::getTable(),
-            'LEFT JOIN' => [
-                Item_OperatingSystem::getTable() => [
-                    'ON' => [
-                        Item_OperatingSystem::getTable() . '.items_id',
-                        Computer::getTable() . '.id',
-                    ],
-                ],
-                OperatingSystem::getTable() => [
-                    'ON' => [
-                        OperatingSystem::getTable() . '.id',
-                        Item_OperatingSystem::getTable() . '.operatingsystems_id',
-                    ],
-                ],
-            ],
-            'WHERE' => array_merge([
-                Computer::getTable() . '.is_deleted' => 0,
-                Computer::getTable() . '.is_template' => 0,
-                Item_OperatingSystem::getTable() . '.itemtype' => 'Computer',
-                Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
-            ], $criteria_states),
-        ];
-
-        foreach ($oses as $os => $search) {
-            $queries[] = [
-                'SELECT' => [
-                    new QueryExpression("'$os'" . " AS OS"),
-                    new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Percent')),
-                ],
-                'COUNT' => 'Total',
-                'FROM' => Computer::getTable(),
-                'LEFT JOIN' => [
-                    Item_OperatingSystem::getTable() => [
-                        'ON' => [
-                            Item_OperatingSystem::getTable() . '.items_id',
-                            Computer::getTable() . '.id',
-                        ],
-                    ],
-                    OperatingSystem::getTable() => [
-                        'ON' => [
-                            OperatingSystem::getTable() . '.id',
-                            Item_OperatingSystem::getTable() . '.operatingsystems_id',
-                        ],
-                    ],
-                ],
-                'WHERE' => array_merge([
-                    Item_OperatingSystem::getTable() . '.itemtype' => 'Computer',
-                    Computer::getTable() . '.is_deleted' => 0,
-                    Computer::getTable() . '.is_template' => 0,
-                    new QueryExpression(OperatingSystem::getTable() . ".name REGEXP '" . $search . "'"),
-                    Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
-                ], $criteria_states),
-            ];
-
-            $notlike[] = new QueryExpression(OperatingSystem::getTable() . ".name NOT REGEXP '" . $search . "'");
-        }
-
-        $queries[] = [
-            'SELECT' => [
-                new QueryExpression("'" . __s('Others') . "' AS OS"),
-                new QueryExpression("COUNT(*) * 100 / " . new QuerySubQuery($subquery, 'Percent')),
+                OperatingSystem::getTable() . '.name AS os_name',
             ],
             'COUNT' => 'Total',
             'FROM' => Computer::getTable(),
@@ -516,19 +452,40 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
                 Computer::getTable() . '.is_deleted' => 0,
                 Computer::getTable() . '.is_template' => 0,
                 Computer::getTable() . '.entities_id' => PluginMreportingCommon::formatWhereEntitiesArray($this->where_entities),
-                $notlike,
             ], $criteria_states),
-            'ORDER' => ['Total DESC'],
-        ];
+            'GROUPBY' => ['os_name'],
+        ]);
 
-        $query = new QueryUnion($queries);
-        $result = $DB->request($query);
+        $all_computers = 0;
+        $totals        = array_fill_keys(array_keys($oses), 0);
+        $others        = 0;
+        foreach ($result as $row) {
+            $all_computers += (int) $row['Total'];
+            // a missing OS name matches no family and is not an 'Other' either
+            if ($row['os_name'] === null) {
+                continue;
+            }
+
+            $matched = false;
+            foreach ($oses as $os => $search) {
+                // case-insensitive, as the REGEXP of the database collation
+                if (preg_match('/' . $search . '/i', $row['os_name']) === 1) {
+                    $totals[$os] += (int) $row['Total'];
+                    $matched = true;
+                }
+            }
+            if (!$matched) {
+                $others += (int) $row['Total'];
+            }
+        }
+        $totals[__s('Others')] = $others;
 
         $datas = [];
-        foreach ($result as $computer) {
-            $percent = round(floatval($computer['Percent']), 2);
-            if ($computer['Total']) {
-                $datas['datas'][$computer['OS'] . " ($percent %)"] = $computer['Total'];
+        foreach ($totals as $os => $total) {
+            if ($total) {
+                // the database rounded the division to 4 decimals before this rounding
+                $percent = round(round($total * 100 / $all_computers, 4), 2);
+                $datas['datas'][$os . " ($percent %)"] = $total;
             }
         }
 
@@ -1121,28 +1078,31 @@ class PluginMreportingInventory extends PluginMreportingBaseclass
         foreach ($result as $data) {
             $entities_first_level[$data['id']] = $data['name'];
         }
+        // computers counted per entity in one query, then summed over each displayed entity and its sons
+        $computers_per_entity = [];
+        $result = $DB->request([
+            'SELECT'  => [Computer::getTable() . '.entities_id'],
+            'COUNT'   => 'Total',
+            'FROM'    => Computer::getTable(),
+            'WHERE'   => [
+                Computer::getTable() . '.is_deleted' => 0,
+                Computer::getTable() . '.is_template' => 0,
+            ],
+            'GROUPBY' => [Computer::getTable() . '.entities_id'],
+        ]);
+        foreach ($result as $row) {
+            $computers_per_entity[$row['entities_id']] = (int) $row['Total'];
+        }
+
         $entities = [];
         foreach ($entities_first_level as $entities_id => $entities_name) {
-            if ($entities_id == $_SESSION['glpiactive_entity']) {
-                $restrict = " = '" . $entities_id . "'";
-            } else {
-                $restrict = 'IN (' . implode(',', getSonsOf('glpi_entities', $entities_id)) . ')';
+            $total = 0;
+            foreach (getSonsOf(Entity::getTable(), $entities_id) as $sons_id) {
+                $total += $computers_per_entity[$sons_id] ?? 0;
             }
-            $query = [
-                'COUNT' => 'Total',
-                'FROM' => Computer::getTable(),
-                'WHERE' => [
-                    Computer::getTable() . '.entities_id' => getSonsOf(Entity::getTable(), $entities_id),
-                    Computer::getTable() . '.is_deleted' => 0,
-                    Computer::getTable() . '.is_template' => 0,
-                ],
-            ];
-            $result = $DB->request($query);
 
-            foreach ($result as $computer) {
-                $datas['tmp'][$entities_name . ' (pourcentage %)'] = $computer['Total'];
-                $entities[$entities_name . ' (pourcentage %)']     = $entities_id;
-            }
+            $datas['tmp'][$entities_name . ' (pourcentage %)'] = $total;
+            $entities[$entities_name . ' (pourcentage %)']     = $entities_id;
         }
         $total = array_sum($datas['tmp']);
         foreach ($datas['tmp'] as $key => $value) {
