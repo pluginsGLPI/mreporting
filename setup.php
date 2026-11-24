@@ -201,6 +201,7 @@ function plugin_version_mreporting()
                 'max' => PLUGIN_MREPORTING_MAX_GLPI,
             ],
         ],
+        'csp_compliant' => true,
     ];
 }
 
