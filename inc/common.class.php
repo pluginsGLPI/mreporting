@@ -260,9 +260,9 @@ class PluginMreportingCommon extends CommonDBTM
             return '';
         }
 
-        $js_onchange = $onchange ? " onchange='window.location.href=this.options[this.selectedIndex].value'" : '';
+        $select_id = 'mreporting_report_select' . mt_rand();
 
-        $select = "<select class='form-select' name='report' $js_onchange>";
+        $select = "<select class='form-select' name='report' id='$select_id'>";
         $select .= "<option value='-1' selected>" . Dropdown::EMPTY_VALUE . '</option>';
 
         foreach ($reports as $classname => $report) {
@@ -324,6 +324,12 @@ class PluginMreportingCommon extends CommonDBTM
             }
         }
         $select .= '</select>';
+
+        if ($onchange) {
+            $select .= Html::scriptBlock(
+                "$('#$select_id').on('change', function () { window.location.href = this.options[this.selectedIndex].value; });",
+            );
+        }
 
         return $select;
     }
@@ -400,9 +406,13 @@ class PluginMreportingCommon extends CommonDBTM
 
                 echo "<div class='f_right'>";
                 echo __s('Export') . ' : ';
-                echo "<a href='#' onClick=\"var w = window.open('popup.php?classname=" . htmlspecialchars($classname) . "' ,'glpipopup', " .
-                  "'height=" . htmlspecialchars(strval($height)) . ", width=1000, top=100, left=100, scrollbars=yes'); w.focus();\">";
+                $export_id = 'mreporting_odt_export' . mt_rand();
+                echo "<a href='#' id='$export_id' data-popup-url='" . htmlspecialchars('popup.php?classname=' . $classname) . "'>";
                 echo 'ODT</a>';
+                echo Html::scriptBlock(
+                    "$('#$export_id').on('click', function () { var w = window.open(this.dataset.popupUrl, 'glpipopup', " .
+                    "'height=" . (int) $height . ", width=1000, top=100, left=100, scrollbars=yes'); w.focus(); });",
+                );
                 echo '</div>';
             } else {
                 echo __s('No report is available !', 'mreporting');
@@ -518,16 +528,17 @@ class PluginMreportingCommon extends CommonDBTM
 
             echo '</table>';
             $formname = 'exportform';
+            $rand     = mt_rand();
             echo "<table width='950px'>";
             $arrow = 'fas fa-level-up-alt';
 
             echo '<tr>';
             echo "<td><i class='" . htmlspecialchars($arrow) . " fa-flip-horizontal fa-lg mx-2'></i></td>";
             echo "<td class='center' style='white-space:nowrap;'>";
-            echo "<a onclick= \"if ( markCheckboxes('" . htmlspecialchars($formname) . "') ) return false;\" href='#'>" . __s('Check all') . '</a></td>';
+            echo "<a href='#' id='mreporting_check_all$rand'>" . __s('Check all') . '</a></td>';
             echo '<td>/</td>';
             echo "<td class='center' style='white-space:nowrap;'>";
-            echo "<a onclick= \"if ( unMarkCheckboxes('" . htmlspecialchars($formname) . "') ) return false;\" href='#'>" . __s('Uncheck all') . '</a></td>';
+            echo "<a href='#' id='mreporting_uncheck_all$rand'>" . __s('Uncheck all') . '</a></td>';
 
             $option[0] = __s('Without data', 'mreporting');
             $option[1] = __s('With data', 'mreporting');
@@ -539,7 +550,9 @@ class PluginMreportingCommon extends CommonDBTM
             Html::closeForm();
             echo '</div>';
 
-            echo "<script type='text/javascript'>
+            echo Html::scriptBlock(
+                "$('#mreporting_check_all$rand').on('click', function (e) { e.preventDefault(); markCheckboxes('$formname'); });
+            $('#mreporting_uncheck_all$rand').on('click', function (e) { e.preventDefault(); unMarkCheckboxes('$formname'); });
             $('#export_submit').on('click', function () {
                //get new crsf
                $.ajax({
@@ -548,8 +561,8 @@ class PluginMreportingCommon extends CommonDBTM
                   $('#export_form input[name=_glpi_csrf_token]').val(token);
                   document.getElementById('exportform').submit();
                });
-            });
-         </script>";
+            });",
+            );
         }
     }
 
@@ -999,15 +1012,18 @@ class PluginMreportingCommon extends CommonDBTM
         echo "<tr class='tab_bg_1'>";
         echo '<th>';
 
-        echo "<a href=\"javascript:showHideDiv('view_datas$rand','viewimg','" .
-         $CFG_GLPI['root_doc'] . "/pics/deplier_down.png','" .
-         $CFG_GLPI['root_doc'] . "/pics/deplier_up.png');\">";
+        echo "<a href='#' id='mreporting_toggle_datas$rand'>";
 
         $img = $show_graph ? 'deplier_down.png' : 'deplier_up.png';
         echo "<img alt='' name='viewimg' src=\"" .
          $CFG_GLPI['root_doc'] . "/pics/" . htmlspecialchars($img) . "\">&nbsp;";
 
         echo __s('data', 'mreporting') . '</a>';
+        echo Html::scriptBlock(
+            "$('#mreporting_toggle_datas$rand').on('click', function (e) { e.preventDefault(); showHideDiv('view_datas$rand', 'viewimg', '" .
+            jsescape($CFG_GLPI['root_doc'] . '/pics/deplier_down.png') . "', '" .
+            jsescape($CFG_GLPI['root_doc'] . '/pics/deplier_up.png') . "'); });",
+        );
         echo '</th>';
         echo '</tr>';
         echo '</table>';
